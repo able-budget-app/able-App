@@ -19,7 +19,7 @@
   --lavender:#7a5fb8;--lavender-light:#f3eefa;
   --red:#c04060;--red-light:#fdeef2;
   --shadow:0 2px 8px rgba(17,28,22,.04);--shadow-md:0 8px 32px rgba(17,28,22,.1);
-  --r:18px;--r-sm:12px;--r-xs:10px;
+  --r:18px;--r-sm:12px;--r-xs:12px;
 
   /* ═══ NEW DESIGN SYSTEM TOKENS ═══ */
   /* Backgrounds */
@@ -223,7 +223,15 @@ input,select,button,textarea{font-family:inherit;}
 .floor-marker{position:absolute;top:-4px;width:2px;height:20px;background:var(--ds-c4);border-radius:2px;}
 .floor-legend{display:flex;gap:14px;margin-top:10px;font-size:11px;font-weight:700;color:var(--ds-t2);}
 .floor-dot{width:9px;height:9px;border-radius:50%;display:inline-block;margin-right:6px;}
-.job-item{display:flex;align-items:center;gap:12px;padding:14px 16px;background:var(--ds-card);border-radius:var(--ds-r2);margin-bottom:9px;box-shadow:var(--ds-sh1);animation:popIn .35s cubic-bezier(.34,1.56,.64,1) forwards;opacity:0;transform:scale(.96) translateY(6px);}
+.job-item{display:flex;align-items:center;gap:12px;padding:14px 16px;background:var(--ds-card);border-radius:var(--ds-r2);margin-bottom:9px;box-shadow:var(--ds-sh1);animation:popIn .35s cubic-bezier(.34,1.56,.64,1) forwards;opacity:0;transform:scale(.96) translateY(6px);max-width:100%;overflow:hidden;}
+@media(max-width:540px){
+  .job-item{gap:10px;padding:12px 13px;}
+  .job-num{width:26px;height:26px;font-size:11px;}
+  .job-name{font-size:13px;word-break:break-word;}
+  .job-amt{font-size:1rem;}
+  .job-right{min-width:0;}
+  #wi-job-list,#wi-debt-impact{max-width:100%;overflow-x:hidden;}
+}
 @keyframes popIn{to{opacity:1;transform:scale(1) translateY(0);}}
 .job-num{width:30px;height:30px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:900;flex-shrink:0;}
 .job-info{flex:1;min-width:0;}
@@ -278,8 +286,9 @@ input,select,button,textarea{font-family:inherit;}
 .bills-row:last-child{border-bottom:none;}
 .bills-row:hover{background:var(--ds-card2);}
 .bills-name{flex:1;font-weight:700;color:var(--ds-t1);min-width:0;}
-.bills-amt-input{background:transparent;border:none;border-bottom:1.5px solid transparent;color:var(--ds-t1);font-family:var(--ds-f);font-size:14px;font-weight:800;width:85px;text-align:right;outline:none;transition:border-color .2s;padding-bottom:2px;letter-spacing:-.01em;}
-.bills-amt-input:hover,.bills-amt-input:focus{border-bottom-color:var(--ds-green);}
+.bills-amt-input{background:var(--ds-card2);border:1px solid var(--ds-t4);border-radius:var(--ds-r1);color:var(--ds-t1);font-family:var(--ds-f);font-size:14px;font-weight:800;width:95px;text-align:right;outline:none;transition:all .15s;padding:6px 10px;letter-spacing:-.01em;cursor:text;-webkit-appearance:none;appearance:none;}
+.bills-amt-input:hover{border-color:var(--ds-green);background:var(--ds-card);}
+.bills-amt-input:focus{border-color:var(--ds-green);background:var(--ds-card);box-shadow:0 0 0 3px rgba(42,122,74,.15);}
 .bills-due{font-size:11px;font-weight:700;color:var(--ds-t3);width:50px;flex-shrink:0;}
 .bills-actions{display:flex;align-items:center;gap:4px;flex-shrink:0;}
 @media(max-width:540px){
@@ -289,22 +298,27 @@ input,select,button,textarea{font-family:inherit;}
   .bills-name .freq-tag, .bills-name .link-tag{display:inline-block;margin-top:2px;}
   .bills-due{grid-area:due;width:auto;text-align:left;font-size:10px;}
   .bills-amt-wrap{grid-area:amount;justify-self:end;}
-  .bills-amt-input{width:90px;font-size:15px;}
+  .bills-amt-input{width:100px;font-size:15px;padding:8px 12px;min-height:36px;}
   .bills-actions{grid-area:actions;justify-self:end;}
   .bills-actions .btn-sm{padding:4px 10px;font-size:11px;}
 }
 .modal-bg{position:fixed;inset:0;background:rgba(17,28,22,.45);z-index:200;display:flex;align-items:center;justify-content:center;padding:1rem;backdrop-filter:blur(6px);animation:modalFadeIn .2s ease;}
 @keyframes modalFadeIn{from{opacity:0;}to{opacity:1;}}
-.modal{background:var(--ds-card);border-radius:var(--ds-r3);padding:1.75rem;width:100%;max-width:480px;box-shadow:var(--ds-sh3);max-height:90vh;overflow-y:auto;animation:modalSlideUp .25s cubic-bezier(.34,1.56,.64,1);}
+.modal{background:var(--ds-card);border-radius:var(--ds-r3);padding:1.75rem;width:100%;max-width:480px;box-shadow:var(--ds-sh3);max-height:90vh;overflow-y:auto;animation:modalSlideUp .25s cubic-bezier(.34,1.56,.64,1);position:relative;}
 @keyframes modalSlideUp{from{opacity:0;transform:translateY(20px) scale(.96);}to{opacity:1;transform:translateY(0) scale(1);}}
-.modal-title{font-family:var(--ds-f);font-size:1.35rem;font-weight:800;margin-bottom:1.35rem;color:var(--ds-t1);letter-spacing:-.02em;}
+.modal-title{font-family:var(--ds-f);font-size:1.35rem;font-weight:800;margin-bottom:1.35rem;color:var(--ds-t1);letter-spacing:-.02em;padding-right:36px;}
+.modal-close{position:absolute;top:14px;right:14px;width:32px;height:32px;border-radius:50%;background:var(--ds-card2);border:none;cursor:pointer;display:flex;align-items:center;justify-content:center;color:var(--ds-t2);transition:all .15s;z-index:2;}
+.modal-close:hover{background:var(--ds-t4);color:var(--ds-t1);}
+.modal-close:focus{outline:none;box-shadow:0 0 0 3px rgba(42,122,74,.2);}
 .modal-actions{display:flex;gap:10px;justify-content:flex-end;margin-top:1.5rem;}
 @media (max-width:600px){
   .modal-bg{align-items:flex-end;padding:0;}
-  .modal{max-width:100%;border-radius:var(--ds-r3) var(--ds-r3) 0 0;padding:1.5rem 1.25rem 2rem;max-height:92vh;animation:sheetSlideUp .3s cubic-bezier(.34,1.2,.64,1);}
+  .modal{max-width:100%;border-radius:var(--ds-r3) var(--ds-r3) 0 0;padding:1.5rem 1.25rem 0;max-height:92vh;animation:sheetSlideUp .3s cubic-bezier(.34,1.2,.64,1);}
   @keyframes sheetSlideUp{from{transform:translateY(100%);}to{transform:translateY(0);}}
   .modal::before{content:'';display:block;width:40px;height:4px;background:var(--ds-t4);border-radius:4px;margin:-.25rem auto 1rem;}
-  .modal-actions{flex-direction:column-reverse;gap:8px;}
+  .modal-title{margin-bottom:1rem;}
+  .modal-close{top:18px;right:14px;}
+  .modal-actions{position:sticky;bottom:0;background:var(--ds-card);margin:1rem -1.25rem 0;padding:12px 1.25rem calc(1rem + env(safe-area-inset-bottom,0px));border-top:1px solid var(--ds-t4);flex-direction:column-reverse;gap:8px;}
   .modal-actions .btn{width:100%;}
 }
 .empty-state{text-align:center;padding:2.5rem 1.5rem;color:var(--ds-t3);font-size:13px;font-weight:600;background:var(--ds-card);border-radius:var(--ds-r2);box-shadow:var(--ds-sh1);}
@@ -1303,6 +1317,7 @@ input,select,button,textarea{font-family:inherit;}
 <!-- MODALS -->
 <div class="modal-bg" id="modal-add-bill" style="display:none;">
   <div class="modal">
+    <button class="modal-close" onclick="closeModal('modal-add-bill')" aria-label="Close"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button>
     <div class="modal-title" id="bill-modal-title">Add a bill</div>
     <div class="form-row">
       <div class="field"><label>Name</label><input type="text" id="nb-name" placeholder="Electric bill"></div>
@@ -1327,6 +1342,7 @@ input,select,button,textarea{font-family:inherit;}
 </div>
 <div class="modal-bg" id="modal-buffer" style="display:none;">
   <div class="modal">
+    <button class="modal-close" onclick="closeModal('modal-buffer')" aria-label="Close"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button>
     <div class="modal-title">Update buffer fund</div>
     <div class="field"><label>Current balance ($)</label><input type="number" id="buf-inp" placeholder="0" min="0" step="0.01"></div>
     <div style="font-size:12px;color:var(--ds-t2);font-weight:600;margin-top:12px;line-height:1.6;background:#eaf2fc;border-radius:var(--ds-r1);padding:12px 14px;">Money set aside for slow months. Goal is one full month of bills. Update whenever you move money in or out.</div>
@@ -1335,6 +1351,7 @@ input,select,button,textarea{font-family:inherit;}
 </div>
 <div class="modal-bg" id="modal-alloc-preview" style="display:none;">
   <div class="modal">
+    <button class="modal-close" onclick="closeModal('modal-alloc-preview')" aria-label="Close"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button>
     <div class="modal-title">Money received. Here's where it goes</div>
     <div id="preview-source" style="font-size:13px;color:var(--ds-t3);font-weight:700;margin-bottom:1rem;letter-spacing:.05em;text-transform:uppercase;"></div>
     <div id="preview-jobs"></div>
@@ -1343,6 +1360,7 @@ input,select,button,textarea{font-family:inherit;}
 </div>
 <div class="modal-bg" id="modal-fixed-alloc" style="display:none;">
   <div class="modal">
+    <button class="modal-close" onclick="closeModal('modal-fixed-alloc')" aria-label="Close"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button>
     <div class="modal-title" id="fa-modal-title">Add fixed allocation</div>
     <div class="field" style="margin-bottom:12px;">
       <label>Label</label>
@@ -1370,6 +1388,7 @@ input,select,button,textarea{font-family:inherit;}
 </div>
 <div class="modal-bg" id="modal-edit-income" style="display:none;">
   <div class="modal">
+    <button class="modal-close" onclick="closeModal('modal-edit-income')" aria-label="Close"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button>
     <div class="modal-title">Edit income</div>
     <div style="font-size:12px;color:var(--ds-t2);font-weight:600;margin-bottom:14px;line-height:1.6;background:var(--ds-green-l);border-radius:var(--ds-r1);padding:10px 12px;">Saving will reverse the original allocation and re-run it with the new amount. Debt balances and buffer will be adjusted.</div>
     <div class="form-row">
@@ -2933,7 +2952,7 @@ function renderDebtPage(){
     div.innerHTML=`<div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:.75rem;">
       <div style="display:flex;gap:10px;align-items:flex-start;">
         <div style="width:22px;height:22px;border-radius:50%;background:var(--coral-light);color:var(--coral);font-size:11px;font-weight:800;display:flex;align-items:center;justify-content:center;">${rank+1}</div>
-        <div><div style="font-size:15px;font-weight:700;">${d.name}</div><div style="font-size:11px;color:var(--text3);font-weight:700;margin-top:2px;">${d.rate}% interest. ${rank===0?'Pay this first':'Pay this next'}</div></div>
+        <div style="min-width:0;"><div style="font-size:15px;font-weight:700;word-break:break-word;">${d.name}</div><div style="font-size:11px;color:var(--text3);font-weight:700;margin-top:2px;">${d.rate}% interest</div><div style="font-size:10px;color:${rank===0?'var(--ds-c4)':'var(--ds-green)'};font-weight:800;margin-top:3px;text-transform:uppercase;letter-spacing:.05em;">${rank===0?'Pay this first':'Pay this next'}</div></div>
       </div>
       <div style="text-align:right;"><input class="debt-balance-input" type="number" value="${d.balance.toFixed(2)}" onchange="updateDebt(${d.oi},this.value)"><div style="font-size:10px;font-weight:700;color:var(--text3);margin-top:2px;">click to update</div></div>
     </div>
@@ -3407,7 +3426,7 @@ function updateSplitPreview(){
     ${rest>0?`<span style="color:var(--coral);opacity:.7;">● ${rest}% leftover goes to debt</span>`:''}
   </div>
   ${over?`<div style="color:var(--red);font-size:12px;font-weight:700;margin-top:6px;">Total is ${total}%. Reduce one value to bring it to 100%.</div>`:''}
-  ${under&&rest>0?`<div style="color:var(--ds-t2);font-size:12px;font-weight:600;margin-top:6px;background:var(--ds-green-l);padding:8px 10px;border-radius:8px;">Heads up: anything you don't allocate here gets added to your debt payment. Right now that's ${rest}% extra on top of your ${debt}% debt setting, so ${debt+rest}% of surplus goes to debt.</div>`:''}`;
+  ${under&&rest>0?`<div style="color:var(--ds-t2);font-size:12px;font-weight:600;margin-top:6px;background:var(--ds-green-l);padding:8px 10px;border-radius:var(--ds-r1);">Heads up: anything you don't allocate here gets added to your debt payment. Right now that's ${rest}% extra on top of your ${debt}% debt setting, so ${debt+rest}% of surplus goes to debt.</div>`:''}`;
   const ex=document.getElementById('split-example');
   const ownerEx=1000*(owner/100),debtEx=1000*(debt/100),bufEx=1000*(buf/100),freeEx=1000*(free/100),restEx=1000*(rest/100);
   ex.innerHTML=`<div class="card" style="padding:1rem;">
