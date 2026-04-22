@@ -402,6 +402,21 @@ input,select,button,textarea{font-family:inherit;}
 .lc-game-compare-val{font-weight:800;font-family:var(--ds-f);}
 .lc-game-compare-val.user{color:var(--row-color);}
 .lc-game-compare-val.opt{color:var(--ds-green);}
+/* ═══ Survive the month ═══ */
+.lc-survive-state{display:grid;grid-template-columns:repeat(4,1fr);gap:6px;background:var(--ds-page);border-radius:var(--ds-r2);padding:10px;margin-bottom:.75rem;}
+.lc-survive-stat{text-align:center;padding:4px;}
+.lc-survive-stat-lbl{font-size:9px;font-weight:800;letter-spacing:.1em;text-transform:uppercase;color:var(--ds-t3);font-family:var(--ds-f);margin-bottom:2px;}
+.lc-survive-stat-val{font-family:var(--ds-f);font-size:15px;font-weight:900;letter-spacing:-.02em;}
+.lc-survive-brief{background:var(--ds-green-l);border-left:3px solid var(--ds-green);border-radius:var(--ds-r1);padding:10px 12px;margin:1rem 0;font-size:12px;color:var(--ds-t2);font-weight:600;line-height:1.5;}
+.lc-survive-day{font-size:11px;font-weight:800;letter-spacing:.1em;color:var(--ds-t3);text-align:center;text-transform:uppercase;margin-bottom:.5rem;}
+.lc-survive-dots{display:flex;gap:4px;justify-content:center;margin-bottom:1rem;}
+.lc-survive-dot{width:24px;height:4px;border-radius:2px;background:var(--ds-t4);transition:background .2s;}
+.lc-survive-dot.current{background:var(--ds-green);}
+.lc-survive-dot.done{background:var(--ds-green-m);}
+.lc-survive-breakdown{margin:1rem 0;display:flex;flex-direction:column;gap:6px;}
+.lc-survive-break-row{display:flex;justify-content:space-between;padding:10px 12px;border-radius:var(--ds-r1);font-size:13px;font-weight:700;}
+.lc-survive-break-row.pass{background:var(--ds-green-l);color:var(--ds-green);}
+.lc-survive-break-row.fail{background:#fdeef2;color:var(--ds-c4);}
 .lc-lesson-info{flex:1;min-width:0;}
 .lc-lesson-title{font-size:14px;font-weight:800;color:var(--ds-t1);letter-spacing:-.01em;margin-bottom:2px;}
 .lc-lesson-hint{font-size:12px;color:var(--ds-t3);font-weight:600;}
@@ -4966,22 +4981,46 @@ const LC_GAMES = {
     title: 'Where does it go?',
     desc: 'Got paid? Split it right. Score 0 to 100 against Able.',
   },
+  survive_month: {
+    id: 'survive_month',
+    title: 'Survive the month',
+    desc: '30 days, lumpy income, real surprises. Make it to day 30 in the black.',
+  },
 };
+
+const SURVIVE_MONTH_EVENTS = [
+  { day: 3, type: 'income', amount: 1500, source: 'Client payment' },
+  { day: 8, type: 'expense', amount: 1000, name: 'Rent' },
+  { day: 14, type: 'income', amount: 900, source: 'Side gig' },
+  { day: 17, type: 'expense', amount: 650, name: 'Car repair', surprise: true },
+  { day: 22, type: 'expense', amount: 390, name: 'Insurance + utilities' },
+  { day: 28, type: 'income', amount: 1800, source: 'Client payment' },
+];
+const SURVIVE_MONTH_START = { balance: 500, debt: 5000, buffer: 500 };
 
 let lcGameState = null;
 
 function lcStartGame(gameId) {
-  if (gameId !== 'where_does_it_go') return;
-  // Random amount between $500 and $4500, rounded to nearest $50
-  const amount = Math.round((500 + Math.random() * 4000) / 50) * 50;
-  lcGameState = {
-    gameId,
-    amount,
-    allocations: { bills: 0, debt: 0, buffer: 0, owner: 0, free: 0 },
-    phase: 'playing',
-    score: 0,
-    optimal: null,
-  };
+  if (gameId === 'where_does_it_go') {
+    const amount = Math.round((500 + Math.random() * 4000) / 50) * 50;
+    lcGameState = {
+      gameId, amount,
+      allocations: { bills: 0, debt: 0, buffer: 0, owner: 0, free: 0 },
+      phase: 'playing', score: 0, optimal: null,
+    };
+  } else if (gameId === 'survive_month') {
+    lcGameState = {
+      gameId,
+      phase: 'intro',
+      eventIdx: 0,
+      state: { ...SURVIVE_MONTH_START, ownerPaid: 0, totalIncome: 0, overdrafts: 0 },
+      pendingAlloc: null,
+      log: [],
+      score: 0,
+    };
+  } else {
+    return;
+  }
   const bg = document.getElementById('lc-game-bg');
   if (!bg) return;
   bg.style.display = 'flex';
@@ -5005,8 +5044,14 @@ function lcGameClose() {
 function lcRenderGame() {
   const view = document.getElementById('lc-game-content');
   if (!view || !lcGameState) return;
-  if (lcGameState.phase === 'playing') view.innerHTML = lcGameRenderPlaying();
-  else if (lcGameState.phase === 'result') view.innerHTML = lcGameRenderResult();
+  if (lcGameState.gameId === 'where_does_it_go') {
+    if (lcGameState.phase === 'playing') view.innerHTML = lcGameRenderPlaying();
+    else if (lcGameState.phase === 'result') view.innerHTML = lcGameRenderResult();
+  } else if (lcGameState.gameId === 'survive_month') {
+    if (lcGameState.phase === 'intro') view.innerHTML = lcSurviveRenderIntro();
+    else if (lcGameState.phase === 'event') view.innerHTML = lcSurviveRenderEvent();
+    else if (lcGameState.phase === 'result') view.innerHTML = lcSurviveRenderResult();
+  }
 }
 
 function lcGameRenderPlaying() {
@@ -5143,6 +5188,240 @@ function lcGameRenderResult() {
     <div class="lc-game-actions">
       <button class="btn" onclick="lcGameClose()">Close</button>
       <button class="btn btn-primary" onclick="lcStartGame('where_does_it_go')">Play again →</button>
+    </div>
+  `;
+}
+
+// ═══════════════════════════════════════
+// GAME 2: Survive the month
+// ═══════════════════════════════════════
+function lcSurviveStateHTML(s) {
+  return `
+    <div class="lc-survive-state">
+      <div class="lc-survive-stat"><div class="lc-survive-stat-lbl">Balance</div><div class="lc-survive-stat-val" style="color:${s.balance < 0 ? 'var(--ds-c4)' : 'var(--ds-t1)'};">${s.balance < 0 ? '-' : ''}$${Math.abs(Math.round(s.balance)).toLocaleString()}</div></div>
+      <div class="lc-survive-stat"><div class="lc-survive-stat-lbl">Debt</div><div class="lc-survive-stat-val" style="color:var(--ds-c4);">$${Math.round(s.debt).toLocaleString()}</div></div>
+      <div class="lc-survive-stat"><div class="lc-survive-stat-lbl">Buffer</div><div class="lc-survive-stat-val" style="color:var(--ds-c5);">$${Math.round(s.buffer).toLocaleString()}</div></div>
+      <div class="lc-survive-stat"><div class="lc-survive-stat-lbl">Paid self</div><div class="lc-survive-stat-val" style="color:var(--ds-c2);">$${Math.round(s.ownerPaid).toLocaleString()}</div></div>
+    </div>
+  `;
+}
+
+function lcSurviveRenderIntro() {
+  const s = SURVIVE_MONTH_START;
+  const knownBills = SURVIVE_MONTH_EVENTS.filter(e => e.type === 'expense' && !e.surprise).reduce((t, e) => t + e.amount, 0);
+  return `
+    <div class="lc-game-header">
+      <div class="lc-game-eyebrow">SURVIVE THE MONTH</div>
+      <div class="lc-game-income">30 days. Lumpy income. Surprises.</div>
+      <div class="lc-game-lesson" style="margin-top:.5rem;">Make it to day 30 in the black. Allocate each deposit wisely.</div>
+    </div>
+    ${lcSurviveStateHTML({ ...s, ownerPaid: 0 })}
+    <div class="lc-survive-brief">
+      <div><strong>Known bills this month: $${knownBills.toLocaleString()}.</strong> A few surprises may hit. Plan accordingly.</div>
+    </div>
+    <div class="lc-game-actions">
+      <button class="btn" onclick="lcGameClose()">Cancel</button>
+      <button class="btn btn-primary" onclick="lcSurviveNext()">Start the month →</button>
+    </div>
+  `;
+}
+
+function lcSurviveNext() {
+  if (!lcGameState) return;
+  if (lcGameState.eventIdx >= SURVIVE_MONTH_EVENTS.length) {
+    lcSurviveFinish();
+    return;
+  }
+  const event = SURVIVE_MONTH_EVENTS[lcGameState.eventIdx];
+  if (event.type === 'expense') {
+    // Apply expense immediately: balance first, then buffer, then overdraft.
+    const s = lcGameState.state;
+    let remaining = event.amount;
+    if (s.balance >= remaining) {
+      s.balance -= remaining; remaining = 0;
+    } else {
+      remaining -= Math.max(0, s.balance);
+      s.balance = Math.min(0, s.balance);
+      if (s.buffer >= remaining) {
+        s.buffer -= remaining; remaining = 0;
+      } else {
+        remaining -= s.buffer;
+        s.buffer = 0;
+        s.balance -= remaining;
+        s.overdrafts += 1;
+      }
+    }
+    lcGameState.log.push({ day: event.day, type: 'expense', name: event.name, amount: event.amount, overdraft: s.overdrafts, surprise: !!event.surprise });
+  }
+  lcGameState.phase = 'event';
+  lcRenderGame();
+}
+
+function lcSurviveRenderEvent() {
+  const event = SURVIVE_MONTH_EVENTS[lcGameState.eventIdx];
+  const s = lcGameState.state;
+  const total = SURVIVE_MONTH_EVENTS.length;
+  const dotsHTML = SURVIVE_MONTH_EVENTS.map((_, i) => {
+    const cls = i < lcGameState.eventIdx ? 'done' : i === lcGameState.eventIdx ? 'current' : '';
+    return `<div class="lc-survive-dot ${cls}"></div>`;
+  }).join('');
+  if (event.type === 'income') {
+    const pend = lcGameState.pendingAlloc || { debt: 0, buffer: 0, owner: 0, keep: 0 };
+    const total4 = pend.debt + pend.buffer + pend.owner + pend.keep;
+    const canSubmit = Math.abs(total4 - 100) < 0.5;
+    const remaining = 100 - total4;
+    const statusClass = canSubmit ? 'ready' : total4 > 100 ? 'over' : 'under';
+    const statusText = total4 === 0 ? 'Start allocating'
+      : total4 > 100 ? `Over by ${Math.round(total4 - 100)}%`
+      : total4 < 100 ? `${Math.round(remaining)}% left`
+      : 'Perfect';
+    const buckets = [
+      { key: 'debt', label: 'Pay off debt', color: '#e07a5f', hint: 'Reduces your debt balance' },
+      { key: 'buffer', label: 'Buffer', color: '#3570b8', hint: 'Last-resort cushion' },
+      { key: 'owner', label: 'Pay yourself', color: '#3d9e78', hint: 'Owner draw' },
+      { key: 'keep', label: 'Keep in balance', color: '#c97c0a', hint: 'What covers bills and surprises' },
+    ];
+    return `
+      <div class="lc-survive-day">Day ${event.day} of 30</div>
+      <div class="lc-survive-dots">${dotsHTML}</div>
+      ${lcSurviveStateHTML(s)}
+      <div class="lc-game-header" style="margin-top:1rem;">
+        <div class="lc-game-eyebrow">MONEY CAME IN</div>
+        <div class="lc-game-income">${event.source}: <strong>$${event.amount.toLocaleString()}</strong></div>
+        <div class="lc-game-remaining ${statusClass}">${statusText}</div>
+      </div>
+      <div class="lc-game-buckets">
+        ${buckets.map(b => `
+          <div class="lc-game-bucket" style="--bucket-color:${b.color};">
+            <div class="lc-game-bucket-head">
+              <div class="lc-game-bucket-label">${b.label}</div>
+              <div class="lc-game-bucket-amt">${Math.round(pend[b.key])}% · $${Math.round(event.amount * pend[b.key] / 100).toLocaleString()}</div>
+            </div>
+            <input type="range" class="lc-game-slider" min="0" max="100" step="1" value="${pend[b.key]}" oninput="lcSurviveSet('${b.key}', this.value)">
+            <div class="lc-game-bucket-hint">${b.hint}</div>
+          </div>
+        `).join('')}
+      </div>
+      <div class="lc-game-actions">
+        <button class="btn" onclick="lcGameClose()">Quit</button>
+        <button class="btn btn-primary" onclick="lcSurviveApplyIncome()" ${canSubmit ? '' : 'disabled style="opacity:.4;cursor:not-allowed;"'}>Apply →</button>
+      </div>
+    `;
+  } else {
+    // Expense already applied; show a notification card
+    const logLast = lcGameState.log[lcGameState.log.length - 1];
+    const overdraftedNow = logLast && logLast.overdraft > (lcGameState.log.length > 1 ? (lcGameState.log[lcGameState.log.length - 2].overdraft || 0) : 0);
+    return `
+      <div class="lc-survive-day">Day ${event.day} of 30</div>
+      <div class="lc-survive-dots">${dotsHTML}</div>
+      ${lcSurviveStateHTML(s)}
+      <div class="lc-game-header" style="margin-top:1rem;">
+        <div class="lc-game-eyebrow">${event.surprise ? 'SURPRISE EXPENSE' : 'BILL DUE'}</div>
+        <div class="lc-game-income">${event.name}: <strong style="color:var(--ds-c4);">-$${event.amount.toLocaleString()}</strong></div>
+        <div class="lc-game-lesson" style="margin-top:.5rem;color:${overdraftedNow ? 'var(--ds-c4)' : 'var(--ds-t2)'};">
+          ${overdraftedNow ? "You overdrafted. That counts against your final score." : 'Covered. On to the next thing.'}
+        </div>
+      </div>
+      <div class="lc-game-actions" style="margin-top:1.25rem;">
+        <button class="btn btn-primary" onclick="lcSurviveAdvance()" style="flex:1;">Continue →</button>
+      </div>
+    `;
+  }
+}
+
+function lcSurviveSet(bucket, val) {
+  if (!lcGameState) return;
+  if (!lcGameState.pendingAlloc) lcGameState.pendingAlloc = { debt: 0, buffer: 0, owner: 0, keep: 0 };
+  lcGameState.pendingAlloc[bucket] = Math.max(0, Math.min(100, parseFloat(val) || 0));
+  lcRenderGame();
+}
+
+function lcSurviveApplyIncome() {
+  if (!lcGameState) return;
+  const event = SURVIVE_MONTH_EVENTS[lcGameState.eventIdx];
+  const pend = lcGameState.pendingAlloc || { debt: 0, buffer: 0, owner: 0, keep: 0 };
+  const s = lcGameState.state;
+  const debtAmt = event.amount * pend.debt / 100;
+  const bufAmt = event.amount * pend.buffer / 100;
+  const ownAmt = event.amount * pend.owner / 100;
+  const keepAmt = event.amount - debtAmt - bufAmt - ownAmt;
+  s.debt = Math.max(0, s.debt - debtAmt);
+  s.buffer += bufAmt;
+  s.ownerPaid += ownAmt;
+  s.balance += keepAmt;
+  s.totalIncome += event.amount;
+  lcGameState.log.push({ day: event.day, type: 'income', source: event.source, amount: event.amount, alloc: { ...pend } });
+  lcGameState.pendingAlloc = null;
+  lcSurviveAdvance();
+}
+
+function lcSurviveAdvance() {
+  if (!lcGameState) return;
+  lcGameState.eventIdx += 1;
+  if (lcGameState.eventIdx >= SURVIVE_MONTH_EVENTS.length) {
+    lcSurviveFinish();
+  } else {
+    lcSurviveNext();
+  }
+}
+
+function lcSurviveFinish() {
+  const s = lcGameState.state;
+  let score = 0;
+  const parts = [];
+  const noOverdraft = s.overdrafts === 0;
+  parts.push({ label: 'Covered everything (no overdrafts)', pts: noOverdraft ? 30 : 0, max: 30, pass: noOverdraft });
+  const debtDown = s.debt < SURVIVE_MONTH_START.debt;
+  parts.push({ label: 'Debt decreased', pts: debtDown ? 30 : 0, max: 30, pass: debtDown });
+  const bufUp = s.buffer > SURVIVE_MONTH_START.buffer;
+  parts.push({ label: 'Buffer grew', pts: bufUp ? 20 : 0, max: 20, pass: bufUp });
+  const paidSelf = s.ownerPaid >= 200;
+  parts.push({ label: 'Paid yourself at least $200', pts: paidSelf ? 20 : 0, max: 20, pass: paidSelf });
+  score = parts.reduce((t, p) => t + p.pts, 0);
+
+  lcGameState.score = score;
+  lcGameState.parts = parts;
+  lcGameState.phase = 'result';
+
+  lcEnsureLearnState();
+  const L = S.settings.learn;
+  if (!L.games) L.games = {};
+  if (!L.games.survive_month) L.games.survive_month = { plays: 0, bestScore: 0 };
+  L.games.survive_month.plays++;
+  if (score > L.games.survive_month.bestScore) L.games.survive_month.bestScore = score;
+  lcBumpDailyStreak();
+  lcEvaluateBadges();
+  save();
+  lcRenderGame();
+}
+
+function lcSurviveRenderResult() {
+  const s = lcGameState.state;
+  const score = lcGameState.score;
+  const parts = lcGameState.parts;
+  const scoreColor = score >= 80 ? 'var(--ds-green)' : score >= 50 ? 'var(--ds-c3)' : 'var(--ds-c4)';
+  const lesson = score >= 90 ? 'Well played. That rhythm is how wealth builds over variable income.'
+    : score >= 70 ? 'Solid. One area to improve is listed below. Try a different allocation next round.'
+    : score >= 50 ? 'You made it, but left some value on the table. Check the misses below.'
+    : 'Rough month. Usually means you spent too fast or skipped paying yourself. Try again.';
+  return `
+    <div class="lc-game-header">
+      <div class="lc-game-eyebrow">END OF MONTH</div>
+      <div class="lc-game-score" style="color:${scoreColor};">${score}</div>
+      <div class="lc-game-lesson">${lesson}</div>
+    </div>
+    ${lcSurviveStateHTML(s)}
+    <div class="lc-survive-breakdown">
+      ${parts.map(p => `
+        <div class="lc-survive-break-row ${p.pass ? 'pass' : 'fail'}">
+          <span>${p.pass ? '✓' : '✕'} ${p.label}</span>
+          <span>${p.pts}/${p.max}</span>
+        </div>
+      `).join('')}
+    </div>
+    <div class="lc-game-actions">
+      <button class="btn" onclick="lcGameClose()">Close</button>
+      <button class="btn btn-primary" onclick="lcStartGame('survive_month')">Try again →</button>
     </div>
   `;
 }
