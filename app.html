@@ -373,9 +373,38 @@ input,select,button,textarea{font-family:inherit;}
 .lc-point-icon svg{width:16px;height:16px;}
 .lc-point-text{font-size:14px;line-height:1.6;color:var(--ds-t1);font-weight:500;flex:1;}
 .lc-point-text strong{color:var(--ds-t1);font-weight:800;}
-.lc-callout{background:linear-gradient(135deg,#eaf5ee,#d9ecde);border-left:4px solid var(--ds-green);border-radius:var(--ds-r2);padding:1.15rem 1.35rem;margin:1rem 0;}
+.lc-callout{background:linear-gradient(135deg,#eaf5ee,#d9ecde);border-left:4px solid var(--ds-green);border-radius:var(--ds-r2);padding:1.15rem 1.35rem;margin:1rem 0;display:flex;gap:12px;align-items:flex-start;}
+.lc-callout-icon{width:32px;height:32px;border-radius:var(--ds-r1);background:var(--ds-green);color:white;display:flex;align-items:center;justify-content:center;flex-shrink:0;}
+.lc-callout-icon svg{width:18px;height:18px;stroke-width:2.4;}
+.lc-callout-body{flex:1;min-width:0;}
 .lc-callout-title{font-size:11px;font-weight:800;letter-spacing:.12em;text-transform:uppercase;color:var(--ds-green);margin-bottom:.4rem;font-family:var(--ds-f);}
 .lc-callout-text{font-size:14px;line-height:1.6;color:var(--ds-t1);font-weight:600;}
+.lc-callout.try-this{background:linear-gradient(135deg,#eaf2fc,#d6e3f2);border-left-color:var(--ds-c5);}
+.lc-callout.try-this .lc-callout-icon{background:var(--ds-c5);}
+.lc-callout.try-this .lc-callout-title{color:var(--ds-c5);}
+.lc-callout.warning{background:linear-gradient(135deg,#fdeef2,#fbdde3);border-left-color:var(--ds-c4);}
+.lc-callout.warning .lc-callout-icon{background:var(--ds-c4);}
+.lc-callout.warning .lc-callout-title{color:var(--ds-c4);}
+/* ═══ Lesson progress bar (fixed) ═══ */
+.lc-progress-bar{position:fixed;top:66px;left:0;right:0;height:3px;background:transparent;z-index:45;pointer-events:none;}
+.lc-progress-fill{height:100%;width:0%;background:linear-gradient(90deg,var(--ds-green),var(--ds-c2));transition:width .1s ease-out;box-shadow:0 1px 4px rgba(42,122,74,.25);}
+@media(max-width:800px){.lc-progress-bar{top:0;}}
+/* ═══ Hero banner per course ═══ */
+.lc-hero-banner{height:140px;border-radius:var(--ds-r3);display:flex;align-items:center;justify-content:center;flex-direction:column;gap:8px;margin-bottom:1.25rem;position:relative;overflow:hidden;}
+.lc-hero-banner::after{content:'';position:absolute;inset:0;background:radial-gradient(circle at 30% 30%,rgba(255,255,255,.35),transparent 55%);pointer-events:none;}
+.lc-hero-banner.payself,.lc-hero-banner.credit{background:linear-gradient(135deg,var(--ds-green-l),var(--ds-green-m));color:var(--ds-green);}
+.lc-hero-banner.debt{background:linear-gradient(135deg,#fdeef2,#fbdde3);color:var(--ds-c4);}
+.lc-hero-banner.funding{background:linear-gradient(135deg,#eaf2fc,#d6e3f2);color:var(--ds-c5);}
+.lc-hero-banner.money{background:linear-gradient(135deg,#fdf3e3,#f9e5bd);color:var(--ds-c3);}
+.lc-hero-icon svg{width:56px;height:56px;stroke-width:1.8;}
+.lc-hero-label{font-size:11px;font-weight:800;letter-spacing:.15em;text-transform:uppercase;opacity:.85;font-family:var(--ds-f);}
+/* ═══ Pull quote ═══ */
+.lc-pull-quote{font-family:var(--ds-f);font-size:1.35rem;font-weight:700;font-style:italic;color:var(--ds-t1);line-height:1.35;letter-spacing:-.02em;text-align:center;padding:1.5rem 1rem;margin:1rem 0;position:relative;}
+.lc-pull-quote::before{content:'"';display:block;font-size:3rem;line-height:.4;color:var(--ds-green);opacity:.35;margin-bottom:.75rem;font-family:Georgia,serif;}
+/* ═══ Section divider ═══ */
+.lc-section-divider{display:flex;align-items:center;gap:14px;margin:1.25rem 0;}
+.lc-section-divider::before,.lc-section-divider::after{content:'';flex:1;height:1px;background:var(--ds-t4);}
+.lc-section-divider-dot{width:6px;height:6px;border-radius:50%;background:var(--ds-green-m);}
 .lc-steps{display:flex;flex-direction:column;gap:0;}
 .lc-step{display:flex;gap:14px;padding:14px 0;border-bottom:1px solid var(--ds-t4);}
 .lc-step:last-child{border-bottom:none;padding-bottom:0;}
@@ -3890,6 +3919,10 @@ const LC_LESSONS = {
         "This isn't willpower. It's math layered on top of an emotional problem. Understand both and the path gets simple. Not easy. Simple.",
         "The tools that got you in are the same ones that get you out. You just need a plan that fits how you actually earn."
       ],
+      pullQuotes: [
+        "This isn't willpower. It's math layered on an emotional problem.",
+        "Avoiding the number feels safer. It isn't."
+      ],
       keyPoints: [
         { icon: 'alert', text: "<strong>Minimum payments are a trap.</strong> They're designed to keep you paying for 15 to 30 years. Pay extra on at least one debt every month to break out." },
         { icon: 'chart', text: '<strong>Compound interest works against you.</strong> A $5,000 card at 22% interest on minimum payments takes over 20 years to clear and costs more than $10,000 in interest.' },
@@ -3897,6 +3930,7 @@ const LC_LESSONS = {
         { icon: 'shield', text: "<strong>Shame keeps you stuck.</strong> Avoiding the number feels safer. It isn't. Looking at the full picture is the first real step out." }
       ],
       callout: {
+        type: 'takeaway',
         title: 'The shift that changes everything',
         text: 'Stop treating debt as a moral failure. Treat it as a math problem. Math problems get solved. Moral failures fester.'
       }
@@ -4502,6 +4536,10 @@ const LC_LESSONS = {
         "Most people underestimate it because the early years look boring. The first decade is almost linear. Around year 15 the curve bends. By year 30 it looks like magic.",
         "People who start early win. Not because they're smarter. They gave their money more time to work."
       ],
+      pullQuotes: [
+        "Around year 15 the curve bends. By year 30 it looks like magic.",
+        "Time is the one ingredient you can't buy back."
+      ],
       keyPoints: [
         { icon: 'zap', text: '<strong>Early dollars count the most.</strong> A dollar invested at 25 has 40 years to compound. At 45, 20 years. Same dollar, wildly different future.' },
         { icon: 'trending', text: '<strong>Consistency beats amount.</strong> $500/month for 45 years at 9% grows to nearly $4 million. Most of that is interest, not your contributions. Showing up is the whole job.' },
@@ -4509,6 +4547,7 @@ const LC_LESSONS = {
         { icon: 'clock', text: "<strong>Time is the one ingredient you can't buy back.</strong> Increase income, cut expenses, optimize rate. You can't get back years you skipped." }
       ],
       callout: {
+        type: 'takeaway',
         title: 'If you feel late, start anyway',
         text: 'Best time to plant a tree was 20 years ago. Second best is today. Compounding still works at 35, 45, 55. Start now.'
       }
@@ -5042,9 +5081,16 @@ function renderLcLesson() {
   const hasFlashcards = flashcards.length > 0;
   const hasQuiz = lcQuizData.length > 0;
 
+  const heroIcon = LC_ICONS[course.icon] || '';
+  const showProgress = lcLessonPhase === 'read';
   let html = `
+    <div class="lc-progress-bar"${showProgress ? '' : ' style="display:none;"'}><div class="lc-progress-fill" id="lc-progress-fill"></div></div>
     <div class="lc-reader">
       <button class="lc-back" onclick="lcOpenCourse('${course.id}')">← Back to ${course.title}</button>
+      <div class="lc-hero-banner ${course.id}">
+        <div class="lc-hero-icon">${heroIcon}</div>
+        <div class="lc-hero-label">${course.sub} · Lesson ${lesson.num} of ${lessons.length}</div>
+      </div>
       <div class="lc-lesson-hero">
         <div class="lc-breadcrumb">${course.title} <span>/ ${lesson.title}</span></div>
         <div class="lc-lesson-h1">${lesson.title}</div>
@@ -5061,6 +5107,14 @@ function renderLcLesson() {
   `;
 
   if (lcLessonPhase === 'read') {
+    const divider = `<div class="lc-section-divider"><div class="lc-section-divider-dot"></div></div>`;
+    const calloutIcons = {
+      takeaway: LC_ICONS.key || LC_ICONS.check,
+      'try-this': LC_ICONS.zap || LC_ICONS.check,
+      warning: LC_ICONS.alert || LC_ICONS.check,
+      default: LC_ICONS.check,
+    };
+    const pullQuotes = Array.isArray(lesson.pullQuotes) ? lesson.pullQuotes : [];
     html += `<div class="lc-stagger">`;
     html += `
       <div class="lc-section">
@@ -5068,7 +5122,11 @@ function renderLcLesson() {
         ${lesson.overview.map(p => `<div class="lc-p">${p}</div>`).join('')}
       </div>
     `;
+    if (pullQuotes[0]) {
+      html += `<div class="lc-pull-quote">${pullQuotes[0]}</div>`;
+    }
     if (lesson.keyPoints && lesson.keyPoints.length) {
+      html += divider;
       html += `
         <div class="lc-section">
           <div class="lc-section-label">Key Points</div>
@@ -5083,15 +5141,25 @@ function renderLcLesson() {
         </div>
       `;
     }
+    if (pullQuotes[1]) {
+      html += `<div class="lc-pull-quote">${pullQuotes[1]}</div>`;
+    }
     if (lesson.callout) {
+      const calloutType = lesson.callout.type || 'takeaway';
+      const typeClass = (calloutType === 'try-this' || calloutType === 'warning') ? ` ${calloutType}` : '';
+      const calloutIcon = calloutIcons[calloutType] || calloutIcons.default;
       html += `
-        <div class="lc-callout">
-          <div class="lc-callout-title">${lesson.callout.title}</div>
-          <div class="lc-callout-text">${lesson.callout.text}</div>
+        <div class="lc-callout${typeClass}">
+          <div class="lc-callout-icon">${calloutIcon}</div>
+          <div class="lc-callout-body">
+            <div class="lc-callout-title">${lesson.callout.title}</div>
+            <div class="lc-callout-text">${lesson.callout.text}</div>
+          </div>
         </div>
       `;
     }
     if (lesson.steps && lesson.steps.length) {
+      html += divider;
       html += `
         <div class="lc-section">
           <div class="lc-section-label">Action Steps</div>
@@ -5194,7 +5262,26 @@ function renderLcLesson() {
 
   html += `</div>`;
   view.innerHTML = html;
+  // Reset and tick the progress bar on every render
+  requestAnimationFrame(updateLcProgress);
 }
+
+// Updates the lesson reading progress bar based on how far the user
+// has scrolled through the lesson content.
+function updateLcProgress() {
+  const fill = document.getElementById('lc-progress-fill');
+  if (!fill) return;
+  const reader = document.querySelector('.lc-reader');
+  if (!reader) { fill.style.width = '0%'; return; }
+  const rect = reader.getBoundingClientRect();
+  const readerHeight = rect.height;
+  const scrolled = Math.max(0, -rect.top);
+  const scrollable = Math.max(1, readerHeight - window.innerHeight);
+  const pct = Math.min(100, Math.max(0, (scrolled / scrollable) * 100));
+  fill.style.width = pct + '%';
+}
+window.addEventListener('scroll', updateLcProgress, { passive: true });
+window.addEventListener('resize', updateLcProgress, { passive: true });
 
 function lcFlipCard() {
   const el = document.getElementById('fc-card');
