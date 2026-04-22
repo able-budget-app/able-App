@@ -828,11 +828,11 @@ input,select,button,textarea{font-family:inherit;}
     <div style="text-align:center;font-size:13px;color:var(--ds-t3);font-weight:600;margin-bottom:1.75rem;letter-spacing:.02em;">One plan. Full access. Cancel anytime.</div>
 
     <div class="plan-card selected" id="plan-monthly" onclick="selectPlan('monthly')">
-      <div class="plan-badge">Most popular</div>
+      <div class="plan-badge">7-day free trial</div>
       <div class="plan-card-top">
         <div>
           <div class="plan-name">Monthly</div>
-          <div class="plan-desc">Full access to all features. Cancel anytime. No questions asked.</div>
+          <div class="plan-desc">7 days free, then $9.99/month. Cancel anytime.</div>
         </div>
         <div class="plan-price">$9.99<span>/mo</span></div>
       </div>
@@ -849,8 +849,9 @@ input,select,button,textarea{font-family:inherit;}
     </div>
 
     <div style="margin-top:1.25rem;">
-      <button class="btn btn-primary" onclick="startCheckout()" id="checkout-btn">Get started →</button>
+      <button class="btn btn-primary" onclick="startCheckout()" id="checkout-btn">Start your free 7-day trial →</button>
     </div>
+    <div id="checkout-fine" style="text-align:center;margin-top:.6rem;font-size:11px;color:var(--ds-t3);font-weight:600;letter-spacing:.02em;line-height:1.5;">Card required. You won't be charged until day 8. Cancel anytime in Settings.</div>
     <div id="paywall-error" style="display:none;margin-top:.75rem;background:#fdeef2;border:1.5px solid rgba(192,64,96,.3);border-radius:var(--ds-r1);padding:12px 14px;font-size:13px;font-weight:600;color:var(--ds-c4);font-family:var(--ds-f);"></div>
     <div style="text-align:center;margin-top:1.25rem;font-size:11px;color:var(--ds-t3);font-weight:600;letter-spacing:.03em;">
       Secured by Stripe · Cancel anytime from Settings
@@ -2022,6 +2023,15 @@ function selectPlan(plan) {
   selectedPlan=plan;
   document.getElementById('plan-monthly').classList.toggle('selected',plan==='monthly');
   document.getElementById('plan-lifetime').classList.toggle('selected',plan==='lifetime');
+  const btn=document.getElementById('checkout-btn');
+  const fine=document.getElementById('checkout-fine');
+  if(plan==='monthly'){
+    if(btn) btn.textContent='Start your free 7-day trial →';
+    if(fine) fine.textContent="Card required. You won't be charged until day 8. Cancel anytime in Settings.";
+  } else {
+    if(btn) btn.textContent='Pay $34.99 →';
+    if(fine) fine.textContent='One-time payment. No recurring charges.';
+  }
 }
 
 async function startCheckout() {
