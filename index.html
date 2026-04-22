@@ -1007,6 +1007,13 @@ input,select,button,textarea{font-family:inherit;}
 <div class="page" id="page-settings">
   <div class="two-col">
     <div>
+      <div class="sec">Fixed allocations</div>
+      <div class="card">
+        <div style="font-size:13px;color:var(--ds-t2);font-weight:600;line-height:1.6;margin-bottom:1rem;">Money that comes off the top of every income, before bills. Use for contractor splits, tax set-asides, or paying yourself first.</div>
+        <div id="fa-list"></div>
+        <div id="fa-total" style="font-size:11px;font-weight:700;color:var(--ds-t3);margin-top:.5rem;"></div>
+        <button class="btn btn-primary btn-sm" style="margin-top:.75rem;" onclick="openFixedAllocModal()">+ Add rule</button>
+      </div>
       <div class="sec">Planning window</div>
       <div class="card">
         <div style="font-size:13px;color:var(--ds-t2);font-weight:600;line-height:1.6;margin-bottom:1rem;">When new money comes in, how far ahead should the allocator plan? Short windows send more money to debt. Longer windows keep more in reserve for upcoming bills.</div>
@@ -1126,6 +1133,33 @@ input,select,button,textarea{font-family:inherit;}
     <div id="preview-source" style="font-size:13px;color:var(--ds-t3);font-weight:700;margin-bottom:1rem;letter-spacing:.05em;text-transform:uppercase;"></div>
     <div id="preview-jobs"></div>
     <div class="modal-actions"><button class="btn" onclick="closeModal('modal-alloc-preview')">Close</button><button class="btn btn-primary" onclick="confirmForecastAlloc()">Confirm &amp; log it</button></div>
+  </div>
+</div>
+<div class="modal-bg" id="modal-fixed-alloc" style="display:none;">
+  <div class="modal">
+    <div class="modal-title" id="fa-modal-title">Add fixed allocation</div>
+    <div class="field" style="margin-bottom:12px;">
+      <label>Label</label>
+      <input type="text" id="fa-label" placeholder="Trainer payout, Tax set-aside, Owner draw">
+    </div>
+    <div class="form-row">
+      <div class="field"><label>Percentage</label><input type="number" id="fa-pct" min="0" max="100" step="0.1" placeholder="20"></div>
+      <div class="field"><label>Goes to</label><select id="fa-dest">
+        <option value="external_transfer">External transfer</option>
+        <option value="savings_bucket">Savings account</option>
+        <option value="holding">Holding account</option>
+        <option value="owner_pay">Owner draw</option>
+      </select></div>
+    </div>
+    <div class="field" style="margin-bottom:12px;">
+      <label>Applies to (none checked = all income)</label>
+      <div id="fa-sources" style="display:flex;flex-wrap:wrap;gap:8px;margin-top:6px;"></div>
+    </div>
+    <div id="fa-error" style="color:var(--ds-c4);font-size:13px;font-weight:600;margin-bottom:10px;display:none;"></div>
+    <div class="modal-actions">
+      <button class="btn" onclick="closeModal('modal-fixed-alloc')">Cancel</button>
+      <button class="btn btn-primary" id="fa-save-btn" onclick="saveFixedAlloc()">Save</button>
+    </div>
   </div>
 </div>
 <div class="modal-bg" id="modal-edit-income" style="display:none;">
@@ -1342,6 +1376,7 @@ async function onAuthStateChange(user) {
       S.allocated_to_bills = parseFloat(d.allocated_to_bills)||0;
       S.obligations     = d.obligations||[];
       S.profile         = d.profile||null;
+      if(normalizeFixedAllocations()) save();
       // Migration: if allocated_to_bills is missing/0 but history contains bill allocations,
       // reconstruct it from the jobs in each history entry. Prevents double-counting on upgrade.
       if(!d.allocated_to_bills && Array.isArray(S.history) && S.history.length){
@@ -1956,9 +1991,51 @@ function billDueLabel(b){
 }
 
 // ═══════════════════════════════════════
+// FIXED ALLOCATIONS (off the top, before bills)
+// ═══════════════════════════════════════
+const FA_DEST_LABELS = {
+  external_transfer: 'External transfer',
+  savings_bucket: 'Savings account',
+  holding: 'Holding account',
+  owner_pay: 'Owner draw',
+};
+
+// Normalize legacy S.obligations shape (from AI onboarding) to the new fixed-allocation shape.
+// Idempotent — safe to call repeatedly.
+function normalizeFixedAllocations() {
+  if (!Array.isArray(S.obligations)) S.obligations = [];
+  let dirty = false;
+  for (const o of S.obligations) {
+    if (!o.id) { o.id = 'fa_' + Date.now() + '_' + Math.random().toString(36).slice(2,7); dirty = true; }
+    if (!o.label && o.name) { o.label = o.name; dirty = true; }
+    if (o.percentage == null && o.value != null && (!o.type || o.type === 'percent')) {
+      o.percentage = parseFloat(o.value) || 0; dirty = true;
+    }
+    if (typeof o.percentage !== 'number') { o.percentage = 0; dirty = true; }
+    if (!o.destination) { o.destination = 'external_transfer'; dirty = true; }
+    if (!Array.isArray(o.enabledSources)) { o.enabledSources = []; dirty = true; }
+    if (o.active == null) { o.active = true; dirty = true; }
+    if (o.triggersOn && !o.note) { o.note = o.triggersOn; dirty = true; }
+  }
+  return dirty;
+}
+
+// Active fixed allocations that apply to a given source name.
+// source=null (e.g. what-if) returns only rules with empty enabledSources (apply-to-all).
+function applicableFixedAllocations(source) {
+  if (!Array.isArray(S.obligations)) return [];
+  return S.obligations.filter(o => {
+    if (!o.active) return false;
+    if (!source) return !o.enabledSources || o.enabledSources.length === 0;
+    if (!o.enabledSources || o.enabledSources.length === 0) return true;
+    return o.enabledSources.includes(source);
+  });
+}
+
+// ═══════════════════════════════════════
 // ALLOCATION ENGINE
 // ═══════════════════════════════════════
-function computeJobs(amount,useCurrentIncome=true) {
+function computeJobs(amount,source,useCurrentIncome=true) {
   // Rolling-window allocation: only reserve for bills coming due in the next N days.
   // This prevents dumping end-of-month income entirely to debt when next-month bills are about to hit.
   const winBills=billsInWindow();
@@ -1969,8 +2046,35 @@ function computeJobs(amount,useCurrentIncome=true) {
   const alreadyReserved=useCurrentIncome?(S.allocated_to_bills||0):0;
   let rem=amount;
   const jobs=[];
+  // Step 1: Fixed allocations come off the top (non-negotiable, before bills).
+  const fixedRules=applicableFixedAllocations(source);
+  for(const fa of fixedRules){
+    const cut=amount*(fa.percentage/100);
+    if(cut<=0.01) continue;
+    jobs.push({
+      name:fa.label,
+      why:`${fa.percentage}% off the top · ${FA_DEST_LABELS[fa.destination]||fa.destination}`,
+      amount:cut,
+      color:'var(--ds-c3)',
+      bg:'#fef3e0',
+      type:'fixed',
+      destination:fa.destination,
+      faId:fa.id,
+    });
+    rem-=cut;
+  }
   // How much of this incoming money needs to be reserved for upcoming window bills?
   const windowNeeded=Math.max(0,winTotal-alreadyReserved);
+  // If fixed allocations ate enough that bills can't be fully covered, warn.
+  if(windowNeeded>0.01 && rem<windowNeeded-0.01){
+    const shortfall=windowNeeded-rem;
+    jobs.unshift({
+      type:'warning',
+      name:'Fixed allocations left '+fr(shortfall)+' short on bills',
+      why:'Bills due in the next '+allocWindow()+' days total '+fr(windowNeeded)+' but only '+fr(Math.max(0,rem))+' is left after fixed allocations. Pause a rule or cover the gap from buffer.',
+      amount:0,
+    });
+  }
   if(windowNeeded>0.01){
     let rem4b=Math.min(rem,windowNeeded);
     // Track how much of the already-reserved bills money belongs to each priority bucket,
@@ -2054,15 +2158,27 @@ function computeJobs(amount,useCurrentIncome=true) {
 
 function renderJobList(jobs,amount,container){
   container.innerHTML='';
+  // Render warning banners first (not counted in numbering)
+  let numbered=0;
   jobs.forEach((job,i)=>{
+    if(job.type==='warning'){
+      const w=document.createElement('div');
+      w.style.cssText='background:#fdeef2;border:1.5px solid rgba(192,64,96,.3);border-radius:var(--ds-r2);padding:12px 14px;margin-bottom:9px;color:var(--ds-c4);font-family:var(--ds-f);animation:popIn .35s cubic-bezier(.34,1.56,.64,1) forwards;opacity:0;transform:scale(.96) translateY(6px);';
+      w.style.animationDelay=(i*0.07)+'s';
+      w.innerHTML=`<div style="font-weight:800;font-size:13px;margin-bottom:3px;letter-spacing:-.01em;">${job.name}</div><div style="font-size:11px;font-weight:600;line-height:1.5;color:var(--ds-t2);">${job.why||''}</div>`;
+      container.appendChild(w);
+      return;
+    }
+    numbered++;
     const pct=Math.round((job.amount/amount)*100);
     const d=document.createElement('div');
     d.className='job-item';
     d.style.animationDelay=(i*0.07)+'s';
     d.style.borderLeftWidth='4px';
     d.style.borderLeftColor=job.color;
-    d.innerHTML=`<div class="job-num" style="background:${job.bg};color:${job.color};">${i+1}</div>
-      <div class="job-info"><div class="job-name">${job.name}</div><div class="job-why">${job.why}</div>
+    const badge=job.type==='fixed'?`<span style="display:inline-block;font-size:9px;font-weight:800;color:var(--ds-c3);background:#fef3e0;padding:2px 7px;border-radius:100px;letter-spacing:.04em;margin-left:6px;vertical-align:middle;">OFF THE TOP</span>`:'';
+    d.innerHTML=`<div class="job-num" style="background:${job.bg};color:${job.color};">${numbered}</div>
+      <div class="job-info"><div class="job-name">${job.name}${badge}</div><div class="job-why">${job.why}</div>
       <div class="prog-wrap" style="margin-top:6px;"><div class="prog-bar" style="width:${pct}%;background:${job.color};"></div></div></div>
       <div class="job-right"><div class="job-amt" style="color:${job.color};">${f2(job.amount)}</div><div class="job-pct">${pct}%</div></div>`;
     container.appendChild(d);
@@ -2108,7 +2224,7 @@ function allocate(){
   const amount=parseFloat(document.getElementById('inc-amount').value);
   const source=document.getElementById('inc-source').value;
   if(!amount||amount<=0){document.getElementById('inc-amount').focus();return;}
-  const jobs=computeJobs(amount);
+  const jobs=computeJobs(amount,source);
   applyJobs(jobs,amount,source);
   document.getElementById('alloc-result').style.display='block';
   document.getElementById('alloc-amt').textContent=f2(amount);
@@ -2374,7 +2490,7 @@ function saveEditIncome(){
   reverseJobs(entry);
   S.history.splice(idx,1);
   save();
-  const jobs=computeJobs(newAmt);
+  const jobs=computeJobs(newAmt,newSrc);
   applyJobs(jobs,newAmt,newSrc);
   refreshHome();renderDebtPage();
   document.getElementById('alloc-result').style.display='block';
@@ -2733,7 +2849,7 @@ function renderForecast(){
 }
 function gotMoney(i){
   const f=S.forecast[i];
-  const jobs=computeJobs(f.amount);
+  const jobs=computeJobs(f.amount,f.source);
   _pendingForecastIdx=i;_pendingForecastJobs=jobs;
   document.getElementById('preview-source').textContent=`${f2(f.amount)} from ${f.source}${f.note?' ('+f.note+')':''}`;
   renderJobList(jobs,f.amount,document.getElementById('preview-jobs'));
@@ -2950,7 +3066,7 @@ function runWhatIf(){
   if(amount<=0){document.getElementById('wi-result').style.display='none';document.getElementById('wi-empty').style.display='block';return;}
   document.getElementById('wi-result').style.display='block';
   document.getElementById('wi-empty').style.display='none';
-  const jobs=computeJobs(amount);
+  const jobs=computeJobs(amount,null);
   renderJobList(jobs,amount,document.getElementById('wi-job-list'));
   const debtJob=jobs.find(j=>j.type==='debt');
   if(debtJob&&S.debts.length){
@@ -2964,7 +3080,7 @@ function saveWhatIfScenario(){
   const amount=parseFloat(document.getElementById('wi-amount').value)||0;
   if(!amount)return;
   const label=document.getElementById('wi-label').value.trim()||`$${Math.round(amount).toLocaleString()} scenario`;
-  const jobs=computeJobs(amount);
+  const jobs=computeJobs(amount,null);
   wiScenarios.push({label,amount,jobs});
   renderWiScenarios();
 }
@@ -2994,7 +3110,7 @@ function loadSettingsPage(){
     b.classList.toggle('btn-primary',w===win);
   });
   updateWindowHint(win);
-  updateSplitPreview();renderSourcesList();
+  updateSplitPreview();renderSourcesList();renderFixedAllocList();
 }
 function selectWindow(w){
   S.settings.allocateWindow=w;
@@ -3086,6 +3202,138 @@ function addSource(){
 function removeSource(i){
   if(!S.sources||S.sources.length<=1)return;
   S.sources.splice(i,1);save();renderSourcesList();populateSources();
+}
+
+// ═══════════════════════════════════════
+// FIXED ALLOCATIONS — UI
+// ═══════════════════════════════════════
+function renderFixedAllocList(){
+  const el=document.getElementById('fa-list');
+  const totalEl=document.getElementById('fa-total');
+  if(!el) return;
+  normalizeFixedAllocations();
+  if(!S.obligations||!S.obligations.length){
+    el.innerHTML='<div style="font-size:12px;color:var(--ds-t3);font-weight:600;font-style:italic;">No rules yet. Add one for contractor splits, taxes, or paying yourself first.</div>';
+    if(totalEl) totalEl.textContent='';
+    return;
+  }
+  el.innerHTML='';
+  S.obligations.forEach((o,i)=>{
+    const scope=(o.enabledSources&&o.enabledSources.length)?o.enabledSources.join(', '):'all income';
+    const destLabel=FA_DEST_LABELS[o.destination]||o.destination;
+    const d=document.createElement('div');
+    d.style.cssText='display:flex;align-items:center;gap:10px;padding:10px 12px;background:var(--ds-page);border-radius:var(--ds-r1);margin-bottom:6px;'+(o.active?'':'opacity:.5;');
+    d.innerHTML=`
+      <button class="checkbtn${o.active?' checked':''}" onclick="toggleFixedAlloc(${i})" title="${o.active?'Active':'Paused'}">${o.active?'✓':''}</button>
+      <div style="flex:1;min-width:0;">
+        <div style="font-size:13px;font-weight:800;color:var(--ds-t1);letter-spacing:-.01em;">${escapeFa(o.label||'Unnamed rule')} <span style="font-size:10px;font-weight:700;color:var(--ds-c3);">${o.percentage}%</span></div>
+        <div style="font-size:11px;color:var(--ds-t3);font-weight:600;margin-top:2px;">${escapeFa(destLabel)} · ${escapeFa(scope)}</div>
+      </div>
+      <button class="btn btn-sm btn-ghost" onclick="openFixedAllocModal(${i})" style="padding:4px 8px;font-size:11px;">Edit</button>
+      <button class="btn btn-danger-ghost btn-sm" onclick="deleteFixedAlloc(${i})">✕</button>`;
+    el.appendChild(d);
+  });
+  const sumActive=S.obligations.filter(o=>o.active).reduce((s,o)=>s+(o.percentage||0),0);
+  if(totalEl){
+    if(sumActive>100){
+      totalEl.innerHTML=`<span style="color:var(--ds-c4);">Total active: ${sumActive.toFixed(1)}% — over 100%. Reduce or pause a rule.</span>`;
+    } else {
+      totalEl.textContent=`Total active: ${sumActive.toFixed(1)}% of every income`;
+    }
+  }
+}
+
+function escapeFa(s){return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');}
+
+function openFixedAllocModal(idx){
+  const modal=document.getElementById('modal-fixed-alloc');
+  const titleEl=document.getElementById('fa-modal-title');
+  const saveBtn=document.getElementById('fa-save-btn');
+  const errEl=document.getElementById('fa-error');
+  errEl.style.display='none';
+  const sourcesEl=document.getElementById('fa-sources');
+  const sources=S.sources||[];
+  // Render source checkboxes
+  sourcesEl.innerHTML=sources.map((s,i)=>`
+    <label style="display:inline-flex;align-items:center;gap:6px;padding:6px 10px;background:var(--ds-page);border-radius:100px;font-size:12px;font-weight:700;color:var(--ds-t1);cursor:pointer;">
+      <input type="checkbox" class="fa-src-check" data-source="${escapeFa(s)}" style="margin:0;">
+      ${escapeFa(s)}
+    </label>`).join('');
+  if(typeof idx==='number'){
+    const o=S.obligations[idx];
+    if(!o) return;
+    modal.dataset.editIdx=idx;
+    titleEl.textContent='Edit fixed allocation';
+    saveBtn.textContent='Save';
+    document.getElementById('fa-label').value=o.label||'';
+    document.getElementById('fa-pct').value=o.percentage||'';
+    document.getElementById('fa-dest').value=o.destination||'external_transfer';
+    setTimeout(()=>{
+      document.querySelectorAll('.fa-src-check').forEach(cb=>{
+        cb.checked=(o.enabledSources||[]).includes(cb.dataset.source);
+      });
+    },0);
+  } else {
+    delete modal.dataset.editIdx;
+    titleEl.textContent='Add fixed allocation';
+    saveBtn.textContent='Add';
+    document.getElementById('fa-label').value='';
+    document.getElementById('fa-pct').value='';
+    document.getElementById('fa-dest').value='external_transfer';
+  }
+  modal.style.display='flex';
+  setTimeout(()=>document.getElementById('fa-label').focus(),50);
+}
+
+function saveFixedAlloc(){
+  const modal=document.getElementById('modal-fixed-alloc');
+  const errEl=document.getElementById('fa-error');
+  const label=document.getElementById('fa-label').value.trim();
+  const pct=parseFloat(document.getElementById('fa-pct').value);
+  const dest=document.getElementById('fa-dest').value;
+  const checked=[...document.querySelectorAll('.fa-src-check')].filter(c=>c.checked).map(c=>c.dataset.source);
+  const showErr=(m)=>{errEl.textContent=m;errEl.style.display='block';};
+  if(!label){showErr('Give the rule a label.');return;}
+  if(isNaN(pct)||pct<=0){showErr('Percentage must be greater than zero.');return;}
+  if(pct>100){showErr('Percentage cannot exceed 100.');return;}
+  // Check total of active doesn't exceed 100
+  const editIdx=modal.dataset.editIdx;
+  const others=S.obligations.filter((o,i)=>o.active && String(i)!==String(editIdx));
+  const otherSum=others.reduce((s,o)=>s+(o.percentage||0),0);
+  if(otherSum+pct>100.0001){
+    showErr(`Total would be ${(otherSum+pct).toFixed(1)}%. Active rules can't sum above 100%.`);
+    return;
+  }
+  if(editIdx!==undefined){
+    const o=S.obligations[parseInt(editIdx)];
+    o.label=label;o.percentage=pct;o.destination=dest;o.enabledSources=checked;
+    delete modal.dataset.editIdx;
+  } else {
+    S.obligations.push({
+      id:'fa_'+Date.now()+'_'+Math.random().toString(36).slice(2,7),
+      label,percentage:pct,destination:dest,enabledSources:checked,active:true,
+    });
+  }
+  save();renderFixedAllocList();closeModal('modal-fixed-alloc');
+}
+
+function toggleFixedAlloc(i){
+  const o=S.obligations[i];if(!o) return;
+  // If activating, ensure total wouldn't exceed 100
+  if(!o.active){
+    const otherSum=S.obligations.filter((x,j)=>x.active&&j!==i).reduce((s,x)=>s+(x.percentage||0),0);
+    if(otherSum+o.percentage>100.0001){
+      alert(`Can't activate: total would be ${(otherSum+o.percentage).toFixed(1)}%. Adjust other rules first.`);
+      return;
+    }
+  }
+  o.active=!o.active;save();renderFixedAllocList();
+}
+
+function deleteFixedAlloc(i){
+  const o=S.obligations[i];if(!o) return;
+  if(!confirm(`Delete "${o.label}"?`)) return;
+  S.obligations.splice(i,1);save();renderFixedAllocList();
 }
 
 // ═══════════════════════════════════════
