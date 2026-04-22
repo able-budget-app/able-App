@@ -1253,6 +1253,24 @@ input,select,button,textarea{font-family:inherit;}
           <button class="btn btn-primary btn-sm" onclick="addSource()">Add</button>
         </div>
       </div>
+      <div class="sec">Email reminders</div>
+      <div class="card">
+        <div style="font-size:13px;color:var(--ds-t2);font-weight:600;line-height:1.6;margin-bottom:1rem;">We'll send these to the email on file. Unsubscribe anytime.</div>
+        <label style="display:flex;align-items:flex-start;gap:12px;padding:12px 0;border-bottom:1px solid var(--ds-t4);cursor:pointer;">
+          <input type="checkbox" id="ep-dormancy" onchange="toggleEmailPref('dormancy',this.checked)" style="width:20px;height:20px;accent-color:var(--ds-green);margin-top:1px;flex-shrink:0;">
+          <div style="flex:1;">
+            <div style="font-weight:700;font-size:14px;color:var(--ds-t1);">Check-in nudge</div>
+            <div style="font-size:12px;color:var(--ds-t3);font-weight:600;margin-top:3px;line-height:1.5;">If you haven't opened Able in 5 days, we'll send a gentle reminder.</div>
+          </div>
+        </label>
+        <label style="display:flex;align-items:flex-start;gap:12px;padding:12px 0;cursor:pointer;">
+          <input type="checkbox" id="ep-weekly" onchange="toggleEmailPref('weekly',this.checked)" style="width:20px;height:20px;accent-color:var(--ds-green);margin-top:1px;flex-shrink:0;">
+          <div style="flex:1;">
+            <div style="font-weight:700;font-size:14px;color:var(--ds-t1);">Weekly summary</div>
+            <div style="font-size:12px;color:var(--ds-t3);font-weight:600;margin-top:3px;line-height:1.5;">Every Monday: income logged, bills paid, debt paydown, where your buffer stands.</div>
+          </div>
+        </label>
+      </div>
       <div class="sec">Account</div>
       <div class="card" style="display:flex;flex-direction:column;gap:10px;">
         <div style="font-size:13px;font-weight:600;color:var(--ds-t2);margin-bottom:6px;">Signed in as <strong id="settings-email" style="color:var(--ds-t1);"></strong></div>
@@ -1421,7 +1439,8 @@ const EMPTY_DATA = {
   settings:{debtPct:20,bufPct:15,freePct:5,ownerPct:0,allocateWindow:14},
   month_history:[], sources:['Salary','Freelance','Side income','Other'],
   allocated_to_bills:0,
-  obligations:[], profile:null
+  obligations:[], profile:null,
+  email_prefs:{dormancy:true, weekly:true}
 };
 let S = JSON.parse(JSON.stringify(EMPTY_DATA));
 let currentUser = null;
@@ -1601,6 +1620,7 @@ async function onAuthStateChange(user) {
       S.allocated_to_bills = parseFloat(d.allocated_to_bills)||0;
       S.obligations     = d.obligations||[];
       S.profile         = d.profile||null;
+      S.email_prefs     = d.email_prefs || {dormancy:true, weekly:true};
       if(normalizeFixedAllocations()) save();
       // Migration: if allocated_to_bills is missing/0 but history contains bill allocations,
       // reconstruct it from the jobs in each history entry. Prevents double-counting on upgrade.
@@ -1614,6 +1634,7 @@ async function onAuthStateChange(user) {
       }
     }
     setSyncState('ok');
+    touchLastActive();
 
     // Remove checkout return loading overlay if present
     const coLoader = document.getElementById('checkout-return-loading');
@@ -2071,10 +2092,18 @@ async function save() {
       month_history:S.month_history, sources:S.sources,
       allocated_to_bills:S.allocated_to_bills,
       obligations:S.obligations||[], profile:S.profile||null,
+      email_prefs:S.email_prefs||{dormancy:true,weekly:true},
       updated_at:new Date().toISOString()
     });
     setSyncState(error?'error':'ok');
   },800);
+}
+
+async function touchLastActive(){
+  if(!currentUser || !sbGet()) return;
+  try {
+    await sbGet().from('user_data').update({last_active:new Date().toISOString()}).eq('id',currentUser.id);
+  } catch(e) { /* silent */ }
 }
 
 // Immediate save (for onboarding completion) - no debounce
@@ -2088,6 +2117,7 @@ async function saveUserData() {
     month_history:S.month_history, sources:S.sources,
     allocated_to_bills:S.allocated_to_bills,
     obligations:S.obligations||[], profile:S.profile||null,
+    email_prefs:S.email_prefs||{dormancy:true,weekly:true},
     updated_at:new Date().toISOString()
   });
   setSyncState(error?'error':'ok');
@@ -3383,6 +3413,17 @@ function loadSettingsPage(){
   });
   updateWindowHint(win);
   updateSplitPreview();renderSourcesList();renderFixedAllocList();
+  const ep = S.email_prefs || {dormancy:true,weekly:true};
+  const epDorm = document.getElementById('ep-dormancy');
+  const epWeek = document.getElementById('ep-weekly');
+  if(epDorm) epDorm.checked = ep.dormancy !== false;
+  if(epWeek) epWeek.checked = ep.weekly !== false;
+}
+
+function toggleEmailPref(key,val){
+  if(!S.email_prefs) S.email_prefs = {dormancy:true,weekly:true};
+  S.email_prefs[key] = !!val;
+  save();
 }
 function selectWindow(w){
   S.settings.allocateWindow=w;
@@ -6862,6 +6903,10 @@ function coachEscapeHtml(s) {
   return String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
 }
 
+function coachRenderMarkdown(s) {
+  return coachEscapeHtml(s).replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>');
+}
+
 async function coachLoadHistory() {
   if (coachHistory !== null) return coachHistory;
   try {
@@ -6956,7 +7001,8 @@ function renderCoachMessages(history) {
   }
   view.innerHTML = history.map(m => {
     const cls = m.role === 'user' ? 'user' : 'coach';
-    return `<div class="coach-bubble ${cls}">${coachEscapeHtml(m.content)}</div>`;
+    const rendered = m.role === 'user' ? coachEscapeHtml(m.content) : coachRenderMarkdown(m.content);
+    return `<div class="coach-bubble ${cls}">${rendered}</div>`;
   }).join('');
   view.scrollTop = view.scrollHeight;
 }
@@ -6990,7 +7036,8 @@ async function coachSend() {
   const view = document.getElementById('coach-messages');
   view.innerHTML = coachHistory.map(m => {
     const cls = m.role === 'user' ? 'user' : 'coach';
-    return `<div class="coach-bubble ${cls}">${coachEscapeHtml(m.content)}</div>`;
+    const rendered = m.role === 'user' ? coachEscapeHtml(m.content) : coachRenderMarkdown(m.content);
+    return `<div class="coach-bubble ${cls}">${rendered}</div>`;
   }).join('') + '<div class="coach-bubble loading">Coach is thinking</div>';
   view.scrollTop = view.scrollHeight;
 
