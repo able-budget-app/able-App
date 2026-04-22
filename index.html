@@ -163,9 +163,8 @@ input,select,button,textarea{font-family:inherit;}
 @media(max-width:800px){
   .nav{position:fixed;bottom:0;left:0;right:0;top:auto;height:auto;border-top:1px solid var(--ds-t4);border-bottom:none;padding:8px 0 calc(14px + env(safe-area-inset-bottom));background:rgba(240,247,242,.96);backdrop-filter:blur(24px);-webkit-backdrop-filter:blur(24px);box-shadow:0 -2px 10px rgba(0,0,0,.04);flex-direction:column;gap:0;touch-action:pan-x;will-change:transform;transform:translate3d(0,0,0);z-index:50;}
   .nav > .logo, .nav > .nav-right{display:none;}
-  .nav-tabs{background:transparent;padding:4px 12px;gap:4px;width:100%;justify-content:flex-start;border-radius:0;overflow-x:auto;overflow-y:hidden;-webkit-overflow-scrolling:touch;scroll-snap-type:x proximity;scroll-padding-left:12px;mask-image:linear-gradient(to right, transparent 0, #000 12px, #000 calc(100% - 24px), transparent 100%);-webkit-mask-image:linear-gradient(to right, transparent 0, #000 12px, #000 calc(100% - 24px), transparent 100%);touch-action:pan-x;}
-  .nav-tabs::-webkit-scrollbar{display:none;}
-  .nav-tab{flex-direction:column;align-items:center;justify-content:center;gap:4px;padding:10px 14px;border-radius:16px;font-size:11px;font-weight:800;letter-spacing:.03em;text-transform:uppercase;flex:0 0 auto;min-width:78px;min-height:58px;scroll-snap-align:start;touch-action:manipulation;}
+  .nav-tabs{background:transparent;padding:4px 8px;gap:4px;width:100%;justify-content:space-around;border-radius:0;}
+  .nav-tab{flex-direction:column;align-items:center;justify-content:center;gap:4px;padding:10px 8px;border-radius:16px;font-size:11px;font-weight:800;letter-spacing:.03em;text-transform:uppercase;flex:1 1 0;min-width:0;min-height:58px;touch-action:manipulation;}
   .nav-tab.active{background:var(--ds-card);box-shadow:0 2px 10px rgba(42,122,74,.15);}
   .nav-tab-icon svg{width:24px;height:24px;stroke-width:2;}
   .nav-tab-label{font-size:11px;font-weight:800;letter-spacing:.03em;line-height:1;white-space:nowrap;}
@@ -548,6 +547,35 @@ input,select,button,textarea{font-family:inherit;}
 .tour-skip{background:transparent;color:rgba(255,255,255,.55);border:none;font-family:var(--ds-f);font-weight:700;font-size:12px;cursor:pointer;padding:6px 10px;}
 .tour-skip:hover{color:var(--white);}
 
+/* ═══════ SUB-NAV (Plan / More) ═══════ */
+.sub-nav{max-width:980px;margin:0 auto;padding:1rem 1.5rem 0;}
+.sub-nav-inner{display:flex;gap:4px;background:var(--ds-green-l);border-radius:100px;padding:4px;width:fit-content;flex-wrap:wrap;}
+.sub-tab{padding:7px 14px;border:none;border-radius:100px;background:transparent;color:var(--ds-t2);font-family:var(--ds-f);font-size:12px;font-weight:700;cursor:pointer;transition:all .2s;letter-spacing:-.01em;white-space:nowrap;}
+.sub-tab:hover:not(.active){color:var(--ds-green);}
+.sub-tab.active{background:var(--ds-card);color:var(--ds-green);box-shadow:0 2px 6px rgba(42,122,74,.12);}
+@media(max-width:540px){
+  .sub-nav{padding:.75rem 1rem 0;}
+  .sub-nav-inner{width:100%;justify-content:space-between;}
+  .sub-tab{flex:1;text-align:center;padding:7px 8px;font-size:11px;}
+}
+
+/* ═══════ COACH FAB + SLIDE-UP PANEL ═══════ */
+.coach-fab{position:fixed;bottom:1.5rem;right:1.5rem;width:56px;height:56px;border-radius:50%;background:linear-gradient(135deg,#2a7a4a,#3d9e78);color:white;border:none;box-shadow:0 6px 20px rgba(42,122,74,.4);cursor:pointer;display:flex;align-items:center;justify-content:center;z-index:150;transition:transform .18s,box-shadow .18s;font-family:var(--ds-f);}
+.coach-fab:hover{transform:translateY(-2px);box-shadow:0 10px 28px rgba(42,122,74,.5);}
+.coach-fab:active{transform:scale(.95);}
+.coach-fab svg{width:24px;height:24px;}
+@media(max-width:800px){
+  .coach-fab{bottom:calc(92px + env(safe-area-inset-bottom));right:1rem;width:52px;height:52px;}
+}
+.coach-panel-bg{position:fixed;inset:0;background:rgba(17,28,22,.45);z-index:250;display:flex;align-items:flex-end;justify-content:center;backdrop-filter:blur(6px);animation:modalFadeIn .2s ease;}
+.coach-panel{background:var(--ds-card);border-radius:var(--ds-r3) var(--ds-r3) 0 0;width:100%;max-width:680px;max-height:90vh;max-height:90dvh;padding:1.5rem 1.5rem 1rem;display:flex;flex-direction:column;box-shadow:var(--ds-sh3);animation:sheetSlideUp .3s cubic-bezier(.34,1.2,.64,1);}
+@media(min-width:801px){.coach-panel{margin-bottom:2rem;border-radius:var(--ds-r3);}.coach-panel-bg{align-items:center;}}
+.coach-panel-header{display:flex;justify-content:space-between;align-items:flex-start;gap:12px;padding-bottom:1rem;border-bottom:1px solid var(--ds-t4);margin-bottom:.5rem;}
+.coach-close{background:transparent;border:none;color:var(--ds-t3);font-size:18px;cursor:pointer;width:32px;height:32px;border-radius:50%;transition:all .15s;display:flex;align-items:center;justify-content:center;flex-shrink:0;font-family:var(--ds-f);}
+.coach-close:hover{background:var(--ds-green-l);color:var(--ds-green);}
+.coach-panel .coach-messages{min-height:200px;max-height:55vh;max-height:55dvh;}
+.coach-panel .coach-input-wrap{position:static;padding:.5rem 0 0;}
+
 /* ═══════ COACH ═══════ */
 .coach-wrap{max-width:760px;margin:0 auto;display:flex;flex-direction:column;min-height:calc(100vh - 180px);min-height:calc(100dvh - 180px);}
 .coach-header{margin-bottom:1rem;}
@@ -694,41 +722,21 @@ input,select,button,textarea{font-family:inherit;}
 <div class="nav">
   <div class="logo">Able</div>
   <div class="nav-tabs">
-    <button class="nav-tab active" onclick="goTo('home',this)">
+    <button class="nav-tab active" data-group="home" onclick="goTo('home')">
       <span class="nav-tab-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg></span>
       <span class="nav-tab-label">Allocate</span>
     </button>
-    <button class="nav-tab" onclick="goTo('forecast',this)">
-      <span class="nav-tab-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg></span>
-      <span class="nav-tab-label">Forecast</span>
+    <button class="nav-tab" data-group="plan" onclick="goTo('plan')">
+      <span class="nav-tab-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 11H3v10h6V11z"/><path d="M15 3h6v18h-6V3z"/><path d="M9 3H3v4h6V3z"/><path d="M21 11h-6v4h6v-4z" style="display:none"/></svg></span>
+      <span class="nav-tab-label">Plan</span>
     </button>
-    <button class="nav-tab" onclick="goTo('debt',this)">
-      <span class="nav-tab-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polyline points="23 18 13.5 8.5 8.5 13.5 1 6"/><polyline points="17 18 23 18 23 12"/></svg></span>
-      <span class="nav-tab-label">Debt</span>
-    </button>
-    <button class="nav-tab" onclick="goTo('bills',this)">
-      <span class="nav-tab-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><rect x="8" y="2" width="8" height="4" rx="1" ry="1"/><path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"/><line x1="9" y1="12" x2="15" y2="12"/><line x1="9" y1="16" x2="15" y2="16"/></svg></span>
-      <span class="nav-tab-label">Bills</span>
-    </button>
-    <button class="nav-tab" onclick="goTo('score',this)">
+    <button class="nav-tab" data-group="score" onclick="goTo('score')">
       <span class="nav-tab-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg></span>
       <span class="nav-tab-label">Score</span>
     </button>
-    <button class="nav-tab" onclick="goTo('whatif',this)">
-      <span class="nav-tab-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M9.663 17h4.673M12 3v1M3.34 7l.7.7M20.66 7l-.7.7M12 21a6 6 0 0 0 4-10.47V9a4 4 0 0 0-8 0v1.53A6 6 0 0 0 12 21z"/></svg></span>
-      <span class="nav-tab-label">What-if</span>
-    </button>
-    <button class="nav-tab" onclick="goTo('learn',this)">
-      <span class="nav-tab-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19.5v-15A2.5 2.5 0 0 1 6.5 2H20v20H6.5a2.5 2.5 0 0 1 0-5H20"/></svg></span>
-      <span class="nav-tab-label">Learn</span>
-    </button>
-    <button class="nav-tab" onclick="goTo('coach',this)">
-      <span class="nav-tab-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg></span>
-      <span class="nav-tab-label">Coach</span>
-    </button>
-    <button class="nav-tab" onclick="goTo('settings',this)">
-      <span class="nav-tab-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg></span>
-      <span class="nav-tab-label">Settings</span>
+    <button class="nav-tab" data-group="more" onclick="goTo('more')">
+      <span class="nav-tab-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="5" r="1.5"/><circle cx="12" cy="12" r="1.5"/><circle cx="12" cy="19" r="1.5"/></svg></span>
+      <span class="nav-tab-label">More</span>
     </button>
   </div>
   <div class="nav-right">
@@ -738,6 +746,22 @@ input,select,button,textarea{font-family:inherit;}
       <span class="nav-user" id="nav-user"></span>
     </div>
     <button class="btn btn-sm btn-ghost" onclick="doSignOut()">Sign out</button>
+  </div>
+</div>
+
+<!-- Sub-navigation for grouped tabs. Visible when the group is active. -->
+<div class="sub-nav" id="sub-nav-plan" style="display:none;">
+  <div class="sub-nav-inner">
+    <button class="sub-tab" data-sub="forecast" onclick="goTo('forecast')">Forecast</button>
+    <button class="sub-tab" data-sub="bills" onclick="goTo('bills')">Bills</button>
+    <button class="sub-tab" data-sub="debt" onclick="goTo('debt')">Debt</button>
+    <button class="sub-tab" data-sub="whatif" onclick="goTo('whatif')">What-if</button>
+  </div>
+</div>
+<div class="sub-nav" id="sub-nav-more" style="display:none;">
+  <div class="sub-nav-inner">
+    <button class="sub-tab" data-sub="learn" onclick="goTo('learn')">Learn</button>
+    <button class="sub-tab" data-sub="settings" onclick="goTo('settings')">Settings</button>
   </div>
 </div>
 
@@ -1079,12 +1103,20 @@ input,select,button,textarea{font-family:inherit;}
   <div id="lc-view"></div>
 </div>
 
-<!-- COACH -->
-<div class="page" id="page-coach">
-  <div class="coach-wrap">
-    <div class="coach-header">
-      <div class="coach-title">Coach</div>
-      <div class="coach-sub">Ask anything about your money. I see your bills, debts, buffer, and income.</div>
+<!-- Floating Coach FAB (visible on every main tab) -->
+<button class="coach-fab" id="coach-fab" onclick="openCoachPanel()" aria-label="Ask Coach">
+  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+</button>
+
+<!-- Coach slide-up panel -->
+<div class="coach-panel-bg" id="coach-panel-bg" style="display:none;" onclick="if(event.target===this)closeCoachPanel()">
+  <div class="coach-panel">
+    <div class="coach-panel-header">
+      <div>
+        <div style="font-family:var(--ds-f);font-size:1.25rem;font-weight:800;color:var(--ds-t1);letter-spacing:-.02em;">Coach</div>
+        <div style="font-size:12px;color:var(--ds-t2);font-weight:600;margin-top:2px;">Ask anything about your money. I see your bills, debts, buffer, and income.</div>
+      </div>
+      <button class="coach-close" onclick="closeCoachPanel()" aria-label="Close">✕</button>
     </div>
     <div class="coach-messages" id="coach-messages"></div>
     <div class="coach-input-wrap">
@@ -3457,23 +3489,68 @@ async function clearAllData(){
 // ═══════════════════════════════════════
 // NAV
 // ═══════════════════════════════════════
-function goTo(id,btn){
+const PAGE_TO_GROUP = {
+  home:'home',
+  forecast:'plan', bills:'plan', debt:'plan', whatif:'plan',
+  score:'score',
+  learn:'more', settings:'more',
+};
+const GROUP_DEFAULT = { plan:'forecast', more:'learn' };
+
+function goTo(target){
+  // Accept either a group name (Plan / More) or a specific page id.
+  const redirect = GROUP_DEFAULT[target];
+  const page = redirect || target;
+  const group = PAGE_TO_GROUP[page] || page;
+
+  // Swap active page
   document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
+  const pageEl = document.getElementById('page-'+page);
+  if(pageEl) pageEl.classList.add('active');
+
+  // Highlight main nav tab for this group
   document.querySelectorAll('.nav-tab').forEach(t=>t.classList.remove('active'));
-  document.getElementById('page-'+id).classList.add('active');
-  btn.classList.add('active');
-  // Scroll the active tab into view inside the scrollable nav-tabs container on mobile.
-  try{btn.scrollIntoView({behavior:'smooth',block:'nearest',inline:'center'});}catch(e){}
-  // Scroll page content to top when switching tabs so the user always starts at the top.
+  const mainTab = document.querySelector(`.nav-tab[data-group="${group}"]`);
+  if(mainTab){
+    mainTab.classList.add('active');
+    try{mainTab.scrollIntoView({behavior:'smooth',block:'nearest',inline:'center'});}catch(e){}
+  }
+
+  // Show/hide sub-nav for the active group, highlight the active sub-tab
+  document.querySelectorAll('.sub-nav').forEach(s=>s.style.display='none');
+  const subNav = document.getElementById('sub-nav-'+group);
+  if(subNav){
+    subNav.style.display='block';
+    subNav.querySelectorAll('.sub-tab').forEach(t=>t.classList.remove('active'));
+    const subTab = subNav.querySelector(`.sub-tab[data-sub="${page}"]`);
+    if(subTab) subTab.classList.add('active');
+  }
+
   window.scrollTo({top:0,behavior:'instant'});
-  if(id==='debt')renderDebtPage();
-  if(id==='bills')renderBillsPage();
-  if(id==='score')renderScore();
-  if(id==='forecast')renderForecast();
-  if(id==='settings')loadSettingsPage();
-  if(id==='whatif'){document.getElementById('wi-empty').style.display='block';document.getElementById('wi-result').style.display='none';}
-  if(id==='learn')renderLearn();
-  if(id==='coach')renderCoach();
+  if(page==='debt')renderDebtPage();
+  if(page==='bills')renderBillsPage();
+  if(page==='score')renderScore();
+  if(page==='forecast')renderForecast();
+  if(page==='settings')loadSettingsPage();
+  if(page==='whatif'){document.getElementById('wi-empty').style.display='block';document.getElementById('wi-result').style.display='none';}
+  if(page==='learn')renderLearn();
+}
+
+// ═══════════════════════════════════════
+// COACH PANEL (floating button)
+// ═══════════════════════════════════════
+function openCoachPanel(){
+  const bg = document.getElementById('coach-panel-bg');
+  if(!bg) return;
+  bg.style.display='flex';
+  document.body.style.overflow='hidden';
+  renderCoach();
+}
+function closeCoachPanel(){
+  const bg = document.getElementById('coach-panel-bg');
+  if(!bg) return;
+  bg.style.display='none';
+  document.body.style.overflow='';
 }
 
 // ═══════════════════════════════════════
@@ -3483,22 +3560,12 @@ const TOUR_STEPS = [
   {
     tab: 'home',
     title: "Money came in? Start here.",
-    body: "Pick the source, enter the amount, and Able splits it across your bills, debt, and buffer automatically."
+    body: "Pick the source, enter the amount, and Able splits it across bills, debt, buffer, and your own pay."
   },
   {
-    tab: 'forecast',
-    title: "Look ahead",
-    body: "See what's coming. Bills due, expected income, and any gaps you'll need to plan around."
-  },
-  {
-    tab: 'debt',
-    title: "Watch debt shrink",
-    body: "Every credit card, loan, and balance lives here. Track minimums, rates, and payoff progress."
-  },
-  {
-    tab: 'bills',
-    title: "Your monthly bills",
-    body: "Everything that repeats each month. When one's paid, it gets marked off so it won't pull money next allocation."
+    tab: 'plan',
+    title: "Plan ahead",
+    body: "Your bills, debts, income forecast, and what-if scenarios. One tab, sub-tabs inside."
   },
   {
     tab: 'score',
@@ -3506,14 +3573,9 @@ const TOUR_STEPS = [
     body: "A score for how well you're sticking to the plan. Higher means fewer surprises."
   },
   {
-    tab: 'whatif',
-    title: "Run the numbers",
-    body: "Thinking about a raise? A big purchase? Extra debt payment? Test it here before committing."
-  },
-  {
-    tab: 'settings',
-    title: "Make it yours",
-    body: "Tweak how extra money splits between debt, buffer, and free spending. Replay this tour anytime from here."
+    tab: 'more',
+    title: "Learn and adjust",
+    body: "Articles, settings, account. The green chat button in the corner is Coach. Tap any time for advice on your actual numbers."
   }
 ];
 
@@ -3529,14 +3591,10 @@ function renderTourStep() {
   const step = TOUR_STEPS[tourStep];
   if(!step) return endTour(true);
 
-  // Click the correct nav tab
-  const navTabs = document.querySelectorAll('.nav-tab');
-  let targetTab = null;
-  navTabs.forEach(tab => {
-    if(tab.getAttribute('onclick')?.includes(`'${step.tab}'`)) targetTab = tab;
-  });
+  // Find the main nav tab for this step's group and navigate to it
+  const targetTab = document.querySelector(`.nav-tab[data-group="${step.tab}"]`);
   if(!targetTab) { tourStep++; return renderTourStep(); }
-  targetTab.click();
+  goTo(step.tab);
 
   // Wait a tick for the page to render, then spotlight the tab
   setTimeout(() => {
