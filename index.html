@@ -160,7 +160,7 @@ a { text-decoration: none; color: inherit; }
   color: white;
   border: none;
   padding: 9px 20px;
-  border-radius: 100px;
+  border-radius: var(--ds-r2);
   font-size: 13px;
   font-weight: 800;
   letter-spacing: -.01em;
@@ -238,23 +238,22 @@ a { text-decoration: none; color: inherit; }
   flex-direction: column;
   gap: .6rem;
   margin-bottom: 2.5rem;
+  align-items: flex-start;
 }
 .hero-bullets li {
-  display: flex;
-  align-items: center;
-  gap: 10px;
+  display: block;
+  padding: 12px 20px;
+  background: var(--ds-card);
+  border: 1px solid var(--ds-green-m);
+  border-radius: var(--ds-r2);
+  box-shadow: var(--ds-sh1);
   font-size: 15px;
   font-weight: 700;
   color: var(--ds-t1);
+  text-align: center;
+  max-width: 100%;
 }
-.hero-bullets li::before {
-  content: '';
-  width: 8px;
-  height: 8px;
-  border-radius: 50%;
-  background: var(--ds-green);
-  flex-shrink: 0;
-}
+.hero-bullets li::before { content: none; }
 .hero-ctas {
   display: flex;
   align-items: center;
@@ -266,7 +265,7 @@ a { text-decoration: none; color: inherit; }
   color: white;
   border: none;
   padding: 14px 28px;
-  border-radius: 100px;
+  border-radius: var(--ds-r2);
   font-size: 15px;
   font-weight: 800;
   letter-spacing: -.01em;
@@ -281,6 +280,13 @@ a { text-decoration: none; color: inherit; }
   box-shadow: 0 8px 24px rgba(42,122,74,.4);
 }
 .btn-primary:active { transform: scale(.97); }
+.btn-primary.ghost {
+  background: transparent;
+  color: var(--ds-green);
+  border: 2px solid var(--ds-green-m);
+  box-shadow: none;
+}
+.btn-primary.ghost:hover { background: var(--ds-green-l); box-shadow: none; }
 .section-cta { text-align: center; margin-top: 3rem; }
 .section-cta .btn-primary { padding: 16px 34px; font-size: 15px; }
 .btn-ghost {
@@ -288,7 +294,7 @@ a { text-decoration: none; color: inherit; }
   color: var(--ds-t2);
   border: 2px solid var(--ds-t4);
   padding: 12px 24px;
-  border-radius: 100px;
+  border-radius: var(--ds-r2);
   font-size: 15px;
   font-weight: 700;
   transition: border-color .2s, color .2s;
@@ -501,7 +507,7 @@ a { text-decoration: none; color: inherit; }
     text-align: center;
   }
   .hero-sub { max-width: 100%; }
-  .hero-bullets { align-items: flex-start; width: fit-content; max-width: 100%; margin-left: auto; margin-right: auto; text-align: left; }
+  .hero-bullets { align-items: center; }
   .hero-ctas { justify-content: center; }
   .hero-fine { text-align: center; }
   .phone-frame { width: 240px; }
@@ -1906,7 +1912,7 @@ a { text-decoration: none; color: inherit; }
     </div>
     <p class="outcomes-bridge reveal">No more paralysis.<br>No more dwindling.<br>Turn unpredictable into predictable.</p>
     <div class="section-cta reveal">
-      <a href="/app.html" class="btn-primary">Start your free 7-day trial</a>
+      <a href="/app.html" class="btn-primary ghost">Start your free 7-day trial</a>
     </div>
   </div>
 </section>
