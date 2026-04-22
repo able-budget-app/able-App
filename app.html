@@ -405,6 +405,26 @@ input,select,button,textarea{font-family:inherit;}
 .lc-section-divider{display:flex;align-items:center;gap:14px;margin:1.25rem 0;}
 .lc-section-divider::before,.lc-section-divider::after{content:'';flex:1;height:1px;background:var(--ds-t4);}
 .lc-section-divider-dot{width:6px;height:6px;border-radius:50%;background:var(--ds-green-m);}
+/* ═══ Audio player ═══ */
+.lc-audio-player{background:var(--ds-card);border:1px solid var(--ds-t4);border-radius:var(--ds-r2);padding:12px 14px;margin:0 0 1.25rem;box-shadow:var(--ds-sh1);display:flex;flex-direction:column;gap:10px;position:sticky;top:72px;z-index:25;}
+@media(max-width:800px){.lc-audio-player{top:6px;}}
+.lc-audio-row{display:flex;align-items:center;gap:10px;}
+.lc-audio-main{width:40px;height:40px;border-radius:50%;background:var(--ds-green);color:white;border:none;font-size:16px;cursor:pointer;flex-shrink:0;display:flex;align-items:center;justify-content:center;transition:background .15s,transform .15s;font-family:var(--ds-f);}
+.lc-audio-main:hover{background:var(--ds-green2);transform:scale(1.05);}
+.lc-audio-main:disabled{opacity:.6;cursor:wait;}
+.lc-audio-main svg{width:16px;height:16px;stroke-width:0;fill:white;}
+.lc-audio-label{flex:1;font-size:13px;font-weight:700;color:var(--ds-t2);font-family:var(--ds-f);min-width:0;}
+.lc-audio-controls{display:flex;align-items:center;gap:6px;}
+.lc-audio-btn-sm{background:var(--ds-page);border:1px solid var(--ds-t4);color:var(--ds-t2);border-radius:var(--ds-r1);padding:5px 9px;font-size:11px;font-weight:700;cursor:pointer;font-family:var(--ds-f);transition:all .15s;line-height:1;}
+.lc-audio-btn-sm:hover{border-color:var(--ds-green);color:var(--ds-green);}
+.lc-audio-btn-sm:disabled{opacity:.4;cursor:not-allowed;}
+.lc-audio-speed{background:var(--ds-page);border:1px solid var(--ds-t4);color:var(--ds-t2);border-radius:var(--ds-r1);padding:5px 8px;font-size:11px;font-weight:700;font-family:var(--ds-f);cursor:pointer;outline:none;}
+.lc-audio-scrub{width:100%;-webkit-appearance:none;appearance:none;height:4px;border-radius:2px;background:var(--ds-t4);outline:none;cursor:pointer;margin:0;}
+.lc-audio-scrub::-webkit-slider-thumb{-webkit-appearance:none;appearance:none;width:14px;height:14px;border-radius:50%;background:var(--ds-green);cursor:pointer;border:2px solid white;box-shadow:0 2px 6px rgba(42,122,74,.3);}
+.lc-audio-scrub::-moz-range-thumb{width:14px;height:14px;border-radius:50%;background:var(--ds-green);cursor:pointer;border:2px solid white;box-shadow:0 2px 6px rgba(42,122,74,.3);}
+.lc-audio-status{font-size:11px;color:var(--ds-t3);font-weight:600;}
+.lc-audio-status.error{color:var(--ds-c4);}
+@media(max-width:540px){.lc-audio-label{font-size:12px;}.lc-audio-btn-sm{padding:5px 7px;font-size:10px;}.lc-audio-speed{padding:5px 6px;font-size:10px;}}
 .lc-steps{display:flex;flex-direction:column;gap:0;}
 .lc-step{display:flex;gap:14px;padding:14px 0;border-bottom:1px solid var(--ds-t4);}
 .lc-step:last-child{border-bottom:none;padding-bottom:0;}
@@ -4977,6 +4997,7 @@ function renderLcHome() {
 }
 
 function lcOpenCourse(courseId) {
+  lcAudioReset();
   lcCurrentCourse = courseId;
   lcView = 'course';
   renderLcCourse();
@@ -5026,6 +5047,7 @@ function renderLcCourse() {
 }
 
 function lcBackToHome() {
+  lcAudioReset();
   lcView = 'home';
   lcCurrentCourse = null;
   lcCurrentLesson = null;
@@ -5046,6 +5068,7 @@ let lcQuizData = [];
 function lcOpenLesson(lessonId) {
   const all = lcAllLessons();
   const lesson = all.find(l => l.id === lessonId);
+  lcAudioReset();
   lcCurrentLesson = lesson;
   lcCurrentCourse = lesson.courseId;
   lcView = 'lesson';
@@ -5060,6 +5083,8 @@ function lcOpenLesson(lessonId) {
 }
 
 function lcSwitchPhase(phase) {
+  // Pause audio when leaving read phase (player DOM goes away)
+  if (phase !== 'read' && lcAudio.audioEl) { try { lcAudio.audioEl.pause(); } catch {} }
   lcLessonPhase = phase;
   if (phase === 'flip') { lcFlashIdx = 0; lcFlashSeen = new Set(); }
   if (phase === 'quiz') { lcQuizIdx = 0; lcQuizAnswers = []; lcQuizData = lcQuizFromLesson(lcCurrentLesson); }
@@ -5099,6 +5124,28 @@ function renderLcLesson() {
           ${lcStreak > 0 ? `<span class="streak-badge" id="lc-streak"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><path d="M8.5 14.5A2.5 2.5 0 0 0 11 12c0-1.38-.5-2-1-3-1.072-2.143-.224-4.054 2-6 .5 2.5 2 4.9 4 6.5 2 1.6 3 3.5 3 5.5a7 7 0 1 1-14 0c0-1.153.433-2.294 1-3a2.5 2.5 0 0 0 2.5 2.5z"/></svg><span class="streak-badge-num">${lcStreak}</span></span>` : ''}
         </div>
       </div>
+      ${lcLessonPhase === 'read' ? `
+      <div class="lc-audio-player" id="lc-audio-player">
+        <div class="lc-audio-row">
+          <button class="lc-audio-main" id="lc-audio-play-btn" onclick="lcAudioPlay()" aria-label="Play">
+            <svg viewBox="0 0 24 24"><polygon points="6 4 20 12 6 20 6 4"/></svg>
+          </button>
+          <div class="lc-audio-label" id="lc-audio-label">Listen along</div>
+          <div class="lc-audio-controls">
+            <button class="lc-audio-btn-sm" onclick="lcAudioSkip(-15)" title="Back 15s" disabled id="lc-audio-back">−15</button>
+            <button class="lc-audio-btn-sm" onclick="lcAudioSkip(15)" title="Forward 15s" disabled id="lc-audio-fwd">+15</button>
+            <select class="lc-audio-speed" id="lc-audio-speed" onchange="lcAudioSetSpeed(this.value)">
+              <option value="0.75">0.75×</option>
+              <option value="1" selected>1×</option>
+              <option value="1.25">1.25×</option>
+              <option value="1.5">1.5×</option>
+            </select>
+          </div>
+        </div>
+        <input type="range" class="lc-audio-scrub" id="lc-audio-scrub" min="0" max="100" value="0" step="0.1" oninput="lcAudioScrub(this.value)" disabled>
+        <div class="lc-audio-status" id="lc-audio-status" style="display:none;"></div>
+      </div>
+      ` : ''}
       <div class="lc-phase-switcher">
         <button class="lc-phase-btn ${lcLessonPhase === 'read' ? 'active' : ''}" onclick="lcSwitchPhase('read')">Read</button>
         <button class="lc-phase-btn ${lcLessonPhase === 'flip' ? 'active' : ''}" onclick="lcSwitchPhase('flip')" ${!hasFlashcards ? 'disabled' : ''}>Flip cards${hasFlashcards ? ` (${flashcards.length})` : ''}</button>
@@ -5262,8 +5309,229 @@ function renderLcLesson() {
 
   html += `</div>`;
   view.innerHTML = html;
+  // Restore audio UI state if audio was already generated for this lesson
+  if (lcLessonPhase === 'read' && lcAudio.ready && lcAudio.lessonId === lesson.id && lcAudio.audioEl) {
+    const scrub = document.getElementById('lc-audio-scrub');
+    const back = document.getElementById('lc-audio-back');
+    const fwd = document.getElementById('lc-audio-fwd');
+    const speed = document.getElementById('lc-audio-speed');
+    if (scrub) scrub.disabled = false;
+    if (back) back.disabled = false;
+    if (fwd) fwd.disabled = false;
+    if (speed) speed.value = String(lcAudio.speed);
+    lcAudioOnTime();
+    if (!lcAudio.audioEl.paused) lcAudioSetPlayBtn('playing');
+  }
   // Reset and tick the progress bar on every render
   requestAnimationFrame(updateLcProgress);
+}
+
+// ═══════════════════════════════════════
+// LESSON AUDIO PLAYER (OpenAI TTS)
+// ═══════════════════════════════════════
+const LC_AUDIO_DB = 'able-audio';
+const LC_AUDIO_STORE = 'clips';
+let lcAudio = { audioEl: null, blobUrl: null, lessonId: null, ready: false, loading: false, speed: 1.0 };
+
+function lcAudioOpenDB() {
+  return new Promise((resolve, reject) => {
+    const req = indexedDB.open(LC_AUDIO_DB, 1);
+    req.onupgradeneeded = () => {
+      const db = req.result;
+      if (!db.objectStoreNames.contains(LC_AUDIO_STORE)) {
+        db.createObjectStore(LC_AUDIO_STORE, { keyPath: 'key' });
+      }
+    };
+    req.onsuccess = () => resolve(req.result);
+    req.onerror = () => reject(req.error);
+  });
+}
+async function lcAudioCacheGet(lessonId) {
+  try {
+    const db = await lcAudioOpenDB();
+    return await new Promise((resolve) => {
+      const tx = db.transaction(LC_AUDIO_STORE, 'readonly');
+      const req = tx.objectStore(LC_AUDIO_STORE).get(lessonId);
+      req.onsuccess = () => resolve(req.result ? req.result.blob : null);
+      req.onerror = () => resolve(null);
+    });
+  } catch (e) { console.warn('[audio] cache get failed', e); return null; }
+}
+async function lcAudioCacheSet(lessonId, blob) {
+  try {
+    const db = await lcAudioOpenDB();
+    await new Promise((resolve) => {
+      const tx = db.transaction(LC_AUDIO_STORE, 'readwrite');
+      tx.objectStore(LC_AUDIO_STORE).put({ key: lessonId, blob });
+      tx.oncomplete = () => resolve();
+      tx.onerror = () => resolve();
+    });
+  } catch (e) { console.warn('[audio] cache set failed', e); }
+}
+
+function lcAudioBuildText(lesson) {
+  const stripHtml = (s) => String(s || '').replace(/<[^>]+>/g, ' ').replace(/\s+/g, ' ').trim();
+  const parts = [];
+  if (lesson.title) parts.push(lesson.title + '.');
+  if (Array.isArray(lesson.overview)) parts.push(lesson.overview.map(stripHtml).join(' '));
+  if (Array.isArray(lesson.pullQuotes) && lesson.pullQuotes.length) {
+    parts.push(lesson.pullQuotes.map(stripHtml).join(' '));
+  }
+  if (Array.isArray(lesson.keyPoints) && lesson.keyPoints.length) {
+    parts.push('Key points.');
+    parts.push(lesson.keyPoints.map(kp => stripHtml(kp.text)).join(' '));
+  }
+  if (lesson.callout) {
+    parts.push(stripHtml(lesson.callout.title) + '. ' + stripHtml(lesson.callout.text));
+  }
+  if (Array.isArray(lesson.steps) && lesson.steps.length) {
+    parts.push('Action steps.');
+    parts.push(lesson.steps.map(s => stripHtml(s.title) + '. ' + stripHtml(s.desc)).join(' '));
+  }
+  return parts.join(' ').replace(/\s+/g, ' ').trim();
+}
+
+async function lcAudioGenerate() {
+  if (lcAudio.loading) return;
+  const lesson = lcCurrentLesson;
+  if (!lesson) return;
+  lcAudio.loading = true;
+  lcAudioSetPlayBtn('loading');
+  lcAudioStatus('Generating audio...');
+  try {
+    let blob = await lcAudioCacheGet(lesson.id);
+    if (!blob) {
+      const text = lcAudioBuildText(lesson);
+      if (!text) throw new Error('No text to read');
+      const { data: { session } } = await sbGet().auth.getSession();
+      if (!session) throw new Error('Not signed in');
+      const res = await fetch(SUPABASE_URL + '/functions/v1/tts', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': 'Bearer ' + session.access_token,
+          'apikey': SUPABASE_KEY,
+        },
+        body: JSON.stringify({ text, voice: 'nova', lessonId: lesson.id }),
+      });
+      if (!res.ok) {
+        let err;
+        try { err = await res.json(); } catch { err = { error: res.statusText }; }
+        throw new Error(err.error || ('TTS failed: ' + res.status));
+      }
+      blob = await res.blob();
+      await lcAudioCacheSet(lesson.id, blob);
+      const rem = res.headers.get('x-remaining-today');
+      if (rem != null) console.log('[audio] remaining today:', rem);
+    }
+    if (lcAudio.blobUrl) URL.revokeObjectURL(lcAudio.blobUrl);
+    const url = URL.createObjectURL(blob);
+    lcAudio.blobUrl = url;
+    if (!lcAudio.audioEl) {
+      lcAudio.audioEl = new Audio();
+      lcAudio.audioEl.addEventListener('timeupdate', lcAudioOnTime);
+      lcAudio.audioEl.addEventListener('loadedmetadata', lcAudioOnTime);
+      lcAudio.audioEl.addEventListener('ended', lcAudioOnEnded);
+      lcAudio.audioEl.addEventListener('pause', () => lcAudioSetPlayBtn('paused'));
+      lcAudio.audioEl.addEventListener('play', () => lcAudioSetPlayBtn('playing'));
+    }
+    lcAudio.audioEl.src = url;
+    lcAudio.audioEl.playbackRate = lcAudio.speed;
+    lcAudio.lessonId = lesson.id;
+    lcAudio.ready = true;
+    lcAudioStatus('');
+    // Enable controls
+    const scrub = document.getElementById('lc-audio-scrub');
+    const back = document.getElementById('lc-audio-back');
+    const fwd = document.getElementById('lc-audio-fwd');
+    if (scrub) scrub.disabled = false;
+    if (back) back.disabled = false;
+    if (fwd) fwd.disabled = false;
+    await lcAudio.audioEl.play();
+  } catch (e) {
+    console.error('[audio] generate failed:', e);
+    lcAudioStatus(e.message || 'Audio failed', true);
+    lcAudioSetPlayBtn('paused');
+  } finally {
+    lcAudio.loading = false;
+  }
+}
+
+async function lcAudioPlay() {
+  if (!lcAudio.ready) return lcAudioGenerate();
+  if (lcAudio.audioEl.paused) await lcAudio.audioEl.play();
+  else lcAudio.audioEl.pause();
+}
+
+function lcAudioSkip(sec) {
+  if (!lcAudio.audioEl) return;
+  const d = lcAudio.audioEl.duration || 0;
+  lcAudio.audioEl.currentTime = Math.max(0, Math.min(d, lcAudio.audioEl.currentTime + sec));
+}
+
+function lcAudioSetSpeed(val) {
+  const s = parseFloat(val);
+  if (isNaN(s)) return;
+  lcAudio.speed = s;
+  if (lcAudio.audioEl) lcAudio.audioEl.playbackRate = s;
+}
+
+function lcAudioScrub(val) {
+  if (!lcAudio.audioEl || !lcAudio.audioEl.duration) return;
+  lcAudio.audioEl.currentTime = (parseFloat(val) / 100) * lcAudio.audioEl.duration;
+}
+
+function lcAudioFormatTime(sec) {
+  if (!isFinite(sec) || isNaN(sec)) return '0:00';
+  const m = Math.floor(sec / 60);
+  const s = Math.floor(sec % 60);
+  return m + ':' + String(s).padStart(2, '0');
+}
+
+function lcAudioOnTime() {
+  const t = lcAudio.audioEl.currentTime;
+  const d = lcAudio.audioEl.duration || 0;
+  const label = document.getElementById('lc-audio-label');
+  const scrub = document.getElementById('lc-audio-scrub');
+  if (label) label.textContent = lcAudioFormatTime(t) + ' / ' + lcAudioFormatTime(d);
+  if (scrub && d > 0) scrub.value = (t / d) * 100;
+}
+
+function lcAudioOnEnded() {
+  lcAudioSetPlayBtn('paused');
+  if (lcAudio.audioEl) lcAudio.audioEl.currentTime = 0;
+  lcAudioOnTime();
+}
+
+function lcAudioSetPlayBtn(state) {
+  const btn = document.getElementById('lc-audio-play-btn');
+  if (!btn) return;
+  btn.disabled = state === 'loading';
+  if (state === 'loading') {
+    btn.innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="animation:dsPulse 1.2s ease-in-out infinite;fill:none;stroke:white;"><circle cx="12" cy="12" r="8"/></svg>';
+  } else if (state === 'playing') {
+    btn.innerHTML = '<svg viewBox="0 0 24 24"><rect x="6" y="4" width="4" height="16"/><rect x="14" y="4" width="4" height="16"/></svg>';
+  } else {
+    btn.innerHTML = '<svg viewBox="0 0 24 24"><polygon points="6 4 20 12 6 20 6 4"/></svg>';
+  }
+}
+
+function lcAudioStatus(msg, isError) {
+  const el = document.getElementById('lc-audio-status');
+  if (!el) return;
+  if (!msg) { el.style.display = 'none'; el.textContent = ''; return; }
+  el.style.display = 'block';
+  el.textContent = msg;
+  el.className = 'lc-audio-status' + (isError ? ' error' : '');
+}
+
+function lcAudioReset() {
+  if (lcAudio.audioEl) {
+    try { lcAudio.audioEl.pause(); } catch {}
+    lcAudio.audioEl.src = '';
+  }
+  if (lcAudio.blobUrl) { try { URL.revokeObjectURL(lcAudio.blobUrl); } catch {} }
+  lcAudio = { audioEl: null, blobUrl: null, lessonId: null, ready: false, loading: false, speed: lcAudio.speed || 1.0 };
 }
 
 // Updates the lesson reading progress bar based on how far the user
