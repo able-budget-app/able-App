@@ -417,6 +417,42 @@ input,select,button,textarea{font-family:inherit;}
 .lc-survive-break-row{display:flex;justify-content:space-between;padding:10px 12px;border-radius:var(--ds-r1);font-size:13px;font-weight:700;}
 .lc-survive-break-row.pass{background:var(--ds-green-l);color:var(--ds-green);}
 .lc-survive-break-row.fail{background:#fdeef2;color:var(--ds-c4);}
+/* ═══ Beat the interest ═══ */
+.lc-beat-strategies{display:grid;grid-template-columns:repeat(3,1fr);gap:6px;margin-bottom:1rem;}
+.lc-beat-strat{background:var(--ds-page);border:1.5px solid var(--ds-t4);border-radius:var(--ds-r2);padding:10px 12px;cursor:pointer;transition:all .15s;font-family:var(--ds-f);text-align:left;}
+.lc-beat-strat:hover{border-color:var(--ds-green);}
+.lc-beat-strat.active{border-color:var(--ds-green);background:var(--ds-green-l);box-shadow:0 2px 8px rgba(42,122,74,.12);}
+.lc-beat-strat-name{font-size:13px;font-weight:800;color:var(--ds-t1);letter-spacing:-.01em;}
+.lc-beat-strat-desc{font-size:10px;color:var(--ds-t3);font-weight:600;margin-top:2px;line-height:1.4;}
+.lc-beat-slider-row{background:var(--ds-page);border-radius:var(--ds-r2);padding:12px 14px;margin-bottom:1rem;}
+.lc-beat-slider-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;font-size:13px;font-weight:700;color:var(--ds-t2);}
+.lc-beat-slider-val{font-family:var(--ds-f);font-weight:900;color:var(--ds-green);font-size:14px;}
+.lc-beat-bars{background:var(--ds-card);border:1px solid var(--ds-t4);border-radius:var(--ds-r2);padding:12px 14px;margin-bottom:1rem;}
+.lc-beat-bar-row{display:flex;align-items:center;gap:10px;padding:8px 0;border-bottom:1px solid var(--ds-t4);}
+.lc-beat-bar-row:last-child{border-bottom:none;}
+.lc-beat-debt-name{width:110px;font-size:13px;font-weight:700;color:var(--ds-t1);letter-spacing:-.01em;}
+.lc-beat-bar-track{flex:1;height:12px;background:var(--ds-t4);border-radius:6px;overflow:hidden;}
+.lc-beat-bar-fill{height:100%;border-radius:6px;transition:width .6s cubic-bezier(.23,1,.32,1);}
+.lc-beat-bar-label{width:64px;text-align:right;font-size:11px;font-weight:700;font-family:var(--ds-f);}
+.lc-beat-summary{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:1rem;}
+.lc-beat-summary > div{background:var(--ds-page);border-radius:var(--ds-r2);padding:12px;text-align:center;}
+.lc-beat-summary-lbl{font-size:10px;font-weight:800;letter-spacing:.12em;color:var(--ds-t3);text-transform:uppercase;font-family:var(--ds-f);}
+.lc-beat-summary-val{font-family:var(--ds-f);font-size:1.35rem;font-weight:900;letter-spacing:-.02em;margin-top:3px;}
+.lc-beat-compare{background:var(--ds-page);border-radius:var(--ds-r2);padding:12px 14px;margin-bottom:1rem;}
+.lc-beat-compare-head{font-size:10px;font-weight:800;letter-spacing:.12em;color:var(--ds-t3);text-transform:uppercase;font-family:var(--ds-f);margin-bottom:8px;}
+.lc-beat-compare-table{display:flex;flex-direction:column;gap:4px;}
+.lc-beat-compare-row{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;padding:6px 8px;border-radius:var(--ds-r1);font-size:12px;font-weight:700;color:var(--ds-t1);}
+.lc-beat-compare-row.head{font-size:10px;font-weight:800;letter-spacing:.08em;text-transform:uppercase;color:var(--ds-t3);padding-bottom:6px;border-bottom:1px solid var(--ds-t4);border-radius:0;}
+.lc-beat-compare-row.active{background:var(--ds-green-l);color:var(--ds-green);}
+/* ═══ Red flag ═══ */
+.lc-red-scenario{background:var(--ds-page);border-left:4px solid var(--ds-c3);border-radius:var(--ds-r2);padding:14px 16px;font-size:14px;line-height:1.55;color:var(--ds-t1);font-weight:500;margin:0 0 .5rem;}
+.lc-red-review{display:flex;flex-direction:column;gap:8px;margin:1rem 0;}
+.lc-red-review-row{background:var(--ds-page);border-radius:var(--ds-r2);padding:12px 14px;border-left:3px solid var(--ds-t4);}
+.lc-red-review-row.pass{border-left-color:var(--ds-green);}
+.lc-red-review-row.fail{border-left-color:var(--ds-c4);}
+.lc-red-review-head{font-size:13px;font-weight:800;color:var(--ds-t1);letter-spacing:-.01em;margin-bottom:4px;}
+.lc-red-review-meta{font-size:11px;color:var(--ds-t3);font-weight:600;margin-top:2px;}
+.lc-red-review-lesson{font-size:12px;color:var(--ds-t2);font-weight:500;line-height:1.5;margin-top:6px;font-style:italic;}
 .lc-lesson-info{flex:1;min-width:0;}
 .lc-lesson-title{font-size:14px;font-weight:800;color:var(--ds-t1);letter-spacing:-.01em;margin-bottom:2px;}
 .lc-lesson-hint{font-size:12px;color:var(--ds-t3);font-weight:600;}
@@ -4986,7 +5022,61 @@ const LC_GAMES = {
     title: 'Survive the month',
     desc: '30 days, lumpy income, real surprises. Make it to day 30 in the black.',
   },
+  beat_interest: {
+    id: 'beat_interest',
+    title: 'Beat the interest',
+    desc: 'Pick a payoff strategy. Watch the timelines shrink. Compare side by side.',
+  },
+  red_flag: {
+    id: 'red_flag',
+    title: 'Read the red flag',
+    desc: 'Spot the trap in each scenario. Learn the pattern before it costs you.',
+  },
 };
+
+const BEAT_INTEREST_SAMPLE = [
+  { name: 'Chase CC', balance: 4200, rate: 22, min: 125 },
+  { name: 'Auto loan', balance: 8500, rate: 6.5, min: 250 },
+  { name: 'Personal loan', balance: 2800, rate: 14, min: 90 },
+];
+
+// Simulate debt payoff over months. Returns { results, debtFreeMo, totalInterest }.
+function lcBeatSimulate(debts, strategy, extraPayment) {
+  const maxMonths = 180;
+  const cur = debts.map(d => ({
+    name: d.name, rate: d.rate || 0, min: d.min || 0,
+    bal: Math.max(0, d.balance || 0), paidMonth: null, totalInterest: 0,
+  }));
+  let freed = 0;
+  for (let mo = 1; mo <= maxMonths; mo++) {
+    let avail = extraPayment + freed;
+    for (const d of cur) {
+      if (d.bal <= 0.01) continue;
+      const interest = d.bal * (d.rate / 100 / 12);
+      d.totalInterest += interest;
+      d.bal = Math.max(0, d.bal + interest - d.min);
+    }
+    const active = cur.filter(d => d.bal > 0.01);
+    if (strategy === 'avalanche') active.sort((a, b) => b.rate - a.rate);
+    else if (strategy === 'snowball') active.sort((a, b) => a.bal - b.bal);
+    else if (strategy === 'hybrid') active.sort((a, b) => {
+      if (a.bal < 500 && b.bal >= 500) return -1;
+      if (b.bal < 500 && a.bal >= 500) return 1;
+      return b.rate - a.rate;
+    });
+    for (const d of active) {
+      if (d.bal <= 0.01 || avail <= 0.01) continue;
+      const pay = Math.min(d.bal, avail);
+      d.bal -= pay;
+      avail -= pay;
+    }
+    cur.forEach(d => { if (d.bal <= 0.01 && !d.paidMonth) { d.paidMonth = mo; freed += d.min; } });
+    if (cur.every(d => d.bal <= 0.01)) break;
+  }
+  const debtFreeMo = Math.max(...cur.map(d => d.paidMonth || maxMonths));
+  const totalInterest = cur.reduce((t, d) => t + d.totalInterest, 0);
+  return { results: cur, debtFreeMo, totalInterest };
+}
 
 const SURVIVE_MONTH_EVENTS = [
   { day: 3, type: 'income', amount: 1500, source: 'Client payment' },
@@ -5016,6 +5106,30 @@ function lcStartGame(gameId) {
       state: { ...SURVIVE_MONTH_START, ownerPaid: 0, totalIncome: 0, overdrafts: 0 },
       pendingAlloc: null,
       log: [],
+      score: 0,
+    };
+  } else if (gameId === 'beat_interest') {
+    const hasReal = Array.isArray(S.debts) && S.debts.length > 0 && S.debts.some(d => (d.balance || 0) > 0);
+    lcGameState = {
+      gameId,
+      phase: 'playing',
+      strategy: 'avalanche',
+      extraPayment: 200,
+      useSample: !hasReal,
+    };
+  } else if (gameId === 'red_flag') {
+    const pool = [...LC_RED_FLAG_SCENARIOS];
+    // Shuffle and take 5
+    for (let i = pool.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [pool[i], pool[j]] = [pool[j], pool[i]];
+    }
+    lcGameState = {
+      gameId,
+      phase: 'playing',
+      scenarios: pool.slice(0, Math.min(5, pool.length)),
+      idx: 0,
+      answers: [],
       score: 0,
     };
   } else {
@@ -5051,6 +5165,11 @@ function lcRenderGame() {
     if (lcGameState.phase === 'intro') view.innerHTML = lcSurviveRenderIntro();
     else if (lcGameState.phase === 'event') view.innerHTML = lcSurviveRenderEvent();
     else if (lcGameState.phase === 'result') view.innerHTML = lcSurviveRenderResult();
+  } else if (lcGameState.gameId === 'beat_interest') {
+    view.innerHTML = lcBeatRenderPlaying();
+  } else if (lcGameState.gameId === 'red_flag') {
+    if (lcGameState.phase === 'playing') view.innerHTML = lcRedFlagRenderPlaying();
+    else if (lcGameState.phase === 'result') view.innerHTML = lcRedFlagRenderResult();
   }
 }
 
@@ -5422,6 +5541,321 @@ function lcSurviveRenderResult() {
     <div class="lc-game-actions">
       <button class="btn" onclick="lcGameClose()">Close</button>
       <button class="btn btn-primary" onclick="lcStartGame('survive_month')">Try again →</button>
+    </div>
+  `;
+}
+
+// ═══════════════════════════════════════
+// GAME 3: Beat the interest
+// ═══════════════════════════════════════
+function lcBeatRenderPlaying() {
+  const state = lcGameState;
+  const debts = state.useSample ? BEAT_INTEREST_SAMPLE : S.debts;
+  const extra = state.extraPayment;
+  const strategies = ['avalanche', 'snowball', 'hybrid'];
+  const labelMap = { avalanche: 'Avalanche', snowball: 'Snowball', hybrid: 'Hybrid' };
+  const descMap = {
+    avalanche: 'Highest interest first. Best math.',
+    snowball: 'Smallest balance first. Best for motivation.',
+    hybrid: 'Quick wins under $500, then avalanche.',
+  };
+  const allResults = strategies.map(s => ({ strategy: s, ...lcBeatSimulate(debts, s, extra) }));
+  const primary = allResults.find(r => r.strategy === state.strategy) || allResults[0];
+  const maxMonths = Math.max(...allResults.map(r => r.debtFreeMo), 1);
+  const debtColors = ['#c04060', '#e07a5f', '#c97c0a', '#3570b8', '#7a5fb8', '#3d9e78'];
+  const fmtMoney = (n) => '$' + Math.round(n).toLocaleString();
+  const fmtMonths = (m) => m >= 180 ? '15+ yr' : (m > 12 ? `${Math.floor(m/12)}y ${m%12}m` : `${m} mo`);
+  return `
+    <div class="lc-game-header">
+      <div class="lc-game-eyebrow">BEAT THE INTEREST</div>
+      <div class="lc-game-income">Pick a strategy. Set extra payment. Watch the math.</div>
+      ${state.useSample ? '<div class="lc-game-lesson" style="margin-top:.35rem;color:var(--ds-t3);font-size:12px;">Using sample debts. Add your own in the Debt tab to replace these.</div>' : ''}
+    </div>
+    <div class="lc-beat-strategies">
+      ${strategies.map(s => `
+        <button class="lc-beat-strat ${s === state.strategy ? 'active' : ''}" onclick="lcBeatSetStrategy('${s}')">
+          <div class="lc-beat-strat-name">${labelMap[s]}</div>
+          <div class="lc-beat-strat-desc">${descMap[s]}</div>
+        </button>
+      `).join('')}
+    </div>
+    <div class="lc-beat-slider-row">
+      <div class="lc-beat-slider-head">
+        <span>Extra payment per month</span>
+        <span class="lc-beat-slider-val">$${extra.toLocaleString()}</span>
+      </div>
+      <input type="range" class="lc-game-slider" min="0" max="1500" step="25" value="${extra}" oninput="lcBeatSetExtra(this.value)" style="--bucket-color:var(--ds-green);">
+    </div>
+    <div class="lc-beat-bars">
+      ${primary.results.map((d, i) => {
+        const mo = d.paidMonth || 180;
+        const pct = Math.min(100, (mo / maxMonths) * 100);
+        const color = debtColors[i % debtColors.length];
+        const isCapped = mo >= 180;
+        return `
+          <div class="lc-beat-bar-row">
+            <div class="lc-beat-debt-name">${d.name}</div>
+            <div class="lc-beat-bar-track"><div class="lc-beat-bar-fill" style="width:${pct}%;background:${color};"></div></div>
+            <div class="lc-beat-bar-label" style="color:${isCapped ? 'var(--ds-c4)' : 'var(--ds-t2)'};">${fmtMonths(mo)}</div>
+          </div>
+        `;
+      }).join('')}
+    </div>
+    <div class="lc-beat-summary">
+      <div><div class="lc-beat-summary-lbl">Debt-free in</div><div class="lc-beat-summary-val" style="color:var(--ds-green);">${fmtMonths(primary.debtFreeMo)}</div></div>
+      <div><div class="lc-beat-summary-lbl">Total interest</div><div class="lc-beat-summary-val" style="color:var(--ds-c4);">${fmtMoney(primary.totalInterest)}</div></div>
+    </div>
+    <div class="lc-beat-compare">
+      <div class="lc-beat-compare-head">How all three compare at \$${extra} extra</div>
+      <div class="lc-beat-compare-table">
+        <div class="lc-beat-compare-row head"><span>Strategy</span><span>Debt-free in</span><span>Total interest</span></div>
+        ${allResults.map(r => `
+          <div class="lc-beat-compare-row ${r.strategy === state.strategy ? 'active' : ''}">
+            <span>${labelMap[r.strategy]}</span>
+            <span>${fmtMonths(r.debtFreeMo)}</span>
+            <span>${fmtMoney(r.totalInterest)}</span>
+          </div>
+        `).join('')}
+      </div>
+    </div>
+    <div class="lc-game-actions">
+      <button class="btn" onclick="lcGameClose()">Close</button>
+      <button class="btn btn-primary" onclick="lcBeatMarkPlayed()">Save result →</button>
+    </div>
+  `;
+}
+
+function lcBeatSetStrategy(s) { if (lcGameState) { lcGameState.strategy = s; lcRenderGame(); } }
+function lcBeatSetExtra(v) { if (lcGameState) { lcGameState.extraPayment = parseInt(v) || 0; lcRenderGame(); } }
+function lcBeatMarkPlayed() {
+  lcEnsureLearnState();
+  const L = S.settings.learn;
+  if (!L.games) L.games = {};
+  if (!L.games.beat_interest) L.games.beat_interest = { plays: 0, bestScore: 0 };
+  L.games.beat_interest.plays++;
+  // "Best score" for this game = tightest (shortest) debt-free month found across saves.
+  // Lower = better, so we store as: 180 - months (so 100-ish means fastest).
+  const debts = lcGameState.useSample ? BEAT_INTEREST_SAMPLE : S.debts;
+  const sim = lcBeatSimulate(debts, lcGameState.strategy, lcGameState.extraPayment);
+  const score = Math.max(0, Math.min(100, 180 - sim.debtFreeMo));
+  if (score > L.games.beat_interest.bestScore) L.games.beat_interest.bestScore = score;
+  lcBumpDailyStreak();
+  lcEvaluateBadges();
+  save();
+  lcGameClose();
+}
+
+// ═══════════════════════════════════════
+// GAME 4: Read the red flag
+// ═══════════════════════════════════════
+const LC_RED_FLAG_SCENARIOS = [
+  {
+    id: 'vegas',
+    scenario: "You just had your biggest month in 6 months: $15k. A friend suggests a weekend in Vegas to celebrate. Bills are due next week and your buffer is $400.",
+    question: "What's the red flag?",
+    choices: [
+      "Weekend trips are always irresponsible.",
+      "Your buffer is critically low for inconsistent income.",
+      "You haven't worked hard enough to earn a break.",
+      "You should invest the $15k instead.",
+    ],
+    correct: 1,
+    lesson: "One big month isn't a plan. With lumpy income, the buffer comes first. Cover bills, stack cushion, then splurge.",
+  },
+  {
+    id: 'bt_transfer',
+    scenario: "You've carried a $2,000 credit card balance at 22% for a year. A new card offers 12 months at 0% for a 3% transfer fee. You transfer the balance and feel great.",
+    question: "What's the real test?",
+    choices: [
+      "Whether the 3% fee was worth it.",
+      "Whether your credit score held.",
+      "What you do with the now-empty original card.",
+      "Which bureaus got notified.",
+    ],
+    correct: 2,
+    lesson: "Balance transfers work when you pay off the transferred debt AND stop adding to it. The empty card is the trap.",
+  },
+  {
+    id: 'lease_ratio',
+    scenario: "Three good income months in a row. You sign a 2-year lease on a place that runs 40% of your average monthly gross.",
+    question: "What's the red flag?",
+    choices: [
+      "Leases are never a good idea.",
+      "You should have bought instead.",
+      "Housing over 28% of gross income suffocates cash flow.",
+      "Three months is not enough history.",
+    ],
+    correct: 2,
+    lesson: "28% on housing, 36% total debt. Over those ratios and every slow month becomes a scramble.",
+  },
+  {
+    id: 'subscription_creep',
+    scenario: "You look at your statement and count eleven active subscriptions. Each one is 'only' $10 to $20. Monthly total: $180.",
+    question: "What's the pattern?",
+    choices: [
+      "Subscription services are predatory.",
+      "You need a budgeting app.",
+      "Small recurring charges compound invisibly until you audit them.",
+      "You should cancel them all immediately.",
+    ],
+    correct: 2,
+    lesson: "$180/month is $2,160/year. Run a quarterly audit. Keep the two or three that actually change your life.",
+  },
+  {
+    id: 'mca_pitch',
+    scenario: "A 'fast business funding' rep offers you $50k today. Repayment is 'only' $75k over 12 months via daily ACH withdrawals.",
+    question: "What's the red flag?",
+    choices: [
+      "You didn't shop around.",
+      "This is a Merchant Cash Advance with 50% effective APR, not a loan.",
+      "You should negotiate the amount up.",
+      "They asked for a personal guarantee.",
+    ],
+    correct: 1,
+    lesson: "Daily ACH + factor rates + no APR quoted = MCA. Effective rates routinely hit 70 to 350%. Walk away.",
+  },
+  {
+    id: 'no_owner_pay',
+    scenario: "You've been in business three years. You pay contractors, software, and a lease. You've never paid yourself a regular amount, just whatever's left over (which is often nothing).",
+    question: "What's the real issue?",
+    choices: [
+      "You need more clients.",
+      "Your pricing is too low.",
+      "You're running a job that pays everyone but you.",
+      "You need a bookkeeper.",
+    ],
+    correct: 2,
+    lesson: "If the business isn't profitable enough to pay you, find out now. Pay yourself first and let the math tell you the truth.",
+  },
+  {
+    id: 'emergency_on_card',
+    scenario: "Your laptop dies mid-project. You put the $1,800 replacement on a credit card you'll 'pay off next week when the client check lands.'",
+    question: "What's the red flag?",
+    choices: [
+      "You shouldn't buy a new laptop yet.",
+      "You don't have a buffer to absorb this, so a 'short-term' card balance often isn't.",
+      "You should finance it through the retailer.",
+      "You should have backed up more.",
+    ],
+    correct: 1,
+    lesson: "Without a buffer, every emergency becomes a card balance, and card balances become interest. A buffer is what keeps 'short-term' actually short.",
+  },
+];
+
+function lcRedFlagRenderPlaying() {
+  const state = lcGameState;
+  const s = state.scenarios[state.idx];
+  const answer = state.answers[state.idx];
+  const answered = answer !== undefined;
+  const total = state.scenarios.length;
+  const dotsHTML = state.scenarios.map((_, i) => {
+    let cls = '';
+    if (i === state.idx) cls = 'current';
+    else if (state.answers[i] !== undefined) cls = state.answers[i].correct ? 'done' : 'wrong';
+    return `<div class="quiz-pdot ${cls}"></div>`;
+  }).join('');
+  return `
+    <div class="lc-game-header">
+      <div class="lc-game-eyebrow">READ THE RED FLAG · ${state.idx + 1} OF ${total}</div>
+    </div>
+    <div class="quiz-progress-dots" style="margin-bottom:1rem;">${dotsHTML}</div>
+    <div class="lc-red-scenario">${s.scenario}</div>
+    <div class="quiz-question" style="font-size:1.1rem;margin-top:1rem;">${s.question}</div>
+    <div class="quiz-choices">
+      ${s.choices.map((c, i) => {
+        let cls = '';
+        if (answered) {
+          if (answer.picked === i && answer.correct) cls = 'correct';
+          else if (answer.picked === i && !answer.correct) cls = 'wrong';
+          else if (i === s.correct) cls = 'reveal-correct';
+        }
+        return `
+          <button class="quiz-choice ${cls}" onclick="lcRedFlagAnswer(${i})" ${answered ? 'disabled' : ''}>
+            <span class="quiz-choice-letter">${String.fromCharCode(65 + i)}</span>
+            <span class="quiz-choice-text">${c}</span>
+            <span class="quiz-choice-check"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></span>
+          </button>
+        `;
+      }).join('')}
+    </div>
+    ${answered ? `
+      <div class="quiz-explain ${answer.correct ? '' : 'wrong'}">
+        ${answer.correct ? 'Correct. ' : 'Not quite. '}${s.lesson}
+      </div>
+      <div class="lc-game-actions">
+        <button class="btn" onclick="lcGameClose()">Close</button>
+        <button class="btn btn-primary" onclick="lcRedFlagNext()">${state.idx === total - 1 ? 'Score my run →' : 'Next →'}</button>
+      </div>
+    ` : `
+      <div style="font-size:12px;color:var(--ds-t3);text-align:center;font-weight:600;margin-top:.5rem;">Pick the red flag. No wrong-answer penalty, but your score reflects how well you read patterns.</div>
+    `}
+  `;
+}
+
+function lcRedFlagAnswer(idx) {
+  if (!lcGameState) return;
+  const s = lcGameState.scenarios[lcGameState.idx];
+  const correct = idx === s.correct;
+  lcGameState.answers[lcGameState.idx] = { picked: idx, correct };
+  lcRenderGame();
+}
+
+function lcRedFlagNext() {
+  if (!lcGameState) return;
+  if (lcGameState.idx < lcGameState.scenarios.length - 1) {
+    lcGameState.idx++;
+    lcRenderGame();
+  } else {
+    const correctCount = lcGameState.answers.filter(a => a && a.correct).length;
+    const score = Math.round((correctCount / lcGameState.scenarios.length) * 100);
+    lcGameState.score = score;
+    lcGameState.phase = 'result';
+    lcEnsureLearnState();
+    const L = S.settings.learn;
+    if (!L.games) L.games = {};
+    if (!L.games.red_flag) L.games.red_flag = { plays: 0, bestScore: 0 };
+    L.games.red_flag.plays++;
+    if (score > L.games.red_flag.bestScore) L.games.red_flag.bestScore = score;
+    lcBumpDailyStreak();
+    lcEvaluateBadges();
+    save();
+    lcRenderGame();
+  }
+}
+
+function lcRedFlagRenderResult() {
+  const state = lcGameState;
+  const correctCount = state.answers.filter(a => a && a.correct).length;
+  const total = state.scenarios.length;
+  const score = state.score;
+  const scoreColor = score >= 80 ? 'var(--ds-green)' : score >= 50 ? 'var(--ds-c3)' : 'var(--ds-c4)';
+  const lesson = score >= 90 ? "You read patterns well. Trust your instincts."
+    : score >= 70 ? 'Solid. Review the ones you missed to close the gap.'
+    : score >= 40 ? "You're learning. Scenarios get clearer with reps."
+    : 'Worth a reread. Patterns take time to see.';
+  return `
+    <div class="lc-game-header">
+      <div class="lc-game-eyebrow">YOUR SCORE</div>
+      <div class="lc-game-score" style="color:${scoreColor};">${score}</div>
+      <div class="lc-game-lesson">${correctCount} of ${total} correct. ${lesson}</div>
+    </div>
+    <div class="lc-red-review">
+      ${state.scenarios.map((s, i) => {
+        const ans = state.answers[i];
+        const userPicked = ans ? s.choices[ans.picked] : '';
+        const correctAns = s.choices[s.correct];
+        return `
+          <div class="lc-red-review-row ${ans && ans.correct ? 'pass' : 'fail'}">
+            <div class="lc-red-review-head">${ans && ans.correct ? '✓' : '✕'} ${s.question}</div>
+            ${!ans || !ans.correct ? `<div class="lc-red-review-meta">You picked: ${coachEscapeHtml(userPicked)}</div><div class="lc-red-review-meta">Correct: ${coachEscapeHtml(correctAns)}</div>` : ''}
+            <div class="lc-red-review-lesson">${s.lesson}</div>
+          </div>
+        `;
+      }).join('')}
+    </div>
+    <div class="lc-game-actions">
+      <button class="btn" onclick="lcGameClose()">Close</button>
+      <button class="btn btn-primary" onclick="lcStartGame('red_flag')">Play again →</button>
     </div>
   `;
 }
