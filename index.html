@@ -60,7 +60,7 @@
   --ds-sh3:0 4px 16px rgba(0,0,0,.07), 0 8px 28px rgba(0,0,0,.08);
 }
 *{box-sizing:border-box;margin:0;padding:0;}
-html,body{overflow-x:hidden;max-width:100%;}
+html,body{overflow-x:hidden;overflow-x:clip;max-width:100%;}
 body{background:var(--ds-page);color:var(--ds-t1);font-family:var(--ds-f);min-height:100vh;min-height:100dvh;overscroll-behavior-x:none;overscroll-behavior-y:contain;}
 h1,h2,h3{font-family:var(--ds-f);}
 input,select,button,textarea{font-family:inherit;}
@@ -1340,7 +1340,7 @@ async function onAuthStateChange(user) {
     refreshHome();
 
     // Run guided tour first time
-    if(!S.tour_done) {
+    if(!S.settings.tour_done) {
       setTimeout(() => startTour(), 500);
     }
   } catch(e) {
@@ -1655,7 +1655,7 @@ async function obConfirm() {
   refreshHome();
 
   // Start the guided tour for first-time users
-  if(!S.tour_done) {
+  if(!S.settings.tour_done) {
     setTimeout(() => startTour(), 600);
   }
 }
@@ -3275,7 +3275,7 @@ function clearTourUI() {
 
 function endTour(completed) {
   clearTourUI();
-  S.tour_done = true;
+  S.settings.tour_done = true;
   save();
   // Navigate back to home
   const homeTab = document.querySelector('.nav-tab');
@@ -3283,7 +3283,7 @@ function endTour(completed) {
 }
 
 function replayTour() {
-  S.tour_done = false;
+  S.settings.tour_done = false;
   startTour();
 }
 
