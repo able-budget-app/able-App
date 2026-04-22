@@ -648,6 +648,16 @@ input,select,button,textarea{font-family:inherit;}
 #coach-send:disabled{opacity:.5;cursor:not-allowed;transform:none;}
 .coach-footer{font-size:11px;color:var(--ds-t3);font-weight:600;text-align:center;padding:.25rem 0 1rem;}
 .coach-error{background:#fdeef2;border:1.5px solid rgba(192,64,96,.3);color:var(--ds-c4);border-radius:var(--ds-r1);padding:10px 12px;font-size:13px;font-weight:600;margin:.5rem 0;}
+/* ═══════ COACH NUDGE TOAST ═══════ */
+.coach-nudge{position:fixed;bottom:5.5rem;right:1.5rem;background:var(--ds-card);border:1.5px solid var(--ds-green-m);border-radius:var(--ds-r2);padding:12px 14px;box-shadow:var(--ds-sh3);z-index:140;max-width:300px;font-family:var(--ds-f);opacity:0;transform:translateY(8px);transition:opacity .25s ease,transform .25s cubic-bezier(.34,1.2,.64,1);}
+.coach-nudge.visible{opacity:1;transform:translateY(0);}
+.coach-nudge-msg{font-size:13px;font-weight:700;color:var(--ds-t1);margin-bottom:10px;line-height:1.4;letter-spacing:-.01em;}
+.coach-nudge-actions{display:flex;gap:6px;align-items:center;}
+.coach-nudge-btn{flex:1;background:var(--ds-green);color:white;border:none;border-radius:var(--ds-r1);padding:8px 12px;font-size:12px;font-weight:800;cursor:pointer;font-family:var(--ds-f);letter-spacing:-.01em;transition:background .15s;}
+.coach-nudge-btn:hover{background:var(--ds-green2);}
+.coach-nudge-close{background:transparent;border:none;color:var(--ds-t3);font-size:22px;cursor:pointer;padding:0 8px;line-height:1;transition:color .15s;}
+.coach-nudge-close:hover{color:var(--ds-c4);}
+@media(max-width:800px){.coach-nudge{bottom:calc(168px + env(safe-area-inset-bottom));right:1rem;max-width:calc(100vw - 2rem);}}
 </style>
 </head>
 <body>
@@ -1504,6 +1514,9 @@ async function onAuthStateChange(user) {
     // Run guided tour first time
     if(!S.settings.tour_done) {
       setTimeout(() => startTour(), 500);
+    } else {
+      // Evaluate proactive Coach nudges after the tour would have shown
+      evalCoachNudges();
     }
   } catch(e) {
     console.error('Auth flow error:', e);
@@ -3588,18 +3601,29 @@ function goTo(target){
 // ═══════════════════════════════════════
 // COACH PANEL (floating button)
 // ═══════════════════════════════════════
-function openCoachPanel(){
+function openCoachPanel(seedPrompt){
   const bg = document.getElementById('coach-panel-bg');
   if(!bg) return;
   bg.style.display='flex';
   document.body.style.overflow='hidden';
   renderCoach();
+  if (seedPrompt) {
+    setTimeout(() => {
+      const input = document.getElementById('coach-input');
+      if (input) { input.value = seedPrompt; input.focus(); }
+    }, 150);
+  }
 }
 function closeCoachPanel(){
   const bg = document.getElementById('coach-panel-bg');
   if(!bg) return;
   bg.style.display='none';
   document.body.style.overflow='';
+}
+function getCurrentPage(){
+  const active = document.querySelector('.page.active');
+  if (!active) return 'home';
+  return active.id.replace(/^page-/, '') || 'home';
 }
 
 // ═══════════════════════════════════════
@@ -5692,18 +5716,66 @@ async function renderCoach() {
   }, 100);
 }
 
+const COACH_INTROS = {
+  home: { title: "Just got paid?", examples: [
+    "How should I split this deposit?",
+    "Am I reserving enough for bills?",
+    "What's my surplus look like?",
+  ]},
+  forecast: { title: "Looking ahead?", examples: [
+    "What's coming up in the next 14 days?",
+    "Can my forecast cover next month's bills?",
+    "Where are the gaps I need to plan around?",
+  ]},
+  debt: { title: "Want help figuring out which debt to hit next?", examples: [
+    "Which debt should I kill first?",
+    "How fast can I be debt-free?",
+    "If I added $200 extra, how much faster?",
+  ]},
+  bills: { title: "Need help with bills?", examples: [
+    "Are any bills worth cutting?",
+    "Which bills are highest priority?",
+    "How much do my bills actually cost me monthly?",
+  ]},
+  whatif: { title: "Testing a scenario?", examples: [
+    "What if I made $10k next week?",
+    "What if income drops 30%?",
+    "Should I raise my owner pay %?",
+  ]},
+  score: { title: "Curious why your score changed?", examples: [
+    "Why did my score move this month?",
+    "Where can I pick up easy points?",
+    "How am I trending vs last month?",
+  ]},
+  learn: { title: "Any lesson giving you trouble?", examples: [
+    "Explain compound interest with my numbers.",
+    "What's my actual DTI?",
+    "How does pay yourself first fit inconsistent income?",
+  ]},
+  settings: { title: "Tweaking your setup?", examples: [
+    "Suggest a split for my situation.",
+    "Should I raise my owner pay %?",
+    "Is my planning window set right?",
+  ]},
+  coach: { title: "What's on your mind?", examples: [
+    "How am I doing this month?",
+    "Which debt should I focus on first?",
+    "Is my buffer on track?",
+    "What should I cut if income drops next month?",
+  ]},
+};
+
 function renderCoachMessages(history) {
   const view = document.getElementById('coach-messages');
   if (!view) return;
   if (!history || history.length === 0) {
+    const page = getCurrentPage();
+    const intro = COACH_INTROS[page] || COACH_INTROS.coach;
     view.innerHTML = `
       <div class="coach-empty">
-        <div class="coach-empty-title">Ask Coach anything.</div>
+        <div class="coach-empty-title">${coachEscapeHtml(intro.title)}</div>
         <div class="coach-examples">
-          <button class="coach-example" onclick="coachUseExample(this)">How am I doing this month?</button>
-          <button class="coach-example" onclick="coachUseExample(this)">Which debt should I focus on first?</button>
-          <button class="coach-example" onclick="coachUseExample(this)">Is my buffer on track?</button>
-          <button class="coach-example" onclick="coachUseExample(this)">What should I cut if income drops next month?</button>
+          ${intro.examples.map(ex => `<button class="coach-example" onclick="coachUseExample(this)">${coachEscapeHtml(ex)}</button>`).join('')}
         </div>
       </div>`;
     return;
@@ -5771,6 +5843,102 @@ async function coachSend() {
     sendBtn.disabled = false;
     input.focus();
   }
+}
+
+// ═══════════════════════════════════════
+// COACH PROACTIVE NUDGES
+// ═══════════════════════════════════════
+// Evaluate the user's state for things worth surfacing. Shows at most
+// one nudge at a time, the first unmissed one. Once dismissed a nudge
+// stays suppressed for 12 hours.
+function evalCoachNudges() {
+  if (!currentUser || !S) return;
+  const nudges = [];
+
+  // 1. Pay yourself first: ownerPct is 0 but income has been logged
+  if ((S.settings && S.settings.ownerPct) == 0 && totalIn() > 100) {
+    nudges.push({
+      id: 'pay_yourself',
+      msg: "Not paying yourself yet? Even 5% is a start.",
+      prompt: "My owner pay percentage is 0. What's a reasonable percentage to start with given my current numbers?",
+    });
+  }
+
+  // 2. Buffer low with bills coming up soon
+  const winBills = (typeof billsInWindow === 'function') ? billsInWindow(7) : [];
+  const winBillsTotal = winBills.reduce((s,b)=>s+(b.amount||0),0);
+  const bufferGoal = (typeof totalBills === 'function') ? totalBills() : 0;
+  if (S.buffer != null && bufferGoal > 0 && S.buffer < bufferGoal * 0.5 && winBillsTotal > 500) {
+    nudges.push({
+      id: 'buffer_low',
+      msg: `Buffer is at ${fr(S.buffer)} and ${fr(winBillsTotal)} in bills are due this week.`,
+      prompt: `My buffer is ${fr(S.buffer)} and I have ${fr(winBillsTotal)} in bills due in the next 7 days. What should I do?`,
+    });
+  }
+
+  // 3. Slow period: no income logged in 14+ days
+  if (Array.isArray(S.history) && S.history.length > 0) {
+    const lastTs = S.history[0].ts || 0;
+    const days = Math.floor((Date.now() - lastTs) / 86400000);
+    if (days >= 14) {
+      nudges.push({
+        id: 'slow_period',
+        msg: `${days} days since your last income. Slow stretch?`,
+        prompt: `I haven't logged income in ${days} days. Help me think through this slow period without panicking.`,
+      });
+    }
+  }
+
+  // Show the first one that hasn't been dismissed recently.
+  for (const nudge of nudges) {
+    const key = 'able_coach_nudge_' + nudge.id;
+    const last = parseInt(localStorage.getItem(key) || '0', 10);
+    if ((Date.now() - last) >= 12 * 3600 * 1000) {
+      // Stagger the render so the app finishes loading first.
+      setTimeout(() => showCoachNudge(nudge), 1200);
+      return;
+    }
+  }
+}
+
+function showCoachNudge(nudge) {
+  const existing = document.getElementById('coach-nudge');
+  if (existing) existing.remove();
+  // Don't show if panel is already open
+  const panel = document.getElementById('coach-panel-bg');
+  if (panel && panel.style.display === 'flex') return;
+
+  const el = document.createElement('div');
+  el.id = 'coach-nudge';
+  el.className = 'coach-nudge';
+  el.dataset.nudgeId = nudge.id;
+  el.dataset.nudgePrompt = nudge.prompt;
+  el.innerHTML = `
+    <div class="coach-nudge-msg">${coachEscapeHtml(nudge.msg)}</div>
+    <div class="coach-nudge-actions">
+      <button class="coach-nudge-btn" onclick="openCoachFromNudge()">Ask Coach</button>
+      <button class="coach-nudge-close" onclick="dismissCoachNudge()" aria-label="Dismiss">×</button>
+    </div>
+  `;
+  document.body.appendChild(el);
+  requestAnimationFrame(() => el.classList.add('visible'));
+}
+
+function dismissCoachNudge() {
+  const el = document.getElementById('coach-nudge');
+  if (!el) return;
+  const id = el.dataset.nudgeId;
+  if (id) localStorage.setItem('able_coach_nudge_' + id, String(Date.now()));
+  el.classList.remove('visible');
+  setTimeout(() => el.remove(), 260);
+}
+
+function openCoachFromNudge() {
+  const el = document.getElementById('coach-nudge');
+  if (!el) return;
+  const prompt = el.dataset.nudgePrompt || '';
+  dismissCoachNudge();
+  openCoachPanel(prompt);
 }
 
 </script>
