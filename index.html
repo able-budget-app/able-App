@@ -825,6 +825,7 @@ input,select,button,textarea{font-family:inherit;}
       <div class="sec">This month</div>
       <div class="metric-row">
         <div class="metric"><div class="metric-label">Income in</div><div class="metric-val" style="color:var(--ds-green);" id="m-in">$0</div></div>
+        <div class="metric"><div class="metric-label">Paid yourself</div><div class="metric-val" style="color:var(--ds-c2);" id="m-owner">$0</div><div class="metric-sub" id="m-owner-sub"></div></div>
         <div class="metric"><div class="metric-label">Extra to debt</div><div class="metric-val" style="color:var(--ds-c4);" id="m-debt">$0</div></div>
         <div class="metric"><div class="metric-label">To buffer</div><div class="metric-val" style="color:var(--ds-c5);" id="m-buf">$0</div></div>
       </div>
@@ -950,7 +951,7 @@ input,select,button,textarea{font-family:inherit;}
       </div>
       <div class="card" style="font-size:13px;color:var(--ds-t2);line-height:1.8;font-weight:600;">
         <div style="font-weight:800;color:var(--ds-t1);margin-bottom:8px;font-size:13px;letter-spacing:-.01em;">How you earn points</div>
-        Bills covered, 40 pts<br>Extra debt payments, 25 pts<br>Buffer fund added, 20 pts<br>Living within income, 15 pts
+        Bills covered, 30 pts<br>Paid yourself, 20 pts<br>Extra debt payments, 20 pts<br>Buffer fund added, 15 pts<br>Living within income, 15 pts
       </div>
     </div>
     <div>
@@ -1029,6 +1030,7 @@ input,select,button,textarea{font-family:inherit;}
       <div class="card">
         <div style="font-size:13px;color:var(--ds-t2);font-weight:600;line-height:1.7;margin-bottom:1.25rem;">Once bills in your planning window are reserved, leftover money is split across these buckets. They must add up to 100 or less.</div>
         <div class="form-row">
+          <div class="field"><label>Pay yourself (%)</label><input type="number" id="set-owner" min="0" max="100" step="1" oninput="updateSplitPreview()"><div style="font-size:11px;color:var(--ds-t3);font-weight:600;margin-top:5px;">Owner draw. Non-negotiable.</div></div>
           <div class="field"><label>Extra debt payoff (%)</label><input type="number" id="set-debt" min="0" max="100" step="1" oninput="updateSplitPreview()"><div style="font-size:11px;color:var(--ds-t3);font-weight:600;margin-top:5px;">Highest-interest debt first</div></div>
           <div class="field"><label>Savings / buffer (%)</label><input type="number" id="set-buf" min="0" max="100" step="1" oninput="updateSplitPreview()"><div style="font-size:11px;color:var(--ds-t3);font-weight:600;margin-top:5px;">Move to a separate savings account</div></div>
           <div class="field"><label>Free to spend (%)</label><input type="number" id="set-free" min="0" max="100" step="1" oninput="updateSplitPreview()"><div style="font-size:11px;color:var(--ds-t3);font-weight:600;margin-top:5px;">No guilt attached. It's yours.</div></div>
@@ -1193,7 +1195,7 @@ const stripeGet = () => window._stripe;
 // ═══════════════════════════════════════
 const EMPTY_DATA = {
   bills:[], debts:[], history:[], forecast:[], buffer:0,
-  settings:{debtPct:20,bufPct:15,freePct:5,allocateWindow:14},
+  settings:{debtPct:20,bufPct:15,freePct:5,ownerPct:0,allocateWindow:14},
   month_history:[], sources:['Salary','Freelance','Side income','Other'],
   allocated_to_bills:0,
   obligations:[], profile:null
@@ -1370,7 +1372,7 @@ async function onAuthStateChange(user) {
       S.history         = d.history||[];
       S.forecast        = d.forecast||[];
       S.buffer          = parseFloat(d.buffer)||0;
-      S.settings        = {debtPct:20,bufPct:15,freePct:5,allocateWindow:14,...(d.settings||{})};
+      S.settings        = {debtPct:20,bufPct:15,freePct:5,ownerPct:0,allocateWindow:14,...(d.settings||{})};
       S.month_history   = d.month_history||[];
       S.sources         = d.sources||['Salary','Freelance','Side income','Other'];
       S.allocated_to_bills = parseFloat(d.allocated_to_bills)||0;
@@ -1493,9 +1495,16 @@ const OB_QUESTIONS = [
   {
     key: 'goals',
     type: 'text',
-    msg: "Last one. What matters most to you right now?",
+    msg: "What matters most to you right now?",
     hint: "Pay off debt fast, build a safety net, just stay on top of bills. Be honest about priorities.",
     placeholder: "I want to crush my credit card debt first, then build up a few months of buffer."
+  },
+  {
+    key: 'pay_self',
+    type: 'text',
+    msg: "Last one. How much do you pay yourself?",
+    hint: "Most entrepreneurs don't pay themselves. You're going to. Even 5% is a start. Enter a number from 0 to 100. Leave blank for our default of 10%.",
+    placeholder: "10"
   }
 ];
 
@@ -1720,6 +1729,18 @@ async function obConfirm() {
   S.debts = (r.debts || []).map(d => ({...d, orig: d.balance}));
   S.sources = r.sources && r.sources.length ? r.sources : S.sources;
   S.settings = r.settings || S.settings;
+  // Apply Pay Yourself First answer from the onboarding step.
+  const pyfRaw = parseFloat(obAnswers.pay_self);
+  const pyfPct = (!isNaN(pyfRaw) && pyfRaw >= 0 && pyfRaw <= 100) ? pyfRaw : 10;
+  S.settings.ownerPct = pyfPct;
+  // Rebalance other buckets if they now push the total over 100.
+  const otherTotal = (S.settings.debtPct||0) + (S.settings.bufPct||0) + (S.settings.freePct||0);
+  if (pyfPct + otherTotal > 100 && otherTotal > 0) {
+    const scale = Math.max(0, 100 - pyfPct) / otherTotal;
+    S.settings.debtPct = Math.round((S.settings.debtPct||0) * scale);
+    S.settings.bufPct = Math.round((S.settings.bufPct||0) * scale);
+    S.settings.freePct = Math.round((S.settings.freePct||0) * scale);
+  }
   S.obligations = r.obligations || [];
   S.profile = { name: r.name, business_type: r.business_type, goals: r.goals };
 
@@ -1796,7 +1817,7 @@ async function loadUserData() {
   S.history         = data.history||[];
   S.forecast        = data.forecast||[];
   S.buffer          = parseFloat(data.buffer)||0;
-  S.settings        = {debtPct:20,bufPct:15,freePct:5,allocateWindow:14,...(data.settings||{})};
+  S.settings        = {debtPct:20,bufPct:15,freePct:5,ownerPct:0,allocateWindow:14,...(data.settings||{})};
   S.month_history   = data.month_history||[];
   S.sources         = data.sources||['Salary','Freelance','Side income','Other'];
   S.allocated_to_bills = parseFloat(data.allocated_to_bills)||0;
@@ -2134,20 +2155,23 @@ function computeJobs(amount,source,useCurrentIncome=true) {
     }
   }
   if(rem>0.01){
+    const ownerPct=S.settings.ownerPct||0;
+    const ownerAmt=rem*(ownerPct/100);
+    if(ownerAmt>0.01) jobs.push({name:'Pay yourself',why:`${ownerPct}% to you. Owner draw.`,amount:ownerAmt,color:'var(--ds-c2)',bg:'#d9ecde',type:'ownerpay'});
     const sorted=[...S.debts].sort((a,b)=>b.rate-a.rate);
     const topDebt=sorted[0];
     if(topDebt){
       const debtAmt=rem*(S.settings.debtPct/100);
       const bufAmt=rem*(S.settings.bufPct/100);
       const freeAmt=rem*(S.settings.freePct/100);
-      const totalDebt=debtAmt+Math.max(0,rem-debtAmt-bufAmt-freeAmt);
+      const totalDebt=debtAmt+Math.max(0,rem-ownerAmt-debtAmt-bufAmt-freeAmt);
       if(totalDebt>0.01) jobs.push({name:`Pay extra on ${topDebt.name}`,why:`Move directly to ${topDebt.name}. Highest interest first (${topDebt.rate}% APR)`,amount:totalDebt,color:'var(--coral)',bg:'var(--coral-light)',type:'debt'});
       if(bufAmt>0.01) jobs.push({name:'Move to your savings account',why:'Set aside in a separate savings account. Your buffer for slow months.',amount:bufAmt,color:'var(--sky)',bg:'var(--sky-light)',type:'buffer'});
       if(freeAmt>0.01) jobs.push({name:'Yours to spend freely',why:`${S.settings.freePct}% guilt-free`,amount:freeAmt,color:'var(--text2)',bg:'var(--bg2)',type:'free'});
     } else {
       const bufAmt=rem*(S.settings.bufPct/100);
       const freeAmt=rem*(S.settings.freePct/100);
-      const saveAmt=rem-bufAmt-freeAmt;
+      const saveAmt=rem-ownerAmt-bufAmt-freeAmt;
       if(saveAmt>0.01) jobs.push({name:'Save it',why:'No debts tracked. Put this away.',amount:saveAmt,color:'var(--sky)',bg:'var(--sky-light)',type:'buffer'});
       if(bufAmt>0.01) jobs.push({name:'Move to savings',why:'Buffer for slow months',amount:bufAmt,color:'var(--sky)',bg:'var(--sky-light)',type:'buffer'});
       if(freeAmt>0.01) jobs.push({name:'Spend freely',why:`${S.settings.freePct}% guilt-free`,amount:freeAmt,color:'var(--text2)',bg:'var(--bg2)',type:'free'});
@@ -2189,6 +2213,9 @@ function applyJobs(jobs,amount,source){
   const debtExtra=jobs.filter(j=>j.type==='debt').reduce((s,j)=>s+j.amount,0);
   const bufContrib=jobs.filter(j=>j.type==='buffer').reduce((s,j)=>s+j.amount,0);
   const billsPaid=jobs.filter(j=>j.type==='bills').reduce((s,j)=>s+j.amount,0);
+  // Owner pay combines the surplus-based ownerpay bucket and any fixed
+  // allocations with destination="owner_pay" (the Profit First path).
+  const ownerPaid=jobs.filter(j=>j.type==='ownerpay'||(j.type==='fixed'&&j.destination==='owner_pay')).reduce((s,j)=>s+j.amount,0);
   // Snapshot the per-debt distribution so we can reverse it exactly if edited/deleted later.
   const debtSplit=[];
   if(debtExtra>0.01){
@@ -2213,7 +2240,7 @@ function applyJobs(jobs,amount,source){
     amount,source,
     date:new Date().toLocaleDateString(),
     ts:Date.now(),
-    debtExtra,bufContrib,billsPaid,
+    debtExtra,bufContrib,billsPaid,ownerPaid,
     debtSplit,
     jobs:JSON.parse(JSON.stringify(jobs))
   });
@@ -2305,9 +2332,22 @@ function refreshHome(){
   document.getElementById('buf-pct-label').textContent=bufPct+'% of goal ('+fr(bufGoal)+')';
   const debtExtra=S.history.reduce((s,h)=>s+(h.debtExtra||0),0);
   const bufContrib=S.history.reduce((s,h)=>s+(h.bufContrib||0),0);
+  const ownerPaidThisMonth=S.history.reduce((s,h)=>s+(h.ownerPaid||0),0);
+  const lastMonthOwnerPaid=(S.month_history&&S.month_history[0])?(S.month_history[0].ownerPaid||0):null;
   document.getElementById('m-in').textContent=fr(ti);
   document.getElementById('m-debt').textContent=fr(debtExtra);
   document.getElementById('m-buf').textContent=fr(bufContrib);
+  document.getElementById('m-owner').textContent=fr(ownerPaidThisMonth);
+  const ownerSub=document.getElementById('m-owner-sub');
+  if(ownerSub){
+    const pctOfIn=ti>0?Math.round((ownerPaidThisMonth/ti)*100):0;
+    let trend='';
+    if(lastMonthOwnerPaid!=null && lastMonthOwnerPaid>0){
+      const diff=ownerPaidThisMonth-lastMonthOwnerPaid;
+      if(Math.abs(diff)>0.5) trend=` · ${diff>0?'up':'down'} ${fr(Math.abs(diff))}`;
+    }
+    ownerSub.textContent=(ownerPaidThisMonth>0?`${pctOfIn}% of income`:'Nothing yet')+trend;
+  }
   document.getElementById('nav-stats').innerHTML=`
     <div><div class="nav-stat-label">This month</div><div class="nav-stat-val" style="color:var(--sage);">${fr(ti)}</div></div>
     <div style="text-align:right;"><div class="nav-stat-label">Total debt</div><div class="nav-stat-val" style="color:var(--coral);">${fr(S.debts.reduce((s,d)=>s+d.balance,0))}</div></div>`;
@@ -2928,11 +2968,16 @@ function renderScore(){
   if(!ti && !pb){document.getElementById('score-big').textContent='--';return;}
   const de=S.history.reduce((s,h)=>s+(h.debtExtra||0),0);
   const bc=S.history.reduce((s,h)=>s+(h.bufContrib||0),0);
+  const op=S.history.reduce((s,h)=>s+(h.ownerPaid||0),0);
   // Paid bills count as covered. This matches how the Allocate page shows it.
-  const s1=Math.min(40,Math.round((Math.min(ti+pb,tb)/(tb||1))*40));
-  const s2=de>0?Math.min(25,Math.round((de/Math.max(tb*0.05,1))*5)):0;
-  const s3=bc>0?Math.min(20,Math.round((bc/Math.max(tb*0.05,1))*4)):0;
-  const s4=15;const total=Math.min(100,s1+s2+s3+s4);
+  const s1=Math.min(30,Math.round((Math.min(ti+pb,tb)/(tb||1))*30));
+  const s2=de>0?Math.min(20,Math.round((de/Math.max(tb*0.05,1))*4)):0;
+  const s3=bc>0?Math.min(15,Math.round((bc/Math.max(tb*0.05,1))*3)):0;
+  const s4=15;
+  // Owner pay: full 20 pts if they hit their ownerPct target of income, scaled down otherwise.
+  const ownerTarget=ti*((S.settings.ownerPct||0)/100);
+  const s5=op>0?(ownerTarget>0.01?Math.min(20,Math.round((op/ownerTarget)*20)):20):0;
+  const total=Math.min(100,s1+s2+s3+s4+s5);
   const grades=[[90,'S, elite budgeter'],[75,'A, really solid'],[60,'B, on the right track'],[45,'C, needs some work'],[0,'D, let\'s fix this']];
   const grade=grades.find(g=>total>=g[0]);
   const sc=total>=75?'var(--sage)':total>=50?'var(--amber)':'var(--red)';
@@ -2945,7 +2990,7 @@ function renderScore(){
     trendEl.textContent=diff>0?`↑ Up ${diff} pts from last month`:diff<0?`↓ Down ${Math.abs(diff)} pts from last month`:'Same as last month';
     trendEl.style.color=diff>0?'var(--sage)':diff<0?'var(--red)':'var(--text3)';
   }
-  const rows=[{label:'Bills covered',val:s1,max:40,color:'var(--red)'},{label:'Extra debt payments',val:s2,max:25,color:'var(--coral)'},{label:'Buffer fund added',val:s3,max:20,color:'var(--sky)'},{label:'Living in budget',val:s4,max:15,color:'var(--sage)'}];
+  const rows=[{label:'Bills covered',val:s1,max:30,color:'var(--red)'},{label:'Paid yourself',val:s5,max:20,color:'var(--ds-c2)'},{label:'Extra debt payments',val:s2,max:20,color:'var(--coral)'},{label:'Buffer fund added',val:s3,max:15,color:'var(--sky)'},{label:'Living in budget',val:s4,max:15,color:'var(--sage)'}];
   const el=document.getElementById('score-rows');el.innerHTML='';
   rows.forEach(r=>{
     const pct=Math.round((r.val/r.max)*100);const d=document.createElement('div');d.className='score-row';
@@ -3101,6 +3146,7 @@ function renderWiScenarios(){
 // SETTINGS
 // ═══════════════════════════════════════
 function loadSettingsPage(){
+  document.getElementById('set-owner').value=S.settings.ownerPct||0;
   document.getElementById('set-debt').value=S.settings.debtPct;
   document.getElementById('set-buf').value=S.settings.bufPct;
   document.getElementById('set-free').value=S.settings.freePct;
@@ -3134,44 +3180,49 @@ function updateWindowHint(w){
   el.innerHTML=`<strong style="color:var(--ds-t2);">${hints[w]||''}</strong><br>Right now you have <strong>${winBills.length}</strong> bill${winBills.length===1?'':'s'} due in the next ${w} days totaling <strong>${fr(total)}</strong>.`;
 }
 function updateSplitPreview(){
+  const owner=parseInt(document.getElementById('set-owner').value)||0;
   const debt=parseInt(document.getElementById('set-debt').value)||0;
   const buf=parseInt(document.getElementById('set-buf').value)||0;
   const free=parseInt(document.getElementById('set-free').value)||0;
-  const total=debt+buf+free;const rest=Math.max(0,100-total);const over=total>100;const under=total<100;
+  const total=owner+debt+buf+free;const rest=Math.max(0,100-total);const over=total>100;const under=total<100;
   document.getElementById('split-preview').innerHTML=`<div style="display:flex;gap:4px;height:12px;border-radius:30px;overflow:hidden;margin-bottom:8px;">
+    <div style="width:${owner}%;background:var(--ds-c2);transition:width .3s;"></div>
     <div style="width:${debt}%;background:var(--coral);transition:width .3s;"></div>
     <div style="width:${buf}%;background:var(--sky);transition:width .3s;"></div>
     <div style="width:${free}%;background:var(--sage);transition:width .3s;"></div>
     <div style="width:${rest}%;background:var(--coral);opacity:.5;transition:width .3s;"></div>
   </div>
   <div style="display:flex;gap:12px;font-size:11px;font-weight:700;flex-wrap:wrap;">
+    <span style="color:var(--ds-c2);">● ${owner}% pay yourself</span>
     <span style="color:var(--coral);">● ${debt}% debt</span>
     <span style="color:var(--sky);">● ${buf}% savings</span>
     <span style="color:var(--sage);">● ${free}% spend</span>
     ${rest>0?`<span style="color:var(--coral);opacity:.7;">● ${rest}% leftover goes to debt</span>`:''}
   </div>
-  ${over?`<div style="color:var(--red);font-size:12px;font-weight:700;margin-top:6px;">⚠ Total is ${total}%. Reduce one value to bring it to 100%.</div>`:''}
+  ${over?`<div style="color:var(--red);font-size:12px;font-weight:700;margin-top:6px;">Total is ${total}%. Reduce one value to bring it to 100%.</div>`:''}
   ${under&&rest>0?`<div style="color:var(--ds-t2);font-size:12px;font-weight:600;margin-top:6px;background:var(--ds-green-l);padding:8px 10px;border-radius:8px;">Heads up: anything you don't allocate here gets added to your debt payment. Right now that's ${rest}% extra on top of your ${debt}% debt setting, so ${debt+rest}% of surplus goes to debt.</div>`:''}`;
   const ex=document.getElementById('split-example');
-  const debtEx=1000*(debt/100),bufEx=1000*(buf/100),freeEx=1000*(free/100),restEx=1000*(rest/100);
+  const ownerEx=1000*(owner/100),debtEx=1000*(debt/100),bufEx=1000*(buf/100),freeEx=1000*(free/100),restEx=1000*(rest/100);
   ex.innerHTML=`<div class="card" style="padding:1rem;">
     <div style="font-size:13px;color:var(--text2);font-weight:600;margin-bottom:.75rem;">After bills are paid, $1,000 surplus would split like this:</div>
+    ${ownerEx>0?`<div style="display:flex;justify-content:space-between;padding:6px 0;border-bottom:1px solid var(--border);font-size:13px;font-weight:700;"><span style="color:var(--ds-c2);">Pay yourself</span><span>${f2(ownerEx)}</span></div>`:''}
     ${debtEx+restEx>0?`<div style="display:flex;justify-content:space-between;padding:6px 0;border-bottom:1px solid var(--border);font-size:13px;font-weight:700;"><span style="color:var(--coral);">Pay off debt</span><span>${f2(debtEx+restEx)}</span></div>`:''}
     ${bufEx>0?`<div style="display:flex;justify-content:space-between;padding:6px 0;border-bottom:1px solid var(--border);font-size:13px;font-weight:700;"><span style="color:var(--sky);">Move to savings</span><span>${f2(bufEx)}</span></div>`:''}
     ${freeEx>0?`<div style="display:flex;justify-content:space-between;padding:6px 0;font-size:13px;font-weight:700;"><span style="color:var(--sage);">Spend freely</span><span>${f2(freeEx)}</span></div>`:''}
   </div>`;
 }
 function saveSettings(){
+  const owner=parseInt(document.getElementById('set-owner').value)||0;
   const debt=parseInt(document.getElementById('set-debt').value)||0;
   const buf=parseInt(document.getElementById('set-buf').value)||0;
   const free=parseInt(document.getElementById('set-free').value)||0;
-  const total=debt+buf+free;
+  const total=owner+debt+buf+free;
   if(total>100){alert('Your percentages add up to '+total+'%. Please bring the total to 100% or less.');return;}
   if(total<100){
     const rest=100-total;
     if(!confirm('Your split adds up to '+total+'%. The remaining '+rest+'% will go to debt payoff on top of your '+debt+'% setting, meaning '+(debt+rest)+'% of surplus goes to debt.\n\nSave this way?\n\nClick Cancel to adjust so everything totals 100%.'))return;
   }
-  S.settings={...S.settings,debtPct:debt,bufPct:buf,freePct:free};save();
+  S.settings={...S.settings,ownerPct:owner,debtPct:debt,bufPct:buf,freePct:free};save();
   const btn=document.querySelector('#page-settings .btn-primary');
   btn.textContent='Saved ✓';setTimeout(()=>{btn.textContent='Save my split';},1500);
 }
@@ -3352,16 +3403,19 @@ function resetMonth(){
   const ti=totalIn();
   const de=S.history.reduce((s,h)=>s+(h.debtExtra||0),0);
   const bc=S.history.reduce((s,h)=>s+(h.bufContrib||0),0);
+  const op=S.history.reduce((s,h)=>s+(h.ownerPaid||0),0);
   const tb=totalBills();
   const pb=paidBills();
   const billsList=S.bills.map(b=>({name:b.name,amount:b.amount,paid:!!b.paid,cat:b.cat}));
   const debtsSnapshot=S.debts.map(d=>({name:d.name,balance:d.balance,rate:d.rate}));
   const totalDebt=S.debts.reduce((s,d)=>s+(d.balance||0),0);
-  const s1=Math.min(40,Math.round((Math.min(ti+pb,tb)/(tb||1))*40));
-  const s2=de>0?25:0;
-  const s3=bc>0?20:0;
+  const s1=Math.min(30,Math.round((Math.min(ti+pb,tb)/(tb||1))*30));
+  const s2=de>0?20:0;
+  const s3=bc>0?15:0;
   const s4=15; // living within income (default credit)
-  const score=s1+s2+s3+s4;
+  const ownerTarget=ti*((S.settings.ownerPct||0)/100);
+  const s5=op>0?(ownerTarget>0.01?Math.min(20,Math.round((op/ownerTarget)*20)):20):0;
+  const score=s1+s2+s3+s4+s5;
   if(!S.month_history)S.month_history=[];
   S.month_history.unshift({
     label,
@@ -3369,6 +3423,7 @@ function resetMonth(){
     income: ti,
     debtPaid: de,
     bufAdded: bc,
+    ownerPaid: op,
     billsTotal: tb,
     billsPaidAmount: pb,
     billsPaidCount: billsList.filter(b=>b.paid).length,
@@ -3702,6 +3757,13 @@ const LC_ICONS = {
 
 const LC_COURSES = [
   {
+    id: 'payself',
+    icon: 'dollar',
+    title: 'Pay Yourself First',
+    sub: 'Start Here',
+    desc: "The one thing most entrepreneurs skip. Learn why it matters and the simplest way to start, even if you're deep in debt."
+  },
+  {
     id: 'debt',
     icon: 'trendingDown',
     title: 'How to Get Out of Debt',
@@ -3732,6 +3794,34 @@ const LC_COURSES = [
 ];
 
 const LC_LESSONS = {
+  payself: [
+    {
+      id: 'py1', phase: 'foundation', num: 1,
+      title: "Why You're Not Paying Yourself (And Why That's Killing Your Business)",
+      hint: "The one thing most entrepreneurs skip",
+      overview: [
+        "Most entrepreneurs are their own last priority. You pay the contractor. You pay the tools. You pay the bills. What's left goes to the business, or stays on a credit card.",
+        "Months blur into years. You work harder than anyone you employ. You're the one who never takes a vacation. The scorecard says you're building something. But you're not. You're running a job that pays other people.",
+        "If you don't pay yourself consistently, one of three things is true. Your business isn't profitable enough to support you. You're subsidizing it with personal savings. Or you're overworking to hide a pricing problem. None of these get better on their own."
+      ],
+      keyPoints: [
+        { icon: 'zap', text: '<strong>Pay yourself first means exactly that.</strong> The moment income lands, a fixed percentage goes to you. Before taxes, before bills, before reinvestment.' },
+        { icon: 'chart', text: '<strong>Five percent beats zero by infinity.</strong> Start small if you have to. The habit matters more than the number at first.' },
+        { icon: 'shield', text: '<strong>Money follows structure, not hope.</strong> There is no finish line where you suddenly feel comfortable paying yourself. Make it the first bill, not the last.' },
+        { icon: 'target', text: '<strong>Use a separate destination.</strong> Not your business operating account. A real, separate account where the money actually goes to you.' }
+      ],
+      callout: {
+        title: 'Pick your number today',
+        text: "5% if you have debt. 10% if you're stable. 15 to 20% if you're profitable and want to grow. Then route that percentage every time income lands."
+      },
+      steps: [
+        { title: 'Pick a starting percentage', desc: "Low is fine. 5% is better than 0%. Don't overthink it." },
+        { title: 'Open a separate account', desc: 'A personal savings account works. Keep it away from your business operating account.' },
+        { title: 'Route the percentage on every income event', desc: "Use Able to track it. The surplus split in Settings has a Pay Yourself bucket. Set it to your number." },
+        { title: 'Run this for 90 days', desc: 'You start to see what your business actually does. You stop confusing revenue with income.' }
+      ]
+    }
+  ],
   debt: [
     {
       id: 'd1', phase: 'foundation', num: 1,
