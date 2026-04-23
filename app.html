@@ -111,12 +111,12 @@ input,select,button,textarea{font-family:inherit;}
 .ob-claude-msg{font-size:22px;font-weight:800;color:var(--ds-t1);line-height:1.3;margin-bottom:.5rem;letter-spacing:-.02em;}
 .ob-claude-hint{font-size:14px;color:var(--ds-t2);font-weight:500;line-height:1.55;margin-bottom:1.5rem;}
 .ob-input-wrap{margin-bottom:1.25rem;}
-.ob-input{width:100%;background:var(--ds-page);border:1.5px solid var(--ds-t4);border-radius:var(--ds-r1);color:var(--ds-t1);font-family:var(--ds-f);font-size:15px;font-weight:600;padding:14px;outline:none;resize:vertical;min-height:96px;transition:all .2s;margin-bottom:1.25rem;}
+.ob-input{width:100%;background:var(--ds-page);border:1.5px solid var(--ds-t4);border-radius:var(--ds-r1);color:var(--ds-t1);font-family:var(--ds-f);font-size:16px;font-weight:600;padding:14px;outline:none;resize:vertical;min-height:96px;transition:all .2s;margin-bottom:1.25rem;}
 .ob-input:focus{border-color:var(--ds-green);box-shadow:0 0 0 3px rgba(42,122,74,.1);}
 .ob-input::placeholder{color:var(--ds-t3);font-weight:500;}
 #ob-input-area{margin-bottom:1.25rem;}
 .ob-table-row{display:flex;gap:6px;margin-bottom:7px;align-items:center;}
-.ob-table-input{flex:1;min-width:0;background:var(--ds-page);border:1.5px solid var(--ds-t4);border-radius:var(--ds-r1);color:var(--ds-t1);font-family:var(--ds-f);font-size:15px;font-weight:700;padding:12px 14px;outline:none;transition:all .2s;}
+.ob-table-input{flex:1;min-width:0;background:var(--ds-page);border:1.5px solid var(--ds-t4);border-radius:var(--ds-r1);color:var(--ds-t1);font-family:var(--ds-f);font-size:16px;font-weight:700;padding:12px 14px;outline:none;transition:all .2s;}
 .ob-table-input:focus{border-color:var(--ds-green);box-shadow:0 0 0 3px rgba(42,122,74,.1);}
 .ob-table-input::placeholder{color:var(--ds-t3);font-weight:500;}
 .ob-table-x{width:34px;height:34px;flex-shrink:0;background:transparent;border:none;color:var(--ds-t3);font-size:20px;cursor:pointer;border-radius:50%;transition:all .15s;}
@@ -298,7 +298,7 @@ input,select,button,textarea{font-family:inherit;}
   .bills-name .freq-tag, .bills-name .link-tag{display:inline-block;margin-top:2px;}
   .bills-due{grid-area:due;width:auto;text-align:left;font-size:10px;}
   .bills-amt-wrap{grid-area:amount;justify-self:end;}
-  .bills-amt-input{width:100px;font-size:15px;padding:8px 12px;min-height:36px;}
+  .bills-amt-input{width:100px;font-size:16px;padding:8px 12px;min-height:36px;}
   .bills-actions{grid-area:actions;justify-self:end;}
   .bills-actions .btn-sm{padding:4px 10px;font-size:11px;}
 }
@@ -763,6 +763,7 @@ input,select,button,textarea{font-family:inherit;}
 .coach-input-wrap{display:flex;gap:8px;align-items:flex-end;padding:.75rem 0;position:sticky;bottom:0;background:var(--ds-page);}
 #coach-input{flex:1;background:var(--ds-card);border:1.5px solid var(--ds-t4);border-radius:var(--ds-r2);padding:12px 14px;font-family:var(--ds-f);font-size:14px;font-weight:500;color:var(--ds-t1);outline:none;resize:none;transition:border-color .18s,box-shadow .18s;min-height:48px;max-height:200px;}
 #coach-input:focus{border-color:var(--ds-green);box-shadow:0 0 0 3px rgba(42,122,74,.1);}
+@media(max-width:800px){#coach-input{font-size:16px;}}
 #coach-send{flex-shrink:0;}
 #coach-send:disabled{opacity:.5;cursor:not-allowed;transform:none;}
 .coach-footer{font-size:11px;color:var(--ds-t3);font-weight:600;text-align:center;padding:.25rem 0 1rem;}
@@ -2144,6 +2145,13 @@ const totalBills=()=>S.bills.reduce((s,b)=>s+billMonthlyAmount(b),0);
 const remainingBills=()=>S.bills.filter(b=>!b.paid).reduce((s,b)=>s+billMonthlyAmount(b),0);
 const paidBills=()=>S.bills.filter(b=>b.paid).reduce((s,b)=>s+billMonthlyAmount(b),0);
 const allocWindow=()=>parseInt(S.settings.allocateWindow)||14;
+// Build a Date for day-of-month `d` in (year, month), clamping to the last valid day
+// of that month so `d=31` in Feb doesn't overflow into March.
+function monthlyDueDate(year,month,d){
+  const lastDay=new Date(year,month+1,0).getDate();
+  return new Date(year,month,Math.min(d,lastDay));
+}
+
 // Bills due within the rolling window that aren't paid yet.
 // "ongoing" bills with no fixed date always count. Weekly/biweekly/custom bills multiply
 // by how many times they'll occur within the window.
@@ -2156,8 +2164,8 @@ function billOccurrencesInWindow(bill,days){
   if(bill.due==='ongoing') return {count:1,nextDays:0};
   if(freq==='monthly'){
     const d=parseInt(bill.due);if(isNaN(d))return {count:0,nextDays:999};
-    let t=new Date(now.getFullYear(),now.getMonth(),d);
-    if(t<now)t=new Date(now.getFullYear(),now.getMonth()+1,d);
+    let t=monthlyDueDate(now.getFullYear(),now.getMonth(),d);
+    if(t<now)t=monthlyDueDate(now.getFullYear(),now.getMonth()+1,d);
     const delta=Math.round((t-now)/86400000);
     return {count: delta<=days?1:0, nextDays:delta};
   }
@@ -2220,8 +2228,8 @@ function daysUntil(due){
   if(typeof due==='number' || (typeof due==='string' && /^\d+$/.test(due))){
     const d=parseInt(due);if(isNaN(d))return 999;
     const now=new Date();now.setHours(0,0,0,0);
-    let t=new Date(now.getFullYear(),now.getMonth(),d);
-    if(t<now)t=new Date(now.getFullYear(),now.getMonth()+1,d);
+    let t=monthlyDueDate(now.getFullYear(),now.getMonth(),d);
+    if(t<now)t=monthlyDueDate(now.getFullYear(),now.getMonth()+1,d);
     return Math.round((t-now)/86400000);
   }
   return 999;
@@ -3167,14 +3175,19 @@ function addForecast(){
 // ═══════════════════════════════════════
 function getBillsForCalendar(){return S.bills.filter(b=>b.due!=='ongoing'&&parseInt(b.due)).sort((a,b)=>parseInt(a.due)-parseInt(b.due));}
 function addToAppleCalendar(){
-  const bills=getBillsForCalendar();const now=new Date();
-  const yr=now.getFullYear();const mo=String(now.getMonth()+1).padStart(2,'0');
+  const bills=getBillsForCalendar();const now=new Date();now.setHours(0,0,0,0);
   let ics='BEGIN:VCALENDAR\nVERSION:2.0\nPRODID:-//Able//EN\nCALSCALE:GREGORIAN\n';
   bills.forEach(b=>{
-    const day=String(parseInt(b.due)).padStart(2,'0');
+    const rawDay=parseInt(b.due);
+    // Anchor DTSTART to the next valid occurrence (clamps day 31 in Feb, etc.).
+    let anchor=monthlyDueDate(now.getFullYear(),now.getMonth(),rawDay);
+    if(anchor<now)anchor=monthlyDueDate(now.getFullYear(),now.getMonth()+1,rawDay);
+    const yr=anchor.getFullYear();
+    const mo=String(anchor.getMonth()+1).padStart(2,'0');
+    const day=String(anchor.getDate()).padStart(2,'0');
     ics+=`BEGIN:VEVENT\nUID:able-${b.name.replace(/\s/g,'-')}-${Date.now()}@able\n`;
     ics+=`DTSTART;VALUE=DATE:${yr}${mo}${day}\n`;
-    ics+=`RRULE:FREQ=MONTHLY;BYMONTHDAY=${parseInt(b.due)}\n`;
+    ics+=`RRULE:FREQ=MONTHLY;BYMONTHDAY=${rawDay}\n`;
     ics+=`SUMMARY:${b.name}: ${f2(b.amount)} due\n`;
     ics+=`DESCRIPTION:${b.name} payment of ${f2(b.amount)} is due today.\n`;
     ics+=`BEGIN:VALARM\nTRIGGER:-P2D\nACTION:DISPLAY\nDESCRIPTION:${b.name} due in 2 days\nEND:VALARM\n`;
@@ -3193,8 +3206,8 @@ function addToGoogleCalendar(){
   bills.forEach((b,i)=>{
     setTimeout(()=>{
       const day=parseInt(b.due);const now=new Date();
-      let date=new Date(now.getFullYear(),now.getMonth(),day);
-      if(date<now)date=new Date(now.getFullYear(),now.getMonth()+1,day);
+      let date=monthlyDueDate(now.getFullYear(),now.getMonth(),day);
+      if(date<now)date=monthlyDueDate(now.getFullYear(),now.getMonth()+1,day);
       const fmt=d=>`${d.getFullYear()}${String(d.getMonth()+1).padStart(2,'0')}${String(d.getDate()).padStart(2,'0')}`;
       const next=new Date(date);next.setDate(next.getDate()+1);
       const title=encodeURIComponent(`${b.name}: ${f2(b.amount)} due`);
