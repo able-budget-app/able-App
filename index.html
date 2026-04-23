@@ -287,6 +287,23 @@ a { text-decoration: none; color: inherit; }
   font-weight: 700;
   display: inline-block;
 }
+.able-mark {
+  position: relative;
+  display: inline-block;
+  white-space: nowrap;
+}
+.able-mark::after {
+  content: '';
+  position: absolute;
+  left: -3%;
+  right: -3%;
+  bottom: -.05em;
+  height: .16em;
+  background: var(--ds-green);
+  border-radius: 60% 40% 70% 30%;
+  transform: rotate(-1deg);
+  pointer-events: none;
+}
 .hero-sub {
   font-size: 18px;
   font-weight: 500;
@@ -706,6 +723,15 @@ a { text-decoration: none; color: inherit; }
   width: 1px;
   background: linear-gradient(to bottom, rgba(184,224,200,.3), rgba(184,224,200,.05));
 }
+.problem-beat[data-stage="unease"]:not(:last-child)::after {
+  background: linear-gradient(to bottom, rgba(184,224,200,.3), rgba(224,156,48,.25));
+}
+.problem-beat[data-stage="warning"]:not(:last-child)::after {
+  background: linear-gradient(to bottom, rgba(224,156,48,.35), rgba(192,64,96,.3));
+}
+.problem-beat[data-stage="alarm"]:not(:last-child)::after {
+  background: linear-gradient(to bottom, rgba(192,64,96,.4), rgba(192,64,96,.1));
+}
 .problem-day {
   display: inline-flex;
   align-items: center;
@@ -735,7 +761,17 @@ a { text-decoration: none; color: inherit; }
   transition: color .4s;
 }
 .problem-beat-text strong { color: white; font-weight: 800; }
-/* Active/highlighted state */
+.beat-money {
+  color: var(--ds-c4);
+  font-size: 1.15em;
+  letter-spacing: -.02em;
+  transition: color .4s, text-shadow .4s;
+}
+.problem-beat.highlight .beat-money {
+  color: #ff6f8c;
+  text-shadow: 0 0 20px rgba(255,111,140,.4);
+}
+/* Active/highlighted state — stage-aware */
 .problem-beat.highlight .problem-day {
   background: rgba(42,122,74,.4);
   border-color: var(--ds-green-m);
@@ -744,6 +780,29 @@ a { text-decoration: none; color: inherit; }
 .problem-beat.highlight .problem-beat-text {
   color: white;
   font-weight: 600;
+}
+.problem-beat[data-stage="unease"].highlight .problem-day {
+  background: rgba(201,124,10,.3);
+  border-color: rgba(224,156,48,.6);
+  color: #f2b75a;
+}
+.problem-beat[data-stage="warning"].highlight .problem-day {
+  background: rgba(201,124,10,.4);
+  border-color: rgba(232,128,72,.7);
+  color: #ffa870;
+}
+.problem-beat[data-stage="alarm"].highlight .problem-day {
+  background: rgba(192,64,96,.4);
+  border-color: rgba(232,96,124,.7);
+  color: #ff8aa6;
+}
+.problem-beat[data-stage="dread"].highlight .problem-day {
+  background: rgba(255,255,255,.06);
+  border-color: rgba(255,255,255,.15);
+  color: rgba(255,255,255,.55);
+}
+.problem-beat[data-stage="alarm"].highlight .problem-beat-text strong {
+  color: #ff8aa6;
 }
 .problem-closer {
   font-size: clamp(1.25rem, 2.5vw, 1.75rem);
@@ -1773,7 +1832,7 @@ a { text-decoration: none; color: inherit; }
       <span class="hero-eyebrow">For freelancers, creators,<br class="br-mobile">and business owners.</span>
       <h1 class="hero-headline">
         <span>From holding your<br>breath with bills</span>
-        <span class="hl-payoff"><span class="hero-arrow">→</span> Finally able to breathe.</span>
+        <span class="hl-payoff"><span class="hero-arrow">→</span> To finally <span class="able-mark">able</span> to breathe.</span>
       </h1>
       <p class="hero-sub">An app built for entrepreneurs who struggle to manage inconsistent income.</p>
       <ul class="hero-bullets">
@@ -1875,31 +1934,31 @@ a { text-decoration: none; color: inherit; }
       <p>By the 30th, $500 to $1,000 is gone. Money that should have killed debt, built savings, or gotten you ahead of next month's bills.</p>
     </div>
     <div class="problem-story reveal">
-      <div class="problem-beat">
+      <div class="problem-beat" data-stage="calm">
         <span class="problem-day">Day 1</span>
         <p class="problem-beat-text">Money comes in. Just in time. Breathe a little.</p>
       </div>
-      <div class="problem-beat">
+      <div class="problem-beat" data-stage="calm">
         <span class="problem-day">Day 2</span>
         <p class="problem-beat-text">You pay the bills that are due. Some is left over.</p>
       </div>
-      <div class="problem-beat">
+      <div class="problem-beat" data-stage="unease">
         <span class="problem-day">Day 3</span>
         <p class="problem-beat-text">You freeze. You don't touch it. You tell yourself it's safer untouched.</p>
       </div>
-      <div class="problem-beat">
+      <div class="problem-beat" data-stage="unease">
         <span class="problem-day">Day 7</span>
         <p class="problem-beat-text">The money sits. A small snack here. Won't hurt.</p>
       </div>
-      <div class="problem-beat">
+      <div class="problem-beat" data-stage="warning">
         <span class="problem-day">Day 14</span>
         <p class="problem-beat-text">The leak begins. Lunch. Gas. A subscription you forgot about. Small stuff. Nothing that feels like a decision.</p>
       </div>
-      <div class="problem-beat">
+      <div class="problem-beat" data-stage="alarm">
         <span class="problem-day">Day 30</span>
-        <p class="problem-beat-text">End of the month. <strong>"Where did that $1,000 go?"</strong> Nothing saved. Nothing paid down. Nothing to show for it.</p>
+        <p class="problem-beat-text">End of the month. <strong>"Where did that <span class="beat-money">$1,000</span> go?"</strong> Nothing saved. Nothing paid down. Nothing to show for it.</p>
       </div>
-      <div class="problem-beat">
+      <div class="problem-beat" data-stage="dread">
         <span class="problem-day">Day 31</span>
         <p class="problem-beat-text">Shame. Guilt. Avoidance. You promise yourself next month will be different. But we know it won't.</p>
       </div>
