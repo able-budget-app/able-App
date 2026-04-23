@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-<title>Able — Built for inconsistent income.</title>
+<title>Able. Built for inconsistent income.</title>
 <meta name="description" content="An app built for entrepreneurs who struggle to budget inconsistent income. Finally pay down your debt, actually build your savings, and stop living unpredictable check to unpredictable check.">
 <link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,300;12..96,400;12..96,500;12..96,600;12..96,700;12..96,800;12..96,900&display=swap" rel="stylesheet">
 <style>
@@ -169,9 +169,59 @@ a { text-decoration: none; color: inherit; }
 }
 .nav-cta:hover { background: var(--ds-green2); transform: translateY(-1px); }
 .nav-cta:active { transform: scale(.97); }
-@media (max-width: 640px) {
+.nav-toggle {
+  display: none;
+  background: transparent;
+  border: 1px solid var(--ds-t4);
+  border-radius: 10px;
+  width: 40px;
+  height: 38px;
+  padding: 0;
+  align-items: center;
+  justify-content: center;
+  color: var(--ds-t1);
+  transition: border-color .2s, background .2s;
+}
+.nav-toggle:hover { border-color: var(--ds-green); }
+.nav-toggle svg { width: 20px; height: 20px; }
+.nav-toggle .icon-close { display: none; }
+.nav-toggle[aria-expanded="true"] .icon-open { display: none; }
+.nav-toggle[aria-expanded="true"] .icon-close { display: block; }
+.nav-mobile {
+  display: none;
+  position: absolute;
+  top: 60px;
+  left: 0;
+  right: 0;
+  background: rgba(240, 247, 242, .98);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border-bottom: 1px solid rgba(196, 216, 204, .4);
+  padding: 1rem 1.25rem 1.5rem;
+  flex-direction: column;
+  gap: .25rem;
+}
+.nav-mobile.open { display: flex; }
+.nav-mobile a {
+  font-size: 16px;
+  font-weight: 700;
+  color: var(--ds-t2);
+  padding: 12px 4px;
+  border-bottom: 1px solid rgba(196,216,204,.35);
+}
+.nav-mobile a:last-of-type { border-bottom: none; }
+.nav-mobile .nav-cta {
+  margin-top: .75rem;
+  padding: 14px 20px;
+  font-size: 14px;
+  text-align: center;
+  color: white;
+}
+@media (max-width: 720px) {
   .nav { padding: 0 1.25rem; }
   .nav-links { display: none; }
+  .nav > .nav-inner > .nav-cta { display: none; }
+  .nav-toggle { display: inline-flex; }
 }
 
 /* ═══════════════════════════════════════
@@ -202,8 +252,8 @@ a { text-decoration: none; color: inherit; }
   margin: 0 auto;
   padding: 0 2rem;
   display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 4rem;
+  grid-template-columns: 1fr 280px;
+  gap: 3rem;
   align-items: center;
 }
 .hero-copy { animation: fadeUp .8s ease both; }
@@ -217,17 +267,23 @@ a { text-decoration: none; color: inherit; }
   display: block;
 }
 .hero-headline {
-  font-size: clamp(2.5rem, 5vw, 4rem);
+  font-size: clamp(2.25rem, 4.5vw, 3.75rem);
   font-weight: 900;
   letter-spacing: -.04em;
   line-height: 1.05;
   color: var(--ds-t1);
   margin-bottom: 1.25rem;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
 }
+.hero-headline .hl-payoff { white-space: nowrap; }
 .hero-arrow {
   color: var(--ds-green);
   font-weight: 700;
-  margin-right: .15em;
+  font-size: .8em;
+  line-height: 1;
+  margin: .08em 0;
   display: inline-block;
 }
 .hero-sub {
@@ -302,7 +358,7 @@ a { text-decoration: none; color: inherit; }
   box-shadow: none;
 }
 .btn-primary.ghost:hover { background: var(--ds-green-l); box-shadow: none; }
-.section-cta { text-align: center; margin-top: 3rem; }
+.section-cta { display: flex; justify-content: center; margin-top: 3rem; }
 .section-cta .btn-primary { padding: 16px 34px; font-size: 15px; }
 .btn-ghost {
   background: transparent;
@@ -521,6 +577,8 @@ a { text-decoration: none; color: inherit; }
     gap: 3rem;
     text-align: center;
   }
+  .hero-headline { align-items: center; }
+  .hero-headline .hl-payoff { white-space: normal; }
   .hero-sub { max-width: 100%; }
   .hero-bullets { align-items: center; }
   .hero-ctas { justify-content: center; }
@@ -602,13 +660,17 @@ a { text-decoration: none; color: inherit; }
   margin-bottom: 1.25rem;
 }
 .problem-intro {
+  max-width: 640px;
+  margin: 0 0 2.5rem;
+}
+.problem-intro p {
   font-size: 17px;
   font-weight: 500;
   line-height: 1.65;
   color: rgba(255,255,255,.82);
-  max-width: 640px;
-  margin: 0 0 2.5rem;
+  margin-bottom: 1rem;
 }
+.problem-intro p:last-child { margin-bottom: 0; }
 .problem-intro em {
   font-style: italic;
   color: white;
@@ -629,11 +691,11 @@ a { text-decoration: none; color: inherit; }
   position: relative;
 }
 .problem-beat:last-child { padding-bottom: 0; }
-/* Vertical connector line between beats */
+/* Vertical connector line between beats — passes through pill centers */
 .problem-beat:not(:last-child)::after {
   content: '';
   position: absolute;
-  left: 36px;
+  left: 40px;
   top: 28px;
   bottom: 0;
   width: 1px;
@@ -643,9 +705,10 @@ a { text-decoration: none; color: inherit; }
   display: inline-flex;
   align-items: center;
   justify-content: center;
+  justify-self: center;
   height: 28px;
   padding: 0 10px;
-  border-radius: 100px;
+  border-radius: var(--ds-r1);
   background: rgba(184,224,200,.12);
   border: 1px solid rgba(184,224,200,.2);
   font-size: 10px;
@@ -712,7 +775,7 @@ a { text-decoration: none; color: inherit; }
   .problem-beat { grid-template-columns: 64px 1fr; gap: 1rem; }
   .problem-beat-text { font-size: 16px; }
   .problem-day { font-size: 9px; padding: 0 8px; }
-  .problem-beat:not(:last-child)::after { left: 28px; }
+  .problem-beat:not(:last-child)::after { left: 32px; }
 }
 
 /* ═══════════════════════════════════════
@@ -769,7 +832,7 @@ a { text-decoration: none; color: inherit; }
   background: radial-gradient(circle, rgba(42,122,74,.15) 0%, transparent 65%);
 }
 .shift-phone-wrap {
-  width: 240px;
+  width: 280px;
   margin: 0 auto;
   position: relative;
   z-index: 1;
@@ -777,31 +840,32 @@ a { text-decoration: none; color: inherit; }
 }
 .shift-phone-frame {
   background: #1a1a1a;
-  border-radius: 38px;
-  padding: 12px;
+  border-radius: 44px;
+  padding: 14px;
   position: relative;
 }
 .shift-phone-frame::before {
   content: '';
   position: absolute;
-  top: 12px;
+  top: 14px;
   left: 50%;
   transform: translateX(-50%);
-  width: 78px;
-  height: 22px;
+  width: 90px;
+  height: 28px;
   background: #1a1a1a;
-  border-radius: 0 0 16px 16px;
+  border-radius: 0 0 18px 18px;
   z-index: 10;
 }
 .shift-phone-screen {
   background: #f0f7f2;
-  border-radius: 28px;
+  border-radius: 34px;
   overflow: hidden;
+  height: 560px;
   position: relative;
 }
 .shift-phone-status {
   background: #f0f7f2;
-  padding: 12px 18px 6px;
+  padding: 14px 20px 6px;
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -812,7 +876,9 @@ a { text-decoration: none; color: inherit; }
   z-index: 5;
 }
 .shift-phone-content {
-  padding: 16px 16px 20px;
+  padding: 0 14px 14px;
+  overflow: hidden;
+  height: calc(100% - 44px);
 }
 .recap-label {
   font-size: 9px;
@@ -828,47 +894,112 @@ a { text-decoration: none; color: inherit; }
   color: #111c16;
   letter-spacing: -.02em;
   line-height: 1.1;
-  margin-bottom: 16px;
+  margin-bottom: 14px;
 }
 .recap-card {
   background: white;
-  border-radius: 16px;
-  padding: 4px 14px;
-  box-shadow: 0 2px 10px rgba(0,0,0,.06);
+  border-radius: 18px;
+  padding: 12px 14px;
+  margin-bottom: 10px;
+  box-shadow: 0 2px 8px rgba(0,0,0,.06);
 }
+.recap-card:last-child { margin-bottom: 0; }
 .recap-row {
   display: flex;
   align-items: center;
   gap: 10px;
-  padding: 12px 0;
-  border-bottom: 1px solid rgba(17,28,22,.06);
 }
-.recap-row:last-child { border-bottom: none; }
 .recap-icon {
-  width: 28px;
-  height: 28px;
+  width: 32px;
+  height: 32px;
   border-radius: 50%;
   display: flex;
   align-items: center;
   justify-content: center;
   flex-shrink: 0;
 }
-.recap-icon svg { width: 14px; height: 14px; }
+.recap-icon svg { width: 16px; height: 16px; }
 .recap-icon-check { background: var(--ds-green); color: white; }
-.recap-icon-up,
-.recap-icon-down { background: rgba(42,122,74,.15); color: var(--ds-green); }
+.recap-icon-up { background: rgba(42,122,74,.15); color: var(--ds-green); }
+.recap-icon-down { background: rgba(192,64,96,.12); color: var(--ds-c4); }
 .recap-row-label {
   flex: 1;
   font-size: 13px;
   font-weight: 700;
   color: #111c16;
-}
-.recap-row-value {
-  font-size: 14px;
-  font-weight: 800;
-  color: var(--ds-green);
   letter-spacing: -.01em;
 }
+.recap-row-sub {
+  font-size: 10px;
+  font-weight: 600;
+  color: #8ca898;
+  margin-top: 1px;
+}
+.recap-row-value {
+  font-size: 16px;
+  font-weight: 900;
+  color: var(--ds-green);
+  letter-spacing: -.02em;
+}
+.recap-row-value.pos { color: var(--ds-green); }
+.recap-row-text { flex: 1; min-width: 0; }
+.recap-bar {
+  margin-top: 10px;
+  height: 6px;
+  background: #e8efeb;
+  border-radius: 100px;
+  overflow: hidden;
+  position: relative;
+}
+.recap-bar-fill {
+  position: absolute;
+  left: 0; top: 0; bottom: 0;
+  border-radius: 100px;
+}
+.recap-bar-fill.debt {
+  width: 38%;
+  background: linear-gradient(90deg, var(--ds-c4), var(--ds-green));
+}
+.recap-bar-fill.savings {
+  width: 62%;
+  background: linear-gradient(90deg, var(--ds-green), var(--ds-c2));
+}
+.recap-bar-meta {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 6px;
+  font-size: 9px;
+  font-weight: 700;
+  color: #8ca898;
+  letter-spacing: .02em;
+}
+.shift-phone-nav {
+  position: absolute;
+  bottom: 0; left: 0; right: 0;
+  background: rgba(240,247,242,.95);
+  border-top: 1px solid #c4d8cc;
+  padding: 8px 4px 12px;
+  display: flex;
+  justify-content: space-around;
+}
+.shift-phone-nav-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2px;
+  font-size: 7px;
+  font-weight: 800;
+  color: #8ca898;
+  text-transform: uppercase;
+  letter-spacing: .04em;
+  padding: 4px 8px;
+  border-radius: 10px;
+}
+.shift-phone-nav-item.active {
+  background: white;
+  color: var(--ds-green);
+}
+.shift-phone-nav-icon { width: 16px; height: 16px; }
 @media (max-width: 860px) {
   .shift-inner { grid-template-columns: 1fr; gap: 3rem; }
 }
@@ -1317,6 +1448,19 @@ a { text-decoration: none; color: inherit; }
   letter-spacing: -.02em;
   line-height: 1.4;
 }
+/* CTA on the green outcomes section: white fill with green text for strong contrast */
+.outcomes-section .btn-primary {
+  background: white;
+  color: var(--ds-green);
+  border: none;
+  box-shadow: 0 4px 16px rgba(0,0,0,.14);
+}
+.outcomes-section .btn-primary:hover {
+  background: var(--ds-card2);
+  color: var(--ds-green2);
+  box-shadow: 0 10px 28px rgba(0,0,0,.22);
+  transform: translateY(-2px);
+}
 @media (max-width: 640px) {
   .outcomes-inner { padding: 0 1.25rem; }
   .outcome-text { font-size: 15px; }
@@ -1397,7 +1541,10 @@ a { text-decoration: none; color: inherit; }
   border: 2px solid transparent;
   transition: border-color .2s, transform .2s;
   position: relative;
+  display: flex;
+  flex-direction: column;
 }
+.pricing-card .pricing-cta { margin-top: auto; }
 .pricing-card:hover { transform: translateY(-3px); border-color: var(--ds-green-m); }
 .pricing-card.featured {
   border-color: var(--ds-green);
@@ -1415,7 +1562,7 @@ a { text-decoration: none; color: inherit; }
   letter-spacing: .08em;
   text-transform: uppercase;
   padding: 4px 14px;
-  border-radius: 100px;
+  border-radius: var(--ds-r1);
   white-space: nowrap;
 }
 .pricing-plan {
@@ -1601,6 +1748,16 @@ a { text-decoration: none; color: inherit; }
       <li><a href="#pricing">Pricing</a></li>
     </ul>
     <a href="/app.html" class="nav-cta">Start your free 7-day trial</a>
+    <button class="nav-toggle" aria-label="Open menu" aria-expanded="false" aria-controls="nav-mobile">
+      <svg class="icon-open" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" aria-hidden="true"><line x1="4" y1="7" x2="20" y2="7"/><line x1="4" y1="12" x2="20" y2="12"/><line x1="4" y1="17" x2="20" y2="17"/></svg>
+      <svg class="icon-close" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" aria-hidden="true"><line x1="6" y1="6" x2="18" y2="18"/><line x1="18" y1="6" x2="6" y2="18"/></svg>
+    </button>
+  </div>
+  <div class="nav-mobile" id="nav-mobile">
+    <a href="#how-it-works">How it works</a>
+    <a href="#features">Features</a>
+    <a href="#pricing">Pricing</a>
+    <a href="/app.html" class="nav-cta">Start your free 7-day trial</a>
   </div>
 </nav>
 
@@ -1609,12 +1766,16 @@ a { text-decoration: none; color: inherit; }
   <div class="hero-inner">
     <div class="hero-copy">
       <span class="hero-eyebrow">For freelancers, creators, and business owners.</span>
-      <h1 class="hero-headline">From holding your breath with bills<br><span class="hero-arrow">→</span> Finally Able to breathe.</h1>
+      <h1 class="hero-headline">
+        <span>From holding your breath with bills</span>
+        <span class="hero-arrow">→</span>
+        <span class="hl-payoff">Finally able to breathe.</span>
+      </h1>
       <p class="hero-sub">An app built for entrepreneurs who struggle to manage inconsistent income.</p>
       <ul class="hero-bullets">
         <li><svg class="bullet-check" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="20 6 9 17 4 12"/></svg><span>Finally pay down your debt</span></li>
         <li><svg class="bullet-check" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="20 6 9 17 4 12"/></svg><span>Actually build your savings</span></li>
-        <li><svg class="bullet-check" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="20 6 9 17 4 12"/></svg><span>Stop living unpredictable check<br>to unpredictable check</span></li>
+        <li><svg class="bullet-check" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="20 6 9 17 4 12"/></svg><span>Stop living check to check</span></li>
       </ul>
       <div class="hero-ctas">
         <a href="/app.html" class="btn-primary">Start your free 7-day trial</a>
@@ -1702,8 +1863,13 @@ a { text-decoration: none; color: inherit; }
 <section class="problem-section">
   <div class="problem-inner">
     <span class="problem-eyebrow">Sound familiar?</span>
-    <h2 class="problem-headline">You're not overspending. You're freezing — and the money leaks anyway.</h2>
-    <p class="problem-intro reveal">It starts with the unknown. You don't know when the next check is coming — so you freeze. You don't allow yourself to touch the money. You tell yourself: <em>if I just hold it, I won't lose it.</em> But then it starts to leak. $14 here. A forgotten subscription there. Lunch. Gas. By the 30th, $500–$1,000 is gone — money that should have killed debt, built savings, or gotten you ahead of next month's bills.</p>
+    <h2 class="problem-headline">You're not overspending.<br>You're freezing, and the money leaks anyway.</h2>
+    <div class="problem-intro reveal">
+      <p>It starts with the unknown. You don't know when the next check is coming, so you freeze.</p>
+      <p>You don't allow yourself to touch the money. You tell yourself: <em>if I just hold it, I won't lose it.</em></p>
+      <p>But then it starts to leak. $14 here. A forgotten subscription. Lunch. Gas.</p>
+      <p>By the 30th, $500 to $1,000 is gone. Money that should have killed debt, built savings, or gotten you ahead of next month's bills.</p>
+    </div>
     <div class="problem-story reveal">
       <div class="problem-beat">
         <span class="problem-day">Day 1</span>
@@ -1751,10 +1917,10 @@ a { text-decoration: none; color: inherit; }
     <div class="shift-copy reveal">
       <span class="eyebrow">There is a better way.</span>
       <h2 class="shift-headline">Imagine this.</h2>
-      <p class="shift-body">A check comes in. You don't freeze. You open Able. It tells you — immediately — what this check is for.</p>
+      <p class="shift-body">A check comes in. You don't freeze. You open Able. It tells you immediately what this check is for.</p>
       <p class="shift-body">You pay bills. You kill debt. You grow savings. What's left is yours to spend.</p>
       <p class="shift-body">End of the month, you know exactly where every dollar went.</p>
-      <p class="shift-closer">The problem was never you. It was the advice you were handed.</p>
+      <p class="shift-closer">The problem was never you.<br>It was the advice you were handed.</p>
     </div>
     <div class="shift-visual reveal">
       <div class="shift-phone-wrap">
@@ -1768,30 +1934,68 @@ a { text-decoration: none; color: inherit; }
               </span>
             </div>
             <div class="shift-phone-content">
-              <div class="recap-label">March recap</div>
+              <div class="recap-label">This month</div>
               <div class="recap-headline">Nothing leaked.</div>
+
               <div class="recap-card">
                 <div class="recap-row">
                   <div class="recap-icon recap-icon-check">
                     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="20 6 9 17 4 12"/></svg>
                   </div>
-                  <div class="recap-row-label">Bills</div>
-                  <div class="recap-row-value">14 of 14</div>
+                  <div class="recap-row-text">
+                    <div class="recap-row-label">Bills paid</div>
+                    <div class="recap-row-sub">Every bill covered on time</div>
+                  </div>
+                  <div class="recap-row-value">14 / 14</div>
                 </div>
+              </div>
+
+              <div class="recap-card">
                 <div class="recap-row">
                   <div class="recap-icon recap-icon-down">
                     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="12" y1="5" x2="12" y2="19"/><polyline points="19 12 12 19 5 12"/></svg>
                   </div>
-                  <div class="recap-row-label">Debt paid</div>
-                  <div class="recap-row-value">−$500</div>
+                  <div class="recap-row-text">
+                    <div class="recap-row-label">Debt killed</div>
+                    <div class="recap-row-sub">Highest-interest balance first</div>
+                  </div>
+                  <div class="recap-row-value">$500</div>
                 </div>
+                <div class="recap-bar"><div class="recap-bar-fill debt"></div></div>
+                <div class="recap-bar-meta"><span>$3,847</span><span>$3,347</span></div>
+              </div>
+
+              <div class="recap-card">
                 <div class="recap-row">
                   <div class="recap-icon recap-icon-up">
                     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="12" y1="19" x2="12" y2="5"/><polyline points="5 12 12 5 19 12"/></svg>
                   </div>
-                  <div class="recap-row-label">Savings</div>
-                  <div class="recap-row-value">+$500</div>
+                  <div class="recap-row-text">
+                    <div class="recap-row-label">Savings grown</div>
+                    <div class="recap-row-sub">Buffer for slow months</div>
+                  </div>
+                  <div class="recap-row-value">$500</div>
                 </div>
+                <div class="recap-bar"><div class="recap-bar-fill savings"></div></div>
+                <div class="recap-bar-meta"><span>$747</span><span>$1,247</span></div>
+              </div>
+            </div>
+            <div class="shift-phone-nav">
+              <div class="shift-phone-nav-item">
+                <svg class="shift-phone-nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
+                Allocate
+              </div>
+              <div class="shift-phone-nav-item active">
+                <svg class="shift-phone-nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 3v18h18"/><polyline points="7 14 11 10 14 13 20 7"/></svg>
+                Progress
+              </div>
+              <div class="shift-phone-nav-item">
+                <svg class="shift-phone-nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="23 6 13.5 15.5 8.5 10.5 1 18"/><polyline points="17 6 23 6 23 12"/></svg>
+                Debt
+              </div>
+              <div class="shift-phone-nav-item">
+                <svg class="shift-phone-nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+                Bills
               </div>
             </div>
           </div>
@@ -1907,7 +2111,7 @@ a { text-decoration: none; color: inherit; }
               <div style="font-size:9px;font-weight:800;letter-spacing:.1em;text-transform:uppercase;color:#8ca898;margin-bottom:6px;">Your progress</div>
               <div class="anim-debt-card">
                 <div class="anim-debt-row">
-                  <span class="anim-debt-name">Chase CC</span>
+                  <span class="anim-debt-name">Credit card</span>
                   <span class="anim-debt-bal falling">$3,847</span>
                 </div>
                 <div class="anim-debt-progress">
@@ -1916,7 +2120,7 @@ a { text-decoration: none; color: inherit; }
               </div>
               <div class="anim-debt-card">
                 <div class="anim-debt-row">
-                  <span class="anim-debt-name">Toyota loan</span>
+                  <span class="anim-debt-name">Car loan</span>
                   <span class="anim-debt-bal" style="font-size:13px;font-weight:900;">$12,200</span>
                 </div>
                 <div class="anim-debt-progress">
@@ -1949,7 +2153,7 @@ a { text-decoration: none; color: inherit; }
   <div class="container">
     <div class="section-center reveal">
       <span class="eyebrow">Built for the way you actually get paid.</span>
-      <h2 class="section-headline">Every reason you froze. Every tool that un-freezes you.</h2>
+      <h2 class="section-headline">Every reason you froze.<br>Every tool that un-freezes you.</h2>
     </div>
   </div>
   <div class="features-grid">
@@ -1958,14 +2162,14 @@ a { text-decoration: none; color: inherit; }
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
       </div>
       <div class="feature-title">Smart Allocation</div>
-      <p class="feature-body">A check lands and you freeze — you don't know what to put it toward. Able splits it across bills, debt, and savings the moment it hits. No math. No guessing.</p>
+      <p class="feature-body">A check lands and you freeze. You don't know what to put it toward. Able splits it across bills, debt, and savings the moment it hits. No math. No guessing.</p>
     </div>
     <div class="feature-card reveal">
       <div class="feature-icon">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
       </div>
       <div class="feature-title">Rolling Bill Window</div>
-      <p class="feature-body">Rent was due Thursday. You didn't see it coming. Able looks 14 days ahead and sets money aside for what's due — so you're never blindsided again.</p>
+      <p class="feature-body">Rent was due Thursday. You didn't see it coming. Able looks 14 days ahead and sets money aside for what's due, so you're never blindsided again.</p>
     </div>
     <div class="feature-card reveal">
       <div class="feature-icon">
@@ -1987,12 +2191,12 @@ a { text-decoration: none; color: inherit; }
       </div>
       <div>
         <div class="feature-title">AI Coach</div>
-        <p class="feature-body">Generic finance advice doesn't know your situation. Able does. It sees your bills, debt, and income — and answers with your numbers, not a book's.</p>
+        <p class="feature-body">Generic finance advice doesn't know your situation. Able does. It sees your bills, debt, and income, and answers with your numbers, not a book's.</p>
       </div>
     </div>
-    <div class="section-cta reveal">
-      <a href="/app.html" class="btn-primary">Start your free 7-day trial</a>
-    </div>
+  </div>
+  <div class="section-cta reveal">
+    <a href="/app.html" class="btn-primary">Start your free 7-day trial</a>
   </div>
 </section>
 
@@ -2021,7 +2225,7 @@ a { text-decoration: none; color: inherit; }
     </div>
     <p class="outcomes-bridge reveal">No more paralysis.<br>No more holding your breath.<br>Just confidence. Every day.</p>
     <div class="section-cta reveal">
-      <a href="/app.html" class="btn-primary ghost">Start your free 7-day trial</a>
+      <a href="/app.html" class="btn-primary">Start your free 7-day trial</a>
     </div>
   </div>
 </section>
@@ -2076,7 +2280,7 @@ a { text-decoration: none; color: inherit; }
     <h2 class="final-headline reveal">From Unable<br><span class="hero-arrow">→</span> Able.</h2>
     <p class="final-sub reveal">That's the whole point. Seven days free to see it.</p>
     <a href="/app.html" class="btn-primary reveal">Start your free 7-day trial</a>
-    <p class="final-fine reveal">7-day free trial on both plans. Card required. Takes less than two minutes to set up.</p>
+    <p class="final-fine reveal">7-day free trial. Card required. Takes less than two minutes to set up.</p>
   </div>
 </section>
 
@@ -2163,6 +2367,26 @@ window.addEventListener('scroll', () => {
     nav.style.boxShadow = 'none';
   }
 }, { passive: true });
+
+// ═══════════════════════════════════════
+// MOBILE NAV — toggle open/close
+// ═══════════════════════════════════════
+const navToggle = document.querySelector('.nav-toggle');
+const navMobile = document.querySelector('.nav-mobile');
+if (navToggle && navMobile) {
+  navToggle.addEventListener('click', () => {
+    const open = navMobile.classList.toggle('open');
+    navToggle.setAttribute('aria-expanded', open ? 'true' : 'false');
+    navToggle.setAttribute('aria-label', open ? 'Close menu' : 'Open menu');
+  });
+  navMobile.querySelectorAll('a').forEach(a => {
+    a.addEventListener('click', () => {
+      navMobile.classList.remove('open');
+      navToggle.setAttribute('aria-expanded', 'false');
+      navToggle.setAttribute('aria-label', 'Open menu');
+    });
+  });
+}
 
 // ═══════════════════════════════════════
 // SMOOTH SCROLL for anchor links
