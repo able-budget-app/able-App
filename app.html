@@ -6912,10 +6912,12 @@ function coachRenderMarkdown(s) {
 
 async function coachLoadHistory() {
   if (coachHistory !== null) return coachHistory;
+  if (!currentUser) { coachHistory = []; return coachHistory; }
   try {
     const { data, error } = await sbGet()
       .from('coach_messages')
       .select('role, content, created_at')
+      .eq('user_id', currentUser.id)
       .order('created_at', { ascending: true });
     if (error) throw error;
     coachHistory = data || [];
