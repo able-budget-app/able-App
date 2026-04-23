@@ -839,16 +839,26 @@ input,select,button,textarea{font-family:inherit;}
 <div id="paywall-screen">
   <div class="paywall-box">
     <div class="paywall-logo">Able</div>
-    <div style="text-align:center;font-size:13px;color:var(--ds-t3);font-weight:600;margin-bottom:1.75rem;letter-spacing:.02em;">One plan. Full access. Cancel anytime.</div>
+    <div style="text-align:center;font-size:13px;color:var(--ds-t3);font-weight:600;margin-bottom:1.75rem;letter-spacing:.02em;">Monthly or annual. Same access. Cancel anytime.</div>
 
-    <div class="plan-card selected" id="plan-monthly" onclick="selectPlan('monthly')">
-      <div class="plan-badge">7-day free trial</div>
+    <div class="plan-card" id="plan-monthly" onclick="selectPlan('monthly')">
       <div class="plan-card-top">
         <div>
           <div class="plan-name">Monthly</div>
           <div class="plan-desc">7 days free, then $9.99/month. Cancel anytime.</div>
         </div>
         <div class="plan-price">$9.99<span>/mo</span></div>
+      </div>
+    </div>
+
+    <div class="plan-card selected" id="plan-annual" onclick="selectPlan('annual')">
+      <div class="plan-badge">Save $41</div>
+      <div class="plan-card-top">
+        <div>
+          <div class="plan-name">Annual</div>
+          <div class="plan-desc">7 days free, then $79/year. Two months free.</div>
+        </div>
+        <div class="plan-price">$79<span>/yr</span></div>
       </div>
     </div>
 
@@ -1430,6 +1440,7 @@ const SUPABASE_URL = 'https://vfnozfvqgevjflwdjlyz.supabase.co';
 const SUPABASE_KEY = 'sb_publishable_zFa0iR6Wzf9BtDuvnB_cRg_7l7JA9PH';
 const STRIPE_KEY   = 'pk_live_3bc5VtR5BgZY9hpaYnXuE2zW';
 const PRICE_MONTHLY  = 'price_1TO3hVDBmPAhrdxkIbpGti8n';
+const PRICE_ANNUAL   = 'price_1TPUDjDBmPAhrdxkL7IkGqp3';
 const PRICE_LIFETIME = 'price_1TO3i3DBmPAhrdxkVq1hAzj9';
 
 // sb and stripe initialized in window.load below
@@ -1449,7 +1460,7 @@ const EMPTY_DATA = {
 };
 let S = JSON.parse(JSON.stringify(EMPTY_DATA));
 let currentUser = null;
-let selectedPlan = 'monthly';
+let selectedPlan = 'annual';
 let _pendingForecastIdx = null;
 let _pendingForecastJobs = null;
 let wiScenarios = [];
@@ -2026,6 +2037,7 @@ function obRestart() {
 function selectPlan(plan) {
   selectedPlan=plan;
   document.getElementById('plan-monthly').classList.toggle('selected',plan==='monthly');
+  document.getElementById('plan-annual').classList.toggle('selected',plan==='annual');
 }
 
 async function startCheckout() {
@@ -2035,7 +2047,7 @@ async function startCheckout() {
   errEl.style.display='none';
 
   try {
-    const priceId=PRICE_MONTHLY;
+    const priceId=selectedPlan==='annual'?PRICE_ANNUAL:PRICE_MONTHLY;
     const returnUrl=window.location.origin+'/app.html?checkout=success';
     const cancelUrl=window.location.origin+'/app.html';
 
