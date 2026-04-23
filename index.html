@@ -224,6 +224,12 @@ a { text-decoration: none; color: inherit; }
   color: var(--ds-t1);
   margin-bottom: 1.25rem;
 }
+.hero-arrow {
+  color: var(--ds-green);
+  font-weight: 700;
+  margin-right: .15em;
+  display: inline-block;
+}
 .hero-sub {
   font-size: 18px;
   font-weight: 500;
@@ -241,7 +247,9 @@ a { text-decoration: none; color: inherit; }
   align-items: flex-start;
 }
 .hero-bullets li {
-  display: block;
+  display: flex;
+  align-items: center;
+  gap: 10px;
   padding: 12px 20px;
   background: var(--ds-card);
   border: 1px solid var(--ds-green-m);
@@ -250,10 +258,17 @@ a { text-decoration: none; color: inherit; }
   font-size: 15px;
   font-weight: 700;
   color: var(--ds-t1);
-  text-align: center;
+  text-align: left;
   max-width: 100%;
+  line-height: 1.35;
 }
 .hero-bullets li::before { content: none; }
+.hero-bullets .bullet-check {
+  width: 18px;
+  height: 18px;
+  color: var(--ds-green);
+  flex-shrink: 0;
+}
 .hero-ctas {
   display: flex;
   align-items: center;
@@ -584,7 +599,19 @@ a { text-decoration: none; color: inherit; }
   letter-spacing: -.04em;
   line-height: 1.1;
   color: white;
-  margin-bottom: 2.5rem;
+  margin-bottom: 1.25rem;
+}
+.problem-intro {
+  font-size: 17px;
+  font-weight: 500;
+  line-height: 1.65;
+  color: rgba(255,255,255,.82);
+  max-width: 640px;
+  margin: 0 0 2.5rem;
+}
+.problem-intro em {
+  font-style: italic;
+  color: white;
 }
 .problem-story {
   display: flex;
@@ -649,6 +676,15 @@ a { text-decoration: none; color: inherit; }
 .problem-beat.highlight .problem-beat-text {
   color: white;
   font-weight: 600;
+}
+.problem-closer {
+  font-size: clamp(1.25rem, 2.5vw, 1.75rem);
+  font-weight: 800;
+  color: white;
+  text-align: center;
+  letter-spacing: -.02em;
+  line-height: 1.3;
+  margin: 2.5rem 0 2rem;
 }
 .problem-transition {
   background: rgba(255,255,255,.06);
@@ -732,43 +768,106 @@ a { text-decoration: none; color: inherit; }
   height: 300px;
   background: radial-gradient(circle, rgba(42,122,74,.15) 0%, transparent 65%);
 }
-.shift-steps {
-  display: flex;
-  flex-direction: column;
-  gap: 1.5rem;
+.shift-phone-wrap {
+  width: 240px;
+  margin: 0 auto;
+  position: relative;
+  z-index: 1;
+  filter: drop-shadow(0 24px 48px rgba(17,28,22,.18));
+}
+.shift-phone-frame {
+  background: #1a1a1a;
+  border-radius: 38px;
+  padding: 12px;
   position: relative;
 }
-.shift-step {
-  display: flex;
-  gap: 1rem;
-  align-items: flex-start;
+.shift-phone-frame::before {
+  content: '';
+  position: absolute;
+  top: 12px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 78px;
+  height: 22px;
+  background: #1a1a1a;
+  border-radius: 0 0 16px 16px;
+  z-index: 10;
 }
-.shift-step-num {
-  width: 32px;
-  height: 32px;
+.shift-phone-screen {
+  background: #f0f7f2;
+  border-radius: 28px;
+  overflow: hidden;
+  position: relative;
+}
+.shift-phone-status {
+  background: #f0f7f2;
+  padding: 12px 18px 6px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 11px;
+  font-weight: 800;
+  color: #111c16;
+  position: relative;
+  z-index: 5;
+}
+.shift-phone-content {
+  padding: 16px 16px 20px;
+}
+.recap-label {
+  font-size: 9px;
+  font-weight: 800;
+  letter-spacing: .12em;
+  text-transform: uppercase;
+  color: #8ca898;
+  margin-bottom: 4px;
+}
+.recap-headline {
+  font-size: 22px;
+  font-weight: 900;
+  color: #111c16;
+  letter-spacing: -.02em;
+  line-height: 1.1;
+  margin-bottom: 16px;
+}
+.recap-card {
+  background: white;
+  border-radius: 16px;
+  padding: 4px 14px;
+  box-shadow: 0 2px 10px rgba(0,0,0,.06);
+}
+.recap-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 12px 0;
+  border-bottom: 1px solid rgba(17,28,22,.06);
+}
+.recap-row:last-child { border-bottom: none; }
+.recap-icon {
+  width: 28px;
+  height: 28px;
   border-radius: 50%;
-  background: var(--ds-green);
-  color: white;
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 13px;
-  font-weight: 900;
   flex-shrink: 0;
-  box-shadow: 0 4px 12px rgba(42,122,74,.3);
 }
-.shift-step-text strong {
-  display: block;
+.recap-icon svg { width: 14px; height: 14px; }
+.recap-icon-check { background: var(--ds-green); color: white; }
+.recap-icon-up,
+.recap-icon-down { background: rgba(42,122,74,.15); color: var(--ds-green); }
+.recap-row-label {
+  flex: 1;
+  font-size: 13px;
+  font-weight: 700;
+  color: #111c16;
+}
+.recap-row-value {
   font-size: 14px;
   font-weight: 800;
-  color: var(--ds-t1);
-  margin-bottom: 2px;
-}
-.shift-step-text span {
-  font-size: 13px;
-  color: var(--ds-t2);
-  font-weight: 500;
-  line-height: 1.5;
+  color: var(--ds-green);
+  letter-spacing: -.01em;
 }
 @media (max-width: 860px) {
   .shift-inner { grid-template-columns: 1fr; gap: 3rem; }
@@ -1058,11 +1157,11 @@ a { text-decoration: none; color: inherit; }
 ═══════════════════════════════════════ */
 .features-section { padding: 100px 0; }
 .features-grid {
-  max-width: 1160px;
+  max-width: 960px;
   margin: 3.5rem auto 0;
   padding: 0 2rem;
   display: grid;
-  grid-template-columns: repeat(3, 1fr);
+  grid-template-columns: repeat(2, 1fr);
   gap: 1.25rem;
 }
 .feature-card {
@@ -1105,7 +1204,7 @@ a { text-decoration: none; color: inherit; }
 .feature-card.ai-card {
   background: linear-gradient(135deg, #111c16 0%, #1f3828 100%);
   border: 1px solid rgba(42,122,74,.3);
-  grid-column: span 3;
+  grid-column: span 2;
   display: grid;
   grid-template-columns: auto 1fr;
   gap: 1.5rem;
@@ -1126,10 +1225,6 @@ a { text-decoration: none; color: inherit; }
 }
 .feature-card.ai-card .feature-body {
   color: rgba(255,255,255,.65);
-}
-@media (max-width: 860px) {
-  .features-grid { grid-template-columns: repeat(2, 1fr); }
-  .feature-card.ai-card { grid-column: span 2; }
 }
 @media (max-width: 580px) {
   .features-grid { grid-template-columns: 1fr; padding: 0 1.25rem; }
@@ -1285,6 +1380,14 @@ a { text-decoration: none; color: inherit; }
   gap: 1.5rem;
   max-width: 760px;
   margin: 3rem auto 0;
+}
+.pricing-submeta {
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--ds-t3);
+  margin-top: -.5rem;
+  margin-bottom: 1.1rem;
+  letter-spacing: -.01em;
 }
 .pricing-card {
   background: var(--ds-card);
@@ -1505,13 +1608,13 @@ a { text-decoration: none; color: inherit; }
 <section class="hero">
   <div class="hero-inner">
     <div class="hero-copy">
-      <span class="hero-eyebrow">Built for inconsistent income.</span>
-      <h1 class="hero-headline">Budget with an inconsistent income.</h1>
-      <p class="hero-sub">An app built for entrepreneurs who struggle to budget inconsistent income.</p>
+      <span class="hero-eyebrow">For freelancers, creators, and business owners.</span>
+      <h1 class="hero-headline">From holding your breath with bills<br><span class="hero-arrow">→</span> Finally Able to breathe.</h1>
+      <p class="hero-sub">An app built for entrepreneurs who struggle to manage inconsistent income.</p>
       <ul class="hero-bullets">
-        <li>Finally pay down your debt</li>
-        <li>Actually build your savings</li>
-        <li>Stop living unpredictable check to unpredictable check</li>
+        <li><svg class="bullet-check" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="20 6 9 17 4 12"/></svg><span>Finally pay down your debt</span></li>
+        <li><svg class="bullet-check" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="20 6 9 17 4 12"/></svg><span>Actually build your savings</span></li>
+        <li><svg class="bullet-check" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="20 6 9 17 4 12"/></svg><span>Stop living unpredictable check<br>to unpredictable check</span></li>
       </ul>
       <div class="hero-ctas">
         <a href="/app.html" class="btn-primary">Start your free 7-day trial</a>
@@ -1599,23 +1702,24 @@ a { text-decoration: none; color: inherit; }
 <section class="problem-section">
   <div class="problem-inner">
     <span class="problem-eyebrow">Sound familiar?</span>
-    <h2 class="problem-headline">This is what every month looks like without a system.</h2>
+    <h2 class="problem-headline">You're not overspending. You're freezing — and the money leaks anyway.</h2>
+    <p class="problem-intro reveal">It starts with the unknown. You don't know when the next check is coming — so you freeze. You don't allow yourself to touch the money. You tell yourself: <em>if I just hold it, I won't lose it.</em> But then it starts to leak. $14 here. A forgotten subscription there. Lunch. Gas. By the 30th, $500–$1,000 is gone — money that should have killed debt, built savings, or gotten you ahead of next month's bills.</p>
     <div class="problem-story reveal">
       <div class="problem-beat">
         <span class="problem-day">Day 1</span>
-        <p class="problem-beat-text">A check comes in. Just in time. Maybe an overdraft first.</p>
+        <p class="problem-beat-text">Money comes in. Just in time. Breathe a little.</p>
       </div>
       <div class="problem-beat">
         <span class="problem-day">Day 2</span>
-        <p class="problem-beat-text">You pay the bills that are due. Some money is left over.</p>
+        <p class="problem-beat-text">You pay the bills that are due. Some is left over.</p>
       </div>
       <div class="problem-beat">
         <span class="problem-day">Day 3</span>
-        <p class="problem-beat-text">You freeze. You don't move it. You don't know when the next check is coming. So you hold on.</p>
+        <p class="problem-beat-text">You freeze. You don't touch it. You tell yourself it's safer untouched.</p>
       </div>
       <div class="problem-beat">
         <span class="problem-day">Day 7</span>
-        <p class="problem-beat-text">The money sits. It starts to feel like spending money.</p>
+        <p class="problem-beat-text">The money sits. A small snack here. Won't hurt.</p>
       </div>
       <div class="problem-beat">
         <span class="problem-day">Day 14</span>
@@ -1623,16 +1727,17 @@ a { text-decoration: none; color: inherit; }
       </div>
       <div class="problem-beat">
         <span class="problem-day">Day 30</span>
-        <p class="problem-beat-text">End of the month. <strong>$400 gone.</strong> Nothing saved. Nothing paid down. Nothing to show for it.</p>
+        <p class="problem-beat-text">End of the month. <strong>"Where did that $1,000 go?"</strong> Nothing saved. Nothing paid down. Nothing to show for it.</p>
       </div>
       <div class="problem-beat">
         <span class="problem-day">Day 31</span>
-        <p class="problem-beat-text">Shame. You promise yourself next month is different. It won't be. Not without a system.</p>
+        <p class="problem-beat-text">Shame. Guilt. Avoidance. You promise yourself next month will be different. But we know it won't.</p>
       </div>
     </div>
+    <p class="problem-closer reveal">Nothing changes if nothing changes.</p>
     <div class="problem-transition reveal">
-      <div class="problem-transition-title">The problem is not discipline.</div>
-      <div class="problem-transition-body">The real problem is not the spending. It is the not knowing.<br><br>You don't know when the next check is coming. So you freeze. You hold the money. And holding feels responsible. But it isn't a plan. It is paralysis dressed up as caution.<br><br>No one taught you how to budget income like yours. Most budgeting advice assumes a steady paycheck. Able doesn't.</div>
+      <div class="problem-transition-title">This isn't your fault.</div>
+      <div class="problem-transition-body">No one taught you how to budget income like yours. Most budgeting advice assumes a steady paycheck. Able doesn't.</div>
     </div>
     <div class="section-cta reveal">
       <a href="/app.html" class="btn-primary">Start your free 7-day trial</a>
@@ -1645,32 +1750,50 @@ a { text-decoration: none; color: inherit; }
   <div class="shift-inner">
     <div class="shift-copy reveal">
       <span class="eyebrow">There is a better way.</span>
-      <h2 class="shift-headline">You don't need more discipline. You need a plan built for income like yours.</h2>
-      <p class="shift-body">Traditional budgets assume you know how much is coming in and when. Yours doesn't work that way. So a traditional budget never will either.</p>
-      <p class="shift-body">Able works with what you have, when you have it. Every time money hits your account, Able tells you exactly what to do with it. Bills get covered. Debt gets attacked. Savings get built. What is left is yours to spend without guilt.</p>
-      <p class="shift-closer">Your paycheck does not follow a schedule. Your budget can.</p>
+      <h2 class="shift-headline">Imagine this.</h2>
+      <p class="shift-body">A check comes in. You don't freeze. You open Able. It tells you — immediately — what this check is for.</p>
+      <p class="shift-body">You pay bills. You kill debt. You grow savings. What's left is yours to spend.</p>
+      <p class="shift-body">End of the month, you know exactly where every dollar went.</p>
+      <p class="shift-closer">The problem was never you. It was the advice you were handed.</p>
     </div>
     <div class="shift-visual reveal">
-      <div class="shift-steps">
-        <div class="shift-step">
-          <div class="shift-step-num">1</div>
-          <div class="shift-step-text">
-            <strong>Log what came in.</strong>
-            <span>Money hits your account. Enter the amount in Able. Ten seconds.</span>
-          </div>
-        </div>
-        <div class="shift-step">
-          <div class="shift-step-num">2</div>
-          <div class="shift-step-text">
-            <strong>Able tells you where it goes.</strong>
-            <span>Bills, debt, savings. Highest priority first. You see every dollar before confirming.</span>
-          </div>
-        </div>
-        <div class="shift-step">
-          <div class="shift-step-num">3</div>
-          <div class="shift-step-text">
-            <strong>Watch the progress stack up.</strong>
-            <span>Debt drops. Savings grow. The fear of the next check fades.</span>
+      <div class="shift-phone-wrap">
+        <div class="shift-phone-frame">
+          <div class="shift-phone-screen">
+            <div class="shift-phone-status">
+              <span>9:41</span>
+              <span style="display:flex;gap:4px;align-items:center;">
+                <svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M1.5 8.5C5.5 4.5 18.5 4.5 22.5 8.5"/><path d="M4.5 11.5C7.5 8.5 16.5 8.5 19.5 11.5"/><path d="M7.5 14.5C9.5 12.5 14.5 12.5 16.5 14.5"/><circle cx="12" cy="18" r="1.5"/></svg>
+                <svg width="20" height="10" viewBox="0 0 20 10" aria-hidden="true"><rect x="0" y="2" width="15" height="6" rx="2" fill="currentColor" opacity=".3"/><rect x="0" y="2" width="11" height="6" rx="2" fill="currentColor"/><rect x="17" y="3.5" width="2" height="3" rx="1" fill="currentColor" opacity=".5"/></svg>
+              </span>
+            </div>
+            <div class="shift-phone-content">
+              <div class="recap-label">March recap</div>
+              <div class="recap-headline">Nothing leaked.</div>
+              <div class="recap-card">
+                <div class="recap-row">
+                  <div class="recap-icon recap-icon-check">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="20 6 9 17 4 12"/></svg>
+                  </div>
+                  <div class="recap-row-label">Bills</div>
+                  <div class="recap-row-value">14 of 14</div>
+                </div>
+                <div class="recap-row">
+                  <div class="recap-icon recap-icon-down">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="12" y1="5" x2="12" y2="19"/><polyline points="19 12 12 19 5 12"/></svg>
+                  </div>
+                  <div class="recap-row-label">Debt paid</div>
+                  <div class="recap-row-value">−$500</div>
+                </div>
+                <div class="recap-row">
+                  <div class="recap-icon recap-icon-up">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="12" y1="19" x2="12" y2="5"/><polyline points="5 12 12 5 19 12"/></svg>
+                  </div>
+                  <div class="recap-row-label">Savings</div>
+                  <div class="recap-row-value">+$500</div>
+                </div>
+              </div>
+            </div>
           </div>
         </div>
       </div>
@@ -1685,7 +1808,7 @@ a { text-decoration: none; color: inherit; }
 <section class="hiw-section" id="how-it-works">
   <div class="hiw-header reveal">
     <span class="hiw-eyebrow">Three steps. No spreadsheet.</span>
-    <h2 class="hiw-headline">Finally. A budget that works without a predictable paycheck.</h2>
+    <h2 class="hiw-headline">How breathing again works.</h2>
   </div>
   <div class="hiw-steps">
 
@@ -1705,7 +1828,7 @@ a { text-decoration: none; color: inherit; }
                 </div>
                 <div class="anim-input">
                   <div class="anim-input-lbl">Where from</div>
-                  <div class="anim-input-val" style="font-size:11px;margin-top:2px;">Airbnb</div>
+                  <div class="anim-input-val" style="font-size:11px;margin-top:2px;">Client invoice</div>
                 </div>
               </div>
               <div class="anim-btn">Tell me where it goes →</div>
@@ -1717,7 +1840,7 @@ a { text-decoration: none; color: inherit; }
       <div class="hiw-step-label">
         <div class="hiw-step-num">1</div>
         <div class="hiw-step-title">Log what came in.</div>
-        <p class="hiw-step-body">Money hits your account. Open Able, enter the amount, pick where it came from. Takes ten seconds.</p>
+        <p class="hiw-step-body">Ten seconds. Any amount. Any source. No categorizing, no tagging, no budget math.</p>
       </div>
     </div>
 
@@ -1810,7 +1933,7 @@ a { text-decoration: none; color: inherit; }
       </div>
       <div class="hiw-step-label">
         <div class="hiw-step-num">3</div>
-        <div class="hiw-step-title">Watch the progress stack up.</div>
+        <div class="hiw-step-title">Debt drops. Savings grow.</div>
         <p class="hiw-step-body">Debt balances drop. Savings grow. The fear of the next check fades. Every dollar in moves you forward, whether it was $400 or $4,000.</p>
       </div>
     </div>
@@ -1826,7 +1949,7 @@ a { text-decoration: none; color: inherit; }
   <div class="container">
     <div class="section-center reveal">
       <span class="eyebrow">Built for the way you actually get paid.</span>
-      <h2 class="section-headline">Everything you need. Nothing you don't.</h2>
+      <h2 class="section-headline">Every reason you froze. Every tool that un-freezes you.</h2>
     </div>
   </div>
   <div class="features-grid">
@@ -1835,42 +1958,28 @@ a { text-decoration: none; color: inherit; }
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
       </div>
       <div class="feature-title">Smart Allocation</div>
-      <p class="feature-body">Log income and Able instantly splits it across bills, debt, and savings based on what is actually due. No manual math. No guessing.</p>
+      <p class="feature-body">A check lands and you freeze — you don't know what to put it toward. Able splits it across bills, debt, and savings the moment it hits. No math. No guessing.</p>
     </div>
     <div class="feature-card reveal">
       <div class="feature-icon">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
       </div>
       <div class="feature-title">Rolling Bill Window</div>
-      <p class="feature-body">Able looks ahead 14 days by default and reserves for what is coming. You always know if you are covered, short, or sitting on surplus.</p>
+      <p class="feature-body">Rent was due Thursday. You didn't see it coming. Able looks 14 days ahead and sets money aside for what's due — so you're never blindsided again.</p>
     </div>
     <div class="feature-card reveal">
       <div class="feature-icon">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="23 6 13.5 15.5 8.5 10.5 1 18"/><polyline points="17 6 23 6 23 12"/></svg>
       </div>
       <div class="feature-title">Debt Tracker</div>
-      <p class="feature-body">Every balance, every rate, all in one place. Able attacks the highest-interest debt first so you pay less over time.</p>
+      <p class="feature-body">You're paying down debt but not sure which debt to attack first. Able sorts every balance and rate, then targets the highest interest. You pay less over time.</p>
     </div>
     <div class="feature-card reveal">
       <div class="feature-icon">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>
       </div>
       <div class="feature-title">Forecast</div>
-      <p class="feature-body">Log expected income before it arrives so you can plan around it. When it hits, one tap confirms it and the allocation runs automatically.</p>
-    </div>
-    <div class="feature-card reveal">
-      <div class="feature-icon">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></svg>
-      </div>
-      <div class="feature-title">Money Literacy</div>
-      <p class="feature-body">Built-in courses on debt, credit, funding, and personal finance. Flashcards, quizzes, streaks, and a score that grows as you learn.</p>
-    </div>
-    <div class="feature-card reveal">
-      <div class="feature-icon">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="5"/><path d="M20 21a8 8 0 0 0-16 0"/></svg>
-      </div>
-      <div class="feature-title">Your Score</div>
-      <p class="feature-body">A monthly score that shows how well you are sticking to the plan. Not to shame you. To show you the progress you are making.</p>
+      <p class="feature-body">Money's coming in two weeks. But the decision needs to happen now. Log expected income before it lands. When it hits, one tap and the plan runs itself.</p>
     </div>
     <div class="feature-card ai-card reveal">
       <div class="feature-icon">
@@ -1878,7 +1987,7 @@ a { text-decoration: none; color: inherit; }
       </div>
       <div>
         <div class="feature-title">AI Coach</div>
-        <p class="feature-body">A financial coach that actually knows your numbers. Ask it anything. It has full access to your income history, bills, debt balances, and spending patterns. It does not give generic advice. It analyzes your situation and tells you what to do next.</p>
+        <p class="feature-body">Generic finance advice doesn't know your situation. Able does. It sees your bills, debt, and income — and answers with your numbers, not a book's.</p>
       </div>
     </div>
     <div class="section-cta reveal">
@@ -1910,7 +2019,7 @@ a { text-decoration: none; color: inherit; }
         <span class="outcome-text">Able to budget inconsistent income.</span>
       </div>
     </div>
-    <p class="outcomes-bridge reveal">No more paralysis.<br>No more dwindling.<br>Turn unpredictable into predictable.</p>
+    <p class="outcomes-bridge reveal">No more paralysis.<br>No more holding your breath.<br>Just confidence. Every day.</p>
     <div class="section-cta reveal">
       <a href="/app.html" class="btn-primary ghost">Start your free 7-day trial</a>
     </div>
@@ -1920,13 +2029,13 @@ a { text-decoration: none; color: inherit; }
 <!-- ═══════ STAKES ═══════ -->
 <section class="stakes-section section">
   <div class="stakes-inner">
-    <span class="eyebrow reveal">Here is what is actually at risk.</span>
-    <h2 class="stakes-headline reveal">Every month without a system is a month you fall further behind.</h2>
-    <p class="stakes-body reveal">Your debt does not pause while you figure it out. Your savings do not grow on their own. The gap between where you are and where you want to be does not close by accident.</p>
-    <p class="stakes-body reveal">You are not bad with money. You are working with the wrong tool.</p>
-    <p class="stakes-body reveal">The entrepreneurs who get this figured out early build wealth. The ones who don't spend years cleaning up the mess. This is not about feeling stressed about money. This is about whether you end up ahead or behind.</p>
+    <span class="eyebrow reveal">The math of waiting.</span>
+    <h2 class="stakes-headline reveal">Every month you wait is another $500–$1,000 gone.</h2>
+    <p class="stakes-body reveal">The leak doesn't pause while you figure it out. It keeps going while you decide whether to start.</p>
+    <p class="stakes-body reveal">Six months of waiting = $3,000 to $6,000 you didn't save. A year = up to $12,000 you didn't use to pay down debt, build a cushion, or get ahead of next month.</p>
+    <p class="stakes-body reveal">And the longer you wait, the more expensive waiting gets. That debt keeps compounding. Those missed savings keep missing.</p>
     <div class="stakes-callout reveal">
-      Entrepreneurs don't fail to pay down debt because they don't want to. They fail because they are afraid of not knowing when the next check is coming in.
+      The cost of waiting compounds. The cost of starting is $9.99.
     </div>
     <div class="section-cta reveal">
       <a href="/app.html" class="btn-primary">Start your free 7-day trial</a>
@@ -1938,35 +2047,36 @@ a { text-decoration: none; color: inherit; }
 <section class="pricing-section" id="pricing">
   <div class="pricing-inner">
     <div class="section-center reveal">
-      <span class="eyebrow">One plan. Full access.</span>
+      <span class="eyebrow">Monthly or yearly. Same access.</span>
       <h2 class="section-headline">Start free. Stay because it works.</h2>
     </div>
     <div class="pricing-cards">
-      <div class="pricing-card featured reveal">
-        <div class="pricing-badge">Most popular</div>
+      <div class="pricing-card reveal">
         <div class="pricing-plan">Monthly</div>
         <div class="pricing-amount">$9.99<span>/mo</span></div>
-        <p class="pricing-desc">Full access to every feature. Cancel anytime. No questions asked.</p>
+        <p class="pricing-desc">Full access to every feature. Cancel anytime.</p>
+        <a href="/app.html" class="pricing-cta ghost">Start your free 7-day trial</a>
+      </div>
+      <div class="pricing-card featured reveal">
+        <div class="pricing-badge">Save $41</div>
+        <div class="pricing-plan">Annual</div>
+        <div class="pricing-amount">$79<span>/yr</span></div>
+        <div class="pricing-submeta">$6.58/mo, billed annually</div>
+        <p class="pricing-desc">Two months free. Cancel anytime.</p>
         <a href="/app.html" class="pricing-cta">Start your free 7-day trial</a>
       </div>
-      <div class="pricing-card reveal">
-        <div class="pricing-plan">Lifetime</div>
-        <div class="pricing-amount">$34.99<span> once</span></div>
-        <p class="pricing-desc">Pay once. Own it forever. Best value if you are in this for the long run.</p>
-        <a href="/app.html" class="pricing-cta ghost">Get lifetime access</a>
-      </div>
     </div>
-    <p class="pricing-fine reveal">7-day free trial. Card required. Cancel anytime.</p>
+    <p class="pricing-fine reveal">7-day free trial on both plans. Card required. Cancel anytime.</p>
   </div>
 </section>
 
 <!-- ═══════ FINAL CTA ═══════ -->
 <section class="final-cta">
   <div class="final-inner">
-    <h2 class="final-headline reveal">Your paycheck does not follow a schedule. Your budget can.</h2>
-    <p class="final-sub reveal">Join the entrepreneurs who stopped freezing and started building.</p>
+    <h2 class="final-headline reveal">From Unable<br><span class="hero-arrow">→</span> Able.</h2>
+    <p class="final-sub reveal">That's the whole point. Seven days free to see it.</p>
     <a href="/app.html" class="btn-primary reveal">Start your free 7-day trial</a>
-    <p class="final-fine reveal">7-day free trial. Card required. Takes less than two minutes to set up.</p>
+    <p class="final-fine reveal">7-day free trial on both plans. Card required. Takes less than two minutes to set up.</p>
   </div>
 </section>
 
