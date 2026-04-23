@@ -1286,12 +1286,24 @@ input,select,button,textarea{font-family:inherit;}
           </div>
         </label>
       </div>
+      <div class="sec">Subscription</div>
+      <div class="card" style="display:flex;flex-direction:column;gap:10px;">
+        <div style="font-size:13px;font-weight:600;color:var(--ds-t2);">Current plan: <strong id="settings-plan" style="color:var(--ds-t1);">Loading…</strong></div>
+        <button class="btn" id="manage-sub-btn" onclick="openManageSubscription()" style="text-align:left;padding:14px 16px;">
+          <div style="font-weight:800;display:flex;align-items:center;gap:10px;color:var(--ds-t1);"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink:0;color:var(--ds-green);"><rect x="3" y="5" width="18" height="14" rx="2"/><line x1="3" y1="10" x2="21" y2="10"/></svg>Manage or cancel subscription</div>
+          <div style="font-size:11px;color:var(--ds-t3);font-weight:600;margin-top:5px;margin-left:28px;">Update card, view invoices, change plan, or cancel. Handled securely by Stripe.</div>
+        </button>
+      </div>
       <div class="sec">Account</div>
       <div class="card" style="display:flex;flex-direction:column;gap:10px;">
         <div style="font-size:13px;font-weight:600;color:var(--ds-t2);margin-bottom:6px;">Signed in as <strong id="settings-email" style="color:var(--ds-t1);"></strong></div>
         <button class="btn" onclick="replayTour()" style="text-align:left;padding:14px 16px;">
           <div style="font-weight:800;display:flex;align-items:center;gap:10px;color:var(--ds-t1);"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink:0;color:var(--ds-green);"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="6"/><circle cx="12" cy="12" r="2"/></svg>Replay app tour</div>
           <div style="font-size:11px;color:var(--ds-t3);font-weight:600;margin-top:5px;margin-left:28px;">Walk through the guided tour again.</div>
+        </button>
+        <button class="btn" onclick="contactSupport()" style="text-align:left;padding:14px 16px;">
+          <div style="font-weight:800;display:flex;align-items:center;gap:10px;color:var(--ds-t1);"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink:0;color:var(--ds-green);"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>Contact support</div>
+          <div style="font-size:11px;color:var(--ds-t3);font-weight:600;margin-top:5px;margin-left:28px;">Opens your email app with a pre-filled message to us.</div>
         </button>
         <button class="btn" onclick="resetMonth()" style="text-align:left;padding:14px 16px;">
           <div style="font-weight:800;display:flex;align-items:center;gap:10px;color:var(--ds-t1);"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink:0;color:var(--ds-green);"><polyline points="1 4 1 10 7 10"/><path d="M3.51 15a9 9 0 1 0 2.13-9.36L1 10"/></svg>Close this month</div>
@@ -1442,6 +1454,7 @@ const STRIPE_KEY   = 'pk_live_3bc5VtR5BgZY9hpaYnXuE2zW';
 const PRICE_MONTHLY  = 'price_1TO3hVDBmPAhrdxkIbpGti8n';
 const PRICE_ANNUAL   = 'price_1TPUDjDBmPAhrdxkL7IkGqp3';
 const PRICE_LIFETIME = 'price_1TO3i3DBmPAhrdxkVq1hAzj9';
+const SUPPORT_EMAIL  = 'support@becomeable.app';
 
 // sb and stripe initialized in window.load below
 const sbGet = () => window._sb;
@@ -1547,7 +1560,12 @@ async function doSignOut() {
 async function checkSubscription(userId) {
   // Check cache first — avoids round trip for returning users
   const cached = sessionStorage.getItem('able_access_'+userId);
-  if(cached === 'true') return true;
+  if(cached === 'true') {
+    // Cache hit, but still fetch the actual status in the background so
+    // the Settings UI can render the current plan label.
+    fetchSubscriptionStatus(userId).then(s=>{if(s)renderSubscriptionPlan(s);});
+    return true;
+  }
 
   try {
     const timeout = new Promise((_, reject) => setTimeout(() => reject(new Error('timeout')), 5000));
@@ -1555,13 +1573,22 @@ async function checkSubscription(userId) {
     const result = await Promise.race([query, timeout]);
     const data = result?.data;
     if(!data) return false;
-    const hasAccess = ['active', 'trialing', 'lifetime'].includes(data.subscription_status);
+    const status = data.subscription_status;
+    renderSubscriptionPlan(status);
+    const hasAccess = ['active', 'trialing', 'lifetime'].includes(status);
     if(hasAccess) sessionStorage.setItem('able_access_'+userId, 'true');
     return hasAccess;
   } catch(e) {
     console.log('checkSubscription error:', e.message);
     return false;
   }
+}
+
+async function fetchSubscriptionStatus(userId) {
+  try {
+    const {data} = await sbGet().from('profiles').select('subscription_status').eq('id', userId).single();
+    return data?.subscription_status || null;
+  } catch { return null; }
 }
 
 async function onAuthStateChange(user) {
@@ -2068,9 +2095,49 @@ async function startCheckout() {
   }
 }
 
-// ═══════════════════════════════════════
-// CLOUD DATA SYNC
-// ═══════════════════════════════════════
+async function openManageSubscription() {
+  const btn=document.getElementById('manage-sub-btn');
+  const original=btn.innerHTML;
+  btn.disabled=true;
+  btn.innerHTML='<div style="font-weight:800;color:var(--ds-t2);padding:2px 0;">Opening Stripe…</div>';
+  try {
+    const resp=await sbGet().functions.invoke('create-portal-session',{
+      body:{returnUrl:window.location.origin+'/app.html'}
+    });
+    if(resp.error) throw new Error(typeof resp.error==='string'?resp.error:(resp.error.message||JSON.stringify(resp.error)));
+    const url=resp.data?.portal_url;
+    if(!url) throw new Error(resp.data?.error||'Portal unavailable');
+    window.location.href=url;
+  } catch(e) {
+    alert('Could not open subscription management: '+e.message);
+    btn.disabled=false;
+    btn.innerHTML=original;
+  }
+}
+
+function contactSupport() {
+  if(!SUPPORT_EMAIL || SUPPORT_EMAIL.includes('PLACEHOLDER')) {
+    alert('Support email not configured yet.');
+    return;
+  }
+  const subject=encodeURIComponent('Able support request');
+  const body=encodeURIComponent('\n\n---\nAccount: '+(currentUser?.email||'')+'\nUser ID: '+(currentUser?.id||''));
+  window.location.href=`mailto:${SUPPORT_EMAIL}?subject=${subject}&body=${body}`;
+}
+
+function renderSubscriptionPlan(status) {
+  const el=document.getElementById('settings-plan');
+  if(!el) return;
+  const label={
+    trialing: 'Free trial (7 days)',
+    active: 'Active subscription',
+    past_due: 'Past due — update your card',
+    incomplete: 'Incomplete — finish checkout',
+    inactive: 'No active subscription',
+    lifetime: 'Lifetime access',
+  }[status] || (status ? status : 'No active subscription');
+  el.textContent = label;
+}
 async function loadUserData() {
   setSyncState('syncing');
   const {data,error}=await sbGet().from('user_data').select('*').eq('id',currentUser.id).single();
