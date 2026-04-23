@@ -266,6 +266,7 @@ a { text-decoration: none; color: inherit; }
   margin-bottom: 1rem;
   display: block;
 }
+.br-mobile { display: none; }
 .hero-headline {
   font-size: clamp(2.25rem, 4.5vw, 3.75rem);
   font-weight: 900;
@@ -277,13 +278,13 @@ a { text-decoration: none; color: inherit; }
   flex-direction: column;
   align-items: flex-start;
 }
-.hero-headline .hl-payoff { white-space: nowrap; }
+.hero-headline .hl-payoff {
+  white-space: nowrap;
+  margin-top: .45em;
+}
 .hero-arrow {
   color: var(--ds-green);
   font-weight: 700;
-  font-size: .8em;
-  line-height: 1;
-  margin: .08em 0;
   display: inline-block;
 }
 .hero-sub {
@@ -587,8 +588,10 @@ a { text-decoration: none; color: inherit; }
   .phone-screen { height: 480px; }
 }
 @media (max-width: 640px) {
-  .hero { padding: 80px 0 40px; }
+  .hero { padding: 112px 0 40px; }
   .hero-inner { padding: 0 1.25rem; }
+  .br-mobile { display: inline; }
+  .hero-eyebrow { margin-bottom: 1.5rem; }
 }
 
 /* ═══════════════════════════════════════
@@ -659,6 +662,8 @@ a { text-decoration: none; color: inherit; }
   color: white;
   margin-bottom: 1.25rem;
 }
+.problem-headline .ph-line { display: block; }
+.problem-headline .ph-line-1 { margin-bottom: .35em; }
 .problem-intro {
   max-width: 640px;
   margin: 0 0 2.5rem;
@@ -1765,17 +1770,16 @@ a { text-decoration: none; color: inherit; }
 <section class="hero">
   <div class="hero-inner">
     <div class="hero-copy">
-      <span class="hero-eyebrow">For freelancers, creators, and business owners.</span>
+      <span class="hero-eyebrow">For freelancers, creators,<br class="br-mobile">and business owners.</span>
       <h1 class="hero-headline">
-        <span>From holding your breath with bills</span>
-        <span class="hero-arrow">→</span>
-        <span class="hl-payoff">Finally able to breathe.</span>
+        <span>From holding your breath<br>with bills</span>
+        <span class="hl-payoff"><span class="hero-arrow">→</span> Finally able to breathe.</span>
       </h1>
       <p class="hero-sub">An app built for entrepreneurs who struggle to manage inconsistent income.</p>
       <ul class="hero-bullets">
         <li><svg class="bullet-check" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="20 6 9 17 4 12"/></svg><span>Finally pay down your debt</span></li>
         <li><svg class="bullet-check" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="20 6 9 17 4 12"/></svg><span>Actually build your savings</span></li>
-        <li><svg class="bullet-check" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="20 6 9 17 4 12"/></svg><span>Stop living check to check</span></li>
+        <li><svg class="bullet-check" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="20 6 9 17 4 12"/></svg><span>Stop living unpredictable check to unpredictable check</span></li>
       </ul>
       <div class="hero-ctas">
         <a href="/app.html" class="btn-primary">Start your free 7-day trial</a>
@@ -1863,7 +1867,7 @@ a { text-decoration: none; color: inherit; }
 <section class="problem-section">
   <div class="problem-inner">
     <span class="problem-eyebrow">Sound familiar?</span>
-    <h2 class="problem-headline">You're not overspending.<br>You're freezing, and the money leaks anyway.</h2>
+    <h2 class="problem-headline"><span class="ph-line ph-line-1">You're not overspending.</span><span class="ph-line">You're freezing, and the money leaks anyway.</span></h2>
     <div class="problem-intro reveal">
       <p>It starts with the unknown. You don't know when the next check is coming, so you freeze.</p>
       <p>You don't allow yourself to touch the money. You tell yourself: <em>if I just hold it, I won't lose it.</em></p>
@@ -1921,6 +1925,9 @@ a { text-decoration: none; color: inherit; }
       <p class="shift-body">You pay bills. You kill debt. You grow savings. What's left is yours to spend.</p>
       <p class="shift-body">End of the month, you know exactly where every dollar went.</p>
       <p class="shift-closer">The problem was never you.<br>It was the advice you were handed.</p>
+      <div class="section-cta reveal">
+        <a href="/app.html" class="btn-primary">Start your free 7-day trial</a>
+      </div>
     </div>
     <div class="shift-visual reveal">
       <div class="shift-phone-wrap">
@@ -2002,9 +2009,6 @@ a { text-decoration: none; color: inherit; }
         </div>
       </div>
     </div>
-    <div class="section-cta reveal" style="grid-column: 1 / -1;">
-      <a href="/app.html" class="btn-primary">Start your free 7-day trial</a>
-    </div>
   </div>
 </section>
 
@@ -2012,7 +2016,7 @@ a { text-decoration: none; color: inherit; }
 <section class="hiw-section" id="how-it-works">
   <div class="hiw-header reveal">
     <span class="hiw-eyebrow">Three steps. No spreadsheet.</span>
-    <h2 class="hiw-headline">How breathing again works.</h2>
+    <h2 class="hiw-headline">How breathing again<br>works.</h2>
   </div>
   <div class="hiw-steps">
 
@@ -2191,7 +2195,7 @@ a { text-decoration: none; color: inherit; }
       </div>
       <div>
         <div class="feature-title">AI Coach</div>
-        <p class="feature-body">Generic finance advice doesn't know your situation. Able does. It sees your bills, debt, and income, and answers with your numbers, not a book's.</p>
+        <p class="feature-body">Generic finance advice doesn't know your situation. Able does. It sees your bills, debt, and income, and gives you answers built on your real numbers.</p>
       </div>
     </div>
   </div>
@@ -2236,7 +2240,8 @@ a { text-decoration: none; color: inherit; }
     <span class="eyebrow reveal">The math of waiting.</span>
     <h2 class="stakes-headline reveal">Every month you wait is another $500–$1,000 gone.</h2>
     <p class="stakes-body reveal">The leak doesn't pause while you figure it out. It keeps going while you decide whether to start.</p>
-    <p class="stakes-body reveal">Six months of waiting = $3,000 to $6,000 you didn't save. A year = up to $12,000 you didn't use to pay down debt, build a cushion, or get ahead of next month.</p>
+    <p class="stakes-body reveal">Six months of waiting = $3,000 to $6,000 you didn't save.</p>
+    <p class="stakes-body reveal">A year = up to $12,000 you didn't use to pay down debt, build a cushion, or get ahead of next month.</p>
     <p class="stakes-body reveal">And the longer you wait, the more expensive waiting gets. That debt keeps compounding. Those missed savings keep missing.</p>
     <div class="stakes-callout reveal">
       The cost of waiting compounds. The cost of starting is $9.99.
@@ -2252,7 +2257,7 @@ a { text-decoration: none; color: inherit; }
   <div class="pricing-inner">
     <div class="section-center reveal">
       <span class="eyebrow">Monthly or yearly. Same access.</span>
-      <h2 class="section-headline">Start free. Stay because it works.</h2>
+      <h2 class="section-headline">Start free.<br class="br-mobile">Stay because it works.</h2>
     </div>
     <div class="pricing-cards">
       <div class="pricing-card reveal">
@@ -2278,7 +2283,7 @@ a { text-decoration: none; color: inherit; }
 <section class="final-cta">
   <div class="final-inner">
     <h2 class="final-headline reveal">From Unable<br><span class="hero-arrow">→</span> Able.</h2>
-    <p class="final-sub reveal">That's the whole point. Seven days free to see it.</p>
+    <p class="final-sub reveal">That's the whole point.<br class="br-mobile">Seven days free to see it.</p>
     <a href="/app.html" class="btn-primary reveal">Start your free 7-day trial</a>
     <p class="final-fine reveal">7-day free trial. Card required. Takes less than two minutes to set up.</p>
   </div>
