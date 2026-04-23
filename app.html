@@ -176,8 +176,21 @@ input,select,button,textarea{font-family:inherit;}
 /* PAGES */
 .page{display:none;max-width:980px;margin:0 auto;padding:1.5rem;}
 .page.active{display:block;}
-.two-col{display:grid;grid-template-columns:1fr 320px;gap:1.25rem;}
+.two-col{display:grid;grid-template-columns:1fr 320px;gap:1.25rem;min-width:0;}
+.two-col > *{min-width:0;}
 @media(max-width:800px){.two-col{grid-template-columns:1fr;}}
+
+/* Mobile overflow fixes: allocation result + income history */
+#alloc-result,#history-list{max-width:100%;}
+#alloc-result > *,#history-list > *{max-width:100%;}
+#alloc-result .alloc-head{display:flex;align-items:baseline;gap:10px;margin-bottom:.75rem;flex-wrap:wrap;min-width:0;}
+.history-item,.history-item > div,.history-item > div > div{min-width:0;}
+.history-item > div > div:first-child{flex:1 1 auto;overflow:hidden;}
+.history-item > div > div:first-child > div{overflow:hidden;text-overflow:ellipsis;}
+@media(max-width:540px){
+  #alloc-amt{font-size:2rem !important;}
+  #alloc-result,#history-list{overflow-x:hidden;}
+}
 
 .card{background:var(--ds-card);border-radius:var(--ds-r2);padding:1.4rem;box-shadow:var(--ds-sh2);margin-bottom:1rem;}
 .sec{font-size:10px;font-weight:800;letter-spacing:.12em;text-transform:uppercase;color:var(--ds-t3);margin-bottom:.65rem;margin-top:1.5rem;font-family:var(--ds-f);}
@@ -970,7 +983,7 @@ input,select,button,textarea{font-family:inherit;}
       </div>
       <div id="alloc-result" style="display:none;">
         <div class="sec" style="margin-top:1.25rem;">Here's exactly what to do with it</div>
-        <div style="display:flex;align-items:baseline;gap:10px;margin-bottom:.75rem;">
+        <div class="alloc-head">
           <div id="alloc-amt" style="font-family:var(--ds-f);font-size:2.5rem;font-weight:900;color:var(--ds-green);letter-spacing:-.03em;line-height:1;"></div>
           <div id="alloc-src" style="font-size:12px;color:var(--ds-t3);font-weight:700;letter-spacing:.05em;text-transform:uppercase;"></div>
         </div>
