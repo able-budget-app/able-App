@@ -2040,7 +2040,7 @@ async function startCheckout() {
     const cancelUrl=window.location.origin+'/app.html';
 
     const resp = await sbGet().functions.invoke('create-checkout',{
-      body:{priceId,userId:currentUser.id,email:currentUser.email,returnUrl,cancelUrl}
+      body:{priceId,returnUrl,cancelUrl}
     });
 
     if(resp.error) throw new Error(typeof resp.error === 'string' ? resp.error : (resp.error.message||JSON.stringify(resp.error)));
