@@ -1544,7 +1544,7 @@ async function checkSubscription(userId) {
     const result = await Promise.race([query, timeout]);
     const data = result?.data;
     if(!data) return false;
-    const hasAccess = data.subscription_status === 'active' || data.subscription_status === 'lifetime';
+    const hasAccess = ['active', 'trialing', 'lifetime'].includes(data.subscription_status);
     if(hasAccess) sessionStorage.setItem('able_access_'+userId, 'true');
     return hasAccess;
   } catch(e) {
