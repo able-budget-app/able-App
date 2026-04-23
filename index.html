@@ -2378,6 +2378,40 @@ a { text-decoration: none; color: inherit; }
 
 <script>
 // ═══════════════════════════════════════
+// ANALYTICS — provider-agnostic track()
+// Swap the body of Able.track to forward to PostHog/Plausible/etc.
+// ═══════════════════════════════════════
+window.Able = window.Able || {};
+window.Able.track = function(event, props) {
+  const payload = { event, props: props || {}, ts: Date.now() };
+  // TODO: forward to analytics provider.
+  //   PostHog:   if (window.posthog) posthog.capture(event, props);
+  //   Plausible: if (window.plausible) plausible(event, { props });
+  if (window._ableTrackDebug) console.log('[track]', event, props);
+};
+
+// Fire landing_viewed once per page load.
+Able.track('landing_viewed');
+
+// Capture clicks on any CTA that heads to the app.
+document.querySelectorAll('a[href^="/app.html"], a[href="/app.html"]').forEach(a => {
+  a.addEventListener('click', () => {
+    const loc = a.closest('.hero') ? 'hero'
+              : a.closest('.nav') ? 'nav'
+              : a.closest('.pricing-section') ? 'pricing'
+              : a.closest('.final-cta') ? 'final'
+              : a.closest('.outcomes-section') ? 'outcomes'
+              : a.closest('.features-section') ? 'features'
+              : a.closest('.hiw-section') ? 'how_it_works'
+              : a.closest('.problem-section') ? 'problem'
+              : a.closest('.shift-section') ? 'shift'
+              : a.closest('.stakes-section') ? 'stakes'
+              : 'other';
+    Able.track('landing_cta_clicked', { location: loc });
+  });
+});
+
+// ═══════════════════════════════════════
 // SCROLL REVEAL
 // ═══════════════════════════════════════
 const revealObserver = new IntersectionObserver((entries) => {

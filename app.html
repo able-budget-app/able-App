@@ -1461,6 +1461,28 @@ const sbGet = () => window._sb;
 const stripeGet = () => window._stripe;
 
 // ═══════════════════════════════════════
+// ANALYTICS — provider-agnostic track()
+// Swap the body of Able.track to forward to PostHog/Plausible/etc.
+// ═══════════════════════════════════════
+window.Able = window.Able || {};
+window.Able.track = function(event, props) {
+  const enriched = { ...(props||{}) };
+  if (window.currentUser?.id) enriched.user_id = window.currentUser.id;
+  // TODO: forward to analytics provider.
+  //   PostHog:   if (window.posthog) posthog.capture(event, enriched);
+  //   Plausible: if (window.plausible) plausible(event, { props: enriched });
+  if (window._ableTrackDebug) console.log('[track]', event, enriched);
+};
+// One-time event helper — fires once per user per browser.
+window.Able.trackOnce = function(event, props) {
+  const uid = window.currentUser?.id || 'anon';
+  const key = 'able_tracked_' + event + '_' + uid;
+  if (localStorage.getItem(key)) return;
+  localStorage.setItem(key, '1');
+  window.Able.track(event, props);
+};
+
+// ═══════════════════════════════════════
 // STATE
 // ═══════════════════════════════════════
 const EMPTY_DATA = {
@@ -1531,6 +1553,7 @@ async function doSignup() {
   const {error}=await sbGet().auth.signUp({email,password:pass});
   btn.textContent='Create account';btn.disabled=false;
   if(error){showAuthError(error.message);return;}
+  Able.track('signup_completed', { email_domain: email.split('@')[1] || null });
   showAuthSuccess('Account created! Check your email for a confirmation link, then come back here to sign in.');
 }
 
@@ -1575,6 +1598,9 @@ async function checkSubscription(userId) {
     if(!data) return false;
     const status = data.subscription_status;
     renderSubscriptionPlan(status);
+    // Fire once-per-user events for subscription lifecycle moments.
+    if (status === 'active') Able.trackOnce('subscription_activated');
+    if (status === 'inactive') Able.trackOnce('subscription_canceled');
     const hasAccess = ['active', 'trialing', 'lifetime'].includes(status);
     if(hasAccess) sessionStorage.setItem('able_access_'+userId, 'true');
     return hasAccess;
@@ -1612,6 +1638,7 @@ async function onAuthStateChange(user) {
   const isFromCheckout = params.get('checkout')==='success';
   if(isFromCheckout){
     window.history.replaceState({},'',window.location.pathname);
+    Able.trackOnce('trial_started');
     console.log('[Able] From checkout, waiting 1.5s for webhook...');
     await new Promise(r=>setTimeout(r,1500));
   }
@@ -1641,6 +1668,7 @@ async function onAuthStateChange(user) {
       document.getElementById('auth-screen').style.display='none';
       document.getElementById('paywall-screen').style.display='flex';
       document.getElementById('app').style.display='none';
+      Able.track('paywall_viewed');
       return;
     }
 
@@ -2077,6 +2105,8 @@ async function startCheckout() {
     const priceId=selectedPlan==='annual'?PRICE_ANNUAL:PRICE_MONTHLY;
     const returnUrl=window.location.origin+'/app.html?checkout=success';
     const cancelUrl=window.location.origin+'/app.html';
+
+    Able.track('checkout_started', { plan: selectedPlan });
 
     const resp = await sbGet().functions.invoke('create-checkout',{
       body:{priceId,returnUrl,cancelUrl}
@@ -2581,6 +2611,7 @@ function applyJobs(jobs,amount,source){
   // Track how much of the user's income this month has actually been routed to upcoming bills.
   // This is what the allocation engine uses to figure out how much more to reserve on future incomes.
   S.allocated_to_bills=(S.allocated_to_bills||0)+billsPaid;
+  const wasFirstIncome = !S.history.length;
   S.history.unshift({
     id:'h_'+Date.now()+'_'+Math.random().toString(36).slice(2,7),
     amount,source,
@@ -2591,6 +2622,7 @@ function applyJobs(jobs,amount,source){
     jobs:JSON.parse(JSON.stringify(jobs))
   });
   save();
+  if (wasFirstIncome) Able.trackOnce('first_income_logged', { amount, source });
 }
 
 function allocate(){
@@ -3047,9 +3079,11 @@ function addBill(){
     };
     delete modal.dataset.editIdx;
   } else {
+    const wasFirstBill = !S.bills.length;
     const bill={name,amount,freq,due,cat,priority,paid:false};
     if(freqDays)bill.freqDays=freqDays;
     S.bills.push(bill);
+    if (wasFirstBill) Able.trackOnce('first_bill_added', { freq, cat });
   }
   save();renderBillsPage();refreshHome();closeModal('modal-add-bill');
 }
