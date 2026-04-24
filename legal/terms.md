@@ -1,9 +1,9 @@
 # Terms of Service
 
-**Effective date:** [EFFECTIVE_DATE]
-**Last updated:** [LAST_UPDATED]
+**Effective date:** 2026-04-23
+**Last updated:** 2026-04-23
 
-These Terms of Service ("Terms") are a legal agreement between you and [BUSINESS_LEGAL_NAME] ("Able," "we," "us," or "our") governing your use of the Able application, website, and related services (together, the "Service").
+These Terms of Service ("Terms") are a legal agreement between you and [TODO_BUSINESS_LEGAL_NAME] ("Able," "we," "us," or "our") governing your use of the Able application, website, and related services (together, the "Service").
 
 By creating an account or using the Service you agree to these Terms. If you do not agree, do not use the Service.
 
@@ -20,7 +20,7 @@ You must be at least 18 years old (or the age of majority in your jurisdiction) 
 You are responsible for:
 - Keeping your login credentials secure.
 - All activity that happens under your account.
-- Notifying us promptly at [SUPPORT_EMAIL] if you believe your account has been compromised.
+- Notifying us promptly at support@becomeable.app if you believe your account has been compromised.
 
 You may not share your account with other people, create multiple accounts to abuse trial credits, or use the Service on behalf of anyone else without their permission.
 
@@ -31,16 +31,16 @@ You may not share your account with other people, create multiple accounts to ab
 ### 3.1 Free trial
 Able offers a 7-day free trial. A valid payment method is required to start the trial. You will not be charged during the trial.
 
-If you do not cancel before the trial ends, your subscription will automatically begin and your payment method will be charged for the plan you selected (monthly or annual). You may cancel at any time during the trial by [CANCEL_PATH e.g. "opening Settings > Billing inside the app and clicking Cancel"].
+If you do not cancel before the trial ends, your subscription will automatically begin and your payment method will be charged for the plan you selected (monthly or annual). You may cancel at any time during the trial by opening Settings inside the app and clicking "Manage or cancel subscription".
 
 ### 3.2 Subscription plans and pricing
-Current plans and prices are shown on [PRICING_URL]. We may change prices in the future; if we do, we will give you at least 30 days notice by email, and the new price will apply to your next renewal.
+Current plans and prices are shown on https://becomeable.netlify.app/#pricing. We may change prices in the future; if we do, we will give you at least 30 days notice by email, and the new price will apply to your next renewal.
 
 ### 3.3 Auto-renewal
 Subscriptions renew automatically at the end of each billing period (monthly or annual) unless you cancel before the renewal date.
 
 ### 3.4 Cancellation
-You may cancel your subscription at any time from inside the app or by emailing [SUPPORT_EMAIL]. Cancellation takes effect at the end of your current paid period; you keep access until then.
+You may cancel your subscription at any time from inside the app or by emailing support@becomeable.app. Cancellation takes effect at the end of your current paid period; you keep access until then.
 
 ### 3.5 Refunds
 Subscription fees are non-refundable except where required by law. We may issue refunds at our discretion if, for example, the Service was unavailable for an extended period or a billing error occurred.
@@ -106,7 +106,7 @@ We grant you a limited, non-exclusive, non-transferable license to use the Servi
 
 ## 9. Termination
 
-You may stop using the Service and delete your account at any time from inside the app or by emailing [SUPPORT_EMAIL].
+You may stop using the Service and delete your account at any time from inside the app or by emailing support@becomeable.app.
 
 We may suspend or terminate your account if:
 - You violate these Terms.
@@ -128,7 +128,7 @@ Some jurisdictions do not allow certain warranty exclusions, so some of the abov
 
 ## 11. Limitation of liability
 
-TO THE MAXIMUM EXTENT PERMITTED BY LAW, [BUSINESS_LEGAL_NAME] AND ITS DIRECTORS, EMPLOYEES, AND AGENTS WILL NOT BE LIABLE FOR ANY INDIRECT, INCIDENTAL, SPECIAL, CONSEQUENTIAL, OR PUNITIVE DAMAGES, INCLUDING LOST PROFITS, LOST DATA, OR LOSS OF GOODWILL, ARISING OUT OF OR RELATING TO YOUR USE OF THE SERVICE.
+TO THE MAXIMUM EXTENT PERMITTED BY LAW, [TODO_BUSINESS_LEGAL_NAME] AND ITS DIRECTORS, EMPLOYEES, AND AGENTS WILL NOT BE LIABLE FOR ANY INDIRECT, INCIDENTAL, SPECIAL, CONSEQUENTIAL, OR PUNITIVE DAMAGES, INCLUDING LOST PROFITS, LOST DATA, OR LOSS OF GOODWILL, ARISING OUT OF OR RELATING TO YOUR USE OF THE SERVICE.
 
 OUR TOTAL LIABILITY TO YOU FOR ANY CLAIM ARISING OUT OF OR RELATING TO THESE TERMS OR THE SERVICE IS LIMITED TO THE GREATER OF (A) THE AMOUNTS YOU PAID US IN THE 12 MONTHS BEFORE THE CLAIM, OR (B) $50 USD.
 
@@ -138,15 +138,15 @@ Some jurisdictions do not allow the exclusion or limitation of certain damages, 
 
 ## 12. Indemnification
 
-You agree to defend, indemnify, and hold harmless [BUSINESS_LEGAL_NAME] from any claims, damages, liabilities, and expenses (including reasonable attorneys' fees) arising out of your use of the Service, your content, or your violation of these Terms.
+You agree to defend, indemnify, and hold harmless [TODO_BUSINESS_LEGAL_NAME] from any claims, damages, liabilities, and expenses (including reasonable attorneys' fees) arising out of your use of the Service, your content, or your violation of these Terms.
 
 ---
 
 ## 13. Governing law and disputes
 
-These Terms are governed by the laws of [GOVERNING_JURISDICTION e.g. "the State of California, United States"], without regard to its conflict-of-laws rules.
+These Terms are governed by the laws of [TODO_GOVERNING_JURISDICTION — e.g. "the State of California, United States"], without regard to its conflict-of-laws rules.
 
-Any dispute arising out of these Terms or the Service will be resolved in the state or federal courts located in [VENUE_JURISDICTION], and you consent to personal jurisdiction there.
+Any dispute arising out of these Terms or the Service will be resolved in the state or federal courts located in [TODO_VENUE_JURISDICTION], and you consent to personal jurisdiction there.
 
 [OPTIONAL: INSERT ARBITRATION CLAUSE HERE IF YOU WANT ARBITRATION. This is a business decision and often requires careful drafting. Leaving it out defaults to standard court litigation.]
 
@@ -162,14 +162,14 @@ We may update these Terms when our product, pricing, or practices change or when
 
 Questions about these Terms:
 
-[BUSINESS_LEGAL_NAME]
-[PHYSICAL_ADDRESS (optional)]
-[SUPPORT_EMAIL]
+[TODO_BUSINESS_LEGAL_NAME]
+[TODO_PHYSICAL_ADDRESS — optional but recommended]
+support@becomeable.app
 
 ---
 
-**Note to [USER]:** This is a starting draft. Before publishing:
-- Fill in every `[PLACEHOLDER]`.
+**Note to Paul:** This is a starting draft. Before publishing:
+- Fill in every `[TODO_*]` marker (legal name, governing jurisdiction, venue, physical address).
 - Decide on arbitration vs. court litigation in Section 13. If you want arbitration, work with a lawyer to draft that clause.
 - Have a lawyer who knows software/SaaS contracts review the whole thing. Costs a few hundred to a couple thousand dollars and it's worth it.
-- Once finalized, publish at a stable URL (e.g. `[SITE_URL]/terms`) and link it from the landing page footer and the signup flow.
+- Once finalized, publish at a stable URL (e.g. `https://becomeable.netlify.app/terms`) and link it from the landing page footer and the signup flow.

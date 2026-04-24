@@ -1,9 +1,9 @@
 # Privacy Policy
 
-**Effective date:** [EFFECTIVE_DATE]
-**Last updated:** [LAST_UPDATED]
+**Effective date:** 2026-04-23
+**Last updated:** 2026-04-23
 
-[BUSINESS_LEGAL_NAME] ("Able," "we," "us," or "our") operates the Able application at [SITE_URL] and the Able web app at [APP_URL] (together, the "Service"). This Privacy Policy explains what information we collect, how we use it, who we share it with, and the rights you have over it.
+[TODO_BUSINESS_LEGAL_NAME] ("Able," "we," "us," or "our") operates the Able application at https://becomeable.netlify.app and the Able web app at https://becomeable.netlify.app/app.html (together, the "Service"). This Privacy Policy explains what information we collect, how we use it, who we share it with, and the rights you have over it.
 
 By using the Service you agree to the handling of information as described here.
 
@@ -77,12 +77,12 @@ We share information only with the following categories of service providers, an
 | Supabase | Database, authentication, serverless functions | Account data, app data, coach messages |
 | Stripe | Payments and subscription management | Email, subscription status, billing country |
 | Anthropic | AI Coach responses | Your coach message and a snapshot of your in-app numbers |
-| [EMAIL_PROVIDER e.g. GoHighLevel] | Transactional and marketing email | Email address, name |
-| [ANALYTICS_PROVIDER e.g. Plausible] | Product analytics | Usage events, device/browser metadata |
+| [TODO_EMAIL_PROVIDER — likely Resend] | Transactional and marketing email | Email address, name |
+| PostHog (US cloud) | Product analytics | Usage events, device/browser metadata |
 
 We may also disclose information if required by law, subpoena, or court order, or when we believe in good faith that disclosure is necessary to protect our rights, your safety, or the safety of others.
 
-If [BUSINESS_LEGAL_NAME] is acquired or merges with another company, your information may be transferred to that company as part of the transaction. We will notify you before that happens.
+If [TODO_BUSINESS_LEGAL_NAME] is acquired or merges with another company, your information may be transferred to that company as part of the transaction. We will notify you before that happens.
 
 ---
 
@@ -100,7 +100,7 @@ We use industry-standard measures to protect your information:
 - Database access is restricted with row-level security so each user can only access their own data
 - Payment processing is delegated to Stripe, who is PCI-DSS Level 1 certified
 
-No system is perfectly secure. If you believe your account has been compromised, contact us immediately at [SUPPORT_EMAIL].
+No system is perfectly secure. If you believe your account has been compromised, contact us immediately at support@becomeable.app.
 
 ---
 
@@ -114,13 +114,13 @@ Depending on where you live, you have the right to:
 - **Object to or restrict** certain uses of your information
 - **Withdraw consent** for marketing email at any time (use the unsubscribe link in any email)
 
-To exercise these rights, email us at [SUPPORT_EMAIL]. We will respond within 30 days.
+To exercise these rights, email us at support@becomeable.app. We will respond within 30 days.
 
 ---
 
 ## 7. Children
 
-The Service is not intended for children under 13 (or under 16 in the EEA/UK). We do not knowingly collect information from children. If you believe a child has given us personal information, contact us at [SUPPORT_EMAIL] and we will delete it.
+The Service is not intended for children under 13 (or under 16 in the EEA/UK). We do not knowingly collect information from children. If you believe a child has given us personal information, contact us at support@becomeable.app and we will delete it.
 
 ---
 
@@ -150,6 +150,6 @@ We will update this policy when our practices change or when required by law. If
 
 Questions or requests about this policy:
 
-[BUSINESS_LEGAL_NAME]
-[PHYSICAL_ADDRESS (optional but recommended)]
-[SUPPORT_EMAIL]
+[TODO_BUSINESS_LEGAL_NAME]
+[TODO_PHYSICAL_ADDRESS — recommended, can be PO box]
+support@becomeable.app
