@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Resources for inconsistent income | Able</title>
-<meta name="description" content="Practical guides for freelancers, creators, and business owners with irregular income. How to budget, save, pay taxes, and get ahead when the paycheck is not steady.">
+<meta name="description" content="Practical guides for freelancers, creators, and business owners with irregular income. Budgeting, taxes, emergency funds, and paying yourself from a business that pays you in chunks.">
 <link rel="canonical" href="https://becomeable.app/resources/">
 <meta property="og:title" content="Resources for inconsistent income | Able">
 <meta property="og:description" content="Practical guides for freelancers, creators, and business owners with irregular income.">
@@ -73,15 +73,8 @@ a:hover { text-decoration: underline; }
   letter-spacing: -.01em;
   transition: background .15s;
 }
-.site-nav .cta:hover {
-  background: var(--ds-green2);
-  text-decoration: none;
-}
-.hub-inner {
-  max-width: 840px;
-  margin: 0 auto;
-  padding: 3rem 2rem 5rem;
-}
+.site-nav .cta:hover { background: var(--ds-green2); text-decoration: none; }
+.hub-inner { max-width: 860px; margin: 0 auto; padding: 3rem 2rem 5rem; }
 .hub-eyebrow {
   font-size: 11px;
   font-weight: 800;
@@ -105,69 +98,64 @@ a:hover { text-decoration: underline; }
   max-width: 620px;
   margin-bottom: 3rem;
 }
-.hub-section-label {
+.cluster {
+  background: var(--ds-card);
+  border-radius: 26px;
+  padding: 1.75rem 1.75rem 1.5rem;
+  margin-bottom: 1.25rem;
+  box-shadow: 0 1px 4px rgba(0,0,0,.05), 0 2px 8px rgba(0,0,0,.04);
+}
+.cluster-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  margin-bottom: .75rem;
+  flex-wrap: wrap;
+  gap: .5rem;
+}
+.cluster-title {
+  font-size: 1.3rem;
+  font-weight: 900;
+  letter-spacing: -.02em;
+  color: var(--ds-t1);
+}
+.cluster-title a { color: var(--ds-t1); text-decoration: none; }
+.cluster-title a:hover { color: var(--ds-green); }
+.cluster-pillar {
   font-size: 11px;
   font-weight: 800;
-  letter-spacing: .14em;
+  letter-spacing: .12em;
   text-transform: uppercase;
-  color: var(--ds-t3);
-  margin: 2.5rem 0 1rem;
+  color: var(--ds-green);
+  background: var(--ds-green-l);
+  padding: 4px 10px;
+  border-radius: 100px;
+  white-space: nowrap;
 }
-.hub-list {
-  list-style: none;
-  padding: 0;
-  margin: 0;
-}
-.hub-item {
-  background: var(--ds-card);
-  border-radius: 18px;
-  padding: 1.25rem 1.5rem;
-  margin-bottom: 10px;
-  box-shadow: 0 1px 4px rgba(0,0,0,.05), 0 2px 8px rgba(0,0,0,.04);
-  transition: transform .15s, box-shadow .15s;
-  display: block;
-  color: inherit;
-}
-.hub-item:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 4px 16px rgba(0,0,0,.06), 0 8px 28px rgba(0,0,0,.06);
-  text-decoration: none;
-}
-.hub-item-title {
-  font-size: 17px;
-  font-weight: 800;
-  color: var(--ds-t1);
-  letter-spacing: -.01em;
-  margin-bottom: .35rem;
-}
-.hub-item-sub {
-  font-size: 14px;
+.cluster-sub {
+  font-size: 14.5px;
   color: var(--ds-t2);
   font-weight: 500;
-  line-height: 1.5;
+  line-height: 1.55;
+  margin-bottom: 1.1rem;
 }
-.hub-item-soon {
-  color: var(--ds-t3);
-  font-weight: 600;
-  cursor: default;
+.cluster-list { list-style: none; padding: 0; margin: 0; }
+.cluster-list li {
+  border-top: 1px solid var(--ds-t4);
+  padding: .85rem 0;
 }
-.hub-item-soon:hover {
-  transform: none;
-  box-shadow: 0 1px 4px rgba(0,0,0,.05), 0 2px 8px rgba(0,0,0,.04);
+.cluster-list li:first-child { border-top: none; padding-top: 0; }
+.cluster-list a {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 1rem;
+  color: var(--ds-t1);
+  font-weight: 700;
+  font-size: 15px;
 }
-.hub-item-soon .hub-item-title { color: var(--ds-t2); }
-.hub-item-soon-tag {
-  display: inline-block;
-  font-size: 9px;
-  font-weight: 800;
-  letter-spacing: .12em;
-  color: var(--ds-t3);
-  background: var(--ds-green-l);
-  padding: 3px 9px;
-  border-radius: 100px;
-  margin-left: 8px;
-  vertical-align: middle;
-}
+.cluster-list a:hover { color: var(--ds-green); text-decoration: none; }
+.cluster-list-chev { color: var(--ds-t3); font-size: 18px; font-weight: 400; line-height: 1; flex-shrink: 0; }
 .site-footer {
   border-top: 1px solid var(--ds-t4);
   padding: 2rem;
@@ -190,51 +178,47 @@ a:hover { text-decoration: underline; }
 <main class="hub-inner">
   <div class="hub-eyebrow">Resources</div>
   <h1 class="hub-headline">Built for the paycheck that does not come every two weeks.</h1>
-  <p class="hub-intro">Practical guides for freelancers, creators, and business owners with inconsistent income. Same principles the steady-paycheck world uses, rebuilt for the way you actually get paid.</p>
+  <p class="hub-intro">Practical guides for freelancers, creators, and business owners with inconsistent income. The foundations of classic personal finance, carried forward for income that arrives when it arrives.</p>
 
-  <div class="hub-section-label">Start here</div>
-  <ul class="hub-list">
-    <li>
-      <a href="/resources/how-to-budget-when-your-income-is-different-every-month.html" class="hub-item">
-        <div class="hub-item-title">How to budget when your income is different every month</div>
-        <div class="hub-item-sub">A per-deposit system that covers bills, taxes, and the next slow month without turning every check into a decision.</div>
-      </a>
-    </li>
-  </ul>
+  <div class="cluster">
+    <div class="cluster-head">
+      <div class="cluster-title"><a href="/budgeting/">Budgeting with irregular income</a></div>
+      <span class="cluster-pillar">Pillar</span>
+    </div>
+    <p class="cluster-sub">The per-deposit system. Baseline paychecks, smoothing reserves, and how to stop living unpredictable check to unpredictable check.</p>
+    <ul class="cluster-list">
+      <li><a href="/budgeting/"><span>How to Budget With Inconsistent Income: The Complete Guide</span><span class="cluster-list-chev">›</span></a></li>
+      <li><a href="/budgeting/freelancer-budget/"><span>How to Budget as a Freelancer</span><span class="cluster-list-chev">›</span></a></li>
+      <li><a href="/budgeting/commission-income-budget/"><span>How to Budget on Commission Income</span><span class="cluster-list-chev">›</span></a></li>
+      <li><a href="/budgeting/feast-or-famine/"><span>The Feast or Famine Cycle (And How to Break It)</span><span class="cluster-list-chev">›</span></a></li>
+      <li><a href="/budgeting/pay-yourself-steady-paycheck/"><span>How to Pay Yourself a Steady Paycheck From an Unsteady Business</span><span class="cluster-list-chev">›</span></a></li>
+    </ul>
+  </div>
 
-  <div class="hub-section-label">Coming soon</div>
-  <ul class="hub-list">
-    <li>
-      <div class="hub-item hub-item-soon">
-        <div class="hub-item-title">Paycheck to paycheck as a freelancer: how to get out<span class="hub-item-soon-tag">Soon</span></div>
-        <div class="hub-item-sub">Why the usual advice does not fit, and what replaces it.</div>
-      </div>
-    </li>
-    <li>
-      <div class="hub-item hub-item-soon">
-        <div class="hub-item-title">What to do with a big client deposit so it does not disappear<span class="hub-item-soon-tag">Soon</span></div>
-        <div class="hub-item-sub">The five-minute decision that turns a lump into a month.</div>
-      </div>
-    </li>
-    <li>
-      <div class="hub-item hub-item-soon">
-        <div class="hub-item-title">How much should a freelancer save for taxes every month<span class="hub-item-soon-tag">Soon</span></div>
-        <div class="hub-item-sub">A percentage you can set once and forget, with the math behind it.</div>
-      </div>
-    </li>
-    <li>
-      <div class="hub-item hub-item-soon">
-        <div class="hub-item-title">Building a financial buffer on inconsistent income<span class="hub-item-soon-tag">Soon</span></div>
-        <div class="hub-item-sub">The smoothing account that lets a slow month feel normal.</div>
-      </div>
-    </li>
-    <li>
-      <div class="hub-item hub-item-soon">
-        <div class="hub-item-title">Debt payoff when your income varies<span class="hub-item-soon-tag">Soon</span></div>
-        <div class="hub-item-sub">How to stay on a payoff plan in lean months without losing the habit.</div>
-      </div>
-    </li>
-  </ul>
+  <div class="cluster">
+    <div class="cluster-head">
+      <div class="cluster-title"><a href="/taxes/">Taxes for the self-employed</a></div>
+      <span class="cluster-pillar">Pillar</span>
+    </div>
+    <p class="cluster-sub">Quarterly payments, self-employment tax, and how to stop dreading April. The set-aside percentage you can fund automatically from every deposit.</p>
+    <ul class="cluster-list">
+      <li><a href="/taxes/"><span>Quarterly Taxes for Self-Employed: The Complete Guide</span><span class="cluster-list-chev">›</span></a></li>
+      <li><a href="/taxes/how-much-to-set-aside/"><span>How Much Should I Set Aside for Taxes as a 1099 Worker</span><span class="cluster-list-chev">›</span></a></li>
+      <li><a href="/taxes/bad-month-quarterly-taxes/"><span>What to Do When Quarterlies Are Due and You Had a Bad Month</span><span class="cluster-list-chev">›</span></a></li>
+    </ul>
+  </div>
+
+  <div class="cluster">
+    <div class="cluster-head">
+      <div class="cluster-title"><a href="/business/">Running a business with variable income</a></div>
+      <span class="cluster-pillar">Pillar</span>
+    </div>
+    <p class="cluster-sub">Pay yourself a real paycheck from a business that pays you in unpredictable chunks. Emergency funds sized for self-employment reality.</p>
+    <ul class="cluster-list">
+      <li><a href="/business/"><span>How to Pay Yourself as a Business Owner With Variable Income</span><span class="cluster-list-chev">›</span></a></li>
+      <li><a href="/business/emergency-fund/"><span>Emergency Fund for Entrepreneurs: Why Three Months Isn't Enough</span><span class="cluster-list-chev">›</span></a></li>
+    </ul>
+  </div>
 </main>
 
 <footer class="site-footer">
