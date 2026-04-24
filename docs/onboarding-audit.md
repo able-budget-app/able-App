@@ -39,6 +39,7 @@ Fix: set `disabled = true` immediately (synchronously before the await).
 **9. "Tell me where it goes →" is opaque for first-time users.**
 `app.html:1000`. No indication what happens next.
 Fix: change to "See allocation plan →" or add a line of microcopy beneath.
+**Status (2026-04-24):** Decided against. User prefers "Tell me where it goes →" for voice/personality. Do not re-propose this change.
 
 **10. Income source dropdown is empty until `populateSources()` runs.**
 `app.html:997–998`. First-time user opens the form to find an empty select.
