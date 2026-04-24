@@ -872,6 +872,29 @@ input,select,button,textarea{font-family:inherit;}
   .db-chip{padding:.65rem .6rem;}
   .db-chip-pts{font-size:13.5px;}
 }
+
+/* ═══════════════════════════════════════
+   ALLOCATION CHECK-OFF (actionable jobs + dopamine)
+═══════════════════════════════════════ */
+.job-num.actionable{cursor:pointer;transition:background .18s,color .18s,transform .18s,box-shadow .18s;position:relative;user-select:none;}
+.job-num.actionable:hover{box-shadow:0 0 0 3px rgba(42,122,74,.18);}
+.job-num.actionable:active{transform:scale(.92);}
+.job-num.actionable.done{background:var(--ds-green)!important;color:transparent!important;animation:jobCheckPop .42s cubic-bezier(.34,1.56,.64,1);box-shadow:0 4px 12px rgba(42,122,74,.25);}
+.job-num.actionable.done::after{content:'';position:absolute;top:50%;left:50%;width:7px;height:11px;border:2.5px solid white;border-top:0;border-left:0;transform:translate(-50%,-60%) rotate(45deg);}
+@keyframes jobCheckPop{0%{transform:scale(.75);}55%{transform:scale(1.2);}100%{transform:scale(1);}}
+.job-item.job-done{background:rgba(42,122,74,.05);}
+.job-item.job-done .job-name,.job-item.job-done .job-why,.job-item.job-done .job-amt,.job-item.job-done .job-pct{opacity:.55;}
+.job-item.job-done .job-name{text-decoration:line-through;text-decoration-thickness:1.5px;}
+
+.alloc-cheer{font-size:12px;font-weight:800;color:var(--ds-green);letter-spacing:.04em;text-transform:uppercase;margin-bottom:6px;animation:cheerIn .4s cubic-bezier(.34,1.2,.64,1);}
+@keyframes cheerIn{from{opacity:0;transform:translateY(-4px);}to{opacity:1;transform:translateY(0);}}
+
+.history-done-badge{display:inline-flex;align-items:center;gap:4px;font-size:9.5px;font-weight:800;letter-spacing:.1em;text-transform:uppercase;padding:3px 8px;border-radius:100px;margin-left:6px;flex-shrink:0;}
+.history-done-badge--partial{background:var(--ds-green-l);color:var(--ds-green);}
+.history-done-badge--complete{background:var(--ds-green);color:white;}
+
+.alloc-locked-in{animation:lockedInPulse 1.6s ease;}
+@keyframes lockedInPulse{0%,100%{box-shadow:0 0 0 0 rgba(42,122,74,0);}40%{box-shadow:0 0 0 5px rgba(42,122,74,.18);}}
 </style>
 <!-- Meta Pixel (replace META_PIXEL_ID with your pixel id) -->
 <script>
@@ -1539,10 +1562,12 @@ posthog.init('phc_B6PH36QxpExnyBYhfScFFF6LhDvoyxuFr6PypJuxxky3', {
       </div>
       <button class="btn btn-primary" style="width:100%;margin-top:.85rem;" onclick="allocate()">Tell me where it goes →</button>
       <div id="alloc-result" style="display:none;margin-top:1.25rem;">
+        <div id="alloc-cheer" class="alloc-cheer" style="display:none;"></div>
         <div class="alloc-head">
           <div id="alloc-amt" style="font-family:var(--ds-f);font-size:2.5rem;font-weight:900;color:var(--ds-green);letter-spacing:-.03em;line-height:1;"></div>
           <div id="alloc-src" style="font-size:12px;color:var(--ds-t3);font-weight:700;letter-spacing:.05em;text-transform:uppercase;"></div>
         </div>
+        <div id="alloc-hint" style="font-size:12px;color:var(--ds-t2);font-weight:600;line-height:1.45;margin:.5rem 0 .85rem;"></div>
         <div id="job-list"></div>
         <div style="display:flex;gap:8px;margin-top:.85rem;flex-wrap:wrap;">
           <button class="btn btn-sm" onclick="exportAllocation()">Save plan</button>
@@ -2896,9 +2921,21 @@ function computeJobs(amount,source,useCurrentIncome=true) {
   return jobs;
 }
 
-function renderJobList(jobs,amount,container){
+function isActionableJob(job){
+  return !!job && ['debt','buffer','ownerpay','fixed'].includes(job.type);
+}
+
+function jobsDoneCounts(h){
+  if(!h||!Array.isArray(h.jobs))return{done:0,total:0};
+  const actionableIdx=h.jobs.map((j,i)=>isActionableJob(j)?i:null).filter(i=>i!==null);
+  const done=actionableIdx.filter(i=>h.jobsDone&&h.jobsDone[i]).length;
+  return{done,total:actionableIdx.length};
+}
+
+function renderJobList(jobs,amount,container,historyId){
   container.innerHTML='';
-  // Render warning banners first (not counted in numbering)
+  const h=historyId?S.history.find(x=>x.id===historyId):null;
+  const doneMap=(h&&h.jobsDone)||{};
   let numbered=0;
   jobs.forEach((job,i)=>{
     if(job.type==='warning'){
@@ -2911,18 +2948,61 @@ function renderJobList(jobs,amount,container){
     }
     numbered++;
     const pct=Math.round((job.amount/amount)*100);
+    const actionable=isActionableJob(job);
+    const done=actionable&&!!doneMap[i];
     const d=document.createElement('div');
-    d.className='job-item';
+    d.className='job-item'+(done?' job-done':'');
     d.style.animationDelay=(i*0.07)+'s';
     d.style.borderLeftWidth='4px';
     d.style.borderLeftColor=job.color;
     const badge=job.type==='fixed'?`<span style="display:inline-block;font-size:9px;font-weight:800;color:var(--ds-c3);background:#fef3e0;padding:2px 7px;border-radius:100px;letter-spacing:.04em;margin-left:6px;vertical-align:middle;">OFF THE TOP</span>`:'';
-    d.innerHTML=`<div class="job-num" style="background:${job.bg};color:${job.color};">${numbered}</div>
+    const numClass='job-num'+(actionable?' actionable':'')+(done?' done':'');
+    const numStyle=`background:${job.bg};color:${job.color};`;
+    const numOnclick=actionable&&historyId?` onclick="toggleJobDone('${historyId}',${i})" role="button" tabindex="0" aria-label="${done?'Mark not done':'Mark done'}" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();toggleJobDone('${historyId}',${i});}"`:'';
+    d.innerHTML=`<div class="${numClass}" style="${numStyle}"${numOnclick}>${numbered}</div>
       <div class="job-info"><div class="job-name">${job.name}${badge}</div><div class="job-why">${job.why}</div>
       <div class="prog-wrap" style="margin-top:6px;"><div class="prog-bar" style="width:${pct}%;background:${job.color};"></div></div></div>
       <div class="job-right"><div class="job-amt" style="color:${job.color};">${f2(job.amount)}</div><div class="job-pct">${pct}%</div></div>`;
     container.appendChild(d);
   });
+}
+
+function toggleJobDone(historyId,jobIdx){
+  const h=S.history.find(x=>x.id===historyId);
+  if(!h||!Array.isArray(h.jobs)||!h.jobs[jobIdx])return;
+  if(!h.jobsDone)h.jobsDone={};
+  const wasDone=!!h.jobsDone[jobIdx];
+  h.jobsDone[jobIdx]=!wasDone;
+  save();
+  const jobListEl=document.getElementById('job-list');
+  const allocResult=document.getElementById('alloc-result');
+  const resultOpen=allocResult&&allocResult.style.display!=='none'&&S.history[0]&&S.history[0].id===historyId;
+  if(resultOpen&&jobListEl){
+    renderJobList(h.jobs,h.amount,jobListEl,h.id);
+  }
+  renderHistory();
+  const counts=jobsDoneCounts(h);
+  if(!wasDone && counts.total>0 && counts.done===counts.total){
+    const target=resultOpen?jobListEl:null;
+    if(target){
+      target.classList.remove('alloc-locked-in');
+      void target.offsetWidth;
+      target.classList.add('alloc-locked-in');
+      setTimeout(()=>target.classList.remove('alloc-locked-in'),1800);
+    }
+    Able.track('allocation_all_done',{historyId,jobCount:counts.total});
+  }
+}
+
+function pickCheerLine(amount,isFirst){
+  if(isFirst)return 'Nice start. Here\'s the plan.';
+  const big=amount>=1500;
+  const small=amount<75;
+  const bigLines=['Solid deposit. Locked in.','Big one — here\'s the plan.'];
+  const smallLines=['Every bit counts.','Small wins stack up.'];
+  const mid=['Nice. Here\'s where it goes.','Got it. Here\'s the plan.','Locked in.'];
+  const pool=big?bigLines:small?smallLines:mid;
+  return pool[Math.floor(Math.random()*pool.length)];
 }
 
 function applyJobs(jobs,amount,source){
@@ -2959,7 +3039,8 @@ function applyJobs(jobs,amount,source){
     ts:Date.now(),
     debtExtra,bufContrib,billsPaid,ownerPaid,
     debtSplit,
-    jobs:JSON.parse(JSON.stringify(jobs))
+    jobs:JSON.parse(JSON.stringify(jobs)),
+    jobsDone:{}
   });
   save();
   if (wasFirstIncome) Able.trackOnce('first_income_logged', { amount, source });
@@ -2970,13 +3051,24 @@ function allocate(){
   const source=document.getElementById('inc-source').value;
   if(!amount||amount<=0){document.getElementById('inc-amount').focus();return;}
   if(!source){document.getElementById('inc-source').focus();return;}
+  const wasFirst=!S.history.length;
   const jobs=computeJobs(amount,source);
   applyJobs(jobs,amount,source);
+  const h=S.history[0];
   const result=document.getElementById('alloc-result');
   result.style.display='block';
+  const cheer=document.getElementById('alloc-cheer');
+  if(cheer){cheer.textContent=pickCheerLine(amount,wasFirst);cheer.style.display='block';}
   document.getElementById('alloc-amt').textContent=f2(amount);
   document.getElementById('alloc-src').textContent='from '+source;
-  renderJobList(jobs,amount,document.getElementById('job-list'));
+  const hintEl=document.getElementById('alloc-hint');
+  if(hintEl){
+    const counts=jobsDoneCounts(h);
+    hintEl.textContent=counts.total>0
+      ?`${counts.total} move${counts.total===1?'':'s'} to make. Tap each circle once you\'ve done it.`
+      :'Bill reserves are set aside in your checking. Nothing to move.';
+  }
+  renderJobList(jobs,amount,document.getElementById('job-list'),h&&h.id);
   document.getElementById('inc-amount').value='';
   setTimeout(()=>{result.scrollIntoView({behavior:'smooth',block:'nearest'});},60);
   refreshHome();
@@ -3183,12 +3275,16 @@ function renderHistory(){
     d.className='history-item';
     d.style.cssText='display:block;padding:0;overflow:hidden;';
     const hasJobs=Array.isArray(h.jobs)&&h.jobs.length;
+    const counts=jobsDoneCounts(h);
+    const badge=counts.total>0?(counts.done===counts.total
+      ?`<span class="history-done-badge history-done-badge--complete">✓ Locked in</span>`
+      :`<span class="history-done-badge history-done-badge--partial">${counts.done}/${counts.total}</span>`):'';
     d.innerHTML=`
       <div style="display:flex;align-items:center;justify-content:space-between;padding:11px 14px;cursor:${hasJobs?'pointer':'default'};" ${hasJobs?`onclick="toggleIncomeExpand('${h.id}')"`:''}>
-        <div style="display:flex;align-items:center;gap:10px;">
+        <div style="display:flex;align-items:center;gap:10px;min-width:0;">
           ${hasJobs?`<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="color:var(--ds-t3);transform:rotate(${expanded?'90':'0'}deg);transition:transform .2s;flex-shrink:0;"><polyline points="9 18 15 12 9 6"/></svg>`:'<span style="width:14px;"></span>'}
-          <div>
-            <div style="font-size:13px;font-weight:800;color:var(--ds-t1);letter-spacing:-.01em;">${h.source}</div>
+          <div style="min-width:0;">
+            <div style="font-size:13px;font-weight:800;color:var(--ds-t1);letter-spacing:-.01em;display:flex;align-items:center;flex-wrap:wrap;">${h.source}${badge}</div>
             <div style="font-size:11px;color:var(--ds-t3);font-weight:600;">${h.date}${hasJobs?' · tap to see breakdown':''}</div>
           </div>
         </div>
@@ -3200,15 +3296,21 @@ function renderHistory(){
       </div>
       ${expanded && hasJobs?`
         <div style="border-top:1px solid var(--ds-t4);padding:12px 14px 14px 32px;background:var(--ds-card2);">
-          <div style="font-size:10px;font-weight:800;letter-spacing:.12em;text-transform:uppercase;color:var(--ds-t3);margin-bottom:8px;font-family:var(--ds-f);">Where this money went</div>
-          ${h.jobs.map(j=>{
+          <div style="font-size:10px;font-weight:800;letter-spacing:.12em;text-transform:uppercase;color:var(--ds-t3);margin-bottom:8px;font-family:var(--ds-f);">Where this money went${counts.total>0?` · ${counts.done} of ${counts.total} done`:''}</div>
+          ${h.jobs.map((j,jIdx)=>{
             const hasItems=Array.isArray(j.items)&&j.items.length;
+            const actionable=isActionableJob(j);
+            const done=actionable&&h.jobsDone&&h.jobsDone[jIdx];
+            const check=actionable?`<div class="job-num actionable${done?' done':''}" style="background:${j.bg||'var(--ds-green-l)'};color:${j.color||'var(--ds-green)'};width:22px;height:22px;font-size:11px;margin-right:10px;flex-shrink:0;" onclick="event.stopPropagation();toggleJobDone('${h.id}',${jIdx})" role="button" tabindex="0" aria-label="${done?'Mark not done':'Mark done'}" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();event.stopPropagation();toggleJobDone('${h.id}',${jIdx});}">${done?'':''}</div>`:'';
             return `
-            <div style="padding:8px 0;border-bottom:1px solid rgba(140,168,152,.15);">
+            <div style="padding:8px 0;border-bottom:1px solid rgba(140,168,152,.15);${done?'opacity:.65;':''}">
               <div style="display:flex;justify-content:space-between;align-items:center;font-size:13px;margin-bottom:${hasItems?'6px':'0'};">
-                <div style="flex:1;min-width:0;">
-                  <div style="font-weight:800;color:var(--ds-t1);">${j.name}</div>
-                  ${!hasItems?`<div style="font-size:11px;color:var(--ds-t3);font-weight:600;">${j.why||''}</div>`:''}
+                <div style="flex:1;min-width:0;display:flex;align-items:center;">
+                  ${check}
+                  <div style="flex:1;min-width:0;">
+                    <div style="font-weight:800;color:var(--ds-t1);${done?'text-decoration:line-through;':''}">${j.name}</div>
+                    ${!hasItems?`<div style="font-size:11px;color:var(--ds-t3);font-weight:600;">${j.why||''}</div>`:''}
+                  </div>
                 </div>
                 <div style="font-weight:900;color:${j.color||'var(--ds-t1)'};letter-spacing:-.01em;margin-left:10px;font-family:var(--ds-f);">${f2(j.amount)}</div>
               </div>
