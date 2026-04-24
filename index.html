@@ -143,17 +143,16 @@ a { text-decoration: none; color: inherit; }
   letter-spacing: -.03em;
   position: relative;
   display: inline-block;
-  padding-bottom: 4px;
+  padding-bottom: 8px;
 }
 .nav-logo::after {
   content: '';
   position: absolute;
-  left: 2%;
-  right: 0;
+  left: -4%;
+  right: -6%;
   bottom: 0;
-  height: 6px;
-  background: var(--ds-green);
-  clip-path: polygon(0 80%, 100% 0, 100% 100%, 0 100%);
+  height: 8px;
+  background: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 120 10' preserveAspectRatio='none'><path d='M3 7 Q 22 2 44 6 T 86 7 T 117 4' stroke='%232a7a4a' stroke-width='2.4' fill='none' stroke-linecap='round' stroke-linejoin='round'/></svg>") no-repeat center / 100% 100%;
   pointer-events: none;
 }
 .nav-links {
@@ -1552,16 +1551,29 @@ a { text-decoration: none; color: inherit; }
   margin-bottom: 1rem;
 }
 .stakes-callout {
+  margin-top: 2rem;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+.stakes-callout-line {
+  border-radius: var(--ds-r2);
+  padding: 1.25rem 1.5rem;
+  font-size: 18px;
+  font-weight: 800;
+  line-height: 1.4;
+  font-style: italic;
+  letter-spacing: -.01em;
+}
+.stakes-callout-line--warn {
   background: linear-gradient(135deg, #fdeef2, #fbdde3);
   border-left: 4px solid var(--ds-c4);
-  border-radius: var(--ds-r2);
-  padding: 1.5rem 1.75rem;
-  margin-top: 2rem;
-  font-size: 18px;
-  font-weight: 700;
-  color: var(--ds-t1);
-  line-height: 1.5;
-  font-style: italic;
+  color: var(--ds-c4);
+}
+.stakes-callout-line--go {
+  background: linear-gradient(135deg, #eaf5ee, #d7ecde);
+  border-left: 4px solid var(--ds-green);
+  color: var(--ds-green);
 }
 @media (max-width: 640px) {
   .stakes-inner { padding: 0 1.25rem; }
@@ -1765,15 +1777,17 @@ a { text-decoration: none; color: inherit; }
   display: inline-block;
   padding-bottom: 4px;
 }
+.footer-logo {
+  padding-bottom: 7px;
+}
 .footer-logo::after {
   content: '';
   position: absolute;
-  left: 2%;
-  right: 0;
+  left: -4%;
+  right: -6%;
   bottom: 0;
-  height: 5px;
-  background: var(--ds-green-m);
-  clip-path: polygon(0 80%, 100% 0, 100% 100%, 0 100%);
+  height: 7px;
+  background: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 120 10' preserveAspectRatio='none'><path d='M3 7 Q 22 2 44 6 T 86 7 T 117 4' stroke='%23b8e0c8' stroke-width='2.4' fill='none' stroke-linecap='round' stroke-linejoin='round'/></svg>") no-repeat center / 100% 100%;
   pointer-events: none;
 }
 .footer-tagline {
@@ -2355,7 +2369,8 @@ posthog.init('phc_B6PH36QxpExnyBYhfScFFF6LhDvoyxuFr6PypJuxxky3', {
     <p class="stakes-body reveal">A year = up to $12,000 you didn't use to pay down debt, build a cushion, or get ahead of next month.</p>
     <p class="stakes-body reveal">And the longer you wait, the more expensive waiting gets. That debt keeps compounding. Those missed savings keep missing.</p>
     <div class="stakes-callout reveal">
-      The cost of waiting compounds. The cost of starting is $9.99.
+      <div class="stakes-callout-line stakes-callout-line--warn">The cost of waiting compounds.</div>
+      <div class="stakes-callout-line stakes-callout-line--go">The cost of starting is $9.99.</div>
     </div>
     <div class="section-cta reveal">
       <a href="/app.html" class="btn-primary">Start your free 7-day trial</a>
