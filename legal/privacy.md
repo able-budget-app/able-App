@@ -3,7 +3,7 @@
 **Effective date:** 2026-04-23
 **Last updated:** 2026-04-23
 
-Able App ("Able," "we," "us," or "our") operates the Able application at https://becomeable.netlify.app and the Able web app at https://becomeable.netlify.app/app.html (together, the "Service"). This Privacy Policy explains what information we collect, how we use it, who we share it with, and the rights you have over it.
+Able App ("Able," "we," "us," or "our") operates the Able application at https://becomeable.app and the Able web app at https://becomeable.app/app.html (together, the "Service"). This Privacy Policy explains what information we collect, how we use it, who we share it with, and the rights you have over it.
 
 By using the Service you agree to the handling of information as described here.
 

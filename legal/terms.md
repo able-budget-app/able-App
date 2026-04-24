@@ -34,7 +34,7 @@ Able offers a 7-day free trial. A valid payment method is required to start the 
 If you do not cancel before the trial ends, your subscription will automatically begin and your payment method will be charged for the plan you selected (monthly or annual). You may cancel at any time during the trial by opening Settings inside the app and clicking "Manage or cancel subscription".
 
 ### 3.2 Subscription plans and pricing
-Current plans and prices are shown on https://becomeable.netlify.app/#pricing. We may change prices in the future; if we do, we will give you at least 30 days notice by email, and the new price will apply to your next renewal.
+Current plans and prices are shown on https://becomeable.app/#pricing. We may change prices in the future; if we do, we will give you at least 30 days notice by email, and the new price will apply to your next renewal.
 
 ### 3.3 Auto-renewal
 Subscriptions renew automatically at the end of each billing period (monthly or annual) unless you cancel before the renewal date.
@@ -172,4 +172,4 @@ hello@becomeable.app
 - Fill in every `[TODO_*]` marker (legal name, governing jurisdiction, venue, physical address).
 - Decide on arbitration vs. court litigation in Section 13. If you want arbitration, work with a lawyer to draft that clause.
 - Have a lawyer who knows software/SaaS contracts review the whole thing. Costs a few hundred to a couple thousand dollars and it's worth it.
-- Once finalized, publish at a stable URL (e.g. `https://becomeable.netlify.app/terms`) and link it from the landing page footer and the signup flow.
+- Once finalized, publish at a stable URL (e.g. `https://becomeable.app/terms`) and link it from the landing page footer and the signup flow.
