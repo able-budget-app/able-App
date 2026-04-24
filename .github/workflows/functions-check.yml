@@ -1,0 +1,34 @@
+name: Edge functions check
+
+on:
+  pull_request:
+    paths:
+      - "supabase/functions/**"
+      - ".github/workflows/functions-check.yml"
+  push:
+    branches: [main]
+    paths:
+      - "supabase/functions/**"
+
+jobs:
+  deno-check:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: denoland/setup-deno@v1
+        with:
+          deno-version: v1.x
+      - name: Deno check every function entry
+        run: |
+          failed=0
+          for entry in supabase/functions/*/index.ts; do
+            echo "::group::$entry"
+            if ! deno check --no-lock "$entry"; then
+              failed=1
+            fi
+            echo "::endgroup::"
+          done
+          if [[ "$failed" -ne 0 ]]; then
+            echo "One or more edge functions failed type/syntax check."
+            exit 1
+          fi

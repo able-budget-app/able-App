@@ -1,0 +1,91 @@
+name: Edge function health check
+
+# Pings the most critical edge functions every 5 minutes.
+# A boot failure on `create-checkout` blocks paid signup, so we want to know
+# within minutes instead of when a user emails support.
+#
+# How it works: we POST an anon-auth request with an obviously-invalid body.
+# If the function BOOTS at all, it responds with a structured 4xx (bad input,
+# missing auth, etc) which we treat as "healthy". If it returns a 5xx,
+# gateway 503, or the request fails entirely, we open/update a GitHub issue
+# so the next commit or dashboard visit surfaces it.
+#
+# Required repo secrets:
+#   SUPABASE_URL       e.g. https://xxxxxx.supabase.co
+#   SUPABASE_ANON_KEY  the publishable anon key
+
+on:
+  schedule:
+    - cron: "*/5 * * * *"
+  workflow_dispatch:
+
+jobs:
+  ping:
+    runs-on: ubuntu-latest
+    permissions:
+      issues: write
+    steps:
+      - name: Ping create-checkout
+        id: ping
+        env:
+          SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
+          SUPABASE_ANON_KEY: ${{ secrets.SUPABASE_ANON_KEY }}
+        run: |
+          set +e
+          url="${SUPABASE_URL}/functions/v1/create-checkout"
+          code=$(curl -sS -o /tmp/body.txt -w "%{http_code}" -X POST "$url" \
+            -H "Authorization: Bearer ${SUPABASE_ANON_KEY}" \
+            -H "apikey: ${SUPABASE_ANON_KEY}" \
+            -H "Content-Type: application/json" \
+            --data '{"healthcheck":true}' \
+            --max-time 15)
+          curl_rc=$?
+          echo "curl_rc=$curl_rc"
+          echo "http_code=$code"
+          body=$(head -c 400 /tmp/body.txt || true)
+          echo "body<<EOF" >> "$GITHUB_OUTPUT"
+          echo "$body" >> "$GITHUB_OUTPUT"
+          echo "EOF" >> "$GITHUB_OUTPUT"
+          # Healthy: function booted and responded 2xx/4xx. Fail: 5xx, 0, or curl error.
+          if [[ "$curl_rc" -ne 0 ]]; then
+            echo "status=network_error" >> "$GITHUB_OUTPUT"
+            exit 1
+          fi
+          if [[ "$code" -ge 500 ]] || [[ "$code" -eq 0 ]]; then
+            echo "status=server_error" >> "$GITHUB_OUTPUT"
+            exit 1
+          fi
+          echo "status=ok" >> "$GITHUB_OUTPUT"
+      - name: Open issue on failure
+        if: failure()
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const title = "Edge function down: create-checkout";
+            const body = [
+              "`create-checkout` is failing its scheduled health check.",
+              "",
+              `**Status:** ${{ steps.ping.outputs.status }}`,
+              "**Response body:**",
+              "```",
+              `${{ steps.ping.outputs.body }}`,
+              "```",
+              "",
+              "Check Supabase dashboard → Edge Functions → create-checkout → Logs.",
+              "Common causes: syntax error (boot failure), missing env var, Stripe key revoked.",
+            ].join("\n");
+            const { data: existing } = await github.rest.issues.listForRepo({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              state: "open",
+              labels: "healthcheck",
+            });
+            if (existing.length === 0) {
+              await github.rest.issues.create({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                title,
+                body,
+                labels: ["healthcheck"],
+              });
+            }
