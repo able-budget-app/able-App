@@ -155,7 +155,7 @@ Always pair the wordmark with a hand-drawn, tapered green underline that sits fl
 Characteristics:
 - Tapered (thin on left, thick on right)
 - Rounded ends
-- Slight smile curve — not a straight line, not a wavy line
+- Slight smile curve, not a straight line, not a wavy line
 - Green (`--ds-green` in nav; same green on dark backgrounds, never mint)
 
 ### Logo on dark
@@ -301,9 +301,9 @@ Logo (bottom-left): Able wordmark with mint underline, 48px
 ```
 
 Example stat content:
-- "72 /100 — your score on inconsistent-income budgeting."
-- "25–35% — what most freelancers should set aside for taxes on every deposit."
-- "6–12 months — emergency fund target for self-employed."
+- "72 /100. Your score on inconsistent-income budgeting."
+- "25 to 35%. What most freelancers should set aside for taxes on every deposit."
+- "6 to 12 months. Emergency fund target for self-employed."
 
 ### Template D: Compare / then-vs-now card (1080 × 1080)
 
@@ -366,7 +366,7 @@ When evaluating whether a proposed design or copy is on-brand, compare to these.
 **Off-brand copy (do not write):**
 - "Unlock your financial potential with our AI-powered budgeting platform."
 - "Say goodbye to money stress with Able's revolutionary approach!"
-- "Transform your finances in 3 easy steps — join thousands of happy entrepreneurs!"
+- "Transform your finances in 3 easy steps, join thousands of happy entrepreneurs!"
 
 ---
 
