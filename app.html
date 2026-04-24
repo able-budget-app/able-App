@@ -187,6 +187,27 @@ input,select,button,textarea{font-family:inherit;}
 .history-item,.history-item > div,.history-item > div > div{min-width:0;}
 .history-item > div > div:first-child{flex:1 1 auto;overflow:hidden;}
 .history-item > div > div:first-child > div{overflow:hidden;text-overflow:ellipsis;}
+
+/* Referral page */
+.refer-progress-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;}
+@media(max-width:540px){.refer-progress-grid{grid-template-columns:1fr;}}
+.refer-progress-card{background:var(--ds-green-l);border-radius:var(--ds-r2);padding:1rem 1.1rem;}
+.refer-progress-label{font-size:14px;font-weight:900;color:var(--ds-t1);letter-spacing:-.01em;}
+.refer-progress-sub{font-size:11px;color:var(--ds-t2);font-weight:600;margin-top:2px;line-height:1.4;}
+.refer-progress-bar{height:8px;background:rgba(196,216,204,.5);border-radius:100px;overflow:hidden;margin-top:10px;}
+.refer-progress-fill{height:100%;background:linear-gradient(90deg,var(--ds-green),var(--ds-c2));border-radius:100px;transition:width .5s ease;}
+.refer-progress-count{font-size:11px;font-weight:800;color:var(--ds-green);margin-top:6px;letter-spacing:.03em;}
+.refer-row{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:12px 14px;background:var(--ds-card);border-radius:var(--ds-r1);margin-bottom:7px;box-shadow:var(--ds-sh1);min-width:0;}
+.refer-row-info{flex:1 1 auto;min-width:0;overflow:hidden;}
+.refer-row-name{font-size:14px;font-weight:800;color:var(--ds-t1);letter-spacing:-.01em;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+.refer-row-meta{font-size:11px;color:var(--ds-t3);font-weight:600;margin-top:2px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+.refer-status{font-size:10px;font-weight:800;letter-spacing:.08em;text-transform:uppercase;padding:5px 10px;border-radius:var(--ds-r1);flex-shrink:0;white-space:nowrap;}
+.refer-status-sent{background:rgba(140,168,152,.15);color:var(--ds-t2);}
+.refer-status-trial{background:rgba(42,122,74,.15);color:var(--ds-green);}
+.refer-status-converted{background:var(--ds-green);color:white;}
+.refer-status-bounced{background:rgba(192,64,96,.15);color:var(--ds-c4);}
+.refer-reward-row{display:flex;justify-content:space-between;align-items:center;padding:10px 0;border-bottom:1px solid var(--ds-t4);}
+.refer-reward-row:last-child{border-bottom:none;}
 @media(max-width:540px){
   #alloc-amt{font-size:2rem !important;}
   #alloc-result,#history-list{overflow-x:hidden;}
@@ -967,6 +988,7 @@ posthog.init('phc_B6PH36QxpExnyBYhfScFFF6LhDvoyxuFr6PypJuxxky3', {
 <div class="sub-nav" id="sub-nav-more" style="display:none;">
   <div class="sub-nav-inner">
     <button class="sub-tab" data-sub="learn" onclick="goTo('learn')">Learn</button>
+    <button class="sub-tab" data-sub="refer" onclick="goTo('refer')">Refer</button>
     <button class="sub-tab" data-sub="settings" onclick="goTo('settings')">Settings</button>
   </div>
 </div>
@@ -1341,6 +1363,63 @@ posthog.init('phc_B6PH36QxpExnyBYhfScFFF6LhDvoyxuFr6PypJuxxky3', {
         </button>
       </div>
     </div>
+  </div>
+</div>
+
+<!-- REFER -->
+<div class="page" id="page-refer">
+  <div style="max-width:780px;margin:0 auto;">
+
+    <!-- Locked state (non-paid users) -->
+    <div id="refer-locked" style="display:none;">
+      <div class="sec">Refer friends</div>
+      <div class="card" style="text-align:center;padding:2rem 1.5rem;">
+        <div style="font-size:1.4rem;font-weight:900;color:var(--ds-t1);letter-spacing:-.02em;margin-bottom:.5rem;">Unlocks after your trial.</div>
+        <div style="font-size:14px;color:var(--ds-t2);font-weight:500;line-height:1.6;">Once your subscription is active, you can invite friends and earn free months and a free year as they join.</div>
+      </div>
+    </div>
+
+    <!-- Active state (paid users) -->
+    <div id="refer-active" style="display:none;">
+      <div class="sec">Earn free months and a free year</div>
+      <div class="card" style="margin-bottom:1rem;">
+        <div style="font-size:15px;color:var(--ds-t2);font-weight:500;line-height:1.6;margin-bottom:1rem;">Invite friends who might find Able useful. When they start a trial or convert to paid, you earn rewards applied as credits to your subscription.</div>
+        <div class="refer-progress-grid">
+          <div class="refer-progress-card">
+            <div class="refer-progress-label">Next free month</div>
+            <div class="refer-progress-sub">Every 3 friends who start a trial.</div>
+            <div class="refer-progress-bar"><div class="refer-progress-fill" id="refer-trial-fill" style="width:0%;"></div></div>
+            <div class="refer-progress-count" id="refer-trial-count">0 of 3</div>
+          </div>
+          <div class="refer-progress-card">
+            <div class="refer-progress-label">Next free year</div>
+            <div class="refer-progress-sub">Every 5 friends who convert to paid.</div>
+            <div class="refer-progress-bar"><div class="refer-progress-fill" id="refer-convert-fill" style="width:0%;"></div></div>
+            <div class="refer-progress-count" id="refer-convert-count">0 of 5</div>
+          </div>
+        </div>
+      </div>
+
+      <div id="refer-rewards-section" style="display:none;margin-bottom:1rem;">
+        <div class="sec">Rewards earned</div>
+        <div class="card"><div id="refer-rewards-list"></div></div>
+      </div>
+
+      <div class="sec">Invite someone</div>
+      <div class="card">
+        <div class="form-row">
+          <div class="field"><label>Their name</label><input type="text" id="refer-name" placeholder="First name"></div>
+          <div class="field"><label>Their email</label><input type="email" id="refer-email" placeholder="friend@example.com"></div>
+        </div>
+        <button class="btn btn-primary" style="width:100%;margin-top:.75rem;" onclick="submitReferral()" id="refer-submit-btn">Send invite</button>
+        <div id="refer-error" style="display:none;margin-top:.75rem;background:#fdeef2;border:1.5px solid rgba(192,64,96,.3);border-radius:var(--ds-r1);padding:10px 14px;font-size:13px;font-weight:600;color:var(--ds-c4);"></div>
+        <div id="refer-success" style="display:none;margin-top:.75rem;background:var(--ds-green-l);border:1.5px solid var(--ds-green-m);border-radius:var(--ds-r1);padding:10px 14px;font-size:13px;font-weight:600;color:var(--ds-green);"></div>
+      </div>
+
+      <div class="sec">Your invites <span id="refer-count" style="color:var(--ds-t3);font-weight:700;"></span></div>
+      <div id="refer-list"></div>
+    </div>
+
   </div>
 </div>
 
@@ -2143,10 +2222,11 @@ async function startCheckout() {
     const returnUrl=window.location.origin+'/app.html?checkout=success';
     const cancelUrl=window.location.origin+'/app.html';
 
-    Able.track('checkout_started', { plan: selectedPlan });
+    const refToken = localStorage.getItem('able_ref_token') || undefined;
+    Able.track('checkout_started', { plan: selectedPlan, referred: !!refToken });
 
     const resp = await sbGet().functions.invoke('create-checkout',{
-      body:{priceId,returnUrl,cancelUrl}
+      body:{priceId,returnUrl,cancelUrl,ref_token:refToken}
     });
 
     if(resp.error) throw new Error(typeof resp.error === 'string' ? resp.error : (resp.error.message||JSON.stringify(resp.error)));
@@ -2154,6 +2234,8 @@ async function startCheckout() {
     const session_url = resp.data?.session_url;
     if(!session_url) throw new Error('Payment setup failed: '+ JSON.stringify(resp.data));
 
+    // Stripe has the ref_token in session metadata now; clear local copy.
+    localStorage.removeItem('able_ref_token');
     window.location.href=session_url;
   } catch(e) {
     errEl.textContent=e.message;
@@ -2204,6 +2286,127 @@ function renderSubscriptionPlan(status) {
     lifetime: 'Lifetime access',
   }[status] || (status ? status : 'No active subscription');
   el.textContent = label;
+}
+
+// ═══════════════════════════════════════
+// REFERRAL PAGE
+// ═══════════════════════════════════════
+function referEscapeHtml(s){return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');}
+
+async function enterReferPage() {
+  if(!currentUser) return;
+  const locked=document.getElementById('refer-locked');
+  const active=document.getElementById('refer-active');
+  const status=await fetchSubscriptionStatus(currentUser.id);
+  const isPaid=status==='active'||status==='lifetime';
+  if(!isPaid){
+    locked.style.display='block';
+    active.style.display='none';
+    return;
+  }
+  locked.style.display='none';
+  active.style.display='block';
+  await loadReferralData();
+}
+
+async function loadReferralData() {
+  try {
+    const [refsRes,rewardsRes]=await Promise.all([
+      sbGet().from('referrals').select('*').eq('referrer_id',currentUser.id).order('created_at',{ascending:false}),
+      sbGet().from('referral_rewards').select('*').eq('user_id',currentUser.id).order('granted_at',{ascending:false}),
+    ]);
+    renderReferralData(refsRes.data||[], rewardsRes.data||[]);
+  } catch(e) { console.error('loadReferralData failed:',e); }
+}
+
+function renderReferralData(refs,rewards) {
+  // Progress counters
+  const trialCount=refs.filter(r=>['trial_started','converted'].includes(r.status)).length;
+  const convertedCount=refs.filter(r=>r.status==='converted').length;
+  const trialProgress=trialCount%3;
+  const convertProgress=convertedCount%5;
+  document.getElementById('refer-trial-count').textContent=`${trialProgress} of 3`;
+  document.getElementById('refer-trial-fill').style.width=`${(trialProgress/3)*100}%`;
+  document.getElementById('refer-convert-count').textContent=`${convertProgress} of 5`;
+  document.getElementById('refer-convert-fill').style.width=`${(convertProgress/5)*100}%`;
+
+  // Rewards list
+  const rewardsSection=document.getElementById('refer-rewards-section');
+  const rewardsList=document.getElementById('refer-rewards-list');
+  if(rewards.length){
+    rewardsSection.style.display='block';
+    rewardsList.innerHTML=rewards.map(r=>{
+      const label=r.reward_type==='free_month'?'1 free month':'1 free year';
+      const date=new Date(r.granted_at).toLocaleDateString();
+      return `<div class="refer-reward-row"><span style="font-weight:700;color:var(--ds-t1);">${label}</span><span style="font-size:12px;color:var(--ds-t3);font-weight:600;">Applied ${date}</span></div>`;
+    }).join('');
+  } else {
+    rewardsSection.style.display='none';
+  }
+
+  // Invites list
+  const countEl=document.getElementById('refer-count');
+  countEl.textContent=refs.length?`(${refs.length})`:'';
+  const listEl=document.getElementById('refer-list');
+  if(!refs.length){
+    listEl.innerHTML='<div class="empty-state">No invites sent yet. Invite your first friend above.</div>';
+    return;
+  }
+  const statusMeta={
+    'sent':{label:'Sent',cls:'refer-status-sent'},
+    'trial_started':{label:'Trial started',cls:'refer-status-trial'},
+    'converted':{label:'Paid',cls:'refer-status-converted'},
+    'bounced':{label:'Bounced',cls:'refer-status-bounced'},
+  };
+  listEl.innerHTML=refs.map(r=>{
+    const m=statusMeta[r.status]||statusMeta['sent'];
+    const days=Math.floor((Date.now()-new Date(r.created_at).getTime())/86400000);
+    const timeAgo=days===0?'today':days===1?'1 day ago':`${days} days ago`;
+    return `<div class="refer-row">
+      <div class="refer-row-info">
+        <div class="refer-row-name">${referEscapeHtml(r.referred_name)}</div>
+        <div class="refer-row-meta">${referEscapeHtml(r.referred_email)} · ${timeAgo}</div>
+      </div>
+      <span class="refer-status ${m.cls}">${m.label}</span>
+    </div>`;
+  }).join('');
+}
+
+async function submitReferral() {
+  const nameEl=document.getElementById('refer-name');
+  const emailEl=document.getElementById('refer-email');
+  const errEl=document.getElementById('refer-error');
+  const okEl=document.getElementById('refer-success');
+  const btn=document.getElementById('refer-submit-btn');
+  errEl.style.display='none';
+  okEl.style.display='none';
+  const name=nameEl.value.trim();
+  const email=emailEl.value.trim();
+  if(!name||!email){
+    errEl.textContent='Please fill in both fields.';
+    errEl.style.display='block';
+    return;
+  }
+  btn.disabled=true;
+  const originalLabel=btn.textContent;
+  btn.textContent='Sending...';
+  try {
+    const resp=await sbGet().functions.invoke('send-referral-invite',{body:{name,email}});
+    if(resp.error) throw new Error(typeof resp.error==='string'?resp.error:(resp.error.message||'Could not send invite'));
+    if(resp.data?.error) throw new Error(resp.data.error);
+    nameEl.value='';
+    emailEl.value='';
+    okEl.textContent=`Invite sent to ${email}.`;
+    okEl.style.display='block';
+    Able.track('referral_sent');
+    await loadReferralData();
+  } catch(e) {
+    errEl.textContent=e.message;
+    errEl.style.display='block';
+  } finally {
+    btn.disabled=false;
+    btn.textContent=originalLabel;
+  }
 }
 async function loadUserData() {
   setSyncState('syncing');
@@ -3900,7 +4103,7 @@ const PAGE_TO_GROUP = {
   home:'home',
   forecast:'plan', bills:'plan', debt:'plan', whatif:'plan',
   score:'score',
-  learn:'more', settings:'more',
+  learn:'more', refer:'more', settings:'more',
 };
 const GROUP_DEFAULT = { plan:'forecast', more:'learn' };
 
@@ -3941,6 +4144,7 @@ function goTo(target){
   if(page==='settings')loadSettingsPage();
   if(page==='whatif'){document.getElementById('wi-empty').style.display='block';document.getElementById('wi-result').style.display='none';}
   if(page==='learn')renderLearn();
+  if(page==='refer')enterReferPage();
 }
 
 // ═══════════════════════════════════════

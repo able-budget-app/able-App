@@ -2397,6 +2397,23 @@ window.Able.track = function(event, props) {
   if (window._ableTrackDebug) console.log('[track]', event, props);
 };
 
+// Capture referral token (?ref=TOKEN) and stash for checkout.
+(function(){
+  try {
+    const params = new URLSearchParams(window.location.search);
+    const ref = params.get('ref');
+    if (ref && /^[a-f0-9]{8,64}$/.test(ref)) {
+      localStorage.setItem('able_ref_token', ref);
+      Able.track('referral_landed', { ref_token: ref });
+      // Clean the URL so ?ref doesn't stick around
+      params.delete('ref');
+      const q = params.toString();
+      const newUrl = window.location.pathname + (q ? '?' + q : '') + window.location.hash;
+      window.history.replaceState({}, '', newUrl);
+    }
+  } catch (_) { /* noop */ }
+})();
+
 // Fire landing_viewed once per page load.
 Able.track('landing_viewed');
 
