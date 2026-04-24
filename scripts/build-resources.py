@@ -27,6 +27,27 @@ NICE_TITLES = {
     "budgeting": "Budgeting with irregular income",
     "taxes": "Taxes for the self-employed",
     "business": "Running a business with variable income",
+    "learn-payself": "Pay Yourself First",
+    "learn-debt": "How to Get Out of Debt",
+    "learn-credit": "How to Improve Your Credit Score",
+    "learn-funding": "How to Get Business Funding",
+    "learn-money": "How Money Actually Works",
+}
+
+# Map URL path prefixes to human labels for breadcrumb building.
+PATH_TITLES = {
+    "/budgeting": "Budgeting",
+    "/taxes": "Taxes",
+    "/business": "Business",
+    "/calculators": "Calculators",
+    "/compare": "Compare",
+    "/resources": "Resources",
+    "/learn": "Learn",
+    "/learn/pay-yourself-first": "Pay Yourself First",
+    "/learn/get-out-of-debt": "How to Get Out of Debt",
+    "/learn/improve-your-credit-score": "How to Improve Your Credit Score",
+    "/learn/get-business-funding": "How to Get Business Funding",
+    "/learn/how-money-works": "How Money Actually Works",
 }
 
 CSS = """
@@ -289,11 +310,20 @@ def render_html(fm, body_md, related_titles):
     )
 
     breadcrumb_parts = ['<a href="/">Home</a>']
-    if cluster:
-        if url == f"/{cluster}/":
-            breadcrumb_parts.append(cluster_label)
+    # Build breadcrumb from URL segments so multi-level paths like
+    # /learn/get-out-of-debt/<slug>/ produce clean trails.
+    segs = [s for s in url.split('/') if s]
+    if segs:
+        for i in range(len(segs) - 1):
+            prefix = '/' + '/'.join(segs[:i + 1])
+            label = PATH_TITLES.get(prefix, segs[i].replace('-', ' ').title())
+            breadcrumb_parts.append(f'<a href="{prefix}/">{label}</a>')
+        # Last segment: title of the current page (no link).
+        # If the URL is a pillar (e.g. /budgeting/), use the cluster label.
+        if len(segs) == 1:
+            prefix = '/' + segs[0]
+            breadcrumb_parts.append(PATH_TITLES.get(prefix, cluster_label or title))
         else:
-            breadcrumb_parts.append(f'<a href="/{cluster}/">{cluster_label}</a>')
             breadcrumb_parts.append(title)
 
     breadcrumb_html = ' / '.join(breadcrumb_parts)
