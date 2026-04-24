@@ -816,6 +816,62 @@ input,select,button,textarea{font-family:inherit;}
 .coach-nudge-close{background:transparent;border:none;color:var(--ds-t3);font-size:22px;cursor:pointer;padding:0 8px;line-height:1;transition:color .15s;}
 .coach-nudge-close:hover{color:var(--ds-c4);}
 @media(max-width:800px){.coach-nudge{bottom:calc(168px + env(safe-area-inset-bottom));right:1rem;max-width:calc(100vw - 2rem);}}
+
+/* ═══════════════════════════════════════
+   DASHBOARD (home page hero + quick actions + allocate sheet)
+═══════════════════════════════════════ */
+.db-hero{position:relative;background:linear-gradient(145deg,#1f6038 0%,#2a7a4a 55%,#3d9e78 100%);border-radius:var(--ds-r3);padding:1.5rem 1.5rem 1.35rem;color:white;box-shadow:0 12px 32px rgba(31,96,56,.22);margin-bottom:1rem;overflow:hidden;}
+.db-hero::before{content:'';position:absolute;inset:0;background:radial-gradient(circle at 85% 10%,rgba(255,255,255,.14),transparent 55%);pointer-events:none;}
+.db-hero-eyebrow{position:relative;font-size:10px;font-weight:800;letter-spacing:.14em;text-transform:uppercase;color:rgba(255,255,255,.7);margin-bottom:.75rem;display:flex;align-items:center;gap:8px;}
+.db-hero-eyebrow::before{content:'';display:inline-block;width:5px;height:5px;border-radius:50%;background:#b8e0c8;}
+.db-hero-headline{position:relative;font-family:var(--ds-f);font-size:1.55rem;font-weight:900;letter-spacing:-.025em;line-height:1.15;margin-bottom:.35rem;}
+.db-hero-sub{position:relative;font-size:13px;font-weight:600;color:rgba(255,255,255,.8);line-height:1.45;margin-bottom:1.35rem;letter-spacing:-.005em;}
+.db-score-wrap{position:relative;margin-bottom:1.1rem;}
+.db-score-row{display:flex;align-items:baseline;justify-content:space-between;gap:12px;margin-bottom:.65rem;}
+.db-score-num{font-family:var(--ds-f);font-size:3.4rem;font-weight:900;line-height:1;letter-spacing:-.04em;color:white;}
+.db-score-num .db-score-max{font-size:1.15rem;font-weight:800;color:rgba(255,255,255,.5);margin-left:3px;letter-spacing:-.02em;}
+.db-score-grade{font-size:10px;font-weight:800;letter-spacing:.14em;text-transform:uppercase;color:rgba(255,255,255,.85);background:rgba(255,255,255,.12);padding:5px 10px;border-radius:var(--ds-r2);white-space:nowrap;}
+.db-score-bar{height:4px;background:rgba(255,255,255,.18);border-radius:100px;overflow:hidden;}
+.db-score-fill{height:100%;background:linear-gradient(90deg,#b8e0c8,#ffffff);border-radius:100px;transition:width .6s cubic-bezier(.34,1.2,.64,1);}
+.db-chips{position:relative;display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:1.1rem;}
+.db-chip{background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.14);border-radius:var(--ds-r2);padding:.75rem .85rem;cursor:pointer;transition:background .18s,transform .18s;}
+.db-chip:hover{background:rgba(255,255,255,.16);transform:translateY(-1px);}
+.db-chip:active{transform:translateY(0);}
+.db-chip-label{font-size:9.5px;font-weight:800;letter-spacing:.12em;color:rgba(255,255,255,.7);margin-bottom:5px;}
+.db-chip-pts{font-family:var(--ds-f);font-size:15px;font-weight:800;color:white;letter-spacing:-.02em;margin-bottom:6px;}
+.db-chip-pts .db-chip-max{color:rgba(255,255,255,.45);font-weight:700;}
+.db-chip-dots{display:flex;gap:3px;}
+.db-chip-dot{width:6px;height:6px;border-radius:50%;background:rgba(255,255,255,.22);}
+.db-chip-dot.filled{background:#b8e0c8;}
+.db-hero-cta{position:relative;width:100%;background:white;color:var(--ds-green);border:none;border-radius:100px;padding:14px 20px;font-family:var(--ds-f);font-size:15px;font-weight:800;letter-spacing:-.01em;cursor:pointer;transition:transform .15s,box-shadow .15s;box-shadow:0 4px 14px rgba(0,0,0,.08);}
+.db-hero-cta:hover{transform:translateY(-1px);box-shadow:0 8px 22px rgba(0,0,0,.12);}
+.db-hero-cta:active{transform:translateY(0);}
+
+.db-action-card{display:flex;align-items:center;gap:14px;background:var(--ds-card);border-radius:var(--ds-r2);padding:1rem 1.15rem;margin-bottom:.65rem;box-shadow:var(--ds-sh1);cursor:pointer;transition:transform .15s,box-shadow .15s;}
+.db-action-card:hover{transform:translateY(-1px);box-shadow:var(--ds-sh2);}
+.db-action-card:active{transform:translateY(0);}
+.db-action-icon{width:38px;height:38px;border-radius:var(--ds-r2);background:var(--ds-green-l);color:var(--ds-green);display:flex;align-items:center;justify-content:center;flex-shrink:0;}
+.db-action-body{flex:1;min-width:0;}
+.db-action-title{font-size:14px;font-weight:800;color:var(--ds-t1);letter-spacing:-.01em;}
+.db-action-sub{font-size:12px;color:var(--ds-t2);font-weight:600;margin-top:2px;line-height:1.4;}
+.db-action-chevron{font-size:22px;color:var(--ds-t3);font-weight:400;line-height:1;flex-shrink:0;}
+
+.db-sheet{position:fixed;inset:0;background:rgba(17,28,22,.45);z-index:220;display:flex;align-items:flex-end;justify-content:center;backdrop-filter:blur(6px);animation:modalFadeIn .2s ease;}
+.db-sheet-panel{background:var(--ds-card);border-radius:var(--ds-r3) var(--ds-r3) 0 0;width:100%;max-width:560px;max-height:90vh;max-height:90dvh;display:flex;flex-direction:column;overflow:hidden;animation:sheetSlideUp .3s cubic-bezier(.34,1.2,.64,1);}
+@media(min-width:801px){.db-sheet-panel{margin-bottom:2rem;border-radius:var(--ds-r3);}.db-sheet{align-items:center;}}
+.db-sheet-header{display:flex;justify-content:space-between;align-items:center;gap:12px;padding:1.1rem 1.25rem .75rem;border-bottom:1px solid var(--ds-t4);}
+.db-sheet-title{font-family:var(--ds-f);font-size:1.1rem;font-weight:900;color:var(--ds-t1);letter-spacing:-.02em;}
+.db-sheet-close{background:transparent;border:none;color:var(--ds-t3);font-size:20px;cursor:pointer;padding:4px 8px;line-height:1;border-radius:var(--ds-r1);transition:background .15s,color .15s;}
+.db-sheet-close:hover{background:var(--ds-green-l);color:var(--ds-green);}
+.db-sheet-body{padding:1.1rem 1.25rem 1.35rem;overflow-y:auto;}
+
+@media(max-width:540px){
+  .db-hero-headline{font-size:1.4rem;}
+  .db-score-num{font-size:2.9rem;}
+  .db-chips{grid-template-columns:repeat(3,1fr);gap:6px;}
+  .db-chip{padding:.65rem .6rem;}
+  .db-chip-pts{font-size:13.5px;}
+}
 </style>
 <!-- Meta Pixel (replace META_PIXEL_ID with your pixel id) -->
 <script>
@@ -1041,98 +1097,66 @@ posthog.init('phc_B6PH36QxpExnyBYhfScFFF6LhDvoyxuFr6PypJuxxky3', {
     <div style="font-size:1.35rem;font-weight:900;color:var(--ds-t1);letter-spacing:-.02em;line-height:1.2;margin-bottom:.4rem;">Start with one small step.</div>
     <div style="font-size:14px;color:var(--ds-t2);font-weight:500;line-height:1.5;margin-bottom:1rem;">Log any real income below, or add your bills so Able knows what to cover. Thirty seconds either way.</div>
     <div style="display:flex;gap:8px;flex-wrap:wrap;">
-      <button class="btn btn-primary btn-sm" onclick="document.getElementById('inc-amount').focus();">Log first income</button>
+      <button class="btn btn-primary btn-sm" onclick="openAllocateSheet()">Log first income</button>
       <button class="btn btn-sm" onclick="goTo('bills')">Add first bill</button>
     </div>
   </div>
-  <div class="two-col">
-    <div>
-      <div class="sec" id="runway-label">Next 14 days runway</div>
-      <div class="card" id="runway-card" style="padding:1.15rem 1.25rem;margin-bottom:1rem;background:linear-gradient(135deg,#f7fbf8 0%,#eaf5ee 100%);">
-        <div style="display:flex;justify-content:space-between;align-items:baseline;margin-bottom:.4rem;gap:8px;flex-wrap:wrap;">
-          <div style="font-family:var(--ds-f);font-size:1.5rem;font-weight:900;color:var(--ds-t1);letter-spacing:-.02em;" id="runway-status">Loading...</div>
-          <div style="font-size:11px;font-weight:700;color:var(--ds-t3);letter-spacing:.05em;text-transform:uppercase;" id="runway-sub"></div>
-        </div>
-        <div style="font-size:13px;color:var(--ds-t2);font-weight:600;line-height:1.5;" id="runway-detail"></div>
+
+  <!-- DASHBOARD HERO -->
+  <div class="db-hero">
+    <div class="db-hero-eyebrow">This month</div>
+    <div class="db-hero-headline" id="db-hero-headline">Ready when you are.</div>
+    <div class="db-hero-sub" id="db-hero-sub">Log income to see where it goes.</div>
+    <div class="db-score-wrap">
+      <div class="db-score-row">
+        <div class="db-score-num"><span id="db-score-big">--</span><span class="db-score-max">/100</span></div>
+        <div class="db-score-grade" id="db-score-grade">Building</div>
       </div>
-      <div class="sec">Monthly income floor</div>
-      <div class="floor-bar-wrap">
-        <div class="floor-labels"><span id="floor-in-label">$0 in so far</span><span id="floor-goal-label">Bills: $0</span></div>
-        <div class="floor-track">
-          <div class="floor-fill" id="floor-fill" style="width:0%;"></div>
-          <div class="floor-marker" id="floor-marker" style="left:100%;"></div>
-        </div>
-        <div class="floor-legend">
-          <span><span class="floor-dot" style="background:var(--ds-green);"></span>Income in</span>
-          <span><span class="floor-dot" style="background:var(--ds-c4);"></span>Bills floor</span>
-          <span id="floor-surplus-label" style="font-weight:700;"></span>
-        </div>
-      </div>
-      <div class="sec">Money just came in</div>
-      <div class="card">
-        <div class="form-row">
-          <div class="field"><label>Amount ($)</label><input type="number" id="inc-amount" placeholder="0.00" min="0" step="0.01"></div>
-          <div class="field"><label>Where from</label><select id="inc-source"><option value="">Pick a source</option></select></div>
-        </div>
-        <button class="btn btn-primary" style="width:100%;" onclick="allocate()">Tell me where it goes →</button>
-      </div>
-      <div id="alloc-result" style="display:none;">
-        <div class="sec" style="margin-top:1.25rem;">Here's exactly what to do with it</div>
-        <div class="alloc-head">
-          <div id="alloc-amt" style="font-family:var(--ds-f);font-size:2.5rem;font-weight:900;color:var(--ds-green);letter-spacing:-.03em;line-height:1;"></div>
-          <div id="alloc-src" style="font-size:12px;color:var(--ds-t3);font-weight:700;letter-spacing:.05em;text-transform:uppercase;"></div>
-        </div>
-        <div id="job-list"></div>
-        <div style="display:flex;gap:8px;margin-top:.75rem;flex-wrap:wrap;">
-          <button class="btn btn-sm" onclick="exportAllocation()">Save this plan</button>
-          <button class="btn btn-sm btn-ghost" onclick="document.getElementById('alloc-result').style.display='none'">Dismiss</button>
-        </div>
-      </div>
-      <div class="divider" style="margin-top:1.5rem;"></div>
-      <div class="sec">Income this month</div>
-      <div id="history-list"><div class="empty-state">No income logged yet this month. Log something above to see where it should go.</div></div>
-      <button class="btn btn-sm btn-ghost" style="margin-top:.5rem;" onclick="resetMonth()">Close this month</button>
+      <div class="db-score-bar"><div class="db-score-fill" id="db-score-fill" style="width:0%;"></div></div>
     </div>
-    <div>
-      <div class="sec">Bills covered</div>
-      <div class="ring-card">
-        <div class="ring-wrap">
-          <svg width="70" height="70" viewBox="0 0 64 64">
-            <circle cx="32" cy="32" r="26" fill="none" stroke="#c4d8cc" stroke-width="6"/>
-            <circle cx="32" cy="32" r="26" fill="none" stroke="#2a7a4a" stroke-width="6" stroke-dasharray="163.36" stroke-dashoffset="163.36" stroke-linecap="round" id="ring-arc"/>
-          </svg>
-          <div class="ring-center" id="ring-pct">0%</div>
-        </div>
-        <div>
-          <div style="font-size:.95rem;font-weight:800;color:var(--ds-t1);letter-spacing:-.01em;">Bills covered this month</div>
-          <div style="font-size:1.25rem;font-weight:900;color:var(--ds-green);letter-spacing:-.02em;margin-top:3px;" id="ring-covered">$0 of $0</div>
-          <div style="font-size:11px;color:var(--ds-t2);font-weight:600;margin-top:3px;" id="ring-sub">Loading...</div>
-        </div>
+    <div class="db-chips">
+      <div class="db-chip" onclick="goTo('bills')" role="button" tabindex="0" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();goTo('bills');}">
+        <div class="db-chip-label">Bills</div>
+        <div class="db-chip-pts"><span id="db-chip-bills-val">0</span><span class="db-chip-max">/30</span></div>
+        <div class="db-chip-dots" id="db-chip-bills-dots"></div>
       </div>
-      <div class="sec">Safety net</div>
-      <div class="buffer-card">
-        <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:.85rem;">
-          <div>
-            <div style="font-size:.95rem;font-weight:800;color:var(--ds-t1);letter-spacing:-.01em;">Buffer fund</div>
-            <div style="font-size:11px;color:var(--ds-t2);font-weight:600;margin-top:3px;">For slow months. Goal is one month of bills.</div>
-          </div>
-          <button class="btn btn-sm" onclick="openBufferModal()">update</button>
-        </div>
-        <div style="font-size:1.75rem;font-weight:900;color:var(--ds-c5);letter-spacing:-.03em;" id="buf-amount">$0</div>
-        <div class="prog-wrap" style="margin-top:.85rem;"><div class="prog-bar" id="buf-bar" style="width:0%;background:var(--ds-c5);"></div></div>
-        <div style="font-size:11px;font-weight:700;color:var(--ds-c5);margin-top:5px;" id="buf-pct-label">0% of goal</div>
+      <div class="db-chip" onclick="goTo('debt')" role="button" tabindex="0" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();goTo('debt');}">
+        <div class="db-chip-label">Debt</div>
+        <div class="db-chip-pts"><span id="db-chip-debt-val">0</span><span class="db-chip-max">/20</span></div>
+        <div class="db-chip-dots" id="db-chip-debt-dots"></div>
       </div>
-      <div class="sec">Due in next 14 days</div>
-      <div id="upcoming-list"></div>
-      <div class="sec">This month</div>
-      <div class="metric-row">
-        <div class="metric"><div class="metric-label">Income in</div><div class="metric-val" style="color:var(--ds-green);" id="m-in">$0</div></div>
-        <div class="metric"><div class="metric-label">Paid yourself</div><div class="metric-val" style="color:var(--ds-c2);" id="m-owner">$0</div><div class="metric-sub" id="m-owner-sub"></div></div>
-        <div class="metric"><div class="metric-label">Extra to debt</div><div class="metric-val" style="color:var(--ds-c4);" id="m-debt">$0</div></div>
-        <div class="metric"><div class="metric-label">To buffer</div><div class="metric-val" style="color:var(--ds-c5);" id="m-buf">$0</div></div>
+      <div class="db-chip" onclick="openBufferModal()" role="button" tabindex="0" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();openBufferModal();}">
+        <div class="db-chip-label">Buffer</div>
+        <div class="db-chip-pts"><span id="db-chip-buffer-val">0</span><span class="db-chip-max">/15</span></div>
+        <div class="db-chip-dots" id="db-chip-buffer-dots"></div>
       </div>
     </div>
+    <button class="db-hero-cta" onclick="openAllocateSheet()">Log income →</button>
   </div>
+
+  <!-- QUICK ACTIONS -->
+  <div class="db-action-card" onclick="goTo('forecast')" role="button" tabindex="0" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();goTo('forecast');}">
+    <div class="db-action-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" width="20" height="20"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg></div>
+    <div class="db-action-body">
+      <div class="db-action-title" id="db-runway-title">Next 14 days</div>
+      <div class="db-action-sub" id="db-runway-sub">Loading...</div>
+    </div>
+    <div class="db-action-chevron">›</div>
+  </div>
+
+  <div class="db-action-card" onclick="openCoachPanel()" role="button" tabindex="0" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();openCoachPanel();}">
+    <div class="db-action-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" width="20" height="20"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg></div>
+    <div class="db-action-body">
+      <div class="db-action-title">Ask the coach</div>
+      <div class="db-action-sub">Get a read on where you stand this month.</div>
+    </div>
+    <div class="db-action-chevron">›</div>
+  </div>
+
+  <!-- INCOME THIS MONTH -->
+  <div class="sec" style="margin-top:1.5rem;">Income this month</div>
+  <div id="history-list"><div class="empty-state">No income logged yet this month. Tap "Log income" above to start.</div></div>
+  <button class="btn btn-sm btn-ghost" style="margin-top:.5rem;" onclick="resetMonth()">Close this month</button>
 </div>
 
 <!-- FORECAST -->
@@ -1500,6 +1524,35 @@ posthog.init('phc_B6PH36QxpExnyBYhfScFFF6LhDvoyxuFr6PypJuxxky3', {
   </div>
 </div>
 </div><!-- end #app -->
+
+<!-- ALLOCATE SHEET -->
+<div class="db-sheet" id="db-allocate-sheet" style="display:none;" onclick="if(event.target===this)closeAllocateSheet()">
+  <div class="db-sheet-panel">
+    <div class="db-sheet-header">
+      <div class="db-sheet-title">Money just came in</div>
+      <button class="db-sheet-close" onclick="closeAllocateSheet()" aria-label="Close">✕</button>
+    </div>
+    <div class="db-sheet-body">
+      <div class="form-row">
+        <div class="field"><label>Amount ($)</label><input type="number" id="inc-amount" placeholder="0.00" min="0" step="0.01"></div>
+        <div class="field"><label>Where from</label><select id="inc-source"><option value="">Pick a source</option></select></div>
+      </div>
+      <button class="btn btn-primary" style="width:100%;margin-top:.85rem;" onclick="allocate()">Tell me where it goes →</button>
+      <div id="alloc-result" style="display:none;margin-top:1.25rem;">
+        <div class="alloc-head">
+          <div id="alloc-amt" style="font-family:var(--ds-f);font-size:2.5rem;font-weight:900;color:var(--ds-green);letter-spacing:-.03em;line-height:1;"></div>
+          <div id="alloc-src" style="font-size:12px;color:var(--ds-t3);font-weight:700;letter-spacing:.05em;text-transform:uppercase;"></div>
+        </div>
+        <div id="job-list"></div>
+        <div style="display:flex;gap:8px;margin-top:.85rem;flex-wrap:wrap;">
+          <button class="btn btn-sm" onclick="exportAllocation()">Save plan</button>
+          <button class="btn btn-sm btn-ghost" onclick="askCoachAboutLastAllocation()">Ask the coach →</button>
+          <button class="btn btn-sm btn-ghost" onclick="closeAllocateSheet()" style="margin-left:auto;">Done</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
 
 <!-- MODALS -->
 <div class="modal-bg" id="modal-add-bill" style="display:none;">
@@ -2916,14 +2969,75 @@ function allocate(){
   const amount=parseFloat(document.getElementById('inc-amount').value);
   const source=document.getElementById('inc-source').value;
   if(!amount||amount<=0){document.getElementById('inc-amount').focus();return;}
+  if(!source){document.getElementById('inc-source').focus();return;}
   const jobs=computeJobs(amount,source);
   applyJobs(jobs,amount,source);
-  document.getElementById('alloc-result').style.display='block';
+  const result=document.getElementById('alloc-result');
+  result.style.display='block';
   document.getElementById('alloc-amt').textContent=f2(amount);
   document.getElementById('alloc-src').textContent='from '+source;
   renderJobList(jobs,amount,document.getElementById('job-list'));
   document.getElementById('inc-amount').value='';
+  setTimeout(()=>{result.scrollIntoView({behavior:'smooth',block:'nearest'});},60);
   refreshHome();
+}
+
+function openAllocateSheet(){
+  const sheet=document.getElementById('db-allocate-sheet');
+  if(!sheet)return;
+  const result=document.getElementById('alloc-result');
+  if(result)result.style.display='none';
+  sheet.style.display='flex';
+  document.body.style.overflow='hidden';
+  populateSources();
+  setTimeout(()=>{const input=document.getElementById('inc-amount');if(input)input.focus();},150);
+}
+
+function closeAllocateSheet(){
+  const sheet=document.getElementById('db-allocate-sheet');
+  if(!sheet)return;
+  sheet.style.display='none';
+  document.body.style.overflow='';
+  const input=document.getElementById('inc-amount');
+  if(input)input.value='';
+  const result=document.getElementById('alloc-result');
+  if(result)result.style.display='none';
+}
+
+function askCoachAboutLastAllocation(){
+  const last=S.history&&S.history[0];
+  closeAllocateSheet();
+  if(!last){openCoachPanel();return;}
+  openCoachPanel(`I just logged ${f2(last.amount)} from ${last.source}. Walk me through how it got split.`);
+}
+
+function computeMonthlyScore(){
+  const tb=totalBills(),ti=totalIn(),pb=paidBills();
+  if(!ti && !pb){
+    return {total:null,grade:null,gradeLetter:null,gradeLabel:'Building',components:{bills:0,pay:0,debt:0,buffer:0,budget:0},hasData:false};
+  }
+  const de=S.history.reduce((s,h)=>s+(h.debtExtra||0),0);
+  const bc=S.history.reduce((s,h)=>s+(h.bufContrib||0),0);
+  const op=S.history.reduce((s,h)=>s+(h.ownerPaid||0),0);
+  const s1=Math.min(30,Math.round((Math.min(ti+pb,tb)/(tb||1))*30));
+  const s2=de>0?Math.min(20,Math.round((de/Math.max(tb*0.05,1))*4)):0;
+  const s3=bc>0?Math.min(15,Math.round((bc/Math.max(tb*0.05,1))*3)):0;
+  const s4=15;
+  const ownerTarget=ti*((S.settings.ownerPct||0)/100);
+  const s5=op>0?(ownerTarget>0.01?Math.min(20,Math.round((op/ownerTarget)*20)):20):0;
+  const total=Math.min(100,s1+s2+s3+s4+s5);
+  const grades=[[90,'S, elite budgeter'],[75,'A, really solid'],[60,'B, on the right track'],[45,'C, needs some work'],[0,'D, let\'s fix this']];
+  const grade=grades.find(g=>total>=g[0]);
+  const gradeLetter=grade[1].charAt(0);
+  const shortLabels={'S':'Elite','A':'Solid','B':'On track','C':'Building','D':'Starting'};
+  return {
+    total,
+    grade:grade[1],
+    gradeLetter,
+    gradeLabel:shortLabels[gradeLetter]||'Building',
+    components:{bills:s1,pay:s5,debt:s2,buffer:s3,budget:s4},
+    hasData:true
+  };
 }
 
 function exportAllocation(){
@@ -2942,91 +3056,104 @@ function exportAllocation(){
 function refreshHome(){
   // Empty-state welcome for fresh accounts (no income logged, no bills yet).
   const welcome=document.getElementById('home-welcome');
-  if(welcome){
-    const isEmpty=(!S.history||!S.history.length)&&(!S.bills||!S.bills.length);
-    welcome.style.display=isEmpty?'block':'none';
+  const dashboard=document.querySelector('#page-home .db-hero');
+  const quickActions=document.querySelectorAll('#page-home .db-action-card');
+  const isEmpty=(!S.history||!S.history.length)&&(!S.bills||!S.bills.length);
+  if(welcome)welcome.style.display=isEmpty?'block':'none';
+  if(dashboard)dashboard.style.display=isEmpty?'none':'';
+  quickActions.forEach(el=>{el.style.display=isEmpty?'none':'';});
+
+  const ti=totalIn();
+  const ns=document.getElementById('nav-stats');
+  if(ns){
+    ns.innerHTML=`
+      <div><div class="nav-stat-label">This month</div><div class="nav-stat-val" style="color:var(--sage);">${fr(ti)}</div></div>
+      <div style="text-align:right;"><div class="nav-stat-label">Total debt</div><div class="nav-stat-val" style="color:var(--coral);">${fr(S.debts.reduce((s,d)=>s+d.balance,0))}</div></div>`;
   }
+
+  renderDashboard();
+  renderHistory();
+}
+
+function renderDashboard(){
   const tb=totalBills(),ti=totalIn(),pb=paidBills();
-  // Rolling window calc for the runway card
+  const covered=Math.min(ti+pb,tb);
+  const remaining=Math.max(0,tb-covered);
+  const surplus=Math.max(0,ti+pb-tb);
+  const score=computeMonthlyScore();
+
+  const headlineEl=document.getElementById('db-hero-headline');
+  const subEl=document.getElementById('db-hero-sub');
+  if(headlineEl && subEl){
+    if(!score.hasData){
+      headlineEl.textContent='Ready when you are.';
+      subEl.textContent=tb>0?'Log income to start covering bills.':'Add your bills and log income to see where you stand.';
+    } else {
+      const gradeLine={
+        'S':"You're running a tight ship.",
+        'A':"Really solid month.",
+        'B':"You're on track.",
+        'C':"You're getting there.",
+        'D':"Let's steady the ship.",
+      };
+      headlineEl.textContent=gradeLine[score.gradeLetter]||"You're on track.";
+      if(tb<=0.01){
+        subEl.textContent='Add bills so Able can protect them first.';
+      } else if(remaining<=0.01){
+        subEl.textContent=surplus>0.01?`Bills covered. ${fr(surplus)} above this month.`:'Bills fully covered this month.';
+      } else {
+        subEl.textContent=`${fr(remaining)} still needed to cover bills.`;
+      }
+    }
+  }
+
+  const bigEl=document.getElementById('db-score-big');
+  const gradeEl=document.getElementById('db-score-grade');
+  const fillEl=document.getElementById('db-score-fill');
+  if(bigEl)bigEl.textContent=score.hasData?score.total:'--';
+  if(gradeEl)gradeEl.textContent=score.gradeLabel;
+  if(fillEl)fillEl.style.width=(score.hasData?score.total:0)+'%';
+
+  function renderChip(prefix,pts,max){
+    const valEl=document.getElementById('db-chip-'+prefix+'-val');
+    const dotsEl=document.getElementById('db-chip-'+prefix+'-dots');
+    if(valEl)valEl.textContent=pts;
+    if(dotsEl){
+      const dotCount=5;
+      const filled=Math.min(dotCount,Math.round((pts/max)*dotCount));
+      dotsEl.innerHTML='';
+      for(let i=0;i<dotCount;i++){
+        const d=document.createElement('div');
+        d.className='db-chip-dot'+(i<filled?' filled':'');
+        dotsEl.appendChild(d);
+      }
+    }
+  }
+  renderChip('bills',score.components.bills,30);
+  renderChip('debt',score.components.debt,20);
+  renderChip('buffer',score.components.buffer,15);
+
+  const runwayTitleEl=document.getElementById('db-runway-title');
+  const runwaySubEl=document.getElementById('db-runway-sub');
   const win=allocWindow();
   const winBills=billsInWindow(win);
   const winTotal=winBills.reduce((s,b)=>s+b.amount,0);
   const windowReserveNeeded=Math.max(0,winTotal-ti);
-  const rwLabel=document.getElementById('runway-label');
-  const rwStatus=document.getElementById('runway-status');
-  const rwSub=document.getElementById('runway-sub');
-  const rwDetail=document.getElementById('runway-detail');
-  if(rwLabel)rwLabel.textContent=`Next ${win} days runway`;
-  if(rwStatus){
+  if(runwayTitleEl)runwayTitleEl.textContent=`Next ${win} days`;
+  if(runwaySubEl){
     if(winTotal<=0.01){
-      rwStatus.textContent='✓ All clear';
-      rwStatus.style.color='var(--ds-green)';
-      rwSub.textContent=`nothing due in ${win} days`;
-      rwDetail.textContent='Any money coming in is surplus. Send it to debt, buffer, or savings.';
+      runwaySubEl.textContent=`Nothing due in ${win} days. Any income is surplus.`;
     } else if(windowReserveNeeded<=0.01){
-      rwStatus.textContent='✓ Covered';
-      rwStatus.style.color='var(--ds-green)';
-      rwSub.textContent=`${fr(winTotal)} due in ${win} days`;
-      rwDetail.textContent=`You've already brought in enough to cover everything due by day ${win}. New income is surplus.`;
+      runwaySubEl.textContent=`Covered. ${fr(winTotal)} due, already reserved.`;
     } else {
-      rwStatus.textContent=fr(windowReserveNeeded)+' still needed';
-      rwStatus.style.color='var(--ds-c3)';
-      rwSub.textContent=`in next ${win} days`;
-      const bills=winBills.slice(0,3).map(b=>b.name).join(', ');
-      const more=winBills.length>3?` + ${winBills.length-3} more`:'';
-      rwDetail.textContent=`${fr(winTotal)} in bills coming up${bills?': '+bills+more:''}. New income will cover these first before anything else.`;
+      runwaySubEl.textContent=`${fr(windowReserveNeeded)} still needed for upcoming bills.`;
     }
   }
-  // Paid bills count as already covered. Effective "covered" is income plus already-paid bills.
-  const covered=Math.min(ti+pb,tb);
-  const pct=tb>0?Math.round((covered/tb)*100):0;
-  const circ=163.36;
-  document.getElementById('ring-arc').style.strokeDashoffset=circ-(pct/100)*circ;
-  document.getElementById('ring-pct').textContent=pct+'%';
-  document.getElementById('ring-covered').textContent=fr(covered)+' of '+fr(tb);
-  const rem=tb-covered;
-  document.getElementById('ring-sub').textContent=rem>0?fr(rem)+' still needed this month':'✓ All bills covered this month!';
-  // Floor bar shows how much MORE income you need this month, accounting for bills already paid.
-  const effectiveGoal=Math.max(0,tb-pb);
-  const floorPct=effectiveGoal>0?Math.min(100,Math.round((ti/effectiveGoal)*100)):100;
-  document.getElementById('floor-fill').style.width=Math.min(100,floorPct)+'%';
-  document.getElementById('floor-fill').style.background=ti>=effectiveGoal?'var(--ds-green)':ti>effectiveGoal*0.5?'var(--ds-c3)':'var(--ds-c4)';
-  document.getElementById('floor-in-label').textContent=fr(ti)+' in so far';
-  document.getElementById('floor-goal-label').textContent=pb>0?'Still needed: '+fr(effectiveGoal)+(pb>0?' ('+fr(pb)+' already paid)':''):'Bills: '+fr(tb);
-  const surplus=ti+pb-tb;
-  document.getElementById('floor-surplus-label').textContent=surplus>0?'+'+fr(surplus)+' above bills':surplus<0?fr(Math.abs(surplus))+' short':'';
-  document.getElementById('floor-surplus-label').style.color=surplus>=0?'var(--ds-green)':'var(--ds-c4)';
-  const bufGoal=tb;
-  const bufPct=bufGoal>0?Math.min(100,Math.round((S.buffer/bufGoal)*100)):0;
-  document.getElementById('buf-amount').textContent=f2(S.buffer);
-  document.getElementById('buf-bar').style.width=bufPct+'%';
-  document.getElementById('buf-pct-label').textContent=bufPct+'% of goal ('+fr(bufGoal)+')';
-  const debtExtra=S.history.reduce((s,h)=>s+(h.debtExtra||0),0);
-  const bufContrib=S.history.reduce((s,h)=>s+(h.bufContrib||0),0);
-  const ownerPaidThisMonth=S.history.reduce((s,h)=>s+(h.ownerPaid||0),0);
-  const lastMonthOwnerPaid=(S.month_history&&S.month_history[0])?(S.month_history[0].ownerPaid||0):null;
-  document.getElementById('m-in').textContent=fr(ti);
-  document.getElementById('m-debt').textContent=fr(debtExtra);
-  document.getElementById('m-buf').textContent=fr(bufContrib);
-  document.getElementById('m-owner').textContent=fr(ownerPaidThisMonth);
-  const ownerSub=document.getElementById('m-owner-sub');
-  if(ownerSub){
-    const pctOfIn=ti>0?Math.round((ownerPaidThisMonth/ti)*100):0;
-    let trend='';
-    if(lastMonthOwnerPaid!=null && lastMonthOwnerPaid>0){
-      const diff=ownerPaidThisMonth-lastMonthOwnerPaid;
-      if(Math.abs(diff)>0.5) trend=` · ${diff>0?'up':'down'} ${fr(Math.abs(diff))}`;
-    }
-    ownerSub.textContent=(ownerPaidThisMonth>0?`${pctOfIn}% of income`:'Nothing yet')+trend;
-  }
-  document.getElementById('nav-stats').innerHTML=`
-    <div><div class="nav-stat-label">This month</div><div class="nav-stat-val" style="color:var(--sage);">${fr(ti)}</div></div>
-    <div style="text-align:right;"><div class="nav-stat-label">Total debt</div><div class="nav-stat-val" style="color:var(--coral);">${fr(S.debts.reduce((s,d)=>s+d.balance,0))}</div></div>`;
-  renderUpcoming();renderHistory();
 }
 
 function renderUpcoming(){
   const el=document.getElementById('upcoming-list');
+  if(!el)return;
   const win=allocWindow();
   const items=S.bills.filter(b=>b.due!=='ongoing').map(b=>({...b,days:billDaysUntil(b)})).filter(b=>b.days<=win).sort((a,b)=>a.days-b.days);
   if(!items.length){el.innerHTML=`<div class="empty-state">No bills due in the next ${win} days.</div>`;return;}
@@ -3046,7 +3173,7 @@ function renderUpcoming(){
 
 function renderHistory(){
   const el=document.getElementById('history-list');
-  if(!S.history.length){el.innerHTML='<div class="empty-state">No income logged yet this month. Log something above to see where it should go.</div>';return;}
+  if(!S.history.length){el.innerHTML='<div class="empty-state">No income logged yet this month. Tap "Log income" above to start.</div>';return;}
   el.innerHTML='';
   S.history.slice(0,12).forEach((h,idx)=>{
     // Migrate older entries that don't have an id
@@ -3642,26 +3769,14 @@ function addToGoogleCalendar(){
 // SCORE
 // ═══════════════════════════════════════
 function renderScore(){
-  const tb=totalBills(),ti=totalIn(),pb=paidBills();
-  if(!ti && !pb){document.getElementById('score-big').textContent='--';return;}
-  const de=S.history.reduce((s,h)=>s+(h.debtExtra||0),0);
-  const bc=S.history.reduce((s,h)=>s+(h.bufContrib||0),0);
-  const op=S.history.reduce((s,h)=>s+(h.ownerPaid||0),0);
-  // Paid bills count as covered. This matches how the Allocate page shows it.
-  const s1=Math.min(30,Math.round((Math.min(ti+pb,tb)/(tb||1))*30));
-  const s2=de>0?Math.min(20,Math.round((de/Math.max(tb*0.05,1))*4)):0;
-  const s3=bc>0?Math.min(15,Math.round((bc/Math.max(tb*0.05,1))*3)):0;
-  const s4=15;
-  // Owner pay: full 20 pts if they hit their ownerPct target of income, scaled down otherwise.
-  const ownerTarget=ti*((S.settings.ownerPct||0)/100);
-  const s5=op>0?(ownerTarget>0.01?Math.min(20,Math.round((op/ownerTarget)*20)):20):0;
-  const total=Math.min(100,s1+s2+s3+s4+s5);
-  const grades=[[90,'S, elite budgeter'],[75,'A, really solid'],[60,'B, on the right track'],[45,'C, needs some work'],[0,'D, let\'s fix this']];
-  const grade=grades.find(g=>total>=g[0]);
+  const score=computeMonthlyScore();
+  if(!score.hasData){document.getElementById('score-big').textContent='--';return;}
+  const {total,grade,components}=score;
+  const {bills:s1,debt:s2,buffer:s3,budget:s4,pay:s5}=components;
   const sc=total>=75?'var(--sage)':total>=50?'var(--amber)':'var(--red)';
   document.getElementById('score-big').textContent=total;
   document.getElementById('score-big').style.color=sc;
-  document.getElementById('score-grade').textContent=grade[1];
+  document.getElementById('score-grade').textContent=grade;
   if(S.month_history.length>0){
     const prev=S.month_history[0].score;const diff=total-prev;
     const trendEl=document.getElementById('score-trend');
@@ -4228,8 +4343,8 @@ function getCurrentPage(){
 const TOUR_STEPS = [
   {
     tab: 'home',
-    title: "Money came in? Start here.",
-    body: "Pick the source, enter the amount, and Able splits it across bills, debt, buffer, and your own pay."
+    title: "Your monthly dashboard.",
+    body: "See your score, runway, and what's left to cover. Tap Log income any time money comes in, and Able splits it across bills, debt, buffer, and your own pay."
   },
   {
     tab: 'plan',
