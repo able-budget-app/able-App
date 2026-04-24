@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SEP IRA vs Solo 401(k) Calculator | Able</title>
+<meta name="description" content="See how much you can contribute to a SEP IRA versus a Solo 401(k) at your income level. Free side-by-side calculator for self-employed retirement planning.">
+<link rel="canonical" href="https://becomeable.app/calculators/sep-vs-solo-401k/">
+<meta property="og:title" content="SEP IRA vs Solo 401(k) Calculator | Able">
+<meta property="og:description" content="Compare contribution limits for SEP IRA and Solo 401(k) at your income level.">
+<meta property="og:url" content="https://becomeable.app/calculators/sep-vs-solo-401k/">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="Able">
+<meta name="twitter:card" content="summary">
+<script type="application/ld+json">{
+  "@context":"https://schema.org","@type":"WebApplication",
+  "name":"SEP IRA vs Solo 401(k) Calculator",
+  "description":"Side-by-side contribution limit comparison for self-employed retirement accounts.",
+  "url":"https://becomeable.app/calculators/sep-vs-solo-401k/","applicationCategory":"FinanceApplication","operatingSystem":"Any",
+  "offers":{"@type":"Offer","price":"0","priceCurrency":"USD"},
+  "creator":{"@type":"Organization","name":"Able","url":"https://becomeable.app/"}
+}</script>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400;12..96,500;12..96,600;12..96,700;12..96,800;12..96,900&display=swap" rel="stylesheet">
+<style>
+:root{--ds-page:#f0f7f2;--ds-card:#fff;--ds-t1:#111c16;--ds-t2:#4a5c52;--ds-t3:#8ca898;--ds-t4:#c4d8cc;--ds-green:#2a7a4a;--ds-green2:#1f6038;--ds-green-l:#eaf5ee;--ds-c4:#c04060;--ds-f:'Bricolage Grotesque',-apple-system,sans-serif}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+body{font-family:var(--ds-f);background:var(--ds-page);color:var(--ds-t1);line-height:1.65;-webkit-font-smoothing:antialiased}
+a{color:var(--ds-green);text-decoration:underline;text-underline-offset:2px}a:hover{color:var(--ds-green2)}
+.site-nav{padding:1.5rem 2rem;display:flex;justify-content:space-between;align-items:center;max-width:960px;margin:0 auto}
+.site-logo{font-size:1.35rem;font-weight:900;color:var(--ds-t1);letter-spacing:-.03em;position:relative;display:inline-block;line-height:1;padding-bottom:3px;text-decoration:none}
+.site-logo::after{content:'';position:absolute;left:0;right:-4%;bottom:0;height:5px;background:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 120 4.2' preserveAspectRatio='none'><path d='M3 2.6 Q2 2.4 3 2.15 Q58 1.75 115 0.15 Q119 1 119 2 Q119 3 115 3.9 Q58 3.55 3 2.65 Q2 2.45 3 2.6 Z' fill='%232a7a4a'/></svg>") no-repeat center/100% 100%}
+.site-nav .cta{background:var(--ds-green);color:#fff;padding:10px 18px;border-radius:100px;font-size:13px;font-weight:800;letter-spacing:-.01em;transition:background .15s;text-decoration:none}
+.site-nav .cta:hover{background:var(--ds-green2)}
+.page{max-width:760px;margin:0 auto;padding:2rem 2rem 4rem}
+.breadcrumb{font-size:12px;font-weight:700;color:var(--ds-t3);margin-bottom:1.25rem;letter-spacing:.02em}
+.breadcrumb a{color:var(--ds-t3);text-decoration:none}.breadcrumb a:hover{color:var(--ds-green)}
+.eyebrow{font-size:11px;font-weight:800;letter-spacing:.14em;text-transform:uppercase;color:var(--ds-green);margin-bottom:.75rem}
+h1{font-size:clamp(1.9rem,4vw,2.6rem);font-weight:900;letter-spacing:-.03em;line-height:1.1;margin-bottom:1rem}
+.dek{font-size:17px;color:var(--ds-t2);font-weight:500;line-height:1.55;margin-bottom:2rem}
+.calc{background:var(--ds-card);border-radius:26px;padding:1.75rem 1.75rem 1.5rem;box-shadow:0 1px 4px rgba(0,0,0,.05),0 4px 16px rgba(0,0,0,.05);margin-bottom:2.25rem}
+.calc-head{font-size:11px;font-weight:800;letter-spacing:.12em;text-transform:uppercase;color:var(--ds-t3);margin-bottom:1rem}
+.field{margin-bottom:1rem}
+.field label{display:block;font-size:12px;font-weight:800;color:var(--ds-t2);letter-spacing:.02em;margin-bottom:6px;text-transform:uppercase}
+.field input,.field select{width:100%;background:var(--ds-page);border:1.5px solid var(--ds-t4);border-radius:12px;padding:12px 14px;font-family:var(--ds-f);font-size:15px;font-weight:700;color:var(--ds-t1);outline:none;transition:border-color .15s,background .15s}
+.field input:focus,.field select:focus{border-color:var(--ds-green);background:var(--ds-card)}
+.field-hint{font-size:11px;color:var(--ds-t3);font-weight:600;margin-top:4px;line-height:1.5}
+.calc-btn{width:100%;background:var(--ds-green);color:#fff;border:none;border-radius:100px;padding:14px;font-family:var(--ds-f);font-size:15px;font-weight:800;letter-spacing:-.01em;cursor:pointer;margin-top:.5rem;transition:background .15s}
+.calc-btn:hover{background:var(--ds-green2)}
+.compare-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:1.5rem}
+@media(max-width:560px){.compare-grid{grid-template-columns:1fr}}
+.compare-card{padding:1.35rem 1.35rem 1.15rem;border-radius:18px;background:var(--ds-page);border:2px solid var(--ds-t4)}
+.compare-card.winner{background:linear-gradient(135deg,#eaf5ee,#d9ecde);border-color:var(--ds-green)}
+.compare-title{font-size:11px;font-weight:800;letter-spacing:.12em;text-transform:uppercase;color:var(--ds-t3);margin-bottom:.25rem}
+.compare-card.winner .compare-title{color:var(--ds-green)}
+.compare-name{font-size:15px;font-weight:900;color:var(--ds-t1);letter-spacing:-.01em;margin-bottom:.65rem}
+.compare-num{font-size:2rem;font-weight:900;letter-spacing:-.04em;color:var(--ds-t1);line-height:1;margin-bottom:.4rem}
+.compare-card.winner .compare-num{color:var(--ds-green)}
+.compare-detail{font-size:12px;color:var(--ds-t2);font-weight:600;line-height:1.5}
+.rec{margin-top:1.25rem;padding:1.1rem 1.25rem;background:var(--ds-green-l);border-left:4px solid var(--ds-green);border-radius:14px;font-size:14px;color:var(--ds-t1);font-weight:700;line-height:1.55}
+.rec strong{color:var(--ds-green)}
+.result{display:none}
+.result.show{display:block;animation:pop .35s cubic-bezier(.34,1.2,.64,1)}
+@keyframes pop{from{opacity:0;transform:translateY(4px)}to{opacity:1;transform:translateY(0)}}
+.body{color:var(--ds-t2)}
+.body h2{font-size:1.4rem;font-weight:800;letter-spacing:-.02em;line-height:1.25;margin-top:2.25rem;margin-bottom:.85rem;color:var(--ds-t1)}
+.body p{font-size:16px;font-weight:500;margin-bottom:1rem;line-height:1.7}
+.body ul,.body ol{margin:1rem 0 1.25rem 1.5rem;font-size:16px;line-height:1.7}.body li{margin-bottom:.4rem}
+.body strong{color:var(--ds-t1);font-weight:800}
+.cta-card{background:linear-gradient(135deg,#eaf5ee,#d9ecde);border-radius:26px;padding:2rem 1.75rem;margin-top:3rem;text-align:center}
+.cta-card-title{font-size:1.3rem;font-weight:900;letter-spacing:-.02em;margin-bottom:.5rem;color:var(--ds-t1)}
+.cta-card-sub{font-size:14px;color:var(--ds-t2);font-weight:600;margin-bottom:1.25rem;line-height:1.55}
+.cta-card-btn{display:inline-block;background:var(--ds-green);color:#fff;padding:14px 28px;border-radius:100px;font-size:15px;font-weight:800;letter-spacing:-.01em;text-decoration:none;transition:background .15s,transform .15s}
+.cta-card-btn:hover{background:var(--ds-green2);transform:translateY(-1px)}
+.cta-card-fine{font-size:11px;color:var(--ds-t3);font-weight:600;margin-top:.85rem;letter-spacing:.02em}
+.site-footer{border-top:1px solid var(--ds-t4);padding:2rem;text-align:center;color:var(--ds-t3);font-size:13px;font-weight:600;line-height:1.6}
+.site-footer a{color:var(--ds-t3);text-decoration:none}.site-footer a:hover{color:var(--ds-green)}
+</style>
+</head>
+<body>
+<nav class="site-nav">
+  <a href="/" class="site-logo">Able</a>
+  <a href="/app.html" class="cta">Start free trial</a>
+</nav>
+
+<main class="page">
+  <div class="breadcrumb"><a href="/">Home</a> / <a href="/calculators/">Calculators</a> / SEP IRA vs Solo 401(k)</div>
+  <div class="eyebrow">Free calculator</div>
+  <h1>SEP IRA vs Solo 401(k) calculator</h1>
+  <p class="dek">Self-employed retirement accounts side by side. See which one lets you save more at your income level, and which one fits your situation.</p>
+
+  <div class="calc">
+    <div class="calc-head">Your contribution limits</div>
+
+    <div class="field">
+      <label for="net">Net self-employment income ($)</label>
+      <input type="number" id="net" placeholder="e.g. 95000" min="0" step="1000">
+      <div class="field-hint">Business revenue minus business expenses, before retirement contributions. Schedule C line 31 if you file one.</div>
+    </div>
+
+    <div class="field">
+      <label for="age">Your age</label>
+      <select id="age">
+        <option value="under50">Under 50</option>
+        <option value="over50">50 or older</option>
+      </select>
+      <div class="field-hint">People 50+ can make catch-up contributions to a Solo 401(k).</div>
+    </div>
+
+    <div class="field">
+      <label for="emp">Do you have W-2 employees besides yourself and your spouse?</label>
+      <select id="emp">
+        <option value="no">No</option>
+        <option value="yes">Yes</option>
+      </select>
+    </div>
+
+    <button type="button" class="calc-btn" onclick="calc()">Compare my contribution limits</button>
+
+    <div class="result" id="result">
+      <div class="compare-grid">
+        <div class="compare-card" id="card-sep">
+          <div class="compare-title">SEP IRA</div>
+          <div class="compare-name">Simplified Employee Pension</div>
+          <div class="compare-num" id="sep-num">--</div>
+          <div class="compare-detail" id="sep-detail"></div>
+        </div>
+        <div class="compare-card" id="card-solo">
+          <div class="compare-title">Solo 401(k)</div>
+          <div class="compare-name">One-participant 401(k)</div>
+          <div class="compare-num" id="solo-num">--</div>
+          <div class="compare-detail" id="solo-detail"></div>
+        </div>
+      </div>
+      <div class="rec" id="rec"></div>
+    </div>
+  </div>
+
+  <div class="body">
+    <h2>How the math works</h2>
+    <p>Both accounts cap the employer-side contribution at roughly 20 percent of net self-employment income, accounting for the deductible half of self-employment tax. The Solo 401(k) adds an employee salary-deferral contribution on top, which is what usually makes it the bigger number at moderate incomes.</p>
+    <p>At very high incomes, the two accounts converge because the total cap (currently $70,000 for 2025, indexed annually) is the same. At lower incomes, the Solo 401(k) wins by a lot.</p>
+
+    <h2>Other reasons to choose one over the other</h2>
+    <ul>
+      <li><strong>You plan to add employees.</strong> SEP IRA is simpler here. A Solo 401(k) stops being eligible the moment you have a W-2 employee beyond your spouse.</li>
+      <li><strong>You want a Roth option.</strong> Solo 401(k) offers Roth contributions. SEP IRA does not.</li>
+      <li><strong>You want to take a loan.</strong> Solo 401(k) allows plan loans. SEP IRA does not.</li>
+      <li><strong>You want minimal paperwork.</strong> SEP IRA is easier to open and run. Solo 401(k) has a Form 5500-EZ filing once assets pass $250,000.</li>
+      <li><strong>You value flexibility year to year.</strong> Both let you change contribution amounts annually. Solo 401(k)'s two-part structure gives a bit more room to tune.</li>
+    </ul>
+
+    <h2>The catch at 50+</h2>
+    <p>The Solo 401(k) lets people 50 and older make a catch-up employee contribution on top of the regular limit (currently $7,500 for 2025). SEP IRA has no catch-up. If you are 50+ and maxing out, the Solo 401(k) wins clearly.</p>
+
+    <h2>Disclaimer</h2>
+    <p>Numbers use 2025 limits as a reasonable approximation and are for planning purposes only. Limits adjust each year. Your actual maximum depends on your specific situation, and retirement account setup decisions should run past a tax pro before you fund them.</p>
+  </div>
+
+  <div class="cta-card">
+    <div class="cta-card-title">Funding retirement from variable income?</div>
+    <div class="cta-card-sub">Able routes retirement contributions from every deposit the same way it handles taxes and bills. Steady progress, lumpy income.</div>
+    <a href="/app.html" class="cta-card-btn">Start your free 7-day trial</a>
+    <div class="cta-card-fine">Seven days free. Cancel anytime.</div>
+  </div>
+</main>
+
+<footer class="site-footer">
+  <div><a href="/">Home</a> &middot; <a href="/resources/">Resources</a> &middot; <a href="/calculators/">Calculators</a> &middot; <a href="/app.html">Sign in</a> &middot; <a href="/privacy.html">Privacy</a> &middot; <a href="/terms.html">Terms</a></div>
+  <div style="margin-top:.5rem;">Able. Built for inconsistent income. Not tax advice.</div>
+</footer>
+
+<script>
+function fmt(n){return '$'+Math.round(n).toLocaleString()}
+function calc(){
+  const net = parseFloat(document.getElementById('net').value);
+  if (!net || net <= 0){ alert('Enter your net self-employment income.'); return; }
+  const age = document.getElementById('age').value;
+  const hasEmp = document.getElementById('emp').value === 'yes';
+  const TOTAL_CAP = 70000;
+  const ELECTIVE = 23500;
+  const CATCHUP = age === 'over50' ? 7500 : 0;
+  // Approximate employer-side limit: 20% of net SE income (simplified SE-tax-adjusted)
+  const employerLimit = Math.min(net * 0.20, TOTAL_CAP);
+  const sepMax = employerLimit;
+  // Solo 401(k) = employee elective (limited by net) + employer, total capped
+  const employee = Math.min(ELECTIVE, net);
+  const soloEmployer = Math.min(employerLimit, Math.max(0, TOTAL_CAP - employee));
+  const soloMax = Math.min(TOTAL_CAP + CATCHUP, employee + soloEmployer + CATCHUP);
+
+  document.getElementById('sep-num').textContent = fmt(sepMax);
+  document.getElementById('sep-detail').innerHTML = `~20% of net SE income, capped at ${fmt(TOTAL_CAP)}. No catch-up.`;
+  document.getElementById('solo-num').textContent = fmt(soloMax);
+  document.getElementById('solo-detail').innerHTML = `${fmt(employee)} elective + ${fmt(soloEmployer)} employer${CATCHUP ? ` + ${fmt(CATCHUP)} catch-up` : ''}. Total cap ${fmt(TOTAL_CAP + CATCHUP)}.`;
+
+  document.getElementById('card-sep').classList.toggle('winner', sepMax > soloMax);
+  document.getElementById('card-solo').classList.toggle('winner', soloMax >= sepMax);
+
+  let rec = '';
+  if (hasEmp) {
+    rec = '<strong>SEP IRA wins for your situation.</strong> Having W-2 employees beyond your spouse disqualifies a Solo 401(k). The SEP IRA is the straightforward path.';
+  } else if (soloMax > sepMax + 1000) {
+    const diff = soloMax - sepMax;
+    rec = `<strong>Solo 401(k) lets you save about ${fmt(diff)} more</strong> at your income level. Unless you need to add employees beyond your spouse, the Solo 401(k) is usually the bigger room.`;
+  } else {
+    rec = '<strong>SEP IRA and Solo 401(k) land close at your income</strong>. Pick based on preferences: Solo 401(k) offers Roth contributions and plan loans; SEP IRA has less paperwork and is easier if you add employees later.';
+  }
+  document.getElementById('rec').innerHTML = rec;
+  document.getElementById('result').classList.add('show');
+}
+</script>
+</body>
+</html>

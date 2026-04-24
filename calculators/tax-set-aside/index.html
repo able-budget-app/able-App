@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Tax Set-Aside Calculator for Self-Employed | Able</title>
+<meta name="description" content="Figure out what percentage of every client deposit to send to taxes. Free calculator for freelancers, 1099 workers, and self-employed business owners.">
+<link rel="canonical" href="https://becomeable.app/calculators/tax-set-aside/">
+<meta property="og:title" content="Tax Set-Aside Calculator for Self-Employed | Able">
+<meta property="og:description" content="Figure out what percentage of every client deposit to send to taxes. Free calculator for freelancers and 1099 workers.">
+<meta property="og:url" content="https://becomeable.app/calculators/tax-set-aside/">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="Able">
+<meta name="twitter:card" content="summary">
+<script type="application/ld+json">{
+  "@context":"https://schema.org",
+  "@type":"WebApplication",
+  "name":"Tax Set-Aside Calculator",
+  "description":"Calculate what percentage of every client deposit to set aside for taxes as a self-employed earner.",
+  "url":"https://becomeable.app/calculators/tax-set-aside/",
+  "applicationCategory":"FinanceApplication",
+  "operatingSystem":"Any",
+  "offers":{"@type":"Offer","price":"0","priceCurrency":"USD"},
+  "creator":{"@type":"Organization","name":"Able","url":"https://becomeable.app/"}
+}</script>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400;12..96,500;12..96,600;12..96,700;12..96,800;12..96,900&display=swap" rel="stylesheet">
+<style>
+:root{--ds-page:#f0f7f2;--ds-card:#fff;--ds-t1:#111c16;--ds-t2:#4a5c52;--ds-t3:#8ca898;--ds-t4:#c4d8cc;--ds-green:#2a7a4a;--ds-green2:#1f6038;--ds-green-l:#eaf5ee;--ds-c4:#c04060;--ds-f:'Bricolage Grotesque',-apple-system,sans-serif}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+body{font-family:var(--ds-f);background:var(--ds-page);color:var(--ds-t1);line-height:1.65;-webkit-font-smoothing:antialiased}
+a{color:var(--ds-green);text-decoration:underline;text-underline-offset:2px}a:hover{color:var(--ds-green2)}
+.site-nav{padding:1.5rem 2rem;display:flex;justify-content:space-between;align-items:center;max-width:960px;margin:0 auto}
+.site-logo{font-size:1.35rem;font-weight:900;color:var(--ds-t1);letter-spacing:-.03em;position:relative;display:inline-block;line-height:1;padding-bottom:3px;text-decoration:none}
+.site-logo::after{content:'';position:absolute;left:0;right:-4%;bottom:0;height:5px;background:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 120 4.2' preserveAspectRatio='none'><path d='M3 2.6 Q2 2.4 3 2.15 Q58 1.75 115 0.15 Q119 1 119 2 Q119 3 115 3.9 Q58 3.55 3 2.65 Q2 2.45 3 2.6 Z' fill='%232a7a4a'/></svg>") no-repeat center/100% 100%}
+.site-nav .cta{background:var(--ds-green);color:#fff;padding:10px 18px;border-radius:100px;font-size:13px;font-weight:800;letter-spacing:-.01em;transition:background .15s;text-decoration:none}
+.site-nav .cta:hover{background:var(--ds-green2)}
+.page{max-width:720px;margin:0 auto;padding:2rem 2rem 4rem}
+.breadcrumb{font-size:12px;font-weight:700;color:var(--ds-t3);margin-bottom:1.25rem;letter-spacing:.02em}
+.breadcrumb a{color:var(--ds-t3);text-decoration:none}.breadcrumb a:hover{color:var(--ds-green)}
+.eyebrow{font-size:11px;font-weight:800;letter-spacing:.14em;text-transform:uppercase;color:var(--ds-green);margin-bottom:.75rem}
+h1{font-size:clamp(1.9rem,4vw,2.6rem);font-weight:900;letter-spacing:-.03em;line-height:1.1;margin-bottom:1rem}
+.dek{font-size:17px;color:var(--ds-t2);font-weight:500;line-height:1.55;margin-bottom:2rem}
+.calc{background:var(--ds-card);border-radius:26px;padding:1.75rem 1.75rem 1.5rem;box-shadow:0 1px 4px rgba(0,0,0,.05),0 4px 16px rgba(0,0,0,.05);margin-bottom:2.25rem}
+.calc-head{font-size:11px;font-weight:800;letter-spacing:.12em;text-transform:uppercase;color:var(--ds-t3);margin-bottom:1rem}
+.calc-tabs{display:flex;gap:6px;margin-bottom:1.25rem;background:var(--ds-green-l);padding:4px;border-radius:100px}
+.calc-tab{flex:1;padding:9px 12px;border:none;background:transparent;font-family:var(--ds-f);font-size:13px;font-weight:800;color:var(--ds-t2);cursor:pointer;border-radius:100px;transition:all .15s;letter-spacing:-.01em}
+.calc-tab.active{background:var(--ds-card);color:var(--ds-green);box-shadow:0 1px 4px rgba(0,0,0,.08)}
+.field{margin-bottom:1rem}
+.field label{display:block;font-size:12px;font-weight:800;color:var(--ds-t2);letter-spacing:.02em;margin-bottom:6px;text-transform:uppercase}
+.field input,.field select{width:100%;background:var(--ds-page);border:1.5px solid var(--ds-t4);border-radius:12px;padding:12px 14px;font-family:var(--ds-f);font-size:15px;font-weight:700;color:var(--ds-t1);outline:none;transition:border-color .15s,background .15s}
+.field input:focus,.field select:focus{border-color:var(--ds-green);background:var(--ds-card)}
+.field-hint{font-size:11px;color:var(--ds-t3);font-weight:600;margin-top:4px;line-height:1.5}
+.calc-btn{width:100%;background:var(--ds-green);color:#fff;border:none;border-radius:100px;padding:14px;font-family:var(--ds-f);font-size:15px;font-weight:800;letter-spacing:-.01em;cursor:pointer;margin-top:.5rem;transition:background .15s}
+.calc-btn:hover{background:var(--ds-green2)}
+.result{margin-top:1.5rem;padding:1.5rem;background:linear-gradient(135deg,#eaf5ee,#d9ecde);border-radius:18px;display:none}
+.result.show{display:block;animation:pop .35s cubic-bezier(.34,1.2,.64,1)}
+@keyframes pop{from{opacity:0;transform:translateY(4px)}to{opacity:1;transform:translateY(0)}}
+.result-label{font-size:11px;font-weight:800;letter-spacing:.12em;text-transform:uppercase;color:var(--ds-green);margin-bottom:.25rem}
+.result-num{font-size:3rem;font-weight:900;letter-spacing:-.04em;color:var(--ds-green);line-height:1;margin-bottom:.35rem}
+.result-sub{font-size:14px;color:var(--ds-t1);font-weight:600;line-height:1.55;margin-bottom:.9rem}
+.result-detail{font-size:13px;color:var(--ds-t2);font-weight:500;line-height:1.6}
+.result-detail strong{color:var(--ds-t1);font-weight:800}
+.body{color:var(--ds-t2)}
+.body h2{font-size:1.4rem;font-weight:800;letter-spacing:-.02em;line-height:1.25;margin-top:2.25rem;margin-bottom:.85rem;color:var(--ds-t1)}
+.body p{font-size:16px;font-weight:500;margin-bottom:1rem;line-height:1.7}
+.body ul,.body ol{margin:1rem 0 1.25rem 1.5rem;font-size:16px;line-height:1.7}.body li{margin-bottom:.4rem}
+.body strong{color:var(--ds-t1);font-weight:800}
+.cta-card{background:linear-gradient(135deg,#eaf5ee,#d9ecde);border-radius:26px;padding:2rem 1.75rem;margin-top:3rem;text-align:center}
+.cta-card-title{font-size:1.3rem;font-weight:900;letter-spacing:-.02em;margin-bottom:.5rem;color:var(--ds-t1)}
+.cta-card-sub{font-size:14px;color:var(--ds-t2);font-weight:600;margin-bottom:1.25rem;line-height:1.55}
+.cta-card-btn{display:inline-block;background:var(--ds-green);color:#fff;padding:14px 28px;border-radius:100px;font-size:15px;font-weight:800;letter-spacing:-.01em;text-decoration:none;transition:background .15s,transform .15s}
+.cta-card-btn:hover{background:var(--ds-green2);transform:translateY(-1px)}
+.cta-card-fine{font-size:11px;color:var(--ds-t3);font-weight:600;margin-top:.85rem;letter-spacing:.02em}
+.site-footer{border-top:1px solid var(--ds-t4);padding:2rem;text-align:center;color:var(--ds-t3);font-size:13px;font-weight:600;line-height:1.6}
+.site-footer a{color:var(--ds-t3);text-decoration:none}.site-footer a:hover{color:var(--ds-green)}
+</style>
+</head>
+<body>
+<nav class="site-nav">
+  <a href="/" class="site-logo">Able</a>
+  <a href="/app.html" class="cta">Start free trial</a>
+</nav>
+
+<main class="page">
+  <div class="breadcrumb"><a href="/">Home</a> / <a href="/calculators/">Calculators</a> / Tax set-aside</div>
+  <div class="eyebrow">Free calculator</div>
+  <h1>Tax set-aside calculator for the self-employed</h1>
+  <p class="dek">Figure out what percentage of every client deposit to route into a tax account. Answer two or three questions and get your number.</p>
+
+  <div class="calc">
+    <div class="calc-head">Your tax rate</div>
+    <div class="calc-tabs">
+      <button type="button" class="calc-tab active" data-tab="past" onclick="switchTab('past')">I filed last year</button>
+      <button type="button" class="calc-tab" data-tab="first" onclick="switchTab('first')">First year self-employed</button>
+    </div>
+
+    <div id="tab-past">
+      <div class="field">
+        <label for="gross">Last year's gross business income ($)</label>
+        <input type="number" id="gross" placeholder="e.g. 62000" min="0" step="100">
+        <div class="field-hint">Schedule C line 1 or line 7. Top-line revenue before expenses.</div>
+      </div>
+      <div class="field">
+        <label for="fed">Last year's total federal tax ($)</label>
+        <input type="number" id="fed" placeholder="e.g. 14200" min="0" step="100">
+        <div class="field-hint">Form 1040 line 24, labeled "Total tax."</div>
+      </div>
+      <div class="field">
+        <label for="state">State</label>
+        <select id="state">
+          <option value="0">No state income tax (AK, FL, NH, NV, SD, TN, TX, WA, WY)</option>
+          <option value="3">Low (AZ, IN, MI, MS, NC, ND, PA, UT, others ~3%)</option>
+          <option value="5">Moderate (CO, GA, IL, KY, MA, MO, OH, VA, others ~5%)</option>
+          <option value="6" selected>Typical (AR, CT, DE, ID, KS, MD, ME, MN, WI, others ~6%)</option>
+          <option value="8">Higher (CA, DC, HI, IA, MT, NJ, NM, NY, OR, SC, WV ~8%)</option>
+          <option value="10">Highest bracket in CA, HI, NJ, NY (add 10%+)</option>
+        </select>
+      </div>
+      <button type="button" class="calc-btn" onclick="calcPast()">Calculate my set-aside rate</button>
+    </div>
+
+    <div id="tab-first" style="display:none;">
+      <div class="field">
+        <label for="state2">State</label>
+        <select id="state2">
+          <option value="notax">No state income tax (AK, FL, NH, NV, SD, TN, TX, WA, WY)</option>
+          <option value="tax" selected>State has income tax</option>
+        </select>
+      </div>
+      <button type="button" class="calc-btn" onclick="calcFirst()">Show my starter rate</button>
+    </div>
+
+    <div class="result" id="result">
+      <div class="result-label">Your set-aside rate</div>
+      <div class="result-num" id="r-num">--</div>
+      <div class="result-sub" id="r-sub"></div>
+      <div class="result-detail" id="r-detail"></div>
+    </div>
+  </div>
+
+  <div class="body">
+    <h2>How the math works</h2>
+    <p>Self-employed earners owe two federal taxes on every dollar of profit: regular income tax (10–37 percent depending on bracket) and self-employment tax (15.3 percent on the first $168,600 of net earnings, then 2.9 percent above that). Add your state's income tax on top.</p>
+    <p>Dividing last year's total federal tax by last year's gross business income gives you a real effective rate, already net of self-employment tax and any deductions you claimed. That's a more honest number than applying bracket percentages to gross.</p>
+    <p>We then add your state's effective rate, plus three percentage points of safety so you end the year with a small refund instead of a balance due.</p>
+
+    <h2>What to do with the number</h2>
+    <p>Open a separate savings account. Label it "Taxes." Every time a business deposit lands in your checking, move this percentage into the tax account the same day. Treat the money as if it already belongs to the IRS, because functionally it does.</p>
+    <p>Four times a year (April 15, June 15, September 15, and January 15), you pay the IRS through <a href="https://www.irs.gov/payments/direct-pay" target="_blank" rel="noopener">Direct Pay</a> out of the tax account. The money was always there. You never had to scramble.</p>
+    <p>Full breakdown: <a href="/taxes/">Quarterly Taxes for Self-Employed: The Complete Guide</a>.</p>
+
+    <h2>When to adjust the rate</h2>
+    <ul>
+      <li><strong>Every January</strong> after you file. Use the actual federal rate from your return and reset.</li>
+      <li><strong>After a major income change.</strong> Crossing a bracket can bump your rate by 3 to 5 points.</li>
+      <li><strong>After a state move.</strong> Moving from California to Texas drops your state rate to zero.</li>
+    </ul>
+  </div>
+
+  <div class="cta-card">
+    <div class="cta-card-title">Let Able route the tax percentage for you.</div>
+    <div class="cta-card-sub">Every business deposit gets split the moment it lands. Your tax account fills up in the background while you work.</div>
+    <a href="/app.html" class="cta-card-btn">Start your free 7-day trial</a>
+    <div class="cta-card-fine">Seven days free. Cancel anytime.</div>
+  </div>
+</main>
+
+<footer class="site-footer">
+  <div><a href="/">Home</a> &middot; <a href="/resources/">Resources</a> &middot; <a href="/calculators/">Calculators</a> &middot; <a href="/app.html">Sign in</a> &middot; <a href="/privacy.html">Privacy</a> &middot; <a href="/terms.html">Terms</a></div>
+  <div style="margin-top:.5rem;">Able. Built for inconsistent income. Not tax advice, just a starting point.</div>
+</footer>
+
+<script>
+function switchTab(name) {
+  document.querySelectorAll('.calc-tab').forEach(t => t.classList.toggle('active', t.dataset.tab === name));
+  document.getElementById('tab-past').style.display = name === 'past' ? '' : 'none';
+  document.getElementById('tab-first').style.display = name === 'first' ? '' : 'none';
+  document.getElementById('result').classList.remove('show');
+}
+function calcPast() {
+  const gross = parseFloat(document.getElementById('gross').value);
+  const fed = parseFloat(document.getElementById('fed').value);
+  const state = parseFloat(document.getElementById('state').value);
+  if (!gross || gross <= 0 || !Number.isFinite(fed) || fed < 0) {
+    alert('Enter both last year\'s gross income and total federal tax.');
+    return;
+  }
+  const fedRate = (fed / gross) * 100;
+  const total = Math.ceil(fedRate + state + 3);
+  const capped = Math.min(Math.max(total, 15), 45);
+  document.getElementById('r-num').textContent = capped + '%';
+  document.getElementById('r-sub').textContent = 'Move this percentage of every business deposit into a tax account the same day it lands.';
+  document.getElementById('r-detail').innerHTML =
+    `<strong>Federal effective rate:</strong> ${fedRate.toFixed(1)}%<br>` +
+    `<strong>State rate:</strong> ${state}%<br>` +
+    `<strong>Safety margin:</strong> 3%<br>` +
+    `<strong>Your rate:</strong> ${capped}%`;
+  document.getElementById('result').classList.add('show');
+}
+function calcFirst() {
+  const has = document.getElementById('state2').value;
+  const rate = has === 'notax' ? 25 : 30;
+  document.getElementById('r-num').textContent = rate + '%';
+  document.getElementById('r-sub').textContent = 'Starter rate for your first year. Move this percentage of every business deposit into a separate tax account.';
+  document.getElementById('r-detail').innerHTML =
+    `<strong>Based on:</strong> self-employment tax (15.3%) + an estimated federal bracket + ${has === 'notax' ? 'no state income tax' : 'typical state income tax'}.<br>` +
+    `<strong>Adjust in January</strong> after you file your first return with your actual effective rate.`;
+  document.getElementById('result').classList.add('show');
+}
+</script>
+</body>
+</html>
