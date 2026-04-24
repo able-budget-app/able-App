@@ -889,7 +889,7 @@ posthog.init('phc_B6PH36QxpExnyBYhfScFFF6LhDvoyxuFr6PypJuxxky3', {
   <div class="onboard-wrap">
     <div class="onboard-card">
       <div class="onboard-progress"><div class="onboard-progress-fill" id="ob-progress"></div></div>
-      <div class="onboard-step-label" id="ob-step-label">Step 1 of 7</div>
+      <div class="onboard-step-label" id="ob-step-label"></div>
 
       <div id="ob-question-area">
         <div class="ob-claude-msg" id="ob-msg">Let's get you set up.</div>
@@ -897,6 +897,9 @@ posthog.init('phc_B6PH36QxpExnyBYhfScFFF6LhDvoyxuFr6PypJuxxky3', {
         <div class="ob-actions">
           <button class="btn-ghost btn btn-sm" id="ob-back-btn" onclick="obBack()" style="display:none;">Back</button>
           <button class="btn btn-primary" id="ob-next-btn" onclick="obNext()">Continue →</button>
+        </div>
+        <div style="text-align:center;margin-top:1.25rem;">
+          <button class="btn-ghost btn btn-sm" onclick="skipOnboarding()" style="font-size:12px;color:var(--ds-t3);">Skip for now and explore</button>
         </div>
       </div>
 
@@ -968,6 +971,16 @@ posthog.init('phc_B6PH36QxpExnyBYhfScFFF6LhDvoyxuFr6PypJuxxky3', {
 
 <!-- ALLOCATE -->
 <div class="page active" id="page-home">
+  <!-- Empty-state welcome for first-time users (no history + no bills) -->
+  <div id="home-welcome" style="display:none;background:linear-gradient(135deg,#eaf5ee,#d9ecde);border-radius:var(--ds-r2);padding:1.5rem 1.75rem;margin-bottom:1.25rem;box-shadow:var(--ds-sh1);">
+    <div style="font-size:11px;font-weight:800;letter-spacing:.12em;text-transform:uppercase;color:var(--ds-green);margin-bottom:.5rem;">Welcome to Able</div>
+    <div style="font-size:1.35rem;font-weight:900;color:var(--ds-t1);letter-spacing:-.02em;line-height:1.2;margin-bottom:.4rem;">Start with one small step.</div>
+    <div style="font-size:14px;color:var(--ds-t2);font-weight:500;line-height:1.5;margin-bottom:1rem;">Log any real income below, or add your bills so Able knows what to cover. Thirty seconds either way.</div>
+    <div style="display:flex;gap:8px;flex-wrap:wrap;">
+      <button class="btn btn-primary btn-sm" onclick="document.getElementById('inc-amount').focus();">Log first income</button>
+      <button class="btn btn-sm" onclick="goTo('bills')">Add first bill</button>
+    </div>
+  </div>
   <div class="two-col">
     <div>
       <div class="sec" id="runway-label">Next 14 days runway</div>
@@ -1844,6 +1857,20 @@ function startOnboarding() {
   renderObStep();
 }
 
+// Escape hatch: drop the user into the app with an empty slate + clear
+// next-steps card on the home page. Marks profile.skipped so the
+// onboarding gate doesn't re-fire on next login.
+function skipOnboarding() {
+  S.profile = S.profile || {};
+  S.profile.skipped = true;
+  save();
+  Able.track('onboarding_skipped');
+  document.getElementById('onboard-screen').style.display = 'none';
+  document.getElementById('app').style.display = 'block';
+  goTo('home');
+  refreshHome();
+}
+
 function renderObStep() {
   const q = OB_QUESTIONS[obStep];
   document.getElementById('ob-question-area').style.display = 'block';
@@ -2661,6 +2688,12 @@ function exportAllocation(){
 // REFRESH HOME
 // ═══════════════════════════════════════
 function refreshHome(){
+  // Empty-state welcome for fresh accounts (no income logged, no bills yet).
+  const welcome=document.getElementById('home-welcome');
+  if(welcome){
+    const isEmpty=(!S.history||!S.history.length)&&(!S.bills||!S.bills.length);
+    welcome.style.display=isEmpty?'block':'none';
+  }
   const tb=totalBills(),ti=totalIn(),pb=paidBills();
   // Rolling window calc for the runway card
   const win=allocWindow();
