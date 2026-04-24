@@ -2342,7 +2342,27 @@ async function startCheckout() {
   const errEl=document.getElementById('paywall-error');
   errEl.style.display='none';
 
+  const showStaleSession=()=>{
+    errEl.innerHTML=`<div style="margin-bottom:8px;">Your sign-in expired. Sign out and back in to continue.</div><button class="btn btn-sm" onclick="doSignOut()">Sign out and restart</button>`;
+    errEl.style.display='block';
+    btn.textContent='Get started →';btn.disabled=false;
+  };
+  const showUnreachable=()=>{
+    errEl.innerHTML=`<div style="margin-bottom:6px;font-weight:800;">Couldn't reach checkout right now.</div><div style="font-weight:600;font-size:12px;line-height:1.5;">Check your connection and try again. If it keeps failing, email <a href="mailto:${SUPPORT_EMAIL}" style="color:var(--ds-c4);font-weight:800;">${SUPPORT_EMAIL}</a>.</div>`;
+    errEl.style.display='block';
+    btn.textContent='Get started →';btn.disabled=false;
+  };
+
   try {
+    // Preflight: confirm we still have a valid session before hitting the function.
+    // Stale JWTs from deleted/revoked users otherwise surface as a confusing
+    // "Failed to send a request to the Edge Function" from the Supabase client.
+    const {data:{session},error:sessionError}=await sbGet().auth.getSession();
+    if(sessionError||!session||!session.user){
+      showStaleSession();
+      return;
+    }
+
     const priceId=selectedPlan==='annual'?PRICE_ANNUAL:PRICE_MONTHLY;
     const returnUrl=window.location.origin+'/app.html?checkout=success';
     const cancelUrl=window.location.origin+'/app.html';
@@ -2354,7 +2374,17 @@ async function startCheckout() {
       body:{priceId,returnUrl,cancelUrl,ref_token:refToken}
     });
 
-    if(resp.error) throw new Error(typeof resp.error === 'string' ? resp.error : (resp.error.message||JSON.stringify(resp.error)));
+    if(resp.error){
+      const msg=typeof resp.error==='string'?resp.error:(resp.error.message||JSON.stringify(resp.error));
+      // Fetch itself failed — session was valid at preflight, so this is a platform/network issue.
+      if(/failed to send|failed to fetch|networkerror/i.test(msg)){
+        console.error('[Able] create-checkout unreachable:', resp.error);
+        Able.track('checkout_unreachable',{plan:selectedPlan,msg});
+        showUnreachable();
+        return;
+      }
+      throw new Error(msg);
+    }
 
     const session_url = resp.data?.session_url;
     if(!session_url) throw new Error('Payment setup failed: '+ JSON.stringify(resp.data));
