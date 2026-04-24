@@ -1,0 +1,339 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Schedule C Walk-Through Line by Line | Able</title>
+<meta name="description" content="A plain-English walk-through of every line on Schedule C, the form where self-employed people report business income and expenses.">
+<link rel="canonical" href="https://becomeable.app/taxes/schedule-c-walkthrough/">
+<meta property="og:title" content="Schedule C Line by Line: A Walk-Through for Self-Employed Filers">
+<meta property="og:description" content="A plain-English walk-through of every line on Schedule C, the form where self-employed people report business income and expenses.">
+<meta property="og:url" content="https://becomeable.app/taxes/schedule-c-walkthrough/">
+<meta property="og:type" content="article">
+<meta property="og:site_name" content="Able">
+<meta name="twitter:card" content="summary">
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"Article","headline":"Schedule C Line by Line: A Walk-Through for Self-Employed Filers","description":"A plain-English walk-through of every line on Schedule C, the form where self-employed people report business income and expenses.","url":"https://becomeable.app/taxes/schedule-c-walkthrough/","author":{"@type":"Organization","name":"Able"},"publisher":{"@type":"Organization","name":"Able","url":"https://becomeable.app/"},"mainEntityOfPage":"https://becomeable.app/taxes/schedule-c-walkthrough/","inLanguage":"en"}</script>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400;12..96,500;12..96,600;12..96,700;12..96,800;12..96,900&display=swap" rel="stylesheet">
+<style>
+:root {
+  --ds-page: #f0f7f2;
+  --ds-card: #ffffff;
+  --ds-t1: #111c16;
+  --ds-t2: #4a5c52;
+  --ds-t3: #8ca898;
+  --ds-t4: #c4d8cc;
+  --ds-green: #2a7a4a;
+  --ds-green2: #1f6038;
+  --ds-green-l: #eaf5ee;
+  --ds-f: 'Bricolage Grotesque', -apple-system, sans-serif;
+}
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+body {
+  font-family: var(--ds-f);
+  background: var(--ds-page);
+  color: var(--ds-t1);
+  line-height: 1.65;
+  -webkit-font-smoothing: antialiased;
+}
+a { color: var(--ds-green); text-decoration: underline; text-underline-offset: 2px; }
+a:hover { color: var(--ds-green2); }
+.site-nav {
+  padding: 1.5rem 2rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  max-width: 960px;
+  margin: 0 auto;
+}
+.site-logo {
+  font-size: 1.35rem;
+  font-weight: 900;
+  color: var(--ds-t1);
+  letter-spacing: -.03em;
+  position: relative;
+  display: inline-block;
+  line-height: 1;
+  padding-bottom: 3px;
+  text-decoration: none;
+}
+.site-logo::after {
+  content: '';
+  position: absolute;
+  left: 0;
+  right: -4%;
+  bottom: 0;
+  height: 5px;
+  background: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 120 4.2' preserveAspectRatio='none'><path d='M3 2.6 Q2 2.4 3 2.15 Q58 1.75 115 0.15 Q119 1 119 2 Q119 3 115 3.9 Q58 3.55 3 2.65 Q2 2.45 3 2.6 Z' fill='%232a7a4a'/></svg>") no-repeat center / 100% 100%;
+}
+.site-nav .cta {
+  background: var(--ds-green);
+  color: white;
+  padding: 10px 18px;
+  border-radius: 100px;
+  font-size: 13px;
+  font-weight: 800;
+  letter-spacing: -.01em;
+  transition: background .15s;
+  text-decoration: none;
+}
+.site-nav .cta:hover { background: var(--ds-green2); }
+.article-inner { max-width: 720px; margin: 0 auto; padding: 2.5rem 2rem 4rem; }
+.breadcrumb { font-size: 12px; font-weight: 700; color: var(--ds-t3); margin-bottom: 1.25rem; letter-spacing: .02em; }
+.breadcrumb a { color: var(--ds-t3); text-decoration: none; }
+.breadcrumb a:hover { color: var(--ds-green); }
+.article-eyebrow { font-size: 11px; font-weight: 800; letter-spacing: .14em; text-transform: uppercase; color: var(--ds-green); margin-bottom: .75rem; }
+.article-dek { font-size: 18px; color: var(--ds-t2); font-weight: 500; line-height: 1.55; margin-bottom: 2.5rem; }
+.article-body h1 { font-size: clamp(1.9rem, 4vw, 2.6rem); font-weight: 900; letter-spacing: -.03em; line-height: 1.1; margin-bottom: 1rem; color: var(--ds-t1); }
+.article-body h2 { font-size: 1.5rem; font-weight: 800; letter-spacing: -.02em; line-height: 1.25; margin-top: 2.75rem; margin-bottom: 1rem; color: var(--ds-t1); }
+.article-body h3 { font-size: 1.1rem; font-weight: 800; letter-spacing: -.01em; margin-top: 1.75rem; margin-bottom: .75rem; color: var(--ds-t1); }
+.article-body p { font-size: 16.5px; color: var(--ds-t2); font-weight: 500; margin-bottom: 1rem; line-height: 1.7; }
+.article-body ol, .article-body ul { margin: 1rem 0 1.25rem 1.5rem; color: var(--ds-t2); font-weight: 500; font-size: 16.5px; line-height: 1.7; }
+.article-body li { margin-bottom: .4rem; }
+.article-body strong { color: var(--ds-t1); font-weight: 800; }
+.article-body hr { border: none; border-top: 1px solid var(--ds-t4); margin: 2.25rem 0; }
+.article-body blockquote {
+  background: var(--ds-green-l);
+  border-left: 4px solid var(--ds-green);
+  border-radius: 18px;
+  padding: 1.25rem 1.5rem;
+  margin: 2rem 0;
+  font-size: 17px;
+  font-weight: 700;
+  color: var(--ds-t1);
+  line-height: 1.5;
+  letter-spacing: -.01em;
+}
+.article-body blockquote p { font-size: inherit; color: inherit; font-weight: inherit; margin: 0; }
+.cta-card {
+  background: linear-gradient(135deg, #eaf5ee 0%, #d9ecde 100%);
+  border-radius: 26px;
+  padding: 2rem 1.75rem;
+  margin-top: 3rem;
+  text-align: center;
+}
+.cta-card-title { font-size: 1.35rem; font-weight: 900; letter-spacing: -.02em; margin-bottom: .5rem; color: var(--ds-t1); }
+.cta-card-sub { font-size: 14px; color: var(--ds-t2); font-weight: 600; margin-bottom: 1.25rem; line-height: 1.55; }
+.cta-card-btn {
+  display: inline-block;
+  background: var(--ds-green);
+  color: white;
+  padding: 14px 28px;
+  border-radius: 100px;
+  font-size: 15px;
+  font-weight: 800;
+  letter-spacing: -.01em;
+  text-decoration: none;
+  transition: background .15s, transform .15s;
+}
+.cta-card-btn:hover { background: var(--ds-green2); transform: translateY(-1px); }
+.cta-card-fine { font-size: 11px; color: var(--ds-t3); font-weight: 600; margin-top: .85rem; letter-spacing: .02em; }
+.related { margin-top: 3.5rem; padding-top: 2rem; border-top: 1px solid var(--ds-t4); }
+.related-label { font-size: 11px; font-weight: 800; letter-spacing: .14em; text-transform: uppercase; color: var(--ds-t3); margin-bottom: 1rem; }
+.related-list { list-style: none; padding: 0; margin: 0; }
+.related-list li { margin-bottom: .6rem; }
+.related-list a { font-size: 15px; font-weight: 700; color: var(--ds-t1); text-decoration: none; }
+.related-list a:hover { color: var(--ds-green); }
+.site-footer {
+  border-top: 1px solid var(--ds-t4);
+  padding: 2rem;
+  text-align: center;
+  color: var(--ds-t3);
+  font-size: 13px;
+  font-weight: 600;
+  line-height: 1.6;
+}
+.site-footer a { color: var(--ds-t3); text-decoration: none; }
+.site-footer a:hover { color: var(--ds-green); }
+</style>
+</head>
+<body>
+<nav class="site-nav">
+  <a href="/" class="site-logo">Able</a>
+  <a href="/app.html" class="cta">Start free trial</a>
+</nav>
+<article class="article-inner">
+  <div class="breadcrumb"><a href="/">Home</a> / <a href="/taxes/">Taxes for the self-employed</a> / Schedule C Line by Line: A Walk-Through for Self-Employed Filers</div>
+  <div class="article-eyebrow">Taxes for the self-employed</div>
+  <div class="article-body">
+    <h1>Schedule C Line by Line: A Walk-Through for Self-Employed Filers</h1>
+    <p class="article-dek">Schedule C (Form 1040) is where self-employed people report their business income and expenses. If you freelance, contract, run a side hustle, or own a sole proprietorship or single-member LLC, you file one.</p>
+<p>This walk-through covers what each line is for, common mistakes, and how to actually fill it out. Not tax advice; talk to a pro if your situation is unusual. But if you have never filled one out and are staring at a blank form wondering what half of it means, this is the explainer.</p>
+<hr />
+<h2>What Schedule C Actually Does</h2>
+<p>Schedule C calculates one number: your net profit or loss from self-employment.</p>
+<p>The math is simple:
+- Gross receipts from the business (what you earned).
+- Minus cost of goods sold (if you sell physical products).
+- Minus business expenses.
+- Equals net profit or loss.</p>
+<p>That net profit is what you pay self-employment tax on, and it is also what flows into your total taxable income on Form 1040.</p>
+<hr />
+<h2>Part I: Income</h2>
+<h3>Line 1: Gross receipts or sales</h3>
+<p>Every dollar that came into your business during the tax year, before any deductions. Include everything, whether a 1099 was issued for it or not.</p>
+<p>Common mistake: forgetting to include income that did not produce a 1099 (clients who paid less than $600 each, cash jobs, personal checks).</p>
+<h3>Line 2: Returns and allowances</h3>
+<p>Refunds, rebates, or discounts you gave back to customers. Subtract these from gross.</p>
+<p>For service businesses, often zero. For product businesses, this can be 2 to 10 percent of revenue.</p>
+<h3>Line 3: Subtracts line 2 from line 1</h3>
+<p>This is your gross income before cost of goods sold.</p>
+<h3>Line 4: Cost of goods sold (COGS)</h3>
+<p>For businesses that sell physical products. Gets calculated in Part III. If you are a pure service business, this is zero.</p>
+<h3>Line 5: Gross profit</h3>
+<p>Line 3 minus line 4.</p>
+<h3>Line 6: Other income</h3>
+<p>Business-related income that is not your main revenue. Interest from business accounts, refunds of previously deducted expenses, rental income on business property. Usually minor or zero.</p>
+<h3>Line 7: Gross income</h3>
+<p>Line 5 plus line 6. This is your total business income before expenses.</p>
+<hr />
+<h2>Part II: Expenses</h2>
+<p>This is where most of the work happens. Every legitimate business expense has a line.</p>
+<h3>Line 8: Advertising</h3>
+<p>Google Ads, Facebook Ads, sponsored posts, business cards, booth fees, influencer collaborations, sponsored content, SEO services, trade show costs.</p>
+<h3>Line 9: Car and truck expenses</h3>
+<p>Either actual vehicle expenses (if you use the actual method) or your standard mileage deduction × business miles (if you use the standard rate).</p>
+<p>For 2024: 67 cents per business mile if using the standard rate.</p>
+<p>You must keep a mileage log to claim this.</p>
+<h3>Line 10: Commissions and fees</h3>
+<p>Commissions paid to others for sales. Referral fees you paid. Sales rep commissions.</p>
+<h3>Line 11: Contract labor</h3>
+<p>Payments to other self-employed people for services. This is where you put your contractor payments. Remember: if you paid any single contractor more than $600, you were required to issue them a 1099-NEC.</p>
+<h3>Line 12: Depletion</h3>
+<p>Applies to natural resource extraction businesses. Most self-employed people skip this.</p>
+<h3>Line 13: Depreciation</h3>
+<p>Deductions for wear and tear on business assets with useful lives longer than one year. Usually computers, vehicles, office furniture. Most small items can be fully deducted in the year of purchase under Section 179 or the de minimis safe harbor.</p>
+<p>Complex enough that most filers use tax software (TurboTax, FreeTaxUSA, H&amp;R Block) or an accountant for depreciation schedules.</p>
+<h3>Line 14: Employee benefit programs</h3>
+<p>Costs of health insurance, retirement, etc. for your employees (if any). Not for yourself as the owner; your own insurance goes on Form 1040 line 17 (self-employed health insurance deduction).</p>
+<h3>Line 15: Insurance (other than health)</h3>
+<p>Business insurance: general liability, professional liability, errors and omissions, commercial auto, business property. Not health insurance (that is deducted elsewhere).</p>
+<h3>Line 16: Interest</h3>
+<p>Interest paid on business loans (line 16a) and mortgage interest on business property (line 16b). Not personal credit card interest unless the card is used exclusively for business.</p>
+<h3>Line 17: Legal and professional services</h3>
+<p>Lawyers, accountants, tax preparers, business coaches, consultants. Includes the cost of preparing your business taxes.</p>
+<h3>Line 18: Office expense</h3>
+<p>Office supplies, postage, shipping, small equipment that does not need to be depreciated.</p>
+<h3>Line 19: Pension and profit-sharing plans</h3>
+<p>Contributions to retirement plans for your employees. Your own SEP or Solo 401(k) contributions go on Form 1040 line 16 (self-employed retirement), not here.</p>
+<h3>Line 20: Rent or lease</h3>
+<ul>
+<li>Line 20a: Vehicles, machinery, equipment.</li>
+<li>Line 20b: Other business property (office space, studio, etc.).</li>
+</ul>
+<h3>Line 21: Repairs and maintenance</h3>
+<p>Repairs to business property. Maintenance on business vehicles not deducted through standard mileage. Equipment repairs.</p>
+<h3>Line 22: Supplies</h3>
+<p>Business supplies consumed during the year. Distinct from line 18 (office expense) mostly in name; many filers put similar items on either line. Tax software usually guides this.</p>
+<h3>Line 23: Taxes and licenses</h3>
+<p>State and local business taxes, business licenses, professional licenses, permits. Not self-employment tax (deducted elsewhere). Not federal income tax (never deductible against income).</p>
+<h3>Line 24: Travel and meals</h3>
+<ul>
+<li>Line 24a: Travel (100% deductible).</li>
+<li>Line 24b: Meals (50% deductible).</li>
+</ul>
+<p>Keep receipts and notes about business purpose.</p>
+<h3>Line 25: Utilities</h3>
+<p>Business-use utilities. If you have a separate office, 100 percent of utilities there. If home office, the business-use percentage is deducted via the home office deduction (Part II line 30), not here.</p>
+<h3>Line 26: Wages</h3>
+<p>Wages paid to employees (W-2 employees of your business). Not your own draws; owner draws are not wages and are not deductible.</p>
+<h3>Line 27a: Other expenses</h3>
+<p>Catch-all for business expenses that do not fit anywhere else. You list each category with its amount. Common items: subscriptions, bank fees, credit card processing fees, professional dues, continuing education.</p>
+<h3>Line 28: Total expenses</h3>
+<p>Sum of lines 8 through 27a.</p>
+<h3>Line 29: Tentative profit or loss</h3>
+<p>Line 7 minus line 28. Your profit before the home office deduction.</p>
+<h3>Line 30: Expenses for business use of home</h3>
+<p>Home office deduction. Simplified method goes on line 30; actual expenses are calculated on Form 8829.</p>
+<p>Deep dive: <a href="/taxes/home-office-deduction/">The Home Office Deduction for Self-Employed</a>.</p>
+<h3>Line 31: Net profit or loss</h3>
+<p>Line 29 minus line 30. This is the key number. If positive, it flows to Schedule SE (self-employment tax) and Form 1040.</p>
+<p>If the loss is bigger than your home office deduction allowance, some of the home office deduction carries over.</p>
+<h3>Line 32: If you have a loss</h3>
+<p>Two sub-lines that determine how a business loss is treated. Most filers check 32a (All investment is at risk), which allows the loss to fully offset other income.</p>
+<hr />
+<h2>Part III: Cost of Goods Sold</h2>
+<p>Only applies if you sell physical products.</p>
+<h3>Line 33: Method used to value inventory</h3>
+<p>Usually "Cost" (most common).</p>
+<h3>Line 34: Was there any change in determining quantities, costs, or valuations between opening and closing inventory?</h3>
+<p>Almost always no. If yes, a change explanation is needed.</p>
+<h3>Line 35: Inventory at beginning of year</h3>
+<p>The value of the inventory you had at the start of the tax year.</p>
+<h3>Line 36: Purchases less cost of items withdrawn for personal use</h3>
+<p>Inventory purchases during the year, minus any inventory you used yourself or took home.</p>
+<h3>Line 37: Cost of labor</h3>
+<p>Direct labor for producing goods (not included in line 26). Rare for small e-commerce sellers.</p>
+<h3>Line 38: Materials and supplies</h3>
+<p>Supplies consumed in making the products you sold.</p>
+<h3>Line 39: Other costs</h3>
+<p>Anything else directly tied to producing goods. Freight in, packaging materials, production tools.</p>
+<h3>Line 40: Add lines 35 through 39</h3>
+<p>Total cost of goods available for sale.</p>
+<h3>Line 41: Inventory at end of year</h3>
+<p>The value of unsold inventory at the end of the tax year.</p>
+<h3>Line 42: Cost of goods sold</h3>
+<p>Line 40 minus line 41. Flows back to Part I line 4.</p>
+<hr />
+<h2>Part IV: Information on Your Vehicle</h2>
+<p>Required if you claimed vehicle expenses on line 9 and you are using the standard mileage method for a vehicle.</p>
+<h3>Line 43: Date the vehicle was placed in service for business</h3>
+<p>First date you used it for business in the current tax year.</p>
+<h3>Line 44: Total miles (a, b, c)</h3>
+<ul>
+<li>44a: Business miles.</li>
+<li>44b: Commuting miles.</li>
+<li>44c: Other miles.</li>
+</ul>
+<p>You need a mileage log that supports these numbers.</p>
+<h3>Lines 45-47: Vehicle availability questions</h3>
+<p>Yes/no questions about whether the vehicle is available for personal use, whether you have another vehicle, whether you have evidence of business use.</p>
+<hr />
+<h2>Part V: Other Expenses</h2>
+<p>List each "other" expense you deducted on line 27a with its amount and a label. Examples: "Bank fees: $320", "Software subscriptions: $4,200", "Professional dues: $850".</p>
+<p>The sum here should equal the amount on line 27a.</p>
+<hr />
+<h2>Common Schedule C Mistakes</h2>
+<p><strong>Mistake 1: Missing income.</strong>
+Not reporting cash payments, PayPal personal transfers that were actually business, or income from clients who did not send 1099s. The IRS can match your 1099s to your reported gross. Under-reporting is how audits start.</p>
+<p><strong>Mistake 2: Over-aggressive expense claims.</strong>
+Claiming clearly personal expenses as business. The line between legitimate business expenses and personal expenses matters. When in doubt, leave it out or ask a pro.</p>
+<p><strong>Mistake 3: Not separating business and personal accounts.</strong>
+If your business money runs through your personal checking, reconstructing Schedule C at tax time is brutal. A separate business checking account makes this exponentially easier.</p>
+<p><strong>Mistake 4: Forgetting the home office.</strong>
+Simplified method is $5 per square foot up to $1,500. Easy to claim. Most eligible freelancers do not. That is a free $500 to $1,500 on the table.</p>
+<p><strong>Mistake 5: No mileage log.</strong>
+If you drive for business and claim mileage, the IRS expects a log with dates, destinations, purposes, and miles. No log = deduction denied in an audit.</p>
+<p><strong>Mistake 6: Misclassifying business entity.</strong>
+Schedule C is for sole proprietorships and single-member LLCs with default tax treatment. S-Corps, multi-member LLCs, and partnerships file different forms. If your business is legally structured differently, Schedule C is not your form.</p>
+<hr />
+<h2>When to Use Software or a Pro</h2>
+<p><strong>You can probably handle your own Schedule C if:</strong>
+- You are a service business (no inventory or COGS).
+- Your gross revenue is under $100,000.
+- You are a sole proprietor or single-member LLC (default tax treatment).
+- Your deductions are standard categories.</p>
+<p><strong>Use a pro if:</strong>
+- You have inventory and COGS.
+- You are above $150,000 in gross revenue.
+- You are an S-Corp or multi-member LLC.
+- You had a major business change (sale, restructuring, new state).
+- You have employees.
+- You had significant asset purchases requiring depreciation.</p>
+<p>Schedule C prep from a competent tax pro runs $300 to $800. Worth it for peace of mind and to catch deductions you might miss.</p>
+<hr />
+<h2>The Able Connection</h2>
+<p>Able does not file your Schedule C. What Able does is keep the tax percentage set aside from every business deposit, so whatever your Schedule C calculation says you owe, the money is already there.</p>
+<p>You are able to pay down debt, even on slow months.</p>
+<p>You are able to save without second-guessing.</p>
+<p>You are able to predict what is coming.</p>
+<p>You are able to budget inconsistent income.</p>
+  </div>
+  <div class="cta-card"><div class="cta-card-title">Run your deposits, not the other way around.</div><div class="cta-card-sub">Seven days free. Card required so the trial starts cleanly. Cancel anytime in Settings.</div><a href="/app.html" class="cta-card-btn">Start your free 7-day trial</a><div class="cta-card-fine">You will not be charged until day 8.</div></div>
+  <div class="related"><div class="related-label">Keep reading</div><ul class="related-list"><li><a href="/taxes/">Quarterly Taxes for Self-Employed: The Complete Guide</a></li><li><a href="/taxes/how-much-to-set-aside/">How Much Should I Set Aside for Taxes as a 1099 Worker</a></li><li><a href="/taxes/self-employment-tax-deductions/">16 Self-Employment Tax Deductions You Should Not Miss</a></li><li><a href="/taxes/home-office-deduction/">The Home Office Deduction for Self-Employed</a></li><li><a href="/taxes/1099-nec-explained/">What Is a 1099-NEC? Plain-English Guide for Freelancers and Contractors</a></li></ul></div>
+</article>
+<footer class="site-footer">
+  <div><a href="/">Home</a> &middot; <a href="/resources/">Resources</a> &middot; <a href="/app.html">Sign in</a> &middot; <a href="/privacy.html">Privacy</a> &middot; <a href="/terms.html">Terms</a></div>
+  <div style="margin-top:.5rem;">Able. Built for inconsistent income.</div>
+</footer>
+</body>
+</html>
