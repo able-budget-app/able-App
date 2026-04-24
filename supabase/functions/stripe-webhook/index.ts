@@ -11,6 +11,63 @@ const corsHeaders = {
 
 const TIMESTAMP_TOLERANCE_SECONDS = 300;
 
+const POSTHOG_API_KEY = Deno.env.get("POSTHOG_API_KEY") ??
+  "phc_B6PH36QxpExnyBYhfScFFF6LhDvoyxuFr6PypJuxxky3";
+const POSTHOG_HOST = Deno.env.get("POSTHOG_HOST") ?? "https://us.i.posthog.com";
+
+// Fire-and-forget PostHog capture from the server. Wrapped so PostHog
+// outages never break the webhook response back to Stripe. If PostHog is
+// down, Stripe still gets 200 OK and the DB update still runs — only the
+// event is lost.
+async function capturePostHog(
+  event: string,
+  distinctId: string,
+  properties: Record<string, unknown>,
+) {
+  try {
+    const res = await fetch(`${POSTHOG_HOST}/i/v0/e/`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        api_key: POSTHOG_API_KEY,
+        event,
+        distinct_id: distinctId,
+        properties: {
+          ...properties,
+          $lib: "able-webhook-server",
+          source: "stripe_webhook",
+        },
+        timestamp: new Date().toISOString(),
+      }),
+    });
+    if (!res.ok) {
+      console.error(
+        `PostHog capture failed: ${event}`,
+        res.status,
+        await res.text(),
+      );
+    }
+  } catch (err) {
+    console.error(`PostHog capture error: ${event}`, err);
+  }
+}
+
+// Trial window helpers. Stripe timestamps are Unix seconds.
+function calculateTrialLengthDays(
+  sub: { trial_start?: number | null; trial_end?: number | null },
+): number | null {
+  if (!sub.trial_start || !sub.trial_end) return null;
+  return Math.round((sub.trial_end - sub.trial_start) / 86400);
+}
+
+function calculateDaysInTrial(
+  sub: { trial_start?: number | null },
+): number | null {
+  if (!sub.trial_start) return null;
+  const nowSec = Math.floor(Date.now() / 1000);
+  return Math.round((nowSec - sub.trial_start) / 86400);
+}
+
 Deno.serve(async (req) => {
   if (req.method === "OPTIONS") return new Response("ok", { headers: corsHeaders });
 
@@ -268,6 +325,125 @@ Deno.serve(async (req) => {
             }
           }
         }
+
+        // paid_conversion: the North Star. Fires only on the .updated event
+        // (not .created) and only when the previous status was trialing.
+        // This avoids false conversions for lifetime purchasers or any
+        // subscription that never had a trial.
+        if (
+          event.type === "customer.subscription.updated" &&
+          event.data.previous_attributes?.status === "trialing" &&
+          sub.status === "active"
+        ) {
+          const userId = await getUserIdByCustomer(sub.customer);
+          if (userId) {
+            const priceItem = sub.items?.data?.[0]?.price;
+            const unitAmount = priceItem?.unit_amount;
+            const mrr = typeof unitAmount === "number" ? unitAmount / 100 : null;
+            (log.steps as unknown[]).push({ step: "paid_conversion", userId });
+            await capturePostHog("paid_conversion", userId, {
+              stripe_customer_id: sub.customer,
+              stripe_subscription_id: sub.id,
+              plan_price_id: priceItem?.id ?? null,
+              mrr,
+              currency: priceItem?.currency ?? null,
+              trial_length_days: calculateTrialLengthDays(sub),
+              days_in_trial: calculateDaysInTrial(sub),
+            });
+            // Mark the person as paid in PostHog. Wrapped separately so a
+            // PostHog outage never breaks the webhook response.
+            try {
+              const idRes = await fetch(`${POSTHOG_HOST}/capture/`, {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({
+                  api_key: POSTHOG_API_KEY,
+                  event: "$identify",
+                  distinct_id: userId,
+                  properties: {
+                    $set: {
+                      plan: "paid",
+                      mrr,
+                      converted_at: new Date().toISOString(),
+                    },
+                  },
+                }),
+              });
+              if (!idRes.ok) {
+                console.error(
+                  "PostHog $identify failed",
+                  idRes.status,
+                  await idRes.text(),
+                );
+              }
+            } catch (err) {
+              console.error("PostHog $identify error:", err);
+            }
+          } else {
+            console.warn(
+              "paid_conversion skipped: no user found for customer",
+              sub.customer,
+            );
+          }
+        }
+
+        // payment_recovered: past_due → active transition. Fires after the
+        // DB status update above so the event always lags a successful write.
+        // days_in_past_due is null for now — computing it requires tracking
+        // a past_due_at timestamp on the profiles row, which we do not yet.
+        if (
+          event.type === "customer.subscription.updated" &&
+          event.data.previous_attributes?.status === "past_due" &&
+          sub.status === "active"
+        ) {
+          const userId = await getUserIdByCustomer(sub.customer);
+          if (userId) {
+            const priceItem = sub.items?.data?.[0]?.price;
+            const unitAmount = priceItem?.unit_amount;
+            const mrr = typeof unitAmount === "number" ? unitAmount / 100 : null;
+            (log.steps as unknown[]).push({ step: "payment_recovered", userId });
+            await capturePostHog("payment_recovered", userId, {
+              stripe_customer_id: sub.customer,
+              stripe_subscription_id: sub.id,
+              mrr,
+              days_in_past_due: null,
+            });
+          } else {
+            console.warn(
+              "payment_recovered skipped: no user found for customer",
+              sub.customer,
+            );
+          }
+        }
+        break;
+      }
+      case "customer.subscription.trial_will_end": {
+        // Stripe fires this automatically ~3 days before trial_end. Must
+        // be enabled in Stripe Dashboard > Webhook endpoint > Events.
+        // We do not write to the DB here; just a PostHog notification so
+        // lifecycle emails and funnel analytics know the window is open.
+        const sub = event.data.object;
+        const userId = await getUserIdByCustomer(sub.customer);
+        if (userId) {
+          const priceItem = sub.items?.data?.[0]?.price;
+          const unitAmount = priceItem?.unit_amount;
+          const mrr = typeof unitAmount === "number" ? unitAmount / 100 : null;
+          (log.steps as unknown[]).push({ step: "trial_ending_soon", userId });
+          await capturePostHog("trial_ending_soon", userId, {
+            stripe_customer_id: sub.customer,
+            stripe_subscription_id: sub.id,
+            trial_end_at: sub.trial_end
+              ? new Date(sub.trial_end * 1000).toISOString()
+              : null,
+            plan_price_id: priceItem?.id ?? null,
+            mrr,
+          });
+        } else {
+          console.warn(
+            "trial_ending_soon skipped: no user found for customer",
+            sub.customer,
+          );
+        }
         break;
       }
       case "customer.subscription.deleted": {
@@ -276,6 +452,33 @@ Deno.serve(async (req) => {
       }
       case "invoice.payment_failed": {
         await patchProfileByCustomer(event.data.object.customer, { subscription_status: "past_due" });
+
+        // payment_failed: fired after the DB status update so the event
+        // always lags a successful write. Never throws; PostHog outage
+        // leaves the DB update intact and Stripe gets 200 OK.
+        const invoice = event.data.object;
+        const userId = await getUserIdByCustomer(invoice.customer);
+        if (userId) {
+          const amtDue = typeof invoice.amount_due === "number"
+            ? invoice.amount_due / 100
+            : null;
+          (log.steps as unknown[]).push({ step: "payment_failed", userId });
+          await capturePostHog("payment_failed", userId, {
+            stripe_customer_id: invoice.customer,
+            stripe_subscription_id: invoice.subscription ?? null,
+            amount_due: amtDue,
+            currency: invoice.currency ?? null,
+            attempt_count: invoice.attempt_count ?? null,
+            next_payment_attempt: invoice.next_payment_attempt
+              ? new Date(invoice.next_payment_attempt * 1000).toISOString()
+              : null,
+          });
+        } else {
+          console.warn(
+            "payment_failed skipped: no user found for customer",
+            invoice.customer,
+          );
+        }
         break;
       }
     }
