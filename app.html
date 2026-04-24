@@ -1779,7 +1779,9 @@ async function doSignup() {
   const {error}=await sbGet().auth.signUp({email,password:pass});
   btn.textContent='Create account';btn.disabled=false;
   if(error){showAuthError(error.message);return;}
-  Able.track('signup_completed', { email_domain: email.split('@')[1] || null });
+  // signup_completed now fires from onAuthStateChange so it covers both
+  // email and Google OAuth signups from a single place, after identify()
+  // has tied the event to the user id.
   showAuthSuccess('Account created! Check your email for a confirmation link, then come back here to sign in.');
 }
 
@@ -1853,6 +1855,46 @@ async function onAuthStateChange(user) {
   }
   currentUser=user;
   if(window.posthog) posthog.identify(user.id, { email: user.email });
+
+  // signup_completed: fires once per user per browser. We check user.created_at
+  // against now to make sure this is a genuine first-time sign-in, not just
+  // a returning user on a new device (where trackOnce localStorage wouldn't
+  // have a dedupe key yet). Catches both email and Google OAuth paths.
+  // Pulls stored UTM attribution from localStorage and attaches it so we can
+  // attribute signups to their original campaign even days after the click.
+  try {
+    const createdAtMs = user.created_at ? new Date(user.created_at).getTime() : 0;
+    const isJustCreated = createdAtMs && (Date.now() - createdAtMs) < 5 * 60 * 1000;
+    if (isJustCreated) {
+      const provider = user.app_metadata?.provider || 'email';
+      const authMethod = provider === 'google' ? 'google' : 'email';
+      let attribution = null;
+      try {
+        const raw = localStorage.getItem('able_attribution');
+        if (raw) {
+          const parsed = JSON.parse(raw);
+          if (parsed && parsed.expires_at && parsed.expires_at > Date.now()) {
+            attribution = parsed;
+          } else {
+            localStorage.removeItem('able_attribution');
+          }
+        }
+      } catch (_) { /* noop */ }
+      Able.trackOnce('signup_completed', {
+        email_domain: (user.email || '').split('@')[1] || null,
+        auth_method: authMethod,
+        signup_utm_source: attribution?.utm_source || null,
+        signup_utm_medium: attribution?.utm_medium || null,
+        signup_utm_campaign: attribution?.utm_campaign || null,
+        signup_utm_content: attribution?.utm_content || null,
+        signup_utm_term: attribution?.utm_term || null,
+        signup_referrer: attribution?.referrer || null,
+      });
+      // Clear attribution after use so a different user signing up on the
+      // same browser isn't misattributed to the same campaign.
+      try { localStorage.removeItem('able_attribution'); } catch (_) { /* noop */ }
+    }
+  } catch (_) { /* non-blocking */ }
 
   const authBox = document.querySelector('.auth-box');
   const showLoading = (msg) => {
@@ -3074,6 +3116,20 @@ function applyJobs(jobs,amount,source){
   });
   save();
   if (wasFirstIncome) Able.trackOnce('first_income_logged', { amount, source });
+  // first_allocation_completed: the moment the user first runs the engine
+  // end-to-end. Fires once per user per browser. Conceptually distinct from
+  // first_income_logged (input vs end-to-end output) even though they fire
+  // at the same instant today.
+  try {
+    const createdAtMs = currentUser?.created_at ? new Date(currentUser.created_at).getTime() : 0;
+    const daysSinceSignup = createdAtMs ? Math.floor((Date.now() - createdAtMs) / 86400000) : null;
+    Able.trackOnce('first_allocation_completed', {
+      jobs_count: Array.isArray(jobs) ? jobs.length : 0,
+      total_amount: amount,
+      allocation_window: allocWindow(),
+      days_since_signup: daysSinceSignup,
+    });
+  } catch (_) { /* non-blocking */ }
 }
 
 function allocate(){
@@ -3497,7 +3553,54 @@ function renderBillsPage(){
   });
   document.getElementById('bills-total').textContent=f2(totalBills());
 }
-function toggleBillPaid(i){S.bills[i].paid=!S.bills[i].paid;save();renderBillsPage();renderUpcoming();refreshHome();}
+// Returns days late (positive) or early (negative) for a bill marked paid
+// at this moment, relative to its due schedule. Null for ongoing/unknown.
+// Monthly bills use a 15-day horizon: past that, we assume the user is
+// paying early for next month's cycle rather than extremely late for this
+// month's. Weekly uses days-since-this-week's-due. Other freqs fall back
+// to -billDaysUntil as a rough "days early" proxy.
+function billDaysLateOrEarly(b){
+  if(!b||b.due==='ongoing')return null;
+  const now=new Date();
+  const today=new Date(now.getFullYear(),now.getMonth(),now.getDate());
+  const freq=b.freq||'monthly';
+  if(freq==='monthly'){
+    const d=parseInt(b.due);if(isNaN(d))return null;
+    const thisMonth=new Date(today.getFullYear(),today.getMonth(),d);
+    const diff=Math.round((today-thisMonth)/86400000);
+    if(diff>15){
+      const nextMonth=new Date(today.getFullYear(),today.getMonth()+1,d);
+      return Math.round((today-nextMonth)/86400000);
+    }
+    return diff;
+  }
+  if(freq==='weekly'){
+    const dow=parseInt(b.due);if(isNaN(dow))return null;
+    return (today.getDay()-dow+7)%7;
+  }
+  const nd=billDaysUntil(b);
+  return (typeof nd==='number'&&nd>0&&nd<365)?-nd:null;
+}
+function toggleBillPaid(i){
+  const bill=S.bills[i];
+  if(!bill)return;
+  const nowPaid=!bill.paid;
+  bill.paid=nowPaid;
+  save();renderBillsPage();renderUpcoming();refreshHome();
+  // bill_paid: fires every time a bill flips TO paid. Not trackOnce.
+  // Skipped when un-paying (false flip) so the event stream reflects only
+  // genuine payment events for retention analysis.
+  if(nowPaid){
+    try{
+      Able.track('bill_paid',{
+        bill_category:bill.cat||null,
+        bill_amount:bill.amount||0,
+        frequency:bill.freq||'monthly',
+        days_late_or_early:billDaysLateOrEarly(bill),
+      });
+    }catch(_){}
+  }
+}
 function markPaidThroughToday(){
   // Mark paid only unpaid MONTHLY bills whose due-day has already passed this month.
   // Weekly/biweekly/custom bills recur multiple times per month, so "paid through today"
@@ -3725,6 +3828,15 @@ function addDebt(){
     });
   }
   save();renderDebtPage();renderBillsPage();refreshHome();
+  // debt_added: fires every time a debt is saved. Not trackOnce since we
+  // want visibility into how many debts a user adds and their shape.
+  try{
+    Able.track('debt_added',{
+      balance,
+      apr:rate,
+      min_payment:min,
+    });
+  }catch(_){}
   ['nd-name','nd-bal','nd-min','nd-apr','nd-due'].forEach(id=>document.getElementById(id).value='');
 }
 // Sync the linked bill whenever a debt's min/due/name changes

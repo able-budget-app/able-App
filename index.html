@@ -2617,8 +2617,32 @@ window.Able.track = function(event, props) {
   } catch (_) { /* noop */ }
 })();
 
-// Fire landing_viewed once per page load.
-Able.track('landing_viewed');
+// Fire landing_viewed once per page load, with UTM + referrer attribution.
+// Persist attribution for 30 days so a signup that happens days later still
+// gets credited to the original campaign. Direct visits never overwrite
+// existing attribution.
+(function(){
+  try {
+    const p = new URLSearchParams(window.location.search);
+    const attribution = {
+      utm_source: p.get('utm_source') || null,
+      utm_medium: p.get('utm_medium') || null,
+      utm_campaign: p.get('utm_campaign') || null,
+      utm_content: p.get('utm_content') || null,
+      utm_term: p.get('utm_term') || null,
+      referrer: document.referrer || null,
+    };
+    Able.track('landing_viewed', attribution);
+    const hasUtm = attribution.utm_source || attribution.utm_medium ||
+                   attribution.utm_campaign || attribution.utm_content || attribution.utm_term;
+    if (hasUtm) {
+      localStorage.setItem('able_attribution', JSON.stringify({
+        ...attribution,
+        expires_at: Date.now() + 30 * 24 * 60 * 60 * 1000,
+      }));
+    }
+  } catch (_) { /* noop */ }
+})();
 
 // Capture clicks on any CTA that heads to the app.
 document.querySelectorAll('a[href^="/app.html"], a[href="/app.html"]').forEach(a => {
