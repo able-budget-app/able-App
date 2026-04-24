@@ -3,7 +3,7 @@
 **Effective date:** 2026-04-23
 **Last updated:** 2026-04-23
 
-These Terms of Service ("Terms") are a legal agreement between you and [TODO_BUSINESS_LEGAL_NAME] ("Able," "we," "us," or "our") governing your use of the Able application, website, and related services (together, the "Service").
+These Terms of Service ("Terms") are a legal agreement between you and Able App ("Able," "we," "us," or "our") governing your use of the Able application, website, and related services (together, the "Service").
 
 By creating an account or using the Service you agree to these Terms. If you do not agree, do not use the Service.
 
@@ -20,7 +20,7 @@ You must be at least 18 years old (or the age of majority in your jurisdiction) 
 You are responsible for:
 - Keeping your login credentials secure.
 - All activity that happens under your account.
-- Notifying us promptly at support@becomeable.app if you believe your account has been compromised.
+- Notifying us promptly at hello@becomeable.app if you believe your account has been compromised.
 
 You may not share your account with other people, create multiple accounts to abuse trial credits, or use the Service on behalf of anyone else without their permission.
 
@@ -40,7 +40,7 @@ Current plans and prices are shown on https://becomeable.netlify.app/#pricing. W
 Subscriptions renew automatically at the end of each billing period (monthly or annual) unless you cancel before the renewal date.
 
 ### 3.4 Cancellation
-You may cancel your subscription at any time from inside the app or by emailing support@becomeable.app. Cancellation takes effect at the end of your current paid period; you keep access until then.
+You may cancel your subscription at any time from inside the app or by emailing hello@becomeable.app. Cancellation takes effect at the end of your current paid period; you keep access until then.
 
 ### 3.5 Refunds
 Subscription fees are non-refundable except where required by law. We may issue refunds at our discretion if, for example, the Service was unavailable for an extended period or a billing error occurred.
@@ -106,7 +106,7 @@ We grant you a limited, non-exclusive, non-transferable license to use the Servi
 
 ## 9. Termination
 
-You may stop using the Service and delete your account at any time from inside the app or by emailing support@becomeable.app.
+You may stop using the Service and delete your account at any time from inside the app or by emailing hello@becomeable.app.
 
 We may suspend or terminate your account if:
 - You violate these Terms.
@@ -128,7 +128,7 @@ Some jurisdictions do not allow certain warranty exclusions, so some of the abov
 
 ## 11. Limitation of liability
 
-TO THE MAXIMUM EXTENT PERMITTED BY LAW, [TODO_BUSINESS_LEGAL_NAME] AND ITS DIRECTORS, EMPLOYEES, AND AGENTS WILL NOT BE LIABLE FOR ANY INDIRECT, INCIDENTAL, SPECIAL, CONSEQUENTIAL, OR PUNITIVE DAMAGES, INCLUDING LOST PROFITS, LOST DATA, OR LOSS OF GOODWILL, ARISING OUT OF OR RELATING TO YOUR USE OF THE SERVICE.
+TO THE MAXIMUM EXTENT PERMITTED BY LAW, Able App AND ITS DIRECTORS, EMPLOYEES, AND AGENTS WILL NOT BE LIABLE FOR ANY INDIRECT, INCIDENTAL, SPECIAL, CONSEQUENTIAL, OR PUNITIVE DAMAGES, INCLUDING LOST PROFITS, LOST DATA, OR LOSS OF GOODWILL, ARISING OUT OF OR RELATING TO YOUR USE OF THE SERVICE.
 
 OUR TOTAL LIABILITY TO YOU FOR ANY CLAIM ARISING OUT OF OR RELATING TO THESE TERMS OR THE SERVICE IS LIMITED TO THE GREATER OF (A) THE AMOUNTS YOU PAID US IN THE 12 MONTHS BEFORE THE CLAIM, OR (B) $50 USD.
 
@@ -138,15 +138,15 @@ Some jurisdictions do not allow the exclusion or limitation of certain damages, 
 
 ## 12. Indemnification
 
-You agree to defend, indemnify, and hold harmless [TODO_BUSINESS_LEGAL_NAME] from any claims, damages, liabilities, and expenses (including reasonable attorneys' fees) arising out of your use of the Service, your content, or your violation of these Terms.
+You agree to defend, indemnify, and hold harmless Able App from any claims, damages, liabilities, and expenses (including reasonable attorneys' fees) arising out of your use of the Service, your content, or your violation of these Terms.
 
 ---
 
 ## 13. Governing law and disputes
 
-These Terms are governed by the laws of [TODO_GOVERNING_JURISDICTION — e.g. "the State of California, United States"], without regard to its conflict-of-laws rules.
+These Terms are governed by the laws of the State of Idaho, United States, without regard to its conflict-of-laws rules.
 
-Any dispute arising out of these Terms or the Service will be resolved in the state or federal courts located in [TODO_VENUE_JURISDICTION], and you consent to personal jurisdiction there.
+Any dispute arising out of these Terms or the Service will be resolved in the state or federal courts located in Canyon County, Idaho, and you consent to personal jurisdiction there.
 
 [OPTIONAL: INSERT ARBITRATION CLAUSE HERE IF YOU WANT ARBITRATION. This is a business decision and often requires careful drafting. Leaving it out defaults to standard court litigation.]
 
@@ -162,9 +162,9 @@ We may update these Terms when our product, pricing, or practices change or when
 
 Questions about these Terms:
 
-[TODO_BUSINESS_LEGAL_NAME]
-[TODO_PHYSICAL_ADDRESS — optional but recommended]
-support@becomeable.app
+Able App
+7548 E Savanna River St, Nampa, Idaho, United States
+hello@becomeable.app
 
 ---
 

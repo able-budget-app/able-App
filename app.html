@@ -838,7 +838,8 @@ posthog.init('phc_B6PH36QxpExnyBYhfScFFF6LhDvoyxuFr6PypJuxxky3', {
       <div class="field" style="margin-bottom:10px;"><label>Password</label><input type="password" id="signup-pass" placeholder="At least 6 characters"></div>
       <div class="field" style="margin-bottom:1rem;"><label>Confirm password</label><input type="password" id="signup-pass2" placeholder="••••••••" onkeydown="if(event.key==='Enter')doSignup()"></div>
       <button class="btn btn-primary" style="width:100%;" onclick="doSignup()" id="signup-btn">Create account</button>
-      <div style="font-size:11px;color:var(--text3);font-weight:600;text-align:center;margin-top:.75rem;line-height:1.5;">We'll send a confirmation email. Click the link to activate your account.</div>
+      <div style="font-size:11px;color:var(--text3);font-weight:600;text-align:center;margin-top:.75rem;line-height:1.5;">We'll send a confirmation email. Click the link, then return and sign in.</div>
+      <div style="font-size:11px;color:var(--text3);font-weight:600;text-align:center;margin-top:.75rem;line-height:1.5;">By creating an account you agree to our <a href="/terms.html" target="_blank" style="color:var(--ds-green);text-decoration:none;font-weight:700;">Terms</a> and <a href="/privacy.html" target="_blank" style="color:var(--ds-green);text-decoration:none;font-weight:700;">Privacy Policy</a>.</div>
     </div>
   </div>
 </div>
@@ -878,6 +879,7 @@ posthog.init('phc_B6PH36QxpExnyBYhfScFFF6LhDvoyxuFr6PypJuxxky3', {
     <div style="text-align:center;margin-top:1.25rem;font-size:11px;color:var(--ds-t3);font-weight:600;letter-spacing:.03em;">
       Secured by Stripe · Cancel anytime from Settings
     </div>
+    <div style="text-align:center;margin-top:.75rem;font-size:11px;color:var(--ds-t3);font-weight:600;letter-spacing:.02em;line-height:1.5;">By starting a trial you agree to our <a href="/terms.html" target="_blank" style="color:var(--ds-green);text-decoration:none;font-weight:700;">Terms</a> and <a href="/privacy.html" target="_blank" style="color:var(--ds-green);text-decoration:none;font-weight:700;">Privacy Policy</a>.</div>
     <div style="text-align:center;margin-top:.75rem;">
       <button class="btn-ghost btn btn-sm" onclick="doSignOut()">Sign out</button>
     </div>
@@ -1475,7 +1477,7 @@ const STRIPE_KEY   = 'pk_live_3bc5VtR5BgZY9hpaYnXuE2zW';
 const PRICE_MONTHLY  = 'price_1TO3hVDBmPAhrdxkIbpGti8n';
 const PRICE_ANNUAL   = 'price_1TPUDjDBmPAhrdxkL7IkGqp3';
 const PRICE_LIFETIME = 'price_1TO3i3DBmPAhrdxkVq1hAzj9';
-const SUPPORT_EMAIL  = 'support@becomeable.app';
+const SUPPORT_EMAIL  = 'hello@becomeable.app';
 
 // sb and stripe initialized in window.load below
 const sbGet = () => window._sb;
