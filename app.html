@@ -830,6 +830,16 @@ input,select,button,textarea{font-family:inherit;}
    DASHBOARD (home page hero + quick actions + allocate sheet)
 ═══════════════════════════════════════ */
 .db-hero{position:relative;background:linear-gradient(145deg,#1f6038 0%,#2a7a4a 55%,#3d9e78 100%);border-radius:var(--ds-r3);padding:1.5rem 1.5rem 1.35rem;color:white;box-shadow:0 12px 32px rgba(31,96,56,.22);margin-bottom:1rem;overflow:hidden;}
+/* Demoted variant: smaller padding + headline so the balance card above stays primary. */
+.db-hero--mini{padding:1.1rem 1.25rem 1.15rem;border-radius:var(--ds-r2);box-shadow:0 8px 24px rgba(31,96,56,.18);}
+.db-hero--mini .db-hero-headline{font-size:1.15rem;margin-bottom:.2rem;}
+.db-hero--mini .db-hero-sub{font-size:12px;margin-bottom:1rem;}
+.db-hero--mini .db-score-wrap{margin-bottom:.85rem;}
+.db-hero--mini .db-score-num{font-size:1.85rem;}
+.db-hero--mini .db-chips{margin-bottom:.85rem;gap:6px;}
+.db-hero--mini .db-chip{padding:.6rem .7rem;}
+.db-hero--mini .db-chip-pts{font-size:13px;margin-bottom:5px;}
+.db-hero--mini .db-hero-cta{padding:11px 18px;font-size:14px;}
 .db-hero::before{content:'';position:absolute;inset:0;background:radial-gradient(circle at 85% 10%,rgba(255,255,255,.14),transparent 55%);pointer-events:none;}
 .db-hero-eyebrow{position:relative;font-size:10px;font-weight:800;letter-spacing:.14em;text-transform:uppercase;color:rgba(255,255,255,.7);margin-bottom:.75rem;display:flex;align-items:center;gap:8px;}
 .db-hero-eyebrow::before{content:'';display:inline-block;width:5px;height:5px;border-radius:50%;background:#b8e0c8;}
@@ -1166,8 +1176,12 @@ posthog.init('phc_B6PH36QxpExnyBYhfScFFF6LhDvoyxuFr6PypJuxxky3', {
     </div>
   </div>
 
-  <!-- DASHBOARD HERO -->
-  <div class="db-hero">
+  <!-- BALANCE / RESERVED / AVAILABLE — primary daily snapshot -->
+  <div class="db-balance-card" id="db-balance-card"></div>
+
+  <!-- DASHBOARD HERO (score + chips) — secondary, smaller variant since the
+       balance card is now the primary element -->
+  <div class="db-hero db-hero--mini">
     <div class="db-hero-eyebrow">This month</div>
     <div class="db-hero-headline" id="db-hero-headline">Ready when you are.</div>
     <div class="db-hero-sub" id="db-hero-sub">Log income to see where it goes.</div>
@@ -1180,26 +1194,23 @@ posthog.init('phc_B6PH36QxpExnyBYhfScFFF6LhDvoyxuFr6PypJuxxky3', {
     </div>
     <div class="db-chips">
       <div class="db-chip" onclick="goTo('bills')" role="button" tabindex="0" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();goTo('bills');}">
-        <div class="db-chip-label">Bills</div>
-        <div class="db-chip-pts"><span id="db-chip-bills-val">0</span><span class="db-chip-max">/30</span></div>
+        <div class="db-chip-label">Bills score</div>
+        <div class="db-chip-pts"><span id="db-chip-bills-val">0</span><span class="db-chip-max">/30 pts</span></div>
         <div class="db-chip-dots" id="db-chip-bills-dots"></div>
       </div>
       <div class="db-chip" onclick="goTo('debt')" role="button" tabindex="0" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();goTo('debt');}">
-        <div class="db-chip-label">Debt</div>
-        <div class="db-chip-pts"><span id="db-chip-debt-val">0</span><span class="db-chip-max">/20</span></div>
+        <div class="db-chip-label">Debt score</div>
+        <div class="db-chip-pts"><span id="db-chip-debt-val">0</span><span class="db-chip-max">/20 pts</span></div>
         <div class="db-chip-dots" id="db-chip-debt-dots"></div>
       </div>
       <div class="db-chip" onclick="openBufferModal()" role="button" tabindex="0" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();openBufferModal();}">
-        <div class="db-chip-label">Buffer</div>
-        <div class="db-chip-pts"><span id="db-chip-buffer-val">0</span><span class="db-chip-max">/15</span></div>
+        <div class="db-chip-label">Buffer score</div>
+        <div class="db-chip-pts"><span id="db-chip-buffer-val">0</span><span class="db-chip-max">/15 pts</span></div>
         <div class="db-chip-dots" id="db-chip-buffer-dots"></div>
       </div>
     </div>
     <button class="db-hero-cta" onclick="openAllocateSheet()">Log income →</button>
   </div>
-
-  <!-- BALANCE / RESERVED / AVAILABLE -->
-  <div class="db-balance-card" id="db-balance-card"></div>
 
   <!-- QUICK ACTIONS -->
   <div class="db-action-card" onclick="goTo('forecast')" role="button" tabindex="0" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();goTo('forecast');}">
