@@ -1726,6 +1726,8 @@ let _pendingForecastIdx = null;
 let _pendingForecastJobs = null;
 let wiScenarios = [];
 let saveTimer = null;
+let isAllocating = false;
+let isConfirmingForecast = false;
 
 // ═══════════════════════════════════════
 // AUTH
@@ -1950,7 +1952,9 @@ async function onAuthStateChange(user) {
     // Apply user data
     const d = userData.data;
     if(d) {
-      S.bills           = d.bills||[];
+      // Normalize: legacy bills (pre-priority-feature) and imported rows can lack `priority`.
+      // computeJobs filters by strict equality on priority [1,2,3] so an undefined value is silently skipped.
+      S.bills           = (d.bills||[]).map(b=>({...b,priority:b.priority||2}));
       S.debts           = d.debts||[];
       S.history         = d.history||[];
       S.forecast        = d.forecast||[];
@@ -2245,16 +2249,11 @@ async function obBuildWithAI() {
   document.getElementById('ob-progress').style.width = '100%';
 
   try {
-    const resp = await fetch(SUPABASE_URL + '/functions/v1/ai-onboard', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        'Authorization': 'Bearer ' + SUPABASE_KEY
-      },
-      body: JSON.stringify({ answers: obAnswers })
+    const { data, error } = await sbGet().functions.invoke('ai-onboard', {
+      body: { answers: obAnswers }
     });
-    const data = await resp.json();
-    if (data.error) throw new Error(data.error);
+    if (error) throw error;
+    if (data && data.error) throw new Error(data.error);
     obResult = data;
     renderObReview();
   } catch(e) {
@@ -2897,6 +2896,9 @@ function computeJobs(amount,source,useCurrentIncome=true) {
     });
     rem-=cut;
   }
+  // Fixed-allocation rules can sum to more than the deposit if validation was bypassed
+  // or stale rules over-subscribe a small income; clamp before downstream math.
+  rem=Math.max(0,rem);
   // How much of this incoming money needs to be reserved for upcoming window bills?
   const windowNeeded=Math.max(0,winTotal-alreadyReserved);
   // If fixed allocations ate enough that bills can't be fully covered, warn.
@@ -3133,31 +3135,39 @@ function applyJobs(jobs,amount,source){
 }
 
 function allocate(){
+  // Guard against rapid double-tap; applyJobs mutates state synchronously, so without this
+  // a fast second tap can land before the input clear and produce a duplicate allocation.
+  if(isAllocating)return;
   const amount=parseFloat(document.getElementById('inc-amount').value);
   const source=document.getElementById('inc-source').value;
   if(!amount||amount<=0){document.getElementById('inc-amount').focus();return;}
   if(!source){document.getElementById('inc-source').focus();return;}
-  const wasFirst=!S.history.length;
-  const jobs=computeJobs(amount,source);
-  applyJobs(jobs,amount,source);
-  const h=S.history[0];
-  const result=document.getElementById('alloc-result');
-  result.style.display='block';
-  const cheer=document.getElementById('alloc-cheer');
-  if(cheer){cheer.textContent=pickCheerLine(amount,wasFirst);cheer.style.display='block';}
-  document.getElementById('alloc-amt').textContent=f2(amount);
-  document.getElementById('alloc-src').textContent='from '+source;
-  const hintEl=document.getElementById('alloc-hint');
-  if(hintEl){
-    const counts=jobsDoneCounts(h);
-    hintEl.textContent=counts.total>0
-      ?`${counts.total} move${counts.total===1?'':'s'} to make. Tap each circle once you\'ve done it.`
-      :'Bill reserves are set aside in your checking. Nothing to move.';
+  isAllocating=true;
+  try {
+    const wasFirst=!S.history.length;
+    const jobs=computeJobs(amount,source);
+    applyJobs(jobs,amount,source);
+    const h=S.history[0];
+    const result=document.getElementById('alloc-result');
+    result.style.display='block';
+    const cheer=document.getElementById('alloc-cheer');
+    if(cheer){cheer.textContent=pickCheerLine(amount,wasFirst);cheer.style.display='block';}
+    document.getElementById('alloc-amt').textContent=f2(amount);
+    document.getElementById('alloc-src').textContent='from '+source;
+    const hintEl=document.getElementById('alloc-hint');
+    if(hintEl){
+      const counts=jobsDoneCounts(h);
+      hintEl.textContent=counts.total>0
+        ?`${counts.total} move${counts.total===1?'':'s'} to make. Tap each circle once you\'ve done it.`
+        :'Bill reserves are set aside in your checking. Nothing to move.';
+    }
+    renderJobList(jobs,amount,document.getElementById('job-list'),h&&h.id);
+    document.getElementById('inc-amount').value='';
+    setTimeout(()=>{result.scrollIntoView({behavior:'smooth',block:'nearest'});},60);
+    refreshHome();
+  } finally {
+    isAllocating=false;
   }
-  renderJobList(jobs,amount,document.getElementById('job-list'),h&&h.id);
-  document.getElementById('inc-amount').value='';
-  setTimeout(()=>{result.scrollIntoView({behavior:'smooth',block:'nearest'});},60);
-  refreshHome();
 }
 
 function openAllocateSheet(){
@@ -3519,10 +3529,15 @@ function saveEditIncome(){
   const jobs=computeJobs(newAmt,newSrc);
   applyJobs(jobs,newAmt,newSrc);
   refreshHome();renderDebtPage();
-  document.getElementById('alloc-result').style.display='block';
-  document.getElementById('alloc-amt').textContent=f2(newAmt);
-  document.getElementById('alloc-src').textContent='from '+newSrc+' (edited)';
-  renderJobList(jobs,newAmt,document.getElementById('job-list'));
+  // Only repaint the allocate-sheet result panel if the sheet itself is open.
+  // Otherwise the user is editing from History and the panel would appear orphaned next time the sheet opens.
+  const sheet=document.getElementById('db-allocate-sheet');
+  if(sheet && sheet.style.display==='flex'){
+    document.getElementById('alloc-result').style.display='block';
+    document.getElementById('alloc-amt').textContent=f2(newAmt);
+    document.getElementById('alloc-src').textContent='from '+newSrc+' (edited)';
+    renderJobList(jobs,newAmt,document.getElementById('job-list'));
+  }
   closeModal('modal-edit-income');
 }
 
@@ -3628,7 +3643,7 @@ function delBill(i){
     return;
   }
   if(!confirm('Delete "'+b.name+'"?'))return;
-  S.bills.splice(i,1);save();renderBillsPage();refreshHome();
+  S.bills.splice(i,1);save();renderBillsPage();renderUpcoming();refreshHome();
 }
 function openAddBillModal(editIdx){
   const modal=document.getElementById('modal-add-bill');
@@ -3740,7 +3755,7 @@ function addBill(){
     S.bills.push(bill);
     if (wasFirstBill) Able.trackOnce('first_bill_added', { freq, cat });
   }
-  save();renderBillsPage();refreshHome();closeModal('modal-add-bill');
+  save();renderBillsPage();renderUpcoming();refreshHome();closeModal('modal-add-bill');
 }
 
 // ═══════════════════════════════════════
@@ -3791,7 +3806,7 @@ function editDebt(i){
   d.dueDay=parseInt(newDue)||null;
   d.rate=parseFloat(newRate)||0;
   syncLinkedBill(d);
-  save();renderDebtPage();renderBillsPage();refreshHome();
+  save();renderDebtPage();renderBillsPage();renderUpcoming();refreshHome();
 }
 function updateDebt(i,v){
   S.debts[i].balance=parseFloat(v)||0;
@@ -3803,7 +3818,7 @@ function delDebt(i){
   // Remove the linked bill if one exists
   if(debtId) S.bills=S.bills.filter(b=>b.fromDebtId!==debtId);
   S.debts.splice(i,1);
-  save();renderDebtPage();renderBillsPage();refreshHome();
+  save();renderDebtPage();renderBillsPage();renderUpcoming();refreshHome();
 }
 function addDebt(){
   const name=document.getElementById('nd-name').value.trim();
@@ -3827,7 +3842,7 @@ function addDebt(){
       fromDebtId:debtId
     });
   }
-  save();renderDebtPage();renderBillsPage();refreshHome();
+  save();renderDebtPage();renderBillsPage();renderUpcoming();refreshHome();
   // debt_added: fires every time a debt is saved. Not trackOnce since we
   // want visibility into how many debts a user adds and their shape.
   try{
@@ -3899,7 +3914,10 @@ function renderForecast(){
   const sorted=[...S.forecast].sort((a,b)=>new Date(a.date)-new Date(b.date));
   if(!sorted.length){el.innerHTML='<div class="empty-state">No expected income added yet. Log a payment you know is coming so Able can plan ahead.</div>';return;}
   el.innerHTML='';
-  sorted.forEach((f,i)=>{
+  sorted.forEach((f)=>{
+    // gotMoney/delForecast index into S.forecast (insertion order), not the sorted view,
+    // so resolve the original index here. indexOf on the object reference is safe — sorted is a shallow copy.
+    const realIdx=S.forecast.indexOf(f);
     const d=new Date(f.date);const diff=Math.round((d-today)/86400000);
     const overdue=f.status==='expected'&&diff<0;
     const sc=overdue?'var(--red)':f.status==='received'?'var(--sage)':'var(--sky)';
@@ -3913,8 +3931,8 @@ function renderForecast(){
       <div class="fc-right">
         <div class="fc-amt">${f2(f.amount)}</div>
         <span class="pill" style="background:${sb2};color:${sc};">${sl}</span>
-        ${f.status!=='received'?`<button class="btn btn-sm btn-primary" onclick="gotMoney(${i})">Got it →</button>`:''}
-        <button class="btn btn-sm btn-ghost" onclick="delForecast(${i})">✕</button>
+        ${f.status!=='received'?`<button class="btn btn-sm btn-primary" onclick="gotMoney(${realIdx})">Got it →</button>`:''}
+        <button class="btn btn-sm btn-ghost" onclick="delForecast(${realIdx})">✕</button>
       </div>`;
     el.appendChild(div);
   });
@@ -3932,7 +3950,13 @@ function renderForecast(){
     </div>`;
 }
 function gotMoney(i){
+  if(isConfirmingForecast)return;
   const f=S.forecast[i];
+  if(!f)return;
+  // Skip stale or zero-amount entries: a re-tapped received forecast or a $0 row would
+  // otherwise create a junk history record on confirm.
+  if(f.status==='received')return;
+  if(!f.amount||f.amount<=0)return;
   const jobs=computeJobs(f.amount,f.source);
   _pendingForecastIdx=i;_pendingForecastJobs=jobs;
   document.getElementById('preview-source').textContent=`${f2(f.amount)} from ${f.source}${f.note?' ('+f.note+')':''}`;
@@ -3940,11 +3964,24 @@ function gotMoney(i){
   document.getElementById('modal-alloc-preview').style.display='flex';
 }
 function confirmForecastAlloc(){
+  if(isConfirmingForecast)return;
+  if(_pendingForecastIdx==null)return;
   const f=S.forecast[_pendingForecastIdx];
-  S.forecast[_pendingForecastIdx].status='received';
-  applyJobs(_pendingForecastJobs,f.amount,f.source+(f.note?' ('+f.note+')':''));
-  closeModal('modal-alloc-preview');renderForecast();refreshHome();
-  _pendingForecastIdx=null;_pendingForecastJobs=null;
+  // Re-check status: another tab or a stale modal could have already received this forecast.
+  if(!f||f.status==='received'){
+    closeModal('modal-alloc-preview');
+    _pendingForecastIdx=null;_pendingForecastJobs=null;
+    return;
+  }
+  isConfirmingForecast=true;
+  try {
+    S.forecast[_pendingForecastIdx].status='received';
+    applyJobs(_pendingForecastJobs,f.amount,f.source+(f.note?' ('+f.note+')':''));
+    closeModal('modal-alloc-preview');renderForecast();refreshHome();
+  } finally {
+    _pendingForecastIdx=null;_pendingForecastJobs=null;
+    isConfirmingForecast=false;
+  }
 }
 function delForecast(i){S.forecast.splice(i,1);save();renderForecast();}
 function addForecast(){
@@ -3963,7 +4000,14 @@ function addForecast(){
 // ═══════════════════════════════════════
 // CALENDAR
 // ═══════════════════════════════════════
-function getBillsForCalendar(){return S.bills.filter(b=>b.due!=='ongoing'&&parseInt(b.due)).sort((a,b)=>parseInt(a.due)-parseInt(b.due));}
+function getBillsForCalendar(){
+  // Calendar export uses a monthly RRULE, so only include monthly bills with a numeric day-of-month >= 1.
+  // Weekly/biweekly/custom bills aren't representable as a single fixed day-of-month and were silently
+  // dropped by the previous filter (parseInt('0') is falsy), which also excluded Sunday weekly bills.
+  return S.bills
+    .filter(b=>(b.freq||'monthly')==='monthly' && b.due!=='ongoing' && parseInt(b.due)>=1)
+    .sort((a,b)=>parseInt(a.due)-parseInt(b.due));
+}
 function addToAppleCalendar(){
   const bills=getBillsForCalendar();const now=new Date();now.setHours(0,0,0,0);
   let ics='BEGIN:VCALENDAR\nVERSION:2.0\nPRODID:-//Able//EN\nCALSCALE:GREGORIAN\n';
@@ -4457,13 +4501,10 @@ function resetMonth(){
   const billsList=S.bills.map(b=>({name:b.name,amount:b.amount,paid:!!b.paid,cat:b.cat}));
   const debtsSnapshot=S.debts.map(d=>({name:d.name,balance:d.balance,rate:d.rate}));
   const totalDebt=S.debts.reduce((s,d)=>s+(d.balance||0),0);
-  const s1=Math.min(30,Math.round((Math.min(ti+pb,tb)/(tb||1))*30));
-  const s2=de>0?20:0;
-  const s3=bc>0?15:0;
-  const s4=15; // living within income (default credit)
-  const ownerTarget=ti*((S.settings.ownerPct||0)/100);
-  const s5=op>0?(ownerTarget>0.01?Math.min(20,Math.round((op/ownerTarget)*20)):20):0;
-  const score=s1+s2+s3+s4+s5;
+  // Use the same scoring formula the live Score tab uses, so the archived month
+  // matches what the user saw before close.
+  const computed=computeMonthlyScore();
+  const score=(computed && typeof computed.total==='number')?computed.total:0;
   if(!S.month_history)S.month_history=[];
   S.month_history.unshift({
     label,
@@ -7827,7 +7868,9 @@ async function coachSend() {
 
   try {
     const { data, error } = await sbGet().functions.invoke('coach-chat', {
-      body: { message: msg, state: buildCoachState() }
+      // Send prior turns so multi-turn conversation is coherent. Slice off the optimistic
+      // user turn we just pushed onto coachHistory; the backend gets it as `message`.
+      body: { message: msg, state: buildCoachState(), history: coachHistory.slice(0,-1) }
     });
     if (error) throw error;
     if (data && data.error) throw new Error(data.error);
@@ -7861,7 +7904,7 @@ function evalCoachNudges() {
   const nudges = [];
 
   // 1. Pay yourself first: ownerPct is 0 but income has been logged
-  if ((S.settings && S.settings.ownerPct) == 0 && totalIn() > 100) {
+  if ((S.settings?.ownerPct ?? 0) === 0 && totalIn() > 100) {
     nudges.push({
       id: 'pay_yourself',
       msg: "Not paying yourself yet? Even 5% is a start.",

@@ -1,0 +1,49 @@
+# QA Log
+
+Running log of QA findings and verification passes. Newest entries at the top.
+
+---
+
+## 2026-04-24 - QA Audit Round 1
+
+Status: fixes applied, awaiting QA review.
+
+### Auditors dispatched
+- Bug Fixer (app.html, supabase/functions)
+- Allocation Auditor (Smart Allocation flow)
+- AI Coach Auditor (real-data grounding)
+
+### Findings summary
+- Bug Fixer: 3 critical, 4 high, 6 medium, 4 low. One critical (`reverseJobs` legacy fallback) was a false positive on close inspection - legacy entries always paid extra to highest-rate debt only, so restoring all of it there is correct.
+- Allocation Auditor: 3 high, 6 medium, 9 low. Largest issues: no real preview/confirm step in `allocate()`, forecast race condition allowing double-allocation across tabs, legacy bills with undefined priority silently skipped.
+- AI Coach Auditor: 1 critical, 1 high, plus several mediums. Critical: `supabase/functions/coach-chat/index.ts` is not in the repo - the live edge function was deployed via the Supabase dashboard only, so its system prompt and rate-limit logic are unauditable.
+
+### Fixes applied (11)
+1. Bills hydration normalizes `priority` (default to 2) so legacy/imported rows aren't silently skipped by `computeJobs`. `app.html:1957`
+2. `obBuildWithAI` now uses `sbGet().functions.invoke()` so the user's session JWT is attached, not the anon key. `app.html:2249-2257`
+3. `computeJobs` clamps `rem = Math.max(0, rem)` after fixed-allocation deductions, preventing negative-remainder propagation. `app.html:2901-2903`
+4. `allocate()` guarded by `isAllocating` flag against rapid double-tap. `app.html:3140-3169`
+5. `saveEditIncome` only repaints the allocate-sheet result panel if the sheet is open. `app.html:3528-3534`
+6. `renderUpcoming()` now refreshes after addBill, delBill, addDebt, delDebt, editDebt. `app.html` multiple locations
+7. `renderForecast` resolves the real `S.forecast` index for `gotMoney`/`delForecast` onclicks - fixes silent wrong-row mutation when forecasts are entered out of date order. `app.html:3920-3935`
+8. `gotMoney` rejects $0 and already-received forecasts before opening the preview modal. `app.html:3939-3950`
+9. `confirmForecastAlloc` re-checks status before applying and uses `isConfirmingForecast` flag, blocking the cross-tab double-allocation race. `app.html:3953-3984`
+10. `getBillsForCalendar` filters explicitly to monthly bills with a valid day-of-month, including Sunday weekly previously dropped by `parseInt('0')` falsy. `app.html:4004-4011`
+11. `resetMonth` archives score via `computeMonthlyScore()` so the saved value matches the live Score tab. `app.html:4504-4510`
+12. Coach payload includes prior `coachHistory.slice(0,-1)` so the model has session memory. `app.html:7873`
+13. `evalCoachNudges` ownerPct check uses strict `===` against nullish coalesce, not loose `==`. `app.html:7892`
+
+(13 distinct edits across the 11 numbered fix items - some bundle related changes.)
+
+### Deferred to round 2
+- **`allocate()` preview vs commit separation**: requires UX work; today the result panel renders after state is already mutated. Design decision needed.
+- **Forecast confirm with adjustable amount**: needs a new editable field in `modal-alloc-preview`.
+- **Upcoming widget per-occurrence rendering**: design call - show a `x2` badge or expand rows for weekly bills?
+- **Month-boundary auto-detect**: today `S.allocated_to_bills` only resets on manual close-month tap; one missed close turns subsequent allocations into all-debt-and-buffer. Needs design.
+- **Insufficient-funds warning when deposit < windowNeeded**: only fires if fixed allocations are the cause; should fire unconditionally.
+- **`save()` debounce data-loss on backgrounding**: needs `visibilitychange` flush via `navigator.sendBeacon`.
+- **`coach-chat` edge function source missing from repo**: cannot fix without the deployed source. User action required - paste the function body or export from the Supabase dashboard.
+
+### False positives
+- `reverseJobs` legacy fallback (Bug Fixer Critical #2): debt was originally rolled to the highest-rate debt only, so the reversal is correct.
+- `computeJobs` `ownerAmt` double-count (Bug Fixer Critical #3): retracted by the auditor on second read.
