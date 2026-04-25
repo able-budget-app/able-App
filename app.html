@@ -1999,9 +1999,11 @@ async function onAuthStateChange(user) {
         },0);
         if(reconstructed>0.01) S.allocated_to_bills=reconstructed;
       }
-      // Per-bill reservations: assign IDs and redistribute the legacy scalar.
+      // Per-bill reservations: assign IDs, redistribute legacy scalar (stragglers),
+      // and release reservations for non-monthly bills whose occurrences have passed.
       let resDirty = ensureBillIds();
       if (_isAllocatedToBillsCurrentMonth() && migrateScalarToReservations()) resDirty = true;
+      if (applyOccurrenceReleases()) resDirty = true;
       if (resDirty) save();
     }
     setSyncState('ok');
@@ -2652,9 +2654,11 @@ async function loadUserData() {
     },0);
     if(reconstructed>0.01) S.allocated_to_bills=reconstructed;
   }
-  // Per-bill reservations: assign IDs and redistribute the legacy scalar.
+  // Per-bill reservations: assign IDs, redistribute legacy scalar (stragglers),
+  // and release reservations for non-monthly bills whose occurrences have passed.
   let resDirty = ensureBillIds();
   if (_isAllocatedToBillsCurrentMonth() && migrateScalarToReservations()) resDirty = true;
+  if (applyOccurrenceReleases()) resDirty = true;
   if (resDirty) save();
   setSyncState('ok');
 }
@@ -2666,7 +2670,6 @@ async function _writeUserData() {
     bills:S.bills, debts:S.debts, history:S.history,
     forecast:S.forecast, buffer:S.buffer, settings:S.settings,
     month_history:S.month_history, sources:S.sources,
-    allocated_to_bills:S.allocated_to_bills,
     obligations:S.obligations||[], profile:S.profile||null,
     email_prefs:S.email_prefs||{dormancy:true,weekly:true},
     updated_at:new Date().toISOString()
@@ -2710,7 +2713,6 @@ async function saveUserData() {
     bills:S.bills, debts:S.debts, history:S.history,
     forecast:S.forecast, buffer:S.buffer, settings:S.settings,
     month_history:S.month_history, sources:S.sources,
-    allocated_to_bills:S.allocated_to_bills,
     obligations:S.obligations||[], profile:S.profile||null,
     email_prefs:S.email_prefs||{dormancy:true,weekly:true},
     updated_at:new Date().toISOString()
@@ -2956,6 +2958,69 @@ function ensureBillIds() {
       dirty = true;
     }
   }
+  return dirty;
+}
+// Number of times a non-monthly bill recurs in (start, end].
+// Monthly and ongoing bills return 0 — they're released by the explicit `paid` flag,
+// not by the passage of time. Used to auto-release reservations as occurrences pass.
+function _occurrencesBetween(bill, start, end) {
+  if (!bill || bill.due === 'ongoing' || bill.paid) return 0;
+  const freq = bill.freq || 'monthly';
+  if (freq === 'monthly') return 0;
+  const s = new Date(start); s.setHours(0,0,0,0);
+  const e = new Date(end); e.setHours(0,0,0,0);
+  if (e <= s) return 0;
+  if (freq === 'weekly') {
+    const targetDow = parseInt(bill.due);
+    if (isNaN(targetDow)) return 0;
+    const startDow = s.getDay();
+    const daysSpan = Math.floor((e - s) / 86400000);
+    const dowDelta = ((targetDow - startDow + 7) % 7) || 7; // first match strictly after start
+    if (dowDelta > daysSpan) return 0;
+    return Math.floor((daysSpan - dowDelta) / 7) + 1;
+  }
+  if (freq === 'biweekly' || freq === 'custom') {
+    const interval = freq === 'biweekly' ? 14 : (parseInt(bill.freqDays) || 14);
+    let anchor = bill.due ? new Date(bill.due) : null;
+    if (!anchor || isNaN(+anchor)) return 0;
+    anchor.setHours(0,0,0,0);
+    // Roll anchor to the first occurrence strictly after start
+    while (anchor <= s) anchor = new Date(anchor.getTime() + interval * 86400000);
+    let count = 0;
+    while (anchor <= e) { count++; anchor = new Date(anchor.getTime() + interval * 86400000); }
+    return count;
+  }
+  return 0;
+}
+// Release reservation slices for non-monthly bills whose occurrences have passed
+// since the last load. Initializes lastOccurrenceCheck on first run so we don't
+// retroactively release across an arbitrary historical gap.
+function applyOccurrenceReleases() {
+  if (!Array.isArray(S.bills)) return false;
+  S.settings = S.settings || {};
+  const now = new Date();
+  const lastIso = S.settings.lastOccurrenceCheck;
+  if (!lastIso) {
+    S.settings.lastOccurrenceCheck = now.toISOString();
+    return true;
+  }
+  const last = new Date(lastIso);
+  if (isNaN(+last) || last >= now) {
+    S.settings.lastOccurrenceCheck = now.toISOString();
+    return true;
+  }
+  let dirty = false;
+  for (const b of S.bills) {
+    if (!b.id || b.paid) continue;
+    const r = _billReserved(b.id);
+    if (r <= 0.01) continue;
+    const count = _occurrencesBetween(b, last, now);
+    if (count > 0) {
+      _releaseReservation(b.id, b.amount * count);
+      dirty = true;
+    }
+  }
+  S.settings.lastOccurrenceCheck = now.toISOString();
   return dirty;
 }
 // One-time migration: redistribute the legacy S.allocated_to_bills scalar across
@@ -3299,7 +3364,6 @@ function applyJobs(jobs,amount,source){
   // keyed by bill id. Auto-reset across month rollover so stale reservations don't persist.
   S.settings=S.settings||{};
   if (!_isAllocatedToBillsCurrentMonth()) {
-    S.allocated_to_bills=0;
     S.settings.reservations={};
   }
   for (const j of jobs.filter(j=>j.type==='bills')) {
@@ -3308,8 +3372,6 @@ function applyJobs(jobs,amount,source){
       if (it && it.billId && it.amount > 0.01) _addReservation(it.billId, it.amount);
     }
   }
-  // Tee the legacy scalar for one release as a rollback safety net.
-  S.allocated_to_bills=(S.allocated_to_bills||0)+billsPaid;
   S.settings.allocResetMonth=_currentMonthKey();
   const wasFirstIncome = !S.history.length;
   S.history.unshift({
@@ -3726,11 +3788,8 @@ function reverseJobs(entry){
   // Reverse buffer contribution
   const bufAdded=entry.bufContrib||entry.jobs.filter(j=>j.type==='buffer').reduce((s,j)=>s+j.amount,0);
   if(bufAdded>0.01) S.buffer=Math.max(0,S.buffer-bufAdded);
-  // Release the amount that was earmarked for bills in this allocation
-  const billsPaid=entry.billsPaid||entry.jobs.filter(j=>j.type==='bills').reduce((s,j)=>s+j.amount,0);
-  if(billsPaid>0.01) S.allocated_to_bills=Math.max(0,(S.allocated_to_bills||0)-billsPaid);
-  // Per-bill: release each item's reservation. Falls through silently for legacy
-  // entries that lack billId (pre-migration) — the scalar release above still happens.
+  // Per-bill: release each item's reservation. Legacy entries without billId
+  // are silently skipped (their reservations don't exist in the new model).
   for (const j of entry.jobs.filter(j=>j.type==='bills')) {
     if (!Array.isArray(j.items)) continue;
     for (const it of j.items) {
@@ -4828,7 +4887,6 @@ function resetMonth(){
     debts: debtsSnapshot
   });
   S.history=[];
-  S.allocated_to_bills=0;
   S.settings=S.settings||{};
   S.settings.allocResetMonth=_currentMonthKey();
   S.settings.reservations={};
