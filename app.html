@@ -1616,11 +1616,11 @@ posthog.init('phc_B6PH36QxpExnyBYhfScFFF6LhDvoyxuFr6PypJuxxky3', {
 </div>
 <div class="modal-bg" id="modal-alloc-preview" style="display:none;">
   <div class="modal">
-    <button class="modal-close" onclick="closeModal('modal-alloc-preview')" aria-label="Close"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button>
+    <button class="modal-close" onclick="cancelForecastPreview()" aria-label="Close"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button>
     <div class="modal-title">Money received. Here's where it goes</div>
     <div id="preview-source" style="font-size:13px;color:var(--ds-t3);font-weight:700;margin-bottom:1rem;letter-spacing:.05em;text-transform:uppercase;"></div>
     <div id="preview-jobs"></div>
-    <div class="modal-actions"><button class="btn" onclick="closeModal('modal-alloc-preview')">Close</button><button class="btn btn-primary" onclick="confirmForecastAlloc()">Confirm &amp; log it</button></div>
+    <div class="modal-actions"><button class="btn" onclick="cancelForecastPreview()">Close</button><button class="btn btn-primary" onclick="confirmForecastAlloc()">Confirm &amp; log it</button></div>
   </div>
 </div>
 <div class="modal-bg" id="modal-fixed-alloc" style="display:none;">
@@ -2629,24 +2629,40 @@ async function loadUserData() {
   setSyncState('ok');
 }
 
+async function _writeUserData() {
+  if(!currentUser) return;
+  const {error}=await sbGet().from('user_data').upsert({
+    id:currentUser.id,
+    bills:S.bills, debts:S.debts, history:S.history,
+    forecast:S.forecast, buffer:S.buffer, settings:S.settings,
+    month_history:S.month_history, sources:S.sources,
+    allocated_to_bills:S.allocated_to_bills,
+    obligations:S.obligations||[], profile:S.profile||null,
+    email_prefs:S.email_prefs||{dormancy:true,weekly:true},
+    updated_at:new Date().toISOString()
+  });
+  setSyncState(error?'error':'ok');
+}
+
 async function save() {
   if(!currentUser) return;
   setSyncState('syncing');
   clearTimeout(saveTimer);
-  saveTimer=setTimeout(async()=>{
-    const {error}=await sbGet().from('user_data').upsert({
-      id:currentUser.id,
-      bills:S.bills, debts:S.debts, history:S.history,
-      forecast:S.forecast, buffer:S.buffer, settings:S.settings,
-      month_history:S.month_history, sources:S.sources,
-      allocated_to_bills:S.allocated_to_bills,
-      obligations:S.obligations||[], profile:S.profile||null,
-      email_prefs:S.email_prefs||{dormancy:true,weekly:true},
-      updated_at:new Date().toISOString()
-    });
-    setSyncState(error?'error':'ok');
-  },800);
+  saveTimer=setTimeout(_writeUserData,800);
 }
+
+// Flush a pending debounced save immediately. Used on visibilitychange so a user
+// who backgrounds the app mid-allocation doesn't lose the write inside the 800ms window.
+function flushSave() {
+  if(!currentUser || !saveTimer) return;
+  clearTimeout(saveTimer);
+  saveTimer=null;
+  _writeUserData();
+}
+
+document.addEventListener('visibilitychange', () => {
+  if (document.hidden) flushSave();
+});
 
 async function touchLastActive(){
   if(!currentUser || !sbGet()) return;
@@ -2868,6 +2884,32 @@ function applicableFixedAllocations(source) {
 // ═══════════════════════════════════════
 // ALLOCATION ENGINE
 // ═══════════════════════════════════════
+// Current calendar month as 'YYYY-MM'. Used to decide when to auto-reset
+// the running allocated_to_bills counter so that allocations don't break
+// when the user misses a manual close-month.
+function _currentMonthKey() { return new Date().toISOString().slice(0,7); }
+
+// Is the current S.allocated_to_bills value attributable to the current
+// calendar month? Two signals, in order of trust:
+//   1. S.settings.allocResetMonth (set by applyJobs/resetMonth going forward)
+//   2. Top-of-history timestamp (legacy migration path for users who never
+//      had allocResetMonth recorded).
+// If neither says "current month", treat the counter as stale and ignore it
+// so future allocations correctly reserve for upcoming bills.
+function _isAllocatedToBillsCurrentMonth() {
+  const cur = _currentMonthKey();
+  if (S.settings && typeof S.settings.allocResetMonth === 'string') {
+    return S.settings.allocResetMonth === cur;
+  }
+  if (Array.isArray(S.history) && S.history.length > 0) {
+    const topTs = S.history[0].ts || 0;
+    if (topTs > 0) {
+      return new Date(topTs).toISOString().slice(0,7) === cur;
+    }
+  }
+  return false;
+}
+
 function computeJobs(amount,source,useCurrentIncome=true) {
   // Rolling-window allocation: only reserve for bills coming due in the next N days.
   // This prevents dumping end-of-month income entirely to debt when next-month bills are about to hit.
@@ -2876,7 +2918,10 @@ function computeJobs(amount,source,useCurrentIncome=true) {
   // How much of prior income has actually been earmarked for upcoming bills?
   // This is tracked every time applyJobs runs and reset on close-month.
   // Using totalIn() here would be wrong because prior income is split across bills, debt, buffer, and free.
-  const alreadyReserved=useCurrentIncome?(S.allocated_to_bills||0):0;
+  // If we crossed a month boundary without an explicit close, the running counter
+  // belongs to a prior month. Treat it as zero for read purposes so the new month's
+  // allocations correctly reserve for upcoming bills.
+  const alreadyReserved=(useCurrentIncome && _isAllocatedToBillsCurrentMonth())?(S.allocated_to_bills||0):0;
   let rem=amount;
   const jobs=[];
   // Step 1: Fixed allocations come off the top (non-negotiable, before bills).
@@ -2901,13 +2946,21 @@ function computeJobs(amount,source,useCurrentIncome=true) {
   rem=Math.max(0,rem);
   // How much of this incoming money needs to be reserved for upcoming window bills?
   const windowNeeded=Math.max(0,winTotal-alreadyReserved);
-  // If fixed allocations ate enough that bills can't be fully covered, warn.
+  // Warn whenever upcoming bills can't be fully covered. Branch the wording by cause:
+  // if fixed allocations consumed enough of the deposit to create the shortfall, name
+  // them; otherwise the deposit itself is just smaller than the window's bills total.
   if(windowNeeded>0.01 && rem<windowNeeded-0.01){
     const shortfall=windowNeeded-rem;
+    const fixedTotal=jobs.filter(j=>j.type==='fixed').reduce((s,j)=>s+j.amount,0);
+    const causedByFixed=fixedTotal>0.01 && amount>=windowNeeded-0.01;
     jobs.unshift({
       type:'warning',
-      name:'Fixed allocations left '+fr(shortfall)+' short on bills',
-      why:'Bills due in the next '+allocWindow()+' days total '+fr(windowNeeded)+' but only '+fr(Math.max(0,rem))+' is left after fixed allocations. Pause a rule or cover the gap from buffer.',
+      name:causedByFixed
+        ?'Fixed allocations left '+fr(shortfall)+' short on bills'
+        :fr(shortfall)+' short on bills due in the next '+allocWindow()+' days',
+      why:causedByFixed
+        ?'Bills due in the next '+allocWindow()+' days total '+fr(windowNeeded)+' but only '+fr(Math.max(0,rem))+' is left after fixed allocations. Pause a rule or cover the gap from buffer.'
+        :'Bills due in the next '+allocWindow()+' days total '+fr(windowNeeded)+'. This deposit only covers '+fr(Math.max(0,rem))+'. Cover the rest from buffer or your next deposit.',
       amount:0,
     });
   }
@@ -3104,7 +3157,11 @@ function applyJobs(jobs,amount,source){
   S.buffer+=bufContrib;
   // Track how much of the user's income this month has actually been routed to upcoming bills.
   // This is what the allocation engine uses to figure out how much more to reserve on future incomes.
+  // Auto-reset on month rollover so a missed close-month doesn't carry the counter forward indefinitely.
+  if (!_isAllocatedToBillsCurrentMonth()) S.allocated_to_bills=0;
   S.allocated_to_bills=(S.allocated_to_bills||0)+billsPaid;
+  S.settings=S.settings||{};
+  S.settings.allocResetMonth=_currentMonthKey();
   const wasFirstIncome = !S.history.length;
   S.history.unshift({
     id:'h_'+Date.now()+'_'+Math.random().toString(36).slice(2,7),
@@ -3989,6 +4046,13 @@ function delForecast(i){
   if(typeof i!=='number'||i<0||i>=S.forecast.length)return;
   S.forecast.splice(i,1);save();renderForecast();
 }
+// Closing the forecast-preview modal without confirming should also drop the staged
+// pending state, so a subsequent gotMoney on a different row starts clean.
+function cancelForecastPreview(){
+  _pendingForecastIdx=null;
+  _pendingForecastJobs=null;
+  closeModal('modal-alloc-preview');
+}
 function addForecast(){
   const source=document.getElementById('fc-src').value;
   const amount=parseFloat(document.getElementById('fc-amt').value)||0;
@@ -4531,6 +4595,8 @@ function resetMonth(){
   });
   S.history=[];
   S.allocated_to_bills=0;
+  S.settings=S.settings||{};
+  S.settings.allocResetMonth=_currentMonthKey();
   S.bills=S.bills.map(b=>({...b,paid:false}));
   save();
   document.getElementById('alloc-result').style.display='none';

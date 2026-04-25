@@ -4,6 +4,20 @@ Running log of QA findings and verification passes. Newest entries at the top.
 
 ---
 
+## 2026-04-24 - QA audit round 2 (engineering bucket)
+
+No audit team this round - direct Editor pass against the deferred engineering items from round 1. Four fixes applied, full details in `build-log.md`.
+
+Verification: JS parses cleanly, all four touch points exercised mentally:
+- `flushSave()` correctly bails when no `saveTimer` is set; otherwise clears the timer and fires the upsert. The `visibilitychange` listener is added at module level so it's installed before login (the `if(!currentUser)` guard inside makes pre-login firings a no-op).
+- The warning branch correctly identifies fixed-allocation-caused shortfall: `fixedTotal > 0.01 && amount >= windowNeeded` means the deposit could have covered bills if not for fixed cuts. Otherwise the deposit was just small.
+- The month-boundary helper has three signal levels and a default-stale fallback. Legacy migration via top-history-timestamp covers users whose `S.settings.allocResetMonth` was never written. The `applyJobs` write path always sets `allocResetMonth` to current month, so within-session and cross-session behavior converge.
+- `cancelForecastPreview()` clears both pending vars before closing - this also closes the latent path QA flagged in round 1.
+
+No regressions surfaced. Branch ahead of origin/main by 1 commit, awaiting user push.
+
+---
+
 ## 2026-04-24 - QA Audit Round 1
 
 Status: fixes applied, awaiting QA review.
