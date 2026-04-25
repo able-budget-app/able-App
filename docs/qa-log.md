@@ -4,6 +4,23 @@ Running log of QA findings and verification passes. Newest entries at the top.
 
 ---
 
+## 2026-04-24 - QA audit round 3 (UX bucket)
+
+No audit team this round - direct Editor pass against the deferred UX items. Three fixes shipped, full details in `build-log.md`.
+
+Verification:
+- `confirmAlloc` re-reads the amount input on confirm (catches paste-then-Confirm where oninput didn't fire), re-validates >0, re-runs `computeJobs` if the value drifted from the staged amount.
+- Forecast race protections preserved: cross-tab status check still in place; `isAllocating` flag now covers both paths.
+- `cancelAllocPreview` clears `_pendingAlloc` before closing - same invariant as round 2's modal-cancel cleanup, just under the new variable name.
+- `renderUpcoming` switch from `S.bills.filter` to `billsInWindow()` matches the allocation engine's data source, so the widget's totals always match what `computeJobs` reserves. Single-occurrence bills render the same as before.
+- `openAllocateSheet` clears `alloc-result` on open; the new flow sets `alloc-result` to display:block inside `confirmAlloc` after applyJobs, matching the prior end-state.
+
+Items removed (collapsed into unified API): `_pendingForecastIdx`, `_pendingForecastJobs`, `isConfirmingForecast`, `confirmForecastAlloc`, `cancelForecastPreview`. All replaced by `_pendingAlloc`, `isAllocating`, `confirmAlloc`, `cancelAllocPreview`. Grep confirms zero stale references.
+
+JS parses cleanly. Branch ahead of origin/main by 1 commit, awaiting user push.
+
+---
+
 ## 2026-04-24 - QA audit round 2 (engineering bucket)
 
 No audit team this round - direct Editor pass against the deferred engineering items from round 1. Four fixes applied, full details in `build-log.md`.

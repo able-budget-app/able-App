@@ -4,6 +4,20 @@ Shipped changes by date. Newest entries at the top. Each entry: what changed, wh
 
 ---
 
+## 2026-04-24 - QA audit round 3 (UX bucket)
+
+Commit: `fix QA audit round 3 - UX bucket` (hash filled in after commit)
+
+Three deferred UX items, all in `app.html`. Unifies direct and forecast paths through a shared preview modal.
+
+- **Real tap-to-confirm**: `allocate()` no longer mutates state. It computes jobs, stages them in `_pendingAlloc`, and opens `modal-alloc-preview`. The actual `applyJobs` call moves to `confirmAlloc()`. Cancel discards the staged allocation and leaves the input fields populated so the user can adjust without retyping.
+- **Editable amount in preview**: the modal now has an amount input that re-runs `computeJobs` on change and re-renders the job list. Works for both direct income (on-the-fly adjustment) and forecast confirm (forecast-amount-edit was the original ask). Confirm re-validates and re-syncs in case the user edited without triggering oninput.
+- **Per-occurrence upcoming widget**: `renderUpcoming` now reads from `billsInWindow()` instead of `S.bills`, so weekly/biweekly bills show their cumulative window total. Multi-occurrence rows display "$50 x 3 in 14d" so the totals match what the allocator reserves.
+
+Refactor: `_pendingForecastIdx` / `_pendingForecastJobs` / `confirmForecastAlloc` / `cancelForecastPreview` / `isConfirmingForecast` all collapsed into the unified `_pendingAlloc` + `confirmAlloc` + `cancelAllocPreview` + `isAllocating` set. Single source of truth, simpler invariants.
+
+---
+
 ## 2026-04-24 - QA audit round 2 (engineering bucket)
 
 Commit: `fix QA audit round 2 - engineering items` (hash filled in after commit)

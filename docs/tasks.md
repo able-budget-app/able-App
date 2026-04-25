@@ -18,11 +18,11 @@ Active task list for QA + build rounds. See `qa-log.md` for QA history and `buil
 - [x] Auto-detect month boundary so `S.allocated_to_bills` resets without manual close
 - [x] Modal-Cancel pending forecast cleanup
 
-## Round 3 candidates (UX, need design decisions)
+## Round 3 - UX bucket (2026-04-24)
 
-- [ ] Split `allocate()` preview from commit - real tap-to-confirm
-- [ ] Adjustable amount field in forecast confirm modal
-- [ ] Per-occurrence rendering in Upcoming widget for weekly/biweekly bills
+- [x] Split `allocate()` preview from commit - real tap-to-confirm
+- [x] Adjustable amount field in forecast confirm modal (also gives direct-income users on-the-fly amount adjustment)
+- [x] Per-occurrence rendering in Upcoming widget for weekly/biweekly bills
 
 ## Out-of-band
 

@@ -1616,11 +1616,12 @@ posthog.init('phc_B6PH36QxpExnyBYhfScFFF6LhDvoyxuFr6PypJuxxky3', {
 </div>
 <div class="modal-bg" id="modal-alloc-preview" style="display:none;">
   <div class="modal">
-    <button class="modal-close" onclick="cancelForecastPreview()" aria-label="Close"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button>
+    <button class="modal-close" onclick="cancelAllocPreview()" aria-label="Close"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button>
     <div class="modal-title">Money received. Here's where it goes</div>
-    <div id="preview-source" style="font-size:13px;color:var(--ds-t3);font-weight:700;margin-bottom:1rem;letter-spacing:.05em;text-transform:uppercase;"></div>
+    <div id="preview-source" style="font-size:13px;color:var(--ds-t3);font-weight:700;margin-bottom:.5rem;letter-spacing:.05em;text-transform:uppercase;"></div>
+    <div class="field" style="margin-bottom:1rem;"><label>Amount</label><input type="number" id="preview-amount" min="0" step="0.01" oninput="onPreviewAmountChange()"></div>
     <div id="preview-jobs"></div>
-    <div class="modal-actions"><button class="btn" onclick="cancelForecastPreview()">Close</button><button class="btn btn-primary" onclick="confirmForecastAlloc()">Confirm &amp; log it</button></div>
+    <div class="modal-actions"><button class="btn" onclick="cancelAllocPreview()">Cancel</button><button class="btn btn-primary" onclick="confirmAlloc()">Confirm &amp; log it</button></div>
   </div>
 </div>
 <div class="modal-bg" id="modal-fixed-alloc" style="display:none;">
@@ -1722,12 +1723,13 @@ const EMPTY_DATA = {
 let S = JSON.parse(JSON.stringify(EMPTY_DATA));
 let currentUser = null;
 let selectedPlan = 'annual';
-let _pendingForecastIdx = null;
-let _pendingForecastJobs = null;
+// Unified staging slot for both direct-income and forecast confirmations. The preview
+// modal renders this; cancelAllocPreview clears it; confirmAlloc commits it via applyJobs.
+// Shape: { type:'direct'|'forecast', amount, source, jobs, forecastIdx?, note? }
+let _pendingAlloc = null;
 let wiScenarios = [];
 let saveTimer = null;
 let isAllocating = false;
-let isConfirmingForecast = false;
 
 // ═══════════════════════════════════════
 // AUTH
@@ -3191,38 +3193,97 @@ function applyJobs(jobs,amount,source){
   } catch (_) { /* non-blocking */ }
 }
 
+// Direct-income entry point. Validates input, computes jobs, stages them in _pendingAlloc,
+// and opens the preview modal. State is NOT mutated until the user taps Confirm.
 function allocate(){
-  // Guard against rapid double-tap; applyJobs mutates state synchronously, so without this
-  // a fast second tap can land before the input clear and produce a duplicate allocation.
   if(isAllocating)return;
   const amount=parseFloat(document.getElementById('inc-amount').value);
   const source=document.getElementById('inc-source').value;
   if(!amount||amount<=0){document.getElementById('inc-amount').focus();return;}
   if(!source){document.getElementById('inc-source').focus();return;}
+  const jobs=computeJobs(amount,source);
+  _pendingAlloc={type:'direct',amount,source,jobs};
+  openAllocPreview(amount,source,jobs);
+}
+
+// Render the preview modal for either direct or forecast paths. Source is the displayed
+// label (forecast may include a note suffix); the canonical source string is in _pendingAlloc.
+function openAllocPreview(amount,sourceLabel,jobs){
+  document.getElementById('preview-source').textContent=`${f2(amount)} from ${sourceLabel}`;
+  document.getElementById('preview-amount').value=amount.toFixed(2);
+  renderJobList(jobs,amount,document.getElementById('preview-jobs'));
+  document.getElementById('modal-alloc-preview').style.display='flex';
+}
+
+// Live preview re-render when the user edits the amount. Keeps _pendingAlloc in sync so
+// Confirm uses the latest values. Skips invalid input (zero/negative); Confirm re-validates.
+function onPreviewAmountChange(){
+  if(!_pendingAlloc)return;
+  const v=parseFloat(document.getElementById('preview-amount').value);
+  if(!v||v<=0)return;
+  if(Math.abs(v-_pendingAlloc.amount)<0.005)return;
+  const newJobs=computeJobs(v,_pendingAlloc.source);
+  _pendingAlloc.amount=v;
+  _pendingAlloc.jobs=newJobs;
+  renderJobList(newJobs,v,document.getElementById('preview-jobs'));
+}
+
+// Discard the staged allocation and close the preview. Input fields in the allocate sheet
+// are intentionally left populated so the user can adjust and re-preview without retyping.
+function cancelAllocPreview(){
+  _pendingAlloc=null;
+  closeModal('modal-alloc-preview');
+}
+
+// Commit the staged allocation. Re-reads the amount input in case the user edited without
+// triggering oninput (paste-then-Confirm). For forecast, re-checks status to catch
+// cross-tab races. The single isAllocating flag prevents double-fire across both paths.
+function confirmAlloc(){
+  if(isAllocating||!_pendingAlloc)return;
+  const v=parseFloat(document.getElementById('preview-amount').value);
+  if(!v||v<=0){document.getElementById('preview-amount').focus();return;}
+  if(Math.abs(v-_pendingAlloc.amount)>0.005){
+    _pendingAlloc.amount=v;
+    _pendingAlloc.jobs=computeJobs(v,_pendingAlloc.source);
+  }
+  const p=_pendingAlloc;
+  if(p.type==='forecast'){
+    const f=S.forecast[p.forecastIdx];
+    if(!f||f.status==='received'){cancelAllocPreview();return;}
+  }
   isAllocating=true;
   try {
-    const wasFirst=!S.history.length;
-    const jobs=computeJobs(amount,source);
-    applyJobs(jobs,amount,source);
-    const h=S.history[0];
-    const result=document.getElementById('alloc-result');
-    result.style.display='block';
-    const cheer=document.getElementById('alloc-cheer');
-    if(cheer){cheer.textContent=pickCheerLine(amount,wasFirst);cheer.style.display='block';}
-    document.getElementById('alloc-amt').textContent=f2(amount);
-    document.getElementById('alloc-src').textContent='from '+source;
-    const hintEl=document.getElementById('alloc-hint');
-    if(hintEl){
-      const counts=jobsDoneCounts(h);
-      hintEl.textContent=counts.total>0
-        ?`${counts.total} move${counts.total===1?'':'s'} to make. Tap each circle once you\'ve done it.`
-        :'Bill reserves are set aside in your checking. Nothing to move.';
+    if(p.type==='forecast'){
+      const f=S.forecast[p.forecastIdx];
+      S.forecast[p.forecastIdx].status='received';
+      applyJobs(p.jobs,p.amount,p.source+(p.note?' ('+p.note+')':''));
+      closeModal('modal-alloc-preview');
+      renderForecast();refreshHome();
+    } else {
+      const wasFirst=!S.history.length;
+      applyJobs(p.jobs,p.amount,p.source);
+      const h=S.history[0];
+      const result=document.getElementById('alloc-result');
+      result.style.display='block';
+      const cheer=document.getElementById('alloc-cheer');
+      if(cheer){cheer.textContent=pickCheerLine(p.amount,wasFirst);cheer.style.display='block';}
+      document.getElementById('alloc-amt').textContent=f2(p.amount);
+      document.getElementById('alloc-src').textContent='from '+p.source;
+      const hintEl=document.getElementById('alloc-hint');
+      if(hintEl){
+        const counts=jobsDoneCounts(h);
+        hintEl.textContent=counts.total>0
+          ?`${counts.total} move${counts.total===1?'':'s'} to make. Tap each circle once you\'ve done it.`
+          :'Bill reserves are set aside in your checking. Nothing to move.';
+      }
+      renderJobList(p.jobs,p.amount,document.getElementById('job-list'),h&&h.id);
+      document.getElementById('inc-amount').value='';
+      closeModal('modal-alloc-preview');
+      setTimeout(()=>{result.scrollIntoView({behavior:'smooth',block:'nearest'});},60);
+      refreshHome();
     }
-    renderJobList(jobs,amount,document.getElementById('job-list'),h&&h.id);
-    document.getElementById('inc-amount').value='';
-    setTimeout(()=>{result.scrollIntoView({behavior:'smooth',block:'nearest'});},60);
-    refreshHome();
   } finally {
+    _pendingAlloc=null;
     isAllocating=false;
   }
 }
@@ -3400,7 +3461,10 @@ function renderUpcoming(){
   const el=document.getElementById('upcoming-list');
   if(!el)return;
   const win=allocWindow();
-  const items=S.bills.filter(b=>b.due!=='ongoing').map(b=>({...b,days:billDaysUntil(b)})).filter(b=>b.days<=win).sort((a,b)=>a.days-b.days);
+  // Use billsInWindow so recurring bills (weekly/biweekly/custom) reflect their full
+  // window exposure - matching what computeJobs reserves. The previous implementation
+  // showed a single $50 row for a weekly bill while allocation reserved 2 x $50.
+  const items=billsInWindow(win).map(b=>({...b,days:b.nextInDays}));
   if(!items.length){el.innerHTML=`<div class="empty-state">No bills due in the next ${win} days.</div>`;return;}
   el.innerHTML='';
   items.forEach(b=>{
@@ -3408,10 +3472,16 @@ function renderUpcoming(){
     const bbg=b.days<=3?'var(--red-light)':b.days<=7?'var(--amber-light)':'var(--bg2)';
     const bc=b.days<=3?'var(--red)':b.days<=7?'var(--amber)':'var(--text3)';
     const lbl=b.days===0?'Today':b.days===1?'Tmrw':`${b.days}d`;
+    const occ=b.occurrences||1;
+    const perOcc=occ>1?(b.amount/occ):b.amount;
+    // Multi-occurrence bills show "$50 x 3 = $150" so the total matches the allocation reservation.
+    const amtHtml=occ>1
+      ?`<div style="text-align:right;"><div style="font-size:.95rem;font-weight:800;">${f2(b.amount)}</div><div style="font-size:10px;color:var(--text3);font-weight:700;margin-top:2px;">${f2(perOcc)} x ${occ} in ${win}d</div></div>`
+      :`<div style="font-size:.95rem;font-weight:800;color:${b.paid?'var(--text3)':'inherit'};text-decoration:${b.paid?'line-through':'none'};">${f2(b.amount)}</div>`;
     const d=document.createElement('div');d.className='upcoming-item '+cls;
     d.innerHTML=`<div class="upcoming-bubble" style="background:${bbg};color:${bc};">${lbl}</div>
       <div style="flex:1;"><div style="font-size:13px;font-weight:700;">${b.name}${b.paid?' ✓':''}</div><div style="font-size:11px;color:var(--text3);font-weight:600;">${billDueLabel(b)}</div></div>
-      <div style="font-size:.95rem;font-weight:800;color:${b.paid?'var(--text3)':'inherit'};text-decoration:${b.paid?'line-through':'none'};">${f2(b.amount)}</div>`;
+      ${amtHtml}`;
     el.appendChild(d);
   });
 }
@@ -4007,51 +4077,20 @@ function renderForecast(){
     </div>`;
 }
 function gotMoney(i){
-  if(isConfirmingForecast)return;
+  if(isAllocating)return;
   const f=S.forecast[i];
   if(!f)return;
-  // Skip stale or zero-amount entries: a re-tapped received forecast or a $0 row would
-  // otherwise create a junk history record on confirm.
   if(f.status==='received')return;
   if(!f.amount||f.amount<=0)return;
   const jobs=computeJobs(f.amount,f.source);
-  _pendingForecastIdx=i;_pendingForecastJobs=jobs;
-  document.getElementById('preview-source').textContent=`${f2(f.amount)} from ${f.source}${f.note?' ('+f.note+')':''}`;
-  renderJobList(jobs,f.amount,document.getElementById('preview-jobs'));
-  document.getElementById('modal-alloc-preview').style.display='flex';
-}
-function confirmForecastAlloc(){
-  if(isConfirmingForecast)return;
-  if(_pendingForecastIdx==null)return;
-  const f=S.forecast[_pendingForecastIdx];
-  // Re-check status: another tab or a stale modal could have already received this forecast.
-  if(!f||f.status==='received'){
-    closeModal('modal-alloc-preview');
-    _pendingForecastIdx=null;_pendingForecastJobs=null;
-    return;
-  }
-  isConfirmingForecast=true;
-  try {
-    S.forecast[_pendingForecastIdx].status='received';
-    applyJobs(_pendingForecastJobs,f.amount,f.source+(f.note?' ('+f.note+')':''));
-    closeModal('modal-alloc-preview');renderForecast();refreshHome();
-  } finally {
-    _pendingForecastIdx=null;_pendingForecastJobs=null;
-    isConfirmingForecast=false;
-  }
+  _pendingAlloc={type:'forecast',amount:f.amount,source:f.source,jobs,forecastIdx:i,note:f.note};
+  openAllocPreview(f.amount,f.source+(f.note?' ('+f.note+')':''),jobs);
 }
 function delForecast(i){
   // Guard against -1: indexOf in renderForecast can return -1 if S.forecast is replaced
   // between sort and click; splice(-1,1) would silently delete the last entry.
   if(typeof i!=='number'||i<0||i>=S.forecast.length)return;
   S.forecast.splice(i,1);save();renderForecast();
-}
-// Closing the forecast-preview modal without confirming should also drop the staged
-// pending state, so a subsequent gotMoney on a different row starts clean.
-function cancelForecastPreview(){
-  _pendingForecastIdx=null;
-  _pendingForecastJobs=null;
-  closeModal('modal-alloc-preview');
 }
 function addForecast(){
   const source=document.getElementById('fc-src').value;
