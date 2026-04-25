@@ -619,6 +619,96 @@ a { text-decoration: none; color: inherit; }
   letter-spacing: -.01em;
   box-shadow: 0 4px 12px rgba(0,0,0,.1);
 }
+/* Unified hero — money rows + secondary CTA, mirrors the real app */
+.app-hero-money-row {
+  position: relative;
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  padding: 3px 0;
+  font-size: 9.5px;
+}
+.app-hero-money-label {
+  font-weight: 800;
+  letter-spacing: .08em;
+  text-transform: uppercase;
+  color: rgba(255,255,255,.72);
+  font-size: 7.5px;
+}
+.app-hero-money-val {
+  font-weight: 800;
+  color: white;
+  letter-spacing: -.02em;
+  font-size: 11px;
+}
+.app-hero-money-divider {
+  height: 1px;
+  background: rgba(255,255,255,.18);
+  margin: 4px 0;
+}
+.app-hero-available-row {
+  position: relative;
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  padding: 2px 0 5px;
+}
+.app-hero-available-label {
+  font-size: 7.5px;
+  font-weight: 800;
+  letter-spacing: .1em;
+  text-transform: uppercase;
+  color: rgba(255,255,255,.85);
+}
+.app-hero-available-val {
+  font-size: 18px;
+  font-weight: 900;
+  color: white;
+  letter-spacing: -.025em;
+  line-height: 1;
+}
+.app-hero-section-divider {
+  height: 1px;
+  background: rgba(255,255,255,.18);
+  margin: 10px 0 8px;
+  position: relative;
+}
+.app-hero-cta-secondary {
+  position: relative;
+  display: block;
+  width: 100%;
+  background: rgba(255,255,255,.13);
+  color: white;
+  border: 1px solid rgba(255,255,255,.28);
+  border-radius: 100px;
+  padding: 7px;
+  text-align: center;
+  font-size: 10px;
+  font-weight: 800;
+  letter-spacing: -.01em;
+  margin-top: 8px;
+}
+.app-hero-score-mini {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 6px;
+  margin-bottom: 5px;
+  position: relative;
+}
+.app-hero-score-mini-label {
+  font-size: 7.5px;
+  font-weight: 800;
+  letter-spacing: .1em;
+  text-transform: uppercase;
+  color: rgba(255,255,255,.7);
+}
+.app-hero-score-mini-num {
+  font-size: 12px;
+  font-weight: 900;
+  color: white;
+  letter-spacing: -.02em;
+}
 .app-qa-card {
   display: flex;
   align-items: center;
@@ -1416,7 +1506,7 @@ a { text-decoration: none; color: inherit; }
 .anim-result-card.card-done { opacity: .62; }
 .anim-result-card.card-done .anim-result-name { text-decoration: line-through; }
 #step2-phone .anim-result-card.card-done {
-  animation: countUp .5s .35s ease both, dimDone .35s 1.8s both;
+  animation: countUp .5s .35s ease both, dimDone .35s 1.4s both;
 }
 @keyframes dimDone {
   from { opacity: 1; }
@@ -2062,38 +2152,52 @@ posthog.init('phc_B6PH36QxpExnyBYhfScFFF6LhDvoyxuFr6PypJuxxky3', {
             </div>
             <div class="phone-content">
               <div class="app-hero-card">
-                <div class="app-hero-eyebrow">This month</div>
-                <div class="app-hero-headline">You're on track.</div>
-                <div class="app-hero-sub">$420 still needed to cover bills.</div>
-                <div class="app-hero-score-row">
-                  <div><span class="app-hero-score-num">72</span><span class="app-hero-score-max">/100</span></div>
-                  <div class="app-hero-grade">On track</div>
+                <div class="app-hero-eyebrow">April · Month in progress</div>
+                <div class="app-hero-money-row">
+                  <span class="app-hero-money-label">In your accounts</span>
+                  <span class="app-hero-money-val">$4,000</span>
+                </div>
+                <div class="app-hero-money-row">
+                  <span class="app-hero-money-label">Reserved for bills</span>
+                  <span class="app-hero-money-val">$1,152</span>
+                </div>
+                <div class="app-hero-money-divider"></div>
+                <div class="app-hero-available-row">
+                  <span class="app-hero-available-label">Available to spend</span>
+                  <span class="app-hero-available-val">$2,848</span>
+                </div>
+                <div class="app-hero-cta">Tell me where it goes →</div>
+                <div class="app-hero-section-divider"></div>
+                <div class="app-hero-score-mini">
+                  <span class="app-hero-score-mini-label">This month's score</span>
+                  <span class="app-hero-score-mini-num">72<span class="app-hero-score-max">/100</span></span>
+                  <span class="app-hero-grade">On track</span>
                 </div>
                 <div class="app-hero-bar"><div class="app-hero-bar-fill"></div></div>
-                <div class="app-hero-chips">
+                <div class="app-hero-chips" style="margin-top:8px;">
                   <div class="app-hero-chip">
                     <div class="app-hero-chip-label">Bills</div>
-                    <div class="app-hero-chip-pts">24<span class="app-hero-chip-pts-max">/30</span></div>
+                    <div class="app-hero-chip-pts">24<span class="app-hero-chip-pts-max">/30 pts</span></div>
                     <div class="app-hero-chip-dots">
                       <div class="app-hero-chip-dot filled"></div><div class="app-hero-chip-dot filled"></div><div class="app-hero-chip-dot filled"></div><div class="app-hero-chip-dot filled"></div><div class="app-hero-chip-dot"></div>
                     </div>
                   </div>
                   <div class="app-hero-chip">
                     <div class="app-hero-chip-label">Debt</div>
-                    <div class="app-hero-chip-pts">14<span class="app-hero-chip-pts-max">/20</span></div>
+                    <div class="app-hero-chip-pts">14<span class="app-hero-chip-pts-max">/20 pts</span></div>
                     <div class="app-hero-chip-dots">
                       <div class="app-hero-chip-dot filled"></div><div class="app-hero-chip-dot filled"></div><div class="app-hero-chip-dot filled"></div><div class="app-hero-chip-dot filled"></div><div class="app-hero-chip-dot"></div>
                     </div>
                   </div>
                   <div class="app-hero-chip">
                     <div class="app-hero-chip-label">Buffer</div>
-                    <div class="app-hero-chip-pts">9<span class="app-hero-chip-pts-max">/15</span></div>
+                    <div class="app-hero-chip-pts">9<span class="app-hero-chip-pts-max">/15 pts</span></div>
                     <div class="app-hero-chip-dots">
                       <div class="app-hero-chip-dot filled"></div><div class="app-hero-chip-dot filled"></div><div class="app-hero-chip-dot filled"></div><div class="app-hero-chip-dot"></div><div class="app-hero-chip-dot"></div>
                     </div>
                   </div>
                 </div>
-                <div class="app-hero-cta">Log income →</div>
+                <div class="app-hero-cta-secondary">Log income →</div>
               </div>
               <div class="app-qa-card">
                 <div class="app-qa-icon">
@@ -2102,16 +2206,6 @@ posthog.init('phc_B6PH36QxpExnyBYhfScFFF6LhDvoyxuFr6PypJuxxky3', {
                 <div class="app-qa-body">
                   <div class="app-qa-title">Next 14 days</div>
                   <div class="app-qa-sub">Covered. $2,180 due, reserved.</div>
-                </div>
-                <div class="app-qa-chev">›</div>
-              </div>
-              <div class="app-qa-card">
-                <div class="app-qa-icon">
-                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
-                </div>
-                <div class="app-qa-body">
-                  <div class="app-qa-title">Ask the coach</div>
-                  <div class="app-qa-sub">Get a read on this month.</div>
                 </div>
                 <div class="app-qa-chev">›</div>
               </div>
