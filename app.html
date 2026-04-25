@@ -3983,7 +3983,12 @@ function confirmForecastAlloc(){
     isConfirmingForecast=false;
   }
 }
-function delForecast(i){S.forecast.splice(i,1);save();renderForecast();}
+function delForecast(i){
+  // Guard against -1: indexOf in renderForecast can return -1 if S.forecast is replaced
+  // between sort and click; splice(-1,1) would silently delete the last entry.
+  if(typeof i!=='number'||i<0||i>=S.forecast.length)return;
+  S.forecast.splice(i,1);save();renderForecast();
+}
 function addForecast(){
   const source=document.getElementById('fc-src').value;
   const amount=parseFloat(document.getElementById('fc-amt').value)||0;

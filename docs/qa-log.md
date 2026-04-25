@@ -47,3 +47,11 @@ Status: fixes applied, awaiting QA review.
 ### False positives
 - `reverseJobs` legacy fallback (Bug Fixer Critical #2): debt was originally rolled to the highest-rate debt only, so the reversal is correct.
 - `computeJobs` `ownerAmt` double-count (Bug Fixer Critical #3): retracted by the auditor on second read.
+
+### QA review of commit 56af46f
+Verdict: PASS WITH CONCERNS. All 13 fixes verified present and correct, no regressions. Two follow-up items:
+
+1. **`delForecast(-1)` silent data corruption** — flagged by QA. `S.forecast.indexOf(f)` in `renderForecast` can return `-1` if the array is replaced concurrently. `gotMoney(-1)` is caught by the `!f` guard at line 3955, but `delForecast(-1)` would `splice(-1,1)` and silently delete the last forecast. **Fixed in follow-up commit** with bounds guard at `app.html:3986-3990`.
+2. **`modal-alloc-preview` Cancel doesn't clear `_pendingForecastIdx`** — pre-existing latent path. Self-heals in normal flow because the next `gotMoney` overwrites the pending state. Deferred to round 2.
+
+Score-formula change in `resetMonth` is a real semantic shift (binary 20pt → proportional). It's the intended fix (archive should match the live tab), but worth a one-line note to users that historical-vs-future month scores aren't strictly comparable until enough months have passed under the new formula.
