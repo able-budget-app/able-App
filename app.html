@@ -937,6 +937,34 @@ input,select,button,textarea{font-family:inherit;}
 .alloc-balance-note{background:var(--ds-green-l);border-radius:var(--ds-r1);padding:9px 12px;margin:.5rem 0 .85rem;font-size:12px;font-weight:600;color:var(--ds-green);line-height:1.5;display:flex;align-items:center;justify-content:space-between;gap:10px;}
 .alloc-balance-note button{background:transparent;color:var(--ds-green);border:1.5px solid var(--ds-green-m);font-family:var(--ds-f);font-size:11px;font-weight:800;padding:4px 10px;border-radius:100px;cursor:pointer;letter-spacing:-.01em;flex-shrink:0;}
 .alloc-balance-note button:hover{background:rgba(42,122,74,.08);}
+/* Next-14 timeline modal — chronological list of bills + expected income */
+.next14-summary{display:flex;justify-content:space-between;gap:10px;background:var(--ds-page);border-radius:var(--ds-r1);padding:10px 14px;margin-bottom:1rem;font-family:var(--ds-f);}
+.next14-summary-cell{flex:1;text-align:center;}
+.next14-summary-cell + .next14-summary-cell{border-left:1px solid var(--ds-t4);}
+.next14-summary-label{font-size:9px;font-weight:800;letter-spacing:.12em;text-transform:uppercase;color:var(--ds-t3);margin-bottom:3px;}
+.next14-summary-val{font-size:1rem;font-weight:900;color:var(--ds-t1);letter-spacing:-.02em;}
+.next14-summary-val--out{color:var(--ds-c4);}
+.next14-summary-val--in{color:var(--ds-green);}
+.next14-summary-val--net{color:var(--ds-t1);}
+.next14-day{font-size:11px;font-weight:800;letter-spacing:.12em;text-transform:uppercase;color:var(--ds-t3);margin:1rem 0 .5rem;font-family:var(--ds-f);}
+.next14-day:first-child{margin-top:0;}
+.next14-day-today{color:var(--ds-green);}
+.next14-row{display:flex;align-items:center;gap:12px;padding:11px 14px;background:var(--ds-card);border-radius:var(--ds-r1);margin-bottom:7px;box-shadow:var(--ds-sh1);}
+.next14-row--bill{border-left:3px solid var(--ds-c4);}
+.next14-row--income{border-left:3px solid var(--ds-green);}
+.next14-icon{width:30px;height:30px;border-radius:50%;display:flex;align-items:center;justify-content:center;flex-shrink:0;}
+.next14-icon--bill{background:#fdeef2;color:var(--ds-c4);}
+.next14-icon--income{background:var(--ds-green-l);color:var(--ds-green);}
+.next14-icon svg{width:14px;height:14px;stroke-width:2.4;}
+.next14-body{flex:1;min-width:0;}
+.next14-name{font-size:13px;font-weight:800;color:var(--ds-t1);letter-spacing:-.01em;display:flex;align-items:center;gap:6px;flex-wrap:wrap;}
+.next14-meta{font-size:11px;color:var(--ds-t3);font-weight:600;margin-top:2px;}
+.next14-amt{font-family:var(--ds-f);font-size:14px;font-weight:900;letter-spacing:-.02em;flex-shrink:0;}
+.next14-amt--out{color:var(--ds-c4);}
+.next14-amt--in{color:var(--ds-green);}
+.next14-funded{display:inline-flex;align-items:center;font-size:9px;font-weight:800;color:var(--ds-green);background:var(--ds-green-l);padding:2px 6px;border-radius:100px;letter-spacing:.04em;}
+.next14-funded--partial{color:var(--ds-c3);background:#fef3e0;}
+.next14-empty{padding:1.5rem 1rem;text-align:center;color:var(--ds-t2);font-size:13px;font-weight:600;background:var(--ds-page);border-radius:var(--ds-r1);}
 .db-action-card{display:flex;align-items:center;gap:14px;background:var(--ds-card);border-radius:var(--ds-r2);padding:1rem 1.15rem;margin-bottom:.65rem;box-shadow:var(--ds-sh1);cursor:pointer;transition:transform .15s,box-shadow .15s;}
 .db-action-card:hover{transform:translateY(-1px);box-shadow:var(--ds-sh2);}
 .db-action-card:active{transform:translateY(0);}
@@ -1254,7 +1282,7 @@ posthog.init('phc_B6PH36QxpExnyBYhfScFFF6LhDvoyxuFr6PypJuxxky3', {
   </div>
 
   <!-- QUICK ACTIONS -->
-  <div class="db-action-card" onclick="goTo('forecast')" role="button" tabindex="0" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();goTo('forecast');}">
+  <div class="db-action-card" onclick="openNext14Modal()" role="button" tabindex="0" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();openNext14Modal();}">
     <div class="db-action-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" width="20" height="20"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg></div>
     <div class="db-action-body">
       <div class="db-action-title" id="db-runway-title">Next 14 days</div>
@@ -1719,6 +1747,15 @@ posthog.init('phc_B6PH36QxpExnyBYhfScFFF6LhDvoyxuFr6PypJuxxky3', {
     <div class="field"><label>Current balance ($)</label><input type="number" id="buf-inp" placeholder="0" min="0" step="0.01"></div>
     <div style="font-size:12px;color:var(--ds-t2);font-weight:600;margin-top:12px;line-height:1.6;background:#eaf2fc;border-radius:var(--ds-r1);padding:12px 14px;">Money set aside for slow months. Goal is one full month of bills. Update whenever you move money in or out.</div>
     <div class="modal-actions"><button class="btn" onclick="closeModal('modal-buffer')">Cancel</button><button class="btn btn-primary" onclick="saveBuffer()">Save</button></div>
+  </div>
+</div>
+<div class="modal-bg" id="modal-next-14" style="display:none;" onclick="if(event.target===this)closeModal('modal-next-14')">
+  <div class="modal" style="max-width:520px;max-height:88dvh;overflow-y:auto;">
+    <button class="modal-close" onclick="closeModal('modal-next-14')" aria-label="Close"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button>
+    <div class="modal-title">Next 14 days</div>
+    <div style="font-size:13px;color:var(--ds-t2);font-weight:600;line-height:1.5;margin-bottom:1rem;">Everything coming up — bills due and income expected, in date order.</div>
+    <div id="next-14-summary"></div>
+    <div id="next-14-list"></div>
   </div>
 </div>
 <div class="modal-bg" id="modal-balance" style="display:none;">
@@ -2953,6 +2990,47 @@ function billsInWindow(days){
   // Sort by soonest first
   list.sort((a,b)=>a.nextInDays-b.nextInDays);
   return list;
+}
+
+// Returns an array of Date objects for each occurrence of the bill within the next
+// `days` days. Used by the Next-14 timeline so each occurrence shows on its own row.
+// Skips paid bills and ongoing-no-date bills.
+function billOccurrenceDates(bill,days){
+  if(!bill||bill.paid||bill.due==='ongoing') return [];
+  const freq=bill.freq||'monthly';
+  const now=new Date();now.setHours(0,0,0,0);
+  const out=[];
+  if(freq==='monthly'){
+    const d=parseInt(bill.due);if(isNaN(d))return [];
+    let t=monthlyDueDate(now.getFullYear(),now.getMonth(),d);
+    if(t<now)t=monthlyDueDate(now.getFullYear(),now.getMonth()+1,d);
+    const delta=Math.round((t-now)/86400000);
+    if(delta<=days) out.push(t);
+    return out;
+  }
+  if(freq==='weekly'){
+    const targetDow=parseInt(bill.due);if(isNaN(targetDow))return [];
+    const todayDow=now.getDay();
+    let delta=(targetDow-todayDow+7)%7;
+    while(delta<=days){
+      out.push(new Date(now.getTime()+delta*86400000));
+      delta+=7;
+    }
+    return out;
+  }
+  if(freq==='biweekly'||freq==='custom'){
+    const interval=freq==='biweekly'?14:(parseInt(bill.freqDays)||14);
+    let anchor=bill.due?new Date(bill.due):null;
+    if(!anchor||isNaN(+anchor)) return [];
+    anchor.setHours(0,0,0,0);
+    while(anchor<now) anchor=new Date(anchor.getTime()+interval*86400000);
+    while(Math.round((anchor-now)/86400000)<=days){
+      out.push(new Date(anchor));
+      anchor=new Date(anchor.getTime()+interval*86400000);
+    }
+    return out;
+  }
+  return [];
 }
 const windowBillsTotal=(days)=>billsInWindow(days).reduce((s,b)=>s+b.amount,0);
 const totalIn=()=>S.history.reduce((s,h)=>s+h.amount,0);
@@ -4991,6 +5069,129 @@ function deleteFixedAlloc(i){
 // ═══════════════════════════════════════
 function openBufferModal(){document.getElementById('buf-inp').value=S.buffer.toFixed(2);document.getElementById('modal-buffer').style.display='flex';}
 function saveBuffer(){S.buffer=parseFloat(document.getElementById('buf-inp').value)||0;save();refreshHome();closeModal('modal-buffer');}
+
+// ═══════════════════════════════════════
+// NEXT 14 DAYS TIMELINE
+// ═══════════════════════════════════════
+// Builds a chronological list of every event coming up in the next N days:
+// per-occurrence bill due dates (recurring bills appear once per occurrence)
+// + forecasted income that hasn't been received yet. Used by the home-page
+// "Next 14 days" action card to show users the full picture in order.
+function buildNext14Events(days){
+  const win = days || allocWindow();
+  const events = [];
+  const now = new Date(); now.setHours(0,0,0,0);
+  // Bills — expand each into per-occurrence dates within the window.
+  for (const b of (S.bills||[])) {
+    const dates = billOccurrenceDates(b, win);
+    for (const date of dates) {
+      events.push({
+        type: 'bill',
+        date,
+        days: Math.round((date - now) / 86400000),
+        name: b.name,
+        amount: b.amount,
+        bill: b,
+      });
+    }
+  }
+  // Forecasted income — only entries that haven't been marked received yet.
+  for (const f of (S.forecast||[])) {
+    if (f.status === 'received') continue;
+    const d = new Date(f.date);
+    if (isNaN(+d)) continue;
+    d.setHours(0,0,0,0);
+    const days = Math.round((d - now) / 86400000);
+    if (days < 0 || days > win) continue;
+    events.push({
+      type: 'income',
+      date: d,
+      days,
+      name: f.source + (f.note ? ' · ' + f.note : ''),
+      amount: f.amount,
+      forecast: f,
+    });
+  }
+  events.sort((a, b) => a.date - b.date || (a.type === 'income' ? -1 : 1));
+  return events;
+}
+function openNext14Modal(){
+  document.getElementById('modal-next-14').style.display = 'flex';
+  renderNext14();
+}
+function renderNext14(){
+  const list = document.getElementById('next-14-list');
+  const summary = document.getElementById('next-14-summary');
+  if (!list || !summary) return;
+  const win = allocWindow();
+  const events = buildNext14Events(win);
+  // Summary tiles at the top: total bills · expected income · net.
+  const billsTotal = events.filter(e => e.type === 'bill').reduce((s, e) => s + e.amount, 0);
+  const incomeTotal = events.filter(e => e.type === 'income').reduce((s, e) => s + e.amount, 0);
+  const net = incomeTotal - billsTotal;
+  summary.innerHTML = `
+    <div class="next14-summary">
+      <div class="next14-summary-cell">
+        <div class="next14-summary-label">Bills due</div>
+        <div class="next14-summary-val next14-summary-val--out">${fr(billsTotal)}</div>
+      </div>
+      <div class="next14-summary-cell">
+        <div class="next14-summary-label">Expected in</div>
+        <div class="next14-summary-val next14-summary-val--in">${fr(incomeTotal)}</div>
+      </div>
+      <div class="next14-summary-cell">
+        <div class="next14-summary-label">Net</div>
+        <div class="next14-summary-val ${net>=0?'next14-summary-val--in':'next14-summary-val--out'}">${(net>=0?'+':'-')}${fr(Math.abs(net))}</div>
+      </div>
+    </div>`;
+  if (!events.length) {
+    list.innerHTML = `<div class="next14-empty">Nothing on the calendar for the next ${win} days. Either it's a quiet stretch or you haven't added bills + expected income yet.</div>`;
+    return;
+  }
+  let html = '';
+  let lastDayKey = '';
+  events.forEach(ev => {
+    const dayKey = ev.date.toISOString().slice(0,10);
+    if (dayKey !== lastDayKey) {
+      const label = ev.days === 0 ? 'Today'
+        : ev.days === 1 ? 'Tomorrow'
+        : ev.date.toLocaleDateString('en-US', { weekday: 'short', month: 'short', day: 'numeric' });
+      html += `<div class="next14-day${ev.days===0?' next14-day-today':''}">${label}</div>`;
+      lastDayKey = dayKey;
+    }
+    if (ev.type === 'bill') {
+      const reserved = ev.bill.id ? Math.min(_billReserved(ev.bill.id), ev.amount) : 0;
+      let fundedTag = '';
+      if (reserved >= ev.amount - 0.01) {
+        fundedTag = '<span class="next14-funded">FUNDED</span>';
+      } else if (reserved > 0.01) {
+        fundedTag = `<span class="next14-funded next14-funded--partial">${Math.round((reserved/ev.amount)*100)}% FUNDED</span>`;
+      }
+      const billIcon = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>';
+      html += `
+        <div class="next14-row next14-row--bill">
+          <div class="next14-icon next14-icon--bill">${billIcon}</div>
+          <div class="next14-body">
+            <div class="next14-name">${ev.name}${fundedTag}</div>
+            <div class="next14-meta">Bill due</div>
+          </div>
+          <div class="next14-amt next14-amt--out">-${f2(ev.amount)}</div>
+        </div>`;
+    } else {
+      const incomeIcon = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"/><polyline points="19 12 12 19 5 12"/></svg>';
+      html += `
+        <div class="next14-row next14-row--income">
+          <div class="next14-icon next14-icon--income">${incomeIcon}</div>
+          <div class="next14-body">
+            <div class="next14-name">${ev.name}</div>
+            <div class="next14-meta">Expected income</div>
+          </div>
+          <div class="next14-amt next14-amt--in">+${f2(ev.amount)}</div>
+        </div>`;
+    }
+  });
+  list.innerHTML = html;
+}
 
 // ═══════════════════════════════════════
 // SPENDING BALANCE
