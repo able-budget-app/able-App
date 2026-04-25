@@ -7978,9 +7978,9 @@ async function coachSend() {
 
   try {
     const { data, error } = await sbGet().functions.invoke('coach-chat', {
-      // Send prior turns so multi-turn conversation is coherent. Slice off the optimistic
-      // user turn we just pushed onto coachHistory; the backend gets it as `message`.
-      body: { message: msg, state: buildCoachState(), history: coachHistory.slice(0,-1) }
+      // Backend re-loads conversation history from coach_messages keyed by user_id,
+      // so we don't need to ship it from the client.
+      body: { message: msg, state: buildCoachState() }
     });
     if (error) throw error;
     if (data && data.error) throw new Error(data.error);

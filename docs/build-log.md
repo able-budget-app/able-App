@@ -4,6 +4,17 @@ Shipped changes by date. Newest entries at the top. Each entry: what changed, wh
 
 ---
 
+## 2026-04-24 - coach-chat source committed + client cleanup
+
+Commit: `add coach-chat function source + revert redundant client history send`
+
+- `supabase/functions/coach-chat/index.ts` added, matching the deployed function byte-for-byte. Closes the round 1 audit gap where the live function was deployed via the Supabase dashboard but never committed - the system prompt, model ID, rate limit, and grounding logic are now versioned.
+- Client-side `coachSend` no longer ships `history: coachHistory.slice(0,-1)` in the request body. The backend re-loads conversation history from the `coach_messages` table keyed by `user_id` (limit 40, ordered ASC), so the client send was redundant payload. Reverts a portion of round 1 fix #12.
+- Heads-up unrelated to this commit: the deployed function uses `claude-haiku-4-5`, not Sonnet 4.6 as commit `3145e3d`'s description claimed. Haiku is fine for this use case (cheaper, faster, still capable of the empathy-first reasoning the brand voice describes), but the prior commit message was wrong.
+- Future cleanup parked: function uses inline CORS headers instead of importing from `_shared/cors.ts` like other functions. Not worth changing in this commit since it's a faithful copy of what's running, but worth a refactor pass when convenient.
+
+---
+
 ## 2026-04-24 - QA audit round 3 (UX bucket)
 
 Commit: `fix QA audit round 3 - UX bucket` (hash filled in after commit)

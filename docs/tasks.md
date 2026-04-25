@@ -26,4 +26,4 @@ Active task list for QA + build rounds. See `qa-log.md` for QA history and `buil
 
 ## Out-of-band
 
-- [ ] Add `supabase/functions/coach-chat/index.ts` to repo - currently deployed only via dashboard, system prompt is unauditable from source
+- [x] Add `supabase/functions/coach-chat/index.ts` to repo (2026-04-24)
