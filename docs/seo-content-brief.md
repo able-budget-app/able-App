@@ -19,7 +19,7 @@ Core features:
 - **Learn.** Short lessons on credit, funding, and money flow.
 - **Games.** 4 interactive scenarios that teach allocation, bill survival, interest, and spotting red flags.
 
-Plans: $9.99/month or $79/year (both come with a 7-day free trial, card required).
+Plans: $14.99/month or $129/year (both come with a 7-day free trial, card required).
 
 ## Brand voice (strict — do not deviate)
 

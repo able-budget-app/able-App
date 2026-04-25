@@ -9,7 +9,7 @@
 
 Hey,
 
-You are two days into your Able trial. Five days left before your card gets charged $9.99 or $79, whichever you picked.
+You are two days into your Able trial. Five days left before your card gets charged $14.99 or $129, whichever you picked.
 
 If you have not logged an income yet, I get it. The app is new, life is loud, and telling a budgeting app your numbers feels like work. But here is the thing:
 

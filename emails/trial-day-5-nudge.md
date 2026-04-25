@@ -11,8 +11,8 @@ Hey,
 
 Your 7-day Able trial ends in 2 days. On day 8, the card you entered gets charged.
 
-- Monthly: $9.99
-- Annual: $79
+- Monthly: $14.99
+- Annual: $129
 
 You do not need to do anything if you want to keep going. The subscription just starts.
 

@@ -4,6 +4,32 @@ Shipped changes by date. Newest entries at the top. Each entry: what changed, wh
 
 ---
 
+## 2026-04-24 - pricing increase ($9.99/$79 -> $14.99/$129)
+
+Commit: `pricing: $14.99 monthly, $129 annual ('save $50' framing)`
+
+New Stripe prices created on the existing product:
+- Monthly: `price_1TPyQ6DBmPAhrdxkrsz0gtfq` ($14.99 USD recurring monthly)
+- Annual: `price_1TPyPZDBmPAhrdxkAwiyRC6U` ($129 USD recurring yearly)
+
+Old prices (`price_1TO3hVDBmPAhrdxkIbpGti8n` and `price_1TPUDjDBmPAhrdxkL7IkGqp3`) are archived in Stripe so new checkouts can't pick them up; existing subscribers stay on the old amounts (grandfather). Lifetime price unchanged.
+
+Code touched (1 batch):
+- Stripe price ID constants in `app.html`
+- App paywall display: monthly + annual cards, fine print, per-month equivalent ($6.58 -> $10.75)
+- Marketing pricing in `index.html`: stakes callout, monthly card, annual card, submeta
+- 4 comparison pages (rocket-money, mint-shutting-down, monarch-money, ynab) Able pricing column
+- 3 email templates (`trial-day-5-nudge.md`, `trial-day-7-last-call.md`, `welcome-04-day-2-check-in.md`)
+- `docs/seo-content-brief.md`
+
+Annual savings framing changed: "Two months free" -> "Save $50 with annual." The math actually shifted slightly (old saved $40.88, new saves $50.88, both ~3+ months free), but $50 is the cleaner round number and matches how the user wants it framed.
+
+Memory updated: `project_launch_checklist.md` now reflects new pricing + grandfather note.
+
+The .md email templates in `/emails/` are reference copies (the live emails are in `supabase/functions/email-cron-daily/index.ts`, which doesn't reference dollar amounts directly - it uses dynamic copy and the Stripe-billed amount). So no edge-function redeploy needed for this pricing change. Just `git push` for the static site.
+
+---
+
 ## 2026-04-24 - punch list (logo, split default, auth, email design)
 
 Commit: `polish: logo underline, split defaults, auth fixes, email redesign`

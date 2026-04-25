@@ -11,8 +11,8 @@ Hey,
 
 Quick heads up: your 7-day Able trial ends tomorrow. Your card will be charged for the plan you selected.
 
-- Monthly: $9.99
-- Annual: $79 (two months free vs monthly)
+- Monthly: $14.99
+- Annual: $129 (save $50 vs monthly)
 
 **If you want to continue,** you do not need to do anything. The subscription starts automatically.
 

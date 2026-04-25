@@ -28,6 +28,14 @@ Active task list for QA + build rounds. See `qa-log.md` for QA history and `buil
 
 - [x] Add `supabase/functions/coach-chat/index.ts` to repo (2026-04-24)
 
+## Pricing increase (2026-04-24)
+
+- [x] Created new Stripe prices ($14.99/mo, $129/yr) on existing product
+- [x] Archived old prices in Stripe; existing customers grandfathered
+- [x] Updated all 13 code/copy references (app paywall, marketing pricing, 4 comparison pages, 3 email reference templates, SEO brief)
+- [x] Annual framing: "Save $50 with annual"
+- [x] Memory: launch checklist reflects new pricing
+
 ## Round 4 - punch list (2026-04-24)
 
 - [x] Logo underline in app (auth, paywall, navbar) matching marketing site
