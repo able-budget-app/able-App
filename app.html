@@ -3521,50 +3521,32 @@ function confirmAlloc(){
   isAllocating=true;
   try {
     const opts = { balanceNeutral: !!p.balanceNeutral };
+    const wasFirst=!S.history.length;
     if(p.type==='forecast'){
-      const f=S.forecast[p.forecastIdx];
       S.forecast[p.forecastIdx].status='received';
       applyJobs(p.jobs,p.amount,p.source+(p.note?' ('+p.note+')':''),opts);
-      closeModal('modal-alloc-preview');
-      renderForecast();refreshHome();
-      const h=S.history[0];
-      if (h && h.balanceDelta > 0.01) {
-        showToast(`I added ${f2(h.balanceDelta)} to your balance — adjust if it didn\'t hit yet.`, {
-          actionLabel: 'Adjust', onAction: openBalanceModal,
-        });
-      }
+      renderForecast();
     } else {
-      const wasFirst=!S.history.length;
       applyJobs(p.jobs,p.amount,p.source,opts);
-      const h=S.history[0];
-      const result=document.getElementById('alloc-result');
-      result.style.display='block';
-      const cheer=document.getElementById('alloc-cheer');
-      if(cheer){cheer.textContent=pickCheerLine(p.amount,wasFirst);cheer.style.display='block';}
-      document.getElementById('alloc-amt').textContent=f2(p.amount);
-      document.getElementById('alloc-src').textContent='from '+p.source;
-      const hintEl=document.getElementById('alloc-hint');
-      if(hintEl){
-        const counts=jobsDoneCounts(h);
-        hintEl.textContent=counts.total>0
-          ?`${counts.total} move${counts.total===1?'':'s'} to make. Tap each circle once you\'ve done it.`
-          :'Bill reserves are set aside in your checking. Nothing to move.';
-      }
-      // Inline balance notice — appears in the result panel when we auto-incremented.
-      const balNote=document.getElementById('alloc-balance-note');
-      if (balNote) {
-        if (h && h.balanceDelta > 0.01) {
-          balNote.innerHTML = `<span>I added <strong>${f2(h.balanceDelta)}</strong> to your spending balance. Adjust if this deposit hasn\'t hit your account yet.</span><button onclick="openBalanceModal()">Adjust</button>`;
-          balNote.style.display = 'flex';
-        } else {
-          balNote.style.display = 'none';
-        }
-      }
-      renderJobList(p.jobs,p.amount,document.getElementById('job-list'),h&&h.id);
-      document.getElementById('inc-amount').value='';
-      closeModal('modal-alloc-preview');
-      setTimeout(()=>{result.scrollIntoView({behavior:'smooth',block:'nearest'});},60);
-      refreshHome();
+      const incAmt=document.getElementById('inc-amount');
+      if(incAmt) incAmt.value='';
+    }
+    // Close both layers (preview modal and the underlying sheet) so the user lands
+    // back on the dashboard with the updated state immediately visible.
+    closeModal('modal-alloc-preview');
+    closeAllocateSheet();
+    refreshHome();
+    // Confirmation toast. Different copy for balance-neutral (reshuffle of existing
+    // balance) vs new income (which auto-incremented the spending balance).
+    const h=S.history[0];
+    if (p.balanceNeutral) {
+      showToast(`Allocated ${f2(p.amount)} from your unallocated balance.`, { duration: 4500 });
+    } else if (h && h.balanceDelta > 0.01) {
+      showToast(`${pickCheerLine(p.amount,wasFirst)} I added ${f2(h.balanceDelta)} to your balance.`, {
+        actionLabel: 'Adjust', onAction: openBalanceModal, duration: 6500,
+      });
+    } else {
+      showToast(`${pickCheerLine(p.amount,wasFirst)} ${f2(p.amount)} logged.`, { duration: 4500 });
     }
   } finally {
     _pendingAlloc=null;
@@ -5005,9 +4987,9 @@ function allocateAvailable(){
   const source = 'Unallocated balance';
   const jobs = computeJobs(avail, source);
   _pendingAlloc = { type: 'direct', amount: avail, source, jobs, balanceNeutral: true };
-  // Open the allocate sheet first (it hosts the post-confirm result panel),
-  // then layer the preview modal on top.
-  openAllocateSheet();
+  // Skip the "Money just came in" sheet — this isn't new money. Go straight
+  // to the preview modal. After confirm, both layers close and the user
+  // lands back on the dashboard.
   openAllocPreview(avail, source, jobs);
 }
 function renderBalanceCard(){
