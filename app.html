@@ -879,6 +879,13 @@ input,select,button,textarea{font-family:inherit;}
 .db-balance-cta:active{transform:translateY(0);}
 .db-balance-cta-ghost{width:100%;background:var(--ds-page);color:var(--ds-t1);border:1.5px solid var(--ds-t4);border-radius:var(--ds-r2);padding:11px 18px;margin-top:.85rem;font-family:var(--ds-f);font-size:14px;font-weight:800;letter-spacing:-.01em;cursor:pointer;}
 .db-balance-shortfall{background:#fdeef2;border-radius:var(--ds-r1);padding:10px 12px;margin-top:.5rem;font-size:12px;font-weight:600;color:var(--ds-c4);line-height:1.5;}
+.app-toast{position:fixed;left:50%;bottom:max(20px,calc(env(safe-area-inset-bottom)+76px));transform:translate(-50%,8px);background:var(--ds-t1);color:white;font-family:var(--ds-f);font-size:13px;font-weight:700;letter-spacing:-.01em;padding:11px 16px;border-radius:100px;box-shadow:0 8px 24px rgba(0,0,0,.18);display:flex;align-items:center;gap:10px;opacity:0;pointer-events:none;transition:opacity .25s,transform .25s cubic-bezier(.34,1.2,.64,1);z-index:200;max-width:calc(100vw - 32px);}
+.app-toast.show{opacity:1;transform:translate(-50%,0);pointer-events:auto;}
+.app-toast-action{background:rgba(255,255,255,.15);color:white;border:none;font-family:var(--ds-f);font-size:12px;font-weight:800;padding:5px 11px;border-radius:100px;cursor:pointer;letter-spacing:-.01em;}
+.app-toast-action:hover{background:rgba(255,255,255,.25);}
+.alloc-balance-note{background:var(--ds-green-l);border-radius:var(--ds-r1);padding:9px 12px;margin:.5rem 0 .85rem;font-size:12px;font-weight:600;color:var(--ds-green);line-height:1.5;display:flex;align-items:center;justify-content:space-between;gap:10px;}
+.alloc-balance-note button{background:transparent;color:var(--ds-green);border:1.5px solid var(--ds-green-m);font-family:var(--ds-f);font-size:11px;font-weight:800;padding:4px 10px;border-radius:100px;cursor:pointer;letter-spacing:-.01em;flex-shrink:0;}
+.alloc-balance-note button:hover{background:rgba(42,122,74,.08);}
 .db-action-card{display:flex;align-items:center;gap:14px;background:var(--ds-card);border-radius:var(--ds-r2);padding:1rem 1.15rem;margin-bottom:.65rem;box-shadow:var(--ds-sh1);cursor:pointer;transition:transform .15s,box-shadow .15s;}
 .db-action-card:hover{transform:translateY(-1px);box-shadow:var(--ds-sh2);}
 .db-action-card:active{transform:translateY(0);}
@@ -971,6 +978,7 @@ posthog.init('phc_B6PH36QxpExnyBYhfScFFF6LhDvoyxuFr6PypJuxxky3', {
 </script>
 </head>
 <body>
+<div id="app-toast" class="app-toast" role="status" aria-live="polite"></div>
 
 <!-- ═══════ AUTH SCREEN ═══════ -->
 <div id="auth-screen">
@@ -1607,6 +1615,7 @@ posthog.init('phc_B6PH36QxpExnyBYhfScFFF6LhDvoyxuFr6PypJuxxky3', {
           <div id="alloc-src" style="font-size:12px;color:var(--ds-t3);font-weight:700;letter-spacing:.05em;text-transform:uppercase;"></div>
         </div>
         <div id="alloc-hint" style="font-size:12px;color:var(--ds-t2);font-weight:600;line-height:1.45;margin:.5rem 0 .85rem;"></div>
+        <div id="alloc-balance-note" class="alloc-balance-note" style="display:none;"></div>
         <div id="job-list"></div>
         <div style="display:flex;gap:8px;margin-top:.85rem;flex-wrap:wrap;">
           <button class="btn btn-sm" onclick="exportAllocation()">Save plan</button>
@@ -3372,7 +3381,11 @@ function pickCheerLine(amount,isFirst){
   return pool[Math.floor(Math.random()*pool.length)];
 }
 
-function applyJobs(jobs,amount,source){
+// opts.balanceNeutral=true means this allocation reshuffles money already in the
+// user's accounts (e.g., the "Tell me where it goes" CTA on unallocated balance);
+// in that case we skip the balance auto-increment.
+function applyJobs(jobs,amount,source,opts){
+  opts = opts || {};
   const debtExtra=jobs.filter(j=>j.type==='debt').reduce((s,j)=>s+j.amount,0);
   const bufContrib=jobs.filter(j=>j.type==='buffer').reduce((s,j)=>s+j.amount,0);
   const billsPaid=jobs.filter(j=>j.type==='bills').reduce((s,j)=>s+j.amount,0);
@@ -3408,6 +3421,14 @@ function applyJobs(jobs,amount,source){
     }
   }
   S.settings.allocResetMonth=_currentMonthKey();
+  // Auto-increment the spending balance so the dashboard "available" stays in sync
+  // with reality. Skip when reshuffling existing balance (balanceNeutral) or when
+  // the user hasn't entered a balance yet (we'd otherwise seed it from one deposit).
+  let balanceDelta = 0;
+  if (!opts.balanceNeutral && _hasBalance() && amount > 0.01) {
+    balanceDelta = amount;
+    S.settings.balance = (S.settings.balance || 0) + amount;
+  }
   const wasFirstIncome = !S.history.length;
   S.history.unshift({
     id:'h_'+Date.now()+'_'+Math.random().toString(36).slice(2,7),
@@ -3416,6 +3437,8 @@ function applyJobs(jobs,amount,source){
     ts:Date.now(),
     debtExtra,bufContrib,billsPaid,ownerPaid,
     debtSplit,
+    balanceDelta,
+    balanceNeutral: !!opts.balanceNeutral,
     jobs:JSON.parse(JSON.stringify(jobs)),
     jobsDone:{}
   });
@@ -3497,15 +3520,22 @@ function confirmAlloc(){
   }
   isAllocating=true;
   try {
+    const opts = { balanceNeutral: !!p.balanceNeutral };
     if(p.type==='forecast'){
       const f=S.forecast[p.forecastIdx];
       S.forecast[p.forecastIdx].status='received';
-      applyJobs(p.jobs,p.amount,p.source+(p.note?' ('+p.note+')':''));
+      applyJobs(p.jobs,p.amount,p.source+(p.note?' ('+p.note+')':''),opts);
       closeModal('modal-alloc-preview');
       renderForecast();refreshHome();
+      const h=S.history[0];
+      if (h && h.balanceDelta > 0.01) {
+        showToast(`I added ${f2(h.balanceDelta)} to your balance — adjust if it didn\'t hit yet.`, {
+          actionLabel: 'Adjust', onAction: openBalanceModal,
+        });
+      }
     } else {
       const wasFirst=!S.history.length;
-      applyJobs(p.jobs,p.amount,p.source);
+      applyJobs(p.jobs,p.amount,p.source,opts);
       const h=S.history[0];
       const result=document.getElementById('alloc-result');
       result.style.display='block';
@@ -3519,6 +3549,16 @@ function confirmAlloc(){
         hintEl.textContent=counts.total>0
           ?`${counts.total} move${counts.total===1?'':'s'} to make. Tap each circle once you\'ve done it.`
           :'Bill reserves are set aside in your checking. Nothing to move.';
+      }
+      // Inline balance notice — appears in the result panel when we auto-incremented.
+      const balNote=document.getElementById('alloc-balance-note');
+      if (balNote) {
+        if (h && h.balanceDelta > 0.01) {
+          balNote.innerHTML = `<span>I added <strong>${f2(h.balanceDelta)}</strong> to your spending balance. Adjust if this deposit hasn\'t hit your account yet.</span><button onclick="openBalanceModal()">Adjust</button>`;
+          balNote.style.display = 'flex';
+        } else {
+          balNote.style.display = 'none';
+        }
       }
       renderJobList(p.jobs,p.amount,document.getElementById('job-list'),h&&h.id);
       document.getElementById('inc-amount').value='';
@@ -3826,6 +3866,14 @@ function reverseJobs(entry){
   // Reverse buffer contribution
   const bufAdded=entry.bufContrib||entry.jobs.filter(j=>j.type==='buffer').reduce((s,j)=>s+j.amount,0);
   if(bufAdded>0.01) S.buffer=Math.max(0,S.buffer-bufAdded);
+  // Reverse the spending-balance auto-increment if any. Legacy entries without
+  // balanceDelta are treated as 0 (no-op).
+  if (typeof entry.balanceDelta === 'number' && entry.balanceDelta > 0.01) {
+    S.settings = S.settings || {};
+    if (typeof S.settings.balance === 'number') {
+      S.settings.balance = Math.max(0, S.settings.balance - entry.balanceDelta);
+    }
+  }
   // Per-bill: release each item's reservation. Legacy entries without billId
   // are silently skipped (their reservations don't exist in the new model).
   for (const j of entry.jobs.filter(j=>j.type==='bills')) {
@@ -3911,7 +3959,7 @@ function saveEditIncome(){
   S.history.splice(idx,1);
   save();
   const jobs=computeJobs(newAmt,newSrc);
-  applyJobs(jobs,newAmt,newSrc);
+  applyJobs(jobs,newAmt,newSrc,{balanceNeutral: !!entry.balanceNeutral});
   refreshHome();renderDebtPage();
   // Only repaint the allocate-sheet result panel if the sheet itself is open.
   // Otherwise the user is editing from History and the panel would appear orphaned next time the sheet opens.
@@ -4904,6 +4952,29 @@ function _totalReservedNow(){
   }, 0);
 }
 function _availableToSpend(){ return _getBalance() - _totalReservedNow(); }
+// Brief floating toast at the bottom. Optional action button on the right.
+let _toastTimer = null;
+function showToast(msg, opts){
+  const el = document.getElementById('app-toast');
+  if (!el) return;
+  opts = opts || {};
+  const duration = opts.duration || 5000;
+  const actionLabel = opts.actionLabel || null;
+  const onAction = opts.onAction || null;
+  el.innerHTML = `<span>${msg}</span>${actionLabel?`<button class="app-toast-action" id="app-toast-action">${actionLabel}</button>`:''}`;
+  if (actionLabel && onAction) {
+    const btn = document.getElementById('app-toast-action');
+    if (btn) btn.onclick = () => { try { onAction(); } catch(_){} hideToast(); };
+  }
+  el.classList.add('show');
+  if (_toastTimer) clearTimeout(_toastTimer);
+  _toastTimer = setTimeout(hideToast, duration);
+}
+function hideToast(){
+  const el = document.getElementById('app-toast');
+  if (el) el.classList.remove('show');
+  if (_toastTimer) { clearTimeout(_toastTimer); _toastTimer = null; }
+}
 function openBalanceModal(){
   document.getElementById('bal-inp').value = _hasBalance() ? S.settings.balance.toFixed(2) : '';
   document.getElementById('modal-balance').style.display='flex';
@@ -4923,27 +4994,21 @@ function toggleReservedBreakdown(){
   if (!el) return;
   el.style.display = el.style.display === 'none' ? 'block' : 'none';
 }
-// Tap the available CTA → open the existing allocate sheet pre-filled with the
-// available amount and a synthetic source. Same allocator, same UX.
+// Tap the available CTA → stage a balance-neutral allocation and open the
+// preview modal directly. Skips the allocate-sheet entry form since the source
+// is fixed ("Unallocated balance") and the amount is the available value.
+// User can still edit the amount inside the preview if they want to plan only
+// part of it. balanceNeutral=true means applyJobs won't auto-increment balance.
 function allocateAvailable(){
   const avail = _availableToSpend();
   if (!(avail > 0.01)) return;
-  // openAllocateSheet populates the source dropdown and clears the amount, so
-  // pre-fill AFTER opening it.
+  const source = 'Unallocated balance';
+  const jobs = computeJobs(avail, source);
+  _pendingAlloc = { type: 'direct', amount: avail, source, jobs, balanceNeutral: true };
+  // Open the allocate sheet first (it hosts the post-confirm result panel),
+  // then layer the preview modal on top.
   openAllocateSheet();
-  const amtEl = document.getElementById('inc-amount');
-  const srcEl = document.getElementById('inc-source');
-  if (amtEl) amtEl.value = avail.toFixed(2);
-  if (srcEl) {
-    let opt = Array.from(srcEl.options).find(o => o.value === 'Unallocated balance');
-    if (!opt) {
-      opt = document.createElement('option');
-      opt.value = 'Unallocated balance';
-      opt.textContent = 'Unallocated balance';
-      srcEl.appendChild(opt);
-    }
-    srcEl.value = 'Unallocated balance';
-  }
+  openAllocPreview(avail, source, jobs);
 }
 function renderBalanceCard(){
   const el = document.getElementById('db-balance-card');
