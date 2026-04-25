@@ -3,6 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+<meta name="robots" content="noindex,nofollow">
 <title>Able. Built for inconsistent income.</title>
 <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;500;600;700;800&family=Lora:ital,wght@0,400;0,600;1,400&family=Bricolage+Grotesque:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
 <script src="https://js.stripe.com/v3/" crossorigin="anonymous"></script>
@@ -127,7 +128,7 @@ input,select,button,textarea{font-family:inherit;}
 .ob-table-input{flex:1;min-width:0;background:var(--ds-page);border:1.5px solid var(--ds-t4);border-radius:var(--ds-r1);color:var(--ds-t1);font-family:var(--ds-f);font-size:16px;font-weight:700;padding:12px 14px;outline:none;transition:all .2s;}
 .ob-table-input:focus{border-color:var(--ds-green);box-shadow:0 0 0 3px rgba(42,122,74,.1);}
 .ob-table-input::placeholder{color:var(--ds-t3);font-weight:500;}
-.ob-table-x{width:34px;height:34px;flex-shrink:0;background:transparent;border:none;color:var(--ds-t3);font-size:20px;cursor:pointer;border-radius:50%;transition:all .15s;}
+.ob-table-x{width:44px;height:44px;flex-shrink:0;background:transparent;border:none;color:var(--ds-t3);font-size:20px;cursor:pointer;border-radius:50%;transition:all .15s;}
 .ob-table-x:hover{background:#fdeef2;color:var(--ds-c4);}
 .ob-actions{display:flex;justify-content:space-between;align-items:center;gap:.75rem;margin-top:1rem;}
 #onboard-screen .btn-primary{display:inline-flex;align-items:center;justify-content:center;gap:6px;padding:14px 26px;background:linear-gradient(135deg,#2a7a4a,#3d9e78);color:white;border:none;border-radius:var(--ds-r1);font-family:var(--ds-f);font-size:14px;font-weight:800;cursor:pointer;transition:all .2s;box-shadow:0 4px 14px rgba(42,122,74,.3);letter-spacing:-.01em;flex:1;}
@@ -289,7 +290,7 @@ input,select,button,textarea{font-family:inherit;}
 .job-pct{font-size:11px;color:var(--ds-t3);font-weight:700;}
 .bill-paid-row{background:var(--ds-green-l)!important;}
 .bill-paid-row .bills-name{text-decoration:line-through;color:var(--ds-t3);}
-.checkbtn{width:24px;height:24px;border-radius:50%;border:2px solid var(--ds-t4);background:transparent;cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:11px;transition:all .2s;flex-shrink:0;}
+.checkbtn{width:44px;height:44px;border-radius:50%;border:2px solid var(--ds-t4);background:transparent;cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:14px;transition:all .2s;flex-shrink:0;}
 .checkbtn.checked{background:var(--ds-green);border-color:var(--ds-green);color:white;}
 .upcoming-item{display:flex;align-items:center;gap:12px;padding:12px 14px;border-radius:var(--ds-r2);margin-bottom:8px;background:var(--ds-card);box-shadow:var(--ds-sh1);}
 .upcoming-item.urgent{background:#fdeef2;}
@@ -310,19 +311,19 @@ input,select,button,textarea{font-family:inherit;}
 .tl-bar-bg{flex:1;height:7px;background:var(--bg2);border-radius:30px;overflow:hidden;}
 .tl-bar{height:7px;border-radius:30px;}
 .tl-date{font-size:12px;font-weight:700;width:80px;text-align:right;}
-.forecast-item{display:flex;align-items:center;gap:12px;padding:11px 14px;background:var(--white);border-radius:var(--r-sm);border:1.5px solid var(--border);margin-bottom:8px;box-shadow:var(--shadow);max-width:100%;overflow:hidden;}
-.fc-days{width:40px;text-align:center;font-size:11px;font-weight:800;color:var(--text3);flex-shrink:0;}
-.fc-body{flex:1 1 auto;min-width:0;overflow:hidden;}
-.fc-source{font-size:13px;font-weight:700;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
-.fc-date{font-size:11px;color:var(--text3);font-weight:600;}
-.fc-right{display:flex;align-items:center;gap:8px;flex-shrink:0;}
-.fc-amt{font-size:.95rem;font-weight:800;color:var(--sage);white-space:nowrap;}
-@media(max-width:540px){
-  .forecast-item{flex-wrap:wrap;align-items:center;row-gap:10px;padding:12px;}
-  .fc-body{flex:1 1 0;min-width:0;}
-  .fc-right{flex-basis:100%;width:100%;justify-content:flex-end;flex-wrap:wrap;gap:6px;}
-  .fc-right .btn-sm{padding:6px 11px;font-size:12px;}
-}
+/* Forecast row — card-style with three internal rows so mobile lays out
+   cleanly without children wrapping awkwardly. Left border color carries the
+   status (green = expected, coral = overdue, gray = already received). */
+.forecast-item{background:var(--ds-card);border-radius:var(--ds-r2);padding:12px 14px;margin-bottom:8px;box-shadow:var(--ds-sh1);border-left:3px solid var(--ds-green);display:flex;flex-direction:column;gap:6px;font-family:var(--ds-f);}
+.forecast-item--overdue{border-left-color:var(--ds-c4);}
+.forecast-item--received{border-left-color:var(--ds-t3);opacity:.72;}
+.fc-row{display:flex;align-items:center;justify-content:space-between;gap:10px;}
+.fc-source{font-size:14px;font-weight:800;color:var(--ds-t1);letter-spacing:-.01em;flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+.fc-amt{font-size:15px;font-weight:900;color:var(--ds-green);letter-spacing:-.02em;white-space:nowrap;}
+.forecast-item--overdue .fc-amt{color:var(--ds-c4);}
+.fc-meta{font-size:11px;font-weight:600;color:var(--ds-t3);flex:1;min-width:0;letter-spacing:.02em;}
+.fc-actions{display:flex;gap:6px;justify-content:flex-end;margin-top:2px;}
+.fc-actions .btn-sm{padding:6px 12px;font-size:12px;}
 .score-big{font-family:var(--ds-f);font-size:6rem;font-weight:900;line-height:1;letter-spacing:-.05em;}
 .score-row{display:flex;align-items:center;gap:12px;margin-bottom:12px;font-size:13px;font-weight:700;}
 .score-label{flex:1;font-weight:600;color:var(--text2);}
@@ -357,7 +358,7 @@ input,select,button,textarea{font-family:inherit;}
 .modal{background:var(--ds-card);border-radius:var(--ds-r3);padding:1.75rem;width:100%;max-width:480px;box-shadow:var(--ds-sh3);max-height:90vh;max-height:90dvh;overflow-y:auto;overscroll-behavior:contain;-webkit-overflow-scrolling:touch;animation:modalSlideUp .25s cubic-bezier(.34,1.56,.64,1);position:relative;}
 @keyframes modalSlideUp{from{opacity:0;transform:translateY(20px) scale(.96);}to{opacity:1;transform:translateY(0) scale(1);}}
 .modal-title{font-family:var(--ds-f);font-size:1.35rem;font-weight:800;margin-bottom:1.35rem;color:var(--ds-t1);letter-spacing:-.02em;padding-right:36px;}
-.modal-close{position:absolute;top:14px;right:14px;width:32px;height:32px;border-radius:50%;background:var(--ds-card2);border:none;cursor:pointer;display:flex;align-items:center;justify-content:center;color:var(--ds-t2);transition:all .15s;z-index:2;}
+.modal-close{position:absolute;top:10px;right:10px;width:44px;height:44px;border-radius:50%;background:var(--ds-card2);border:none;cursor:pointer;display:flex;align-items:center;justify-content:center;color:var(--ds-t2);transition:all .15s;z-index:2;}
 .modal-close:hover{background:var(--ds-t4);color:var(--ds-t1);}
 .modal-close:focus{outline:none;box-shadow:0 0 0 3px rgba(42,122,74,.2);}
 .modal-actions{display:flex;gap:10px;justify-content:flex-end;margin-top:1.5rem;}
@@ -4629,26 +4630,37 @@ function renderForecast(){
   const sorted=[...S.forecast].sort((a,b)=>new Date(a.date)-new Date(b.date));
   if(!sorted.length){el.innerHTML='<div class="empty-state">No expected income added yet. Log a payment you know is coming so Able can plan ahead.</div>';return;}
   el.innerHTML='';
-  sorted.forEach((f)=>{
+  sorted.forEach((f) => {
     // gotMoney/delForecast index into S.forecast (insertion order), not the sorted view,
     // so resolve the original index here. indexOf on the object reference is safe — sorted is a shallow copy.
-    const realIdx=S.forecast.indexOf(f);
-    const d=new Date(f.date);const diff=Math.round((d-today)/86400000);
-    const overdue=f.status==='expected'&&diff<0;
-    const sc=overdue?'var(--red)':f.status==='received'?'var(--sage)':'var(--sky)';
-    const sb2=overdue?'var(--red-light)':f.status==='received'?'var(--sage-light)':'var(--sky-light)';
-    const sl=overdue?'overdue':f.status==='received'?'received ✓':'expected';
-    const dateStr=d.toLocaleDateString('en-US',{month:'short',day:'numeric'});
-    const daysStr=diff===0?'today':diff>0?`in ${diff}d`:`${Math.abs(diff)}d ago`;
-    const div=document.createElement('div');div.className='forecast-item';
-    div.innerHTML=`<div class="fc-days">${daysStr}</div>
-      <div class="fc-body"><div class="fc-source">${f.source}${f.note?' · '+f.note:''}</div><div class="fc-date">${dateStr}</div></div>
-      <div class="fc-right">
-        <div class="fc-amt">${f2(f.amount)}</div>
-        <span class="pill" style="background:${sb2};color:${sc};">${sl}</span>
-        ${f.status!=='received'?`<button class="btn btn-sm btn-primary" onclick="gotMoney(${realIdx})">Got it →</button>`:''}
-        <button class="btn btn-sm btn-ghost" onclick="delForecast(${realIdx})">✕</button>
-      </div>`;
+    const realIdx = S.forecast.indexOf(f);
+    const d = new Date(f.date);
+    const diff = Math.round((d - today) / 86400000);
+    const overdue = f.status === 'expected' && diff < 0;
+    const received = f.status === 'received';
+    const pillBg = overdue ? 'var(--red-light)' : received ? 'var(--sage-light)' : 'var(--sky-light)';
+    const pillColor = overdue ? 'var(--red)' : received ? 'var(--sage)' : 'var(--sky)';
+    const pillLabel = overdue ? 'overdue' : received ? 'received ✓' : 'expected';
+    const dateStr = d.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
+    const daysStr = diff === 0 ? 'today' : diff > 0 ? `in ${diff}d` : `${Math.abs(diff)}d ago`;
+    const cls = overdue ? 'forecast-item forecast-item--overdue' : received ? 'forecast-item forecast-item--received' : 'forecast-item';
+    const sign = received ? '+' : '';
+    const div = document.createElement('div');
+    div.className = cls;
+    const actions = received
+      ? `<div class="fc-actions"><button class="btn btn-sm btn-ghost" onclick="delForecast(${realIdx})">✕</button></div>`
+      : `<div class="fc-actions"><button class="btn btn-sm btn-primary" onclick="gotMoney(${realIdx})">Got it →</button><button class="btn btn-sm btn-ghost" onclick="delForecast(${realIdx})">✕</button></div>`;
+    div.innerHTML = `
+      <div class="fc-row">
+        <div class="fc-source">${f.source}${f.note ? ' · ' + f.note : ''}</div>
+        <div class="fc-amt">${sign}${f2(f.amount)}</div>
+      </div>
+      <div class="fc-row">
+        <div class="fc-meta">${dateStr} · ${daysStr}</div>
+        <span class="pill" style="background:${pillBg};color:${pillColor};">${pillLabel}</span>
+      </div>
+      ${actions}
+    `;
     el.appendChild(div);
   });
   const tb=totalBills(),ti=totalIn();
@@ -9155,7 +9167,23 @@ async function coachSend() {
       footer.innerHTML = `<span>${data.remainingToday} messages left today</span>`;
     }
   } catch (e) {
-    const errMsg = (e && e.message) ? e.message : 'Something went wrong. Try again.';
+    const raw = (e && e.message) ? String(e.message) : '';
+    // Translate technical errors into something the user can act on.
+    // Daily-cap message from the backend already comes through human-friendly.
+    let errMsg;
+    if (/daily cap/i.test(raw)) {
+      errMsg = raw;
+    } else if (/rate.?limit|429|too many requests/i.test(raw)) {
+      errMsg = "Coach is briefly overwhelmed. Try again in a moment.";
+    } else if (/overloaded|529|503/i.test(raw)) {
+      errMsg = "Coach is busy right now. Give it 30 seconds and try again.";
+    } else if (/network|fetch|failed to fetch|timeout|offline/i.test(raw)) {
+      errMsg = "Network hiccup. Check your connection and try again.";
+    } else if (/unauthorized|401/i.test(raw)) {
+      errMsg = "Session expired. Sign out and back in to continue.";
+    } else {
+      errMsg = raw || 'Something went wrong. Try again.';
+    }
     coachHistory = coachHistory.slice(0, -1);
     renderCoachMessages(coachHistory);
     footer.innerHTML = `<div class="coach-error">${coachEscapeHtml(errMsg)}</div>`;
