@@ -1320,6 +1320,15 @@ posthog.init('phc_B6PH36QxpExnyBYhfScFFF6LhDvoyxuFr6PypJuxxky3', {
     <div class="db-action-chevron">›</div>
   </div>
 
+  <div class="db-action-card" onclick="goTo('forecast')" role="button" tabindex="0" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();goTo('forecast');}">
+    <div class="db-action-icon" style="background:#fef3e0;color:var(--ds-c3);"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" width="20" height="20"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg></div>
+    <div class="db-action-body">
+      <div class="db-action-title">Add expected income</div>
+      <div class="db-action-sub" id="db-forecast-sub">Plan for what's coming.</div>
+    </div>
+    <div class="db-action-chevron">›</div>
+  </div>
+
   <!-- INCOME THIS MONTH -->
   <div class="sec" style="margin-top:1.5rem;">Income this month</div>
   <div id="history-list"><div class="empty-state">No income logged yet this month. Tap "Log income" above to start.</div></div>
@@ -1557,6 +1566,27 @@ posthog.init('phc_B6PH36QxpExnyBYhfScFFF6LhDvoyxuFr6PypJuxxky3', {
       <div class="sec">Email reminders</div>
       <div class="card">
         <div style="font-size:13px;color:var(--ds-t2);font-weight:600;line-height:1.6;margin-bottom:1rem;">We'll send these to the email on file. Unsubscribe anytime.</div>
+        <label style="display:flex;align-items:flex-start;gap:12px;padding:12px 0;border-bottom:1px solid var(--ds-t4);cursor:pointer;">
+          <input type="checkbox" id="ep-bill_reminder" onchange="toggleEmailPref('bill_reminder',this.checked)" style="width:20px;height:20px;accent-color:var(--ds-green);margin-top:1px;flex-shrink:0;">
+          <div style="flex:1;">
+            <div style="font-weight:700;font-size:14px;color:var(--ds-t1);">Bill due tomorrow</div>
+            <div style="font-size:12px;color:var(--ds-t3);font-weight:600;margin-top:3px;line-height:1.5;">A heads-up the day before any bill comes due, so it's never a surprise.</div>
+          </div>
+        </label>
+        <label style="display:flex;align-items:flex-start;gap:12px;padding:12px 0;border-bottom:1px solid var(--ds-t4);cursor:pointer;">
+          <input type="checkbox" id="ep-low_buffer" onchange="toggleEmailPref('low_buffer',this.checked)" style="width:20px;height:20px;accent-color:var(--ds-green);margin-top:1px;flex-shrink:0;">
+          <div style="flex:1;">
+            <div style="font-weight:700;font-size:14px;color:var(--ds-t1);">Buffer running low</div>
+            <div style="font-size:12px;color:var(--ds-t3);font-weight:600;margin-top:3px;line-height:1.5;">If your buffer drops below half a month of bills, we'll let you know so you can rebuild before a slow stretch.</div>
+          </div>
+        </label>
+        <label style="display:flex;align-items:flex-start;gap:12px;padding:12px 0;border-bottom:1px solid var(--ds-t4);cursor:pointer;">
+          <input type="checkbox" id="ep-monthly_wrap" onchange="toggleEmailPref('monthly_wrap',this.checked)" style="width:20px;height:20px;accent-color:var(--ds-green);margin-top:1px;flex-shrink:0;">
+          <div style="flex:1;">
+            <div style="font-weight:700;font-size:14px;color:var(--ds-t1);">Monthly wrap-up</div>
+            <div style="font-size:12px;color:var(--ds-t3);font-weight:600;margin-top:3px;line-height:1.5;">First of the month: how last month's score came out, what shifted, and what to focus on this month.</div>
+          </div>
+        </label>
         <label style="display:flex;align-items:flex-start;gap:12px;padding:12px 0;border-bottom:1px solid var(--ds-t4);cursor:pointer;">
           <input type="checkbox" id="ep-dormancy" onchange="toggleEmailPref('dormancy',this.checked)" style="width:20px;height:20px;accent-color:var(--ds-green);margin-top:1px;flex-shrink:0;">
           <div style="flex:1;">
@@ -1903,7 +1933,7 @@ const EMPTY_DATA = {
   month_history:[], sources:['Salary','Freelance','Side income','Other'],
   allocated_to_bills:0,
   obligations:[], profile:null,
-  email_prefs:{dormancy:true, weekly:true}
+  email_prefs:{dormancy:true, weekly:true, bill_reminder:true, low_buffer:true, monthly_wrap:true}
 };
 let S = JSON.parse(JSON.stringify(EMPTY_DATA));
 let currentUser = null;
@@ -2177,7 +2207,7 @@ async function onAuthStateChange(user) {
       S.allocated_to_bills = parseFloat(d.allocated_to_bills)||0;
       S.obligations     = d.obligations||[];
       S.profile         = d.profile||null;
-      S.email_prefs     = d.email_prefs || {dormancy:true, weekly:true};
+      S.email_prefs     = d.email_prefs || {dormancy:true, weekly:true, bill_reminder:true, low_buffer:true, monthly_wrap:true};
       if(normalizeFixedAllocations()) save();
       // Migration: if allocated_to_bills is missing/0 but history contains bill allocations,
       // reconstruct it from the jobs in each history entry. Prevents double-counting on upgrade.
@@ -2874,7 +2904,7 @@ async function _writeUserData() {
     forecast:S.forecast, buffer:S.buffer, settings:S.settings,
     month_history:S.month_history, sources:S.sources,
     obligations:S.obligations||[], profile:S.profile||null,
-    email_prefs:S.email_prefs||{dormancy:true,weekly:true},
+    email_prefs:S.email_prefs||{dormancy:true,weekly:true,bill_reminder:true,low_buffer:true,monthly_wrap:true},
     updated_at:new Date().toISOString()
   });
   setSyncState(error?'error':'ok');
@@ -2917,7 +2947,7 @@ async function saveUserData() {
     forecast:S.forecast, buffer:S.buffer, settings:S.settings,
     month_history:S.month_history, sources:S.sources,
     obligations:S.obligations||[], profile:S.profile||null,
-    email_prefs:S.email_prefs||{dormancy:true,weekly:true},
+    email_prefs:S.email_prefs||{dormancy:true,weekly:true,bill_reminder:true,low_buffer:true,monthly_wrap:true},
     updated_at:new Date().toISOString()
   });
   setSyncState(error?'error':'ok');
@@ -3980,6 +4010,17 @@ function renderDashboard(){
       runwaySubEl.textContent=`${fr(windowReserveNeeded)} still needed for upcoming bills.`;
     }
   }
+  // Forecast card sub: show a count + total when forecast has entries, otherwise nudge.
+  const forecastSubEl = document.getElementById('db-forecast-sub');
+  if (forecastSubEl) {
+    const pending = (S.forecast||[]).filter(f => f.status !== 'received');
+    if (pending.length === 0) {
+      forecastSubEl.textContent = "Plan for what's coming so Able can split future deposits ahead of time.";
+    } else {
+      const total = pending.reduce((s,f)=>s+(f.amount||0),0);
+      forecastSubEl.textContent = `${pending.length} expected · ${fr(total)} pending.`;
+    }
+  }
 }
 
 function renderUpcoming(){
@@ -4946,15 +4987,17 @@ function loadSettingsPage(){
   });
   updateWindowHint(win);
   updateSplitPreview();renderSourcesList();renderFixedAllocList();
-  const ep = S.email_prefs || {dormancy:true,weekly:true};
-  const epDorm = document.getElementById('ep-dormancy');
-  const epWeek = document.getElementById('ep-weekly');
-  if(epDorm) epDorm.checked = ep.dormancy !== false;
-  if(epWeek) epWeek.checked = ep.weekly !== false;
+  // All email prefs default ON (treat undefined as true). Each cron-driven email
+  // sender on the backend respects the matching key on email_prefs.
+  const ep = S.email_prefs || {};
+  ['dormancy','weekly','bill_reminder','low_buffer','monthly_wrap'].forEach(key => {
+    const el = document.getElementById('ep-'+key);
+    if (el) el.checked = ep[key] !== false;
+  });
 }
 
 function toggleEmailPref(key,val){
-  if(!S.email_prefs) S.email_prefs = {dormancy:true,weekly:true};
+  if(!S.email_prefs) S.email_prefs = {};
   S.email_prefs[key] = !!val;
   save();
 }
@@ -5751,23 +5794,28 @@ function getCurrentPage(){
 const TOUR_STEPS = [
   {
     tab: 'home',
-    title: "Your monthly dashboard.",
-    body: "See your score, runway, and what's left to cover. Tap Log income any time money comes in, and Able splits it across bills, debt, buffer, and your own pay."
+    title: "Your money at a glance.",
+    body: "The green hero shows what's in your accounts, what's reserved for upcoming bills, and what's safe to spend. Tap Tell me where it goes when you have unallocated money, or Log income when new money lands."
+  },
+  {
+    tab: 'home',
+    title: "Next 14 days.",
+    body: "Tap that card to see every bill due and every expected income payment in date order. No spreadsheet, no surprise."
   },
   {
     tab: 'plan',
-    title: "Plan ahead",
-    body: "Your bills, debts, income forecast, and what-if scenarios. One tab, sub-tabs inside."
+    title: "Plan ahead.",
+    body: "Bills, debts, expected income, and what-if scenarios — one tab, sub-tabs inside. Add bills here so Able knows what to reserve for. Add expected income so future deposits get pre-planned."
   },
   {
     tab: 'score',
-    title: "Track your discipline",
-    body: "A score for how well you're sticking to the plan. Higher means fewer surprises."
+    title: "Track your discipline.",
+    body: "Bills covered, paying yourself, extra to debt, buffer growth, living within income. Five things, 100 points. Higher means fewer surprises."
   },
   {
     tab: 'more',
-    title: "Learn and adjust",
-    body: "Articles, settings, account. The green chat button in the corner is Coach. Tap any time for advice on your actual numbers."
+    title: "Learn, refer, adjust.",
+    body: "Articles in Learn. Refer friends for free months. Settings is where you tune your split, change the planning window, and manage your subscription. The green chat button is Coach — tap any time for advice on your actual numbers."
   }
 ];
 
