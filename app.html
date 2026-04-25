@@ -7,6 +7,12 @@
 <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;500;600;700;800&family=Lora:ital,wght@0,400;0,600;1,400&family=Bricolage+Grotesque:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
 <script src="https://js.stripe.com/v3/" crossorigin="anonymous"></script>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.js" crossorigin="anonymous"></script>
+<!-- Demo seed (local-only). Runs only when ?demo=1 is in the URL. See SETUP.md. -->
+<script>
+  if (new URLSearchParams(location.search).get('demo') === '1' || sessionStorage.getItem('able_demo') === '1') {
+    document.write('<script src="scripts/demo-seed.js"><\/script>');
+  }
+</script>
 <style>
 :root {
   /* ═══ LEGACY TOKENS — remapped to new design system ═══ */
@@ -1993,6 +1999,10 @@ async function onAuthStateChange(user) {
         },0);
         if(reconstructed>0.01) S.allocated_to_bills=reconstructed;
       }
+      // Per-bill reservations: assign IDs and redistribute the legacy scalar.
+      let resDirty = ensureBillIds();
+      if (_isAllocatedToBillsCurrentMonth() && migrateScalarToReservations()) resDirty = true;
+      if (resDirty) save();
     }
     setSyncState('ok');
     touchLastActive();
@@ -2642,6 +2652,10 @@ async function loadUserData() {
     },0);
     if(reconstructed>0.01) S.allocated_to_bills=reconstructed;
   }
+  // Per-bill reservations: assign IDs and redistribute the legacy scalar.
+  let resDirty = ensureBillIds();
+  if (_isAllocatedToBillsCurrentMonth() && migrateScalarToReservations()) resDirty = true;
+  if (resDirty) save();
   setSyncState('ok');
 }
 
@@ -2900,6 +2914,72 @@ function applicableFixedAllocations(source) {
 // ═══════════════════════════════════════
 // ALLOCATION ENGINE
 // ═══════════════════════════════════════
+// Per-bill reservation map lives at S.settings.reservations: { [billId]: amount }.
+// Replaces the old single-scalar S.allocated_to_bills, which couldn't answer
+// "is this specific bill funded?" and drifted on bill add/remove/edit.
+// Stored under settings (not a new column) so the same JSONB round-trip carries it.
+function _reservations() {
+  if (!S.settings) S.settings = {};
+  if (!S.settings.reservations || typeof S.settings.reservations !== 'object') S.settings.reservations = {};
+  return S.settings.reservations;
+}
+function _billReserved(billId) {
+  if (!billId) return 0;
+  const r = _reservations()[billId];
+  return typeof r === 'number' && r > 0 ? r : 0;
+}
+function _addReservation(billId, amt) {
+  if (!billId || !(amt > 0.01)) return;
+  const r = _reservations();
+  r[billId] = (r[billId] || 0) + amt;
+}
+function _releaseReservation(billId, amt) {
+  if (!billId) return;
+  const r = _reservations();
+  const cur = r[billId] || 0;
+  const next = Math.max(0, cur - amt);
+  if (next <= 0.01) delete r[billId]; else r[billId] = next;
+}
+function _clearReservation(billId) {
+  if (!billId) return;
+  const r = _reservations();
+  delete r[billId];
+}
+// Assign stable IDs to any bill that doesn't have one. Idempotent.
+// Returns true if anything changed (so callers can save()).
+function ensureBillIds() {
+  let dirty = false;
+  if (!Array.isArray(S.bills)) return false;
+  for (const b of S.bills) {
+    if (!b.id) {
+      b.id = 'b_' + Date.now().toString(36) + '_' + Math.random().toString(36).slice(2,7);
+      dirty = true;
+    }
+  }
+  return dirty;
+}
+// One-time migration: redistribute the legacy S.allocated_to_bills scalar across
+// per-bill reservations using the same priority+date order the engine used implicitly.
+// Safe to call repeatedly — only does work when reservations is empty and the scalar > 0.
+function migrateScalarToReservations() {
+  ensureBillIds();
+  const map = _reservations();
+  const hasAny = Object.keys(map).length > 0;
+  let rem = parseFloat(S.allocated_to_bills) || 0;
+  if (hasAny || rem <= 0.01) return false;
+  const win = billsInWindow();
+  for (const p of [1,2,3]) {
+    const grp = win.filter(b => b.priority === p).sort((a,b) => (a.nextInDays||0) - (b.nextInDays||0));
+    for (const b of grp) {
+      if (rem <= 0.01) break;
+      const give = Math.min(rem, b.amount);
+      if (give > 0.01) { map[b.id] = (map[b.id]||0) + give; rem -= give; }
+    }
+    if (rem <= 0.01) break;
+  }
+  return true;
+}
+
 // Current calendar month as 'YYYY-MM'. Used to decide when to auto-reset
 // the running allocated_to_bills counter so that allocations don't break
 // when the user misses a manual close-month.
@@ -2931,13 +3011,13 @@ function computeJobs(amount,source,useCurrentIncome=true) {
   // This prevents dumping end-of-month income entirely to debt when next-month bills are about to hit.
   const winBills=billsInWindow();
   const winTotal=winBills.reduce((s,b)=>s+b.amount,0);
-  // How much of prior income has actually been earmarked for upcoming bills?
-  // This is tracked every time applyJobs runs and reset on close-month.
-  // Using totalIn() here would be wrong because prior income is split across bills, debt, buffer, and free.
-  // If we crossed a month boundary without an explicit close, the running counter
-  // belongs to a prior month. Treat it as zero for read purposes so the new month's
-  // allocations correctly reserve for upcoming bills.
-  const alreadyReserved=(useCurrentIncome && _isAllocatedToBillsCurrentMonth())?(S.allocated_to_bills||0):0;
+  // Per-bill reservations from prior income this month. Treat as empty across month rollover
+  // so the new month's allocations correctly re-reserve.
+  const isCur = useCurrentIncome && _isAllocatedToBillsCurrentMonth();
+  const reserved = isCur ? _reservations() : {};
+  // How much of each in-window bill is already covered (cap at bill amount).
+  const billPriorCover = b => Math.min(b.amount, reserved[b.id] || 0);
+  const totalPriorCover = winBills.reduce((s,b)=>s+billPriorCover(b),0);
   let rem=amount;
   const jobs=[];
   // Step 1: Fixed allocations come off the top (non-negotiable, before bills).
@@ -2961,7 +3041,7 @@ function computeJobs(amount,source,useCurrentIncome=true) {
   // or stale rules over-subscribe a small income; clamp before downstream math.
   rem=Math.max(0,rem);
   // How much of this incoming money needs to be reserved for upcoming window bills?
-  const windowNeeded=Math.max(0,winTotal-alreadyReserved);
+  const windowNeeded=Math.max(0,winTotal-totalPriorCover);
   // Warn whenever upcoming bills can't be fully covered. Branch the wording by cause:
   // if fixed allocations consumed enough of the deposit to create the shortfall, name
   // them; otherwise the deposit itself is just smaller than the window's bills total.
@@ -2980,62 +3060,72 @@ function computeJobs(amount,source,useCurrentIncome=true) {
       amount:0,
     });
   }
-  if(windowNeeded>0.01){
+  // Always emit a bills job per priority group when the group has any in-window bills,
+  // so users see the full coverage picture (including bills already funded from prior income).
+  // Per-bill items carry a status flag the renderer uses for badges.
+  if(winBills.length){
     let rem4b=Math.min(rem,windowNeeded);
-    // Track how much of the already-reserved bills money belongs to each priority bucket,
-    // so we don't double-reserve for priority 1 when it's already covered.
-    let reservedLeftToApply=alreadyReserved;
     for(const p of [1,2,3]){
-      if(rem4b<=0.01) break;
       const grp=winBills.filter(b=>b.priority===p);
+      if(!grp.length) continue;
       const grpTotal=grp.reduce((s,b)=>s+b.amount,0);
-      if(grpTotal<=0.01) continue;
-      // Prior bill-reservations cover this bucket first before we allocate new money to it.
-      const grpCoveredByReserved=Math.min(reservedLeftToApply,grpTotal);
-      reservedLeftToApply-=grpCoveredByReserved;
-      const grpNeeded=Math.max(0,grpTotal-grpCoveredByReserved);
-      if(grpNeeded<=0.01) continue;
-      const pay=Math.min(rem4b,grpNeeded);
-      // Build per-bill line items showing exactly how much of this money goes to each bill.
-      // Sort by soonest-due first, then walk through distributing the payment.
+      const grpPriorCover=grp.reduce((s,b)=>s+billPriorCover(b),0);
+      const grpNeeded=Math.max(0,grpTotal-grpPriorCover);
+      const payToGrp=Math.min(rem4b,grpNeeded);
+      // Sort by soonest-due first, then distribute payToGrp across bills filling each.
       const sortedGrp=[...grp].sort((a,b)=>(a.nextInDays||0)-(b.nextInDays||0));
-      let remForItems=pay;
-      let reservedLeftForItems=grpCoveredByReserved;
+      let remForItems=payToGrp;
       const items=[];
       for(const b of sortedGrp){
-        if(remForItems<=0.01)break;
-        // Prior reservations cover each bill first before new money does
-        const reservedOnThis=Math.min(reservedLeftForItems,b.amount);
-        reservedLeftForItems-=reservedOnThis;
-        const needsFromNew=Math.max(0,b.amount-reservedOnThis);
-        if(needsFromNew<=0.01)continue;
-        const give=Math.min(remForItems,needsFromNew);
-        if(give<=0.01)continue;
+        const priorCover=billPriorCover(b);
+        const need=Math.max(0,b.amount-priorCover);
+        const give=Math.min(remForItems,need);
+        if(give>0.01) remForItems-=give;
+        const remaining=Math.max(0,need-give);
+        // Status: funded_prior · funded_now · partial · uncovered
+        let status;
+        if (need <= 0.01) status='funded_prior';
+        else if (remaining <= 0.01) status='funded_now';
+        else if (give > 0.01) status='partial';
+        else status='uncovered';
         items.push({
           name:b.name,
+          billId:b.id,
           amount:give,
           totalBillAmount:b.amount,
+          fundedFromPrior:priorCover,
+          remaining,
           dueLabel:billDueLabel(b),
           daysUntil:b.nextInDays,
           occurrences:b.occurrences||1,
-          cat:b.cat
+          cat:b.cat,
+          status,
         });
-        remForItems-=give;
       }
       const names=grp.map(b=>b.name);
       const labels=['Critical bills due soon','Utilities & essentials due soon','Subscriptions due soon'];
       const colors=['var(--red)','var(--amber)','var(--text3)'];
       const bgs=['var(--red-light)','var(--amber-light)','var(--bg2)'];
+      // Subtitle: when nothing new gets allocated to this group, lead with coverage status
+      // so the user sees why no money is going there from this deposit.
+      const grpFullyCovered=grpNeeded<=0.01;
+      const why=grpFullyCovered
+        ?`All ${fr(grpTotal)} already covered from earlier deposits this month`
+        :(payToGrp<=0.01
+          ?`${fr(grpPriorCover)} of ${fr(grpTotal)} already covered from earlier deposits`
+          :names.slice(0,3).join(', ')+(names.length>3?` + ${names.length-3} more`:''));
       jobs.push({
         name:labels[p-1],
-        why:names.slice(0,3).join(', ')+(names.length>3?` + ${names.length-3} more`:''),
-        amount:pay,
+        why,
+        amount:payToGrp,
         color:colors[p-1],
         bg:bgs[p-1],
         type:'bills',
+        priorCover:grpPriorCover,
+        groupTotal:grpTotal,
         items
       });
-      rem4b-=pay;rem-=pay;
+      if (payToGrp > 0.01) { rem4b-=payToGrp; rem-=payToGrp; }
     }
   }
   if(rem>0.01){
@@ -3075,6 +3165,14 @@ function jobsDoneCounts(h){
   return{done,total:actionableIdx.length};
 }
 
+// Per-item status badge for bills items. Compact, inline.
+function _billItemBadge(status){
+  if (status === 'funded_prior') return `<span style="display:inline-block;font-size:9px;font-weight:800;color:var(--ds-green);background:var(--ds-green-l);padding:2px 7px;border-radius:100px;letter-spacing:.04em;margin-left:6px;vertical-align:middle;">FUNDED FROM PRIOR</span>`;
+  if (status === 'funded_now') return `<span style="display:inline-block;font-size:9px;font-weight:800;color:var(--ds-green);background:var(--ds-green-l);padding:2px 7px;border-radius:100px;letter-spacing:.04em;margin-left:6px;vertical-align:middle;">FUNDED</span>`;
+  if (status === 'partial') return `<span style="display:inline-block;font-size:9px;font-weight:800;color:var(--ds-c3);background:#fef3e0;padding:2px 7px;border-radius:100px;letter-spacing:.04em;margin-left:6px;vertical-align:middle;">PARTIAL</span>`;
+  if (status === 'uncovered') return `<span style="display:inline-block;font-size:9px;font-weight:800;color:var(--ds-c4);background:#fdeef2;padding:2px 7px;border-radius:100px;letter-spacing:.04em;margin-left:6px;vertical-align:middle;">UNCOVERED</span>`;
+  return '';
+}
 function renderJobList(jobs,amount,container,historyId){
   container.innerHTML='';
   const h=historyId?S.history.find(x=>x.id===historyId):null;
@@ -3090,7 +3188,7 @@ function renderJobList(jobs,amount,container,historyId){
       return;
     }
     numbered++;
-    const pct=Math.round((job.amount/amount)*100);
+    const pct=amount>0?Math.round((job.amount/amount)*100):0;
     const actionable=isActionableJob(job);
     const done=actionable&&!!doneMap[i];
     const d=document.createElement('div');
@@ -3102,10 +3200,36 @@ function renderJobList(jobs,amount,container,historyId){
     const numClass='job-num'+(actionable?' actionable':'')+(done?' done':'');
     const numStyle=`background:${job.bg};color:${job.color};`;
     const numOnclick=actionable&&historyId?` onclick="toggleJobDone('${historyId}',${i})" role="button" tabindex="0" aria-label="${done?'Mark not done':'Mark done'}" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();toggleJobDone('${historyId}',${i});}"`:'';
+    // Bills jobs: render each in-window bill inline with a status badge so the user
+    // sees the full coverage picture (incl. bills already funded from earlier deposits).
+    const isBills = job.type==='bills' && Array.isArray(job.items) && job.items.length;
+    const itemsHtml = isBills ? `
+      <div style="margin-top:8px;padding-left:4px;border-left:2px solid ${job.color||'var(--ds-t4)'};">
+        ${job.items.map(it=>{
+          const dueText = it.daysUntil===0?'due today':it.daysUntil===1?'due tomorrow':it.daysUntil!=null?`due in ${it.daysUntil}d`:(it.dueLabel||'');
+          const fromPrior = (it.fundedFromPrior||0) > 0.01 ? ` · ${f2(it.fundedFromPrior)} from prior` : '';
+          const fromThis = (it.amount||0) > 0.01 ? ` · ${f2(it.amount)} from this` : '';
+          const remaining = (it.remaining||0) > 0.01 ? ` · ${f2(it.remaining)} still needed` : '';
+          return `
+            <div style="display:flex;justify-content:space-between;align-items:center;padding:5px 0 5px 10px;font-size:12px;">
+              <div style="flex:1;min-width:0;">
+                <div style="font-weight:700;color:var(--ds-t1);">${it.name}${it.occurrences>1?` <span style="font-size:10px;color:var(--ds-t3);font-weight:700;">×${it.occurrences}</span>`:''}${_billItemBadge(it.status)}</div>
+                <div style="font-size:10px;color:var(--ds-t3);font-weight:700;letter-spacing:.03em;">${dueText} · ${f2(it.totalBillAmount||0)}${fromPrior}${fromThis}${remaining}</div>
+              </div>
+            </div>
+          `;
+        }).join('')}
+      </div>` : '';
+    // For bills jobs that contributed nothing from this deposit (everything covered from prior),
+    // hide the right-rail amount/percent — the per-item rows tell the story.
+    const rightRail = (isBills && job.amount<=0.01)
+      ? `<div class="job-right"><div class="job-amt" style="color:var(--ds-green);font-size:14px;">All covered</div></div>`
+      : `<div class="job-right"><div class="job-amt" style="color:${job.color};">${f2(job.amount)}</div><div class="job-pct">${pct}%</div></div>`;
     d.innerHTML=`<div class="${numClass}" style="${numStyle}"${numOnclick}>${numbered}</div>
       <div class="job-info"><div class="job-name">${job.name}${badge}</div><div class="job-why">${job.why}</div>
-      <div class="prog-wrap" style="margin-top:6px;"><div class="prog-bar" style="width:${pct}%;background:${job.color};"></div></div></div>
-      <div class="job-right"><div class="job-amt" style="color:${job.color};">${f2(job.amount)}</div><div class="job-pct">${pct}%</div></div>`;
+      ${!isBills?`<div class="prog-wrap" style="margin-top:6px;"><div class="prog-bar" style="width:${pct}%;background:${job.color};"></div></div>`:''}
+      ${itemsHtml}</div>
+      ${rightRail}`;
     container.appendChild(d);
   });
 }
@@ -3171,12 +3295,21 @@ function applyJobs(jobs,amount,source){
     }
   }
   S.buffer+=bufContrib;
-  // Track how much of the user's income this month has actually been routed to upcoming bills.
-  // This is what the allocation engine uses to figure out how much more to reserve on future incomes.
-  // Auto-reset on month rollover so a missed close-month doesn't carry the counter forward indefinitely.
-  if (!_isAllocatedToBillsCurrentMonth()) S.allocated_to_bills=0;
-  S.allocated_to_bills=(S.allocated_to_bills||0)+billsPaid;
+  // Per-bill reservations: write each bills-job item's amount into the reservation map
+  // keyed by bill id. Auto-reset across month rollover so stale reservations don't persist.
   S.settings=S.settings||{};
+  if (!_isAllocatedToBillsCurrentMonth()) {
+    S.allocated_to_bills=0;
+    S.settings.reservations={};
+  }
+  for (const j of jobs.filter(j=>j.type==='bills')) {
+    if (!Array.isArray(j.items)) continue;
+    for (const it of j.items) {
+      if (it && it.billId && it.amount > 0.01) _addReservation(it.billId, it.amount);
+    }
+  }
+  // Tee the legacy scalar for one release as a rollback safety net.
+  S.allocated_to_bills=(S.allocated_to_bills||0)+billsPaid;
   S.settings.allocResetMonth=_currentMonthKey();
   const wasFirstIncome = !S.history.length;
   S.history.unshift({
@@ -3553,18 +3686,23 @@ function renderHistory(){
               </div>
               ${hasItems?`
                 <div style="padding-left:4px;border-left:2px solid ${j.color||'var(--ds-t4)'};margin-left:2px;">
-                  ${j.items.map(it=>`
+                  ${j.items.map(it=>{
+                    // Status-aware right rail: funded_prior shows the bill's reserved amount,
+                    // otherwise show the amount this deposit contributed.
+                    const rightAmt = it.status==='funded_prior'
+                      ? `<div style="font-size:10px;font-weight:700;color:var(--ds-green);">covered</div>`
+                      : `<div style="font-weight:800;color:var(--ds-t1);letter-spacing:-.01em;margin-left:10px;">${f2(it.amount||0)}</div>`;
+                    const dueText = it.daysUntil===0?'due today':it.daysUntil===1?'due tomorrow':it.daysUntil!=null?`due in ${it.daysUntil}d · ${it.dueLabel||''}`:it.dueLabel||'';
+                    const partialNote = it.totalBillAmount && it.amount>0.01 && Math.abs(it.amount-it.totalBillAmount)>0.01 ? ` · partial of ${f2(it.totalBillAmount)}` : '';
+                    return `
                     <div style="display:flex;justify-content:space-between;align-items:center;padding:5px 0 5px 10px;font-size:12px;">
                       <div style="flex:1;min-width:0;">
-                        <div style="font-weight:700;color:var(--ds-t1);">${it.name}${it.occurrences>1?` <span style="font-size:10px;color:var(--ds-t3);font-weight:700;">×${it.occurrences}</span>`:''}</div>
-                        <div style="font-size:10px;color:var(--ds-t3);font-weight:700;letter-spacing:.03em;">
-                          ${it.daysUntil===0?'due today':it.daysUntil===1?'due tomorrow':it.daysUntil!=null?`due in ${it.daysUntil}d · ${it.dueLabel||''}`:it.dueLabel||''}
-                          ${it.totalBillAmount&&Math.abs(it.amount-it.totalBillAmount)>0.01?` · partial of ${f2(it.totalBillAmount)}`:''}
-                        </div>
+                        <div style="font-weight:700;color:var(--ds-t1);">${it.name}${it.occurrences>1?` <span style="font-size:10px;color:var(--ds-t3);font-weight:700;">×${it.occurrences}</span>`:''}${typeof _billItemBadge==='function'?_billItemBadge(it.status):''}</div>
+                        <div style="font-size:10px;color:var(--ds-t3);font-weight:700;letter-spacing:.03em;">${dueText}${partialNote}</div>
                       </div>
-                      <div style="font-weight:800;color:var(--ds-t1);letter-spacing:-.01em;margin-left:10px;">${f2(it.amount)}</div>
-                    </div>
-                  `).join('')}
+                      ${rightAmt}
+                    </div>`;
+                  }).join('')}
                 </div>
               `:''}
             </div>
@@ -3591,6 +3729,14 @@ function reverseJobs(entry){
   // Release the amount that was earmarked for bills in this allocation
   const billsPaid=entry.billsPaid||entry.jobs.filter(j=>j.type==='bills').reduce((s,j)=>s+j.amount,0);
   if(billsPaid>0.01) S.allocated_to_bills=Math.max(0,(S.allocated_to_bills||0)-billsPaid);
+  // Per-bill: release each item's reservation. Falls through silently for legacy
+  // entries that lack billId (pre-migration) — the scalar release above still happens.
+  for (const j of entry.jobs.filter(j=>j.type==='bills')) {
+    if (!Array.isArray(j.items)) continue;
+    for (const it of j.items) {
+      if (it && it.billId && it.amount > 0.01) _releaseReservation(it.billId, it.amount);
+    }
+  }
   // Reverse debt paydown. If we have a per-debt snapshot, use it for exact restoration.
   // Fall back to the old highest-rate-first rollup for pre-fix history entries.
   if(Array.isArray(entry.debtSplit)&&entry.debtSplit.length){
@@ -3688,12 +3834,24 @@ function saveEditIncome(){
 function renderBillsPage(){
   const el=document.getElementById('bills-body');el.innerHTML='';
   const catDots={housing:'var(--sage)',debt:'var(--coral)',utilities:'var(--amber)',transport:'var(--sky)',insurance:'var(--lavender)',subs:'var(--text3)'};
+  // Per-bill funding status used for the "Funded" badge below.
+  const reservationsLive = _isAllocatedToBillsCurrentMonth() ? _reservations() : {};
   S.bills.forEach((b,i)=>{
     // Migrate older bills that don't have a freq field
     if(!b.freq)b.freq='monthly';
     const d=document.createElement('div');d.className='bills-row'+(b.paid?' bill-paid-row':'');
     const linkTag=b.fromDebtId?' <span style="display:inline-flex;align-items:center;gap:3px;font-size:9px;font-weight:800;color:var(--ds-green);background:var(--ds-green-l);padding:2px 6px;border-radius:100px;letter-spacing:.04em;vertical-align:middle;margin-left:4px;" title="Auto-synced from your Debt tab"><svg width="8" height="8" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M21 2l-2 2m-7.61 7.61a5.5 5.5 0 1 1-7.778 7.778 5.5 5.5 0 0 1 7.777-7.777zm0 0L15.5 7.5m0 0l3 3L22 7l-3-3m-3.5 3.5L19 4"/></svg>DEBT</span>':'';
     const freqTag=b.freq&&b.freq!=='monthly'?` <span style="display:inline-flex;align-items:center;font-size:9px;font-weight:800;color:var(--ds-c5);background:#eaf2fc;padding:2px 6px;border-radius:100px;letter-spacing:.04em;vertical-align:middle;margin-left:4px;">${b.freq.toUpperCase()}</span>`:'';
+    // Funded badge: how much of this bill is currently reserved from prior deposits this month.
+    // Hidden when paid (the money's gone) or when reservation is zero (no signal needed).
+    const reservedAmt = (b.id && !b.paid) ? Math.min(reservationsLive[b.id]||0, b.amount) : 0;
+    let fundedTag = '';
+    if (reservedAmt > 0.01) {
+      const fullyFunded = reservedAmt >= b.amount - 0.01;
+      const label = fullyFunded ? 'FUNDED' : `${Math.round((reservedAmt/b.amount)*100)}% FUNDED`;
+      const tip = fullyFunded ? `${f2(b.amount)} reserved from prior deposits` : `${f2(reservedAmt)} of ${f2(b.amount)} reserved from prior deposits`;
+      fundedTag = ` <span title="${tip}" style="display:inline-flex;align-items:center;font-size:9px;font-weight:800;color:var(--ds-green);background:var(--ds-green-l);padding:2px 6px;border-radius:100px;letter-spacing:.04em;vertical-align:middle;margin-left:4px;">${label}</span>`;
+    }
     const amtInput=b.fromDebtId
       ?`<div style="font-weight:800;text-align:right;font-family:var(--ds-f);font-size:14px;letter-spacing:-.01em;color:var(--ds-t3);padding:0 4px;" title="Edit in the Debt tab">${b.amount.toFixed(2)}</div>`
       :`<input class="bills-amt-input" type="number" value="${b.amount.toFixed(2)}" onchange="updateBill(${i},this.value)">`;
@@ -3701,7 +3859,7 @@ function renderBillsPage(){
       ?`<button class="btn btn-danger-ghost btn-sm" style="opacity:.4;" onclick="delBill(${i})" title="Remove from Debt tab">✕</button>`
       :`<button class="btn btn-sm btn-ghost" onclick="openAddBillModal(${i})" style="padding:4px 8px;font-size:11px;" title="Edit">Edit</button> <button class="btn btn-danger-ghost btn-sm" onclick="delBill(${i})">✕</button>`;
     d.innerHTML=`<button class="checkbtn${b.paid?' checked':''}" onclick="toggleBillPaid(${i})">${b.paid?'✓':''}</button>
-      <div class="bills-name" style="padding-left:8px;">${b.name} <span style="display:inline-block;width:7px;height:7px;border-radius:50%;background:${catDots[b.cat]||'var(--text3)'};margin-left:3px;vertical-align:middle;"></span>${linkTag}${freqTag}</div>
+      <div class="bills-name" style="padding-left:8px;">${b.name} <span style="display:inline-block;width:7px;height:7px;border-radius:50%;background:${catDots[b.cat]||'var(--text3)'};margin-left:3px;vertical-align:middle;"></span>${linkTag}${freqTag}${fundedTag}</div>
       <div class="bills-due">${billDueLabel(b)}</div>
       <div class="bills-amt-wrap">${amtInput}</div>
       <div class="bills-actions">${delBtn}</div>`;
@@ -3742,6 +3900,9 @@ function toggleBillPaid(i){
   if(!bill)return;
   const nowPaid=!bill.paid;
   bill.paid=nowPaid;
+  // Paying a bill releases its reservation — that money has now left the system.
+  // Un-paying does NOT restore the reservation (we don't know if the money came back).
+  if (nowPaid && bill.id) _clearReservation(bill.id);
   save();renderBillsPage();renderUpcoming();refreshHome();
   // bill_paid: fires every time a bill flips TO paid. Not trackOnce.
   // Skipped when un-paying (false flip) so the event stream reflects only
@@ -3773,7 +3934,7 @@ function markPaidThroughToday(){
   if(!eligible.length){alert('No monthly bills are due on or before today ('+today+').\n\nFor weekly or biweekly bills, use the check button on each row.');return;}
   const total=eligible.reduce((s,b)=>s+b.amount,0);
   if(!confirm('Mark '+eligible.length+' bill'+(eligible.length>1?'s':'')+' paid for a total of '+fr(total)+'?\n\n'+eligible.map(b=>'• '+b.name+' ('+fr(b.amount)+')').join('\n'))) return;
-  eligible.forEach(b=>b.paid=true);
+  eligible.forEach(b=>{b.paid=true; if(b.id) _clearReservation(b.id);});
   save();renderBillsPage();renderUpcoming();refreshHome();
 }
 function updateBill(i,v){S.bills[i].amount=parseFloat(v)||0;save();renderBillsPage();renderUpcoming();refreshHome();}
@@ -3784,6 +3945,7 @@ function delBill(i){
     return;
   }
   if(!confirm('Delete "'+b.name+'"?'))return;
+  if (b.id) _clearReservation(b.id);
   S.bills.splice(i,1);save();renderBillsPage();renderUpcoming();refreshHome();
 }
 function openAddBillModal(editIdx){
@@ -3891,7 +4053,7 @@ function addBill(){
     delete modal.dataset.editIdx;
   } else {
     const wasFirstBill = !S.bills.length;
-    const bill={name,amount,freq,due,cat,priority,paid:false};
+    const bill={id:'b_'+Date.now().toString(36)+'_'+Math.random().toString(36).slice(2,7),name,amount,freq,due,cat,priority,paid:false};
     if(freqDays)bill.freqDays=freqDays;
     S.bills.push(bill);
     if (wasFirstBill) Able.trackOnce('first_bill_added', { freq, cat });
@@ -3956,8 +4118,11 @@ function updateDebt(i,v){
 function delDebt(i){
   if(!confirm('Remove "'+S.debts[i].name+'"?'))return;
   const debtId=S.debts[i].id;
-  // Remove the linked bill if one exists
-  if(debtId) S.bills=S.bills.filter(b=>b.fromDebtId!==debtId);
+  // Remove the linked bill (and its reservation) if one exists
+  if(debtId){
+    S.bills.filter(b=>b.fromDebtId===debtId).forEach(b=>{ if(b.id) _clearReservation(b.id); });
+    S.bills=S.bills.filter(b=>b.fromDebtId!==debtId);
+  }
   S.debts.splice(i,1);
   save();renderDebtPage();renderBillsPage();renderUpcoming();refreshHome();
 }
@@ -3974,6 +4139,7 @@ function addDebt(){
   // Auto-create a linked bill if we have a due day and a minimum payment
   if(dueDay && min>0){
     S.bills.push({
+      id:'b_'+Date.now().toString(36)+'_'+Math.random().toString(36).slice(2,7),
       name:name+' (minimum)',
       amount:min,
       due:String(dueDay),
@@ -4000,18 +4166,22 @@ function syncLinkedBill(debt){
   if(!debt.id) return;
   const billIdx=S.bills.findIndex(b=>b.fromDebtId===debt.id);
   if(debt.dueDay && debt.min>0){
+    const existing=billIdx>=0?S.bills[billIdx]:null;
     const billData={
+      id:existing?.id || ('b_'+Date.now().toString(36)+'_'+Math.random().toString(36).slice(2,7)),
       name:debt.name+' (minimum)',
       amount:debt.min,
       due:String(debt.dueDay),
       cat:'debt',
       priority:1,
-      paid:billIdx>=0?S.bills[billIdx].paid:false,
+      paid:existing?existing.paid:false,
       fromDebtId:debt.id
     };
     if(billIdx>=0) S.bills[billIdx]=billData;
     else S.bills.push(billData);
   } else if(billIdx>=0){
+    const removed=S.bills[billIdx];
+    if(removed && removed.id) _clearReservation(removed.id);
     S.bills.splice(billIdx,1);
   }
 }
@@ -4661,6 +4831,7 @@ function resetMonth(){
   S.allocated_to_bills=0;
   S.settings=S.settings||{};
   S.settings.allocResetMonth=_currentMonthKey();
+  S.settings.reservations={};
   S.bills=S.bills.map(b=>({...b,paid:false}));
   save();
   document.getElementById('alloc-result').style.display='none';
