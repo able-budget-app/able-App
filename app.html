@@ -3508,14 +3508,22 @@ function renderJobList(jobs,amount,container,historyId){
       <div style="margin-top:8px;padding-left:4px;border-left:2px solid ${job.color||'var(--ds-t4)'};">
         ${job.items.map(it=>{
           const dueText = it.daysUntil===0?'due today':it.daysUntil===1?'due tomorrow':it.daysUntil!=null?`due in ${it.daysUntil}d`:(it.dueLabel||'');
+          // Recurring bill (e.g. weekly/biweekly with multiple occurrences in window):
+          // show "$100 each × 2 in window" so totalBillAmount=$200 reads correctly as
+          // per-occurrence amount × occurrences instead of looking like the bill price.
+          const occ = it.occurrences || 1;
+          const perOcc = occ > 1 ? (it.totalBillAmount / occ) : it.totalBillAmount;
+          const amtText = occ > 1
+            ? ` · ${f2(perOcc)} each × ${occ}`
+            : ` · ${f2(it.totalBillAmount||0)}`;
           const fromPrior = (it.fundedFromPrior||0) > 0.01 ? ` · ${f2(it.fundedFromPrior)} from prior` : '';
           const fromThis = (it.amount||0) > 0.01 ? ` · ${f2(it.amount)} from this` : '';
           const remaining = (it.remaining||0) > 0.01 ? ` · ${f2(it.remaining)} still needed` : '';
           return `
             <div style="display:flex;justify-content:space-between;align-items:center;padding:5px 0 5px 10px;font-size:12px;">
               <div style="flex:1;min-width:0;">
-                <div style="font-weight:700;color:var(--ds-t1);">${it.name}${it.occurrences>1?` <span style="font-size:10px;color:var(--ds-t3);font-weight:700;">×${it.occurrences}</span>`:''}${_billItemBadge(it.status)}</div>
-                <div style="font-size:10px;color:var(--ds-t3);font-weight:700;letter-spacing:.03em;">${dueText} · ${f2(it.totalBillAmount||0)}${fromPrior}${fromThis}${remaining}</div>
+                <div style="font-weight:700;color:var(--ds-t1);">${it.name}${occ>1?` <span style="font-size:10px;color:var(--ds-t3);font-weight:700;">×${occ}</span>`:''}${_billItemBadge(it.status)}</div>
+                <div style="font-size:10px;color:var(--ds-t3);font-weight:700;letter-spacing:.03em;">${dueText}${amtText}${fromPrior}${fromThis}${remaining}</div>
               </div>
             </div>
           `;
@@ -3985,12 +3993,19 @@ function renderHistory(){
                       ? `<div style="font-size:10px;font-weight:700;color:var(--ds-green);">covered</div>`
                       : `<div style="font-weight:800;color:var(--ds-t1);letter-spacing:-.01em;margin-left:10px;">${f2(it.amount||0)}</div>`;
                     const dueText = it.daysUntil===0?'due today':it.daysUntil===1?'due tomorrow':it.daysUntil!=null?`due in ${it.daysUntil}d · ${it.dueLabel||''}`:it.dueLabel||'';
-                    const partialNote = it.totalBillAmount && it.amount>0.01 && Math.abs(it.amount-it.totalBillAmount)>0.01 ? ` · partial of ${f2(it.totalBillAmount)}` : '';
+                    // For recurring bills with multiple occurrences in the window, show
+                    // "$100 each × 2" rather than the multiplied total alone (which reads
+                    // as if it were the bill price).
+                    const occ = it.occurrences || 1;
+                    const perOcc = occ > 1 ? (it.totalBillAmount / occ) : it.totalBillAmount;
+                    const amtNote = occ > 1
+                      ? ` · ${f2(perOcc)} each × ${occ}`
+                      : (it.totalBillAmount && it.amount>0.01 && Math.abs(it.amount-it.totalBillAmount)>0.01 ? ` · partial of ${f2(it.totalBillAmount)}` : '');
                     return `
                     <div style="display:flex;justify-content:space-between;align-items:center;padding:5px 0 5px 10px;font-size:12px;">
                       <div style="flex:1;min-width:0;">
-                        <div style="font-weight:700;color:var(--ds-t1);">${it.name}${it.occurrences>1?` <span style="font-size:10px;color:var(--ds-t3);font-weight:700;">×${it.occurrences}</span>`:''}${typeof _billItemBadge==='function'?_billItemBadge(it.status):''}</div>
-                        <div style="font-size:10px;color:var(--ds-t3);font-weight:700;letter-spacing:.03em;">${dueText}${partialNote}</div>
+                        <div style="font-weight:700;color:var(--ds-t1);">${it.name}${occ>1?` <span style="font-size:10px;color:var(--ds-t3);font-weight:700;">×${occ}</span>`:''}${typeof _billItemBadge==='function'?_billItemBadge(it.status):''}</div>
+                        <div style="font-size:10px;color:var(--ds-t3);font-weight:700;letter-spacing:.03em;">${dueText}${amtNote}</div>
                       </div>
                       ${rightAmt}
                     </div>`;
@@ -8814,7 +8829,67 @@ let coachSending = false;
 function buildCoachState() {
   const ti = (typeof totalIn === 'function') ? totalIn() : 0;
   const tb = (typeof totalBills === 'function') ? totalBills() : 0;
+  // Spending balance + per-bill reservations + available to spend. These are
+  // the day-to-day numbers users actually look at, so the coach should see them
+  // exactly as the dashboard shows them.
+  const hasBal = (typeof _hasBalance === 'function') && _hasBalance();
+  const balance = hasBal ? _getBalance() : null;
+  const reservedTotal = (typeof _totalReservedNow === 'function') ? _totalReservedNow() : 0;
+  const available = balance != null ? Math.round((balance - reservedTotal) * 100) / 100 : null;
+  // Per-bill reservation map (only unpaid bills with money set aside) so the
+  // coach can answer "is X funded?" specifically.
+  const reservationsByBill = (S.bills || [])
+    .filter(b => b.id && !b.paid && (typeof _billReserved === 'function') && _billReserved(b.id) > 0.01)
+    .map(b => ({
+      bill: b.name,
+      amount: b.amount,
+      reserved: Math.round(Math.min(_billReserved(b.id), b.amount) * 100) / 100,
+      days_until: (typeof billDaysUntil === 'function') ? billDaysUntil(b) : null,
+    }));
+  // Past-due monthly bills the user hasn't marked paid yet.
+  const pastDue = (typeof _pastDueBills === 'function')
+    ? _pastDueBills().map(({ b, info }) => ({
+        bill: b.name,
+        amount: b.amount,
+        days_past: info.daysPast,
+      }))
+    : [];
+  // The most recent deposit in full detail (with its job breakdown), so when
+  // users ask "what did I just do with that money?" the coach has the answer
+  // without having to ask them to re-explain.
+  const last = (S.history || [])[0];
+  const latestDeposit = last ? {
+    id: last.id,
+    amount: last.amount,
+    source: last.source,
+    date: last.date,
+    ts: last.ts,
+    balance_neutral: !!last.balanceNeutral,
+    totals: {
+      to_bills: last.billsPaid,
+      to_debt: last.debtExtra,
+      to_buffer: last.bufContrib,
+      to_owner: last.ownerPaid,
+    },
+    debt_split: last.debtSplit,
+    jobs: Array.isArray(last.jobs) ? last.jobs.map(j => ({
+      name: j.name,
+      type: j.type,
+      amount: j.amount,
+      why: j.why,
+      items: Array.isArray(j.items) ? j.items.map(i => ({
+        bill: i.name,
+        amount: i.amount,
+        bill_total: i.totalBillAmount,
+        funded_from_prior: i.fundedFromPrior,
+        remaining: i.remaining,
+        status: i.status,
+        days_until: i.daysUntil,
+      })) : undefined,
+    })) : undefined,
+  } : null;
   return {
+    today: new Date().toISOString().slice(0, 10),
     bills: S.bills,
     debts: S.debts,
     buffer: S.buffer,
@@ -8822,19 +8897,25 @@ function buildCoachState() {
     sources: S.sources,
     obligations: S.obligations,
     profile: S.profile,
-    allocated_to_bills: S.allocated_to_bills,
+    // New, dashboard-aligned numbers — prefer these when answering questions.
+    balance,
+    reserved_total: reservedTotal,
+    available_to_spend: available,
+    reservations_by_bill: reservationsByBill,
+    past_due_bills: pastDue,
+    latest_deposit: latestDeposit,
     history: (S.history || []).slice(0, 10).map(h => ({
+      id: h.id,
       amount: h.amount, source: h.source, date: h.date,
-      debtExtra: h.debtExtra, bufContrib: h.bufContrib, billsPaid: h.billsPaid
+      debtExtra: h.debtExtra, bufContrib: h.bufContrib, billsPaid: h.billsPaid, ownerPaid: h.ownerPaid,
     })),
     forecast: S.forecast,
     month_history: (S.month_history || []).slice(0, 3).map(m => ({
       label: m.label, income: m.income, debtPaid: m.debtPaid,
       bufAdded: m.bufAdded, score: m.score,
-      totalDebtEnd: m.totalDebtEnd, bufferEnd: m.bufferEnd
+      totalDebtEnd: m.totalDebtEnd, bufferEnd: m.bufferEnd,
     })),
     totals: { monthlyBills: tb, incomeThisMonth: ti },
-    today: new Date().toISOString().slice(0, 10),
   };
 }
 
