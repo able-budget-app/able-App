@@ -2027,6 +2027,24 @@ async function onAuthStateChange(user) {
   const showLoading = (msg) => {
     if(authBox) authBox.innerHTML = `<div style="text-align:center;padding:1rem 0;font-family:var(--ds-f);"><div style="font-family:var(--ds-f);font-size:1.75rem;font-weight:900;margin-bottom:.4rem;color:var(--ds-t1);letter-spacing:-.03em;">Able</div><div style="display:inline-flex;align-items:center;gap:10px;margin-top:1.25rem;padding:10px 18px;background:var(--ds-green-l);border-radius:100px;"><div style="width:10px;height:10px;border-radius:50%;background:var(--ds-green);animation:dsPulse 1.2s ease-in-out infinite;"></div><div style="font-size:13px;color:var(--ds-green);font-weight:700;letter-spacing:.02em;">${msg}</div></div></div>`;
   };
+  const showAuthFailure = (errMsg) => {
+    if(!authBox) return;
+    // Make sure the auth screen is the visible layer so this card is actually seen.
+    document.getElementById('auth-screen').style.display='flex';
+    document.getElementById('paywall-screen').style.display='none';
+    document.getElementById('app').style.display='none';
+    const onb=document.getElementById('onboard-screen'); if(onb) onb.style.display='none';
+    const safeMsg = (errMsg||'').toString().replace(/[<>&]/g, c => ({'<':'&lt;','>':'&gt;','&':'&amp;'}[c]));
+    authBox.innerHTML = `
+      <div style="text-align:center;padding:1rem 0;font-family:var(--ds-f);">
+        <div style="font-family:var(--ds-f);font-size:1.75rem;font-weight:900;margin-bottom:.4rem;color:var(--ds-t1);letter-spacing:-.03em;">Able</div>
+        <div style="font-size:14px;color:var(--ds-c4);font-weight:800;margin:1.25rem 0 .5rem;letter-spacing:-.01em;">Couldn't finish loading your account</div>
+        <div style="font-size:12px;color:var(--ds-t3);font-weight:600;line-height:1.5;margin:0 auto 1.25rem;max-width:300px;">${safeMsg||"Something went wrong on our end. Try again — if it keeps happening, sign out and back in."}</div>
+        <button class="btn btn-primary" style="margin-bottom:.5rem;width:100%;" onclick="location.reload()">Try again</button>
+        <button class="btn btn-ghost btn-sm" onclick="signOut()">Sign out</button>
+      </div>
+    `;
+  };
 
   if(document.getElementById('settings-email')) document.getElementById('settings-email').textContent=user.email;
 
@@ -2146,8 +2164,17 @@ async function onAuthStateChange(user) {
       evalCoachNudges();
     }
   } catch(e) {
+    // Don't auto-reload — that turns any silent JS error post-sign-in into an
+    // infinite loop (the reload re-triggers onAuthStateChange which re-throws).
+    // Surface the failure with a Try again / Sign out card and let the user act.
     console.error('Auth flow error:', e);
-    location.reload();
+    try {
+      Able.track('auth_flow_error', {
+        message: (e && e.message) || String(e),
+        stack: ((e && e.stack) || '').slice(0, 400),
+      });
+    } catch(_){}
+    showAuthFailure(e && e.message);
   }
 }
 
