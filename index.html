@@ -658,6 +658,21 @@ a { text-decoration: none; color: inherit; }
 }
 .phone-nav-icon { width: 16px; height: 16px; }
 
+/* Trust bullets that live BELOW the phone visual on desktop, span both columns. */
+.hero-bullets--below {
+  grid-column: 1 / -1;
+  margin: 2.5rem auto 0;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 1rem 2rem;
+  max-width: 820px;
+  padding: 0;
+}
+.hero-bullets--below li {
+  list-style: none;
+  margin: 0;
+}
 @media (max-width: 900px) {
   .hero-inner {
     grid-template-columns: 1fr;
@@ -668,6 +683,7 @@ a { text-decoration: none; color: inherit; }
   .hero-headline .hl-payoff { white-space: normal; }
   .hero-sub { max-width: 100%; }
   .hero-bullets { align-items: center; }
+  .hero-bullets--below { flex-direction: column; gap: .75rem; margin-top: 1.5rem; }
   .hero-ctas { justify-content: center; }
   .hero-fine { text-align: center; }
   .phone-frame { width: 240px; }
@@ -2013,11 +2029,6 @@ posthog.init('phc_B6PH36QxpExnyBYhfScFFF6LhDvoyxuFr6PypJuxxky3', {
         <span class="hl-payoff"><span class="hero-arrow">→</span> To finally able to breathe.</span>
       </h1>
       <p class="hero-sub">An app built for entrepreneurs who struggle to manage inconsistent income.</p>
-      <ul class="hero-bullets">
-        <li><svg class="bullet-check" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="20 6 9 17 4 12"/></svg><span>Finally pay down your debt</span></li>
-        <li><svg class="bullet-check" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="20 6 9 17 4 12"/></svg><span>Actually build your savings</span></li>
-        <li><svg class="bullet-check" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="20 6 9 17 4 12"/></svg><span>Stop living unpredictable<br>check to unpredictable check</span></li>
-      </ul>
       <div class="hero-ctas">
         <a href="/app.html" class="btn-primary">Start your free 7-day trial</a>
         <a href="#how-it-works" class="btn-ghost">See how it works</a>
@@ -2262,6 +2273,11 @@ posthog.init('phc_B6PH36QxpExnyBYhfScFFF6LhDvoyxuFr6PypJuxxky3', {
         </div>
       </div>
     </div>
+    <ul class="hero-bullets hero-bullets--below">
+      <li><svg class="bullet-check" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="20 6 9 17 4 12"/></svg><span>Finally pay down your debt</span></li>
+      <li><svg class="bullet-check" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="20 6 9 17 4 12"/></svg><span>Actually build your savings</span></li>
+      <li><svg class="bullet-check" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="20 6 9 17 4 12"/></svg><span>Stop living unpredictable check to unpredictable check</span></li>
+    </ul>
   </div>
 </section>
 
@@ -2401,7 +2417,7 @@ posthog.init('phc_B6PH36QxpExnyBYhfScFFF6LhDvoyxuFr6PypJuxxky3', {
               <div class="anim-savings-card">
                 <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:3px;">
                   <div class="anim-savings-label">Buffer savings</div>
-                  <div style="display:inline-flex;align-items:center;gap:3px;font-size:7px;font-weight:800;letter-spacing:.08em;text-transform:uppercase;background:#2a7a4a;color:white;padding:2px 6px;border-radius:100px;">✓ Locked in</div>
+                  <div style="display:inline-flex;align-items:center;gap:3px;font-size:7px;font-weight:800;letter-spacing:.08em;text-transform:uppercase;background:#2a7a4a;color:white;padding:2px 6px;border-radius:100px;white-space:nowrap;">✓ Locked in</div>
                 </div>
                 <div class="anim-savings-val growing">$1,247</div>
               </div>

@@ -879,10 +879,11 @@ input,select,button,textarea{font-family:inherit;}
 .db-balance-cta:active{transform:translateY(0);}
 .db-balance-cta-ghost{width:100%;background:var(--ds-page);color:var(--ds-t1);border:1.5px solid var(--ds-t4);border-radius:var(--ds-r2);padding:11px 18px;margin-top:.85rem;font-family:var(--ds-f);font-size:14px;font-weight:800;letter-spacing:-.01em;cursor:pointer;}
 .db-balance-shortfall{background:#fdeef2;border-radius:var(--ds-r1);padding:10px 12px;margin-top:.5rem;font-size:12px;font-weight:600;color:var(--ds-c4);line-height:1.5;}
-.app-toast{position:fixed;left:50%;bottom:max(20px,calc(env(safe-area-inset-bottom)+76px));transform:translate(-50%,8px);background:var(--ds-t1);color:white;font-family:var(--ds-f);font-size:13px;font-weight:700;letter-spacing:-.01em;padding:11px 16px;border-radius:100px;box-shadow:0 8px 24px rgba(0,0,0,.18);display:flex;align-items:center;gap:10px;opacity:0;pointer-events:none;transition:opacity .25s,transform .25s cubic-bezier(.34,1.2,.64,1);z-index:200;max-width:calc(100vw - 32px);}
+.app-toast{position:fixed;left:50%;bottom:max(20px,calc(env(safe-area-inset-bottom)+88px));transform:translate(-50%,12px);background:var(--ds-card);color:var(--ds-t1);font-family:var(--ds-f);font-size:13px;font-weight:700;letter-spacing:-.01em;line-height:1.45;padding:13px 18px;border-radius:var(--ds-r2);border-left:4px solid var(--ds-green);box-shadow:0 14px 40px rgba(0,0,0,.16),0 2px 6px rgba(0,0,0,.06);display:flex;align-items:center;gap:12px;opacity:0;pointer-events:none;transition:opacity .25s,transform .25s cubic-bezier(.34,1.2,.64,1);z-index:200;max-width:min(420px,calc(100vw - 24px));min-width:240px;}
 .app-toast.show{opacity:1;transform:translate(-50%,0);pointer-events:auto;}
-.app-toast-action{background:rgba(255,255,255,.15);color:white;border:none;font-family:var(--ds-f);font-size:12px;font-weight:800;padding:5px 11px;border-radius:100px;cursor:pointer;letter-spacing:-.01em;}
-.app-toast-action:hover{background:rgba(255,255,255,.25);}
+.app-toast-msg{flex:1;min-width:0;}
+.app-toast-action{background:var(--ds-green-l);color:var(--ds-green);border:none;font-family:var(--ds-f);font-size:12px;font-weight:800;padding:7px 13px;border-radius:100px;cursor:pointer;letter-spacing:-.01em;flex-shrink:0;}
+.app-toast-action:hover{background:var(--ds-green);color:white;}
 .alloc-balance-note{background:var(--ds-green-l);border-radius:var(--ds-r1);padding:9px 12px;margin:.5rem 0 .85rem;font-size:12px;font-weight:600;color:var(--ds-green);line-height:1.5;display:flex;align-items:center;justify-content:space-between;gap:10px;}
 .alloc-balance-note button{background:transparent;color:var(--ds-green);border:1.5px solid var(--ds-green-m);font-family:var(--ds-f);font-size:11px;font-weight:800;padding:4px 10px;border-radius:100px;cursor:pointer;letter-spacing:-.01em;flex-shrink:0;}
 .alloc-balance-note button:hover{background:rgba(42,122,74,.08);}
@@ -1306,11 +1307,21 @@ posthog.init('phc_B6PH36QxpExnyBYhfScFFF6LhDvoyxuFr6PypJuxxky3', {
 
 <!-- BILLS -->
 <div class="page" id="page-bills">
-  <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:1.25rem;gap:10px;flex-wrap:wrap;">
+  <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:1rem;gap:10px;flex-wrap:wrap;">
     <div style="font-family:var(--ds-f);font-size:1.5rem;font-weight:800;letter-spacing:-.02em;color:var(--ds-t1);">Monthly bills</div>
     <div style="display:flex;gap:8px;">
       <button class="btn btn-sm" onclick="markPaidThroughToday()" title="Check off every bill whose due day is on or before today">Mark paid through today</button>
       <button class="btn btn-primary btn-sm" onclick="openAddBillModal()">+ Add bill</button>
+    </div>
+  </div>
+  <div class="card" style="display:flex;align-items:center;justify-content:space-between;padding:14px 18px;margin-bottom:.85rem;">
+    <div>
+      <div style="font-size:10px;font-weight:800;color:var(--ds-t3);text-transform:uppercase;letter-spacing:.12em;font-family:var(--ds-f);">Monthly total</div>
+      <div style="font-size:1.5rem;font-weight:900;color:var(--ds-t1);letter-spacing:-.02em;font-family:var(--ds-f);" id="bills-total">$0</div>
+    </div>
+    <div style="text-align:right;">
+      <div style="font-size:10px;font-weight:800;color:var(--ds-t3);text-transform:uppercase;letter-spacing:.12em;font-family:var(--ds-f);">Tracked</div>
+      <div style="font-size:1.05rem;font-weight:800;color:var(--ds-t1);letter-spacing:-.02em;font-family:var(--ds-f);" id="bills-count">0</div>
     </div>
   </div>
   <div class="card" style="padding:.25rem 0;">
@@ -1322,12 +1333,8 @@ posthog.init('phc_B6PH36QxpExnyBYhfScFFF6LhDvoyxuFr6PypJuxxky3', {
       <div style="width:30px;"></div>
     </div>
     <div id="bills-body"></div>
-    <div style="display:flex;justify-content:space-between;align-items:center;padding:14px 16px;border-top:1px solid var(--ds-t4);margin-top:2px;background:var(--ds-card2);border-radius:0 0 var(--ds-r2) var(--ds-r2);">
-      <span style="font-size:10px;font-weight:800;color:var(--ds-t3);text-transform:uppercase;letter-spacing:.12em;font-family:var(--ds-f);">Monthly total</span>
-      <span style="font-size:1.25rem;font-weight:900;color:var(--ds-t1);letter-spacing:-.02em;" id="bills-total">$0</span>
-    </div>
   </div>
-  <div style="font-size:12px;color:var(--ds-t3);font-weight:600;padding:0 4px;margin-top:.75rem;">Click any amount to edit. Check off bills as you pay them each month.</div>
+  <div style="font-size:12px;color:var(--ds-t3);font-weight:600;padding:0 4px;margin-top:.75rem;">Sorted by due date. Click any amount to edit. Check off bills as you pay them each month.</div>
 </div>
 
 <!-- SCORE -->
@@ -1432,7 +1439,7 @@ posthog.init('phc_B6PH36QxpExnyBYhfScFFF6LhDvoyxuFr6PypJuxxky3', {
           <div class="field"><label>Free to spend (%)</label><input type="number" id="set-free" min="0" max="100" step="1" oninput="updateSplitPreview()"><div style="font-size:11px;color:var(--ds-t3);font-weight:600;margin-top:5px;">No guilt attached. It's yours.</div></div>
         </div>
         <div id="split-preview" style="margin-top:.85rem;"></div>
-        <button class="btn btn-primary" style="margin-top:1.1rem;width:100%;" onclick="saveSettings()">Save my split</button>
+        <button class="btn btn-primary" id="save-split-btn" style="margin-top:1.1rem;width:100%;" onclick="saveSettings()">Save my split</button>
       </div>
       <div class="sec">Example: if $1,000 surplus came in</div>
       <div id="split-example" style="margin-bottom:1rem;"></div>
@@ -3963,7 +3970,20 @@ function renderBillsPage(){
   const catDots={housing:'var(--sage)',debt:'var(--coral)',utilities:'var(--amber)',transport:'var(--sky)',insurance:'var(--lavender)',subs:'var(--text3)'};
   // Per-bill funding status used for the "Funded" badge below.
   const reservationsLive = _isAllocatedToBillsCurrentMonth() ? _reservations() : {};
-  S.bills.forEach((b,i)=>{
+  // Sort by due date so the soonest bills land at the top. Paid bills sink to
+  // the bottom so the next-action items are visually first. Ongoing bills (no
+  // fixed date) sort just before paid since they're always "active." Renders
+  // use the original index so editBillModal/updateBill/etc. continue working.
+  const sortedEntries = S.bills.map((b,origIdx) => {
+    if(!b.freq)b.freq='monthly';
+    const isOngoing = b.due === 'ongoing';
+    return { b, origIdx, isOngoing, days: isOngoing ? 998 : (billDaysUntil(b)||999) };
+  }).sort((a,c) => {
+    if (a.b.paid !== c.b.paid) return a.b.paid ? 1 : -1;
+    return a.days - c.days;
+  });
+  sortedEntries.forEach(({b, origIdx}) => {
+    const i = origIdx;
     // Migrate older bills that don't have a freq field
     if(!b.freq)b.freq='monthly';
     const d=document.createElement('div');d.className='bills-row'+(b.paid?' bill-paid-row':'');
@@ -3993,6 +4013,8 @@ function renderBillsPage(){
     el.appendChild(d);
   });
   document.getElementById('bills-total').textContent=f2(totalBills());
+  const countEl=document.getElementById('bills-count');
+  if(countEl) countEl.textContent=String(S.bills.length);
 }
 // Returns days late (positive) or early (negative) for a bill marked paid
 // at this moment, relative to its due schedule. Null for ongoing/unknown.
@@ -4745,8 +4767,7 @@ function saveSettings(){
     if(!confirm('Your split adds up to '+total+'%. The remaining '+rest+'% will go to debt payoff on top of your '+debt+'% setting, meaning '+(debt+rest)+'% of surplus goes to debt.\n\nSave this way?\n\nClick Cancel to adjust so everything totals 100%.'))return;
   }
   S.settings={...S.settings,ownerPct:owner,debtPct:debt,bufPct:buf,freePct:free};save();
-  const btn=document.querySelector('#page-settings .btn-primary');
-  btn.textContent='Saved ✓';setTimeout(()=>{btn.textContent='Save my split';},1500);
+  showToast('Split saved.', { duration: 3000 });
 }
 function populateSources(){
   const srcs=S.sources||['Salary','Freelance','Side income','Other'];
@@ -4943,7 +4964,7 @@ function showToast(msg, opts){
   const duration = opts.duration || 5000;
   const actionLabel = opts.actionLabel || null;
   const onAction = opts.onAction || null;
-  el.innerHTML = `<span>${msg}</span>${actionLabel?`<button class="app-toast-action" id="app-toast-action">${actionLabel}</button>`:''}`;
+  el.innerHTML = `<span class="app-toast-msg">${msg}</span>${actionLabel?`<button class="app-toast-action" id="app-toast-action">${actionLabel}</button>`:''}`;
   if (actionLabel && onAction) {
     const btn = document.getElementById('app-toast-action');
     if (btn) btn.onclick = () => { try { onAction(); } catch(_){} hideToast(); };
@@ -5394,6 +5415,14 @@ window.addEventListener('load', async () => {
       detectSessionInUrl: true,
       persistSession: true,
       autoRefreshToken: true,
+      // Explicit flow + storage so behavior is predictable across browsers.
+      // On mobile incognito (iOS Safari especially), the localStorage code_verifier
+      // written during signInWithOAuth can fail to round-trip through the Google
+      // redirect, which silently fails the code exchange and leaves the user back
+      // on the auth screen with no error. The console logging below at least
+      // surfaces what's happening if it recurs.
+      flowType: 'pkce',
+      storage: window.localStorage,
     }
   });
 
@@ -5415,15 +5444,25 @@ window.addEventListener('load', async () => {
     document.getElementById('app').style.display = 'none';
   }
 
-  // Handle OAuth redirect — Supabase puts tokens in the URL hash
-  // exchangeCodeForSession handles the PKCE flow if present
+  // Handle OAuth redirect — Supabase puts tokens in the URL hash, or a PKCE
+  // code in the search params. detectSessionInUrl handles the exchange in the
+  // client constructor; this getSession() call surfaces a result we can verify.
   if(window.location.hash.includes('access_token') || window.location.search.includes('code=')) {
     try {
-      await window._sb.auth.getSession();
+      const {data,error} = await window._sb.auth.getSession();
+      if (error) throw error;
+      if (!data?.session) {
+        // We had a code in the URL but no session came back. Most often this is
+        // an incognito browser that lost the localStorage code_verifier between
+        // signInWithOAuth and the redirect.
+        console.warn('OAuth callback completed but no session was created. Likely cause: storage cleared between sign-in and redirect (incognito browser).');
+        try { Able.track('oauth_callback_no_session', { ua: navigator.userAgent }); } catch(_){}
+        try { window.history.replaceState({}, '', window.location.pathname); } catch(_) {}
+        try { showAuthError("Sign-in didn't complete. If you're in private/incognito mode, try a regular browser tab."); } catch(_){}
+      }
     } catch(e) {
       console.error('Session exchange error:', e);
-      // Clear the dead code/token so a refresh doesn't retry the same broken exchange,
-      // and surface the failure to the user instead of leaving them stuck on a silent auth screen.
+      try { Able.track('oauth_exchange_error', { message: e?.message, ua: navigator.userAgent }); } catch(_){}
       try { window.history.replaceState({}, '', window.location.pathname); } catch(_) {}
       try { showAuthError('Sign-in did not complete. Please try again.'); } catch(_) {}
     }
