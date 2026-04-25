@@ -837,7 +837,39 @@ input,select,button,textarea{font-family:inherit;}
 /* ═══════════════════════════════════════
    DASHBOARD (home page hero + quick actions + allocate sheet)
 ═══════════════════════════════════════ */
-.db-hero{position:relative;background:linear-gradient(145deg,#1f6038 0%,#2a7a4a 55%,#3d9e78 100%);border-radius:var(--ds-r3);padding:1.5rem 1.5rem 1.35rem;color:white;box-shadow:0 12px 32px rgba(31,96,56,.22);margin-bottom:1rem;overflow:hidden;}
+.db-hero{position:relative;background:linear-gradient(145deg,#1f6038 0%,#2a7a4a 55%,#3d9e78 100%);border-radius:var(--ds-r3);padding:1.25rem 1.35rem 1.15rem;color:white;box-shadow:0 12px 32px rgba(31,96,56,.22);margin-bottom:1rem;overflow:hidden;}
+/* Unified hero — money rows on green */
+.db-hero-money-row{position:relative;display:flex;justify-content:space-between;align-items:baseline;padding:6px 0;font-family:var(--ds-f);}
+.db-hero-money-label{font-size:11px;font-weight:800;letter-spacing:.1em;text-transform:uppercase;color:rgba(255,255,255,.78);}
+.db-hero-money-val{font-size:15px;font-weight:800;color:white;letter-spacing:-.02em;}
+.db-hero-money-divider{height:1px;background:rgba(255,255,255,.18);margin:6px 0;}
+.db-hero-available-row{position:relative;display:flex;justify-content:space-between;align-items:baseline;padding:4px 0 6px;font-family:var(--ds-f);}
+.db-hero-available-label{font-size:11px;font-weight:800;letter-spacing:.12em;text-transform:uppercase;color:rgba(255,255,255,.85);}
+.db-hero-available-val{font-size:1.85rem;font-weight:900;color:white;letter-spacing:-.025em;line-height:1.1;}
+.db-hero-available-val--neg{color:#ffd0d8;}
+.db-hero-toggle{display:inline-flex;align-items:center;font-size:13px;color:rgba(255,255,255,.7);background:transparent;border:none;cursor:pointer;padding:0;margin-left:6px;}
+.db-hero-toggle:hover{color:white;}
+.db-hero-breakdown{margin-top:6px;padding:8px 10px;background:rgba(255,255,255,.08);border-radius:var(--ds-r1);font-family:var(--ds-f);}
+.db-hero-breakdown-row{display:flex;justify-content:space-between;align-items:center;padding:5px 0;font-size:12px;color:white;}
+.db-hero-breakdown-row + .db-hero-breakdown-row{border-top:1px solid rgba(255,255,255,.1);}
+.db-hero-breakdown-name{color:white;font-weight:700;}
+.db-hero-breakdown-meta{color:rgba(255,255,255,.6);font-weight:600;font-size:10px;letter-spacing:.03em;margin-top:2px;}
+.db-hero-breakdown-amt{color:white;font-weight:800;letter-spacing:-.01em;}
+.db-hero-edit{position:relative;font-size:10px;font-weight:700;color:rgba(255,255,255,.7);background:rgba(255,255,255,.12);border:none;cursor:pointer;padding:4px 9px;border-radius:100px;letter-spacing:.04em;text-transform:uppercase;transition:background .15s,color .15s;}
+.db-hero-edit:hover{background:rgba(255,255,255,.22);color:white;}
+.db-hero-cta-primary{position:relative;width:100%;background:white;color:var(--ds-green);border:none;border-radius:100px;padding:13px 18px;margin:.85rem 0 .25rem;font-family:var(--ds-f);font-size:14px;font-weight:800;letter-spacing:-.01em;cursor:pointer;box-shadow:0 4px 14px rgba(0,0,0,.1);transition:transform .15s,box-shadow .15s;}
+.db-hero-cta-primary:hover{transform:translateY(-1px);box-shadow:0 6px 18px rgba(0,0,0,.15);}
+.db-hero-cta-primary:active{transform:translateY(0);}
+.db-hero-cta-secondary{position:relative;width:100%;background:rgba(255,255,255,.13);color:white;border:1.5px solid rgba(255,255,255,.28);border-radius:100px;padding:11px 18px;font-family:var(--ds-f);font-size:13px;font-weight:800;letter-spacing:-.01em;cursor:pointer;transition:background .15s;}
+.db-hero-cta-secondary:hover{background:rgba(255,255,255,.22);}
+.db-hero-section-divider{height:1px;background:rgba(255,255,255,.18);margin:1rem 0 .9rem;position:relative;}
+.db-hero-empty{padding:.5rem 0 .75rem;color:rgba(255,255,255,.88);font-size:13px;font-weight:600;line-height:1.5;}
+.db-hero-shortfall{background:rgba(255,255,255,.12);border-left:3px solid #ffd0d8;border-radius:var(--ds-r1);padding:9px 12px;margin-top:.5rem;font-size:12px;font-weight:600;color:#ffd0d8;line-height:1.5;}
+/* Compact score row inside the unified hero */
+.db-score-mini-row{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:.5rem;}
+.db-score-mini-label{font-size:10px;font-weight:800;letter-spacing:.12em;text-transform:uppercase;color:rgba(255,255,255,.7);}
+.db-score-mini-val{font-family:var(--ds-f);font-size:1.1rem;font-weight:900;color:white;letter-spacing:-.02em;flex-shrink:0;}
+.db-score-mini-val .db-score-mini-max{color:rgba(255,255,255,.5);font-size:.78em;font-weight:700;margin-left:1px;}
 /* Demoted variant: smaller padding + headline so the balance card above stays primary. */
 .db-hero--mini{padding:1.1rem 1.25rem 1.15rem;border-radius:var(--ds-r2);box-shadow:0 8px 24px rgba(31,96,56,.18);}
 .db-hero--mini .db-hero-headline{font-size:1.15rem;margin-bottom:.2rem;}
@@ -1184,22 +1216,23 @@ posthog.init('phc_B6PH36QxpExnyBYhfScFFF6LhDvoyxuFr6PypJuxxky3', {
     </div>
   </div>
 
-  <!-- BALANCE / RESERVED / AVAILABLE — primary daily snapshot -->
-  <div class="db-balance-card" id="db-balance-card"></div>
+  <!-- UNIFIED DASHBOARD HERO — money snapshot + score in one card -->
+  <div class="db-hero" id="db-hero">
+    <div class="db-hero-eyebrow" id="db-hero-eyebrow" style="margin-bottom:.65rem;">This month</div>
 
-  <!-- DASHBOARD HERO (score + chips) — secondary, smaller variant since the
-       balance card is now the primary element -->
-  <div class="db-hero db-hero--mini">
-    <div class="db-hero-eyebrow">This month</div>
-    <div class="db-hero-headline" id="db-hero-headline">Ready when you are.</div>
-    <div class="db-hero-sub" id="db-hero-sub">Log income to see where it goes.</div>
-    <div class="db-score-wrap">
-      <div class="db-score-row">
-        <div class="db-score-num"><span id="db-score-big">--</span><span class="db-score-max">/100</span></div>
-        <div class="db-score-grade" id="db-score-grade">Building</div>
-      </div>
-      <div class="db-score-bar"><div class="db-score-fill" id="db-score-fill" style="width:0%;"></div></div>
+    <!-- Money section: rendered by renderHeroMoney() -->
+    <div id="db-hero-money"></div>
+
+    <div class="db-hero-section-divider"></div>
+
+    <!-- Score (compact, secondary to the money section above) -->
+    <div class="db-score-mini-row">
+      <span class="db-score-mini-label">This month's score</span>
+      <span class="db-score-mini-val"><span id="db-score-big">--</span><span class="db-score-mini-max">/100</span></span>
+      <span class="db-score-grade" id="db-score-grade">Building</span>
     </div>
+    <div class="db-score-bar" style="margin-bottom:.85rem;"><div class="db-score-fill" id="db-score-fill" style="width:0%;"></div></div>
+
     <div class="db-chips">
       <div class="db-chip" onclick="goTo('bills')" role="button" tabindex="0" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();goTo('bills');}">
         <div class="db-chip-label">Bills score</div>
@@ -1217,7 +1250,7 @@ posthog.init('phc_B6PH36QxpExnyBYhfScFFF6LhDvoyxuFr6PypJuxxky3', {
         <div class="db-chip-dots" id="db-chip-buffer-dots"></div>
       </div>
     </div>
-    <button class="db-hero-cta" onclick="openAllocateSheet()">Log income →</button>
+    <button class="db-hero-cta-secondary" onclick="openAllocateSheet()">Log income →</button>
   </div>
 
   <!-- QUICK ACTIONS -->
@@ -3655,12 +3688,10 @@ function refreshHome(){
   // Empty-state welcome for fresh accounts (no income logged, no bills yet).
   const welcome=document.getElementById('home-welcome');
   const dashboard=document.querySelector('#page-home .db-hero');
-  const balanceCard=document.getElementById('db-balance-card');
   const quickActions=document.querySelectorAll('#page-home .db-action-card');
   const isEmpty=(!S.history||!S.history.length)&&(!S.bills||!S.bills.length);
   if(welcome)welcome.style.display=isEmpty?'block':'none';
   if(dashboard)dashboard.style.display=isEmpty?'none':'';
-  if(balanceCard)balanceCard.style.display=isEmpty?'none':'';
   quickActions.forEach(el=>{el.style.display=isEmpty?'none':'';});
 
   const ti=totalIn();
@@ -3672,40 +3703,18 @@ function refreshHome(){
   }
 
   renderDashboard();
-  renderBalanceCard();
+  renderHeroMoney();
   renderHistory();
 }
 
 function renderDashboard(){
-  const tb=totalBills(),ti=totalIn(),pb=paidBills();
-  const covered=Math.min(ti+pb,tb);
-  const remaining=Math.max(0,tb-covered);
-  const surplus=Math.max(0,ti+pb-tb);
   const score=computeMonthlyScore();
 
-  const headlineEl=document.getElementById('db-hero-headline');
-  const subEl=document.getElementById('db-hero-sub');
-  if(headlineEl && subEl){
-    if(!score.hasData){
-      headlineEl.textContent='Ready when you are.';
-      subEl.textContent=tb>0?'Log income to start covering bills.':'Add your bills and log income to see where you stand.';
-    } else {
-      const gradeLine={
-        'S':"You're running a tight ship.",
-        'A':"Really solid month.",
-        'B':"You're on track.",
-        'C':"You're getting there.",
-        'D':"Let's steady the ship.",
-      };
-      headlineEl.textContent=gradeLine[score.gradeLetter]||"You're on track.";
-      if(tb<=0.01){
-        subEl.textContent='Add bills so Able can protect them first.';
-      } else if(remaining<=0.01){
-        subEl.textContent=surplus>0.01?`Bills covered. ${fr(surplus)} above this month.`:'Bills fully covered this month.';
-      } else {
-        subEl.textContent=`${fr(remaining)} still needed to cover bills.`;
-      }
-    }
+  // Eyebrow shows current month so the hero reads as "this month's snapshot".
+  const eyebrowEl=document.getElementById('db-hero-eyebrow');
+  if(eyebrowEl){
+    const now=new Date();
+    eyebrowEl.textContent=now.toLocaleDateString('en-US',{month:'long'}).toUpperCase()+' · MONTH IN PROGRESS';
   }
 
   const bigEl=document.getElementById('db-score-big');
@@ -5011,8 +5020,9 @@ function saveBalance(){
   closeModal('modal-balance');
   renderBalanceCard();
 }
-function toggleReservedBreakdown(){
-  const el = document.getElementById('db-balance-breakdown');
+function toggleReservedBreakdown(){ toggleHeroBreakdown(); }
+function toggleHeroBreakdown(){
+  const el = document.getElementById('db-hero-breakdown');
   if (!el) return;
   el.style.display = el.style.display === 'none' ? 'block' : 'none';
 }
@@ -5032,16 +5042,17 @@ function allocateAvailable(){
   // lands back on the dashboard.
   openAllocPreview(avail, source, jobs);
 }
-function renderBalanceCard(){
-  const el = document.getElementById('db-balance-card');
+// Renders the money section (balance / reserved / available / CTA) into the
+// unified green hero. Replaces the old white db-balance-card. The eyebrow
+// (set in renderDashboard) shows the current month so users can read the
+// hero as "this month's snapshot at a glance."
+function renderHeroMoney(){
+  const el = document.getElementById('db-hero-money');
   if (!el) return;
   if (!_hasBalance()) {
     el.innerHTML = `
-      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:.4rem;">
-        <div class="db-action-title">Add your spending balance</div>
-      </div>
-      <div class="db-balance-empty">Tell Able what's in your checking and active spending accounts. We'll show you what's safe to spend after upcoming bills are accounted for.</div>
-      <button class="db-balance-cta" onclick="openBalanceModal()">Add balance</button>
+      <div class="db-hero-empty">Add what's in your spending accounts so Able can show what's safe to spend after upcoming bills.</div>
+      <button class="db-hero-cta-primary" onclick="openBalanceModal()">Add balance</button>
     `;
     return;
   }
@@ -5058,80 +5069,72 @@ function renderBalanceCard(){
     }))
     .sort((a,b) => (a.days||999) - (b.days||999));
   const breakdownHtml = reservedBills.length
-    ? `<div id="db-balance-breakdown" class="db-balance-breakdown" style="display:none;">
+    ? `<div id="db-hero-breakdown" class="db-hero-breakdown" style="display:none;">
         ${reservedBills.map(r => `
-          <div class="db-balance-breakdown-row">
+          <div class="db-hero-breakdown-row">
             <div>
-              <div class="db-balance-breakdown-name">${r.name}</div>
-              <div class="db-balance-breakdown-meta">${r.days===0?'due today':r.days===1?'due tomorrow':r.days!=null&&r.days<999?'due in '+r.days+'d':'ongoing'}${r.reserved < r.total - 0.01 ? ' · '+f2(r.reserved)+' of '+f2(r.total) : ''}</div>
+              <div class="db-hero-breakdown-name">${r.name}</div>
+              <div class="db-hero-breakdown-meta">${r.days===0?'due today':r.days===1?'due tomorrow':r.days!=null&&r.days<999?'due in '+r.days+'d':'ongoing'}${r.reserved < r.total - 0.01 ? ' · '+f2(r.reserved)+' of '+f2(r.total) : ''}</div>
             </div>
-            <div class="db-balance-breakdown-amt">${f2(r.reserved)}</div>
+            <div class="db-hero-breakdown-amt">${f2(r.reserved)}</div>
           </div>
         `).join('')}
       </div>`
     : '';
-  // Build the card body based on whether available is positive, zero, or negative.
-  let bodyHtml = '';
+  const editBtn = `<button class="db-hero-edit" onclick="openBalanceModal()" aria-label="Edit balance">Edit</button>`;
+  const reservedRow = `
+    <div class="db-hero-money-row" style="cursor:${reservedBills.length?'pointer':'default'};" ${reservedBills.length?'onclick="toggleHeroBreakdown()"':''}>
+      <span class="db-hero-money-label">Reserved for bills${reservedBills.length?' <span class="db-hero-toggle" aria-label="Show breakdown">▾</span>':''}</span>
+      <span class="db-hero-money-val">${f2(reserved)}</span>
+    </div>`;
+  let body = '';
   if (available > 0.01) {
-    bodyHtml = `
-      <div class="db-balance-row">
-        <span class="db-balance-label">In your accounts</span>
-        <span class="db-balance-val">${f2(balance)}</span>
+    body = `
+      <div class="db-hero-money-row">
+        <span class="db-hero-money-label">In your accounts</span>
+        <span style="display:flex;align-items:center;gap:8px;"><span class="db-hero-money-val">${f2(balance)}</span>${editBtn}</span>
       </div>
-      <div class="db-balance-row" style="cursor:${reservedBills.length?'pointer':'default'};" ${reservedBills.length?'onclick="toggleReservedBreakdown()"':''}>
-        <span class="db-balance-label">Reserved for bills${reservedBills.length?' <span class="db-balance-toggle" aria-label="Show breakdown">▾</span>':''}</span>
-        <span class="db-balance-val">${f2(reserved)}</span>
-      </div>
+      ${reservedRow}
       ${breakdownHtml}
-      <div class="db-balance-divider"></div>
-      <div class="db-balance-row">
-        <span class="db-balance-label">Available to spend</span>
-        <span class="db-balance-val-big">${f2(available)}</span>
+      <div class="db-hero-money-divider"></div>
+      <div class="db-hero-available-row">
+        <span class="db-hero-available-label">Available to spend</span>
+        <span class="db-hero-available-val">${f2(available)}</span>
       </div>
-      <button class="db-balance-cta" onclick="allocateAvailable()">Tell me where it goes →</button>
+      <button class="db-hero-cta-primary" onclick="allocateAvailable()">Tell me where it goes →</button>
     `;
   } else if (Math.abs(available) <= 0.01) {
-    bodyHtml = `
-      <div class="db-balance-row">
-        <span class="db-balance-label">In your accounts</span>
-        <span class="db-balance-val">${f2(balance)}</span>
+    body = `
+      <div class="db-hero-money-row">
+        <span class="db-hero-money-label">In your accounts</span>
+        <span style="display:flex;align-items:center;gap:8px;"><span class="db-hero-money-val">${f2(balance)}</span>${editBtn}</span>
       </div>
-      <div class="db-balance-row" style="cursor:${reservedBills.length?'pointer':'default'};" ${reservedBills.length?'onclick="toggleReservedBreakdown()"':''}>
-        <span class="db-balance-label">Reserved for bills${reservedBills.length?' <span class="db-balance-toggle">▾</span>':''}</span>
-        <span class="db-balance-val">${f2(reserved)}</span>
-      </div>
+      ${reservedRow}
       ${breakdownHtml}
-      <div class="db-balance-divider"></div>
-      <div style="font-size:13px;font-weight:700;color:var(--ds-green);text-align:center;padding:.4rem 0 .1rem;">Every dollar's accounted for. Nothing left to allocate.</div>
+      <div class="db-hero-money-divider"></div>
+      <div style="font-size:13px;font-weight:700;color:white;text-align:center;padding:.5rem 0 .25rem;">Every dollar's accounted for. Nothing left to allocate.</div>
     `;
   } else {
     const short = Math.abs(available);
-    bodyHtml = `
-      <div class="db-balance-row">
-        <span class="db-balance-label">In your accounts</span>
-        <span class="db-balance-val">${f2(balance)}</span>
+    body = `
+      <div class="db-hero-money-row">
+        <span class="db-hero-money-label">In your accounts</span>
+        <span style="display:flex;align-items:center;gap:8px;"><span class="db-hero-money-val">${f2(balance)}</span>${editBtn}</span>
       </div>
-      <div class="db-balance-row" style="cursor:${reservedBills.length?'pointer':'default'};" ${reservedBills.length?'onclick="toggleReservedBreakdown()"':''}>
-        <span class="db-balance-label">Reserved for bills${reservedBills.length?' <span class="db-balance-toggle">▾</span>':''}</span>
-        <span class="db-balance-val">${f2(reserved)}</span>
-      </div>
+      ${reservedRow}
       ${breakdownHtml}
-      <div class="db-balance-divider"></div>
-      <div class="db-balance-row">
-        <span class="db-balance-label">Short by</span>
-        <span class="db-balance-val-big db-balance-val-neg">${f2(short)}</span>
+      <div class="db-hero-money-divider"></div>
+      <div class="db-hero-available-row">
+        <span class="db-hero-available-label">Short by</span>
+        <span class="db-hero-available-val db-hero-available-val--neg">${f2(short)}</span>
       </div>
-      <div class="db-balance-shortfall">Reservations exceed your balance. Skip a bill, dip into your buffer, or wait for the next deposit to fill the gap.</div>
+      <div class="db-hero-shortfall">Reservations exceed your balance. Skip a bill, dip into your buffer, or wait for the next deposit to fill the gap.</div>
     `;
   }
-  el.innerHTML = `
-    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:.25rem;">
-      <div style="font-size:11px;font-weight:800;letter-spacing:.12em;text-transform:uppercase;color:var(--ds-t3);">Today's money</div>
-      <button class="db-balance-edit" onclick="openBalanceModal()">Edit</button>
-    </div>
-    ${bodyHtml}
-  `;
+  el.innerHTML = body;
 }
+// Backward-compat shim — older callers used renderBalanceCard.
+function renderBalanceCard(){ renderHeroMoney(); }
 
 // ═══════════════════════════════════════
 // RESET / CLEAR
