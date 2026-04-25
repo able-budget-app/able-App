@@ -8,8 +8,8 @@ Active task list for QA + build rounds. See `qa-log.md` for QA history and `buil
 - [x] Allocation Auditor (Smart Allocation flow)
 - [x] AI Coach Auditor (real-data grounding)
 - [x] Editor: apply fixes, commit `fix QA audit round 1`
-- [ ] QA review of editor diff
-- [ ] User: review and push to main (deploys via Netlify)
+- [x] QA review of editor diff (PASS WITH CONCERNS, follow-up shipped as `f10c518`)
+- [x] User: review and push to main (deployed via Netlify)
 
 ## Round 2 - engineering bucket (2026-04-24)
 
@@ -27,3 +27,16 @@ Active task list for QA + build rounds. See `qa-log.md` for QA history and `buil
 ## Out-of-band
 
 - [x] Add `supabase/functions/coach-chat/index.ts` to repo (2026-04-24)
+
+## Round 4 - punch list (2026-04-24)
+
+- [x] Logo underline in app (auth, paywall, navbar) matching marketing site
+- [x] Smart-default surplus split button ("Use this" with 5/50/35/10)
+- [x] Google OAuth: force account picker via `prompt: select_account`
+- [x] OAuth callback errors surface to auth screen instead of silent console log
+- [x] Auth flow: removed `initialSessionHandled` gate so `SIGNED_IN` always runs the flow when a user is present
+- [x] Email layout redesigned (table-based for Outlook compat, underlined logo header, gradient accent strip, gradient CTA, branded footer)
+
+Deferred to a future pass (per scope, not blockers):
+- Animated GIFs in emails - requires designer assets, drop into `inner` HTML when ready
+- Deeper Google OAuth race investigation if the `prompt: select_account` + auth-flow fix doesn't fully resolve the incognito flow

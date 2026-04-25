@@ -4,6 +4,22 @@ Running log of QA findings and verification passes. Newest entries at the top.
 
 ---
 
+## 2026-04-24 - Punch list verification
+
+Direct Editor pass on a 6-item brain-dump (logo underline, split-defaults button, two Google OAuth fixes, auth-listener gate removal, email redesign). No audit team.
+
+Verification:
+- Logo `::after` uses `display:block; margin:0 auto` so it centers under text-aligned-center labels without needing markup changes. Works for `.logo` (inline-block, marketing-site pattern with `right:-4%`) and for `.auth-logo`/`.paywall-logo` (block, fixed-width centered approach).
+- "Use this" button calls `applyRecommendedSplit()` which writes inputs and calls existing `updateSplitPreview()` - all downstream wiring (the bar chart, the example block, validation) re-runs naturally.
+- Google `prompt: select_account`: confirmed via Supabase JS docs that `queryParams` is the correct option key for forwarding to the OAuth provider. Forces Google's account chooser every time.
+- OAuth catch block: `showAuthError` exists at line 1744 (loaded before the load handler runs), but wrapped in try/catch in case timing is funky on first paint. URL clearing is also wrapped to avoid blocking on environments without `history.replaceState`.
+- `SIGNED_IN` now always runs flow. The `runAuthFlow` async guard at line 4948 prevents double-execution if INITIAL_SESSION lands while SIGNED_IN flow is mid-flight. Wasteful repeats are bounded by `Able.trackOnce` for one-time events and by query timeouts elsewhere.
+- Email layout switched to nested tables for Outlook compat. Inline data-URI SVG is rendered as `<img>` so it gracefully degrades in clients that strip data URIs (the underline disappears, the rest of the layout stays intact).
+
+JS parses cleanly. Ahead of origin/main by 1 commit.
+
+---
+
 ## 2026-04-24 - QA audit round 3 (UX bucket)
 
 No audit team this round - direct Editor pass against the deferred UX items. Three fixes shipped, full details in `build-log.md`.

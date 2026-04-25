@@ -4,6 +4,25 @@ Shipped changes by date. Newest entries at the top. Each entry: what changed, wh
 
 ---
 
+## 2026-04-24 - punch list (logo, split default, auth, email design)
+
+Commit: `polish: logo underline, split defaults, auth fixes, email redesign`
+
+Six fixes from a brain-dump punch list:
+
+- Logo underline now applied to `.logo`, `.auth-logo`, `.paywall-logo` matching the marketing site treatment (data-URI SVG, centered fixed-width below the text). Three CSS additions, no markup changes.
+- Settings → "How to split surplus money" now offers a "Use this" button with literature-default split (5% pay yourself / 50% extra debt / 35% buffer / 10% spend). Frames Able's positioning per memory: extending Ramsey-aggressive-debt with a small Profit-First owner draw baseline.
+- Google OAuth: `signInWithOAuth` now passes `queryParams: { prompt: 'select_account' }`. Without this, Google silently signs the user in with the browser's cached account, which made "sign out then create a new account" loop into the same account and made Sign Up vs Sign In behave identically. This should also help the incognito-signup-redirects-to-auth-screen bug.
+- OAuth callback errors no longer log silently. If `getSession()` throws during code exchange, the URL params are cleared (so a refresh doesn't retry the dead code) and `showAuthError` surfaces a real message.
+- Auth listener: removed the `initialSessionHandled` gate from the `SIGNED_IN` handler. The original gate was a defensive workaround for a Supabase SDK race where queries could hang before INITIAL_SESSION; with current SDK timeouts, the gate's main effect was leaving users stuck on the auth screen if INITIAL_SESSION fired without a user. Now `SIGNED_IN` always runs the auth flow when a user is present; the existing `runAuthFlow` guard dedupes against concurrent INITIAL_SESSION-triggered runs.
+- Email layout (`supabase/functions/email-cron-daily/index.ts`) redesigned: table-based outer structure for Outlook compatibility, branded logo header with hand-drawn underline (data-URI SVG `<img>`), gradient accent strip on the card, gradient CTA, "becomeable.app" footer. All 11 templates pick up the new shell automatically since they go through `layout()`.
+
+**Deploy split between two surfaces:**
+- Static-site changes (`app.html`) deploy via Netlify on `git push origin main`.
+- The email function update requires a separate deploy step: `./scripts/deploy-functions.sh email-cron-daily`. A `git push` does NOT redeploy edge functions.
+
+---
+
 ## 2026-04-24 - coach-chat source committed + client cleanup
 
 Commit: `add coach-chat function source + revert redundant client history send`

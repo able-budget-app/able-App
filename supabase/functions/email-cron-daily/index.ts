@@ -190,20 +190,38 @@ async function sendViaResend(admin: any, to: string, subject: string, html: stri
 
 const unsubUrl = (token: string) => `${SUPABASE_URL}/functions/v1/unsubscribe?token=${encodeURIComponent(token)}`;
 
+// Hand-drawn underline SVG matching the marketing site's nav-logo treatment. Encoded as
+// a data URI so it inlines into an <img>; degrades cleanly in clients that strip data URIs.
+const LOGO_UNDERLINE = `data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 120 4.2' preserveAspectRatio='none'><path d='M3 2.6 Q2 2.4 3 2.15 Q58 1.75 115 0.15 Q119 1 119 2 Q119 3 115 3.9 Q58 3.55 3 2.65 Q2 2.45 3 2.6 Z' fill='%232a7a4a'/></svg>`;
+
 function layout(inner: string, unsub: string): string {
-  return `<!doctype html><html><body style="margin:0;padding:0;background:#f0f7f2;font-family:Helvetica,Arial,sans-serif;color:#111c16;">
-<div style="max-width:520px;margin:0 auto;padding:32px 24px;">
-  <div style="font-weight:900;font-size:20px;letter-spacing:-.02em;color:#2a7a4a;margin-bottom:24px;">Able</div>
-  <div style="background:#ffffff;border-radius:18px;padding:28px 24px;box-shadow:0 2px 8px rgba(0,0,0,.05);">${inner}</div>
-  <div style="text-align:center;margin-top:20px;font-size:12px;color:#8ca898;line-height:1.6;">
+  return `<!doctype html><html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"></head>
+<body style="margin:0;padding:0;background:#f0f7f2;font-family:Helvetica,Arial,sans-serif;color:#111c16;-webkit-font-smoothing:antialiased;">
+<table role="presentation" cellpadding="0" cellspacing="0" border="0" width="100%" style="background:#f0f7f2;"><tr><td align="center" style="padding:36px 16px 32px;">
+<table role="presentation" cellpadding="0" cellspacing="0" border="0" width="100%" style="max-width:520px;">
+  <tr><td align="center" style="padding-bottom:22px;">
+    <div style="display:inline-block;text-align:center;">
+      <div style="font-weight:900;font-size:30px;letter-spacing:-.03em;color:#111c16;line-height:1;">Able</div>
+      <img src="${LOGO_UNDERLINE}" alt="" width="80" height="6" style="display:block;margin:4px auto 0;width:80px;height:6px;border:0;">
+    </div>
+    <div style="margin-top:12px;font-size:11px;color:#8ca898;font-weight:700;letter-spacing:.06em;text-transform:uppercase;">For lumpy income</div>
+  </td></tr>
+  <tr><td style="background:#ffffff;border-radius:18px;overflow:hidden;box-shadow:0 2px 12px rgba(42,122,74,.08);">
+    <div style="height:4px;background:#2a7a4a;background-image:linear-gradient(90deg,#2a7a4a,#3d9e78);"></div>
+    <div style="padding:28px 24px;">${inner}</div>
+  </td></tr>
+  <tr><td align="center" style="padding-top:20px;font-size:12px;color:#8ca898;line-height:1.6;">
     <a href="${APP_URL}/app.html" style="color:#2a7a4a;font-weight:700;text-decoration:none;">Open Able</a>
     &middot;
     <a href="${unsub}" style="color:#8ca898;text-decoration:underline;">Unsubscribe</a>
-  </div>
-</div></body></html>`;
+    <div style="margin-top:8px;font-size:11px;color:#a8baad;">becomeable.app</div>
+  </td></tr>
+</table>
+</td></tr></table>
+</body></html>`;
 }
 
-const cta = `<a href="${APP_URL}/app.html" style="display:inline-block;background:#2a7a4a;color:#ffffff;padding:12px 24px;border-radius:12px;font-weight:800;text-decoration:none;font-size:14px;margin-top:16px;">Open Able</a>`;
+const cta = `<a href="${APP_URL}/app.html" style="display:inline-block;background:#2a7a4a;background-image:linear-gradient(135deg,#2a7a4a,#3d9e78);color:#ffffff;padding:14px 28px;border-radius:14px;font-weight:800;text-decoration:none;font-size:14px;margin-top:18px;letter-spacing:-.01em;box-shadow:0 4px 12px rgba(42,122,74,.25);">Open Able</a>`;
 
 function row(label: string, val: string): string {
   return `<div style="display:flex;justify-content:space-between;padding:12px 0;border-bottom:1px solid #eaf5ee;"><span style="color:#4a5c52;font-weight:600;font-size:14px;">${label}</span><span style="color:#111c16;font-weight:800;font-size:14px;">${val}</span></div>`;
