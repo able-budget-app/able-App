@@ -3009,17 +3009,42 @@ function billsInWindow(days){
   const d=days||allocWindow();
   // Expand bills into per-occurrence "virtual bills" so recurring ones count their full impact.
   const list=[];
+  const now=new Date();now.setHours(0,0,0,0);
   for(const b of S.bills){
-    if(b.paid)continue;
-    const occ=billOccurrencesInWindow(b,d);
-    if(occ.count<=0)continue;
-    // Create a virtual entry that represents this bill's total exposure in the window.
-    // We keep the original name/priority so downstream code still groups correctly.
+    let occ;
+    if (b.paid) {
+      // Paid monthly bills: skip the just-paid (current cycle) occurrence and
+      // include the FRESH NEXT one if it falls in the window. Without this,
+      // bills disappear from upcoming-bills the moment they're marked paid —
+      // even though next month's occurrence is right around the corner.
+      // Paid weekly/biweekly/custom bills are handled by applyOccurrenceReleases
+      // (reservations release as occurrences pass), so we don't double-show them.
+      const freq = b.freq || 'monthly';
+      if (freq !== 'monthly' || b.due === 'ongoing') continue;
+      const dueDay = parseInt(b.due);
+      if (isNaN(dueDay)) continue;
+      // The just-paid occurrence is in the current calendar month (paid flags
+      // get cleared by autoRolloverIfNewMonth on month change, so paid=true
+      // implies the user marked it during this month). The fresh next is in
+      // the following month.
+      const nextDate = monthlyDueDate(now.getFullYear(), now.getMonth() + 1, dueDay);
+      const delta = Math.round((nextDate - now) / 86400000);
+      if (delta > d || delta < 0) continue;
+      occ = { count: 1, nextDays: delta };
+    } else {
+      occ = billOccurrencesInWindow(b, d);
+      if (occ.count <= 0) continue;
+    }
+    // Create a virtual entry that represents this bill's total exposure in the
+    // window. Override paid:false on the virtual so downstream renderers don't
+    // strike-through the FRESH next occurrence (the original S.bills entry
+    // stays paid=true, untouched).
     list.push({
       ...b,
-      amount:b.amount*occ.count,
-      occurrences:occ.count,
-      nextInDays:occ.nextDays
+      paid: false,
+      amount: b.amount * occ.count,
+      occurrences: occ.count,
+      nextInDays: occ.nextDays,
     });
   }
   // Sort by soonest first
@@ -3029,12 +3054,23 @@ function billsInWindow(days){
 
 // Returns an array of Date objects for each occurrence of the bill within the next
 // `days` days. Used by the Next-14 timeline so each occurrence shows on its own row.
-// Skips paid bills and ongoing-no-date bills.
+// Skips ongoing-no-date bills. Paid monthly bills return their FRESH NEXT occurrence
+// (next cycle) so the timeline doesn't go blank the moment a bill is marked paid.
+// Paid non-monthly bills are skipped (applyOccurrenceReleases handles them).
 function billOccurrenceDates(bill,days){
-  if(!bill||bill.paid||bill.due==='ongoing') return [];
+  if(!bill||bill.due==='ongoing') return [];
   const freq=bill.freq||'monthly';
   const now=new Date();now.setHours(0,0,0,0);
   const out=[];
+  if (bill.paid) {
+    if (freq !== 'monthly') return [];
+    const dueDay = parseInt(bill.due);
+    if (isNaN(dueDay)) return [];
+    const nextDate = monthlyDueDate(now.getFullYear(), now.getMonth() + 1, dueDay);
+    const delta = Math.round((nextDate - now) / 86400000);
+    if (delta <= days && delta >= 0) out.push(nextDate);
+    return out;
+  }
   if(freq==='monthly'){
     const d=parseInt(bill.due);if(isNaN(d))return [];
     let t=monthlyDueDate(now.getFullYear(),now.getMonth(),d);
@@ -3266,20 +3302,18 @@ function applyOccurrenceReleases() {
   S.settings.lastOccurrenceCheck = now.toISOString();
   return dirty;
 }
-// Auto-rollover: when the calendar month changes, clear paid flags and per-bill
-// reservations so the new month's bills start fresh and recurring bills stop
-// being skipped (billsInWindow filters out paid=true bills).
+// Auto-rollover: when the calendar month changes, clear paid flags so this
+// month's bills aren't permanently flagged as last month's. Reservations are
+// PRESERVED so they roll forward to whichever next-cycle occurrence the bill
+// has — set-aside money doesn't vaporize at midnight on the 1st.
 //
 // Why this matters: bill.paid is a single bool, not per-cycle. If the user
-// marks April's truck loan paid then logs in on May 1, the bill is still
-// flagged paid and disappears from the window even though May's truck loan is
-// coming up. Auto-rollover prevents that without requiring a manual
-// "Close this month" click.
+// marks April's truck loan paid then logs in on May 1, the bill stays flagged
+// paid and disappears from upcoming-bills. Auto-rollover clears that flag.
 //
-// Known limitation: within a single month, a bill marked paid stays out of
-// the window for the rest of that month. End-of-month users may briefly see
-// "available to spend" overstate things until the new month rolls. That's a
-// separate refactor for a future round.
+// The legacy S.allocated_to_bills scalar is set to 0 — it was a transient
+// migration helper, not a real source of truth, and was never written after
+// Phase 2 of the reservations refactor.
 //
 // Doesn't archive the prior month into month_history — that's still a manual
 // resetMonth() operation for users who want a clean record.
@@ -3287,15 +3321,16 @@ function autoRolloverIfNewMonth() {
   if (!S.settings) S.settings = {};
   if (S.settings.allocResetMonth === _currentMonthKey()) return false;
   const hadPaidBills = (S.bills||[]).some(b => b.paid);
-  const hadReservations = S.settings.reservations && Object.keys(S.settings.reservations).length > 0;
   const hadScalar = (parseFloat(S.allocated_to_bills) || 0) > 0.01;
   if (Array.isArray(S.bills)) {
     S.bills.forEach(b => { if (b.paid) b.paid = false; });
   }
-  S.settings.reservations = {};
   S.settings.allocResetMonth = _currentMonthKey();
   S.allocated_to_bills = 0;
-  if (hadPaidBills || hadReservations || hadScalar) {
+  // Reservations: intentionally preserved. Paid flags cleared above mean the
+  // bills are now "unpaid for this new cycle"; the reservations attached to
+  // their billIds keep them funded going into the new month.
+  if (hadPaidBills || hadScalar) {
     try { Able.track('auto_rollover_new_month'); } catch(_) {}
   }
   return true;
