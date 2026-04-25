@@ -74,8 +74,13 @@ Deno.serve(async (req) => {
   try {
     const signature = req.headers.get("stripe-signature");
     const body = await req.text();
-    const WEBHOOK_SECRET = Deno.env.get("STRIPE_WEBHOOK_SECRET")!;
-    const STRIPE_SECRET = Deno.env.get("STRIPE_SECRET_KEY")!;
+    // Dual-mode secrets: live + test. The function verifies an incoming
+    // signature against either one. The matching mode's API key is then
+    // used for any Stripe API call-backs (resolved after JSON.parse below).
+    const WEBHOOK_SECRET_LIVE = Deno.env.get("STRIPE_WEBHOOK_SECRET") ?? "";
+    const WEBHOOK_SECRET_TEST = Deno.env.get("STRIPE_WEBHOOK_SECRET_TEST") ?? "";
+    const STRIPE_SECRET_LIVE = Deno.env.get("STRIPE_SECRET_KEY") ?? "";
+    const STRIPE_SECRET_TEST = Deno.env.get("STRIPE_SECRET_KEY_TEST") ?? "";
     const SUPABASE_URL = Deno.env.get("SUPABASE_URL")!;
     const SERVICE_KEY = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!;
 
@@ -94,20 +99,40 @@ Deno.serve(async (req) => {
 
     const encoder = new TextEncoder();
     const signedPayload = `${timestamp}.${body}`;
-    const key = await crypto.subtle.importKey(
-      "raw", encoder.encode(WEBHOOK_SECRET),
-      { name: "HMAC", hash: "SHA-256" }, false, ["sign"]
-    );
-    const signed = await crypto.subtle.sign("HMAC", key, encoder.encode(signedPayload));
-    const computed = Array.from(new Uint8Array(signed))
-      .map((b) => b.toString(16).padStart(2, "0")).join("");
-
-    if (!timingSafeEqual(computed, sig)) {
+    // Try the live secret first; fall back to the test secret. Either one
+    // succeeding is sufficient — this lets Stripe CLI-signed test events
+    // and real live-mode webhooks share the same endpoint.
+    const verifyWithSecret = async (secret: string): Promise<boolean> => {
+      if (!secret) return false;
+      const k = await crypto.subtle.importKey(
+        "raw", encoder.encode(secret),
+        { name: "HMAC", hash: "SHA-256" }, false, ["sign"]
+      );
+      const s = await crypto.subtle.sign("HMAC", k, encoder.encode(signedPayload));
+      const c = Array.from(new Uint8Array(s))
+        .map((b) => b.toString(16).padStart(2, "0")).join("");
+      return timingSafeEqual(c, sig);
+    };
+    const verifiedLive = await verifyWithSecret(WEBHOOK_SECRET_LIVE);
+    const verifiedTest = verifiedLive ? false : await verifyWithSecret(WEBHOOK_SECRET_TEST);
+    if (!verifiedLive && !verifiedTest) {
       return respond({ error: "Invalid signature" }, 400);
     }
 
     const event = JSON.parse(body);
-    const log: Record<string, unknown> = { event: event.type, id: event.id, steps: [] };
+    // Pick the Stripe API key matching the event's mode. Fall back to
+    // whichever key is set if only one mode is configured in the env.
+    // applyCredit() and any other callback into Stripe closes over this.
+    const STRIPE_SECRET = event.livemode === false
+      ? (STRIPE_SECRET_TEST || STRIPE_SECRET_LIVE)
+      : (STRIPE_SECRET_LIVE || STRIPE_SECRET_TEST);
+    const log: Record<string, unknown> = {
+      event: event.type,
+      id: event.id,
+      livemode: event.livemode === true,
+      verified_via: verifiedLive ? "live" : "test",
+      steps: [],
+    };
 
     const sbHeaders = {
       Authorization: `Bearer ${SERVICE_KEY}`,
