@@ -431,10 +431,17 @@ input,select,button,textarea{font-family:inherit;}
 .lc-game-card-desc{font-size:12px;color:var(--ds-t2);font-weight:600;margin-top:3px;line-height:1.5;}
 .lc-game-card-stats{display:flex;gap:12px;margin-top:.75rem;font-size:11px;font-weight:700;color:var(--ds-t3);letter-spacing:.03em;}
 /* ═══ Game overlay ═══ */
-.lc-game-bg{position:fixed;inset:0;background:rgba(17,28,22,.45);z-index:250;display:flex;align-items:flex-end;justify-content:center;backdrop-filter:blur(6px);}
-.lc-game{background:var(--ds-card);border-radius:var(--ds-r3) var(--ds-r3) 0 0;width:100%;max-width:640px;max-height:92vh;overflow-y:auto;padding:1.5rem 1.25rem 1.25rem;position:relative;box-shadow:var(--ds-sh3);animation:sheetSlideUp .3s cubic-bezier(.34,1.2,.64,1);}
+.lc-game-bg{position:fixed;inset:0;background:rgba(17,28,22,.45);z-index:250;display:flex;align-items:flex-end;justify-content:center;backdrop-filter:blur(6px);overscroll-behavior:contain;}
+/* Use dvh on mobile so the popup respects the dynamic address bar (vh on iOS
+   silently extends past the actual visible area when the bar is hidden, which
+   pushed the title out of view). overscroll-behavior:contain stops touch
+   scrolling from bubbling to the body when reaching the popup's edges. */
+.lc-game{background:var(--ds-card);border-radius:var(--ds-r3) var(--ds-r3) 0 0;width:100%;max-width:640px;max-height:92vh;max-height:92dvh;overflow-y:auto;overscroll-behavior:contain;-webkit-overflow-scrolling:touch;padding:1.5rem 1.25rem 1.25rem;position:relative;box-shadow:var(--ds-sh3);animation:sheetSlideUp .3s cubic-bezier(.34,1.2,.64,1);}
 @media(min-width:801px){.lc-game{border-radius:var(--ds-r3);margin-bottom:2rem;}.lc-game-bg{align-items:center;}}
-.lc-game-close{position:absolute;top:14px;right:14px;width:32px;height:32px;border-radius:50%;background:var(--ds-page);color:var(--ds-t2);display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:16px;border:none;z-index:2;}
+/* Extra right padding on the first content block so the close button doesn't
+   visually overlap the title/eyebrow line. */
+.lc-game > *:first-child,.lc-game-header{padding-right:42px;}
+.lc-game-close{position:absolute;top:14px;right:14px;width:32px;height:32px;border-radius:50%;background:var(--ds-page);color:var(--ds-t2);display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:16px;border:none;z-index:5;}
 .lc-game-close:hover{background:var(--ds-green-l);color:var(--ds-green);}
 .lc-game-header{text-align:center;margin-bottom:1.25rem;padding-top:.25rem;}
 .lc-game-eyebrow{font-size:10px;font-weight:800;letter-spacing:.15em;color:var(--ds-green);margin-bottom:.35rem;font-family:var(--ds-f);}
@@ -6741,14 +6748,14 @@ function lcGameRenderPlaying() {
     <div class="lc-game-header">
       <div class="lc-game-eyebrow">WHERE DOES IT GO?</div>
       <div class="lc-game-income">A deposit just landed: <strong>$${amount.toLocaleString()}</strong></div>
-      <div class="lc-game-remaining ${statusClass}">${statusText}</div>
+      <div class="lc-game-remaining ${statusClass}" id="lc-where-status">${statusText}</div>
     </div>
     <div class="lc-game-buckets">
       ${buckets.map(b => `
         <div class="lc-game-bucket" style="--bucket-color:${b.color};">
           <div class="lc-game-bucket-head">
             <div class="lc-game-bucket-label">${b.label}</div>
-            <div class="lc-game-bucket-amt">${Math.round(a[b.key])}% · $${Math.round(amount * a[b.key] / 100).toLocaleString()}</div>
+            <div class="lc-game-bucket-amt" data-bucket-amt="${b.key}">${Math.round(a[b.key])}% · $${Math.round(amount * a[b.key] / 100).toLocaleString()}</div>
           </div>
           <input type="range" class="lc-game-slider" min="0" max="100" step="1" value="${a[b.key]}" oninput="lcGameSet('${b.key}', this.value)">
           <div class="lc-game-bucket-hint">${b.hint}</div>
@@ -6757,7 +6764,7 @@ function lcGameRenderPlaying() {
     </div>
     <div class="lc-game-actions">
       <button class="btn" onclick="lcGameClose()">Cancel</button>
-      <button class="btn btn-primary" onclick="lcGameSubmit()" ${canSubmit ? '' : 'disabled style="opacity:.4;cursor:not-allowed;"'}>Score my split →</button>
+      <button class="btn btn-primary" id="lc-where-submit" onclick="lcGameSubmit()" ${canSubmit ? '' : 'disabled style="opacity:.4;cursor:not-allowed;"'}>Score my split →</button>
     </div>
   `;
 }
@@ -6766,7 +6773,31 @@ function lcGameSet(bucket, val) {
   if (!lcGameState) return;
   const n = parseFloat(val) || 0;
   lcGameState.allocations[bucket] = Math.max(0, Math.min(100, n));
-  lcRenderGame();
+  // Targeted DOM update instead of full re-render. A full re-render would
+  // destroy the slider element mid-drag and limit the user to one step per tap.
+  const a = lcGameState.allocations;
+  const amount = lcGameState.amount;
+  const amtEl = document.querySelector(`[data-bucket-amt="${bucket}"]`);
+  if (amtEl) amtEl.textContent = `${Math.round(a[bucket])}% · $${Math.round(amount * a[bucket] / 100).toLocaleString()}`;
+  const total = a.bills + a.debt + a.buffer + a.owner + a.free;
+  const remaining = 100 - total;
+  const canSubmit = Math.abs(total - 100) < 0.5;
+  const statusEl = document.getElementById('lc-where-status');
+  if (statusEl) {
+    const cls = canSubmit ? 'ready' : total > 100 ? 'over' : 'under';
+    const txt = total === 0 ? 'Start allocating'
+      : total > 100 ? `Over by ${Math.round(total - 100)}%`
+      : total < 100 ? `${Math.round(remaining)}% left`
+      : 'Perfect. Hit score.';
+    statusEl.textContent = txt;
+    statusEl.className = `lc-game-remaining ${cls}`;
+  }
+  const submitBtn = document.getElementById('lc-where-submit');
+  if (submitBtn) {
+    submitBtn.disabled = !canSubmit;
+    submitBtn.style.opacity = canSubmit ? '' : '.4';
+    submitBtn.style.cursor = canSubmit ? '' : 'not-allowed';
+  }
 }
 
 function lcGameComputeOptimal(amount) {
@@ -6953,14 +6984,14 @@ function lcSurviveRenderEvent() {
       <div class="lc-game-header" style="margin-top:1rem;">
         <div class="lc-game-eyebrow">MONEY CAME IN</div>
         <div class="lc-game-income">${event.source}: <strong>$${event.amount.toLocaleString()}</strong></div>
-        <div class="lc-game-remaining ${statusClass}">${statusText}</div>
+        <div class="lc-game-remaining ${statusClass}" id="lc-survive-status">${statusText}</div>
       </div>
       <div class="lc-game-buckets">
         ${buckets.map(b => `
           <div class="lc-game-bucket" style="--bucket-color:${b.color};">
             <div class="lc-game-bucket-head">
               <div class="lc-game-bucket-label">${b.label}</div>
-              <div class="lc-game-bucket-amt">${Math.round(pend[b.key])}% · $${Math.round(event.amount * pend[b.key] / 100).toLocaleString()}</div>
+              <div class="lc-game-bucket-amt" data-survive-amt="${b.key}">${Math.round(pend[b.key])}% · $${Math.round(event.amount * pend[b.key] / 100).toLocaleString()}</div>
             </div>
             <input type="range" class="lc-game-slider" min="0" max="100" step="1" value="${pend[b.key]}" oninput="lcSurviveSet('${b.key}', this.value)">
             <div class="lc-game-bucket-hint">${b.hint}</div>
@@ -6969,7 +7000,7 @@ function lcSurviveRenderEvent() {
       </div>
       <div class="lc-game-actions">
         <button class="btn" onclick="lcGameClose()">Quit</button>
-        <button class="btn btn-primary" onclick="lcSurviveApplyIncome()" ${canSubmit ? '' : 'disabled style="opacity:.4;cursor:not-allowed;"'}>Apply →</button>
+        <button class="btn btn-primary" id="lc-survive-apply" onclick="lcSurviveApplyIncome()" ${canSubmit ? '' : 'disabled style="opacity:.4;cursor:not-allowed;"'}>Apply →</button>
       </div>
     `;
   } else {
@@ -6998,7 +7029,31 @@ function lcSurviveSet(bucket, val) {
   if (!lcGameState) return;
   if (!lcGameState.pendingAlloc) lcGameState.pendingAlloc = { debt: 0, buffer: 0, owner: 0, keep: 0 };
   lcGameState.pendingAlloc[bucket] = Math.max(0, Math.min(100, parseFloat(val) || 0));
-  lcRenderGame();
+  // Targeted DOM update — see lcGameSet for why a full re-render breaks slider drag.
+  const event = SURVIVE_MONTH_EVENTS[lcGameState.eventIdx];
+  if (!event || event.type !== 'income') return;
+  const pend = lcGameState.pendingAlloc;
+  const amtEl = document.querySelector(`[data-survive-amt="${bucket}"]`);
+  if (amtEl) amtEl.textContent = `${Math.round(pend[bucket])}% · $${Math.round(event.amount * pend[bucket] / 100).toLocaleString()}`;
+  const total4 = pend.debt + pend.buffer + pend.owner + pend.keep;
+  const remaining = 100 - total4;
+  const canSubmit = Math.abs(total4 - 100) < 0.5;
+  const statusEl = document.getElementById('lc-survive-status');
+  if (statusEl) {
+    const cls = canSubmit ? 'ready' : total4 > 100 ? 'over' : 'under';
+    const txt = total4 === 0 ? 'Start allocating'
+      : total4 > 100 ? `Over by ${Math.round(total4 - 100)}%`
+      : total4 < 100 ? `${Math.round(remaining)}% left`
+      : 'Perfect';
+    statusEl.textContent = txt;
+    statusEl.className = `lc-game-remaining ${cls}`;
+  }
+  const applyBtn = document.getElementById('lc-survive-apply');
+  if (applyBtn) {
+    applyBtn.disabled = !canSubmit;
+    applyBtn.style.opacity = canSubmit ? '' : '.4';
+    applyBtn.style.cursor = canSubmit ? '' : 'not-allowed';
+  }
 }
 
 function lcSurviveApplyIncome() {
@@ -7128,10 +7183,24 @@ function lcBeatRenderPlaying() {
     <div class="lc-beat-slider-row">
       <div class="lc-beat-slider-head">
         <span>Extra payment per month</span>
-        <span class="lc-beat-slider-val">$${extra.toLocaleString()}</span>
+        <span class="lc-beat-slider-val" id="lc-beat-extra-label">$${extra.toLocaleString()}</span>
       </div>
       <input type="range" class="lc-game-slider" min="0" max="1500" step="25" value="${extra}" oninput="lcBeatSetExtra(this.value)" style="--bucket-color:var(--ds-green);">
     </div>
+    <div id="lc-beat-output">${lcBeatRenderOutput(allResults, primary, maxMonths, state.strategy, extra, debtColors, labelMap)}</div>
+    <div class="lc-game-actions">
+      <button class="btn" onclick="lcGameClose()">Close</button>
+      <button class="btn btn-primary" onclick="lcBeatMarkPlayed()">Save result →</button>
+    </div>
+  `;
+}
+
+// Pulled out so lcBeatSetExtra can refresh just this fragment without
+// rebuilding the slider element (which would kill drag interaction).
+function lcBeatRenderOutput(allResults, primary, maxMonths, strategy, extra, debtColors, labelMap) {
+  const fmtMoney = (n) => '$' + Math.round(n).toLocaleString();
+  const fmtMonths = (m) => m >= 180 ? '15+ yr' : (m > 12 ? `${Math.floor(m/12)}y ${m%12}m` : `${m} mo`);
+  return `
     <div class="lc-beat-bars">
       ${primary.results.map((d, i) => {
         const mo = d.paidMonth || 180;
@@ -7156,7 +7225,7 @@ function lcBeatRenderPlaying() {
       <div class="lc-beat-compare-table">
         <div class="lc-beat-compare-row head"><span>Strategy</span><span>Debt-free in</span><span>Total interest</span></div>
         ${allResults.map(r => `
-          <div class="lc-beat-compare-row ${r.strategy === state.strategy ? 'active' : ''}">
+          <div class="lc-beat-compare-row ${r.strategy === strategy ? 'active' : ''}">
             <span>${labelMap[r.strategy]}</span>
             <span>${fmtMonths(r.debtFreeMo)}</span>
             <span>${fmtMoney(r.totalInterest)}</span>
@@ -7164,15 +7233,29 @@ function lcBeatRenderPlaying() {
         `).join('')}
       </div>
     </div>
-    <div class="lc-game-actions">
-      <button class="btn" onclick="lcGameClose()">Close</button>
-      <button class="btn btn-primary" onclick="lcBeatMarkPlayed()">Save result →</button>
-    </div>
   `;
 }
 
 function lcBeatSetStrategy(s) { if (lcGameState) { lcGameState.strategy = s; lcRenderGame(); } }
-function lcBeatSetExtra(v) { if (lcGameState) { lcGameState.extraPayment = parseInt(v) || 0; lcRenderGame(); } }
+function lcBeatSetExtra(v) {
+  if (!lcGameState) return;
+  lcGameState.extraPayment = parseInt(v) || 0;
+  // Targeted refresh of just the bars/summary/compare fragment so the slider
+  // element survives the drag (a full re-render would destroy it mid-interaction).
+  const state = lcGameState;
+  const debts = state.useSample ? BEAT_INTEREST_SAMPLE : S.debts;
+  const extra = state.extraPayment;
+  const strategies = ['avalanche', 'snowball', 'hybrid'];
+  const labelMap = { avalanche: 'Avalanche', snowball: 'Snowball', hybrid: 'Hybrid' };
+  const allResults = strategies.map(s => ({ strategy: s, ...lcBeatSimulate(debts, s, extra) }));
+  const primary = allResults.find(r => r.strategy === state.strategy) || allResults[0];
+  const maxMonths = Math.max(...allResults.map(r => r.debtFreeMo), 1);
+  const debtColors = ['#c04060', '#e07a5f', '#c97c0a', '#3570b8', '#7a5fb8', '#3d9e78'];
+  const out = document.getElementById('lc-beat-output');
+  if (out) out.innerHTML = lcBeatRenderOutput(allResults, primary, maxMonths, state.strategy, extra, debtColors, labelMap);
+  const lbl = document.getElementById('lc-beat-extra-label');
+  if (lbl) lbl.textContent = '$' + extra.toLocaleString();
+}
 function lcBeatMarkPlayed() {
   lcEnsureLearnState();
   const L = S.settings.learn;
