@@ -349,9 +349,12 @@ input,select,button,textarea{font-family:inherit;}
   .bills-actions{grid-area:actions;justify-self:end;}
   .bills-actions .btn-sm{padding:4px 10px;font-size:11px;}
 }
-.modal-bg{position:fixed;inset:0;background:rgba(17,28,22,.45);z-index:200;display:flex;align-items:center;justify-content:center;padding:1rem;backdrop-filter:blur(6px);animation:modalFadeIn .2s ease;}
+.modal-bg{position:fixed;inset:0;background:rgba(17,28,22,.45);z-index:200;display:flex;align-items:center;justify-content:center;padding:1rem;backdrop-filter:blur(6px);animation:modalFadeIn .2s ease;overscroll-behavior:contain;}
 @keyframes modalFadeIn{from{opacity:0;}to{opacity:1;}}
-.modal{background:var(--ds-card);border-radius:var(--ds-r3);padding:1.75rem;width:100%;max-width:480px;box-shadow:var(--ds-sh3);max-height:90vh;overflow-y:auto;animation:modalSlideUp .25s cubic-bezier(.34,1.56,.64,1);position:relative;}
+/* overscroll-behavior:contain stops touch scrolling from bubbling out to the
+   body when the modal reaches its scroll edges. dvh respects the iOS dynamic
+   address bar so tall modals don't exceed the actual visible area. */
+.modal{background:var(--ds-card);border-radius:var(--ds-r3);padding:1.75rem;width:100%;max-width:480px;box-shadow:var(--ds-sh3);max-height:90vh;max-height:90dvh;overflow-y:auto;overscroll-behavior:contain;-webkit-overflow-scrolling:touch;animation:modalSlideUp .25s cubic-bezier(.34,1.56,.64,1);position:relative;}
 @keyframes modalSlideUp{from{opacity:0;transform:translateY(20px) scale(.96);}to{opacity:1;transform:translateY(0) scale(1);}}
 .modal-title{font-family:var(--ds-f);font-size:1.35rem;font-weight:800;margin-bottom:1.35rem;color:var(--ds-t1);letter-spacing:-.02em;padding-right:36px;}
 .modal-close{position:absolute;top:14px;right:14px;width:32px;height:32px;border-radius:50%;background:var(--ds-card2);border:none;cursor:pointer;display:flex;align-items:center;justify-content:center;color:var(--ds-t2);transition:all .15s;z-index:2;}
@@ -360,7 +363,7 @@ input,select,button,textarea{font-family:inherit;}
 .modal-actions{display:flex;gap:10px;justify-content:flex-end;margin-top:1.5rem;}
 @media (max-width:600px){
   .modal-bg{align-items:flex-end;padding:0;}
-  .modal{max-width:100%;border-radius:var(--ds-r3) var(--ds-r3) 0 0;padding:1.5rem 1.25rem 0;max-height:92vh;animation:sheetSlideUp .3s cubic-bezier(.34,1.2,.64,1);}
+  .modal{max-width:100%;border-radius:var(--ds-r3) var(--ds-r3) 0 0;padding:1.5rem 1.25rem 0;max-height:92vh;max-height:92dvh;animation:sheetSlideUp .3s cubic-bezier(.34,1.2,.64,1);}
   @keyframes sheetSlideUp{from{transform:translateY(100%);}to{transform:translateY(0);}}
   .modal::before{content:'';display:block;width:40px;height:4px;background:var(--ds-t4);border-radius:4px;margin:-.25rem auto 1rem;}
   .modal-title{margin-bottom:1rem;}
@@ -2188,6 +2191,9 @@ async function onAuthStateChange(user) {
       // Per-bill reservations: assign IDs, redistribute legacy scalar (stragglers),
       // and release reservations for non-monthly bills whose occurrences have passed.
       let resDirty = ensureBillIds();
+      // Calendar-month rollover BEFORE migrate so a stale scalar from a prior
+      // month doesn't get redistributed into the new month's reservations.
+      if (autoRolloverIfNewMonth()) resDirty = true;
       if (_isAllocatedToBillsCurrentMonth() && migrateScalarToReservations()) resDirty = true;
       if (applyOccurrenceReleases()) resDirty = true;
       if (resDirty) save();
@@ -2852,6 +2858,7 @@ async function loadUserData() {
   // Per-bill reservations: assign IDs, redistribute legacy scalar (stragglers),
   // and release reservations for non-monthly bills whose occurrences have passed.
   let resDirty = ensureBillIds();
+  if (autoRolloverIfNewMonth()) resDirty = true;
   if (_isAllocatedToBillsCurrentMonth() && migrateScalarToReservations()) resDirty = true;
   if (applyOccurrenceReleases()) resDirty = true;
   if (resDirty) save();
@@ -3259,6 +3266,41 @@ function applyOccurrenceReleases() {
   S.settings.lastOccurrenceCheck = now.toISOString();
   return dirty;
 }
+// Auto-rollover: when the calendar month changes, clear paid flags and per-bill
+// reservations so the new month's bills start fresh and recurring bills stop
+// being skipped (billsInWindow filters out paid=true bills).
+//
+// Why this matters: bill.paid is a single bool, not per-cycle. If the user
+// marks April's truck loan paid then logs in on May 1, the bill is still
+// flagged paid and disappears from the window even though May's truck loan is
+// coming up. Auto-rollover prevents that without requiring a manual
+// "Close this month" click.
+//
+// Known limitation: within a single month, a bill marked paid stays out of
+// the window for the rest of that month. End-of-month users may briefly see
+// "available to spend" overstate things until the new month rolls. That's a
+// separate refactor for a future round.
+//
+// Doesn't archive the prior month into month_history — that's still a manual
+// resetMonth() operation for users who want a clean record.
+function autoRolloverIfNewMonth() {
+  if (!S.settings) S.settings = {};
+  if (S.settings.allocResetMonth === _currentMonthKey()) return false;
+  const hadPaidBills = (S.bills||[]).some(b => b.paid);
+  const hadReservations = S.settings.reservations && Object.keys(S.settings.reservations).length > 0;
+  const hadScalar = (parseFloat(S.allocated_to_bills) || 0) > 0.01;
+  if (Array.isArray(S.bills)) {
+    S.bills.forEach(b => { if (b.paid) b.paid = false; });
+  }
+  S.settings.reservations = {};
+  S.settings.allocResetMonth = _currentMonthKey();
+  S.allocated_to_bills = 0;
+  if (hadPaidBills || hadReservations || hadScalar) {
+    try { Able.track('auto_rollover_new_month'); } catch(_) {}
+  }
+  return true;
+}
+
 // One-time migration: redistribute the legacy S.allocated_to_bills scalar across
 // per-bill reservations using the same priority+date order the engine used implicitly.
 // Safe to call repeatedly — only does work when reservations is empty and the scalar > 0.
