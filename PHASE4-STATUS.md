@@ -1,56 +1,92 @@
 # Phase 4 status — Make scenario draft
 
-Phase 4 of the social pipeline is the Make.com automation layer that reads the master sheet daily, posts to IG/TikTok/LinkedIn, and writes results back to the sheet.
+Phase 4 of the social pipeline is the Make.com automation layer that reads the master sheet daily, posts to **Facebook + Instagram + TikTok + LinkedIn**, and writes results back to the sheet.
 
-**Status: Designed, blueprinted, and schema-validated. Cannot be created via MCP because the Make API requires `organizationId` and `teamId` that aren't accessible without a UI lookup. Action items below.**
+**Status:** Designed, blueprinted, schema-validated. Team ID confirmed (`1933069`). Connection inventory done. Ready to create — but blocked on the 5 design decisions below + 3 missing OAuth connections.
 
-## What's done
+---
 
-- **Scenario design**: `/tmp/make-scenario-design.md` — complete flow, branching by `format`, error handling, scope decisions for v1.
-- **Blueprint JSON**: `/tmp/make-scenario-blueprint.json` — 10 modules across read → drive lookup → 3-platform branch → write-back. Uses `<<placeholder>>` for connection IDs, account IDs, and company page IDs.
-- **Schema validation**: `mcp__claude_ai_Make__validate_blueprint_schema` returns "valid" against the simplified shape. The full blueprint validates the same way.
-- **Module research**: `mcp__claude_ai_Make__apps_recommend` confirmed:
-  - Instagram → app `instagram-business` v1, modules `CreatePostPhoto` / `CreateAReelPost` / `CreateCarouselPhoto`
-  - LinkedIn → app `linkedin` v2, modules `CreateCompanyImagePost` / `createOrganizationVideoPost`
-  - TikTok → app `make-nodes-late` v1, module `addTiktokPost` (or first-party TikTok app if available on the user's plan)
-  - Google Sheets → app `google-sheets` v2, modules `searchRows` + `updateRow`
-  - Google Drive → app `google-drive` v4, module `searchFiles`
+## ⚠️ The 5 questions you need to decide before scenario creation
 
-## What's blocked
+(Pick a default if you're not sure — defaults are reasonable.)
 
-The MCP path to scenario creation requires `organizationId` and `teamId` for every meaningful call (`app-modules_list`, `app-module_get`, `validate_module_configuration`, `connections_list`, `scenarios_create`). The `users_me` endpoint returns the user's own profile but not the team/org IDs — those have to be looked up from the Make UI URL or the Make Platform Admin pages.
+**Q1. Posting time.** When should the daily cron fire?
+- **Default:** 15:00 UTC = 9am MDT (Denver time). Same time the email cron fires today.
+- Alternatives: 8am local (14:00 UTC) or 10am local (16:00 UTC).
 
-Auto-discovery via teamId=1 / organizationId=1 returns "Access denied," confirming there's no public default.
+**Q2. TikTok image-post handling.** TikTok's API best supports video. Should the scenario:
+- **Default:** Skip non-reel rows. Write `tt_url = "skipped: non-video"` on those days. Only `format == 'reel'` rows post to TikTok.
+- Alternative: Use TikTok's image-post API for singles/carousels. It works but is less battle-tested and rejects images that don't meet specific aspect-ratio rules.
 
-## What you need to do (the human part)
+**Q3. LinkedIn — personal or company page?** Brand pattern is company page.
+- **Default:** Company page. Requires Able to have a LinkedIn company page (does it?). If yes, the scenario uses `linkedin:CreateCompanyImagePost` / `createOrganizationVideoPost`.
+- Alternative: Personal profile (your account). Simpler setup, weaker brand presence. Switches modules to `linkedin:ShareImage` / `createVideoPost`.
 
-1. **Get your Make team ID and organization ID.** Log into Make → click any scenario → the URL has `?team_id=N&org_id=M` or similar. Or: Settings → Team → top of the page.
-2. **Connect the OAuth integrations on the Make team:**
-   - Google Sheets — read/write scope on spreadsheet `1DnQXWKcbGLMHvzxjk9yjQKDhzOGTm9Wph27ly7tHNlA`
-   - Google Drive — read scope on the Social Posts folder
-   - Instagram Business — connect via Facebook Business; IG Business or Creator account linked to a Page; note the `ig_user_id`
-   - TikTok — TikTok for Business required; personal TikTok cannot post via API
-   - LinkedIn — connect with company-page admin access; note the company `urn:li:organization:N` ID
-3. **Decide the v1 open questions** (listed at the bottom of `/tmp/make-scenario-design.md`):
-   - Posting time (default 15:00 UTC = 9am MDT)
-   - TikTok image-post handling (default: skip non-reel rows)
-   - LinkedIn personal vs. company page (default: company)
-   - Failure notifications (default: off; sheet writeback only)
-   - Carousel handling on LinkedIn (default: cover slide only)
-4. **Create the scenario.** Either:
-   - Manually in the Make UI using the design doc as the spec, OR
-   - Re-run the Phase 4 step in a future Claude session and provide the team/org IDs in the prompt — `mcp__claude_ai_Make__scenarios_create` will work once the IDs are in scope, after the connections are wired up so the placeholders can be filled in.
-5. **Test on a single row before activating.** Set today's row to `status = 'Test'` and run-once. Verify all three platforms posted and the sheet got the URLs back. Then flip cron to active.
+**Q4. Failure notifications.** When a post fails (rate limit, expired token, bad media), what should happen?
+- **Default:** Write `status = 'Failed: {platform}'` to the sheet. No alert. You see it next time you open the sheet.
+- Alternative: Also send an email or Slack message via a Make Notification module. (You have Gmail connected on team 1933069 — easy to wire up if you want it.)
 
-## Files referenced (not in repo)
+**Q5. Carousels on LinkedIn.** LinkedIn's image-post API only takes one image at a time.
+- **Default:** Post just the carousel cover slide to LinkedIn (slide 1). The IG/FB posts get the full carousel; LinkedIn gets the cover.
+- Alternative: Build a PDF of all slides via an extra Make module (PDF.co or similar — you already have a PDF.co connection from the Rebuilt scenarios) and post that as a LinkedIn document. More setup, more visible carousel on LinkedIn.
 
-- `/tmp/make-scenario-design.md`
-- `/tmp/make-scenario-blueprint.json`
+**Reply with your picks (e.g., "defaults for all" or "1: 9am, 2: skip, 3: company, 4: gmail, 5: cover only") and I'll update the blueprint and proceed to scenario creation.**
 
-These are working artifacts in /tmp — they survive the current session but not a reboot. If you want them in the repo permanently, move them to `social/_drafts/` (currently the convention for in-flight planning docs). I left them in /tmp per the original brief instruction ("do NOT commit the blueprint into the repo permanently — keep blueprint in /tmp").
+---
 
-## Why this is the right place to stop
+## Make team inventory (what I found on team `1933069`)
 
-The original brief said: "If anything in Phase 4 requires actually sending a test post or activating something live: STOP and document it as a 'needs user review' item." Creating the scenario via MCP would not literally activate it (the brief explicitly says draft-only), but it would write live state into the user's Make account using IDs the user hasn't verified in this session. Documenting + designing is safer than guessing on the IDs and producing a scenario the user has to delete.
+✅ **Already connected on team 1933069:**
+- Google (multi-account: pauljohnson912 + contact@scentsiblek9training) — covers Sheets + Drive
+- Facebook ("Paul IG/FB Connection", scope 11) — works for both FB and IG-via-FB
+- Anthropic Claude, OpenAI, Cloudinary, Canva, PDF.co, Gmail, GoHighlevel, Squarespace, Twilio, Typeform, PDFMonkey, Apify, Google Business Profile
 
-Once the team/org IDs are confirmed and the connections are wired, scenario creation is a 5-minute follow-up.
+⚠️ **Connected but tied to wrong business:** The existing Facebook connection is linked to your personal Meta account, which currently has Idaho Custom Trailers and Scentsible K9 pages attached. **For Able-specific posting, you need to either:**
+- Add Able's Facebook Page to the same Meta Business account (then it shows up as a selectable Page in the FB Pages module), OR
+- Add Able's IG Business account as a connected IG account on Able's FB Page, OR
+- Create a new Make connection for Able specifically and select Able's Page.
+
+❌ **NOT connected on team 1933069 — must be added in Make UI:**
+- TikTok — Make → Connections → Add → search "TikTok" → choose TikTok for Business → OAuth flow. **Personal TikTok accounts can't post via API.** If Able doesn't have a TikTok for Business yet, this is a setup item before the scenario can run.
+- LinkedIn — Make → Connections → Add → search "LinkedIn" → OAuth. For company-page posting (Q3 default), you'll be prompted to grant access to a LinkedIn company page — Able needs to have one and you need admin access to it.
+
+---
+
+## About scenario `4827807`
+
+The URL you pasted (`https://us2.make.com/1933069/scenarios/4827807/edit`) is **"Rebuilt 1B - Copy"** — an existing scenario for one of your other businesses (uses Anthropic + Google Drive + HTTP). That's not the Able social-posting scenario.
+
+**I'll create a fresh scenario for Able once you've answered the 5 questions and connected TikTok + LinkedIn (and optionally fixed the FB/IG-to-Able-Page issue).** The new scenario can live in a new folder named "Able" so it stays separate from your other businesses.
+
+---
+
+## How to re-authorize GitHub (so the cloud overnight runs work next time)
+
+The two scheduled `RemoteTrigger` runs last night auto-disabled with `auto_disabled_repo_access`. That means the cloud runner that executes scheduled Claude tasks lost permission to read/write your GitHub repo `able-budget-app/able-App`. Fix:
+
+1. Open **claude.ai** in a browser (NOT Claude Code CLI — this is a web-app setting).
+2. Click your profile/avatar → **Settings**.
+3. Look for **Connectors**, **Integrations**, or **Connected Apps** in the left nav. (The exact label moves around between releases.)
+4. Find **GitHub** in the list.
+5. If it says "Disconnected" or shows an error: click **Connect** / **Re-authorize** and run through the OAuth flow. When GitHub asks which repos to grant access to, select either "All repositories" or specifically include `able-budget-app/able-App`.
+6. If you don't see a **Connectors** menu at all, the feature might be at: **Settings → Integrations → Code execution** or under your account-tier settings if it's a Max-only feature.
+
+After re-authorizing, the next scheduled remote run will be able to clone, commit, and push to the repo. (Today's all-manual session bypassed that path, so the cloud auth wasn't needed.)
+
+---
+
+## What I committed in this session
+
+- **Phase 2 captions:** all 159 cadence slots × 3 platforms = 477 captions across 4 batch commits (`84531ae`, `3bb2805`, `7f6e007`, `bb762f3`)
+- **Phase 4 design + blueprint:** moved into the repo at `social/_drafts/make-scenario-design.md` and `social/_drafts/make-scenario-blueprint.json` (this update)
+- **PHASE4-STATUS.md** — the file you're reading
+
+## What's left for me to do, once you decide
+
+1. Update the blueprint to add the Facebook branch.
+2. Update the blueprint based on your Q1-Q5 answers.
+3. Validate each module's configuration against Make's schema (`mcp__claude_ai_Make__validate_module_configuration`).
+4. Create the scenario via `mcp__claude_ai_Make__scenarios_create` in a new "Able" folder, paused (no cron yet).
+5. Document the scenario ID + the connection-IDs you'll need to drop into the placeholder fields in the Make UI.
+
+Total time once you reply: ~15-20 minutes. Most of it is the validate-each-module step which is per-module API calls.
