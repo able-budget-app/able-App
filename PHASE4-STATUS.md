@@ -1,132 +1,167 @@
 # Phase 4 status — Make scenario CREATED ✅
 
-## Scenario live
+**Scenario URL:** https://us2.make.com/1933069/scenarios/4869011/edit
+**Status:** PAUSED
 
-**Scenario ID:** `4869011`
-**Name:** "Able social — daily cross-post (Phase 4 v1)"
-**Edit URL:** https://us2.make.com/1933069/scenarios/4869011/edit
-**Status:** PAUSED (`isActive: false`) — won't run until you activate it
+## What's done
 
-## What's wired up
+- ✅ Scenario created and updated with new column layout
+- ✅ Master sheet schema extended: 22 → 28 columns
+  - Added `caption_fb` (column Q) — auto-derived from caption_ig with URL inlined
+  - Added `ig_url`, `fb_url`, `tt_url`, `li_url`, `posted_at` (columns X-AB) for Make to write back
+- ✅ CSV regenerated. **Re-import to the master sheet.**
+- ✅ Scenario filter now uses column W (status) and AB1 range
+- ✅ FB module now references caption_fb instead of caption_ig
+- ✅ Sheet update step now writes per-platform URLs to columns X-AB
 
-| Module | App | Connection ID | Notes |
-|---|---|---|---|
-| 1. Read today's row | google-sheets:filterRows | 7727156 (Google) | Filters by `post_date == today` AND `status != Posted` |
-| 2. Router | builtin | — | Fans out to 4 parallel branches |
-| 3. IG photo post | instagram-business:CreatePostPhoto | 7816528 (FB/IG) | For single/brandscript/carousel |
-| 4. IG reel post | instagram-business:CreateAReelPost | 7816528 | For reel format |
-| 5. FB photo post | facebook-pages:CreatePostWithPhotos | 7816528 | For all non-reel formats |
-| 6. LinkedIn image post | linkedin:CreateCompanyImagePost | 8569387 | For all non-reel formats |
-| 7. LinkedIn video post | linkedin:createOrganizationVideoPost | 8569387 | For reel format |
-| 8. Update sheet status | google-sheets:updateRow | 7727156 | Marks row as Posted |
+## ⚠️ What you must do, in order
 
-**Scheduling (applied):**
-- Mon-Sat at 12:00 NY time = **10am Mountain**
-- Sun at 16:00 NY time = **2pm Mountain**
+### Step 1 — Re-import the master sheet
 
-(If you change your Make team timezone to America/Denver, edit scheduler to 10:00 / 14:00.)
+The schema changed. The scenario won't work against the old 22-column layout.
+
+1. Open https://docs.google.com/spreadsheets/d/1DnQXWKcbGLMHvzxjk9yjQKDhzOGTm9Wph27ly7tHNlA/edit
+2. File → Import → Upload → select `marketing-footage/social-export/_master-sheet.csv` (run `node scripts/build-master-sheet.js` first if needed)
+3. Choose "Replace data starting at A1"
+4. Verify columns: should now end at AB (28 columns)
+
+### Step 2 — Fix the IG/FB connection so Able's Page is visible
+
+The existing "Paul IG/FB Connection" was OAuth'd before Able's FB Page existed. Facebook's OAuth grants access to **specific Pages at the moment of connection** — new Pages created later are not auto-included.
+
+**The most reliable fix:** reauthorize the connection.
+
+1. In Make → **Connections** (left nav)
+2. Click **"Paul IG/FB Connection"**
+3. Click **Reverify** or **Reauthorize** (button in the connection details)
+4. The Facebook OAuth popup appears. **When asked which Pages to grant access to**, make sure Able's Page is checked (in addition to existing Pages: Idaho Custom Trailers, Scentsible K9, etc.)
+5. Click "Continue" / "Save"
+6. Back in Make, click "Save" on the connection
+
+**For Instagram specifically**, Able's IG account also needs to:
+- Be a **Business or Creator** account (not Personal). Open Instagram app → Settings → Account → Switch to Professional Account.
+- Be **linked to Able's Facebook Page**. Open Meta Business Suite (business.facebook.com) → Accounts → Instagram → Add → connect Able's IG to Able's FB Page.
+
+If you don't see Able's Page in the OAuth list during reauthorize, the issue is upstream: Able's Page isn't yet on a Meta Business Account that grants access to Make. Fix in Meta Business Settings → Pages → Add → connect Able's Page → grant Make access via Business Integrations.
+
+**Verification:** After reauthorize, open the scenario, click on any IG or FB module, and check the `Page` dropdown. Able's Page should appear.
+
+### Step 3 — Add the Drive lookup step
+
+The scenario currently has empty `image_url` / `video_url` fields. Add a Drive search module between the sheet read and the router so each post pulls the actual media.
+
+1. Open the scenario
+2. Hover between **module 1 (Search Rows)** and **module 2 (Router)** — you'll see a `+` icon between them
+3. Click `+`
+4. Search "Google Drive" → choose **"Search Files"** (the exact module name in the UI; it might appear as "Search for a File")
+5. Configure:
+   - **Connection:** "My Google connection (pauljohnson912@gmail.com)" (id 7727156)
+   - **Search method:** "By query"
+   - **Query:** `name = '{{1.\`K\`}}' and trashed = false`
+   - **Limit:** 1
+6. Click `OK`
+7. Now wire the URL field in each platform module to reference the new Drive module's output:
+   - **Module 3 (IG photo):** `image_url` → `{{<drive_id>.webContentLink}}`
+   - **Module 4 (IG reel):** `video_url` → `{{<drive_id>.webContentLink}}`
+   - **Module 5 (FB photo):** `photos[0].url` → `{{<drive_id>.webContentLink}}`
+   - **Module 6 (LinkedIn image):** `image_url` → `{{<drive_id>.webContentLink}}`
+   - **Module 7 (LinkedIn video):** `video_url` → `{{<drive_id>.webContentLink}}`
+   
+   Replace `<drive_id>` with the auto-assigned numeric ID Make gives the Drive module (probably 9 if added at the end, or 2 if inserted between 1 and the router).
+
+### Step 4 — Pick the right account/page in each platform module
+
+For each of modules 3, 4, 5, 6, 7:
+- Click the module → in the sidebar, the `Page` / `Account` / `Company` dropdown is empty
+- Click the dropdown → select Able's IG / FB Page / LinkedIn company page
+- (If it says "Connect another account" instead of showing options, the connection step in #2 above wasn't successful — go back and reauthorize)
+
+### Step 5 — Set up failure notifications (Gmail email)
+
+The scaffold doesn't have error handlers wired up. Add them:
+
+1. Right-click on each platform module (3, 4, 5, 6, 7) → **Add error handler**
+2. Choose **"Resume"** (so other branches still run if one fails)
+3. Connect the error handler to a new module: search **Email → Send an Email**
+4. Configure:
+   - **Connection:** "My Gmail connection" (id 7861787)
+   - **To:** pauljohnson912@gmail.com
+   - **Subject:** `Able social FAILED · {{formatDate(now; "YYYY-MM-DD")}} · {{<module name>}}`
+   - **Body:** `Post id: {{1.\`E\`}}, format: {{1.\`D\`}}, slug: {{1.\`F\`}}. Error: {{<error variable>}}`
+
+Repeat for each platform module.
+
+### Step 6 — Set today's row's post_date and test
+
+The scenario filters by `post_date == today`. Until post_dates are populated, the filter never matches.
+
+1. Pick a post you want to test with (today's date, format=single is easiest)
+2. In the master sheet, set that row's `post_date` to today's date in YYYY-MM-DD format (e.g., `2026-04-26`)
+3. Make sure that row's `status` column is empty
+4. In the Make scenario, click **"Run once"** (top toolbar)
+5. Watch the run inspector — confirm:
+   - Module 1 finds the row
+   - Drive module finds the file
+   - IG, FB, LinkedIn each post successfully (or you see specific errors)
+   - Module 8 updates the sheet status to "Posted" with URLs in X-AB
+6. Verify the posts appear on IG, FB, LinkedIn
+
+### Step 7 — Activate the schedule
+
+Once a single test post works end-to-end:
+1. Populate `post_date` for at least the next 1-2 weeks of cadence
+2. In Make scenario settings, toggle **Active: ON**
+3. The scenario will fire at the next scheduled time (Mon-Sat 12:00 NY = 10am Mountain, Sun 16:00 NY = 2pm Mountain)
 
 ---
 
-## ⚠️ Things you need to finish in the Make UI before activating
+## What's still pending after Step 7
 
-The scenario is a **scaffold**. It has the right modules and the right connections, but several module-level fields need to be picked from dropdowns or filled in. Open the scenario and click each module to configure:
-
-### 1. Pick the right account/page in each platform module
-
-- **IG modules (3, 4):** Click the module → `Page` dropdown → select Able's IG Business account.
-  - Requires Able's IG Business account to be linked to a FB Page accessible from your Facebook connection.
-- **FB module (5):** Click the module → `Page` dropdown → select Able's FB Page.
-- **LinkedIn modules (6, 7):** Click the module → `Company` dropdown → select Able's company page (the one you just created).
-
-### 2. Add the media URL source — **scenario currently has empty image_url / video_url fields**
-
-The original design had a Google Drive search step that auto-resolved the file from the `filename` column. I had to remove it because Make's google-drive `searchFiles` module doesn't exist at the version I tried. You have two options:
-
-**Option A (simpler — recommended for v1):** Add a `drive_url` column to the master sheet manually.
-- Add column W = `drive_url` to the spreadsheet
-- For each row, paste the Drive shareable link in the format `https://drive.google.com/uc?id={fileId}&export=download`
-- Update each platform module's `image_url` / `video_url` / `photos[0].url` field to reference `{{1.`W`}}`
-- Update the filter range in module 1 from `A1:V1` to `A1:W1`
-- Tedious for 175 rows, but you can do it once via a sheet formula if filenames are consistent
-
-**Option B (proper — recommended for v2):** Insert a Drive lookup step
-- Open the scenario, click between modules 1 and 2 (router), click `+ Add module`
-- Search for `Google Drive` → choose `Search files` (the right module name in the UI)
-- Configure: search query `name = '{{1.`K`}}' and trashed = false`, limit 1
-- Then update each platform module's URL field to reference the Drive output's `webContentLink`
-
-I recommend Option A for the first test (it's faster), then upgrade to Option B once you're comfortable.
-
-### 3. Set up failure notifications (Q4 answer)
-
-The current scenario doesn't have the Gmail error-handler I'd planned (kept the v1 scaffold simple to ship). To add:
-
-- Right-click each platform module → `Add error handler` → choose `Resume` (so other branches still run)
-- Connect the error handler to a new module: `Email → Send an Email`
-- Select your Gmail connection (`7861787`)
-- Configure:
-  - To: `pauljohnson912@gmail.com`
-  - Subject: `Able social post FAILED · {{formatDate(now; "YYYY-MM-DD")}} · {module name}`
-  - Body: include `{{1.`E`}}` (post id), `{{1.`D`}}` (format), and the error message
-
-### 4. Test on a single row before activating
-
-1. Pick today's row in the sheet — confirm `caption_ig` / `caption_fb` / `caption_li` are populated
-2. Make sure `status` column is empty
-3. Open scenario → click `Run once` (top toolbar)
-4. Watch the run inspector — confirm each branch posts successfully
-5. Verify the posts on IG/FB/LinkedIn
-6. Verify the sheet `status` updated to "Posted at YYYY-MM-DD HH:mm"
-7. If everything works, click the toggle to activate the schedule
+- **TikTok automation** — currently `tt_url = "manual"` placeholder. v2 add-on with `make-nodes-late` or Blotato.
+- **LinkedIn document/PDF carousels** — currently cover slide only. v2 upgrade.
+- **AI agent that auto-fixes failed posts** — low priority per your call.
 
 ---
 
-## TikTok still pending
+## Schema changes — for reference
 
-**Decision (Q2):** Skip TikTok in v1. Confirmed via Make's app catalog: the official `tiktok` Make app is **ads-only** (campaigns, ad groups). Content posting requires a third-party app.
+Master sheet column layout (28 columns):
 
-For v1, post to TikTok manually using the same captions from the sheet.
-
-For v2, options to automate:
-- `make-nodes-late:addTiktokPost` — community-maintained, free, low-popularity (caveat: untested at scale)
-- `blotato:Post` — paid scheduler ~$15/mo, supports IG+TT+LI all in one
-- `postfast:createPosts` — similar paid scheduler
-
----
-
-## LinkedIn carousels: cover slide only (Q5)
-
-**Decision:** v1 posts only the carousel cover slide to LinkedIn. The IG and FB carousels show the full multi-slide swipe; LinkedIn shows just slide 1.
-
-For v2 upgrade to PDF document carousels:
-1. Add a PDF.co `HTMLtoPDF` step (you already have a PDF.co connection)
-2. Replace `linkedin:CreateCompanyImagePost` with `linkedin:Make an API Call` to LinkedIn's UGC Posts endpoint
-3. Estimated work: 30-45 min
-
----
+| Col | Header | Notes |
+|---|---|---|
+| A | week | |
+| B | day | |
+| C | post_date | YYYY-MM-DD; you populate this |
+| D | format | single / brandscript / carousel / reel |
+| E | id | |
+| F | slug | |
+| G | theme | |
+| H | week_theme | |
+| I | notes | |
+| J | punch | |
+| K | filename | What's in Drive — single source of truth for Drive search |
+| L | drive_folder | Folder hint |
+| M | relevant_links | URL appended to LI captions, swapped into FB captions |
+| N | caption_ig | "Link in bio" CTA |
+| O | caption_tt | URL inline |
+| P | caption_li | URL appended automatically |
+| Q | **caption_fb** (NEW) | IG body with URL inlined (no "Link in bio") |
+| R | blog_url | Phase 3 |
+| S | yt_short_url | Phase 3 |
+| T | yt_long_url | Phase 3 |
+| U | notebooklm_url | Phase 3 |
+| V | repurpose_status | Free-text |
+| W | **status** (moved from V) | Pending / Posted / Failed |
+| X | **ig_url** (NEW) | Make writes back |
+| Y | **fb_url** (NEW) | Make writes back |
+| Z | **tt_url** (NEW) | Make writes back ("manual" for now) |
+| AA | **li_url** (NEW) | Make writes back |
+| AB | **posted_at** (NEW) | Timestamp Make writes back |
 
 ## Files in repo
 
-- `social/_drafts/make-scenario-design.md` — full design doc with locked decisions
-- `social/_drafts/make-scenario-blueprint.json` — final blueprint JSON (the version that got created)
+- `social/_drafts/make-scenario-design.md` — design doc
+- `social/_drafts/make-scenario-blueprint.json` — final blueprint (matches the live scenario)
+- `scripts/build-master-sheet.js` — schema source of truth
+- `marketing-footage/social-export/_master-sheet.csv` — generated, ready to re-import
 - `PHASE4-STATUS.md` — this file
-
-## Phase 4 v2 backlog (ranked)
-
-1. Add `drive_url` column to master sheet OR wire up Drive lookup step in scenario (required before activation)
-2. Add Gmail failure notifications on each platform module
-3. Test on a single row, fix any module config issues
-4. Wire up TikTok via `make-nodes-late` or Blotato
-5. LinkedIn document/PDF carousels
-6. AI agent that auto-fixes failed posts (low priority per your call)
-
----
-
-## How to re-authorize GitHub (still needed for overnight cloud runs)
-
-You said this is done — confirming the steps for posterity:
-
-1. claude.ai → Settings → Connectors → GitHub → re-authorize
-2. Grant access to `able-budget-app/able-App`
-3. Next scheduled overnight `RemoteTrigger` will work

@@ -176,11 +176,14 @@ const HEADERS = [
   'format', 'id', 'slug', 'theme', 'week_theme', 'notes', 'punch',
   'filename', 'drive_folder',
   // Captions per platform — relevant_links feeds into caption_li for LinkedIn
-  'relevant_links', 'caption_ig', 'caption_tt', 'caption_li',
+  // caption_fb auto-derived from caption_ig (swap "Link in bio." for URL)
+  'relevant_links', 'caption_ig', 'caption_tt', 'caption_li', 'caption_fb',
   // Repurposing pipeline (each social post → blog → NotebookLM → YouTube)
   'blog_url', 'yt_short_url', 'yt_long_url', 'notebooklm_url', 'repurpose_status',
-  // Posting status
+  // Posting status (column W after caption_fb insertion)
   'status',
+  // Per-platform result URLs (Make scenario writes back here)
+  'ig_url', 'fb_url', 'tt_url', 'li_url', 'posted_at',
 ];
 
 const rows = [];
@@ -199,6 +202,9 @@ for (const week of WEEKS) {
     const cap = CAPTIONS[`${week.n}|${d.day}`] || {};
     const links = cap.links || 'becomeable.app';
     const captionLi = cap.li ? `${cap.li}\n\n${links}` : '';
+    // Facebook caption: same body as IG, but Facebook allows clickable URLs in
+    // posts (unlike Instagram), so swap "Link in bio." for the relevant URL.
+    const captionFb = cap.ig ? cap.ig.replace(/Link in bio\./g, links) : '';
 
     rows.push([
       week.n,
@@ -217,12 +223,14 @@ for (const week of WEEKS) {
       cap.ig || '',                        // caption_ig
       cap.tt || '',                        // caption_tt
       captionLi,                           // caption_li — body + appended links
+      captionFb,                           // caption_fb — IG body with URL inlined
       '',                                  // blog_url — Phase 3
       '',                                  // yt_short_url — Phase 4
       '',                                  // yt_long_url — Phase 4
       '',                                  // notebooklm_url — Phase 3
       '',                                  // repurpose_status — free-text tracker
       'Pending',
+      '', '', '', '', '',                  // ig_url, fb_url, tt_url, li_url, posted_at — Make populates these
     ]);
   }
 }
@@ -241,9 +249,10 @@ for (const b of BRANDSCRIPT) {
     filenameFor(item),
     driveFolderFor(item),
     'becomeable.app',  // relevant_links
-    '', '', '',        // captions
+    '', '', '', '',    // caption_ig, caption_tt, caption_li, caption_fb
     '', '', '', '', '', // repurpose pipeline
     'Reserve',
+    '', '', '', '', '', // ig_url, fb_url, tt_url, li_url, posted_at
   ]);
 }
 

@@ -12,7 +12,7 @@
         "filter": [
           [
             { "a": "C", "b": "{{formatDate(now; \"YYYY-MM-DD\")}}", "o": "text:equal" },
-            { "a": "V", "b": "Posted",                              "o": "text:notequal" }
+            { "a": "W", "b": "Posted",                              "o": "text:notequal" }
           ]
         ],
         "orderBy": "__ROW_NUMBER__",
@@ -20,7 +20,7 @@
         "fieldType": "string",
         "sortOrder": "asc",
         "spreadsheetId": "1DnQXWKcbGLMHvzxjk9yjQKDhzOGTm9Wph27ly7tHNlA",
-        "tableFirstRow": "A1:V1",
+        "tableFirstRow": "A1:AB1",
         "includesHeaders": true,
         "valueRenderOption": "FORMATTED_VALUE",
         "dateTimeRenderOption": "FORMATTED_STRING"
@@ -100,7 +100,7 @@
               },
               "mapper": {
                 "page_id": "",
-                "message": "{{1.`N`}}",
+                "message": "{{1.`Q`}}",
                 "photos": [
                   { "type": "url", "url": "" }
                 ]
@@ -170,9 +170,14 @@
                 "sheetId": "1. Master Sheet Generation",
                 "rowNumber": "{{1.__ROW_NUMBER__}}",
                 "values": {
-                  "21": "Posted at {{formatDate(now; \"YYYY-MM-DD HH:mm\")}}"
+                  "22": "Posted",
+                  "23": "{{ifempty(3.permalink; 4.permalink)}}",
+                  "24": "{{5.id}}",
+                  "25": "manual",
+                  "26": "{{ifempty(6.activity; 7.activity)}}",
+                  "27": "{{formatDate(now; \"YYYY-MM-DD HH:mm\")}}"
                 },
-                "tableFirstRow": "A1:V1",
+                "tableFirstRow": "A1:AB1",
                 "includesHeaders": true,
                 "valueInputOption": "USER_ENTERED"
               },
