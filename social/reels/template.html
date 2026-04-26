@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Able · reel</title>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400;12..96,500;12..96,600;12..96,700;12..96,800;12..96,900&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="_styles.css">
+<style>
+  html, body {
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 40px;
+  }
+  .controls {
+    position: fixed;
+    bottom: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    gap: 12px;
+    z-index: 100;
+  }
+  .controls button {
+    padding: 10px 20px;
+    background: #2a7a4a;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    font-family: 'Bricolage Grotesque', sans-serif;
+    font-weight: 700;
+    font-size: 14px;
+    cursor: pointer;
+  }
+  .controls button:hover { background: #1f6038; }
+</style>
+</head>
+<body>
+  <div class="reel" id="reel"></div>
+
+  <div class="controls">
+    <button onclick="location.reload()">Replay</button>
+    <button onclick="prev()">←</button>
+    <button onclick="next()">→</button>
+  </div>
+
+  <script src="data.js"></script>
+  <script>
+    const params = new URLSearchParams(location.search);
+    const id = params.get('id') || 'R1';
+    const reel = (window.REELS || []).find(r => r.id === id);
+    const root = document.getElementById('reel');
+
+    function renderText(str) {
+      return str
+        .replace(/\n/g, '<br>')
+        // Absorb any trailing punctuation INTO the nowrap underline span so it can't be orphaned
+        .replace(/\{([^}]+)\}([.,;:!?]*)/g, '<span class="underline">$1$2</span>');
+    }
+
+    if (!reel) {
+      root.innerHTML = '<div class="missing">No reel for ' + id + '</div>';
+    } else {
+      root.classList.add('theme-' + reel.theme);
+      document.title = `Able · ${reel.id} · ${reel.slug}`;
+
+      if (reel.format === 'text-reel') {
+        // Build timed beats (no size class — autoFit picks one uniform size).
+        // Text is wrapped in .beat-text so the inner box has explicit width: 100%
+        // and won't shrink to min-content around inline-block underlines.
+        let cumulative = 0;
+        const beatsHtml = reel.beats.map((b, i) => {
+          const themeCls = b.theme ? ` theme-${b.theme}` : '';
+          const html = `<div class="beat${themeCls}" style="--bd:${b.durationSec}s; --bs:${cumulative}s"><div class="beat-text">${renderText(b.text)}</div></div>`;
+          cumulative += b.durationSec;
+          return html;
+        }).join('');
+
+        root.innerHTML = `
+          <div class="eyebrow">${reel.id} · ${reel.slug}</div>
+          <div class="beats-stage">${beatsHtml}</div>
+          <div class="footer">
+            <div class="wordmark">Able</div>
+            <div class="url">becomeable.app</div>
+          </div>
+        `;
+
+        // Multi-theme support — switch reel bg per active beat by elapsed time.
+        const beatStarts = [];
+        let acc = 0;
+        for (const b of reel.beats) {
+          beatStarts.push({ start: acc, end: acc + b.durationSec, theme: b.theme || reel.theme });
+          acc += b.durationSec;
+        }
+        const allThemes = ['theme-page','theme-white','theme-green','theme-glass','theme-black','theme-glass-dark'];
+        function updateReelTheme(t) {
+          allThemes.forEach(c => root.classList.remove(c));
+          root.classList.add('theme-' + t);
+        }
+        function tick(startTime) {
+          const elapsed = (performance.now() - startTime) / 1000;
+          if (elapsed > reel.durationSec) return;
+          const active = beatStarts.find(b => elapsed >= b.start && elapsed < b.end);
+          if (active) updateReelTheme(active.theme);
+          requestAnimationFrame(() => tick(startTime));
+        }
+
+        // Auto-fit using REAL DOM layout in an off-screen mirror.
+        // Mirror copies .beat-text exactly (same width, padding, box-sizing, font).
+        // We render the actual innerHTML (with <br> and inline-block underline spans)
+        // and check:
+        //   - rendered line count (offsetHeight / lineHeight) ≤ intended line count
+        //   - no horizontal overflow (scrollWidth ≤ container — catches nowrap underlines)
+        //   - height fits the stage
+        // Pick the largest size that satisfies all for every beat. Apply uniformly.
+        function autoFitAndPlay() {
+          const stage = root.querySelector('.beats-stage');
+          const beatEls = Array.from(root.querySelectorAll('.beat'));
+          const textEls = Array.from(root.querySelectorAll('.beat-text'));
+          if (!textEls.length || !stage) return;
+
+          const containerW = stage.clientWidth;    // full beat width (.beat-text is 100%)
+          const stageH = stage.clientHeight;
+
+          const mirror = document.createElement('div');
+          mirror.style.cssText = `
+            position: absolute;
+            left: -99999px;
+            top: 0;
+            width: ${containerW}px;
+            padding: 0 24px;
+            box-sizing: border-box;
+            font-family: 'Bricolage Grotesque', -apple-system, sans-serif;
+            font-weight: 800;
+            line-height: 1.08;
+            letter-spacing: -0.03em;
+            text-align: center;
+            visibility: hidden;
+          `;
+          document.body.appendChild(mirror);
+
+          const sizes = textEls.map(textEl => {
+            const html = textEl.innerHTML;
+            const expectedLines = (html.match(/<br\s*\/?>/gi) || []).length + 1;
+
+            for (let size = 132; size >= 56; size -= 4) {
+              mirror.style.fontSize = size + 'px';
+              mirror.innerHTML = html;
+              const lineH = size * 1.08;
+              const renderedLines = Math.round(mirror.offsetHeight / lineH);
+              const fitsWidth = mirror.scrollWidth <= containerW;
+              const fitsHeight = mirror.offsetHeight <= stageH;
+
+              if (renderedLines <= expectedLines && fitsWidth && fitsHeight) {
+                return size;
+              }
+            }
+            return 56;
+          });
+
+          mirror.remove();
+          const finalSize = Math.min.apply(null, sizes);
+
+          textEls.forEach(el => {
+            el.style.fontSize = finalSize + 'px';
+          });
+          beatEls.forEach(el => {
+            el.classList.add('play');     // triggers the CSS animation now (after fit)
+          });
+
+          // Start theme tracker in sync with animation start
+          requestAnimationFrame(() => tick(performance.now()));
+        }
+
+        if (document.fonts && document.fonts.ready) {
+          document.fonts.ready.then(autoFitAndPlay);
+        } else {
+          setTimeout(autoFitAndPlay, 100);
+        }
+
+      } else if (reel.format === 'talking-head') {
+        // Render script + cues for filming reference
+        const scriptHtml = reel.script.replace(/\n\n/g, '</p><p class="voice">').replace(/\n/g, '<br>');
+        const cuesHtml = (reel.cues || []).map(c =>
+          `<div class="cue">@${c.time}s · ${c.style} · ${renderText(c.text)}</div>`
+        ).join('');
+
+        root.innerHTML = `
+          <div class="eyebrow">${reel.id} · ${reel.slug} · talking-head</div>
+          <div class="script">
+            <p class="voice">${scriptHtml}</p>
+            <div class="cues-wrap">${cuesHtml}</div>
+          </div>
+          <div class="footer">
+            <div class="wordmark">Able</div>
+            <div class="url">${reel.durationSec}s</div>
+          </div>
+        `;
+      }
+    }
+
+    // Keyboard nav
+    function next() {
+      const idx = REELS.findIndex(r => r.id === id);
+      const n = REELS[(idx + 1) % REELS.length];
+      location.search = '?id=' + n.id;
+    }
+    function prev() {
+      const idx = REELS.findIndex(r => r.id === id);
+      const p = REELS[(idx - 1 + REELS.length) % REELS.length];
+      location.search = '?id=' + p.id;
+    }
+    document.addEventListener('keydown', e => {
+      if (e.key === 'ArrowRight') next();
+      if (e.key === 'ArrowLeft') prev();
+    });
+  </script>
+</body>
+</html>

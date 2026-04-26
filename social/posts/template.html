@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Able · post</title>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400;12..96,500;12..96,600;12..96,700;12..96,800;12..96,900&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="_styles.css">
+<style>
+  html, body {
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 40px;
+  }
+</style>
+</head>
+<body>
+  <div class="post" id="post"></div>
+
+  <script src="data.js"></script>
+  <script src="_render.js"></script>
+  <script>
+    const params = new URLSearchParams(location.search);
+    const id = params.get('id') || '01';
+    const ALL = [...(window.POSTS || []), ...(window.BRANDSCRIPT || [])];
+    const post = ALL.find(p => p.id === id);
+    const root = document.getElementById('post');
+
+    if (!post) {
+      root.innerHTML = '<div class="missing">No post found for id=' + id + '</div>';
+    } else {
+      renderSlideInto(root, post);
+      document.title = `Able · ${post.id} · ${post.slug}`;
+    }
+
+    // Keyboard nav: arrows — stays within whichever array the current id belongs to
+    document.addEventListener('keydown', (e) => {
+      const list = (window.POSTS || []).some(p => p.id === id)
+        ? window.POSTS
+        : (window.BRANDSCRIPT || []);
+      const idx = list.findIndex(p => p.id === id);
+      if (idx === -1) return;
+      let next;
+      if (e.key === 'ArrowRight') next = list[(idx + 1) % list.length];
+      if (e.key === 'ArrowLeft')  next = list[(idx - 1 + list.length) % list.length];
+      if (next) location.search = '?id=' + next.id;
+    });
+  </script>
+</body>
+</html>

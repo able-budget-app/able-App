@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Able · carousel</title>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400;12..96,500;12..96,600;12..96,700;12..96,800;12..96,900&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="_styles.css">
+<style>
+  html, body {
+    min-height: 100vh;
+    padding: 40px 0;
+  }
+  .carousel-header {
+    width: 1080px;
+    margin: 0 auto 24px;
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    color: #4a5c52;
+    font-size: 13px;
+    font-weight: 700;
+    letter-spacing: .12em;
+    text-transform: uppercase;
+  }
+  .carousel-header .title {
+    color: #111c16;
+    text-transform: none;
+    letter-spacing: -.01em;
+    font-size: 18px;
+    font-weight: 800;
+  }
+  .slides {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 24px;
+  }
+  .slide-wrap {
+    position: relative;
+  }
+  .slide-tag {
+    position: absolute;
+    top: -12px;
+    left: 0;
+    background: #2a7a4a;
+    color: #fff;
+    font-size: 11px;
+    font-weight: 800;
+    letter-spacing: .14em;
+    text-transform: uppercase;
+    padding: 4px 10px;
+    border-radius: 6px;
+    z-index: 10;
+  }
+</style>
+</head>
+<body>
+  <div class="carousel-header" id="header"></div>
+  <div class="slides" id="slides"></div>
+
+  <script src="data.js"></script>
+  <script src="_render.js"></script>
+  <script>
+    const params = new URLSearchParams(location.search);
+    const id = params.get('id') || 'C2';
+    const carousel = (window.CAROUSELS || []).find(c => c.id === id);
+    const slidesEl = document.getElementById('slides');
+    const headerEl = document.getElementById('header');
+
+    if (!carousel) {
+      slidesEl.innerHTML = '<div style="font-size:22px;color:#4a5c52;padding:40px;">No carousel found for id=' + id + '</div>';
+    } else {
+      headerEl.innerHTML = `
+        <span>${carousel.id} · ${carousel.slug}</span>
+        <span class="title">${carousel.slides.length} slides</span>
+      `;
+      document.title = `Able · ${carousel.id} · ${carousel.slug}`;
+
+      carousel.slides.forEach((slide, i) => {
+        // Each slide inherits the carousel's theme unless overridden
+        const slideData = Object.assign({ theme: carousel.theme }, slide);
+        const wrap = document.createElement('div');
+        wrap.className = 'slide-wrap';
+        wrap.innerHTML = `<div class="slide-tag">Slide ${i + 1}</div><div class="post"></div>`;
+        const postEl = wrap.querySelector('.post');
+        renderSlideInto(postEl, slideData);
+        slidesEl.appendChild(wrap);
+      });
+    }
+  </script>
+</body>
+</html>

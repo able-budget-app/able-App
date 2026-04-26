@@ -1,0 +1,703 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Able — Social posts</title>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400;12..96,600;12..96,800&display=swap" rel="stylesheet">
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    background: #d9e8de;
+    font-family: 'Bricolage Grotesque', sans-serif;
+    color: #111c16;
+    padding: 48px;
+    -webkit-font-smoothing: antialiased;
+  }
+  h1 {
+    font-size: 28px;
+    font-weight: 800;
+    letter-spacing: -.02em;
+    margin-bottom: 6px;
+  }
+  .sub {
+    font-size: 14px;
+    color: #4a5c52;
+    margin-bottom: 24px;
+  }
+  .top-row {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    flex-wrap: wrap;
+    margin-bottom: 24px;
+  }
+  .reels-link {
+    display: inline-block;
+    padding: 10px 18px;
+    background: #2a7a4a;
+    color: #fff;
+    border-radius: 999px;
+    font-size: 13px;
+    font-weight: 700;
+    text-decoration: none;
+    letter-spacing: -.01em;
+  }
+  .tabs {
+    display: flex;
+    gap: 6px;
+    margin-bottom: 24px;
+    border-bottom: 1px solid rgba(0,0,0,.08);
+  }
+  .tab {
+    background: none;
+    border: 0;
+    padding: 12px 18px;
+    font-family: inherit;
+    font-size: 14px;
+    font-weight: 700;
+    color: #4a5c52;
+    cursor: pointer;
+    border-bottom: 2px solid transparent;
+    margin-bottom: -1px;
+    letter-spacing: -.01em;
+  }
+  .tab:hover { color: #2a7a4a; }
+  .tab.active { color: #2a7a4a; border-bottom-color: #2a7a4a; }
+  .panel { display: none; }
+  .panel.active { display: block; }
+
+  .filters {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+    margin-bottom: 28px;
+  }
+  .filter {
+    background: #fff;
+    border: 1px solid #c4d8cc;
+    border-radius: 999px;
+    padding: 8px 16px;
+    font-size: 13px;
+    font-weight: 700;
+    color: #4a5c52;
+    cursor: pointer;
+    font-family: inherit;
+    transition: all .15s;
+  }
+  .filter:hover { border-color: #2a7a4a; color: #2a7a4a; }
+  .filter.active {
+    background: #2a7a4a;
+    color: #fff;
+    border-color: #2a7a4a;
+  }
+  .grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(380px, 1fr));
+    gap: 24px;
+  }
+  .card {
+    background: #fff;
+    border-radius: 18px;
+    padding: 14px;
+    box-shadow: 0 2px 8px rgba(0,0,0,.05);
+  }
+  .card.hidden { display: none; }
+  .label {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 11px;
+    font-weight: 800;
+    letter-spacing: .14em;
+    text-transform: uppercase;
+    color: #2a7a4a;
+    margin: 4px 6px 10px;
+  }
+  .label .id { color: #111c16; }
+  .label .theme {
+    font-size: 10px;
+    padding: 3px 8px;
+    border-radius: 999px;
+    background: #eaf5ee;
+    color: #2a7a4a;
+  }
+  .label .theme.green { background: #2a7a4a; color: #fff; }
+  .label .theme.white { background: #fff; color: #4a5c52; border: 1px solid #c4d8cc; }
+  .label .theme.glass { background: linear-gradient(135deg, #34936a, #1f6038); color: #fff; }
+  .label .theme.black { background: #0e1a14; color: #3d9e78; }
+  .label .theme.glass-dark { background: linear-gradient(135deg, #1a2520, #050b08); color: #3d9e78; }
+  .frame-wrap {
+    width: 100%;
+    aspect-ratio: 1 / 1;
+    overflow: hidden;
+    border-radius: 12px;
+    border: 1px solid #c4d8cc;
+    position: relative;
+    background: #f0f7f2;
+  }
+  .frame-wrap iframe {
+    width: 1160px;
+    height: 1160px;
+    border: 0;
+    transform: scale(.32);
+    transform-origin: top left;
+    position: absolute;
+    top: -20px;
+    left: -20px;
+  }
+  .open {
+    display: block;
+    margin-top: 10px;
+    text-align: center;
+    font-size: 12px;
+    font-weight: 700;
+    color: #2a7a4a;
+    text-decoration: none;
+    padding: 6px;
+  }
+  .open:hover { text-decoration: underline; }
+
+  /* Cadence */
+  .cadence-meta {
+    background: #fff;
+    border-radius: 14px;
+    padding: 16px 18px;
+    margin-bottom: 20px;
+    font-size: 13px;
+    color: #4a5c52;
+    line-height: 1.55;
+  }
+  .cadence-meta strong { color: #111c16; font-weight: 700; }
+  .cadence-meta .legend {
+    display: flex; gap: 14px; flex-wrap: wrap; margin-top: 10px;
+  }
+  .cadence-meta .legend span {
+    display: inline-flex; align-items: center; gap: 6px;
+    font-size: 11px; font-weight: 700; letter-spacing: .04em;
+    text-transform: uppercase;
+  }
+  .cadence-meta .dot { width: 10px; height: 10px; border-radius: 3px; display: inline-block; }
+  .cadence {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(420px, 1fr));
+    gap: 18px;
+  }
+  .week {
+    background: #fff;
+    border-radius: 16px;
+    padding: 16px 18px 14px;
+    box-shadow: 0 2px 8px rgba(0,0,0,.05);
+  }
+  .week-head {
+    display: flex; align-items: baseline; justify-content: space-between;
+    margin-bottom: 12px;
+    padding-bottom: 10px;
+    border-bottom: 1px solid rgba(0,0,0,.06);
+  }
+  .week-num {
+    font-size: 16px; font-weight: 800; letter-spacing: -.01em;
+    color: #111c16;
+  }
+  .week-theme {
+    font-size: 11px; font-weight: 700; letter-spacing: .06em;
+    text-transform: uppercase; color: #2a7a4a;
+  }
+  .day {
+    display: grid;
+    grid-template-columns: 38px 64px 1fr auto;
+    align-items: center;
+    gap: 10px;
+    padding: 7px 0;
+    font-size: 13px;
+  }
+  .day + .day { border-top: 1px dashed rgba(0,0,0,.06); }
+  .day-name {
+    font-size: 11px; font-weight: 800; letter-spacing: .08em;
+    text-transform: uppercase; color: #4a5c52;
+  }
+  .fmt {
+    font-size: 9px; font-weight: 800; letter-spacing: .1em;
+    text-transform: uppercase;
+    padding: 4px 8px; border-radius: 6px;
+    text-align: center;
+  }
+  .fmt.single   { background: #eaf5ee; color: #2a7a4a; }
+  .fmt.reel     { background: #2a7a4a; color: #fff; }
+  .fmt.carousel { background: #0e1a14; color: #3d9e78; }
+  .fmt.brandscript { background: #fff; color: #2a7a4a; border: 1px solid #c4d8cc; }
+  .day a {
+    color: #111c16; text-decoration: none;
+    font-weight: 600; letter-spacing: -.01em;
+    overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+  }
+  .day a:hover { color: #2a7a4a; text-decoration: underline; }
+  .day a .slug { color: #4a5c52; font-weight: 500; }
+  .day .theme-chip {
+    width: 12px; height: 12px; border-radius: 4px;
+    border: 1px solid rgba(0,0,0,.1);
+    flex-shrink: 0;
+  }
+  .theme-chip.page       { background: #f0f7f2; }
+  .theme-chip.white      { background: #ffffff; }
+  .theme-chip.green      { background: #2a7a4a; }
+  .theme-chip.glass      { background: linear-gradient(135deg, #34936a, #1f6038); }
+  .theme-chip.black      { background: #0e1a14; }
+  .theme-chip.glass-dark { background: linear-gradient(135deg, #1a2520, #050b08); }
+  .day .note {
+    grid-column: 2 / -1;
+    font-size: 11px; color: #6b7d72;
+    font-style: italic;
+    margin-top: -2px;
+  }
+
+  .section-h {
+    font-size: 18px;
+    font-weight: 800;
+    letter-spacing: -.01em;
+    color: #111c16;
+    margin: 36px 0 16px;
+    padding-top: 12px;
+    border-top: 1px solid rgba(0,0,0,.08);
+  }
+  .section-h:first-of-type { border-top: 0; padding-top: 0; margin-top: 0; }
+  .carousel-card .label .count {
+    font-size: 10px;
+    padding: 3px 8px;
+    border-radius: 999px;
+    background: #eaf5ee;
+    color: #2a7a4a;
+  }
+</style>
+</head>
+<body>
+  <h1>Able social posts</h1>
+  <div class="sub">63 single posts · 43 carousels · 27 reels · 42 brand-script lines · 1080×1080 (singles + carousels) and 1080×1920 (reels) for Instagram / Facebook / LinkedIn / TikTok / Shorts.</div>
+
+  <div class="top-row">
+    <a class="reels-link" href="reels/">→ Reels (27)</a>
+  </div>
+
+  <nav class="tabs" id="tabs">
+    <button class="tab active" data-tab="singles">Singles</button>
+    <button class="tab" data-tab="carousels">Carousels</button>
+    <button class="tab" data-tab="brandscript">Brand script</button>
+    <button class="tab" data-tab="cadence">Cadence</button>
+  </nav>
+
+  <section class="panel active" id="panel-singles">
+    <div class="filters" id="filters">
+      <button class="filter active" data-theme="all">All</button>
+      <button class="filter" data-theme="page">Page-green</button>
+      <button class="filter" data-theme="white">White</button>
+      <button class="filter" data-theme="green">Brand green</button>
+      <button class="filter" data-theme="glass">Glass</button>
+      <button class="filter" data-theme="black">Cloud black</button>
+      <button class="filter" data-theme="glass-dark">Glass dark</button>
+    </div>
+    <div class="grid" id="grid"></div>
+  </section>
+
+  <section class="panel" id="panel-carousels">
+    <div class="grid" id="carousel-grid"></div>
+  </section>
+
+  <section class="panel" id="panel-brandscript">
+    <div class="cadence-meta">
+      <strong>42 brand-script lines.</strong> Lifted verbatim from the brand script —
+      brand lockup, North Star, audience, villain, real fear, paralysis, permission, solution,
+      outcomes, transformation, new identity. Edit the source text in
+      <code>posts/data.js</code> (the <code>BRANDSCRIPT</code> array) to keep voice consistent across every other post.
+    </div>
+    <div id="brandscript-grid"></div>
+  </section>
+
+  <section class="panel" id="panel-cadence">
+    <div class="cadence-meta">
+      <strong>25-week posting calendar — 3-week StoryBrand launch + 22-week sustaining cadence.</strong>
+      Launch (weeks 1–3) front-loads brand messaging through the StoryBrand arc:
+      <em>Hero &amp; problem</em> (W1) → <em>Guide / founder</em> (W2) → <em>Plan / CTA / success</em> (W3).
+      Sustaining (weeks 4–25) reinforces those beats through personas, deeper tax, habits, comparisons, and the pricing close in week 25.
+      <br><br>
+      Every week ends with a <strong>Sun · Brand script</strong> reinforcement — a verbatim phrase from the brand script chosen to echo that week's theme. 25 brand-script placements total; the remaining 16 lines stay in reserve for ads, retargeting, and email.
+      <div class="legend">
+        <span><span class="dot" style="background:#eaf5ee;border:1px solid #c4d8cc"></span>Single</span>
+        <span><span class="dot" style="background:#2a7a4a"></span>Reel</span>
+        <span><span class="dot" style="background:#0e1a14"></span>Carousel</span>
+        <span><span class="dot" style="background:#fff;border:1px solid #2a7a4a"></span>Brand script</span>
+      </div>
+    </div>
+    <div class="cadence" id="cadence"></div>
+  </section>
+
+  <script src="posts/data.js"></script>
+  <script src="reels/data.js"></script>
+  <script>
+    const grid = document.getElementById('grid');
+    const carouselGrid = document.getElementById('carousel-grid');
+    const themeLabel = {
+      page: 'Page-green',
+      white: 'White',
+      green: 'Brand green',
+      glass: 'Glass',
+      black: 'Cloud black',
+      'glass-dark': 'Glass dark'
+    };
+
+    POSTS.forEach(post => {
+      const card = document.createElement('div');
+      card.className = 'card';
+      card.dataset.theme = post.theme;
+      card.innerHTML = `
+        <div class="label">
+          <span class="id">${post.id} · ${post.slug}</span>
+          <span class="theme ${post.theme}">${themeLabel[post.theme]}</span>
+        </div>
+        <div class="frame-wrap">
+          <iframe src="posts/template.html?id=${post.id}" loading="lazy"></iframe>
+        </div>
+        <a class="open" href="posts/template.html?id=${post.id}" target="_blank">Open full size →</a>
+      `;
+      grid.appendChild(card);
+    });
+
+    (window.CAROUSELS || []).forEach(c => {
+      const card = document.createElement('div');
+      card.className = 'card carousel-card';
+      card.innerHTML = `
+        <div class="label">
+          <span class="id">${c.id} · ${c.slug}</span>
+          <span class="theme ${c.theme}">${themeLabel[c.theme]}</span>
+        </div>
+        <div class="frame-wrap">
+          <iframe src="posts/cover.html?id=${c.id}" loading="lazy"></iframe>
+        </div>
+        <a class="open" href="posts/carousel.html?id=${c.id}" target="_blank">Open all ${c.slides.length} slides →</a>
+      `;
+      carouselGrid.appendChild(card);
+    });
+
+    // Tabs
+    document.getElementById('tabs').addEventListener('click', e => {
+      const btn = e.target.closest('.tab');
+      if (!btn) return;
+      document.querySelectorAll('.tab').forEach(b => b.classList.remove('active'));
+      document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
+      btn.classList.add('active');
+      document.getElementById('panel-' + btn.dataset.tab).classList.add('active');
+    });
+
+    // Theme filter
+    document.getElementById('filters').addEventListener('click', e => {
+      const btn = e.target.closest('.filter');
+      if (!btn) return;
+      document.querySelectorAll('.filter').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      const theme = btn.dataset.theme;
+      document.querySelectorAll('#grid .card').forEach(c => {
+        c.classList.toggle('hidden', theme !== 'all' && c.dataset.theme !== theme);
+      });
+    });
+
+    // ----- Brand script -----
+    const bsRoot = document.getElementById('brandscript-grid');
+    const bsByCat = new Map();
+    (window.BRANDSCRIPT || []).forEach(p => {
+      if (!bsByCat.has(p.cat)) bsByCat.set(p.cat, []);
+      bsByCat.get(p.cat).push(p);
+    });
+    bsByCat.forEach((items, cat) => {
+      const h = document.createElement('h2');
+      h.className = 'section-h';
+      h.textContent = cat + ' (' + items.length + ')';
+      bsRoot.appendChild(h);
+      const g = document.createElement('div');
+      g.className = 'grid';
+      items.forEach(post => {
+        const card = document.createElement('div');
+        card.className = 'card';
+        card.dataset.theme = post.theme;
+        card.innerHTML = `
+          <div class="label">
+            <span class="id">${post.id} · ${post.slug}</span>
+            <span class="theme ${post.theme}">${themeLabel[post.theme]}</span>
+          </div>
+          <div class="frame-wrap">
+            <iframe src="posts/template.html?id=${post.id}" loading="lazy"></iframe>
+          </div>
+          <a class="open" href="posts/template.html?id=${post.id}" target="_blank">Open full size →</a>
+        `;
+        g.appendChild(card);
+      });
+      bsRoot.appendChild(g);
+    });
+
+    // ----- Cadence -----
+    // 22 weeks. Each entry: { day, type: 'single'|'reel'|'carousel', id, note? }
+    const WEEKS = [
+      // ─────────── LAUNCH (weeks 1–3) — StoryBrand arc ───────────
+      { n: 1, theme: 'Launch · Hero &amp; problem (you)', days: [
+        { day: 'Mon', type: 'single',   id: '55', note: 'Hero ID — built for waves' },
+        { day: 'Tue', type: 'reel',     id: 'R21', note: 'The three of you' },
+        { day: 'Wed', type: 'carousel', id: 'C39', note: 'Three kinds of broke at Day 30' },
+        { day: 'Thu', type: 'single',   id: '56', note: 'Internal — you\'re not lazy, you\'re under-equipped' },
+        { day: 'Fri', type: 'carousel', id: 'C40', note: 'Why apps fail you specifically' },
+        { day: 'Sat', type: 'single',   id: '57', note: 'Philosophical — handed the wrong tool' },
+      ]},
+      { n: 2, theme: 'Launch · Guide (we get it, we built this)', days: [
+        { day: 'Mon', type: 'single',   id: '58', note: 'The loop — Day 14, Day 30, Day 1' },
+        { day: 'Tue', type: 'reel',     id: 'R28', note: 'Permission reel · Not your fault — needed a system' },
+        { day: 'Wed', type: 'brandscript', id: 'B21', note: 'Permission line · You don\'t need more discipline (brandscript)' },
+        { day: 'Thu', type: 'single',   id: '59', note: 'You shouldn\'t have to be a CFO' },
+        { day: 'Fri', type: 'carousel', id: 'C42', note: 'What a calm month feels like' },
+        { day: 'Sat', type: 'single',   id: '60', note: 'Boring on purpose · Specific by design' },
+      ]},
+      { n: 3, theme: 'Launch · Plan + CTA + success/failure', days: [
+        { day: 'Mon', type: 'single',   id: '61', note: 'The plan — split first, spend last' },
+        { day: 'Tue', type: 'reel',     id: 'R23', note: 'Five buckets walkthrough' },
+        { day: 'Wed', type: 'carousel', id: 'C45', note: 'How breathing again works (homepage 3 steps verbatim)' },
+        { day: 'Thu', type: 'single',   id: '62', note: 'Failure avoided — April. Surprise. Shame.' },
+        { day: 'Fri', type: 'carousel', id: 'C44', note: 'Day 1 to Day 90 transformation' },
+        { day: 'Sat', type: 'single',   id: '63', note: 'CTA close — free for 7 days' },
+      ]},
+
+      // ─────────── SUSTAINING (weeks 4–25) — depth + breadth ───────────
+      { n: 4, theme: 'Sustain · brand reinforcement', days: [
+        { day: 'Mon', type: 'single',   id: '09', note: 'Free to try · built for inconsistent income' },
+        { day: 'Tue', type: 'reel',     id: 'R15' },
+        { day: 'Wed', type: 'carousel', id: 'C9' },
+        { day: 'Thu', type: 'single',   id: '25' },
+        { day: 'Fri', type: 'carousel', id: 'C2' },
+        { day: 'Sat', type: 'single',   id: '11' },
+      ]},
+      { n: 5, theme: 'The problem · leaks', days: [
+        { day: 'Mon', type: 'single',   id: '02' },
+        { day: 'Tue', type: 'reel',     id: 'R5' },
+        { day: 'Wed', type: 'carousel', id: 'C1' },
+        { day: 'Thu', type: 'single',   id: '18' },
+        { day: 'Fri', type: 'carousel', id: 'C8' },
+      ]},
+      { n: 6, theme: 'System · five buckets', days: [
+        { day: 'Mon', type: 'single',   id: '43' },
+        { day: 'Tue', type: 'reel',     id: 'R3' },
+        { day: 'Wed', type: 'carousel', id: 'C3' },
+        { day: 'Thu', type: 'single',   id: '04' },
+        { day: 'Fri', type: 'carousel', id: 'C16' },
+      ]},
+      { n: 7, theme: 'Tax · 30% rule', days: [
+        { day: 'Mon', type: 'single',   id: '35' },
+        { day: 'Tue', type: 'reel',     id: 'R4' },
+        { day: 'Wed', type: 'carousel', id: 'C5' },
+        { day: 'Thu', type: 'single',   id: '36' },
+        { day: 'Fri', type: 'carousel', id: 'C27' },
+      ]},
+      { n: 8, theme: 'Calm · numbers over panic', days: [
+        { day: 'Mon', type: 'single',   id: '22' },
+        { day: 'Tue', type: 'reel',     id: 'R8' },
+        { day: 'Wed', type: 'carousel', id: 'C26' },
+        { day: 'Thu', type: 'single',   id: '12' },
+        { day: 'Fri', type: 'carousel', id: 'C30' },
+      ]},
+      { n: 9, theme: 'Day 1 → Day 30', days: [
+        { day: 'Mon', type: 'single',   id: '06' },
+        { day: 'Tue', type: 'reel',     id: 'R1', note: 'Anchor reel — the freelancer month' },
+        { day: 'Wed', type: 'carousel', id: 'C6' },
+        { day: 'Thu', type: 'single',   id: '21' },
+        { day: 'Fri', type: 'carousel', id: 'C12' },
+      ]},
+      { n: 10, theme: 'Founder · why I built this', days: [
+        { day: 'Mon', type: 'single',   id: '42' },
+        { day: 'Tue', type: 'reel',     id: 'R9', note: 'Why I built Able (name removed)' },
+        { day: 'Wed', type: 'carousel', id: 'C43', note: 'How Able works in 8 slides (promoted from reserve, replaces C7)' },
+        { day: 'Thu', type: 'single',   id: '41' },
+        { day: 'Fri', type: 'carousel', id: 'C11' },
+      ]},
+      { n: 11, theme: 'Comparison · wrong tool', days: [
+        { day: 'Mon', type: 'single',   id: '27' },
+        { day: 'Tue', type: 'reel',     id: 'R6' },
+        { day: 'Wed', type: 'carousel', id: 'C15' },
+        { day: 'Thu', type: 'single',   id: '28' },
+        { day: 'Fri', type: 'carousel', id: 'C14' },
+        { day: 'Sat', type: 'reel',     id: 'R30', note: 'Anti-hustle · Boring on purpose' },
+      ]},
+      { n: 12, theme: 'Money math · where it goes', days: [
+        { day: 'Mon', type: 'single',   id: '05' },
+        { day: 'Tue', type: 'reel',     id: 'R2' },
+        { day: 'Wed', type: 'carousel', id: 'C4' },
+        { day: 'Thu', type: 'single',   id: '13' },
+        { day: 'Fri', type: 'carousel', id: 'C13' },
+        { day: 'Sat', type: 'reel',     id: 'R31', note: '$400 paralysis anchor — nothing to show for it' },
+      ]},
+      { n: 13, theme: 'Persona · creators', days: [
+        { day: 'Mon', type: 'single',   id: '31' },
+        { day: 'Tue', type: 'reel',     id: 'R10' },
+        { day: 'Wed', type: 'carousel', id: 'C19' },
+        { day: 'Thu', type: 'single',   id: '39' },
+        { day: 'Fri', type: 'carousel', id: 'C18' },
+      ]},
+      { n: 14, theme: 'Persona · designers / devs / coaches', days: [
+        { day: 'Mon', type: 'single',   id: '14' },
+        { day: 'Tue', type: 'reel',     id: 'R11' },
+        { day: 'Wed', type: 'carousel', id: 'C20' },
+        { day: 'Thu', type: 'single',   id: '30' },
+        { day: 'Fri', type: 'carousel', id: 'C24' },
+      ]},
+      { n: 15, theme: 'Persona · gig + real estate', days: [
+        { day: 'Mon', type: 'single',   id: '19' },
+        { day: 'Tue', type: 'reel',     id: 'R12' },
+        { day: 'Wed', type: 'carousel', id: 'C22' },
+        { day: 'Thu', type: 'single',   id: '47' },
+        { day: 'Fri', type: 'carousel', id: 'C21' },
+      ]},
+      { n: 16, theme: 'Persona · etsy + commission', days: [
+        { day: 'Mon', type: 'single',   id: '16' },
+        { day: 'Tue', type: 'reel',     id: 'R13' },
+        { day: 'Wed', type: 'carousel', id: 'C23' },
+        { day: 'Thu', type: 'single',   id: '38' },
+        { day: 'Fri', type: 'carousel', id: 'C25' },
+      ]},
+      { n: 17, theme: 'Tax · deeper (1099-NEC + 1099-K)', days: [
+        { day: 'Mon', type: 'single',   id: '32' },
+        { day: 'Tue', type: 'reel',     id: 'R7' },
+        { day: 'Wed', type: 'carousel', id: 'C28' },
+        { day: 'Thu', type: 'single',   id: '24' },
+        { day: 'Fri', type: 'carousel', id: 'C29' },
+      ]},
+      { n: 18, theme: 'Habits · pay yourself', days: [
+        { day: 'Mon', type: 'single',   id: '03' },
+        { day: 'Tue', type: 'reel',     id: 'R14' },
+        { day: 'Wed', type: 'carousel', id: 'C10' },
+        { day: 'Thu', type: 'single',   id: '50' },
+        { day: 'Fri', type: 'carousel', id: 'C36' },
+      ]},
+      { n: 19, theme: 'Setup · taxes + Schedule C', days: [
+        { day: 'Mon', type: 'single',   id: '44' },
+        { day: 'Tue', type: 'reel',     id: 'R17' },
+        { day: 'Wed', type: 'carousel', id: 'C32' },
+        { day: 'Thu', type: 'single',   id: '45' },
+        { day: 'Fri', type: 'carousel', id: 'C33' },
+      ]},
+      { n: 20, theme: 'Sustain · home office + how money works', days: [
+        { day: 'Mon', type: 'single',   id: '51' },
+        { day: 'Tue', type: 'reel',     id: 'R18' },
+        { day: 'Wed', type: 'carousel', id: 'C31' },
+        { day: 'Thu', type: 'single',   id: '26' },
+        { day: 'Fri', type: 'carousel', id: 'C37' },
+      ]},
+      { n: 21, theme: 'Drip · debt + freelancer budget', days: [
+        { day: 'Mon', type: 'single',   id: '17' },
+        { day: 'Tue', type: 'reel',     id: 'R16' },
+        { day: 'Wed', type: 'carousel', id: 'C17' },
+        { day: 'Thu', type: 'single',   id: '23' },
+        { day: 'Fri', type: 'carousel', id: 'C34' },
+      ]},
+      { n: 22, theme: 'Drip · credit + business funding', days: [
+        { day: 'Mon', type: 'single',   id: '46' },
+        { day: 'Tue', type: 'reel',     id: 'R19' },
+        { day: 'Wed', type: 'carousel', id: 'C35' },
+        { day: 'Thu', type: 'single',   id: '10' },
+        { day: 'Fri', type: 'carousel', id: 'C38' },
+      ]},
+      { n: 23, theme: 'Drip · last reel, singles take over', days: [
+        { day: 'Mon', type: 'single',   id: '37' },
+        { day: 'Tue', type: 'reel',     id: 'R20' },
+        { day: 'Wed', type: 'single',   id: '33' },
+        { day: 'Thu', type: 'single',   id: '34' },
+        { day: 'Fri', type: 'single',   id: '49' },
+        { day: 'Sat', type: 'reel',     id: 'R27', note: 'Audience re-recognition · If you\'ve ever' },
+      ]},
+      { n: 24, theme: 'Drip · sustained singles', days: [
+        { day: 'Mon', type: 'single',   id: '01' },
+        { day: 'Tue', type: 'single',   id: '07' },
+        { day: 'Wed', type: 'single',   id: '15' },
+        { day: 'Thu', type: 'single',   id: '29' },
+        { day: 'Fri', type: 'single',   id: '40' },
+        { day: 'Sat', type: 'reel',     id: 'R29', note: 'Identity stack · I am able' },
+      ]},
+      { n: 25, theme: 'Finale · pricing + close', days: [
+        { day: 'Mon', type: 'single',   id: '08' },
+        { day: 'Tue', type: 'single',   id: '20', note: 'Pricing CTA' },
+        { day: 'Wed', type: 'single',   id: '48' },
+        { day: 'Thu', type: 'single',   id: '52' },
+        { day: 'Fri', type: 'single',   id: '53' },
+        { day: 'Sat', type: 'single',   id: '54', note: 'Final post' },
+      ]},
+    ];
+
+    const postById = new Map((window.POSTS       || []).map(p => [p.id, p]));
+    const carById  = new Map((window.CAROUSELS   || []).map(c => [c.id, c]));
+    const reelById = new Map((window.REELS       || []).map(r => [r.id, r]));
+    const bsById   = new Map((window.BRANDSCRIPT || []).map(b => [b.id, b]));
+
+    const lookup = (type, id) => {
+      if (type === 'single')      return { item: postById.get(id), href: `posts/template.html?id=${id}` };
+      if (type === 'carousel')    return { item: carById.get(id),  href: `posts/carousel.html?id=${id}` };
+      if (type === 'reel')        return { item: reelById.get(id), href: `reels/template.html?id=${id}` };
+      if (type === 'brandscript') return { item: bsById.get(id),   href: `posts/template.html?id=${id}` };
+      return { item: null, href: '#' };
+    };
+
+    // ── Brand-script reinforcement: one Sun slot per week, themed to the week ──
+    // 25 placements; edit here without touching WEEKS. Unused brand-script lines
+    // stay in reserve for ads, retargeting, and email.
+    const BS_CADENCE = {
+      1:  { id: 'B07', note: 'Audience tagline · Built for entrepreneurs with inconsistent income' },
+      2:  { id: 'B22', note: 'Solution mechanic · Able gives every dollar a job the moment it arrives' },
+      3:  { id: 'B41', note: 'Transformation · From Unable → Able' },
+      4:  { id: 'B01', note: 'Brand lockup · Built for inconsistent income' },
+      5:  { id: 'B15', note: 'Paralysis · Money that sits, leaks' },
+      6:  { id: 'B23', note: 'Solution · A budget that works without a predictable paycheck' },
+      7:  { id: 'B25', note: 'Outcome · Finally pay down your debt' },
+      8:  { id: 'B39', note: 'Outcome · No more paralysis. Just confidence.' },
+      9:  { id: 'B17', note: 'Paralysis · You don\'t move the money because you don\'t know when the next check is coming' },
+      10: { id: 'B13', note: 'Real fear · Afraid of not knowing when the next check is coming in' },
+      11: { id: 'B10', note: 'Villain · Most budgeting apps assume a steady paycheck' },
+      12: { id: 'B19', note: 'Paralysis · $400 gone, nothing to show for it' },
+      13: { id: 'B05', note: 'Audience · For the entrepreneur who struggles to budget inconsistent income' },
+      14: { id: 'B06', note: 'Audience · For entrepreneurs who can\'t budget inconsistent income' },
+      15: { id: 'B08', note: 'Audience · For people with inconsistent income' },
+      16: { id: 'B11', note: 'Villain · Inconsistent income makes budgeting feel impossible' },
+      17: { id: 'B12', note: 'Villain · Never taught how to budget a paycheck that doesn\'t follow a schedule' },
+      18: { id: 'B27', note: 'Outcome · Stop living unpredictable check to unpredictable check' },
+      19: { id: 'B33', note: 'New identity · I am able to pay down debt, even on slow months' },
+      20: { id: 'B24', note: 'Solution · Able assumes your income is lumpy, unpredictable, rarely on schedule' },
+      21: { id: 'B34', note: 'New identity · I am able to save without second-guessing' },
+      22: { id: 'B26', note: 'Outcome · Actually build your savings' },
+      23: { id: 'B36', note: 'New identity · I am able to budget inconsistent income' },
+      24: { id: 'B40', note: 'Cost of waiting · Every month is another $500–$1,000 gone' },
+      25: { id: 'B38', note: 'Become able · Manifesto bookend (4 outcomes)' },
+    };
+
+    const cadenceRoot = document.getElementById('cadence');
+    WEEKS.forEach(w => {
+      const wEl = document.createElement('div');
+      wEl.className = 'week';
+      const days = [...w.days];
+      const bs = BS_CADENCE[w.n];
+      if (bs) days.push({ day: 'Sun', type: 'brandscript', id: bs.id, note: bs.note });
+      const dayRows = days.map(d => {
+        const { item, href } = lookup(d.type, d.id);
+        const slug = item ? item.slug : '(missing)';
+        const theme = item ? (item.theme || 'page') : 'page';
+        const noteHtml = d.note ? `<div class="note">${d.note}</div>` : '';
+        return `
+          <div class="day">
+            <span class="day-name">${d.day}</span>
+            <span class="fmt ${d.type}">${d.type}</span>
+            <a href="${href}" target="_blank">${d.id} <span class="slug">· ${slug}</span></a>
+            <span class="theme-chip ${theme}" title="${themeLabel[theme] || theme}"></span>
+            ${noteHtml}
+          </div>
+        `;
+      }).join('');
+      wEl.innerHTML = `
+        <div class="week-head">
+          <span class="week-num">Week ${w.n}</span>
+          <span class="week-theme">${w.theme}</span>
+        </div>
+        ${dayRows}
+      `;
+      cadenceRoot.appendChild(wEl);
+    });
+  </script>
+</body>
+</html>

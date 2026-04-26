@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Able · cover</title>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400;12..96,500;12..96,600;12..96,700;12..96,800;12..96,900&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="_styles.css">
+<style>
+  html, body {
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 40px;
+  }
+</style>
+</head>
+<body>
+  <div class="post" id="post"></div>
+
+  <script src="data.js"></script>
+  <script src="_render.js"></script>
+  <script>
+    const params = new URLSearchParams(location.search);
+    const id = params.get('id') || 'C2';
+    const carousel = (window.CAROUSELS || []).find(c => c.id === id);
+    const root = document.getElementById('post');
+
+    if (!carousel || !carousel.slides[0]) {
+      root.innerHTML = '<div class="missing">No cover for ' + id + '</div>';
+    } else {
+      const slide = Object.assign({ theme: carousel.theme }, carousel.slides[0]);
+      renderSlideInto(root, slide);
+    }
+  </script>
+</body>
+</html>

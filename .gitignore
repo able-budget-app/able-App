@@ -13,3 +13,10 @@
 # Supabase CLI local cache
 supabase/.temp/
 supabase/.branches/
+
+# Social export — derived artifacts (PNG/MP4) are heavy and re-buildable
+# via scripts/export-social.py. Keep _master-sheet.csv (source-of-truth schedule).
+marketing-footage/social-export/_raw/
+marketing-footage/social-export/singles/
+marketing-footage/social-export/carousels/
+marketing-footage/social-export/reels/

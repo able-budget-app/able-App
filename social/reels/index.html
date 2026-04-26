@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Able — Reels</title>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400;12..96,600;12..96,800&display=swap" rel="stylesheet">
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    background: #d9e8de;
+    font-family: 'Bricolage Grotesque', sans-serif;
+    color: #111c16;
+    padding: 48px;
+    -webkit-font-smoothing: antialiased;
+  }
+  h1 {
+    font-size: 28px;
+    font-weight: 800;
+    letter-spacing: -.02em;
+    margin-bottom: 6px;
+  }
+  .sub {
+    font-size: 14px;
+    color: #4a5c52;
+    margin-bottom: 24px;
+  }
+  .back {
+    display: inline-block;
+    font-size: 13px;
+    font-weight: 700;
+    color: #2a7a4a;
+    text-decoration: none;
+    margin-bottom: 24px;
+  }
+  .back:hover { text-decoration: underline; }
+  .grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+    gap: 20px;
+  }
+  .card {
+    background: #fff;
+    border-radius: 18px;
+    padding: 14px;
+    box-shadow: 0 2px 8px rgba(0,0,0,.05);
+  }
+  .label {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 11px;
+    font-weight: 800;
+    letter-spacing: .14em;
+    text-transform: uppercase;
+    color: #2a7a4a;
+    margin: 4px 6px 10px;
+  }
+  .label .id { color: #111c16; }
+  .label .meta {
+    font-size: 10px;
+    padding: 3px 8px;
+    border-radius: 999px;
+    background: #eaf5ee;
+    color: #2a7a4a;
+  }
+  .label .meta.talking-head { background: #f0e0d0; color: #c97c0a; }
+  .frame-wrap {
+    width: 100%;
+    aspect-ratio: 9 / 16;
+    overflow: hidden;
+    border-radius: 12px;
+    border: 1px solid #c4d8cc;
+    position: relative;
+    background: #f0f7f2;
+  }
+  .frame-wrap iframe {
+    width: 1080px;
+    height: 1920px;
+    border: 0;
+    transform: scale(.27);
+    transform-origin: top left;
+    position: absolute;
+    top: -10px;
+    left: -10px;
+  }
+  .open {
+    display: block;
+    margin-top: 10px;
+    text-align: center;
+    font-size: 12px;
+    font-weight: 700;
+    color: #2a7a4a;
+    text-decoration: none;
+    padding: 6px;
+  }
+  .open:hover { text-decoration: underline; }
+</style>
+</head>
+<body>
+  <a class="back" href="../index.html">← Back to social</a>
+  <h1>Able reels</h1>
+  <div class="sub">20 reels · 1080×1920 · explicit text-box (no min-content shrink) · screen-record in Chrome to MP4.</div>
+
+  <div class="grid" id="grid"></div>
+
+  <script src="data.js?v=6"></script>
+  <script>
+    const grid = document.getElementById('grid');
+    const v = Date.now(); // cache-bust the iframes so we always see the latest template + data
+
+    REELS.forEach(reel => {
+      const card = document.createElement('div');
+      card.className = 'card';
+      card.innerHTML = `
+        <div class="label">
+          <span class="id">${reel.id} · ${reel.slug}</span>
+          <span class="meta ${reel.format}">${reel.durationSec}s · ${reel.format}</span>
+        </div>
+        <div class="frame-wrap"><iframe src="template.html?id=${reel.id}&v=${v}" loading="lazy"></iframe></div>
+        <a class="open" href="template.html?id=${reel.id}" target="_blank">Open full size →</a>
+      `;
+      grid.appendChild(card);
+    });
+  </script>
+</body>
+</html>

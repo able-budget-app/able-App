@@ -1,0 +1,238 @@
+/* Reel styles — vertical 1080×1920 for IG/TikTok/Shorts */
+:root {
+  --bg: #f0f7f2;
+  --t1: #111c16;
+  --t2: #4a5c52;
+  --eyebrow-color: #2a7a4a;
+  --squiggle: #2a7a4a;
+  --f: 'Bricolage Grotesque', -apple-system, sans-serif;
+}
+
+.theme-page       { --bg: #f0f7f2; --t1: #111c16; --t2: #4a5c52; --eyebrow-color: #2a7a4a; --squiggle: #2a7a4a; }
+.theme-white      { --bg: #ffffff; --t1: #111c16; --t2: #4a5c52; --eyebrow-color: #2a7a4a; --squiggle: #2a7a4a; }
+.theme-green      { --t1: #ffffff; --t2: rgba(255,255,255,.62); --eyebrow-color: #cdebd8; --squiggle: #ffffff; }
+.theme-glass      { --t1: #ffffff; --t2: rgba(255,255,255,.72); --eyebrow-color: #cdebd8; --squiggle: #ffffff; }
+.theme-black      { --t1: #ffffff; --t2: rgba(255,255,255,.62); --eyebrow-color: #3d9e78; --squiggle: #3d9e78; }
+.theme-glass-dark { --t1: #ffffff; --t2: rgba(255,255,255,.72); --eyebrow-color: #3d9e78; --squiggle: #3d9e78; }
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+html, body {
+  background: #d9e8de;
+  font-family: var(--f);
+  -webkit-font-smoothing: antialiased;
+}
+
+.reel {
+  width: 1080px;
+  height: 1920px;
+  background: var(--bg);
+  position: relative;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  padding: 140px 100px 120px;
+  box-shadow: 0 20px 60px rgba(0,0,0,.12);
+  flex-shrink: 0;
+}
+
+/* Theme backgrounds */
+.theme-black.reel {
+  background:
+    radial-gradient(ellipse at 90% 10%, rgba(42,122,74,.22) 0%, transparent 55%),
+    radial-gradient(ellipse at 10% 95%, rgba(42,122,74,.14) 0%, transparent 60%),
+    linear-gradient(160deg, #0e1a14 0%, #050b08 100%);
+}
+.theme-green.reel {
+  background: linear-gradient(160deg, #34936a 0%, #2a7a4a 50%, #1f6038 100%);
+}
+.theme-glass.reel {
+  background: linear-gradient(160deg, #34936a 0%, #2a7a4a 50%, #1f6038 100%);
+}
+.theme-glass-dark.reel {
+  background:
+    radial-gradient(ellipse at 90% 10%, rgba(42,122,74,.18) 0%, transparent 55%),
+    radial-gradient(ellipse at 10% 95%, rgba(42,122,74,.12) 0%, transparent 60%),
+    linear-gradient(160deg, #0e1a14 0%, #050b08 100%);
+}
+
+/* Halos for non-glass themes */
+.reel:not(.theme-glass):not(.theme-glass-dark)::before {
+  content: '';
+  position: absolute;
+  top: -300px; right: -300px;
+  width: 800px; height: 800px;
+  background: radial-gradient(circle, rgba(42,122,74,.10) 0%, transparent 70%);
+  pointer-events: none;
+}
+.reel.theme-green::before {
+  background: radial-gradient(circle, rgba(255,255,255,.10) 0%, transparent 70%);
+}
+.reel.theme-black::before { display: none; }
+
+/* Eyebrow at top — slug or carousel id */
+.eyebrow {
+  font-size: 28px;
+  font-weight: 800;
+  letter-spacing: .22em;
+  text-transform: uppercase;
+  color: var(--eyebrow-color);
+  position: relative;
+  z-index: 2;
+}
+
+/* Stage where beats stack and play */
+.beats-stage {
+  flex: 1;
+  position: relative;
+  margin: 100px 0;
+  z-index: 2;
+}
+
+.beat {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0;
+}
+/* Inner text box — explicit 100% width so the box never shrinks to min-content
+   (which would happen with flex column + align-items: center, causing every
+   word around an inline-block underline to orphan to its own line). */
+.beat-text {
+  width: 100%;
+  padding: 0 24px;
+  box-sizing: border-box;
+  text-align: center;
+  font-size: 132px;
+  font-weight: 800;
+  line-height: 1.08;
+  letter-spacing: -.03em;
+  color: var(--t1);
+}
+/* Animation only fires once .play is added — gated by JS after auto-fit completes */
+.beat.play {
+  animation: beatPlay var(--bd, 2.5s) forwards;
+  animation-delay: var(--bs, 0s);
+}
+
+/* Beat-level theme overrides — when set on .beat, the entire reel bg shifts.
+   We apply to .reel via JS for active beat only. */
+
+@keyframes beatPlay {
+  0%   { opacity: 0; transform: translateY(40px); }
+  10%  { opacity: 1; transform: translateY(0); }
+  88%  { opacity: 1; transform: translateY(0); }
+  100% { opacity: 0; transform: translateY(-40px); }
+}
+
+/* Underline */
+.underline {
+  position: relative;
+  display: inline-block;
+  white-space: nowrap;
+}
+.underline::after {
+  content: '';
+  position: absolute;
+  left: -1%;
+  right: -1%;
+  bottom: -22px;
+  height: 26px;
+  background-color: var(--squiggle);
+  -webkit-mask-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 120 4.2' preserveAspectRatio='none'><path d='M3 2.6 Q2 2.4 3 2.15 Q58 1.75 115 0.15 Q119 1 119 2 Q119 3 115 3.9 Q58 3.55 3 2.65 Q2 2.45 3 2.6 Z' fill='white'/></svg>");
+  mask-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 120 4.2' preserveAspectRatio='none'><path d='M3 2.6 Q2 2.4 3 2.15 Q58 1.75 115 0.15 Q119 1 119 2 Q119 3 115 3.9 Q58 3.55 3 2.65 Q2 2.45 3 2.6 Z' fill='white'/></svg>");
+  -webkit-mask-repeat: no-repeat;
+  mask-repeat: no-repeat;
+  -webkit-mask-size: 100% 100%;
+  mask-size: 100% 100%;
+}
+
+/* Footer wordmark */
+.footer {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  position: relative;
+  z-index: 2;
+}
+.wordmark {
+  font-size: 56px;
+  font-weight: 900;
+  letter-spacing: -.03em;
+  color: var(--t1);
+  line-height: 1;
+  position: relative;
+  display: inline-block;
+}
+.wordmark::after {
+  content: '';
+  position: absolute;
+  left: 0;
+  right: -4%;
+  bottom: -8px;
+  height: 12px;
+  background-color: var(--squiggle);
+  -webkit-mask-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 120 4.2' preserveAspectRatio='none'><path d='M3 2.6 Q2 2.4 3 2.15 Q58 1.75 115 0.15 Q119 1 119 2 Q119 3 115 3.9 Q58 3.55 3 2.65 Q2 2.45 3 2.6 Z' fill='white'/></svg>");
+  mask-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 120 4.2' preserveAspectRatio='none'><path d='M3 2.6 Q2 2.4 3 2.15 Q58 1.75 115 0.15 Q119 1 119 2 Q119 3 115 3.9 Q58 3.55 3 2.65 Q2 2.45 3 2.6 Z' fill='white'/></svg>");
+  -webkit-mask-repeat: no-repeat;
+  mask-repeat: no-repeat;
+  -webkit-mask-size: 100% 100%;
+  mask-size: 100% 100%;
+}
+.url {
+  font-size: 28px;
+  font-weight: 700;
+  color: var(--t2);
+  letter-spacing: .01em;
+  line-height: 1;
+  padding-bottom: 8px;
+}
+
+/* Talking-head format — teleprompter view (script + cue timeline) */
+.script {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  margin: 60px 0;
+  z-index: 2;
+  position: relative;
+}
+.script .voice {
+  font-size: 54px;
+  line-height: 1.32;
+  font-weight: 500;
+  color: var(--t1);
+  letter-spacing: -.01em;
+}
+.script .voice strong {
+  font-weight: 800;
+}
+.script .cues-wrap {
+  margin-top: 70px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+.script .cue {
+  display: inline-block;
+  background: rgba(42,122,74,.12);
+  border-left: 5px solid var(--eyebrow-color);
+  padding: 10px 16px;
+  font-size: 28px;
+  font-weight: 700;
+  color: var(--eyebrow-color);
+  letter-spacing: .08em;
+  text-transform: uppercase;
+}
+
+/* Missing fallback */
+.missing {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+  font-size: 40px;
+  color: var(--t2);
+}
