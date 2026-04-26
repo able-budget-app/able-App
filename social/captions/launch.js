@@ -4685,4 +4685,1155 @@ Same product category. Different starting assumption. Different tool entirely.
 Free for 7 days. $14.99/mo or $129/yr after.`,
   },
 
+  // ─────────────────────────────────────────────────────────
+  // W21 — Drip · debt + freelancer budget
+  // ─────────────────────────────────────────────────────────
+
+  '21|Mon': {
+    // 17 budgeting-failing · single
+    ig: `If you're a freelancer, here's the reframe.
+
+You're not failing at budgeting. Budgeting is failing you.
+
+Generic budgeting tools were built around a steady paycheck. Variable income breaks the assumptions. The failure isn't yours.
+
+Free for 7 days. Link in bio.
+
+#freelancing #1099life #variableincome #budgeting #moneymindset`,
+
+    tt: `Not failing at budgeting.
+
+Budgeting is failing you.
+
+becomeable.app
+
+#freelancetok #1099 #budgeting`,
+
+    li: `You're not failing at budgeting. Budgeting is failing you.
+
+Most variable-income earners have spent years feeling like they can't budget. Apps don't stick. Spreadsheets get abandoned. Goals get missed. The pattern is so consistent it produces a felt identity: "I'm bad at budgeting."
+
+But the cause isn't user failure. It's tool failure. Generic budgeting tools were designed around a single income shape: regular paychecks on a predictable schedule. That shape produces specific defaults — monthly category allocation, fixed savings goals, "this month vs. last month" comparisons. All of those defaults misfire when income is variable.
+
+So the user follows generic instructions. The instructions produce wrong answers. The user concludes the problem is theirs. The conclusion is wrong. The instructions were generic, the income wasn't.
+
+A tool that fits variable income produces different results without changing the user. Same person, different toolkit. The "failing at budgeting" identity dissolves when the budgeting actually works.
+
+Free for 7 days. $14.99/mo or $129/yr after.`,
+  },
+
+  '21|Tue': {
+    // R16 income-reserve · reel
+    ig: `If you're a freelancer, here's the income reserve.
+
+A dam. On a river. Big check flows in. Slow week flows out. Bills funded. Always.
+
+The reserve is the thing that makes lumpy income feel steady.
+
+Free for 7 days. Link in bio.
+
+#freelancing #1099life #variableincome #budgeting #freelancelife`,
+
+    tt: `The income reserve.
+
+A dam on a river.
+Big check: flows in.
+Slow week: flows out.
+Bills funded. Always.
+
+becomeable.app
+
+#freelancetok #1099 #variableincome`,
+
+    li: `The income reserve, in 60 seconds and a metaphor.
+
+A river is lumpy in volume. Storms swell it. Dry spells shrink it. The flow downstream is unpredictable.
+
+A dam regulates outflow. The reservoir behind the dam absorbs the lumps. The spillway delivers a steady flow regardless of what the source is doing today. Downstream of the dam, life is predictable.
+
+Substitute money for water. Variable income is the lumpy river. The reserve is the dam. The user's monthly paycheck is the steady spillway flow. Big deposit lands, fills the reserve. Slow week, the reserve releases enough to cover normal monthly outflow. The user pays themselves the same amount every month.
+
+The reserve is the structural difference between variable income that feels chaotic and variable income that feels manageable. Same income flow. Different downstream experience. The dam does the regulation.
+
+Build the reserve gradually. One month of bills as the floor. Three months as the comfortable upper end. Every big deposit feeds it. Slow months draw from it. Eventually it runs without attention.
+
+Free for 7 days. $14.99/mo or $129/yr after.`,
+  },
+
+  '21|Wed': {
+    // C17 freelancer-budget · carousel
+    links: 'becomeable.app/budgeting/freelancer-budget/',
+    ig: `If you're a freelancer, here's the budget. (Swipe.)
+
+Last month: $7,400. Month before: $3,100. Budgeting your best month leaves you broke. It's not discipline — it's fear of the empty week.
+
+Tax. Bills. Reserve. Debt. Free.
+
+Free for 7 days. Link in bio.
+
+#freelancing #1099life #variableincome #budgeting #freelancelife`,
+
+    tt: `How freelancers budget variable income.
+
+Last month: $7,400.
+Month before: $3,100.
+Best-month budget = broke.
+
+Tax. Bills. Reserve. Debt. Free.
+
+becomeable.app/budgeting/freelancer-budget/
+
+#freelancetok #1099 #variableincome`,
+
+    li: `How a freelancer budgets variable income, in plain language.
+
+The numbers vary wildly. Last month: $7,400. Month before: $3,100. The trap is budgeting your best month — committing to spending levels that match peak income. Then a slow month hits, and you're already over-extended on commitments the slow month can't cover.
+
+The other trap is budgeting your worst month — under-living so dramatically that the slow months feel survivable. That works for a while, but it's punishing during good months when you've structurally restricted yourself.
+
+The variable-income answer isn't to pick a month and budget against it. It's to budget against a flow, not a month. Every deposit gets split into the same five jobs in the same order:
+
+Tax (30% off the top). Bills (this cycle's commitments). Reserve (smoothing for slow months). Debt (scheduled payments). Free (what's left).
+
+Big deposits fund all five aggressively. Slow deposits still fund all five, just at smaller amounts. The reserve does the work of bridging between the two. The user pays themselves a steady monthly paycheck from the reserve, and that paycheck doesn't change when the deposits do.
+
+It's not discipline. It's structure. The structure handles what discipline can't.
+
+Free for 7 days. $14.99/mo or $129/yr after.`,
+  },
+
+  '21|Thu': {
+    // 23 stop-bracing · single
+    ig: `If you're a freelancer, here's the moment.
+
+The day you stop guessing is the day you stop bracing.
+
+The bracing is downstream of the guessing. Once the math is done in real time, automatically, the guessing leaves. The bracing leaves with it.
+
+Free for 7 days. Link in bio.
+
+#freelancing #1099life #variableincome #moneymindset #freelancelife`,
+
+    tt: `The day you stop guessing.
+
+Is the day you stop bracing.
+
+becomeable.app
+
+#freelancetok #1099 #moneymindset`,
+
+    li: `The day you stop guessing is the day you stop bracing.
+
+That sentence captures the relationship between cognitive load and physical readiness in variable-income work. Bracing is the somatic response to anticipated bad outcomes. Guessing is the cognitive process that produces the anticipation.
+
+When the math runs through your head all day — how much is taxes, will next month cover bills, is this purchase fine — the bracing happens automatically. Each guess carries a probability of being wrong. The body braces in proportion to the cumulative uncertainty.
+
+Remove the guessing, the bracing leaves. The math doesn't have to run through your head if a system runs it automatically. The tax bucket fills itself. The reserve covers slow months. The debt schedule keeps running. The brain stops needing to predict outcomes because the outcomes are already determined.
+
+The downstream effect is felt: opening the bank app without tightening up. Taking a slow week without immediate calculation. Discretionary spending without flinching.
+
+The structure produces the calm. Not the willpower.
+
+Free for 7 days. $14.99/mo or $129/yr after.`,
+  },
+
+  '21|Fri': {
+    // C34 get-out-of-debt · carousel
+    ig: `If you're a freelancer with debt, here's the strategy. (Swipe.)
+
+Every debt book assumes steady income. Yours isn't. Those plans break fast.
+
+Reserve covers minimums. Good months attack principal.
+
+Free for 7 days. Link in bio.
+
+#freelancing #1099life #variableincome #debtfree #debtfreejourney`,
+
+    tt: `Debt with variable income.
+
+Every debt book assumes steady income.
+Yours isn't.
+
+Reserve covers minimums.
+Good months attack principal.
+
+becomeable.app
+
+#freelancetok #1099 #debtfree`,
+
+    li: `Getting out of debt on variable income, in two moves.
+
+Most debt-payoff plans (snowball, avalanche, etc.) assume steady income. The plan calculates how much extra principal you can throw at debt each month, given a known monthly surplus. Variable income breaks this immediately. Some months have a surplus. Some don't. A plan that assumes consistent surplus stalls the first slow month.
+
+The variable-income strategy:
+
+Move 1: The reserve covers minimums. Build a reserve big enough to fund debt minimums plus rent plus essential bills for the longest realistic slow stretch. Once the reserve exists, slow months don't break the debt schedule. Minimum payments hit on time. Progress doesn't reset.
+
+Move 2: Good months attack principal. Above the reserve, surplus from strong months goes hard at principal. Not at lifestyle expansion. Not at wishful future spending. Principal. Every $500 toward principal compounds in the right direction faster than most people expect.
+
+This combination — protected schedule via reserve, accelerated principal via good months — produces consistent debt reduction even on variable income. The slow months don't reset. The good months speed up.
+
+Free for 7 days. $14.99/mo or $129/yr after.`,
+  },
+
+  '21|Sun': {
+    // B34 identity-save-no-second-guess · brandscript
+    ig: `If you're a freelancer, here's the new identity.
+
+I am able to save without second-guessing.
+
+That second-guessing is what burns most savings goals. Once savings is automated as a percentage of every deposit, the second-guessing dissolves.
+
+Free for 7 days. Link in bio.
+
+#freelancing #1099life #variableincome #saving #moneymindset`,
+
+    tt: `I am able to save.
+
+Without second-guessing.
+
+becomeable.app
+
+#freelancetok #1099 #moneymindset`,
+
+    li: `I am able to save without second-guessing.
+
+The second-guessing is the thing that burns most variable-income savings goals. The user moves money to savings, then immediately starts wondering: should I have? Was that the right amount? Will I need it back next week? Is this reckless given the next deposit's uncertainty?
+
+The wondering becomes a tax on the savings habit. Every transfer carries a small cost of mental friction. Repeat enough times, the habit dies.
+
+The fix is automating the savings as a percentage of every deposit, routed at the moment the deposit clears. Once the routing is automatic, the second-guessing doesn't have a hook. The decision was made once, the routing executes without your involvement, the saved amount is whatever the percentage produced.
+
+Same person. Same income. The second-guessing leaves because the decision-making leaves.
+
+Free for 7 days. $14.99/mo or $129/yr after.`,
+  },
+
+  // ─────────────────────────────────────────────────────────
+  // W22 — Drip · credit + business funding
+  // ─────────────────────────────────────────────────────────
+
+  '22|Mon': {
+    // 46 mint-replacement · single
+    ig: `If you used Mint, here's the catch.
+
+Coming from Mint? The replacement still assumes a paycheck.
+
+Most "Mint alternatives" inherited Mint's defaults. Same paycheck-shaped tool with a different logo. Variable income breaks all of them the same way.
+
+Free for 7 days. Link in bio.
+
+#freelancing #1099life #variableincome #budgeting #personalfinance`,
+
+    tt: `Coming from Mint?
+
+The replacement still assumes a paycheck.
+
+becomeable.app
+
+#freelancetok #1099 #variableincome`,
+
+    li: `Coming from Mint? The replacement still assumes a paycheck.
+
+When Mint shut down, the budgeting app market filled with alternatives. Most of them inherited Mint's core defaults: monthly category allocation, "this month vs. last month" comparisons, savings goals based on a baseline, automatic transaction categorization that assumes regular paychecks.
+
+The defaults aren't wrong for users with regular paychecks. They're wrong for variable income. Switching from Mint to a Mint-shaped alternative produces the same friction with a different logo. The shape of the tool didn't change.
+
+What changed for variable-income earners isn't who shut down. It's whether the available tools fit the income shape. Most still don't. The Mint-replacement market is still mostly paycheck-shaped.
+
+A tool built specifically for variable income makes different default assumptions. Income arrives lumpy. Allocation happens at deposit, not at month-start. Buckets are percentage-driven. A reserve sits between income and bills. None of those defaults match the Mint inheritance.
+
+Free for 7 days. $14.99/mo or $129/yr after.`,
+  },
+
+  '22|Tue': {
+    // R19 spreadsheet-to-system · reel
+    ig: `If you're a freelancer, here's the moment.
+
+Your spreadsheet is dying. Opened three times this quarter. Can't follow variable.
+
+You don't need a better spreadsheet. You need a system.
+
+Free for 7 days. Link in bio.
+
+#freelancing #1099life #variableincome #budgeting #freelancelife`,
+
+    tt: `Your spreadsheet is dying.
+
+Opened 3 times this quarter.
+
+You don't need a better spreadsheet.
+
+becomeable.app
+
+#freelancetok #1099 #variableincome`,
+
+    li: `Your spreadsheet is dying. You don't need a better spreadsheet. You need a system.
+
+Most variable-income earners go through a spreadsheet phase. The user builds a custom tool to compensate for the gap left by generic apps. Categories, formulas, manual entry, monthly reconciliation. It works for a while.
+
+The phase ends predictably. The maintenance cost compounds. Manual entry is the killer — the moment you fall behind by two weeks, the rest of the spreadsheet becomes unreliable. By the third quarter, the spreadsheet has been opened three times, the data is stale, and the tool that was supposed to bring control is producing more guilt than insight.
+
+A better spreadsheet doesn't fix this. The maintenance is the problem. The fix is automation.
+
+A system that runs without manual entry — that splits deposits automatically, tracks bucket balances continuously, alerts when something looks off — replaces the spreadsheet with structure. The spreadsheet phase was a sign that variable income needed its own toolkit. The system delivers what the spreadsheet was reaching for, without the maintenance burden.
+
+Free for 7 days. $14.99/mo or $129/yr after.`,
+  },
+
+  '22|Wed': {
+    // C35 credit-score · carousel
+    ig: `If you have variable income, here's your credit in 6 slides. (Swipe.)
+
+Two factors dominate. Payment history (35%). Utilization (30%, keep below 10%).
+
+Pay balances down: 30 to 60 points in 30 days.
+
+Free for 7 days. Link in bio.
+
+#1099life #freelancing #creditscore #personalfinance #variableincome`,
+
+    tt: `Credit score in 6 slides.
+
+Payment history: 35%.
+Utilization: 30%, keep below 10%.
+
+Pay balances down: 30-60 pts in 30 days.
+
+becomeable.app
+
+#freelancetok #1099 #creditscore`,
+
+    li: `Improving your credit score, the variable-income version.
+
+Two factors dominate the score. Payment history is 35%. Credit utilization is 30%. Together they're 65% of the calculation. The other factors — credit age, new credit, credit mix — are smaller and slower to move.
+
+For variable-income earners, the payment history factor is where most of the volatility comes from. Slow months can mean missed payments. Missed payments tank the score for years. The reserve fixes this structurally — once the reserve covers minimums on slow months, payment history stops being volatile. Every payment hits on time, every month, regardless of income.
+
+Credit utilization is the faster lever. Most scoring models penalize high utilization (above 30%) and reward low utilization (below 10%). Paying balances down from a high utilization to below 10% can move the score 30-60 points in a single billing cycle. This is the highest-leverage move available for users with high credit card balances.
+
+The variable-income-specific advice: automate everything. Auto-pay minimums. Auto-pay statement balance if cash flow allows. Never miss a payment due to attention drift. The reserve makes this automation reliable.
+
+Free for 7 days. $14.99/mo or $129/yr after.`,
+  },
+
+  '22|Thu': {
+    // 10 money-energy · single
+    ig: `If you're a freelancer, here's the metaphor.
+
+Money is energy. Direct it, or it leaks.
+
+Same money, two outcomes. The difference is whether you give each dollar a job before it has a chance to drift.
+
+Free for 7 days. Link in bio.
+
+#freelancing #1099life #variableincome #moneymindset #freelancelife`,
+
+    tt: `Money is energy.
+
+Direct it. Or it leaks.
+
+becomeable.app
+
+#freelancetok #1099 #moneymindset`,
+
+    li: `Money is energy. Direct it, or it leaks.
+
+The energy metaphor maps cleanly to how money behaves in undifferentiated pools. Energy without a destination dissipates — it spreads out, follows the path of least resistance, ends up doing low-value work or no work at all. Money behaves the same way. Money sitting in checking with no job assigned drifts toward the path of least resistance. Small purchases. Subscription drift. "I'll just grab it" decisions. By Day 30, the energy has dispersed.
+
+Energy with a destination produces work. Money with a job produces specific outcomes. Tax dollars routed to a tax bucket fund the IRS bill. Bill dollars routed to bills produce paid bills. Reserve dollars routed to reserve produce a buffer. Same dollars. Different outcomes. The destination is the entire variable.
+
+The reframe is small but useful. Stop thinking of money as a static pool to manage. Start thinking of it as energy to direct. The act of directing — at the moment of deposit, into specific buckets — is what produces the difference between "I made $4,000 and have nothing to show for it" and "I made $4,000 and here's what each piece did."
+
+Free for 7 days. $14.99/mo or $129/yr after.`,
+  },
+
+  '22|Fri': {
+    // C38 business-funding · carousel
+    ig: `If you run a one-person business, here's funding without losing it. (Swipe.)
+
+80% of small business loans get denied. The reasons are all fixable. Personal vs business credit are two systems. Set up the business first.
+
+Free for 7 days. Link in bio.
+
+#smallbusiness #entrepreneur #1099life #businessfunding #freelancing`,
+
+    tt: `Business funding.
+
+80% of small biz loans denied.
+Reasons are fixable.
+Personal vs business credit = 2 systems.
+
+becomeable.app
+
+#smallbusiness #entrepreneur #1099`,
+
+    li: `Business funding without losing it. The basics.
+
+About 80% of small business loan applications get denied. The reasons are usually consistent: weak personal credit, no business credit history, unclear business structure, insufficient documented revenue, high personal debt-to-income.
+
+All fixable. Most of them require time more than money.
+
+Personal vs. business credit are two separate systems. Personal credit follows you. Business credit attaches to an EIN, a registered entity, a business address, and a track record of business-related accounts. Building business credit requires a registered business with its own bank account, vendor relationships, and on-time payment history. None of that happens by default. It happens because you set it up deliberately.
+
+PAYDEX is the Dun & Bradstreet score lenders look at for business credit. Lenders typically want 80+. Building toward 80+ means establishing trade credit accounts (vendors who report payment history to D&B) and paying them on time consistently. Multi-year process for most.
+
+The implication: if business funding might be in your future, set up the business credit infrastructure now. The work is small monthly attention. The payoff is larger and easier loans years later.
+
+Free for 7 days. $14.99/mo or $129/yr after.`,
+  },
+
+  '22|Sun': {
+    // B26 outcome-build-savings · brandscript
+    ig: `If you have inconsistent income, here's the outcome.
+
+Actually build your savings.
+
+The "actually" is doing work. Most variable-income earners try and quit. The structure is what makes the savings stick.
+
+Free for 7 days. Link in bio.
+
+#variableincome #1099life #freelancing #saving #moneymindset`,
+
+    tt: `Actually build your savings.
+
+becomeable.app
+
+#freelancetok #1099 #saving`,
+
+    li: `Actually build your savings.
+
+The "actually" carries weight. Most variable-income earners have a savings goal somewhere in their head. Most have tried to build savings multiple times. Most haven't succeeded — the savings goal hits a slow month, the money gets reabsorbed into operating costs, the goal resets.
+
+The structural reason this fails: savings without a system depends on monthly willpower against unpredictable income. Some months feel adequate, some don't. By the time "what's left" gets calculated, it's often nothing.
+
+The structural fix: route a percentage of every deposit to savings the moment the deposit clears. Not a fixed monthly amount. A percentage. 5% to start. The bucket fills proportional to income. Big months contribute more. Slow months contribute less. The discipline doesn't require ongoing decision-making.
+
+Same income. Different mechanism. Across a year, the percentage-of-deposit approach saves materially more than the "save what's left" approach, because the percentage runs without willpower. Same person. Different result.
+
+Free for 7 days. $14.99/mo or $129/yr after.`,
+  },
+
+  // ─────────────────────────────────────────────────────────
+  // W23 — Drip · last reel, singles take over
+  // ─────────────────────────────────────────────────────────
+
+  '23|Mon': {
+    // 37 shouldnt-have-to · single
+    ig: `If you're a freelancer, here's the resentment.
+
+Spreadsheets ask you to be an accountant. You shouldn't have to be.
+
+The mental tax of running spreadsheet math while also doing the actual work is the real cost. A system removes the tax.
+
+Free for 7 days. Link in bio.
+
+#freelancing #1099life #variableincome #budgeting #freelancelife`,
+
+    tt: `Spreadsheets ask you to be an accountant.
+
+You shouldn't have to be.
+
+becomeable.app
+
+#freelancetok #1099 #variableincome`,
+
+    li: `Spreadsheets ask you to be an accountant. You shouldn't have to be.
+
+That sentence captures a real resentment most variable-income earners eventually reach. The work that pays you doesn't include "be your own bookkeeper." But every spreadsheet-based budgeting attempt requires you to do exactly that — categorize transactions, reconcile accounts, project cash flow, calculate tax obligations, maintain records.
+
+Doing the bookkeeping in addition to the actual work means doing two jobs simultaneously. Most freelancers and one-person businesses can sustain that for a few weeks. After that, the bookkeeping job gets neglected, the spreadsheet falls behind, the tool that was supposed to provide control becomes a source of guilt.
+
+The fix isn't more accountant-style discipline. It's automation that replaces the accountant role. A system that splits deposits automatically, tracks bucket balances continuously, calculates tax obligations in real time — all without manual data entry — removes the second job. You go back to one job: the actual work. The math runs underneath.
+
+Free for 7 days. $14.99/mo or $129/yr after.`,
+  },
+
+  '23|Tue': {
+    // R20 save-more · reel
+    ig: `If you have variable income, here's the truth.
+
+"Save more" isn't a plan. It's a wish dressed as advice.
+
+Saving needs left over. Variable income rarely has it. Reverse the order.
+
+Free for 7 days. Link in bio.
+
+#variableincome #1099life #freelancing #saving #moneymindset`,
+
+    tt: `"Save more" isn't a plan.
+
+It's a wish dressed as advice.
+
+Reverse the order.
+
+becomeable.app
+
+#freelancetok #1099 #saving`,
+
+    li: `"Save more" isn't a plan. It's a wish dressed as advice.
+
+Saving requires money left over. Variable income rarely produces reliable left-over because the income amount and timing are unpredictable. By the time "what's left" gets calculated, it's often nothing — every month, despite intent.
+
+The fix is reversing the order. Save first, spend what's left. The standard finance industry calls this "pay yourself first," and they're right about the principle. Variable income just needs the implementation adjusted.
+
+Implementation: route a percentage of every deposit to savings at the moment the deposit clears. Not a fixed dollar amount. A percentage. 5% to start. Big deposits contribute more. Slow deposits contribute less. The system never asks the user to decide.
+
+Same money. Different order. Same income produces materially more savings across a year, because the percentage-based mechanism runs without willpower or ongoing decision-making. Reverse the order, the saving happens.
+
+Free for 7 days. $14.99/mo or $129/yr after.`,
+  },
+
+  '23|Wed': {
+    // 33 asks-for-nothing · single
+    ig: `If you're an entrepreneur, here's the test.
+
+The best money system asks you for nothing.
+
+No daily check-ins. No streaks. No nudges to engage. The right tool runs underneath your life and doesn't require attention to do its job.
+
+Free for 7 days. Link in bio.
+
+#entrepreneur #1099life #freelancing #variableincome #personalfinance`,
+
+    tt: `The best money system.
+
+Asks you for nothing.
+
+becomeable.app
+
+#freelancetok #1099 #moneymindset`,
+
+    li: `The best money system asks you for nothing.
+
+That sentence is a useful test for whether a financial tool actually fits variable income. Most fintech apps fail it on day one. They ask for daily engagement. Streak counters. Push notifications. Insights you have to scroll through. Goal-setting flows that require ongoing attention.
+
+The cumulative cost of those engagements is real, especially for users whose actual work is cognitively demanding. Every minute spent maintaining the budgeting app is a minute not spent on the work that pays.
+
+The right tool runs underneath your life. Deposits clear, splits happen automatically, the tax bucket fills, the reserve adjusts, the buckets show their balances. No streaks. No notifications. No attention required.
+
+The user opens the app once a week, maybe, just to check. The app's job is to be correct, not to be engaging. Boring is the feature.
+
+The bar: if the app demands attention to do its job, it's the wrong tool. If the app does its job without your attention, it might be the right one.
+
+Free for 7 days. $14.99/mo or $129/yr after.`,
+  },
+
+  '23|Thu': {
+    // 34 every-month-guess · single
+    ig: `If you're a freelancer, here's the math.
+
+Every month you guess, another $2,000 gone.
+
+That's not a moral failure. It's the cost of running variable income without a system. The leak compounds. The cost is real. The fix is small.
+
+Free for 7 days. Link in bio.
+
+#freelancing #1099life #variableincome #budgeting #moneymindset`,
+
+    tt: `Every month you guess.
+
+Another $2,000 gone.
+
+becomeable.app
+
+#freelancetok #1099 #variableincome`,
+
+    li: `Every month you guess, another $2,000 gone.
+
+That's the average leak rate for variable-income earners running without structure. Subscription drift, mixed-bucket dollars, tax money quietly spent, bill money reabsorbed into general spending. Different sources, same outcome.
+
+$2,000 a month is $24,000 a year. Three years is $72,000. Five years is $120,000. The compound math is brutal because the leak never stops on its own. Nothing dramatic forces a fix. It's small in any single week, which is why it persists.
+
+The fix doesn't require earning more. It requires giving every dollar a job at the moment of deposit. Tax bucket. Bills. Reserve. Debt. Free spending. Five jobs, assigned at deposit, before any spending decisions can pull from the pool.
+
+Once the routing is in place, the leak closes. Not because the user got more disciplined. Because the leak's source — undifferentiated dollars sitting in checking — stopped existing.
+
+Same person. Same income. $2,000 a month staying in productive use instead of leaking out.
+
+Free for 7 days. $14.99/mo or $129/yr after.`,
+  },
+
+  '23|Fri': {
+    // 49 doesnt-fix-leak · single
+    ig: `If you've tried Rocket Money or similar, here's the catch.
+
+Cancels your subscriptions. Doesn't fix the leak.
+
+The leak isn't subscriptions specifically. It's undifferentiated dollars sitting in checking. Cutting subscriptions trims the symptom. The cause persists.
+
+Free for 7 days. Link in bio.
+
+#1099life #freelancing #variableincome #budgeting #subscriptions`,
+
+    tt: `Cancels your subscriptions.
+
+Doesn't fix the leak.
+
+becomeable.app
+
+#freelancetok #1099 #variableincome`,
+
+    li: `Cancels your subscriptions. Doesn't fix the leak.
+
+The "subscription audit" tools (Rocket Money and similar) do real work. They find recurring charges you forgot about, surface unused services, automate cancellation. For a one-time audit, they save real money — usually a few hundred dollars in unwanted recurring spending.
+
+But the leak isn't subscriptions specifically. The leak is undifferentiated dollars sitting in checking, drifting toward the path of least resistance. Subscriptions are one symptom of the leak. Small purchases are another symptom. Mixed-bucket dollars are another. Tax money quietly getting spent is another.
+
+Cancelling subscriptions trims one symptom. The other symptoms persist. The dollars that were going to subscriptions get reabsorbed into other small drift. Net leak is barely changed.
+
+The cause is structural. Money without a job leaks. The fix is structural too. Give every dollar a job at the moment of deposit. The leak closes at the source, not at the symptom.
+
+Free for 7 days. $14.99/mo or $129/yr after.`,
+  },
+
+  '23|Sat': {
+    // R27 if-youve-ever · reel
+    ig: `If you've ever frozen on Day 1, or checked your balance at 1am, or dreaded April —
+
+You're not bad with money.
+
+Wrong tool. Not wrong you.
+
+Free for 7 days. Link in bio.
+
+#freelancing #1099life #variableincome #moneymindset #freelancelife`,
+
+    tt: `If you've ever frozen on Day 1.
+Or checked your balance at 1am.
+Or dreaded April.
+
+Wrong tool. Not wrong you.
+
+becomeable.app
+
+#freelancetok #1099 #moneymindset`,
+
+    li: `If you've ever frozen on Day 1, checked your balance at 1am, or dreaded April — you're not bad with money. You were handed the wrong tool.
+
+The three patterns named in that sentence are common variable-income experiences. Each one, when looked at individually, looks like a personal failure. Stacked, they describe a structural mismatch between the income shape and the tools available.
+
+Freezing on Day 1: the rational response to facing allocation decisions without information. Moving the money commits it to a job. Committing feels reckless when the next deposit is uncertain. So the money sits.
+
+Checking the balance at 1am: the rational response to running cash-flow forecasts in your head. The brain doesn't stop when you go to bed. The forecast keeps running. The 1am check is the brain trying to confirm the math.
+
+Dreading April: the rational response to having tax money mixed with operating money all year. The bill that arrives is real. The bucket to pay it doesn't exist.
+
+All three resolve when the tool fits the income shape. The freeze, the late-night check, the April dread — none of them are personal failures. They're symptoms of a structural mismatch.
+
+Free for 7 days. $14.99/mo or $129/yr after.`,
+  },
+
+  '23|Sun': {
+    // B36 identity-budget-inconsistent · brandscript
+    ig: `If you have inconsistent income, here's the new identity.
+
+I am able to budget inconsistent income.
+
+Past tense doesn't matter. Whatever you tried before that didn't work was a tool problem, not a you problem.
+
+Free for 7 days. Link in bio.
+
+#variableincome #1099life #freelancing #budgeting #moneymindset`,
+
+    tt: `I am able to budget inconsistent income.
+
+becomeable.app
+
+#freelancetok #1099 #budgeting`,
+
+    li: `I am able to budget inconsistent income.
+
+That sentence is the new identity variable-income earners can earn through structural finances. The "I am able" framing is direct, present tense, and specific. It doesn't say "I will be" or "I'm trying." It states the working capability.
+
+The capability is real once the structure is in place. Splitting deposits at the moment they land. Funding a tax bucket on every payment. Routing percentages to a smoothing reserve. Scheduling debt payments that survive slow months. The system runs the budget. The user runs the system once, then watches it work.
+
+The identity follows the structure. Before the structure, the identity is some version of "I can't budget" or "I'm bad with money" or "money stresses me out." After the structure, the identity becomes "I am able to budget inconsistent income" — past failures notwithstanding, because past failures were tool failures, not personal ones.
+
+Free for 7 days. $14.99/mo or $129/yr after.`,
+  },
+
+  // ─────────────────────────────────────────────────────────
+  // W24 — Drip · sustained singles
+  // ─────────────────────────────────────────────────────────
+
+  '24|Mon': {
+    // 01 wrong-tool · single
+    ig: `If you're a freelancer, here's the foundational reframe.
+
+You're not bad with money. You were handed the wrong tool.
+
+Same income. Different tool. Different result. The math is unambiguous.
+
+Free for 7 days. Link in bio.
+
+#freelancing #1099life #variableincome #budgeting #moneymindset`,
+
+    tt: `Not bad with money.
+
+Handed the wrong tool.
+
+becomeable.app
+
+#freelancetok #1099 #moneymindset`,
+
+    li: `You're not bad with money. You were handed the wrong tool.
+
+That's the foundational reframe Able is built around. It's also the most accurate diagnosis of what's actually happening when variable-income earners feel like they "can't" budget despite years of trying.
+
+The tools available — Mint and its descendants, generic spreadsheet templates, "manage your money" advice from W-2-shaped sources — were built for a different income shape. Regular paycheck, predictable amount, biweekly schedule. Variable income breaks the underlying assumptions of every one of those tools.
+
+When the tool doesn't fit, the user follows generic instructions that produce wrong answers. Repeated failure produces a felt identity: "I'm bad at this." But the failure wasn't user error. It was tool error.
+
+A tool built for variable income makes different default assumptions and produces different results. Same person. Different toolkit. The "bad with money" identity dissolves when the budgeting actually works.
+
+Free for 7 days. $14.99/mo or $129/yr after.`,
+  },
+
+  '24|Tue': {
+    // 07 shame-tool · single
+    ig: `If you've felt shame about money, here's the reattribution.
+
+The shame isn't yours. It belongs to the tool.
+
+Generic finance advice was built for someone with different income. The fail produced shame. The shame should land on the tool, not on you.
+
+Free for 7 days. Link in bio.
+
+#freelancing #1099life #variableincome #moneymindset #shame`,
+
+    tt: `The shame isn't yours.
+
+It belongs to the tool.
+
+becomeable.app
+
+#freelancetok #1099 #moneymindset`,
+
+    li: `The shame isn't yours. It belongs to the tool.
+
+Most variable-income earners carry shame about money that they didn't earn through any specific failing. The shame accumulated through repeated experience of generic financial tools producing wrong results. Each failure looked like a personal failure. The cumulative effect was a felt identity of being "bad with money."
+
+The reattribution matters. The tools assumed a paycheck. Variable income breaks the assumptions. Generic instructions produce wrong answers. Following the wrong instructions correctly still produces failure — and the user concludes the failure is theirs.
+
+It isn't. The shame should land on the tool. The tool was wrong for the use case. The user was correctly applying instructions to a tool that didn't fit.
+
+Once the tool fits — once it's specifically built for variable income — the shame stops accumulating. The system works. The user's experience matches their effort. The identity shifts.
+
+Free for 7 days. $14.99/mo or $129/yr after.`,
+  },
+
+  '24|Wed': {
+    // 15 done-thinking · single
+    ig: `If you're a freelancer, here's the real outcome.
+
+I didn't want to be a budgeter. I wanted to be done thinking about money.
+
+That sentence captures the actual goal. Not better budgeting. Less mental space spent on it.
+
+Free for 7 days. Link in bio.
+
+#freelancing #1099life #variableincome #moneymindset #budgeting`,
+
+    tt: `I didn't want to be a budgeter.
+
+I wanted to be done thinking about money.
+
+becomeable.app
+
+#freelancetok #1099 #moneymindset`,
+
+    li: `I didn't want to be a budgeter. I wanted to be done thinking about money.
+
+That sentence captures the actual outcome variable-income earners want. Not "be better at budgeting." Not "track spending more carefully." Done thinking about money — with the math handled by something else, the cognitive space freed for the actual work.
+
+The standard advice misreads this. "Track every expense" assumes the user wants to be a tracker. "Set goals and review monthly" assumes the user wants to be a goal-setter. The user doesn't want any of that. The user wants the underlying mechanics to run correctly without requiring attention.
+
+The right tool is the one you forget about. It runs underneath the day, splits deposits as they land, maintains buckets, alerts only when something requires action. The user opens it occasionally to confirm the system is running. Not to maintain it.
+
+Done thinking about money is the real outcome. The tools that demand engagement are getting in the way of that outcome. The right tool gets out of the way.
+
+Free for 7 days. $14.99/mo or $129/yr after.`,
+  },
+
+  '24|Thu': {
+    // 29 missing-system · single
+    ig: `If you're a freelancer, here's the diagnosis.
+
+You're not bad at math. You're missing a system.
+
+The math is fine. The math wasn't the problem. The thing missing is structure that runs without your attention. Add the structure, the math runs.
+
+Free for 7 days. Link in bio.
+
+#freelancing #1099life #variableincome #budgeting #moneymindset`,
+
+    tt: `Not bad at math.
+
+Missing a system.
+
+becomeable.app
+
+#freelancetok #1099 #variableincome`,
+
+    li: `You're not bad at math. You're missing a system.
+
+Variable-income earners often blame their math when budgeting fails. The math is rarely the problem. Most users can do the arithmetic — 30% of $4,000 is $1,200, the bills total $1,800, what's left is $1,000. The math itself isn't where the failure happens.
+
+The failure happens in execution. Knowing the math doesn't make the moves automatic. The user knows they should route 30% to a tax bucket. They don't, because moving money requires attention they don't have at the moment of deposit. The math goes unexecuted.
+
+A system replaces execution-by-attention with execution-by-routing. The 30% moves automatically the moment the deposit clears, without requiring the user to remember, decide, or act in the moment. The math is the same. The execution is different. The result is different.
+
+Same person. Same math knowledge. The system is the difference.
+
+Free for 7 days. $14.99/mo or $129/yr after.`,
+  },
+
+  '24|Fri': {
+    // 40 split-stop-bracing · single
+    ig: `If you're a freelancer, here's the directive.
+
+Split every deposit. Stop bracing.
+
+Two sentences. The split produces the structure. The structure produces the calm. The calm replaces the bracing.
+
+Free for 7 days. Link in bio.
+
+#freelancing #1099life #variableincome #budgeting #moneymindset`,
+
+    tt: `Split every deposit.
+
+Stop bracing.
+
+becomeable.app
+
+#freelancetok #1099 #variableincome`,
+
+    li: `Split every deposit. Stop bracing.
+
+Two sentences. The whole instruction set, compressed.
+
+"Split every deposit" is the action. The deposit clears, the dollars route to specific jobs (tax, bills, reserve, debt, free) the moment they land. Five jobs, in order, every time, regardless of deposit size. No exceptions for small deposits. No exceptions for "this one I'll handle later." Every deposit, split.
+
+"Stop bracing" is the outcome. The bracing was downstream of the unstructured pile. Without a clear allocation, the brain runs cash-flow forecasts continuously, anticipating bad outcomes. Once the dollars are in their assigned jobs, the brain stops needing to forecast — the outcomes are already determined. The bracing leaves because the source of the bracing leaves.
+
+Two sentences. Repeatable. Mechanical. The structure produces the result. The directive doesn't require willpower. It requires a one-time setup that runs underneath everything afterward.
+
+Free for 7 days. $14.99/mo or $129/yr after.`,
+  },
+
+  '24|Sat': {
+    // R29 i-am-able · reel
+    ig: `If you have inconsistent income, here's the identity.
+
+I am able to pay down debt. Even on slow months.
+I am able to save. Without second-guessing.
+I am able.
+
+That's the new identity. The structure produces it.
+
+Free for 7 days. Link in bio.
+
+#variableincome #1099life #freelancing #moneymindset #identity`,
+
+    tt: `I am able to pay down debt.
+
+I am able to save.
+
+I am able.
+
+becomeable.app
+
+#freelancetok #1099 #moneymindset`,
+
+    li: `I am able. The full identity stack, in order.
+
+I am able to pay down debt. Even on slow months. The reserve covers minimums during dry stretches. Debt payments don't reset because of income volatility. Progress accrues continuously.
+
+I am able to save. Without second-guessing. Savings is automated as a percentage of every deposit. The decision was made once. The routing executes without your involvement. The second-guessing that burns most savings goals doesn't have a hook.
+
+I am able. Period. The "able" identity is what sits underneath all the specific capabilities. Once the structure is in place, the user is genuinely able to do the things that previously felt impossible. Not because they got more disciplined. Because the structure removed the obstacles that disguised themselves as discipline failures.
+
+The identity follows the structure. "Unable" was the felt experience of running variable income through paycheck-shaped tools. "Able" is the felt experience of running variable income through tools built for it.
+
+Free for 7 days. $14.99/mo or $129/yr after.`,
+  },
+
+  '24|Sun': {
+    // B40 outcome-cost-of-waiting · brandscript
+    ig: `If you have variable income, here's the math you've been ignoring.
+
+Every month you wait is another $500 to $1,000 gone.
+
+The wait isn't free. It's the most expensive option available. The cost compounds.
+
+Free for 7 days. Link in bio.
+
+#variableincome #1099life #freelancing #budgeting #moneymindset`,
+
+    tt: `Every month you wait.
+
+Another $500-$1,000 gone.
+
+becomeable.app
+
+#freelancetok #1099 #variableincome`,
+
+    li: `Every month you wait is another $500 to $1,000 gone.
+
+That's the conservative leak rate for variable-income earners running without structure. The full leak is often higher — closer to $1,000-$2,000 monthly — but $500-$1,000 is the floor.
+
+The wait isn't neutral. It's an active monthly cost. The dollars don't stay put while you decide whether to set up a system. They leak — into subscription drift, mixed-bucket dollars, small purchases, undifferentiated spending. Every month of waiting is dollars that don't come back.
+
+The compound math: six months of waiting equals $3,000-$6,000. One year is $6,000-$12,000. Three years is $18,000-$36,000. Five years is the price of a meaningful asset.
+
+The cost of starting is bounded. One hour, one tool, done. The cost of waiting is unbounded — it accrues every month indefinitely. The math is unambiguous. The hesitation is psychological, not financial.
+
+Free for 7 days. $14.99/mo or $129/yr after.`,
+  },
+
+  // ─────────────────────────────────────────────────────────
+  // W25 — Finale · pricing + close
+  // ─────────────────────────────────────────────────────────
+
+  '25|Mon': {
+    // 08 calm-feature · single
+    ig: `If you're a freelancer, here's the design philosophy.
+
+Calm is a feature. Not a side effect.
+
+Most fintech optimizes for engagement. Able optimizes for calm. The fewer minutes you spend in it, the better it's doing its job.
+
+Free for 7 days. Link in bio.
+
+#freelancing #1099life #variableincome #moneymindset #personalfinance`,
+
+    tt: `Calm is a feature.
+
+Not a side effect.
+
+becomeable.app
+
+#freelancetok #1099 #moneymindset`,
+
+    li: `Calm is a feature. Not a side effect.
+
+That's the design philosophy in five words. Most fintech apps optimize for engagement — streaks, notifications, gamified goals, "insights" that drive opens. The underlying business model rewards engagement. Engagement is the product.
+
+Able optimizes for calm. The point is for you to open it less, not more. Open it once when a deposit clears, watch the split happen, close it. That's the loop. The fewer minutes you spend in the app, the better the app is doing its job.
+
+The reason this is the right pattern for variable income specifically: the income condition is already cognitively expensive. Wondering whether the tax bucket has the right amount, whether bills will clear, whether a slow month is going to break something — all of that is already burning attention. The right tool reduces attention spent on money, not increases it.
+
+Calm isn't a side effect of the system working. It's the system's primary output. The bucket math, the auto-splits, the boring reliable execution — all of it produces calm by design. The features are calm-producing. Same money, different felt experience.
+
+Free for 7 days. $14.99/mo or $129/yr after.`,
+  },
+
+  '25|Tue': {
+    // 20 pricing · single
+    ig: `If you're considering Able, here's the pricing.
+
+$14.99 a month. Or $129 a year. Save $50.
+
+7-day free trial either way. Card required at signup, no charge during the trial. Cancel anytime.
+
+Free for 7 days. Link in bio.
+
+#1099life #freelancing #variableincome #budgeting #pricing`,
+
+    tt: `$14.99 a month.
+$129 a year. Save $50.
+
+Free for 7 days.
+
+becomeable.app
+
+#freelancetok #1099 #variableincome`,
+
+    li: `Pricing for Able, plainly written.
+
+Monthly: $14.99 a month. Cancel anytime.
+
+Annual: $129 for the year. Saves $50 versus monthly. Break-even is around month nine.
+
+Free for 7 days at signup, either plan. Card required at signup. No charge during the trial window. Cancel anytime in the trial with zero charge. The card requirement is there to keep bot signups out, not to slip in a surprise charge.
+
+Most variable-income earners go monthly first to confirm the system fits their actual income pattern. After two or three months, the ones who like it switch to annual to save the $50. That's a sensible path.
+
+The pricing is bounded enough that anyone seeing meaningful improvement in their tax bucket alone will recoup it. The leak that gets closed by routing every deposit pays for the subscription many times over within the first quarter for most users.
+
+Free for 7 days. $14.99/mo or $129/yr after.`,
+  },
+
+  '25|Wed': {
+    // 48 two-income-households · single
+    ig: `If you're single-income freelance, here's the gap.
+
+Most personal finance was built for two-income households. Yours isn't one.
+
+The advice that assumes a partner's stable W-2 doesn't transfer to single freelance income. The math is meaningfully different.
+
+Free for 7 days. Link in bio.
+
+#freelancing #1099life #variableincome #singleincome #budgeting`,
+
+    tt: `Most personal finance was built for two-income households.
+
+Yours isn't one.
+
+becomeable.app
+
+#freelancetok #1099 #variableincome`,
+
+    li: `Most personal finance advice was built for two-income households. Yours isn't one.
+
+That's a gap most single-income freelancers don't see at first. The standard finance literature implicitly assumes two earners. One earns regular W-2 income with benefits. The other earns variable or part-time income. The combination smooths out volatility.
+
+Single-income freelance breaks this assumption. There's no second income smoothing the variable. There's no employer-provided health insurance. There's no spouse's 401k matching. The full structural risk falls on one income stream.
+
+The implications are different for several core decisions. The reserve has to be bigger because there's no fallback income. Health insurance is a personal expense, not a benefit. Retirement contributions have to come from the same income stream that funds living expenses. Slow months don't get covered by a partner's paycheck.
+
+The variable-income financial framework adjusts for this. Larger reserve targets. Health insurance treated as a Floor expense, not a discretionary one. Retirement automated as a percentage of every deposit. Each adjustment is small. Together they describe a financial setup that survives single-income variable income.
+
+Free for 7 days. $14.99/mo or $129/yr after.`,
+  },
+
+  '25|Thu': {
+    // 52 pay-yourself-wrong · single
+    ig: `If you're an entrepreneur, here's the trap.
+
+Pay yourself last. Pay yourself wrong.
+
+Most entrepreneurs run a job that pays everyone except them. The fix is mechanical: a percentage of every deposit, routed to personal pay before discretionary business spending.
+
+Free for 7 days. Link in bio.
+
+#entrepreneur #smallbusiness #1099life #freelancing #moneymindset`,
+
+    tt: `Pay yourself last.
+
+Pay yourself wrong.
+
+becomeable.app
+
+#freelancetok #1099 #entrepreneur`,
+
+    li: `Pay yourself last. Pay yourself wrong.
+
+That's the trap most variable-income entrepreneurs fall into. The work pays clients, contractors, software vendors, the platform, the IRS. Whatever's left at the end is what the entrepreneur takes home. Some months "what's left" is fine. Some months it isn't. Many months it's nothing.
+
+The "pay yourself last" pattern feels responsible. It feels like the right priority — business obligations first, personal extraction second. In practice, it means the business never pays the owner reliably. The owner becomes the unfunded line item.
+
+The fix is structural. Pay yourself first means: a personal paycheck routes from the business to the owner before discretionary business spending happens. The amount can be small. 5% of every deposit beats 0% by infinity. The percentage matters less than the routing.
+
+A different account is critical. Owner pay sitting in the operating account is owner pay about to be spent on operating expenses. Different account, different mental category, different actual outcome.
+
+Pay yourself first. Pay yourself right.
+
+Free for 7 days. $14.99/mo or $129/yr after.`,
+  },
+
+  '25|Fri': {
+    // 53 cpa-didnt-mention · single
+    links: 'becomeable.app/taxes/self-employment-tax-deductions/',
+    ig: `If you're 1099, here's the SEP-IRA hint.
+
+The retirement plan your CPA didn't mention.
+
+SEP-IRA contributions are fully deductible up to ~25% of net SE income. Big deduction. Most freelancers underuse it.
+
+Free for 7 days. Link in bio.
+
+#1099life #freelancing #selfemployed #retirement #taxes`,
+
+    tt: `The retirement plan your CPA didn't mention.
+
+SEP-IRA. ~25% of net SE income.
+Fully deductible.
+
+becomeable.app/taxes/self-employment-tax-deductions/
+
+#freelancetok #1099 #taxtok`,
+
+    li: `The retirement plan your CPA didn't mention. Specifically: SEP-IRA.
+
+A SEP-IRA (Simplified Employee Pension) is a retirement account designed for self-employed earners. Contributions are fully deductible up to roughly 25% of net self-employment income. The deduction comes off above-the-line, which compounds into other tax-bracket effects.
+
+For high-earning freelancers, the SEP-IRA is the biggest single tax-deferral lever available. On $80,000 of net SE income, you can contribute up to ~$20,000 and deduct it fully. That deduction reduces taxable income, often by enough to drop you into a lower bracket.
+
+Why CPAs sometimes don't mention it: SEP-IRAs have to be set up before the tax filing deadline of the year you want to contribute for. Many freelancers learn about them too late to use them retroactively. Other CPAs assume the client has another retirement vehicle and don't surface it as an option.
+
+The Solo 401k is a similar option with somewhat higher contribution limits and a Roth option, but more administrative overhead.
+
+The structural lever: route a percentage of every deposit to a SEP-IRA bucket throughout the year. By December, the bucket has the contribution amount. The funding happens gradually, the deduction is the same.
+
+Free for 7 days. $14.99/mo or $129/yr after.`,
+  },
+
+  '25|Sat': {
+    // 54 smallest-month · single
+    ig: `If you're a freelancer, here's the planning question.
+
+What's the smallest month you could survive?
+
+That number is your Floor. It's the most useful number in variable-income financial planning. Below it, the system breaks. Above it, you have options.
+
+Free for 7 days. Link in bio.
+
+#freelancing #1099life #variableincome #budgeting #moneymindset`,
+
+    tt: `What's the smallest month you could survive?
+
+That number is your Floor.
+
+becomeable.app
+
+#freelancetok #1099 #variableincome`,
+
+    li: `What's the smallest month you could survive?
+
+That question, taken seriously, produces the most useful number in variable-income financial planning: your Floor. The Floor is the dollar amount per month that covers the genuinely non-negotiable expenses. Rent, utilities, food, insurance, debt minimums, transportation. The expenses that, if unfunded, the system breaks.
+
+Most variable-income earners have never calculated their Floor explicitly. The number sits implicitly behind every cash-flow worry, but it's never written down. Writing it down clarifies a lot.
+
+Once the Floor is known, the reserve target follows directly. A reserve big enough to cover the Floor for 3 months is the difference between routine slow stretches and survival events. A reserve big enough for 6 months is comfort. A reserve big enough for 12 months is professional flexibility — the freedom to say no to bad clients without putting yourself at risk.
+
+Most freelancers can identify their Floor in 20 minutes. The number is usually smaller than the felt sense of monthly expense. The felt sense includes a lot of discretionary that isn't actually Floor.
+
+What's the smallest month you could survive? Calculate it. Build the reserve to cover three of them. The rest of the financial framework follows from there.
+
+Free for 7 days. $14.99/mo or $129/yr after.`,
+  },
+
+  '25|Sun': {
+    // B38 identity-become-able · brandscript
+    ig: `If you have inconsistent income, here's the bookend.
+
+Become able.
+
+Not "be better." Not "try harder." Become able. The identity shift that comes with running variable income through tools built for it.
+
+Free for 7 days. Link in bio.
+
+#variableincome #1099life #freelancing #moneymindset #becomeable`,
+
+    tt: `Become able.
+
+becomeable.app
+
+#freelancetok #1099 #moneymindset`,
+
+    li: `Become able. The identity shift that's possible when variable income runs through tools built for it.
+
+"Become able" is the bookend to the variable-income journey. The starting state, for most users, is some version of "unable" — unable to budget, unable to save, unable to plan, unable to feel calm about money. The unable state isn't a personal failing. It's the predictable outcome of running variable income through paycheck-shaped tools.
+
+The transition: the structure replaces the discipline. The tax bucket fills itself. The reserve absorbs lumpiness. The bills get pre-funded. The savings routes automatically. None of it requires ongoing willpower. The user runs the setup once, then watches the system work.
+
+The identity shift follows: "I am able to budget inconsistent income. I am able to pay down debt, even on slow months. I am able to save without second-guessing. I am able."
+
+Become able. The structure produces the identity. The identity wasn't earned through effort. It was earned through the right tool.
+
+Free for 7 days. $14.99/mo or $129/yr after.`,
+  },
+
 };
