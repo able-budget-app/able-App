@@ -1,33 +1,29 @@
 {
-  "name": "Able social — daily cross-post (IG/TikTok/LinkedIn)",
+  "name": "Able social — daily cross-post (Phase 4 v1)",
   "flow": [
     {
       "id": 1,
-      "module": "google-sheets:searchRows",
+      "module": "google-sheets:filterRows",
       "version": 2,
-      "parameters": {
-        "__IMTCONN__": "<<connection-id-for-google-sheets>>"
-      },
+      "parameters": { "__IMTCONN__": 7727156 },
       "mapper": {
-        "mode": "select",
-        "spreadsheetId": "1DnQXWKcbGLMHvzxjk9yjQKDhzOGTm9Wph27ly7tHNlA",
-        "sheetId": "1. Master Sheet Generation",
-        "includesHeaders": true,
+        "from": "drive",
+        "limit": "1",
         "filter": [
           [
-            {
-              "a": "post_date",
-              "o": "text:equal",
-              "b": "{{formatDate(now; \"YYYY-MM-DD\"; \"America/Denver\")}}"
-            },
-            {
-              "a": "status",
-              "o": "text:notequal",
-              "b": "Posted"
-            }
+            { "a": "C", "b": "{{formatDate(now; \"YYYY-MM-DD\")}}", "o": "text:equal" },
+            { "a": "V", "b": "Posted",                              "o": "text:notequal" }
           ]
         ],
-        "limit": "1"
+        "orderBy": "__ROW_NUMBER__",
+        "sheetId": "1. Master Sheet Generation",
+        "fieldType": "string",
+        "sortOrder": "asc",
+        "spreadsheetId": "1DnQXWKcbGLMHvzxjk9yjQKDhzOGTm9Wph27ly7tHNlA",
+        "tableFirstRow": "A1:V1",
+        "includesHeaders": true,
+        "valueRenderOption": "FORMATTED_VALUE",
+        "dateTimeRenderOption": "FORMATTED_STRING"
       },
       "metadata": {
         "designer": { "x": 0, "y": 0 }
@@ -35,155 +31,129 @@
     },
     {
       "id": 2,
-      "module": "google-drive:searchFiles",
-      "version": 4,
-      "parameters": {
-        "__IMTCONN__": "<<connection-id-for-google-drive>>"
-      },
-      "mapper": {
-        "select": "fromAll",
-        "query": "name = '{{1.filename}}' and trashed = false",
-        "spaces": "drive",
-        "orderBy": "createdTime desc",
-        "pageSize": "1"
-      },
-      "metadata": {
-        "designer": { "x": 300, "y": 0 }
-      }
-    },
-    {
-      "id": 3,
       "module": "builtin:BasicRouter",
       "version": 1,
       "mapper": null,
       "metadata": {
-        "designer": { "x": 600, "y": 0 }
+        "designer": { "x": 300, "y": 0 }
       },
       "routes": [
         {
           "flow": [
             {
-              "id": 4,
+              "id": 3,
               "module": "instagram-business:CreatePostPhoto",
               "version": 1,
-              "parameters": {
-                "__IMTCONN__": "<<connection-id-for-instagram-business>>"
-              },
+              "parameters": { "__IMTCONN__": 7816528 },
               "filter": {
-                "name": "format == single|brandscript",
+                "name": "Image formats",
                 "conditions": [
-                  [
-                    {
-                      "a": "{{1.format}}",
-                      "o": "text:equal",
-                      "b": "single"
-                    }
-                  ],
-                  [
-                    {
-                      "a": "{{1.format}}",
-                      "o": "text:equal",
-                      "b": "brandscript"
-                    }
-                  ]
+                  [{ "a": "{{1.`D`}}", "o": "text:equal", "b": "single" }],
+                  [{ "a": "{{1.`D`}}", "o": "text:equal", "b": "brandscript" }],
+                  [{ "a": "{{1.`D`}}", "o": "text:equal", "b": "carousel" }]
                 ]
               },
               "mapper": {
-                "image_url": "{{2.webContentLink}}",
-                "caption": "{{1.caption_ig}}",
-                "ig_user_id": "<<set-from-IG-business-account-id>>"
+                "caption": "{{1.`N`}}",
+                "accountId": "",
+                "image_url": ""
               },
-              "metadata": { "designer": { "x": 900, "y": -300 } }
+              "metadata": {
+                "designer": { "x": 600, "y": -300 }
+              }
             },
             {
-              "id": 5,
+              "id": 4,
               "module": "instagram-business:CreateAReelPost",
               "version": 1,
-              "parameters": {
-                "__IMTCONN__": "<<connection-id-for-instagram-business>>"
-              },
+              "parameters": { "__IMTCONN__": 7816528 },
               "filter": {
-                "name": "format == reel",
+                "name": "Reel format",
                 "conditions": [
-                  [
-                    {
-                      "a": "{{1.format}}",
-                      "o": "text:equal",
-                      "b": "reel"
-                    }
-                  ]
+                  [{ "a": "{{1.`D`}}", "o": "text:equal", "b": "reel" }]
                 ]
               },
               "mapper": {
-                "video_url": "{{2.webContentLink}}",
-                "caption": "{{1.caption_ig}}",
-                "ig_user_id": "<<set-from-IG-business-account-id>>",
+                "caption": "{{1.`N`}}",
+                "accountId": "",
+                "video_url": "",
                 "share_to_feed": true
               },
-              "metadata": { "designer": { "x": 900, "y": -150 } }
-            },
-            {
-              "id": 6,
-              "module": "instagram-business:CreateCarouselPhoto",
-              "version": 1,
-              "parameters": {
-                "__IMTCONN__": "<<connection-id-for-instagram-business>>"
-              },
-              "filter": {
-                "name": "format == carousel",
-                "conditions": [
-                  [
-                    {
-                      "a": "{{1.format}}",
-                      "o": "text:equal",
-                      "b": "carousel"
-                    }
-                  ]
-                ]
-              },
-              "mapper": {
-                "ig_user_id": "<<set-from-IG-business-account-id>>",
-                "caption": "{{1.caption_ig}}",
-                "media": [
-                  {
-                    "image_url": "<<resolve-each-slide-fileId-via-Drive-list-folder>>"
-                  }
-                ]
-              },
-              "metadata": { "designer": { "x": 900, "y": 0 } }
+              "metadata": {
+                "designer": { "x": 600, "y": -150 }
+              }
             }
           ]
         },
         {
           "flow": [
             {
-              "id": 7,
-              "module": "make-nodes-late:addTiktokPost",
-              "version": 1,
-              "parameters": {
-                "__IMTCONN__": "<<connection-id-for-tiktok>>"
-              },
+              "id": 5,
+              "module": "facebook-pages:CreatePostWithPhotos",
+              "version": 6,
+              "parameters": { "__IMTCONN__": 7816528 },
               "filter": {
-                "name": "format == reel (TikTok video only in v1)",
+                "name": "Image formats (FB)",
                 "conditions": [
-                  [
-                    {
-                      "a": "{{1.format}}",
-                      "o": "text:equal",
-                      "b": "reel"
-                    }
-                  ]
+                  [{ "a": "{{1.`D`}}", "o": "text:notequal", "b": "reel" }]
                 ]
               },
               "mapper": {
-                "video_url": "{{2.webContentLink}}",
-                "caption": "{{1.caption_tt}}",
-                "privacy": "PUBLIC_TO_EVERYONE",
-                "disable_comments": false,
-                "disable_duet": false,
-                "disable_stitch": false
+                "page_id": "",
+                "message": "{{1.`N`}}",
+                "photos": [
+                  { "type": "url", "url": "" }
+                ]
               },
-              "metadata": { "designer": { "x": 900, "y": 150 } }
+              "metadata": {
+                "designer": { "x": 600, "y": 100 }
+              }
+            }
+          ]
+        },
+        {
+          "flow": [
+            {
+              "id": 6,
+              "module": "linkedin:CreateCompanyImagePost",
+              "version": 2,
+              "parameters": { "__IMTCONN__": 8569387 },
+              "filter": {
+                "name": "Image formats (LinkedIn)",
+                "conditions": [
+                  [{ "a": "{{1.`D`}}", "o": "text:notequal", "b": "reel" }]
+                ]
+              },
+              "mapper": {
+                "company_id": "",
+                "text": "{{1.`P`}}",
+                "image_url": "",
+                "visibility": "PUBLIC"
+              },
+              "metadata": {
+                "designer": { "x": 600, "y": 300 }
+              }
+            },
+            {
+              "id": 7,
+              "module": "linkedin:createOrganizationVideoPost",
+              "version": 2,
+              "parameters": { "__IMTCONN__": 8569387 },
+              "filter": {
+                "name": "Reel format (LinkedIn)",
+                "conditions": [
+                  [{ "a": "{{1.`D`}}", "o": "text:equal", "b": "reel" }]
+                ]
+              },
+              "mapper": {
+                "company_id": "",
+                "text": "{{1.`P`}}",
+                "video_url": "",
+                "visibility": "PUBLIC"
+              },
+              "metadata": {
+                "designer": { "x": 600, "y": 450 }
+              }
             }
           ]
         },
@@ -191,81 +161,28 @@
           "flow": [
             {
               "id": 8,
-              "module": "linkedin:CreateCompanyImagePost",
+              "module": "google-sheets:updateRow",
               "version": 2,
-              "parameters": {
-                "__IMTCONN__": "<<connection-id-for-linkedin>>"
-              },
-              "filter": {
-                "name": "format != reel (image-style posts)",
-                "conditions": [
-                  [
-                    {
-                      "a": "{{1.format}}",
-                      "o": "text:notequal",
-                      "b": "reel"
-                    }
-                  ]
-                ]
-              },
+              "parameters": { "__IMTCONN__": 7727156 },
               "mapper": {
-                "company_id": "<<set-from-LinkedIn-company-page-id>>",
-                "text": "{{1.caption_li}}",
-                "image_url": "{{2.webContentLink}}",
-                "visibility": "PUBLIC"
+                "from": "drive",
+                "spreadsheetId": "1DnQXWKcbGLMHvzxjk9yjQKDhzOGTm9Wph27ly7tHNlA",
+                "sheetId": "1. Master Sheet Generation",
+                "rowNumber": "{{1.__ROW_NUMBER__}}",
+                "values": {
+                  "21": "Posted at {{formatDate(now; \"YYYY-MM-DD HH:mm\")}}"
+                },
+                "tableFirstRow": "A1:V1",
+                "includesHeaders": true,
+                "valueInputOption": "USER_ENTERED"
               },
-              "metadata": { "designer": { "x": 900, "y": 300 } }
-            },
-            {
-              "id": 9,
-              "module": "linkedin:createOrganizationVideoPost",
-              "version": 2,
-              "parameters": {
-                "__IMTCONN__": "<<connection-id-for-linkedin>>"
-              },
-              "filter": {
-                "name": "format == reel (video on LinkedIn)",
-                "conditions": [
-                  [
-                    {
-                      "a": "{{1.format}}",
-                      "o": "text:equal",
-                      "b": "reel"
-                    }
-                  ]
-                ]
-              },
-              "mapper": {
-                "company_id": "<<set-from-LinkedIn-company-page-id>>",
-                "text": "{{1.caption_li}}",
-                "video_url": "{{2.webContentLink}}",
-                "visibility": "PUBLIC"
-              },
-              "metadata": { "designer": { "x": 900, "y": 450 } }
+              "metadata": {
+                "designer": { "x": 600, "y": 600 }
+              }
             }
           ]
         }
       ]
-    },
-    {
-      "id": 10,
-      "module": "google-sheets:updateRow",
-      "version": 2,
-      "parameters": {
-        "__IMTCONN__": "<<connection-id-for-google-sheets>>"
-      },
-      "mapper": {
-        "spreadsheetId": "1DnQXWKcbGLMHvzxjk9yjQKDhzOGTm9Wph27ly7tHNlA",
-        "sheetId": "1. Master Sheet Generation",
-        "rowNumber": "{{1.__ROW_NUMBER__}}",
-        "values": {
-          "status": "Posted",
-          "ig_url": "{{ifempty(4.permalink; ifempty(5.permalink; 6.permalink))}}",
-          "tt_url": "{{ifempty(7.share_url; \"skipped: non-video\")}}",
-          "li_url": "{{ifempty(8.activity_urn; 9.activity_urn)}}"
-        }
-      },
-      "metadata": { "designer": { "x": 1200, "y": 0 } }
     }
   ],
   "metadata": {
@@ -284,10 +201,5 @@
     "designer": {
       "orphans": []
     }
-  },
-  "scheduling": {
-    "type": "cron",
-    "cron": "0 15 * * *",
-    "interval": 86400
   }
 }
