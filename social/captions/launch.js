@@ -3800,4 +3800,889 @@ The "feels impossible" is a category mismatch, not a personal failure. The feeli
 Free for 7 days. $14.99/mo or $129/yr after.`,
   },
 
+  // ─────────────────────────────────────────────────────────
+  // W17 — Tax · deeper (1099-NEC + 1099-K)
+  // ─────────────────────────────────────────────────────────
+
+  '17|Mon': {
+    // 32 irs-takes · single
+    links: 'becomeable.app/taxes/how-much-to-set-aside/',
+    ig: `If you're 1099, here's the math.
+
+A $4,000 deposit feels like $4,000.
+
+$1,200 belongs to the IRS.
+
+The 30% rule isn't tax advice. It's a structural reality. Move it the moment the deposit clears.
+
+Free for 7 days. Link in bio.
+
+#1099life #freelancing #selfemployed #taxes #variableincome`,
+
+    tt: `A $4,000 deposit feels like $4,000.
+
+$1,200 belongs to the IRS.
+
+The 30% rule.
+
+becomeable.app/taxes/how-much-to-set-aside/
+
+#freelancetok #1099 #taxtok`,
+
+    li: `A $4,000 deposit feels like $4,000. $1,200 of it belongs to the IRS.
+
+That sentence captures the most common 1099 financial mistake. The deposit clears, the brain registers the full amount as available money, and discretionary decisions get made against the pre-tax balance. By the time April arrives, the tax money has been spent in a thousand small unmemorable ways.
+
+The 30% rule is structural, not advisory. It's the floor for most 1099 earners. Self-employment tax is 15.3% by itself. Federal income tax is another 12-22% depending on bracket. State tax adds 0-10%. Compounded, 30% is conservative for most. Higher earners often need 35-40%.
+
+The fix is mechanical. Route 30% to a separate account the moment a deposit clears. Don't let it sit in checking even briefly. Don't trust yourself to remember it later. The money was never yours. Treat it as if the IRS sent the deposit pre-deducted. Spending what's left feels different than spending the whole amount.
+
+April becomes paperwork instead of a reckoning. The bucket that's been filling all year is what pays the bill.
+
+Free for 7 days. $14.99/mo or $129/yr after.`,
+  },
+
+  '17|Tue': {
+    // R7 freezing-flowing · reel
+    ig: `If you're a freelancer, here's the metaphor.
+
+You're not overspending. You're freezing.
+
+Money sits. Money leaks. Direct it, or it leaks. Same money, more work.
+
+Free for 7 days. Link in bio.
+
+#freelancing #1099life #variableincome #budgeting #moneymindset`,
+
+    tt: `Not overspending.
+
+Freezing.
+
+Money sits. Money leaks.
+
+becomeable.app
+
+#freelancetok #1099 #moneymindset`,
+
+    li: `You're not overspending. You're freezing.
+
+The freezing metaphor is the most useful diagnostic for variable-income earners. Money lands in checking. The user knows, abstractly, that some of it is tax money and some is bill money and some should be saved. They don't move it. They leave it sitting, treating it as a single ambiguous pile.
+
+The pile doesn't stay full. It leaks. Subscriptions renew. Small purchases happen. A nice meal here, a small impulse there. By Day 30, the pile is materially smaller, and the user can't fully account for where it went.
+
+The diagnosis is precise: not overspending, freezing. The leak isn't from spending too much. It's from money sitting undirected. Energy without a destination flows wherever gravity sends it. Money without a job behaves the same way.
+
+The fix is direction. Every dollar gets a job the moment it lands. Tax bucket. Bills. Reserve. Debt. Free spending. Five jobs, assigned at deposit, before any spending decisions can pull from the pool.
+
+Same money. More work, in the structural sense — each dollar working in its assigned role instead of dispersing into general spending.
+
+Free for 7 days. $14.99/mo or $129/yr after.`,
+  },
+
+  '17|Wed': {
+    // C28 1099-nec · carousel
+    links: 'becomeable.app/taxes/1099-nec-explained/',
+    ig: `If you do 1099 work, here's the 1099-NEC explained. (Swipe.)
+
+Issued by clients, not platforms. Threshold: $600. Didn't get one? The IRS still did.
+
+Track every payment. Tie out at year-end.
+
+Free for 7 days. Link in bio.
+
+#1099life #freelancing #1099nec #taxes #selfemployed`,
+
+    tt: `What is a 1099-NEC?
+
+Issued by clients (not platforms).
+Threshold: $600.
+Didn't get one? IRS still did.
+
+becomeable.app/taxes/1099-nec-explained/
+
+#freelancetok #1099 #taxtok`,
+
+    li: `What is a 1099-NEC, in plain language.
+
+The 1099-NEC is the form clients send when they pay you $600 or more during a tax year for services. NEC stands for "Non-Employee Compensation." It replaced the older 1099-MISC for most freelance work in 2020.
+
+Issued by clients, not platforms. If you invoice a business directly and they pay you, that's NEC territory. If you're paid through a platform (Stripe, Etsy, Upwork, PayPal), that's the 1099-K, which is different.
+
+Threshold: $600 per client per year. Below that, the client isn't required to issue the form. Above that, they should. In practice, some don't. Doesn't change your obligation. The IRS still expects you to report the income.
+
+Didn't get a 1099-NEC you expected? Track the payments yourself. Your records are the source of truth, not the forms. Tie out at year-end: total revenue per client, regardless of whether forms arrived.
+
+The structural fix: log every income event as it happens. Don't wait for forms in January. By the time forms arrive, the year's records should already match what's reported. April becomes confirmation, not reconstruction.
+
+Free for 7 days. $14.99/mo or $129/yr after.`,
+  },
+
+  '17|Thu': {
+    // 24 isnt-yours · single
+    ig: `If you're 1099, here's the principle.
+
+If 30% isn't moved, it isn't yours.
+
+Tax money sitting in checking is tax money about to be spent. The act of moving it the second the deposit clears is the difference between a tax bucket and an April crisis.
+
+Free for 7 days. Link in bio.
+
+#1099life #freelancing #selfemployed #taxes #variableincome`,
+
+    tt: `If 30% isn't moved.
+
+It isn't yours.
+
+becomeable.app
+
+#freelancetok #1099 #taxtok`,
+
+    li: `If 30% isn't moved, it isn't yours.
+
+That sentence is the entire principle of variable-income tax management. The IRS gets paid regardless. The only variable is whether you fund the obligation gradually as deposits land or all at once in April.
+
+Tax money sitting in checking is functionally identical to tax money about to be spent. The brain doesn't easily distinguish between earmarked dollars and general dollars when both are visible in the same account. Spending decisions pull from the visible balance. By April, the bill arrives, the bucket has nothing in it, and the money has to come from somewhere else.
+
+The fix is mechanical movement. Route 30% to a separate account the moment a deposit clears. Don't allow it to sit in checking, even for a few hours. Don't trust attention or memory to keep the math straight. The dollar count is the only thing that matters at year-end.
+
+Once the routing is automatic, the rest of the system relaxes. The remaining 70% becomes the actual amount available for bills, reserve, debt, and free spending. Decisions get made against an accurate balance instead of a misleading one.
+
+Free for 7 days. $14.99/mo or $129/yr after.`,
+  },
+
+  '17|Fri': {
+    // C29 1099-k · carousel
+    links: 'becomeable.app/taxes/1099-k-explained/',
+    ig: `If you sell online, here's the 1099-K. (Swipe.)
+
+Stripe. PayPal. Venmo. Etsy. All issue them. The number shown is gross, not net.
+
+Reconcile fees, returns, refunds. Pay tax on net profit.
+
+Free for 7 days. Link in bio.
+
+#1099k #ecommerce #etsyseller #onlineseller #1099life`,
+
+    tt: `What is a 1099-K?
+
+Stripe. PayPal. Venmo. Etsy.
+Shows the gross.
+Reconcile fees, returns, refunds.
+
+becomeable.app/taxes/1099-k-explained/
+
+#freelancetok #1099 #taxtok`,
+
+    li: `What is a 1099-K, in plain language.
+
+The 1099-K is the form payment processors send when they handle money for you. Stripe, PayPal, Venmo, Square, Etsy, eBay, Amazon — anyone who processes payments and reports them to the IRS.
+
+The number shown on the 1099-K is the gross — the total dollars that flowed through the platform on your behalf. Not net. Not after fees. Not after returns or refunds. The gross.
+
+This trips up new sellers consistently. The platform reports $50,000. The seller's actual net after Etsy fees, shipping costs, returns, and refunds was $32,000. Paying tax on $50,000 is overpayment by thousands of dollars.
+
+The fix is reconciliation. Keep your own books separately from what the platform reports. Track gross sales, platform fees, shipping costs paid, refunds issued, returns processed. Net profit is gross minus all of those. Tax is owed on net, not on gross.
+
+By 2026, the 1099-K threshold drops to $600 across all platforms. Many more sellers will start receiving them. Reconciliation becomes critical. The 1099-K is informational. Your books are the source of truth.
+
+Free for 7 days. $14.99/mo or $129/yr after.`,
+  },
+
+  '17|Sun': {
+    // B12 villain-never-taught · brandscript
+    ig: `If you're 1099, here's the diagnosis.
+
+You were never taught how to budget a paycheck that doesn't follow a schedule.
+
+Not your fault. The school system, the personal finance industry, your parents — none of them had the vocabulary for this.
+
+Free for 7 days. Link in bio.
+
+#1099life #freelancing #selfemployed #variableincome #moneymindset`,
+
+    tt: `Never taught how to budget a paycheck that doesn't follow a schedule.
+
+Not your fault.
+
+becomeable.app
+
+#freelancetok #1099 #moneymindset`,
+
+    li: `You were never taught how to budget a paycheck that doesn't follow a schedule.
+
+That sentence describes a real gap in financial education. The K-12 personal finance curriculum, where it exists, assumes a future of regular paychecks. The college-level personal finance courses make the same assumption. Most parents who teach money concepts at home learned in a W-2 world and pass on W-2 frameworks.
+
+Variable income wasn't a category most people prepared for. The standard playbook — "save 20% of every paycheck, build a 3-6 month emergency fund, max your 401k" — assumes a paycheck. None of those instructions translate cleanly to income that arrives in lumps on no schedule.
+
+The result is a generation of variable-income earners who feel financially illiterate, when actually they were taught literacy in a different language. The frameworks they learned don't apply. The frameworks they need weren't taught.
+
+The fix is learning the variable-income toolkit. Split-first allocation. Percentage-based bucket funding. The smoothing reserve. Tax-on-every-deposit. None of it is hard. It's just not what you were taught. Once it's learned, the same income behaves predictably.
+
+Free for 7 days. $14.99/mo or $129/yr after.`,
+  },
+
+  // ─────────────────────────────────────────────────────────
+  // W18 — Habits · pay yourself
+  // ─────────────────────────────────────────────────────────
+
+  '18|Mon': {
+    // 03 fewer-leaks · single
+    ig: `If you're a freelancer, here's the reframe.
+
+You don't need more income. You need fewer leaks.
+
+Most variable-income earners assume the answer is earning more. Earning more without closing leaks just means more dollars to leak. Same percentage gone, larger denominator.
+
+Free for 7 days. Link in bio.
+
+#freelancing #1099life #variableincome #budgeting #freelancelife`,
+
+    tt: `You don't need more income.
+
+You need fewer leaks.
+
+becomeable.app
+
+#freelancetok #1099 #variableincome`,
+
+    li: `You don't need more income. You need fewer leaks.
+
+Most variable-income earners assume the answer to feeling broke is earning more. The intuition is straightforward: bigger deposits, more breathing room, less stress. The intuition is wrong, or at least incomplete.
+
+Without a system underneath, earning more produces a larger denominator for the same percentage leak. If 25% of every deposit gets reabsorbed into general spending — small purchases, drift, mixed-bucket dollars, undifferentiated cash — then a $4,000 month leaks $1,000 and a $7,000 month leaks $1,750. The leak scales with income.
+
+Closing the leak is more efficient than earning more. A 5% improvement in leak — from 25% down to 20% — recovers $200 on a $4,000 month. Doing the same on a steady annual basis recovers $2,400 a year. That recovery happens at zero additional work hours.
+
+Earn more is good advice eventually. Close the leaks is better advice first. Same effort. Different result.
+
+Free for 7 days. $14.99/mo or $129/yr after.`,
+  },
+
+  '18|Tue': {
+    // R14 cost-of-waiting · reel
+    ig: `If you're a freelancer, here's the math.
+
+The cost of waiting. Per month: $2,000. Six months: $12,000. One year: $24,000.
+
+Not bad with money. A missing system. The math chooses for you.
+
+Free for 7 days. Link in bio.
+
+#freelancing #1099life #variableincome #budgeting #selfemployed`,
+
+    tt: `The cost of waiting.
+
+Per month: $2,000.
+Six months: $12,000.
+One year: $24,000.
+
+becomeable.app
+
+#freelancetok #1099 #variableincome`,
+
+    li: `The cost of waiting, written out as monthly totals.
+
+Per month, an unstructured variable-income earner loses about $2,000 to leaks they can't fully account for. Mixed-bucket dollars, subscription drift, tax money that quietly got spent, bill money reabsorbed.
+
+Six months at that pace is $12,000. The price of a beat-up used car. The price of three months of full-time runway. The price of a meaningful chunk of debt principal.
+
+One year is $24,000. The price of a mid-tier vehicle. The price of a year's worth of retirement contribution at 401k limits. The price of a small business launch.
+
+Three years is $72,000. The price of a down payment on a house in most US markets. The price of a sabbatical. The price of a real cushion.
+
+The waiting math is compound, not punitive. The leak feels small in any single month — that's why it persists. Nothing dramatic forces a fix. Reading the compound number is what forces it.
+
+The fix doesn't require earning more. It requires routing every dollar to a job the moment a deposit clears.
+
+Free for 7 days. $14.99/mo or $129/yr after.`,
+  },
+
+  '18|Wed': {
+    // C10 save-more · carousel
+    ig: `If you have variable income, "save more" isn't a plan. (Swipe.)
+
+It's a wish dressed as advice. Saving requires left over. Variable income rarely has it.
+
+Move savings first. Spend what's left.
+
+Free for 7 days. Link in bio.
+
+#variableincome #1099life #freelancing #budgeting #saving`,
+
+    tt: `"Save more" isn't a plan.
+
+It's a wish dressed as advice.
+
+Move savings first. Spend what's left.
+
+becomeable.app
+
+#freelancetok #1099 #saving`,
+
+    li: `"Save more" isn't a plan. It's a wish dressed as advice.
+
+The reason it doesn't work for variable-income earners specifically: saving requires money left over. Variable income rarely has reliable left-over because the income amount and timing are unpredictable. Some months feel adequate, some don't. By the time "what's left" is calculated, it's often nothing.
+
+The fix is reversing the order. Save first, spend what's left. The standard finance industry call this "pay yourself first," and it's the right idea applied wrong. For variable income, "save first" can't mean a fixed monthly amount, because the income to support a fixed amount isn't guaranteed.
+
+The variable-income version: route a percentage of every deposit to a savings bucket the moment the deposit clears. Not a fixed dollar amount. A percentage. 5% to start. The bucket fills proportional to income. Big months contribute more. Slow months contribute less. The discipline doesn't depend on knowing the month in advance.
+
+Same money. Different order. The order is the entire fix.
+
+Free for 7 days. $14.99/mo or $129/yr after.`,
+  },
+
+  '18|Thu': {
+    // 50 before-you-see-it · single
+    ig: `If you're 1099, here's the trick.
+
+30% of every deposit. Moved before you see it.
+
+Once it's in a separate account, you don't count it as available money. The brain stops weighing it in spending decisions. April stops being a financial event.
+
+Free for 7 days. Link in bio.
+
+#1099life #freelancing #selfemployed #taxes #variableincome`,
+
+    tt: `30% of every deposit.
+
+Moved before you see it.
+
+becomeable.app
+
+#freelancetok #1099 #taxtok`,
+
+    li: `30% of every deposit. Moved before you see it.
+
+That sentence captures the entire mechanical fix for the 1099 tax problem. Not "save 30% for taxes." Not "remember to set aside taxes." Move it. Mechanically. Before the brain registers the deposit as available money.
+
+The phrase "before you see it" is doing real work. The reason most 1099 earners under-fund the tax bucket isn't laziness or ignorance. It's that the brain treats visible balance as available balance. If the full deposit shows up in checking, even briefly, spending decisions get made against that number. The intent to save 30% loses to the cognitive default.
+
+The fix is to make the 30% invisible at the moment of deposit. Either auto-routed by a banking rule, or moved by an app the second the deposit clears, or transferred manually within the first hour. The specific mechanism matters less than the principle: the money is in a different account before any decision-making engages.
+
+Once the 30% is invisible, the remaining 70% becomes the actual operating balance. Decisions made against 70% are accurate. The tax bucket fills itself. April stops being a financial event because the math was already done.
+
+Free for 7 days. $14.99/mo or $129/yr after.`,
+  },
+
+  '18|Fri': {
+    // C36 pay-yourself-first · carousel
+    ig: `If you're an entrepreneur, here's the reframe. (Swipe.)
+
+Most entrepreneurs are their own last priority. You're running a job that pays others. Money follows structure, not hope.
+
+Start with 5%. Beats zero by infinity.
+
+Free for 7 days. Link in bio.
+
+#entrepreneur #smallbusiness #1099life #freelancing #variableincome`,
+
+    tt: `Most entrepreneurs are their own last priority.
+
+You're running a job that pays others.
+
+Start with 5%.
+
+becomeable.app
+
+#entrepreneur #1099 #freelancetok`,
+
+    li: `Pay yourself first. The variable-income entrepreneur version.
+
+Most entrepreneurs are their own last priority. The work pays clients, contractors, software vendors, the brokerage, the platform, the IRS. Whatever's left at the end is what the entrepreneur takes home. Some months "what's left" is fine. Some months it isn't.
+
+The fix is structural. Pay yourself first means: a personal paycheck routes from the business to the owner before discretionary business spending happens. The amount can be small. 5% of every deposit beats 0% by infinity. The percentage is less important than the routing.
+
+The reason this works specifically for variable income: it removes the "wait until the end of the month and see what's left" pattern. By the end of the month, what's left is shaped by every other decision made. Pulling owner pay first means the owner pay is funded against gross income, not net. The other decisions get made against what's left after the owner is paid.
+
+A different account is critical. Owner pay sitting in the operating account is owner pay about to be spent on operating expenses. Different account, different mental category, different actual outcome.
+
+Free for 7 days. $14.99/mo or $129/yr after.`,
+  },
+
+  '18|Sun': {
+    // B27 outcome-stop-check-to-check · brandscript
+    ig: `If you have inconsistent income, here's the outcome.
+
+Stop living unpredictable check to unpredictable check.
+
+That phrase is doing real work. Not paycheck to paycheck — that implies a paycheck. Unpredictable check to unpredictable check captures the actual rhythm.
+
+Free for 7 days. Link in bio.
+
+#variableincome #1099life #freelancing #moneymindset #freelancelife`,
+
+    tt: `Stop living unpredictable check to unpredictable check.
+
+becomeable.app
+
+#freelancetok #1099 #moneymindset`,
+
+    li: `Stop living unpredictable check to unpredictable check.
+
+That phrasing is precise on purpose. Not "paycheck to paycheck" — that idiom implies a paycheck, which variable-income earners often don't have. Unpredictable check to unpredictable check captures the actual experience.
+
+The rhythm: a deposit clears. The amount is some unpredictable size. The user pays the immediate bills, lets the rest fund discretionary spending, watches the balance dwindle, waits for the next deposit. The pattern isn't a steady weekly paycheck shape. It's a series of relief-then-stress cycles, each one shaped by an unknown next deposit's amount and timing.
+
+The outcome of a working system is the breaking of that cycle. The relief stops being temporary. The stress doesn't return on Day 28. The next deposit's size matters less because the reserve absorbs the variance and the bills are pre-funded from the prior deposit's allocation.
+
+Same income. Different rhythm. The rhythm is what produces the day-to-day feeling. Fix the rhythm, the feeling lifts.
+
+Free for 7 days. $14.99/mo or $129/yr after.`,
+  },
+
+  // ─────────────────────────────────────────────────────────
+  // W19 — Setup · taxes + Schedule C
+  // ─────────────────────────────────────────────────────────
+
+  '19|Mon': {
+    // 44 move-30 · single
+    links: 'becomeable.app/taxes/how-much-to-set-aside/',
+    ig: `If you're 1099, here's the system.
+
+"Save more" isn't a system.
+
+Move 30% on every deposit. That's a system. Specific action, specific timing, specific outcome.
+
+Free for 7 days. Link in bio.
+
+#1099life #freelancing #selfemployed #taxes #budgeting`,
+
+    tt: `"Save more" isn't a system.
+
+Move 30% on every deposit.
+
+That's a system.
+
+becomeable.app/taxes/how-much-to-set-aside/
+
+#freelancetok #1099 #taxtok`,
+
+    li: `"Save more" isn't a system. Move 30% on every deposit. That's a system.
+
+The difference between advice and a system is specificity. "Save more" is advice. It tells you what direction to move, but not what action to take, when to take it, or how to know whether it happened. Advice without a mechanism is a wish.
+
+A system has three parts: the action, the trigger, and the verification. "Move 30% on every deposit" specifies all three. Action: transfer 30% to a separate account. Trigger: every deposit, regardless of size or source. Verification: the destination account balance equals 30% of cumulative deposits over the period.
+
+Once you have a system, the willpower question disappears. You're not deciding monthly whether to save. You're executing a routine you decided once. The routine survives bad days, busy weeks, distracted moments — because the routine doesn't require attention to run.
+
+The variable-income financial framework is built from systems like this. Move 30% on every deposit (tax). Move X% to reserve. Schedule debt payments. Cap free spending to a specific bucket. Each one is mechanical. None require ongoing decision-making.
+
+Same person. With a system. Different outcome.
+
+Free for 7 days. $14.99/mo or $129/yr after.`,
+  },
+
+  '19|Tue': {
+    // R17 tax-bucket-setup · reel
+    links: 'becomeable.app/taxes/how-much-to-set-aside/',
+    ig: `If you're 1099, here's the tax bucket setup in 4 steps.
+
+Step 1: separate savings account. Step 2: pick 30%. Step 3: move it every deposit. Step 4: same day, before spending.
+
+April becomes paperwork. Not an event.
+
+Free for 7 days. Link in bio.
+
+#1099life #freelancing #taxes #selfemployed #variableincome`,
+
+    tt: `Tax bucket setup.
+
+1: separate savings.
+2: pick 30%.
+3: move every deposit.
+4: same day, before spending.
+
+becomeable.app/taxes/how-much-to-set-aside/
+
+#freelancetok #1099 #taxtok`,
+
+    li: `Tax bucket setup, in four concrete steps.
+
+Step 1: Open a separate savings account. Different bank if possible. The friction of a transfer-to-spend is part of the design. The point isn't earning interest. It's separating tax money from operating money so the brain stops counting it.
+
+Step 2: Pick 30%. For most 1099 earners, 30% is the conservative floor. Higher earners might need 35-40%. Lower earners with significant deductions might get away with 25%. Start at 30% and adjust based on actual tax liability. Better to over-route and refund yourself in April than to under-route and panic.
+
+Step 3: Move it on every deposit. Every. No exceptions. Big deposits get 30%. Small deposits get 30%. Bonus checks get 30%. The rule applies to all incoming dollars without negotiation.
+
+Step 4: Same day, before spending. The window between deposit and split is where the failure mode lives. Same-day movement removes the window. Set up auto-routing if possible. Manual within the hour if not.
+
+April becomes paperwork. The bucket has filled itself all year. The 1040 just confirms a number you've already funded.
+
+Free for 7 days. $14.99/mo or $129/yr after.`,
+  },
+
+  '19|Wed': {
+    // C32 schedule-c · carousel
+    links: 'becomeable.app/taxes/schedule-c-walkthrough/',
+    ig: `If you're 1099, here's Schedule C in 6 slides. (Swipe.)
+
+The form where your business lives. Line 1: gross. Lines 4-6: COGS. Lines 8-27: expenses. Line 31: net profit (what gets taxed).
+
+Free for 7 days. Link in bio.
+
+#1099life #scheduleC #freelancing #taxes #selfemployed`,
+
+    tt: `Schedule C in 6 slides.
+
+Line 1: gross.
+Lines 4-6: COGS.
+Lines 8-27: expenses.
+Line 31: net profit (taxed).
+
+becomeable.app/taxes/schedule-c-walkthrough/
+
+#freelancetok #1099 #taxtok`,
+
+    li: `Schedule C in 6 slides. The form where your business lives.
+
+If you're self-employed, Schedule C is the form where the IRS sees what your business actually did during the tax year. It runs alongside your 1040 and calculates net profit, which is what gets taxed.
+
+Line 1: Gross income. Everything that came in. Every client payment, every platform deposit, every cash transaction. The full top-line number for the year.
+
+Lines 4-6: Cost of goods sold. Materials, inventory, the direct costs of producing what you sold. Service businesses skip these. Product businesses spend a lot of time here.
+
+Lines 8-27: Operating expenses. Rent for business space, software subscriptions, phone (business portion), travel, advertising, professional services, supplies, insurance. The deductions that turn gross into net.
+
+Line 31: Net profit. Gross minus COGS minus expenses. This is what gets taxed. Self-employment tax (15.3%) plus federal income tax plus state tax all apply to this number.
+
+The implication: every dollar of legitimate business expense reduces Line 31, which reduces tax owed. Tracking expenses isn't optional. It's the difference between paying tax on $80,000 of net vs. $50,000 of net.
+
+Free for 7 days. $14.99/mo or $129/yr after.`,
+  },
+
+  '19|Thu': {
+    // 45 starting-point · single
+    ig: `If you're a freelancer, here's the diagnostic.
+
+You don't need to be better. You need a different starting point.
+
+Most variable-income financial advice tells you to do the same things harder. Different starting point, same effort, different result.
+
+Free for 7 days. Link in bio.
+
+#freelancing #1099life #variableincome #moneymindset #budgeting`,
+
+    tt: `You don't need to be better.
+
+You need a different starting point.
+
+becomeable.app
+
+#freelancetok #1099 #moneymindset`,
+
+    li: `You don't need to be better. You need a different starting point.
+
+That sentence reframes the typical financial-improvement narrative. Most advice — work harder, be more disciplined, track more carefully, save more — assumes the user is the variable. Push the user, get a different result. That model works when the system is right and the user is the problem.
+
+For variable-income earners using paycheck-shaped tools, the model is wrong. The system is the problem. Pushing the user just produces frustrated users running the same broken tools harder.
+
+A different starting point: assume the system is broken and replace it. Variable income gets a variable-income toolkit. Split-first allocation. Smoothing reserve. Percentage-based bucket funding. Tax-on-every-deposit. Same person, different starting point — and suddenly the same effort produces different results, because the underlying mechanics now match the income shape.
+
+The reframe is small but matters. The user isn't broken. The starting point was wrong. Fix the starting point and the rest follows.
+
+Free for 7 days. $14.99/mo or $129/yr after.`,
+  },
+
+  '19|Fri': {
+    // C33 se-deductions · carousel
+    links: 'becomeable.app/taxes/self-employment-tax-deductions/',
+    ig: `If you're self-employed, here are 5 deductions you might miss. (Swipe.)
+
+Health insurance premiums. Half of SE tax. Vehicle. Equipment. Retirement.
+
+Each one reduces what gets taxed.
+
+Free for 7 days. Link in bio.
+
+#selfemployed #1099life #taxes #freelancing #smallbusiness`,
+
+    tt: `5 deductions you might miss.
+
+Health insurance premiums.
+Half of SE tax.
+Vehicle (mileage or actual).
+Equipment.
+Retirement (SEP-IRA).
+
+becomeable.app/taxes/self-employment-tax-deductions/
+
+#freelancetok #1099 #taxtok`,
+
+    li: `Five self-employment deductions that meaningfully reduce taxable income.
+
+Health insurance premiums. If you pay for your own health insurance, the premiums are fully deductible above-the-line. This is the deduction most freelancers underuse. It comes off gross income before AGI calculations, which compounds into other tax-bracket effects.
+
+Half of self-employment tax. Self-employment tax is 15.3% (Social Security + Medicare). Half of it — 7.65% — is deductible from your income. The IRS treats this as the equivalent of the employer-paid half a W-2 employee's employer would cover.
+
+Vehicle. Two methods: mileage or actual. Mileage is simpler — the IRS rate per business mile. Actual is more documentation but often produces a bigger deduction for high-cost vehicles or heavy business use. Run both and take the bigger.
+
+Equipment. Computer, software, phone, tools, office furniture. The thresholds for immediate expensing have gotten generous. Most equipment under $2,500 can be expensed in the year purchased.
+
+Retirement. SEP-IRA contributions are fully deductible up to ~25% of net SE income. Solo 401k similar. This is the biggest single tax-deferral lever most freelancers have access to.
+
+Each deduction reduces Line 31 on Schedule C. Lower Line 31 means lower tax. Track everything throughout the year, not at year-end.
+
+Free for 7 days. $14.99/mo or $129/yr after.`,
+  },
+
+  '19|Sun': {
+    // B33 identity-pay-down-slow-months · brandscript
+    ig: `If you're an entrepreneur, here's the new identity.
+
+I am able to pay down debt, even on slow months.
+
+That sentence is the outcome. Not "I make more." Not "I save 20%." The structural confidence that debt gets reduced regardless of what the income did this month.
+
+Free for 7 days. Link in bio.
+
+#entrepreneur #1099life #variableincome #debt #moneymindset`,
+
+    tt: `I am able to pay down debt.
+
+Even on slow months.
+
+becomeable.app
+
+#freelancetok #1099 #moneymindset`,
+
+    li: `I am able to pay down debt, even on slow months.
+
+That sentence is the new identity variable-income earners earn through structural finances. The "even on slow months" qualifier is doing the real work. Anyone can pay down debt during a flush month. The question is whether the system survives a slow one.
+
+The structural answer: the reserve covers minimums. During a slow month, the debt schedule keeps running because the reserve absorbs the income gap. The debt principal continues to decline. The slow month doesn't reset progress.
+
+During a normal or strong month, the schedule plus extra principal payments accelerate the timeline. Big months push the payoff date forward. Slow months hold ground. Across the year, debt steadily decreases.
+
+This is the difference between debt-payoff plans that work for variable income and ones that don't. Plans that assume steady income break the moment a slow month hits. Plans that include a reserve as the buffer between income volatility and debt payments survive every income shape.
+
+The identity follows the structure. "I am able to pay down debt, even on slow months" is true once the structure is in place. It wasn't true before, regardless of intent.
+
+Free for 7 days. $14.99/mo or $129/yr after.`,
+  },
+
+  // ─────────────────────────────────────────────────────────
+  // W20 — Sustain · home office + how money works
+  // ─────────────────────────────────────────────────────────
+
+  '20|Mon': {
+    // 51 three-months-slow · single
+    ig: `If you're a freelancer, here's the question.
+
+Three months of slow. What does that actually cost?
+
+Without a reserve, three slow months is a survival event. With a reserve, three slow months is a normal month repeated three times. The math is the same. The system underneath is different.
+
+Free for 7 days. Link in bio.
+
+#freelancing #1099life #variableincome #budgeting #freelancelife`,
+
+    tt: `Three months of slow.
+
+What does that actually cost?
+
+becomeable.app
+
+#freelancetok #1099 #variableincome`,
+
+    li: `Three months of slow. What does that actually cost?
+
+The honest answer depends entirely on whether the user has a reserve. With a 3-month reserve in place, three slow months is a routine drawdown event. Bills pay, tax bucket continues to fund, debt continues to decline, the user takes their normal monthly paycheck. The reserve refills when income returns to normal.
+
+Without a reserve, three slow months is a survival event. Bills get prioritized against rent, debt minimums get pushed to credit, tax money gets raided for living expenses, the user lives on credit cards and high-cost debt. The recovery from three slow months without a reserve takes 6-12 months of normal income afterward, because the debt and missed contributions compound.
+
+Same three slow months. Different cost by an order of magnitude. The variable was the reserve.
+
+Building the reserve is the highest-leverage move most variable-income earners can make. It compounds in the right direction. Every additional month of reserve buffer reduces the cost of any future slow stretch. The math works the same way debt math works, but in reverse.
+
+Three months of slow is the right scenario to plan for. It's common enough to be likely, severe enough to break weak systems, recoverable with a working one.
+
+Free for 7 days. $14.99/mo or $129/yr after.`,
+  },
+
+  '20|Tue': {
+    // R18 first-week · reel
+    ig: `If you're a freelancer, here's your first week with Able.
+
+Day 1: tax %. Day 2: bills. Day 3: debt schedule. Day 4: reserve target. Day 5: what's left is free.
+
+Eight minutes total. The system runs from there.
+
+Free for 7 days. Link in bio.
+
+#freelancing #1099life #variableincome #budgeting #selfemployed`,
+
+    tt: `First week with Able.
+
+Day 1: tax %.
+Day 2: bills.
+Day 3: debt.
+Day 4: reserve.
+Day 5: what's left is free.
+
+becomeable.app
+
+#freelancetok #1099 #variableincome`,
+
+    li: `Your first week with Able. The setup, in 5 days.
+
+Day 1: Set your tax percentage. For most 1099 earners, 30% is the right starting point. Adjust later based on actual liability. The number determines how much routes to the tax bucket on every deposit.
+
+Day 2: Pick your bills. Add the recurring expenses that arrive on a schedule. Rent or mortgage, utilities, insurance, subscriptions. Spread across months for the persistently lumpy ones.
+
+Day 3: Add debt. Schedule payments. Knowing the debt schedule lets the reserve cover minimums during slow months. It also unlocks aggressive principal payments on strong months without putting the schedule at risk.
+
+Day 4: Set your reserve target. One full month of bills as the floor. Three months as the upper end. The reserve absorbs lumpiness so bills don't experience income volatility.
+
+Day 5: Whatever's left after taxes, bills, debt, and reserve is free. Genuinely free. Spend without bracing.
+
+Eight minutes total. The system runs from there. Every deposit gets split automatically against the structure you set up in week one. No ongoing maintenance.
+
+Free for 7 days. $14.99/mo or $129/yr after.`,
+  },
+
+  '20|Wed': {
+    // C31 home-office · carousel
+    links: 'becomeable.app/taxes/home-office-deduction/',
+    ig: `If you work from home, here's the home office deduction. (Swipe.)
+
+Two methods: simplified ($5 per sq ft) or actual (document everything).
+
+Run both. Take the bigger.
+
+Free for 7 days. Link in bio.
+
+#homeoffice #1099life #freelancing #remotework #taxes`,
+
+    tt: `Home office deduction.
+
+Simplified: $5/sq ft.
+Actual: document everything.
+
+Run both. Take the bigger.
+
+becomeable.app/taxes/home-office-deduction/
+
+#freelancetok #1099 #taxtok`,
+
+    li: `The home office deduction, in plain language.
+
+If you use part of your home regularly and exclusively for business, you may qualify for the home office deduction. The "regular and exclusive" test is strict — the space has to be primarily a workspace, not a guest room that doubles as an office.
+
+Two methods to calculate the deduction:
+
+Simplified method: $5 per square foot of qualified home office space, up to 300 square feet. Maximum deduction is $1,500. Quick math, low documentation overhead. Good for most freelancers with a small dedicated office.
+
+Actual expenses method: a percentage of actual home expenses (mortgage interest or rent, utilities, insurance, repairs, depreciation), based on the percentage of total square footage your office occupies. Higher documentation burden. Often produces a bigger deduction, especially in higher-cost-of-living areas.
+
+The right approach: run both calculations. Take whichever produces the bigger deduction in any given year. Most tax software will do this comparison automatically. Some years simplified wins, some years actual wins.
+
+Documentation matters either way. Photos of the space, square footage measurement, records of business use. The IRS audits home office deductions more aggressively than most categories.
+
+Free for 7 days. $14.99/mo or $129/yr after.`,
+  },
+
+  '20|Thu': {
+    // 26 cost-of-starting · single
+    ig: `If you're a freelancer, here's the math.
+
+The cost of waiting is bigger than the cost of starting.
+
+Setting up a system feels expensive in the moment. Not setting one up costs more, every month, forever. The compound math is brutal.
+
+Free for 7 days. Link in bio.
+
+#freelancing #1099life #variableincome #moneymindset #budgeting`,
+
+    tt: `The cost of waiting.
+
+Bigger than the cost of starting.
+
+becomeable.app
+
+#freelancetok #1099 #moneymindset`,
+
+    li: `The cost of waiting is bigger than the cost of starting.
+
+Setting up a working money system costs maybe an hour, plus the price of a tool. The upfront feels like work. The benefit feels abstract. Most variable-income earners delay it indefinitely.
+
+Not setting up a system has a different cost: the leak continues, every month, indefinitely. About $1,000-$2,000 per month of small undifferentiated drift, plus tax-bucket under-funding, plus reserve absence, plus the cognitive load of running mental cash-flow forecasts.
+
+The compound math is brutal because it runs in two directions. The cost of starting is bounded — one hour, one product, done. The cost of waiting is unbounded — it accrues every month the system isn't in place. Six months of waiting equals $12,000 in leaks. One year equals $24,000.
+
+The cost of starting is also recoverable. The first month after a system is in place, the leaks close. The recovery rate is roughly the leak rate. A user who switches in March recovers most of the year's residual leaks by July or August.
+
+Starting is the cheaper option. Waiting is the expensive option. The math is unambiguous. The hesitation is psychological, not financial.
+
+Free for 7 days. $14.99/mo or $129/yr after.`,
+  },
+
+  '20|Fri': {
+    // C37 how-money-works · carousel
+    ig: `If you're an entrepreneur, here's how money actually works. (Swipe.)
+
+Money is a skill, not a personality. Nobody taught you. Not your fault.
+
+Rule of 72: divide 72 by the rate. Years until your money doubles.
+
+Free for 7 days. Link in bio.
+
+#entrepreneur #moneymindset #personalfinance #1099life #investing`,
+
+    tt: `Money is a skill, not a personality.
+
+Rule of 72: divide 72 by rate.
+1% savings: 72 yrs to double.
+8% market: 9 yrs to double.
+
+becomeable.app
+
+#freelancetok #1099 #moneymindset`,
+
+    li: `How money actually works, in three sentences and a math trick.
+
+First sentence: Money is a skill, not a personality trait. The "I'm just bad with money" framing assumes money handling is innate. It isn't. It's a learnable set of habits and structures. Anyone can run them. Some people learned them earlier than others.
+
+Second sentence: Nobody taught you. The personal finance education most adults received was minimal, generic, and often wrong. The school system, parents, and culture didn't equip most people for this. The "not your fault" qualifier matters because shame is the biggest obstacle to learning.
+
+Third sentence: Money follows structure, not hope. The structural choices — where money is routed, when, in what amounts — produce outcomes more reliably than the intent-based choices ("try to save more this month"). Build the structure once. The structure runs without willpower.
+
+The Rule of 72 is the most useful single math fact in personal finance. Divide 72 by your annual return rate. The result is how many years your money takes to double. At 1% savings: 72 years. At 8% stock market: 9 years. The compound math of those two paths is the entire reason "save in a HYSA" and "invest the index" produce different lifetime outcomes.
+
+Free for 7 days. $14.99/mo or $129/yr after.`,
+  },
+
+  '20|Sun': {
+    // B24 solution-lumpy-on-purpose · brandscript
+    ig: `If you have inconsistent income, here's the design.
+
+Traditional apps assume a steady paycheck. Able assumes your income is lumpy, unpredictable, and rarely on schedule.
+
+Different starting assumption. Different working tool.
+
+Free for 7 days. Link in bio.
+
+#variableincome #1099life #freelancing #budgeting #freelancelife`,
+
+    tt: `Traditional apps assume a steady paycheck.
+
+Able assumes lumpy, unpredictable, rarely on schedule.
+
+becomeable.app
+
+#freelancetok #1099 #variableincome`,
+
+    li: `Traditional apps assume a steady paycheck. Able assumes your income is lumpy, unpredictable, and rarely on schedule.
+
+That's the entire design philosophy in two sentences. The starting assumption is the difference. Every downstream feature, every interface decision, every default value flows from whether the tool assumes regular income or variable income.
+
+In a tool that assumes a paycheck: monthly category budgets, fixed savings goals, "this month vs. last month" comparisons, allocation interfaces that ask you to plan the month before it starts. All of these work fine if income is regular. None of them work cleanly if income is variable.
+
+In a tool that assumes lumpy income: split-first allocation triggered by deposit, percentage-based bucket funding tied to incoming dollars, a smoothing reserve as a primary structure, tax-on-every-deposit as a default, fixed monthly paycheck paid from the reserve regardless of recent income. These work specifically because they match the income shape.
+
+Same product category. Different starting assumption. Different tool entirely.
+
+Free for 7 days. $14.99/mo or $129/yr after.`,
+  },
+
 };
