@@ -1,0 +1,219 @@
+/* Brand asset stylesheet. Mirrors social/posts/_styles.css for the swoosh
+   so every brand asset matches B41 exactly — same shape, same proportional
+   thickness, same proportional offset, same overshoot. The only difference:
+   font-sizes are CSS variables so the swoosh scales with the headline. */
+
+:root {
+  /* Default: green theme (matches B41). */
+  --bg: #2a7a4a;
+  --t1: #ffffff;
+  --t2: rgba(255,255,255,.78);
+  --eyebrow-color: #cdebd8;
+  --squiggle: #ffffff;
+  --f: 'Bricolage Grotesque', -apple-system, sans-serif;
+
+  /* Type scale — overridable per canvas. */
+  --eyebrow-fs: 22px;
+  --punch-fs: 104px;
+  --wordmark-fs: 44px;
+  --url-fs: 22px;
+  --tagline-fs: 22px;
+}
+
+.theme-light {
+  --bg: #f0f7f2;
+  --t1: #111c16;
+  --t2: #4a5c52;
+  --eyebrow-color: #2a7a4a;
+  --squiggle: #2a7a4a;
+}
+
+.theme-green-grad {
+  background: linear-gradient(135deg, #2a7a4a 0%, #1f6038 100%) !important;
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+html, body {
+  font-family: var(--f);
+  -webkit-font-smoothing: antialiased;
+  background: #d9e8de;
+  color: var(--t1);
+}
+
+.canvas {
+  background: var(--bg);
+  position: relative;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+}
+
+.canvas.centered { align-items: center; text-align: center; }
+
+/* Subtle radial halo to match the .post styling on B41. */
+.canvas:not(.no-halo)::before {
+  content: '';
+  position: absolute;
+  top: -20%; right: -20%;
+  width: 60%; height: 90%;
+  background: radial-gradient(circle, rgba(255,255,255,.10) 0%, transparent 70%);
+  pointer-events: none;
+}
+.canvas:not(.no-halo)::after {
+  content: '';
+  position: absolute;
+  bottom: -25%; left: -25%;
+  width: 60%; height: 90%;
+  background: radial-gradient(circle, rgba(0,0,0,.08) 0%, transparent 70%);
+  pointer-events: none;
+}
+.theme-light.canvas:not(.no-halo)::before {
+  background: radial-gradient(circle, rgba(42,122,74,.10) 0%, transparent 70%);
+}
+.theme-light.canvas:not(.no-halo)::after {
+  background: radial-gradient(circle, rgba(42,122,74,.06) 0%, transparent 70%);
+}
+
+.eyebrow {
+  font-size: var(--eyebrow-fs);
+  font-weight: 800;
+  letter-spacing: .22em;
+  text-transform: uppercase;
+  color: var(--eyebrow-color);
+  position: relative;
+  z-index: 2;
+}
+
+.stack {
+  margin-top: auto;
+  margin-bottom: auto;
+  position: relative;
+  z-index: 2;
+}
+
+.punch {
+  font-size: var(--punch-fs);
+  font-weight: 800;
+  line-height: 1.02;
+  letter-spacing: -.03em;
+  color: var(--t1);
+  /* Reserve flow-space for the absolute swoosh that hangs below "Able.".
+     Swoosh ends ~31% of font-size below baseline (13.5% offset + 17.3% height). */
+  padding-bottom: 0.32em;
+}
+
+.muted {
+  font-size: calc(var(--punch-fs) * 0.6);
+  font-weight: 600;
+  line-height: 1.08;
+  letter-spacing: -.02em;
+  color: var(--t2);
+  margin-bottom: 36px;
+}
+
+/* Hero swoosh: matches social/posts/_styles.css ratios.
+   At font-size 104, the canonical CSS uses bottom: -14px, height: 18px.
+   That's bottom = -13.46% of font-size, height = 17.30% of font-size. */
+.underline {
+  position: relative;
+  display: inline-block;
+  white-space: nowrap;
+}
+.underline::after {
+  content: '';
+  position: absolute;
+  left: -1%;
+  right: -1%;
+  bottom: calc(var(--punch-fs) * -0.135);
+  height: calc(var(--punch-fs) * 0.173);
+  background-color: var(--squiggle);
+  -webkit-mask-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 120 4.2' preserveAspectRatio='none'><path d='M3 2.6 Q2 2.4 3 2.15 Q58 1.75 115 0.15 Q119 1 119 2 Q119 3 115 3.9 Q58 3.55 3 2.65 Q2 2.45 3 2.6 Z' fill='white'/></svg>");
+          mask-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 120 4.2' preserveAspectRatio='none'><path d='M3 2.6 Q2 2.4 3 2.15 Q58 1.75 115 0.15 Q119 1 119 2 Q119 3 115 3.9 Q58 3.55 3 2.65 Q2 2.45 3 2.6 Z' fill='white'/></svg>");
+  -webkit-mask-repeat: no-repeat;
+          mask-repeat: no-repeat;
+  -webkit-mask-size: 100% 100%;
+          mask-size: 100% 100%;
+}
+
+.footer {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  position: relative;
+  z-index: 2;
+  width: 100%;
+}
+.canvas.centered .footer {
+  justify-content: center;
+  gap: 24px;
+}
+
+.tagline-block {
+  position: relative;
+  z-index: 2;
+}
+.tagline {
+  font-size: var(--tagline-fs);
+  font-weight: 500;
+  line-height: 1.2;
+  letter-spacing: -.01em;
+  color: var(--t1);
+}
+
+/* Hero-mark layout: big "Able" wordmark + tagline, no transformation headline.
+   Used by profile-square (mark only), og-image, and cover-facebook. */
+.hero-mark {
+  margin: auto;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  position: relative;
+  z-index: 2;
+}
+.hero-mark .wordmark { display: inline-block; }
+.hero-mark .tagline-block {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  color: var(--t1);
+}
+.hero-mark .url {
+  margin-top: var(--hero-url-gap, 24px);
+}
+
+/* Wordmark swoosh: matches .wordmark::after in _styles.css.
+   At font-size 44, bottom: -6px, height: 9px → ratios 13.6% and 20.5%. */
+.wordmark {
+  font-size: var(--wordmark-fs);
+  font-weight: 900;
+  letter-spacing: -.03em;
+  color: var(--t1);
+  line-height: 1;
+  position: relative;
+  display: inline-block;
+}
+.wordmark::after {
+  content: '';
+  position: absolute;
+  left: 0;
+  right: -4%;
+  bottom: calc(var(--wordmark-fs) * -0.136);
+  height: calc(var(--wordmark-fs) * 0.205);
+  background-color: var(--squiggle);
+  -webkit-mask-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 120 4.2' preserveAspectRatio='none'><path d='M3 2.6 Q2 2.4 3 2.15 Q58 1.75 115 0.15 Q119 1 119 2 Q119 3 115 3.9 Q58 3.55 3 2.65 Q2 2.45 3 2.6 Z' fill='white'/></svg>");
+          mask-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 120 4.2' preserveAspectRatio='none'><path d='M3 2.6 Q2 2.4 3 2.15 Q58 1.75 115 0.15 Q119 1 119 2 Q119 3 115 3.9 Q58 3.55 3 2.65 Q2 2.45 3 2.6 Z' fill='white'/></svg>");
+  -webkit-mask-repeat: no-repeat;
+          mask-repeat: no-repeat;
+  -webkit-mask-size: 100% 100%;
+          mask-size: 100% 100%;
+}
+
+.url {
+  font-size: var(--url-fs);
+  font-weight: 700;
+  color: var(--t2);
+  letter-spacing: .01em;
+  line-height: 1;
+}

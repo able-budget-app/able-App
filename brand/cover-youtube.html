@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="canvas-size" content="2560x1440">
+<title>Able · cover-youtube</title>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:wght@500;700;800;900&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="_brand.css">
+<style>
+  /* YouTube banner: full canvas 2560x1440, but only the centered 1546x423
+     band is visible on every device. Keep all important content there. */
+  html, body { width: 2560px; height: 1440px; margin: 0; padding: 0; background: #d9e8de; }
+  .canvas {
+    width: 2560px; height: 1440px;
+    padding: 0;
+    --eyebrow-fs: 22px;
+    --punch-fs: 100px;
+    --wordmark-fs: 42px;
+    --url-fs: 22px;
+    align-items: center;
+    justify-content: center;
+  }
+  .yt-safe {
+    width: 1546px;
+    height: 423px;
+    padding: 18px 56px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    position: relative;
+    z-index: 2;
+  }
+  .yt-safe .stack { margin: auto 0; }
+  .yt-safe .footer {
+    display: flex;
+    align-items: flex-end;
+    justify-content: center;
+    gap: 28px;
+    width: 100%;
+  }
+</style>
+</head>
+<body>
+  <div class="canvas">
+    <div class="yt-safe">
+      <div class="eyebrow">For entrepreneurs</div>
+      <div class="stack">
+        <div class="punch">From Unable<br>&rarr; <span class="underline">Able.</span></div>
+      </div>
+      <div class="footer">
+        <div class="wordmark">Able</div>
+        <div class="url">becomeable.app</div>
+      </div>
+    </div>
+  </div>
+</body>
+</html>

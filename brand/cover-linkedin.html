@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="canvas-size" content="1128x191">
+<title>Able · cover-linkedin</title>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:wght@500;700;800;900&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="_brand.css">
+<style>
+  /* LinkedIn page banner is short (191px). Page logo overlaps top-left ~140x140
+     starting at ~32px in. Layout: wordmark center-left of safe zone, tagline
+     + URL on right. */
+  html, body { width: 1128px; height: 191px; margin: 0; padding: 0; background: #d9e8de; }
+  .canvas {
+    width: 1128px; height: 191px;
+    padding: 0;
+    --wordmark-fs: 50px;
+    --tagline-fs: 22px;
+    --url-fs: 20px;
+  }
+  .li-row {
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    padding: 0 64px 0 220px;
+    gap: 56px;
+    position: relative;
+    z-index: 2;
+  }
+  .li-mark { flex: 0 0 auto; }
+  .li-copy {
+    flex: 0 1 auto;
+    text-align: right;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    color: var(--t1);
+  }
+  .li-copy .tagline { color: #ffffff; }
+  .li-copy .url { color: rgba(255,255,255,.78); }
+</style>
+</head>
+<body>
+  <div class="canvas no-halo">
+    <div class="li-row">
+      <div class="li-mark"><span class="wordmark">Able</span></div>
+      <div class="li-copy">
+        <div class="tagline">An app built for entrepreneurs who struggle</div>
+        <div class="tagline">to manage inconsistent income.</div>
+        <div class="url">becomeable.app</div>
+      </div>
+    </div>
+  </div>
+</body>
+</html>
