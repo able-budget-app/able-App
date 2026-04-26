@@ -2917,4 +2917,887 @@ The fix is to make small spending come out of a bucket with a defined ceiling, a
 Free for 7 days. $14.99/mo or $129/yr after.`,
   },
 
+  // ─────────────────────────────────────────────────────────
+  // W13 — Persona · creators
+  // ─────────────────────────────────────────────────────────
+
+  '13|Mon': {
+    // 31 protecting · single
+    ig: `If you're a creator, you're not avoiding your bank account.
+
+You're protecting yourself from it.
+
+Because there's no system underneath. Looking at the number means making decisions you don't have information for. Avoidance is rational.
+
+Free for 7 days. Link in bio.
+
+#creator #creatorlife #creatoreconomy #variableincome #youtuber`,
+
+    tt: `Creators don't avoid the bank app.
+
+They protect themselves from it.
+
+No system underneath = decisions with no info.
+
+becomeable.app
+
+#creatortok #creatoreconomy #variableincome`,
+
+    li: `Creators don't avoid the bank app because they're irresponsible. They protect themselves from it.
+
+A look at the balance triggers a cascade of questions a creator can't easily answer. How much of this is taxable? How much was the brand deal vs. ad revenue vs. merch? Will next month be like this month, or half this month? Is it safe to make any decision right now, or should I wait?
+
+When the questions can't be answered, looking at the number costs more than ignoring it. The avoidance isn't laziness. It's a rational response to facing decisions without the information needed to make them.
+
+The fix is structural. Once each deposit is routed the moment it lands — taxes off the top, bills covered, reserve topped off, debt scheduled, what's left genuinely free — the bank app becomes a status check, not a decision point. The questions are pre-answered. Looking is no longer expensive.
+
+Free for 7 days. $14.99/mo or $129/yr after.`,
+  },
+
+  '13|Tue': {
+    // R10 same-income · reel
+    ig: `If you're a creator, here's what changes.
+
+Same income. Different feeling.
+
+Bills paid. Taxes covered. Debt shrinking. Savings growing. Nothing leaked.
+
+Not more money. A different system underneath the same money.
+
+Free for 7 days. Link in bio.
+
+#creator #creatorlife #variableincome #creatoreconomy #youtuber`,
+
+    tt: `Same income.
+Different feeling.
+
+Bills paid. Taxes covered.
+Debt shrinking. Savings growing.
+
+Nothing leaked.
+
+becomeable.app
+
+#creatortok #creatoreconomy #variableincome`,
+
+    li: `Same income, different feeling. That's the entire promise of restructuring how money flows for a variable-income earner.
+
+The income amount doesn't change. The deposits land at the same lumpy schedule. The total per year is the same. What changes is what each dollar does the moment it arrives.
+
+Bills paid: every cycle, on time, without scrambling. Taxes covered: the tax bucket is funded as a percentage of every deposit, so April becomes paperwork. Debt shrinking: scheduled payments hit on schedule, including during slow months, because the reserve covers them. Savings growing: what's left after the four jobs above gets routed to a savings bucket on a defined schedule, not as the leftover after spending.
+
+Nothing leaked. That last one is the felt difference. The leak is the thing that makes the same income feel different in a bad system vs. a good one. Close the leak by giving every dollar a job at deposit, and the same income feels measurably different.
+
+Free for 7 days. $14.99/mo or $129/yr after.`,
+  },
+
+  '13|Wed': {
+    // C19 creator-budget · carousel
+    links: 'becomeable.app/budgeting/creator-budget/',
+    ig: `If you're a creator, your income is five incomes pretending to be one. (Swipe.)
+
+Platform. Brand deals. Merch. Subscriptions. Affiliate.
+
+The algorithm is a black box. You don't budget it. You smooth it.
+
+Free for 7 days. Link in bio.
+
+#creator #creatorlife #variableincome #creatoreconomy #youtuber`,
+
+    tt: `Creator income is five incomes.
+
+Platform. Brand deals. Merch. Subs. Affiliate.
+
+A viral month is not your new normal.
+
+becomeable.app/budgeting/creator-budget/
+
+#creatortok #creatoreconomy #variableincome`,
+
+    li: `Creator income isn't one income. It's five incomes pretending to be one.
+
+Platform revenue (YouTube ad share, TikTok creativity fund, Instagram bonuses). Brand deals (sponsorships, integrations, ambassador agreements). Merch (drop-based, often seasonal, with COGS). Subscriptions (Patreon, channel memberships, YouTube subs). Affiliate revenue (links, codes, commissions).
+
+Each behaves differently. Platform revenue is algorithm-dependent. Brand deals are project-based with net-30 to net-90 timing. Merch is lumpy and capital-intensive. Subscriptions are monthly recurring but slowly drift. Affiliate is reactive to traffic.
+
+The trap is treating a viral month as the new normal. It isn't. The compound 12-month average is the only number that matters for paying yourself a steady amount, and it's almost always lower than the recent peak.
+
+Pay yourself a number that's below your best and above your worst. Route the difference to a smoothing reserve. Slow months draw on the reserve. Big months refill it. Same paycheck, same day, regardless of what the algorithm did this week.
+
+Free for 7 days. $14.99/mo or $129/yr after.`,
+  },
+
+  '13|Thu': {
+    // 39 variable-income · single
+    ig: `If you're a creator, here's the reframe.
+
+It's not personal finance. It's variable income.
+
+Different category, different rules, different tools. The personal finance industry treats you like an edge case. You're not.
+
+Free for 7 days. Link in bio.
+
+#creator #creatorlife #variableincome #creatoreconomy #1099life`,
+
+    tt: `It's not personal finance.
+
+It's variable income.
+
+Different category. Different rules.
+
+becomeable.app
+
+#creatortok #creatoreconomy #variableincome`,
+
+    li: `It's not personal finance. It's variable income.
+
+The personal finance industry treats variable-income earners — creators, freelancers, contractors, commission earners — as an edge case of W-2 advice. The defaults assume a paycheck. The math assumes a baseline. The product features assume monthly stability.
+
+Variable income isn't a flavor of personal finance. It's a different category. The rules of regular finance carry over only loosely. Allocate by category for the month? Doesn't work, because the month's income isn't known. Save 20% of every paycheck? Doesn't work, because there's no paycheck. Build a 3-6 month emergency fund? Useful, but the more critical structure is a smoothing reserve that absorbs lumpiness.
+
+The category needs its own toolkit. Split-first allocation. Percentage-based bucket funding tied to incoming dollars, not fixed monthly amounts. A reserve that sits between income and bills. Tax bucket on every deposit because there's no employer withholding. Free spending capped at what's left after the four other buckets are funded.
+
+Free for 7 days. $14.99/mo or $129/yr after.`,
+  },
+
+  '13|Fri': {
+    // C18 steady-paycheck · carousel
+    links: 'becomeable.app/budgeting/pay-yourself-steady-paycheck/',
+    ig: `If you're a creator, here's how to pay yourself a steady paycheck. (Swipe.)
+
+Income is lumpy. Bills aren't. The reserve is a dam on the river.
+
+75% of your 12-month average. Same number, same day. Boring is the feature.
+
+Free for 7 days. Link in bio.
+
+#creator #creatorlife #variableincome #creatoreconomy #freelancelife`,
+
+    tt: `How creators pay themselves steady.
+
+Income lumpy. Bills steady.
+Reserve = dam on a river.
+75% of 12-month average.
+
+becomeable.app/budgeting/pay-yourself-steady-paycheck/
+
+#creatortok #creatoreconomy #variableincome`,
+
+    li: `How a variable-income earner pays themselves a steady paycheck.
+
+The mismatch: income is lumpy, bills aren't. Most of the bills you owe arrive on a schedule. Rent on the 1st. Insurance on the 15th. Subscriptions on whatever date they renew. Variable income doesn't sync with that schedule. Some months overshoot, some undershoot.
+
+The fix is a smoothing reserve. Big months feed it. Slow months draw from it. The user pays themselves a fixed monthly number from the reserve, regardless of what came in that month. The reserve absorbs the lumpiness so the bills experience steady cash flow.
+
+The number to pay yourself: 75% of your 12-month rolling average. Below your best months, above your worst. Conservative enough that the reserve can grow during peaks. Aggressive enough that it doesn't feel punitive during normal months.
+
+Same number, same day. Every month. The system pays you. You don't have to decide.
+
+Free for 7 days. $14.99/mo or $129/yr after.`,
+  },
+
+  '13|Sun': {
+    // B05 audience-struggles-to-budget · brandscript
+    ig: `If you're an entrepreneur who struggles to budget inconsistent income, this is for you.
+
+Not generic advice. Not a paycheck-shaped budget. A system built for the income shape you actually have.
+
+Free for 7 days. Link in bio.
+
+#entrepreneur #1099life #variableincome #freelancelife #smallbusiness`,
+
+    tt: `For the entrepreneur who struggles to budget inconsistent income.
+
+Not generic advice. A system for the income you have.
+
+becomeable.app
+
+#freelancetok #1099 #entrepreneur`,
+
+    li: `For the entrepreneur who struggles to budget inconsistent income.
+
+The struggle isn't a discipline issue. It's a category issue. Generic budgeting tools assume regular paychecks. Variable income breaks the assumption, which breaks the tool, which leaves the user holding a tool that produces wrong answers if they follow the instructions correctly.
+
+The right tool starts from the opposite assumption: income arrives lumpy, on its own schedule, in different amounts. Allocation happens at the moment of deposit, not at month-start. Buckets are percentage-driven, not fixed dollars. A reserve sits between income and bills to absorb the lumpiness.
+
+That's the entire reframe. Once the tool fits the income shape, the struggle leaves. Not because the user got more disciplined. Because the tool stopped fighting the income.
+
+Free for 7 days. $14.99/mo or $129/yr after.`,
+  },
+
+  // ─────────────────────────────────────────────────────────
+  // W14 — Persona · designers / devs / coaches
+  // ─────────────────────────────────────────────────────────
+
+  '14|Mon': {
+    // 14 same-different · single
+    ig: `If you're a designer or developer, here's the shift.
+
+Same income. Different feeling.
+
+Project-based work has gaps between projects. The income amount doesn't change. The system underneath does.
+
+Free for 7 days. Link in bio.
+
+#freelancedesigner #freelancedev #freelancing #1099life #variableincome`,
+
+    tt: `Same income.
+Different feeling.
+
+Project gaps don't break the system.
+
+becomeable.app
+
+#freelancetok #1099 #variableincome`,
+
+    li: `Same income, different feeling. The shift that matters most for project-based earners.
+
+Designers, developers, consultants, anyone working project-by-project knows the rhythm: a project lands, the deposit clears, the work begins. Six to twelve weeks later, the work delivers, the invoice goes out, net-30 hits, another deposit lands. Between projects, gaps.
+
+The gaps are the killer. Not because the total income is too low. Because during a gap, the question "is this dry stretch normal or a problem" doesn't have a confident answer without a system. So the gap gets treated as both — money is conserved as if it's a problem, but spending continues as if it's normal. Both can't be true. The middle gets messy.
+
+A system that treats gaps as a known feature, not an exception, fixes this. The reserve covers gaps. Bills don't change shape during a gap. Tax money doesn't get raided during a gap. The gap becomes a routine cash-flow event, not an emergency.
+
+Same income. Different feeling.
+
+Free for 7 days. $14.99/mo or $129/yr after.`,
+  },
+
+  '14|Tue': {
+    // R11 steady-paycheck · reel
+    links: 'becomeable.app/budgeting/pay-yourself-steady-paycheck/',
+    ig: `If you're a freelancer, here's the trick.
+
+Income is lumpy. Bills are not. The income reserve is a dam on a river.
+
+Same paycheck. Same day. Boring is the feature.
+
+Free for 7 days. Link in bio.
+
+#freelancing #1099life #variableincome #freelancelife #selfemployed`,
+
+    tt: `Income is lumpy.
+Bills are not.
+
+The reserve = a dam on a river.
+Same paycheck, same day.
+
+becomeable.app/budgeting/pay-yourself-steady-paycheck/
+
+#freelancetok #1099 #variableincome`,
+
+    li: `Pay yourself a steady paycheck. The mechanic, in 60 seconds.
+
+A river is lumpy in volume. A dam regulates outflow. The reservoir behind the dam absorbs flood and drought, and the spillway delivers a steady flow downstream regardless of what the source is doing this week.
+
+Substitute money for water. Lumpy income flows in. The reserve absorbs the lumpiness. A steady monthly draw flows out, funding a fixed paycheck the user pays themselves on the same day every month.
+
+That's the entire metaphor, and it maps cleanly to a working setup. Big months overflow into the reserve. Slow months draw from the reserve. The user's actual paycheck — the number that lands in their personal checking on the 1st — is the same every time. Bills experience that steady stream. The user experiences predictability.
+
+Boring is the feature. Specifically: same number, same day. Forever. Until you choose to change it.
+
+Free for 7 days. $14.99/mo or $129/yr after.`,
+  },
+
+  '14|Wed': {
+    // C20 designer-developer · carousel
+    links: 'becomeable.app/budgeting/designer-developer-budget/',
+    ig: `If you're a designer or dev, here's the budget. (Swipe.)
+
+Project-based income has gaps. Net-60 means you're funding their business. Your Floor is the only number that doesn't change.
+
+Tax. Floor. Reserve. Then yours.
+
+Free for 7 days. Link in bio.
+
+#freelancedesigner #freelancedev #freelancing #1099life #remotework`,
+
+    tt: `Designer/dev budget.
+
+Project-based = gaps.
+Net-60 = funding their business.
+Floor = unchanging number.
+
+Tax. Floor. Reserve. Then yours.
+
+becomeable.app/budgeting/designer-developer-budget/
+
+#freelancetok #1099 #variableincome`,
+
+    li: `How designers and developers budget project-based income, in plain language.
+
+Project work has gaps. Six weeks of work, then two to four weeks of pipeline-building before the next contract starts. The income reflects the work cadence, not a steady weekly rhythm.
+
+Net-60 invoicing is a separate problem. You did the work. The invoice clears 60 days later. During those 60 days, you're effectively funding the client's business out of your reserve. The longer the net-terms, the bigger the reserve has to be to cover the gap without breaking.
+
+Three concepts make project-based income work:
+
+Your Floor. The number that doesn't change month to month. Rent, insurance, the recurring household and business expenses. Knowing your Floor means knowing the minimum the reserve has to cover during a gap.
+
+Tax bucket. Off the top of every deposit, regardless of project. 30% for most 1099 designers and devs. The tax bucket isn't optional and it isn't seasonal.
+
+Reserve. Big enough to cover the Floor through the longest expected gap plus the longest expected net-term. For most: 2-3 months of Floor minimum.
+
+Tax. Floor. Reserve. Then yours.
+
+Free for 7 days. $14.99/mo or $129/yr after.`,
+  },
+
+  '14|Thu': {
+    // 30 hard-mode · single
+    ig: `If you're a freelancer, here's the diagnostic.
+
+Personal finance was built for W-2s.
+
+You're playing on hard mode. Same game, different rules. The advice that worked for someone with a paycheck doesn't transfer cleanly. You're not bad at it. You're playing a different game.
+
+Free for 7 days. Link in bio.
+
+#freelancing #1099life #variableincome #remotework #freelancelife`,
+
+    tt: `Personal finance was built for W-2s.
+
+You're playing on hard mode.
+
+Same game. Different rules.
+
+becomeable.app
+
+#freelancetok #1099 #variableincome`,
+
+    li: `Personal finance was built for W-2 employees. You're playing on hard mode.
+
+That sentence sounds like a complaint, but it's actually a precise diagnosis. The entire personal finance canon — the books, the apps, the YouTube channels, the blogs, the financial advisors — was developed for the W-2 use case. Regular paycheck. Predictable amount. Same employer for years. Benefits handled automatically. Tax withholding handled automatically.
+
+Variable income breaks every one of those defaults. The paycheck is irregular. The amounts vary by 2x or more month to month. There may not be a single employer. Benefits cost real cash. Tax withholding has to be done manually, by the user, on every deposit.
+
+When you play any game with the wrong rulebook, you lose. Not because you're worse at the game. Because the rules don't match. The W-2 rulebook applied to variable income produces wrong answers — sometimes catastrophically wrong, like under-funding the tax bucket and discovering it in April.
+
+The fix is the right rulebook. Variable-income rules are different in specific, learnable ways. Once they're applied, the same income performs differently. The "hard mode" feeling lifts.
+
+Free for 7 days. $14.99/mo or $129/yr after.`,
+  },
+
+  '14|Fri': {
+    // C24 coach-consultant · carousel
+    links: 'becomeable.app/budgeting/coach-consultant-budget/',
+    ig: `If you're a coach or consultant, here's the budget. (Swipe.)
+
+Session income looks predictable until a referral drought hits. Insurance delays compound the pain.
+
+Income reserve. Bills paid in dry weeks.
+
+Free for 7 days. Link in bio.
+
+#coachlife #coaching #consultant #freelancelife #1099life`,
+
+    tt: `Coach/consultant budget.
+
+Session income = predictable until it isn't.
+Referral drought = weeks long.
+Insurance delays = predictable friction.
+
+becomeable.app/budgeting/coach-consultant-budget/
+
+#coachlife #consulting #1099`,
+
+    li: `How coaches and consultants budget session-based income.
+
+Session work feels predictable. The schedule is full, sessions are booked weeks out, the rate is set. Right up until it isn't. A few clients pause. Two referrals don't convert. A holiday week breaks the rhythm. Insurance reimbursements delay 60-90 days. The "predictable" income suddenly has gaps.
+
+The fix is treating predictability as a default-on assumption that's regularly wrong. Plan as if a referral drought is always two months out. The reserve covers a 4-6 week dry stretch without breaking the bills. Tax bucket gets funded on every deposit because session income is taxable income.
+
+The other piece coaches frequently miss: the relationship between client volume and personal energy. Taking any client to keep the cash flowing creates compounding resentment that makes the work worse and the income lumpier. A reserve big enough to say no to the wrong client is a business asset, not just a personal one.
+
+Income reserve. Bills paid in dry weeks. Free to say no.
+
+Free for 7 days. $14.99/mo or $129/yr after.`,
+  },
+
+  '14|Sun': {
+    // B06 audience-cant-budget · brandscript
+    ig: `If you're an entrepreneur who can't budget inconsistent income, you're not alone.
+
+It's not a discipline problem. The available tools were built for paychecks. They don't fit your income shape.
+
+Free for 7 days. Link in bio.
+
+#entrepreneur #1099life #variableincome #freelancelife #smallbusiness`,
+
+    tt: `For entrepreneurs who can't budget inconsistent income.
+
+Not a discipline problem.
+
+The tools were built for paychecks.
+
+becomeable.app
+
+#freelancetok #1099 #entrepreneur`,
+
+    li: `For entrepreneurs who can't budget inconsistent income.
+
+The "can't" is doing real work in that sentence. It's not "won't." It's not "haven't tried." It's "actively cannot, despite trying." That's the experience of trying to apply paycheck-shaped budgeting tools to variable income.
+
+The categories don't fit. The monthly allocation interface assumes a known monthly income. The savings goal calculator assumes a baseline. The "this month vs. last month" comparison gives meaningless answers. After enough rounds of trying generic tools and watching them fail, "can't budget" becomes the lived experience.
+
+But the user wasn't the problem. The tools were the problem. Once the tools match the income shape — split-first allocation, percentage-driven buckets, a smoothing reserve, tax-on-every-deposit — the budgeting starts working. Same person. Different tools. Different result.
+
+Free for 7 days. $14.99/mo or $129/yr after.`,
+  },
+
+  // ─────────────────────────────────────────────────────────
+  // W15 — Persona · gig + real estate
+  // ─────────────────────────────────────────────────────────
+
+  '15|Mon': {
+    // 19 nothing-leaked · single
+    ig: `If you're in gig work, here's the small win.
+
+Bills paid. Taxes covered. Nothing leaked.
+
+That's the whole sentence. Not "I made more money." Not "I hit a goal." The bills are paid, the tax money is sitting where it should, and nothing got reabsorbed into general spending.
+
+Free for 7 days. Link in bio.
+
+#gigworker #rideshare #doordash #1099life #variableincome`,
+
+    tt: `Bills paid.
+Taxes covered.
+Nothing leaked.
+
+That's the whole sentence.
+
+becomeable.app
+
+#gigtok #1099 #rideshare`,
+
+    li: `Bills paid. Taxes covered. Nothing leaked.
+
+Three sentences. They describe the actual outcome of a working money system for variable-income earners. Not "I hit a savings goal." Not "I'm earning more." The boring, structural outcomes that compound month after month.
+
+Bills paid: every cycle, on time, without scrambling, without bridging from a credit card, without choosing which one to skip.
+
+Taxes covered: the tax bucket is funded as a percentage of every deposit. April becomes paperwork because the math was done in real time, not annually.
+
+Nothing leaked: the small undifferentiated spending that aggregates to $1,000-$2,000 a month for most variable-income earners didn't happen. Every dollar had a job. Free spending was bounded to a specific bucket. When that bucket emptied, small spending stopped.
+
+The compound of those three sentences across twelve months is the difference between "I earn enough" and "I'm not making it." Same income. Different result.
+
+Free for 7 days. $14.99/mo or $129/yr after.`,
+  },
+
+  '15|Tue': {
+    // R12 which-one · reel
+    ig: `If you're in gig work, which one are you?
+
+The Freezer. Moving money makes it real.
+The Leaker. Day 30. It's gone.
+The Shame Cycle. Relief, leak, panic.
+
+All three are structural. Not personal.
+
+Free for 7 days. Link in bio.
+
+#gigworker #rideshare #1099life #variableincome #moneymindset`,
+
+    tt: `Which one are you?
+
+The Freezer.
+The Leaker.
+The Shame Cycle.
+
+All structural. Not personal.
+
+becomeable.app
+
+#gigtok #1099 #moneymindset`,
+
+    li: `Three patterns variable-income earners fall into. All structural, none personal.
+
+The Freezer. Money lands and gets left in checking. Moving it feels like committing it to a job, and committing feels reckless when the next deposit is uncertain. By Day 30, the money has been spent without intent, because nothing was allocated. The freeze isn't laziness. It's a rational response to decisions without information.
+
+The Leaker. Money lands and gets routed to a bucket — sometimes — but the small daily spending pulls from checking continuously. By Day 30, the deposit is gone, distributed across hundreds of unmemorable purchases. The leak isn't carelessness. It's the natural behavior of money sitting in an undifferentiated pool.
+
+The Shame Cycle. The user moves between freezing and leaking. Big deposit lands, brief relief, then the leak begins. By Day 28, the bracing starts. Day 30 confirms the worst. Day 1 of the new month, the cycle resets with promises to do better.
+
+All three resolve when every dollar gets a job at deposit. The patterns weren't moral failures. They were the predictable response to an unstructured system.
+
+Free for 7 days. $14.99/mo or $129/yr after.`,
+  },
+
+  '15|Wed': {
+    // C22 rideshare-driver · carousel
+    links: 'becomeable.app/budgeting/rideshare-driver-budget/',
+    ig: `If you drive rideshare, here's the budget. (Swipe.)
+
+Income is daily and fragile. Your gross is not your take-home. Maintenance is your biggest hidden cost.
+
+25% aside before you see it. Rainy days funded early.
+
+Free for 7 days. Link in bio.
+
+#rideshare #uber #lyft #gigworker #1099life`,
+
+    tt: `Rideshare budget.
+
+Income = daily, fragile.
+Gross ≠ take-home.
+Maintenance = hidden cost.
+
+25% aside before you see it.
+
+becomeable.app/budgeting/rideshare-driver-budget/
+
+#rideshare #gigtok #1099`,
+
+    li: `How rideshare drivers budget gig income.
+
+Income is daily and weather-dependent. A rainy holiday weekend pays differently than a slow Tuesday. The cadence is unpredictable enough that monthly averaging is misleading — a single bad week can break the math if there's no reserve.
+
+Your gross is not your take-home. Platform commission, fees, gas, insurance, maintenance, and depreciation all come out before the income is "yours." Most new drivers underestimate the gap between gross and net by 20-40%.
+
+Maintenance is the biggest hidden cost. Tires, brakes, oil, transmission, eventual replacement of the vehicle. None of these arrive on a schedule that matches the income. If maintenance isn't being funded continuously from incoming dollars, it lands as a crisis when something breaks.
+
+The fix is structural. Set 25% aside the moment income lands — covers tax plus a vehicle reserve. The remaining 75% covers your Floor (rent, household), with a personal reserve for slow weeks and rainy days.
+
+Funded early. Bills don't blink during slow stretches.
+
+Free for 7 days. $14.99/mo or $129/yr after.`,
+  },
+
+  '15|Thu': {
+    // 47 every-dollar-assigned · single
+    ig: `If you're in gig work, here's the trap.
+
+Some apps ask you to assign every dollar.
+
+Money you don't have yet. The instructions assume a paycheck on a schedule. Variable income breaks the assumption.
+
+Free for 7 days. Link in bio.
+
+#gigworker #rideshare #1099life #variableincome #budgeting`,
+
+    tt: `Some apps make you assign every dollar.
+
+Money you don't have yet.
+
+That assumes a paycheck. Yours isn't one.
+
+becomeable.app
+
+#gigtok #1099 #variableincome`,
+
+    li: `Some budgeting apps ask you to assign every dollar to a category before the month starts.
+
+That advice works if you know the month's income. It doesn't if you don't. For variable-income earners, "assign every dollar" requires committing money you haven't received yet to specific categories, then reconciling reality against the plan when the actual income lands and turns out to be different.
+
+The reconciliation is the problem. If you assigned $4,000 to monthly categories and $2,800 actually arrived, every category is short. If $5,500 arrived, the surplus has nowhere to go. Either case requires a manual rework. Multiply by twelve months a year, the maintenance cost dominates.
+
+The variable-income alternative is split-first. Money gets categories the moment it arrives, as percentages of what actually landed. No projection. No commitment to amounts not yet earned. No reconciliation. Each deposit gets split into tax bucket, bills, reserve, debt, free — proportional to the deposit's actual size.
+
+Same outcome (every dollar has a job). Different timing (allocation at deposit, not at month-start). Materially less friction for variable income.
+
+Free for 7 days. $14.99/mo or $129/yr after.`,
+  },
+
+  '15|Fri': {
+    // C21 real-estate-agent · carousel
+    links: 'becomeable.app/budgeting/real-estate-agent-budget/',
+    ig: `If you're a real estate agent, here's the budget. (Swipe.)
+
+Commission lands. Half is the brokerage. Deals fall through. Q4 closes are what you worked in Q3.
+
+Tax. Floor. Reserve. Slow seasons without scrambling.
+
+Free for 7 days. Link in bio.
+
+#realestate #realtor #realestateagent #commission #1099life`,
+
+    tt: `Real estate agent budget.
+
+Commission lands. Brokerage takes half.
+Deals fall through.
+Q4 closes = Q3 work.
+
+Tax. Floor. Reserve.
+
+becomeable.app/budgeting/real-estate-agent-budget/
+
+#realestatetok #realtor #commission`,
+
+    li: `How real estate agents budget commission income.
+
+Commissions are big and infrequent. A closing might be 4-8 weeks of work, payable in a single deposit, weeks or months after the work was done. The brokerage takes its split before you see the money. Marketplace fees, MLS dues, insurance, vehicle, marketing — all come out of what's left.
+
+Deals fall through. Inspection issues, financing failures, buyer cold feet, seller cold feet. A deposit that looked likely two weeks ago disappears. Some commissions reverse via chargebacks weeks after they hit.
+
+Q4 closes are what you worked in Q3. The work-to-payment lag is the killer for cash flow. December income reflects October hustle. February reflects November-December hustle (or its absence during the holidays). Living off this month's deposits is not the same as funding this month from this month's work.
+
+The fix: tax bucket on every check, Floor pre-funded, Reserve big enough to cover the longest realistic dry stretch. Slow seasons stop being scrambling seasons. The reserve does the absorbing.
+
+Free for 7 days. $14.99/mo or $129/yr after.`,
+  },
+
+  '15|Sun': {
+    // B08 audience-people · brandscript
+    ig: `If you have inconsistent income, this is for you.
+
+Not freelancers specifically. Not creators specifically. Anyone whose income arrives in waves.
+
+A budget tool that bends with the water.
+
+Free for 7 days. Link in bio.
+
+#variableincome #1099life #freelancing #gigworker #commission`,
+
+    tt: `For people with inconsistent income.
+
+Income arrives in waves.
+Tools assume tides.
+
+becomeable.app
+
+#variableincome #1099 #freelancetok`,
+
+    li: `For people with inconsistent income.
+
+Variable income isn't one job. It's a category that includes freelancers, contractors, creators, commission earners, gig workers, one-person businesses, royalty earners, seasonal workers, and the increasingly common combination of W-2 plus side income.
+
+What ties them together isn't the kind of work. It's the income shape. Lumpy in size. Unpredictable in timing. Often without employer tax withholding. Sometimes net-30 or net-60 from when the work was done. Almost always misaligned with bill schedules.
+
+The shape produces specific structural problems. Tax money has to be set aside manually. Bills experience volatility income doesn't smooth out automatically. A bad month can have downstream effects three months later. Saving against a baseline doesn't work because the baseline doesn't exist.
+
+The shape also has a specific structural fix. Split-first allocation. A reserve that absorbs lumpiness. Percentage-based bucket funding. Tax-on-every-deposit. The fix isn't industry-specific. It's category-specific.
+
+Free for 7 days. $14.99/mo or $129/yr after.`,
+  },
+
+  // ─────────────────────────────────────────────────────────
+  // W16 — Persona · etsy + commission
+  // ─────────────────────────────────────────────────────────
+
+  '16|Mon': {
+    // 16 white-knuckling · single
+    ig: `If you sell online, here's the permission.
+
+Permission to stop white-knuckling.
+
+Every Q4 push, every slow January, every "did this seller refund clear yet" check. The white-knuckling is the symptom. A reserve dissolves it.
+
+Free for 7 days. Link in bio.
+
+#etsyseller #etsy #ecommerce #smallbusiness #1099life`,
+
+    tt: `Permission to stop white-knuckling.
+
+Q4 push. January slow.
+Refund pending.
+
+The white-knuckling is the symptom.
+
+becomeable.app
+
+#etsyseller #ecommerce #1099`,
+
+    li: `Permission to stop white-knuckling.
+
+White-knuckling is the specific physical feeling of trying to control money outcomes through sheer attention. Constantly checking the bank balance. Counting orders before the month closes. Refreshing the dashboard. Holding off on personal spending "just in case." Forecasting cash flow in your head while doing other things.
+
+The white-knuckling isn't laziness or discipline. It's what happens when the system underneath the money isn't trustworthy. With nothing else to rely on, attention becomes the failsafe. Which costs more than the money it's trying to control.
+
+A reserve dissolves white-knuckling structurally. Bills are funded for the next 4-6 weeks regardless of what this week's sales did. Tax money is in a separate bucket regardless of platform reporting timing. Slow weeks aren't survival events. The system is already covering the things attention was trying to cover.
+
+The relief is specific. You stop checking the bank app on weekends. You stop running cash-flow simulations in your head while doing the work. The work gets better because attention is freed up to do the work, not police the money.
+
+Free for 7 days. $14.99/mo or $129/yr after.`,
+  },
+
+  '16|Tue': {
+    // R13 april-no-panic · reel
+    links: 'becomeable.app/taxes/how-much-to-set-aside/',
+    ig: `If you sell online, here's April without the panic.
+
+Move 30% since January. By April, the bill is paid. Just paperwork. Not an event.
+
+Free for 7 days. Link in bio.
+
+#etsyseller #ecommerce #1099life #taxes #smallbusiness`,
+
+    tt: `April without the panic.
+
+Move 30% since January.
+The bill is already paid.
+Just paperwork.
+
+becomeable.app/taxes/how-much-to-set-aside/
+
+#etsyseller #1099 #taxtok`,
+
+    li: `April without the panic, for online sellers specifically.
+
+The 1099-K complications make April harder for ecommerce. The form reports gross sales, not net of fees, returns, or COGS. The IRS sees the gross. You're responsible for proving the net via your return.
+
+If 30% of every payout has been routed to a tax bucket since January, the panic doesn't happen regardless of what the 1099-K shows. The bill is funded. The return is paperwork — actual numbers reconciled against the form, deductions applied, final amount paid from the bucket that's already there.
+
+If 30% has not been routed, the 1099-K becomes a crisis document. The reported gross looks bigger than the income felt. The bill that arrives is real. The money to pay it has to come from somewhere — savings, debt, payment plans.
+
+The interesting detail is that the upstream choice is small. Route 30% on each payout to a separate account. Automatic if it's set up. Monthly if it isn't. Once it's routed, April is a non-event.
+
+Free for 7 days. $14.99/mo or $129/yr after.`,
+  },
+
+  '16|Wed': {
+    // C23 etsy-seller · carousel
+    links: 'becomeable.app/budgeting/etsy-seller-budget/',
+    ig: `If you sell on Etsy, here's the budget. (Swipe.)
+
+Q4 is 40% of revenue. Inventory cash sits in products. 1099-K shows the gross, not the net.
+
+Tax bucket from every deposit. Q4 funds the other 9 months.
+
+Free for 7 days. Link in bio.
+
+#etsyseller #etsy #ecommerce #handmade #smallbusiness`,
+
+    tt: `Etsy budget.
+
+Q4 = 40% of revenue.
+Inventory cash sits in products.
+1099-K shows the gross.
+
+Q4 funds the other 9 months.
+
+becomeable.app/budgeting/etsy-seller-budget/
+
+#etsyseller #ecommerce #handmade`,
+
+    li: `How Etsy sellers budget seasonal, inventory-driven income.
+
+Q4 is roughly 40% of annual revenue for most established Etsy shops. The other nine months spread thin. Treating Q4 income as Q4 spending money guarantees a difficult winter and a harder spring.
+
+Inventory cash is a separate problem. Cash that's tied up in products on the shelf isn't liquid. A successful drop converts inventory to cash, but a slow month leaves cash inside products that haven't sold yet. The accounting on hand-made and small-batch ecommerce is meaningfully different from service-based variable income.
+
+Platform fees, shipping, ad spend, and returns all reduce gross to net. The 1099-K reports gross sales — which can be 30-50% higher than what actually landed in your account after Etsy's cuts and the cost of fulfilling the orders.
+
+The fix:
+
+Tax bucket from every deposit. 30% of net (not gross) is a reasonable starting point. Adjust based on COGS specifics.
+
+Q4 income funds the next 9 months, not Q4 lifestyle. The reserve absorbs the seasonality.
+
+Inventory cash gets tracked separately from operating cash. Don't confuse "I sold $X this month" with "I have $X liquid."
+
+Free for 7 days. $14.99/mo or $129/yr after.`,
+  },
+
+  '16|Thu': {
+    // 38 too-late · single
+    ig: `If you sell online, here's the trap.
+
+Most apps show what already happened.
+
+By the time the spending category goes red, the spending already occurred. Hindsight isn't useful when the goal is preventing the leak.
+
+Free for 7 days. Link in bio.
+
+#ecommerce #etsyseller #onlineseller #smallbusiness #1099life`,
+
+    tt: `Most apps show what already happened.
+
+By then it's too late.
+
+You can't prevent what already occurred.
+
+becomeable.app
+
+#etsyseller #ecommerce #1099`,
+
+    li: `Most budgeting apps show what already happened. By then it's too late.
+
+The standard budgeting interface is a retrospective dashboard. Categories, spending against budget, this month vs. last month, drilldowns into where the money went. Useful for diagnosis. Useless for prevention.
+
+The leak doesn't get closed by knowing where it went. It gets closed by giving every dollar a job before it has a chance to leak. That's an upstream decision — at the moment of deposit — not a downstream review.
+
+Variable-income earners specifically don't benefit from retrospective dashboards. The income isn't predictable enough for budget-vs-actual to be a clean comparison. The categories don't apply consistently because the income source varies. The "this month vs. last month" view is misleading because the months aren't comparable.
+
+What works: split-first allocation, applied automatically the moment a deposit clears. The decisions are made at deposit time. The retrospective view is a status check, not a reckoning. The leak doesn't happen in the first place because the dollars are routed before the spending decisions can pull from them.
+
+Free for 7 days. $14.99/mo or $129/yr after.`,
+  },
+
+  '16|Fri': {
+    // C25 commission-income · carousel
+    links: 'becomeable.app/budgeting/commission-income-budget/',
+    ig: `If you live on commission, here's the survival guide. (Swipe.)
+
+Commission is a job where the rules change monthly. "If I just had three good months in a row" — the wrong frame.
+
+Tax. Bills. Reserve. Slow months funded ahead.
+
+Free for 7 days. Link in bio.
+
+#commissionsales #salesperson #saleslife #1099life #variableincome`,
+
+    tt: `Commission survival guide.
+
+Rules change monthly.
+"3 good months in a row" = wrong frame.
+
+Tax. Bills. Reserve.
+Slow months funded ahead.
+
+becomeable.app/budgeting/commission-income-budget/
+
+#salestok #commission #1099`,
+
+    li: `Commission survival guide for sales-based variable income.
+
+Commission is a job where the rules change monthly. The comp plan adjusts. The targets move. The split changes. The accelerators kick in or don't. A great month and a terrible month can come from the same level of effort with different external conditions.
+
+The trap is the "three good months in a row" frame. It's the wrong frame. Commission earners who structure their finances around chasing three good consecutive months end up white-knuckling, because the three-month sequence rarely happens, and when it does, it's brief.
+
+The right frame: assume the next month is average. Build a system that survives an average month, with a reserve big enough to absorb a bad one without breaking. Big months refill the reserve. They don't fund lifestyle expansion.
+
+Tax bucket on every check. Bills pre-funded from the reserve, not from this month's commission. A personal Floor that doesn't expand when commission expands. The reserve sits between income volatility and life.
+
+You're not bad with money. You're using the wrong brain — the one that tries to time good months. Use the structural one. The system handles the volatility.
+
+Free for 7 days. $14.99/mo or $129/yr after.`,
+  },
+
+  '16|Sun': {
+    // B11 villain-feels-impossible · brandscript
+    ig: `If you have inconsistent income, you've felt this.
+
+Inconsistent income makes budgeting feel impossible.
+
+The "feels" is doing work. It's not impossible. The available tools were the wrong tools. With the right tool, the feeling lifts.
+
+Free for 7 days. Link in bio.
+
+#variableincome #1099life #freelancing #budgeting #moneymindset`,
+
+    tt: `Inconsistent income makes budgeting feel impossible.
+
+The "feels" is doing work.
+
+The tools were wrong.
+
+becomeable.app
+
+#variableincome #1099 #budgeting`,
+
+    li: `Inconsistent income makes budgeting feel impossible.
+
+That sentence captures the lived experience of trying to budget without a tool that fits. The "feels" is doing real work — it's not literally impossible, but every attempt produces friction that makes the work feel pointless.
+
+Why it feels impossible: every budgeting tool starts from the wrong premise. Monthly allocation assumes a known monthly income. Savings goals assume a baseline. Category budgets assume stable spending shapes. Each attempt to use generic tools fails in a slightly different way, and the cumulative experience is "this is impossible for me."
+
+It isn't. The tools were wrong. The category — variable income — has its own working toolkit. Split-first allocation. Percentage-driven buckets. A smoothing reserve. Tax-on-every-deposit. Once those replace the paycheck-shaped defaults, the friction leaves.
+
+The "feels impossible" is a category mismatch, not a personal failure. The feeling lifts when the toolkit matches the income shape.
+
+Free for 7 days. $14.99/mo or $129/yr after.`,
+  },
+
 };
