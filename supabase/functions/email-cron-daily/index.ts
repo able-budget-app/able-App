@@ -9,7 +9,7 @@ const APP_URL = (Deno.env.get('APP_URL') || 'https://becomeable.app').trim().rep
 
 Deno.serve(async (req) => {
   const auth = req.headers.get('Authorization') ?? '';
-  if (!auth.includes(CRON_SECRET)) {
+  if (auth !== `Bearer ${CRON_SECRET}`) {
     return new Response(JSON.stringify({ error: 'Unauthorized' }), { status: 401 });
   }
 
@@ -204,7 +204,7 @@ function layout(inner: string, unsub: string): string {
       <div style="font-weight:900;font-size:30px;letter-spacing:-.03em;color:#111c16;line-height:1;">Able</div>
       <img src="${LOGO_UNDERLINE}" alt="" width="80" height="6" style="display:block;margin:4px auto 0;width:80px;height:6px;border:0;">
     </div>
-    <div style="margin-top:12px;font-size:11px;color:#8ca898;font-weight:700;letter-spacing:.06em;text-transform:uppercase;">For lumpy income</div>
+    <div style="margin-top:12px;font-size:11px;color:#2a7a4a;font-weight:800;letter-spacing:.18em;text-transform:uppercase;">Built for inconsistent income</div>
   </td></tr>
   <tr><td style="background:#ffffff;border-radius:18px;overflow:hidden;box-shadow:0 2px 12px rgba(42,122,74,.08);">
     <div style="height:4px;background:#2a7a4a;background-image:linear-gradient(90deg,#2a7a4a,#3d9e78);"></div>
@@ -221,7 +221,7 @@ function layout(inner: string, unsub: string): string {
 </body></html>`;
 }
 
-const cta = `<a href="${APP_URL}/app.html" style="display:inline-block;background:#2a7a4a;background-image:linear-gradient(135deg,#2a7a4a,#3d9e78);color:#ffffff;padding:14px 28px;border-radius:14px;font-weight:800;text-decoration:none;font-size:14px;margin-top:18px;letter-spacing:-.01em;box-shadow:0 4px 12px rgba(42,122,74,.25);">Open Able</a>`;
+const cta = `<a href="${APP_URL}/app.html" style="display:inline-block;background:#2a7a4a;color:#ffffff;padding:14px 28px;border-radius:14px;font-weight:800;text-decoration:none;font-size:15px;margin-top:18px;letter-spacing:-.01em;box-shadow:0 4px 16px rgba(42,122,74,.3);">Open Able</a>`;
 
 function row(label: string, val: string): string {
   return `<div style="display:flex;justify-content:space-between;padding:12px 0;border-bottom:1px solid #eaf5ee;"><span style="color:#4a5c52;font-weight:600;font-size:14px;">${label}</span><span style="color:#111c16;font-weight:800;font-size:14px;">${val}</span></div>`;
@@ -231,7 +231,7 @@ async function sendDormancy(admin: any, email: string, user: any) {
   const bills = Array.isArray(user.bills) ? user.bills : [];
   const unpaidCount = bills.filter((b: any) => !b.paid).length;
   const buffer = parseFloat(user.buffer) || 0;
-  const inner = `<div style="font-size:22px;font-weight:800;letter-spacing:-.01em;margin-bottom:10px;">A quick check-in.</div>
+  const inner = `<div style="font-size:24px;font-weight:900;letter-spacing:-.03em;line-height:1.15;color:#111c16;margin-bottom:12px;">A quick check-in.</div>
     <div style="font-size:15px;line-height:1.6;color:#4a5c52;font-weight:500;margin-bottom:8px;">
       Money is energy. When we stop looking at it, it starts looking somewhere else.
       ${unpaidCount > 0 ? `You have <strong style="color:#111c16;">${unpaidCount} bill${unpaidCount === 1 ? '' : 's'}</strong> to handle soon.` : `You're current on bills. Good work.`}
@@ -254,7 +254,7 @@ async function sendWeekly(admin: any, email: string, user: any) {
     ...(bufAdded > 0 ? [row('Added to buffer', '$' + Math.round(bufAdded).toLocaleString())] : []),
     row('Buffer now', '$' + Math.round(buffer).toLocaleString()),
   ].join('');
-  const inner = `<div style="font-size:22px;font-weight:800;letter-spacing:-.01em;margin-bottom:10px;">Your week in Able.</div>
+  const inner = `<div style="font-size:24px;font-weight:900;letter-spacing:-.03em;line-height:1.15;color:#111c16;margin-bottom:12px;">Your week in Able.</div>
     <div style="font-size:14px;color:#4a5c52;font-weight:500;margin-bottom:20px;">Last 7 days at a glance.</div>
     ${rows}${cta}`;
   return sendViaResend(admin, email, `Your week in Able`, layout(inner, unsubUrl(user.unsubscribe_token)), 'weekly', user.id);
@@ -263,7 +263,7 @@ async function sendWeekly(admin: any, email: string, user: any) {
 async function sendBillDue(admin: any, email: string, user: any, bills: any[]) {
   const total = bills.reduce((s: number, b: any) => s + (b.amount || 0), 0);
   const list = bills.map((b: any) => `<div style="display:flex;justify-content:space-between;padding:10px 0;border-bottom:1px solid #eaf5ee;"><span style="color:#111c16;font-weight:700;font-size:14px;">${escapeHtml(b.name)}</span><span style="color:#111c16;font-weight:800;font-size:14px;">$${Math.round(b.amount).toLocaleString()}</span></div>`).join('');
-  const inner = `<div style="font-size:22px;font-weight:800;letter-spacing:-.01em;margin-bottom:10px;">Heads up, not a panic.</div>
+  const inner = `<div style="font-size:24px;font-weight:900;letter-spacing:-.03em;line-height:1.15;color:#111c16;margin-bottom:12px;">Heads up, not a panic.</div>
     <div style="font-size:15px;line-height:1.6;color:#4a5c52;font-weight:500;margin-bottom:14px;">You have ${bills.length} bill${bills.length === 1 ? '' : 's'} due tomorrow. If you've already allocated, no action needed.</div>
     ${list}
     <div style="display:flex;justify-content:space-between;padding:14px 0 4px;font-size:14px;font-weight:800;color:#111c16;"><span>Total</span><span>$${Math.round(total).toLocaleString()}</span></div>${cta}`;
@@ -272,7 +272,7 @@ async function sendBillDue(admin: any, email: string, user: any, bills: any[]) {
 
 async function sendLowBuffer(admin: any, email: string, user: any, buffer: number, monthlyBills: number) {
   const pct = Math.round((buffer / monthlyBills) * 100);
-  const inner = `<div style="font-size:22px;font-weight:800;letter-spacing:-.01em;margin-bottom:10px;">A gentle nudge.</div>
+  const inner = `<div style="font-size:24px;font-weight:900;letter-spacing:-.03em;line-height:1.15;color:#111c16;margin-bottom:12px;">A gentle nudge.</div>
     <div style="font-size:15px;line-height:1.6;color:#4a5c52;font-weight:500;margin-bottom:8px;">
       Your buffer sits at <strong style="color:#111c16;">$${Math.round(buffer).toLocaleString()}</strong>, about <strong style="color:#111c16;">${pct}%</strong> of one month of bills.
     </div>
@@ -302,7 +302,7 @@ async function sendMonthlyWrap(admin: any, email: string, user: any) {
     ...(bufAdded > 0 ? [row('Added to buffer', '$' + Math.round(bufAdded).toLocaleString())] : []),
     row('Buffer now', '$' + Math.round(buffer).toLocaleString()),
   ].join('');
-  const inner = `<div style="font-size:22px;font-weight:800;letter-spacing:-.01em;margin-bottom:10px;">${monthName} in Able.</div>
+  const inner = `<div style="font-size:24px;font-weight:900;letter-spacing:-.03em;line-height:1.15;color:#111c16;margin-bottom:12px;">${monthName} in Able.</div>
     <div style="font-size:14px;color:#4a5c52;font-weight:500;margin-bottom:20px;">Last month at a glance. Each month is a data point, not a verdict.</div>
     ${rows}${cta}`;
   return sendViaResend(admin, email, `${monthName} in Able`, layout(inner, unsubUrl(user.unsubscribe_token)), 'monthly_wrap', user.id);
@@ -327,7 +327,7 @@ async function sendCart(admin: any, email: string, user: any, stage: '24h' | '3d
     },
   };
   const c = copy[stage];
-  const inner = `<div style="font-size:22px;font-weight:800;letter-spacing:-.01em;margin-bottom:10px;">${c.title}</div>
+  const inner = `<div style="font-size:24px;font-weight:900;letter-spacing:-.03em;line-height:1.15;color:#111c16;margin-bottom:12px;">${c.title}</div>
     <div style="font-size:15px;line-height:1.6;color:#4a5c52;font-weight:500;margin-bottom:8px;">${c.body}</div>${cta}`;
   return sendViaResend(admin, email, c.subject, layout(inner, unsubUrl(user.unsubscribe_token)), `cart_${stage}`, user.id);
 }
@@ -337,16 +337,16 @@ function escapeHtml(s: string): string {
 }
 
 async function sendTrialDay5(admin: any, email: string, user: any) {
-  const inner = `<div style="font-size:22px;font-weight:800;letter-spacing:-.01em;margin-bottom:10px;">Your Able trial ends in 2 days.</div><div style="font-size:15px;line-height:1.6;color:#4a5c52;font-weight:500;margin-bottom:12px;">Quick heads up. In two days, your card gets charged for the plan you selected.</div><div style="font-size:15px;line-height:1.6;color:#4a5c52;font-weight:500;margin-bottom:12px;">If Able has clicked for you, no action needed. Subscription just starts on day 8.</div><div style="font-size:15px;line-height:1.6;color:#4a5c52;font-weight:500;margin-bottom:12px;">If it has not clicked yet, now is the window. Log any real income and see where it goes. That moment is the whole app. If it does not land, cancel from Settings before day 8.</div>${cta}`;
+  const inner = `<div style="font-size:24px;font-weight:900;letter-spacing:-.03em;line-height:1.15;color:#111c16;margin-bottom:12px;">Your Able trial ends in 2 days.</div><div style="font-size:15px;line-height:1.6;color:#4a5c52;font-weight:500;margin-bottom:12px;">Quick heads up. In two days, your card gets charged for the plan you selected.</div><div style="font-size:15px;line-height:1.6;color:#4a5c52;font-weight:500;margin-bottom:12px;">If Able has clicked for you, no action needed. Subscription just starts on day 8.</div><div style="font-size:15px;line-height:1.6;color:#4a5c52;font-weight:500;margin-bottom:12px;">If it has not clicked yet, now is the window. Log any real income and see where it goes. That moment is the whole app. If it does not land, cancel from Settings before day 8.</div>${cta}`;
   return sendViaResend(admin, email, 'Your Able trial ends in 2 days', layout(inner, unsubUrl(user.unsubscribe_token)), 'trial_day_5_nudge', user.id);
 }
 
 async function sendTrialDay7(admin: any, email: string, user: any) {
-  const inner = `<div style="font-size:22px;font-weight:800;letter-spacing:-.01em;margin-bottom:10px;">Tomorrow: your Able subscription starts.</div><div style="font-size:15px;line-height:1.6;color:#4a5c52;font-weight:500;margin-bottom:12px;">Your 7-day trial ends tomorrow. Your card will be charged for the plan you selected.</div><div style="font-size:15px;line-height:1.6;color:#4a5c52;font-weight:500;margin-bottom:12px;">To continue, do nothing. The subscription starts automatically.</div><div style="font-size:15px;line-height:1.6;color:#4a5c52;font-weight:500;margin-bottom:12px;">To cancel, do it now in Settings. Two taps.</div>${cta}`;
+  const inner = `<div style="font-size:24px;font-weight:900;letter-spacing:-.03em;line-height:1.15;color:#111c16;margin-bottom:12px;">Tomorrow: your Able subscription starts.</div><div style="font-size:15px;line-height:1.6;color:#4a5c52;font-weight:500;margin-bottom:12px;">Your 7-day trial ends tomorrow. Your card will be charged for the plan you selected.</div><div style="font-size:15px;line-height:1.6;color:#4a5c52;font-weight:500;margin-bottom:12px;">To continue, do nothing. The subscription starts automatically.</div><div style="font-size:15px;line-height:1.6;color:#4a5c52;font-weight:500;margin-bottom:12px;">To cancel, do it now in Settings. Two taps.</div>${cta}`;
   return sendViaResend(admin, email, 'Tomorrow: your Able subscription starts', layout(inner, unsubUrl(user.unsubscribe_token)), 'trial_day_7_last_call', user.id);
 }
 
 async function sendTrialEndedNoConvert(admin: any, email: string, user: any) {
-  const inner = `<div style="font-size:22px;font-weight:800;letter-spacing:-.01em;margin-bottom:10px;">Your trial ended. Tell me why.</div><div style="font-size:15px;line-height:1.6;color:#4a5c52;font-weight:500;margin-bottom:12px;">Your Able trial ended and your subscription did not continue. No charge, no hard feelings.</div><div style="font-size:15px;line-height:1.6;color:#4a5c52;font-weight:500;margin-bottom:12px;">One honest answer would genuinely help me: <strong style="color:#111c16;">what was missing for you?</strong> Expensive. Confusing. Not the right shape. Forgot. Whatever is true.</div><div style="font-size:15px;line-height:1.6;color:#4a5c52;font-weight:500;margin-bottom:12px;">Hit reply. I read everything. No follow-up drip, just this one.</div>${cta}`;
+  const inner = `<div style="font-size:24px;font-weight:900;letter-spacing:-.03em;line-height:1.15;color:#111c16;margin-bottom:12px;">Your trial ended. Tell me why.</div><div style="font-size:15px;line-height:1.6;color:#4a5c52;font-weight:500;margin-bottom:12px;">Your Able trial ended and your subscription did not continue. No charge, no hard feelings.</div><div style="font-size:15px;line-height:1.6;color:#4a5c52;font-weight:500;margin-bottom:12px;">One honest answer would genuinely help me: <strong style="color:#111c16;">what was missing for you?</strong> Expensive. Confusing. Not the right shape. Forgot. Whatever is true.</div><div style="font-size:15px;line-height:1.6;color:#4a5c52;font-weight:500;margin-bottom:12px;">Hit reply. I read everything. No follow-up drip, just this one.</div>${cta}`;
   return sendViaResend(admin, email, 'Your trial ended. Tell me why.', layout(inner, unsubUrl(user.unsubscribe_token)), 'trial_ended_no_convert', user.id);
 }
