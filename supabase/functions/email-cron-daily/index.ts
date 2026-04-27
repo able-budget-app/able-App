@@ -172,6 +172,28 @@ function json(body: unknown, status = 200) {
 }
 
 async function sendViaResend(admin: any, to: string, subject: string, html: string, type: string, userId: string): Promise<boolean> {
+  // Claim-first pattern. INSERT a row with status='sending' BEFORE calling
+  // Resend. The UNIQUE index on (user_id, type, sent_day) means a concurrent
+  // cron run that races us hits 23505 unique_violation on insert and bails —
+  // structurally preventing double-sends. After Resend returns, UPDATE the
+  // row with the final status + resend_id.
+  const claim = await admin
+    .from('email_sends')
+    .insert({ user_id: userId, type, status: 'sending', resend_id: null })
+    .select('id')
+    .single();
+  if (claim.error) {
+    // 23505 = unique_violation. Another worker already claimed this slot, so
+    // the email is going / went via that path. Return true so the caller's
+    // counters don't bump 'errors' for this benign no-op.
+    const msg = claim.error.message || '';
+    if (claim.error.code === '23505' || /duplicate key|unique constraint/i.test(msg)) {
+      return true;
+    }
+    console.error('Resend claim error:', claim.error);
+    return false;
+  }
+  const claimId = claim.data?.id;
   try {
     const resp = await fetch('https://api.resend.com/emails', {
       method: 'POST',
@@ -179,11 +201,17 @@ async function sendViaResend(admin: any, to: string, subject: string, html: stri
       body: JSON.stringify({ from: FROM_EMAIL, to, subject, html }),
     });
     const body = await resp.json().catch(() => ({}));
-    await admin.from('email_sends').insert({ user_id: userId, type, status: resp.ok ? 'sent' : 'error', resend_id: body?.id ?? null });
+    if (claimId) {
+      await admin.from('email_sends')
+        .update({ status: resp.ok ? 'sent' : 'error', resend_id: body?.id ?? null })
+        .eq('id', claimId);
+    }
     return resp.ok;
   } catch (e) {
     console.error('Resend error:', e);
-    await admin.from('email_sends').insert({ user_id: userId, type, status: 'error' });
+    if (claimId) {
+      await admin.from('email_sends').update({ status: 'error' }).eq('id', claimId);
+    }
     return false;
   }
 }

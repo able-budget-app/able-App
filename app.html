@@ -1008,6 +1008,15 @@ input,select,button,textarea{font-family:inherit;}
 .next14-mark{font-family:var(--ds-f);font-size:11px;font-weight:800;letter-spacing:-.01em;color:var(--ds-green);background:var(--ds-green-l);border:1px solid var(--ds-green-m);padding:6px 10px;border-radius:100px;cursor:pointer;flex-shrink:0;min-height:32px;white-space:nowrap;transition:background .15s;}
 .next14-mark:hover{background:#d9ecde;}
 .next14-mark:active{transform:scale(.97);}
+/* Look-ahead: monthly bills due past the rolling window (15-45 days out).
+   Informational only — no reservations until they enter the window. */
+.next14-lookahead{margin-top:1.25rem;padding-top:1rem;border-top:1px dashed var(--ds-t4);}
+.next14-lookahead-header{font-size:10px;font-weight:800;letter-spacing:.14em;text-transform:uppercase;color:var(--ds-t3);margin-bottom:4px;}
+.next14-lookahead-sub{font-size:11px;color:var(--ds-t3);font-weight:600;line-height:1.5;margin-bottom:.65rem;}
+.next14-lookahead-row{display:flex;align-items:center;gap:10px;padding:8px 12px;background:var(--ds-page);border-radius:var(--ds-r1);margin-bottom:5px;font-family:var(--ds-f);}
+.next14-lookahead-name{flex:1;min-width:0;font-size:12px;font-weight:700;color:var(--ds-t2);letter-spacing:-.005em;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+.next14-lookahead-meta{font-size:11px;color:var(--ds-t3);font-weight:600;flex-shrink:0;}
+.next14-lookahead-amt{font-size:12px;font-weight:800;color:var(--ds-t2);letter-spacing:-.01em;flex-shrink:0;}
 /* Past-due banner — sits above the hero when monthly bills missed their due day */
 .past-due-banner{display:flex;align-items:center;gap:12px;background:#fdeef2;border-left:4px solid var(--ds-c4);border-radius:var(--ds-r2);padding:12px 14px;margin-bottom:.85rem;box-shadow:var(--ds-sh1);font-family:var(--ds-f);}
 .past-due-banner-icon{width:32px;height:32px;border-radius:50%;background:var(--ds-c4);color:white;display:flex;align-items:center;justify-content:center;font-weight:900;flex-shrink:0;font-size:18px;}
@@ -5532,12 +5541,14 @@ function renderNext14(){
         <div class="next14-summary-val ${net>=0?'next14-summary-val--in':'next14-summary-val--out'}">${(net>=0?'+':'-')}${fr(Math.abs(net))}</div>
       </div>
     </div>`;
-  if (!events.length) {
-    list.innerHTML = `<div class="next14-empty">Nothing on the calendar for the next ${win} days. Either it's a quiet stretch or you haven't added bills + expected income yet.</div>`;
-    return;
-  }
   let html = '';
   let lastDayKey = '';
+  if (!events.length) {
+    // Empty primary list still lets the look-ahead render below — if the user
+    // paid all this month's bills, "next 14 days" can be empty while next
+    // month's rent is still coming.
+    html += `<div class="next14-empty">Nothing on the calendar for the next ${win} days. Either it's a quiet stretch or you haven't added bills + expected income yet.</div>`;
+  }
   events.forEach(ev => {
     const dayKey = ev.date.toISOString().slice(0,10);
     if (dayKey !== lastDayKey) {
@@ -5585,6 +5596,48 @@ function renderNext14(){
         </div>`;
     }
   });
+  // Look-ahead: monthly bills whose next occurrence falls outside the rolling
+  // window but within ~45 days. Without this, paid monthly bills disappear
+  // from view the moment they're checked off — even though next month's
+  // occurrence is right around the corner. Informational only — reservations
+  // still don't extend out (the rolling window is the active planning horizon).
+  const today = new Date(); today.setHours(0,0,0,0);
+  const lookAheadDays = 45;
+  const lookAhead = [];
+  for (const b of (S.bills || [])) {
+    if (!b.due || b.due === 'ongoing') continue;
+    if ((b.freq || 'monthly') !== 'monthly') continue;
+    const dueDay = parseInt(b.due);
+    if (isNaN(dueDay)) continue;
+    // First candidate: this month's occurrence (if not paid + still future).
+    let candidate = monthlyDueDate(today.getFullYear(), today.getMonth(), dueDay);
+    let delta = Math.round((candidate - today) / 86400000);
+    // If this-month is past or paid, hop to next-month's occurrence.
+    if (candidate < today || b.paid) {
+      candidate = monthlyDueDate(today.getFullYear(), today.getMonth() + 1, dueDay);
+      delta = Math.round((candidate - today) / 86400000);
+    }
+    // Only surface if it's PAST the rolling window but within 45d. Bills inside
+    // the window are already rendered above as primary rows.
+    if (delta > win && delta <= lookAheadDays) {
+      lookAhead.push({ name: b.name, amount: b.amount, days: delta, date: candidate });
+    }
+  }
+  if (lookAhead.length) {
+    lookAhead.sort((a, b) => a.days - b.days);
+    const total = lookAhead.reduce((s, r) => s + r.amount, 0);
+    html += `
+      <div class="next14-lookahead">
+        <div class="next14-lookahead-header">Looking further out</div>
+        <div class="next14-lookahead-sub">${fr(total)} in monthly bills past day ${win}. Reservations cover these once their date moves into your ${win}-day window.</div>
+        ${lookAhead.map(r => `
+          <div class="next14-lookahead-row">
+            <span class="next14-lookahead-name">${r.name}</span>
+            <span class="next14-lookahead-meta">${r.date.toLocaleDateString('en-US',{month:'short',day:'numeric'})}</span>
+            <span class="next14-lookahead-amt">-${f2(r.amount)}</span>
+          </div>`).join('')}
+      </div>`;
+  }
   list.innerHTML = html;
 }
 
@@ -9352,14 +9405,39 @@ async function coachSend() {
   view.scrollTop = view.scrollHeight;
 
   try {
-    const { data, error } = await sbGet().functions.invoke('coach-chat', {
-      // Backend re-loads conversation history from coach_messages keyed by user_id,
-      // so we don't need to ship it from the client.
-      body: { message: msg, state: buildCoachState() }
-    });
-    if (error) throw error;
-    if (data && data.error) throw new Error(data.error);
-    if (!data || !data.reply) throw new Error('Empty response from Coach.');
+    // Retry-with-backoff for transient errors (rate-limit, overload, network).
+    // Auth + daily-cap errors fall through immediately to the user-facing
+    // error path below — retrying those is wasted work.
+    const RETRY_PATTERNS = [/rate.?limit|429|too many requests/i, /overloaded|529|503/i, /network|fetch|failed to fetch|timeout|offline/i];
+    const BACKOFF_MS = [0, 1000, 3000];
+    const RETRY_TEXT = ['Coach is thinking', 'Coach is taking a moment', 'One more try'];
+    let data, lastErr;
+    for (let attempt = 0; attempt < BACKOFF_MS.length; attempt++) {
+      if (BACKOFF_MS[attempt] > 0) await new Promise(r => setTimeout(r, BACKOFF_MS[attempt]));
+      // Update the loading bubble so the user knows we're still trying.
+      if (attempt > 0) {
+        const loadingBubble = view.querySelector('.coach-bubble.loading');
+        if (loadingBubble) loadingBubble.textContent = RETRY_TEXT[attempt];
+      }
+      try {
+        // Backend re-loads conversation history from coach_messages keyed by
+        // user_id, so we don't need to ship it from the client.
+        const result = await sbGet().functions.invoke('coach-chat', {
+          body: { message: msg, state: buildCoachState() }
+        });
+        if (result.error) throw result.error;
+        if (result.data && result.data.error) throw new Error(result.data.error);
+        if (!result.data || !result.data.reply) throw new Error('Empty response from Coach.');
+        data = result.data;
+        break;
+      } catch (e) {
+        lastErr = e;
+        const raw = (e && e.message) ? String(e.message) : '';
+        const isRetryable = RETRY_PATTERNS.some(p => p.test(raw));
+        // Don't retry on non-retryable errors or after the final attempt.
+        if (!isRetryable || attempt === BACKOFF_MS.length - 1) throw e;
+      }
+    }
     coachHistory.push({ role: 'assistant', content: data.reply });
     renderCoachMessages(coachHistory);
     if (typeof data.remainingToday === 'number') {
