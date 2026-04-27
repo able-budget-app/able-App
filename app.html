@@ -79,9 +79,16 @@ input,select,button,textarea{font-family:inherit;}
 /* AUTH SCREEN */
 #auth-screen{position:fixed;inset:0;background:var(--ds-page);z-index:1000;display:flex;align-items:center;justify-content:center;padding:1rem;font-family:var(--ds-f);}
 .auth-box{background:var(--ds-card);border-radius:var(--ds-r3);padding:2.5rem 2rem;width:100%;max-width:420px;box-shadow:var(--ds-sh3);}
-.auth-logo{font-family:var(--ds-f);font-size:2rem;font-weight:900;text-align:center;margin-bottom:.5rem;color:var(--ds-t1);letter-spacing:-.03em;}
-.auth-logo em{font-style:normal;color:var(--ds-green);}
-.auth-logo::after{content:'';display:block;width:90px;max-width:70%;height:6px;margin:4px auto 0;background:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 120 4.2' preserveAspectRatio='none'><path d='M3 2.6 Q2 2.4 3 2.15 Q58 1.75 115 0.15 Q119 1 119 2 Q119 3 115 3.9 Q58 3.55 3 2.65 Q2 2.45 3 2.6 Z' fill='%232a7a4a'/></svg>") no-repeat center / 100% 100%;pointer-events:none;}
+/* Canonical Able wordmark — single source of truth for the "Able" logo
+   treatment. Mirrors index.html .nav-logo + .footer-logo: inline-block with
+   absolute-positioned underline that matches the text width (via right:-4%).
+   Use modifier classes for size + color variants. */
+.brand-wordmark{font-family:var(--ds-f);font-size:1.75rem;font-weight:900;color:var(--ds-t1);letter-spacing:-.03em;line-height:1;position:relative;display:inline-block;}
+.brand-wordmark::after{content:'';position:absolute;left:0;right:-4%;bottom:-3px;height:5px;background:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 120 4.2' preserveAspectRatio='none'><path d='M3 2.6 Q2 2.4 3 2.15 Q58 1.75 115 0.15 Q119 1 119 2 Q119 3 115 3.9 Q58 3.55 3 2.65 Q2 2.45 3 2.6 Z' fill='%232a7a4a'/></svg>") no-repeat center / 100% 100%;pointer-events:none;}
+.brand-wordmark--lg{font-size:2rem;}
+.brand-wordmark--xl{font-size:2.25rem;}
+.brand-wordmark--green{color:var(--ds-green);}
+.brand-wordmark-wrap{text-align:center;}
 .auth-tagline{text-align:center;font-size:13px;color:var(--ds-t3);font-weight:600;margin-bottom:1.75rem;letter-spacing:.02em;}
 .auth-tabs{display:flex;gap:2px;background:var(--ds-green-l);border-radius:100px;padding:4px;margin-bottom:1.5rem;}
 .auth-tab{flex:1;padding:9px;border:none;border-radius:100px;background:transparent;color:var(--ds-t2);font-family:var(--ds-f);font-size:13px;font-weight:700;cursor:pointer;transition:all .2s;letter-spacing:-.01em;}
@@ -92,9 +99,6 @@ input,select,button,textarea{font-family:inherit;}
 /* PAYWALL SCREEN */
 #paywall-screen{position:fixed;inset:0;background:var(--ds-page);z-index:999;display:none;align-items:center;justify-content:center;padding:1rem;overflow-y:auto;font-family:var(--ds-f);}
 .paywall-box{background:var(--ds-card);border-radius:var(--ds-r3);padding:2.5rem 2rem;width:100%;max-width:500px;box-shadow:var(--ds-sh3);margin:auto;}
-.paywall-logo{font-family:var(--ds-f);font-size:1.75rem;font-weight:900;text-align:center;margin-bottom:.6rem;color:var(--ds-t1);letter-spacing:-.03em;}
-.paywall-logo em{font-style:normal;color:var(--ds-green);}
-.paywall-logo::after{content:'';display:block;width:80px;max-width:70%;height:5px;margin:4px auto 0;background:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 120 4.2' preserveAspectRatio='none'><path d='M3 2.6 Q2 2.4 3 2.15 Q58 1.75 115 0.15 Q119 1 119 2 Q119 3 115 3.9 Q58 3.55 3 2.65 Q2 2.45 3 2.6 Z' fill='%232a7a4a'/></svg>") no-repeat center / 100% 100%;pointer-events:none;}
 .plan-card{border:2px solid var(--ds-t4);border-radius:var(--ds-r2);padding:1.4rem;margin-bottom:.8rem;cursor:pointer;transition:all .2s;position:relative;background:var(--ds-card);}
 .plan-card:hover{border-color:var(--ds-green);transform:translateY(-1px);box-shadow:var(--ds-sh2);}
 .plan-card.selected{border-color:var(--ds-green);background:var(--ds-green-l);box-shadow:0 0 0 3px rgba(42,122,74,.1);}
@@ -152,7 +156,7 @@ input,select,button,textarea{font-family:inherit;}
 
 /* NAV - responsive: top bar on desktop, bottom tab bar on mobile */
 .nav{background:var(--ds-card);border-bottom:1px solid var(--ds-t4);padding:0 1.75rem;display:flex;align-items:center;justify-content:space-between;height:66px;position:sticky;top:0;z-index:50;box-shadow:var(--ds-sh1);gap:16px;font-family:var(--ds-f);}
-.logo{font-family:var(--ds-f);font-size:1.35rem;font-weight:900;white-space:nowrap;color:var(--ds-t1);letter-spacing:-.02em;position:relative;display:inline-block;line-height:1;padding-bottom:0;}
+.logo{font-family:var(--ds-f);font-size:1.35rem;font-weight:900;white-space:nowrap;color:var(--ds-t1);letter-spacing:-.03em;position:relative;display:inline-block;line-height:1;padding-bottom:0;}
 .logo em{font-style:normal;color:var(--ds-green);}
 .logo::after{content:'';position:absolute;left:0;right:-4%;bottom:-3px;height:5px;background:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 120 4.2' preserveAspectRatio='none'><path d='M3 2.6 Q2 2.4 3 2.15 Q58 1.75 115 0.15 Q119 1 119 2 Q119 3 115 3.9 Q58 3.55 3 2.65 Q2 2.45 3 2.6 Z' fill='%232a7a4a'/></svg>") no-repeat center / 100% 100%;pointer-events:none;}
 .nav-tabs{display:flex;gap:2px;background:var(--ds-green-l);border-radius:100px;padding:4px;flex-shrink:0;}
@@ -1114,7 +1118,7 @@ posthog.init('phc_B6PH36QxpExnyBYhfScFFF6LhDvoyxuFr6PypJuxxky3', {
 <!-- ═══════ AUTH SCREEN ═══════ -->
 <div id="auth-screen">
   <div class="auth-box">
-    <div class="auth-logo">Able</div>
+    <div class="brand-wordmark-wrap" style="margin-bottom:.5rem;"><div class="brand-wordmark brand-wordmark--lg">Able</div></div>
     <div class="auth-tagline">Built for inconsistent income.</div>
     <div class="auth-tabs">
       <button class="auth-tab active" onclick="switchAuthTab('login',this)">Sign in</button>
@@ -1155,7 +1159,7 @@ posthog.init('phc_B6PH36QxpExnyBYhfScFFF6LhDvoyxuFr6PypJuxxky3', {
 <!-- ═══════ PAYWALL SCREEN ═══════ -->
 <div id="paywall-screen">
   <div class="paywall-box">
-    <div class="paywall-logo">Able</div>
+    <div class="brand-wordmark-wrap" style="margin-bottom:.6rem;"><div class="brand-wordmark">Able</div></div>
     <div style="text-align:center;font-size:13px;color:var(--ds-t3);font-weight:600;margin-bottom:1.75rem;letter-spacing:.02em;">Monthly or annual. Same access. Cancel anytime.</div>
 
     <div class="plan-card" id="plan-monthly" role="radio" aria-checked="false" tabindex="0" onclick="selectPlan('monthly')" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();selectPlan('monthly');}">
@@ -1295,6 +1299,10 @@ posthog.init('phc_B6PH36QxpExnyBYhfScFFF6LhDvoyxuFr6PypJuxxky3', {
       <button class="btn btn-sm" onclick="goTo('bills')">Add first bill</button>
     </div>
   </div>
+
+  <!-- Brand wordmark — sets the page tone before the dashboard cards. Same
+       canonical underline used on the landing nav, footer, auth, and paywall. -->
+  <div class="brand-wordmark-wrap" style="margin-bottom:1.25rem;"><div class="brand-wordmark brand-wordmark--lg">Become Able</div></div>
 
   <!-- Past-due bills banner — visible only when monthly bills missed their due day -->
   <div id="past-due-banner"></div>
@@ -2188,7 +2196,7 @@ async function onAuthStateChange(user) {
 
   const authBox = document.querySelector('.auth-box');
   const showLoading = (msg) => {
-    if(authBox) authBox.innerHTML = `<div style="text-align:center;padding:1rem 0;font-family:var(--ds-f);"><div style="font-family:var(--ds-f);font-size:1.75rem;font-weight:900;margin-bottom:.4rem;color:var(--ds-t1);letter-spacing:-.03em;">Able</div><div style="display:inline-flex;align-items:center;gap:10px;margin-top:1.25rem;padding:10px 18px;background:var(--ds-green-l);border-radius:100px;"><div style="width:10px;height:10px;border-radius:50%;background:var(--ds-green);animation:dsPulse 1.2s ease-in-out infinite;"></div><div style="font-size:13px;color:var(--ds-green);font-weight:700;letter-spacing:.02em;">${msg}</div></div></div>`;
+    if(authBox) authBox.innerHTML = `<div style="text-align:center;padding:1rem 0;font-family:var(--ds-f);"><div class="brand-wordmark-wrap" style="margin-bottom:.4rem;"><div class="brand-wordmark">Able</div></div><div style="display:inline-flex;align-items:center;gap:10px;margin-top:1.25rem;padding:10px 18px;background:var(--ds-green-l);border-radius:100px;"><div style="width:10px;height:10px;border-radius:50%;background:var(--ds-green);animation:dsPulse 1.2s ease-in-out infinite;"></div><div style="font-size:13px;color:var(--ds-green);font-weight:700;letter-spacing:.02em;">${msg}</div></div></div>`;
   };
   const showAuthFailure = (errMsg) => {
     if(!authBox) return;
@@ -2200,7 +2208,7 @@ async function onAuthStateChange(user) {
     const safeMsg = (errMsg||'').toString().replace(/[<>&]/g, c => ({'<':'&lt;','>':'&gt;','&':'&amp;'}[c]));
     authBox.innerHTML = `
       <div style="text-align:center;padding:1rem 0;font-family:var(--ds-f);">
-        <div style="font-family:var(--ds-f);font-size:1.75rem;font-weight:900;margin-bottom:.4rem;color:var(--ds-t1);letter-spacing:-.03em;">Able</div>
+        <div class="brand-wordmark-wrap" style="margin-bottom:.4rem;"><div class="brand-wordmark">Able</div></div>
         <div style="font-size:14px;color:var(--ds-c4);font-weight:800;margin:1.25rem 0 .5rem;letter-spacing:-.01em;">Couldn't finish loading your account</div>
         <div style="font-size:12px;color:var(--ds-t3);font-weight:600;line-height:1.5;margin:0 auto 1.25rem;max-width:300px;">${safeMsg||"Something went wrong on our end. Try again — if it keeps happening, sign out and back in."}</div>
         <button class="btn btn-primary" style="margin-bottom:.5rem;width:100%;" onclick="location.reload()">Try again</button>
@@ -2220,7 +2228,7 @@ async function onAuthStateChange(user) {
     const onb=document.getElementById('onboard-screen'); if(onb) onb.style.display='none';
     authBox.innerHTML = `
       <div style="text-align:center;padding:1rem 0;font-family:var(--ds-f);">
-        <div style="font-family:var(--ds-f);font-size:1.75rem;font-weight:900;margin-bottom:.4rem;color:var(--ds-t1);letter-spacing:-.03em;">Able</div>
+        <div class="brand-wordmark-wrap" style="margin-bottom:.4rem;"><div class="brand-wordmark">Able</div></div>
         <div style="display:inline-flex;align-items:center;gap:10px;margin-top:1.25rem;padding:10px 18px;background:var(--ds-green-l);border-radius:100px;"><div style="width:10px;height:10px;border-radius:50%;background:var(--ds-green);animation:dsPulse 1.2s ease-in-out infinite;"></div><div style="font-size:13px;color:var(--ds-green);font-weight:700;letter-spacing:.02em;">Still confirming your payment</div></div>
         <div style="font-size:14px;color:var(--ds-t1);font-weight:800;margin:1.5rem 0 .5rem;letter-spacing:-.01em;">Your payment went through.</div>
         <div style="font-size:13px;color:var(--ds-t2);font-weight:600;line-height:1.5;margin:0 auto 1.25rem;max-width:320px;">Stripe usually confirms in seconds, sometimes it takes a minute. Refresh in a moment and you'll be in.</div>
@@ -6118,7 +6126,7 @@ window.addEventListener('load', async () => {
     const loadingDiv = document.createElement('div');
     loadingDiv.id = 'checkout-return-loading';
     loadingDiv.style.cssText = 'position:fixed;inset:0;display:flex;align-items:center;justify-content:center;background:var(--ds-page);z-index:9999;font-family:var(--ds-f);';
-    loadingDiv.innerHTML = `<div style="text-align:center;padding:2rem;"><div style="font-family:var(--ds-f);font-size:2.25rem;font-weight:900;margin-bottom:.75rem;color:var(--ds-green);letter-spacing:-.03em;">Able</div><div style="display:inline-flex;align-items:center;gap:10px;margin-top:1.25rem;padding:10px 18px;background:var(--ds-card);border-radius:100px;box-shadow:var(--ds-sh1);"><div style="width:10px;height:10px;border-radius:50%;background:var(--ds-green);animation:dsPulse 1.2s ease-in-out infinite;"></div><div style="font-size:13px;color:var(--ds-t2);font-weight:700;letter-spacing:.02em;">Confirming your subscription. Usually takes a few seconds.</div></div></div><style>@keyframes dsPulse{0%,100%{opacity:.4;transform:scale(.9)}50%{opacity:1;transform:scale(1.1)}}</style>`;
+    loadingDiv.innerHTML = `<div style="text-align:center;padding:2rem;"><div class="brand-wordmark-wrap" style="margin-bottom:.75rem;"><div class="brand-wordmark brand-wordmark--xl brand-wordmark--green">Able</div></div><div style="display:inline-flex;align-items:center;gap:10px;margin-top:1.25rem;padding:10px 18px;background:var(--ds-card);border-radius:100px;box-shadow:var(--ds-sh1);"><div style="width:10px;height:10px;border-radius:50%;background:var(--ds-green);animation:dsPulse 1.2s ease-in-out infinite;"></div><div style="font-size:13px;color:var(--ds-t2);font-weight:700;letter-spacing:.02em;">Confirming your subscription. Usually takes a few seconds.</div></div></div><style>@keyframes dsPulse{0%,100%{opacity:.4;transform:scale(.9)}50%{opacity:1;transform:scale(1.1)}}</style>`;
     document.body.appendChild(loadingDiv);
   } else {
     document.getElementById('auth-screen').style.display = 'flex';
