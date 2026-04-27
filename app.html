@@ -355,6 +355,9 @@ input,select,button,textarea{font-family:inherit;}
   .bills-actions .btn-sm{padding:4px 10px;font-size:11px;}
 }
 .modal-bg{position:fixed;inset:0;background:rgba(17,28,22,.45);z-index:200;display:flex;align-items:center;justify-content:center;padding:1rem;backdrop-filter:blur(6px);animation:modalFadeIn .2s ease;overscroll-behavior:contain;}
+/* Allocation preview is launched FROM the allocate sheet (z-index 220), so it
+   needs to sit above the sheet to be visible. Other modals can stay at 200. */
+#modal-alloc-preview{z-index:230;}
 @keyframes modalFadeIn{from{opacity:0;}to{opacity:1;}}
 /* overscroll-behavior:contain stops touch scrolling from bubbling out to the
    body when the modal reaches its scroll edges. dvh respects the iOS dynamic
@@ -2356,9 +2359,13 @@ async function onAuthStateChange(user) {
     populateSources();
     refreshHome();
 
-    // Guided tour no longer auto-starts; empty-state guidance on Home handles
-    // first-time orientation. Users can replay the tour from Settings.
-    if(S.settings.tour_done) {
+    // First-time users (post-onboarding, never run the tour) get auto-fired
+    // into the guided tour so they see the dashboard structure + the day-1
+    // refer step. Tour writes tour_done=true on Skip or Got it, so it won't
+    // fire again. Returning users skip straight to coach nudges.
+    if(!S.settings.tour_done) {
+      setTimeout(() => startTour(), 600);
+    } else {
       evalCoachNudges();
     }
   } catch(e) {
