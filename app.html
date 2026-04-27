@@ -2205,6 +2205,27 @@ async function onAuthStateChange(user) {
       </div>
     `;
   };
+  // Reached when the user paid at Stripe but the webhook hasn't updated their
+  // profile within ~28s. The charge succeeded — bouncing them to the paywall
+  // would be punishing a paying customer for our internal latency. Show a
+  // calm "still confirming" page with a refresh path + support fallback.
+  const showCheckoutPending = () => {
+    if(!authBox) return;
+    document.getElementById('auth-screen').style.display='flex';
+    document.getElementById('paywall-screen').style.display='none';
+    document.getElementById('app').style.display='none';
+    const onb=document.getElementById('onboard-screen'); if(onb) onb.style.display='none';
+    authBox.innerHTML = `
+      <div style="text-align:center;padding:1rem 0;font-family:var(--ds-f);">
+        <div style="font-family:var(--ds-f);font-size:1.75rem;font-weight:900;margin-bottom:.4rem;color:var(--ds-t1);letter-spacing:-.03em;">Able</div>
+        <div style="display:inline-flex;align-items:center;gap:10px;margin-top:1.25rem;padding:10px 18px;background:var(--ds-green-l);border-radius:100px;"><div style="width:10px;height:10px;border-radius:50%;background:var(--ds-green);animation:dsPulse 1.2s ease-in-out infinite;"></div><div style="font-size:13px;color:var(--ds-green);font-weight:700;letter-spacing:.02em;">Still confirming your payment</div></div>
+        <div style="font-size:14px;color:var(--ds-t1);font-weight:800;margin:1.5rem 0 .5rem;letter-spacing:-.01em;">Your payment went through.</div>
+        <div style="font-size:13px;color:var(--ds-t2);font-weight:600;line-height:1.5;margin:0 auto 1.25rem;max-width:320px;">Stripe usually confirms in seconds, sometimes it takes a minute. Refresh in a moment and you'll be in.</div>
+        <button class="btn btn-primary" style="margin-bottom:.5rem;width:100%;" onclick="location.reload()">Check again</button>
+        <div style="font-size:11px;color:var(--ds-t3);font-weight:600;margin-top:.85rem;line-height:1.5;">Still stuck after a couple tries? Email <a href="mailto:hello@becomeable.app" style="color:var(--ds-green);font-weight:700;text-decoration:none;">hello@becomeable.app</a> with your account email and we'll fix it manually within the hour.</div>
+      </div>
+    `;
+  };
 
   if(document.getElementById('settings-email')) document.getElementById('settings-email').textContent=user.email;
 
@@ -2214,8 +2235,8 @@ async function onAuthStateChange(user) {
   if(isFromCheckout){
     window.history.replaceState({},'',window.location.pathname);
     Able.trackOnce('trial_started');
-    console.debug('[Able] From checkout, waiting 1.5s for webhook...');
-    await new Promise(r=>setTimeout(r,1500));
+    console.debug('[Able] From checkout, waiting 2.5s for webhook...');
+    await new Promise(r=>setTimeout(r,2500));
   }
 
   try {
@@ -2226,10 +2247,14 @@ async function onAuthStateChange(user) {
     let hasAccess = await checkSubscription(user.id);
     console.debug(`[Able] First checkSubscription: ${Math.round(performance.now()-t0)}ms, hasAccess=${hasAccess}`);
 
-    // If coming from checkout and not yet active, poll briefly
+    // If coming from checkout and not yet active, poll with progressive backoff.
+    // Stripe webhooks usually land in <3s but can take 20-30s in test mode or
+    // under load. Total budget here is ~28s — beats the prior 7.5s window that
+    // would bounce paying users back to the paywall after the timer expired.
     if(!hasAccess && isFromCheckout) {
-      for(let i=0; i<6 && !hasAccess; i++) {
-        await new Promise(r=>setTimeout(r, 1000));
+      const delays = [1000,1000,1500,1500,2000,2000,2500,2500,3000,3000,3000,3000];
+      for (let i = 0; i < delays.length && !hasAccess; i++) {
+        await new Promise(r=>setTimeout(r, delays[i]));
         sessionStorage.removeItem('able_access_'+user.id);
         const tPoll = performance.now();
         hasAccess = await checkSubscription(user.id);
@@ -2238,12 +2263,22 @@ async function onAuthStateChange(user) {
     }
 
     if(!hasAccess){
+      // Webhook still hasn't landed after the extended poll window. Don't
+      // bounce paying users back to the paywall — their charge succeeded and
+      // we have no way to "un-charge" them. Show a friendly retry state that
+      // makes clear the payment went through. Almost always resolves on the
+      // next reload once the webhook catches up.
       const coLoader = document.getElementById('checkout-return-loading');
       if(coLoader) coLoader.remove();
-      document.getElementById('auth-screen').style.display='none';
-      document.getElementById('paywall-screen').style.display='flex';
-      document.getElementById('app').style.display='none';
-      Able.track('paywall_viewed');
+      if(isFromCheckout){
+        showCheckoutPending();
+        Able.track('checkout_webhook_slow');
+      } else {
+        document.getElementById('auth-screen').style.display='none';
+        document.getElementById('paywall-screen').style.display='flex';
+        document.getElementById('app').style.display='none';
+        Able.track('paywall_viewed');
+      }
       return;
     }
 
