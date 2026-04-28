@@ -1,0 +1,1733 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex,nofollow">
+<title>Able · Business Plan v1.0</title>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:wght@400;500;600;700;800;900&family=DM+Serif+Display&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --ds-page:#f0f7f2;
+    --ds-paper:#fafdfb;
+    --ds-card:#ffffff;
+    --ds-card2:#f7fbf8;
+    --ds-t1:#111c16;
+    --ds-t2:#4a5c52;
+    --ds-t3:#8ca898;
+    --ds-t4:#c4d8cc;
+    --ds-green:#2a7a4a;
+    --ds-green2:#1f6038;
+    --ds-green-l:#eaf5ee;
+    --ds-green-m:#b8e0c8;
+    --ds-c3:#c97c0a;
+    --ds-c4:#c04060;
+    --ds-c5:#3570b8;
+    --ds-warn-bg:#fef3e0;
+    --ds-warn-bd:#e9c98a;
+    --ds-danger-bg:#fdeef2;
+    --ds-danger-bd:#e9b3c1;
+    --ds-f:'Bricolage Grotesque',-apple-system,BlinkMacSystemFont,sans-serif;
+    --ds-fs:'DM Serif Display',Georgia,serif;
+    --ds-r1:12px;
+    --ds-r2:18px;
+    --ds-r3:26px;
+    --ds-sh1:0 1px 4px rgba(0,0,0,.05),0 2px 8px rgba(0,0,0,.04);
+    --ds-sh2:0 2px 8px rgba(0,0,0,.05),0 4px 16px rgba(0,0,0,.06);
+    --ds-sh3:0 4px 16px rgba(0,0,0,.07),0 8px 28px rgba(0,0,0,.08);
+  }
+
+  /* ─── Print page setup ─── */
+  @page{
+    size:letter;
+    margin:0.55in 0.55in 0.7in 0.55in;
+    @bottom-left{
+      content:"able · business plan v1.0";
+      font-family:'Bricolage Grotesque',sans-serif;
+      font-size:9px;
+      color:#8ca898;
+      letter-spacing:.04em;
+    }
+    @bottom-right{
+      content:"page " counter(page);
+      font-family:'Bricolage Grotesque',sans-serif;
+      font-size:9px;
+      color:#8ca898;
+      letter-spacing:.04em;
+    }
+  }
+  @page cover{
+    margin:0;
+    @bottom-left{content:none;}
+    @bottom-right{content:none;}
+  }
+
+  *{box-sizing:border-box;margin:0;padding:0;}
+  html{font-size:13px;}
+  body{
+    background:var(--ds-paper);
+    color:var(--ds-t1);
+    font-family:var(--ds-f);
+    line-height:1.55;
+    -webkit-font-smoothing:antialiased;
+  }
+
+  /* ─── Page wrapper ─── */
+  .page{
+    page-break-after:always;
+    break-after:page;
+    padding:0;
+  }
+  .page:last-child{page-break-after:auto;}
+  .page-break{page-break-before:always;break-before:page;}
+
+  /* ─── Cover ─── */
+  .cover{
+    page:cover;
+    background:var(--ds-card);
+    height:11in;
+    width:8.5in;
+    padding:0.9in 0.85in 0.7in;
+    display:flex;
+    flex-direction:column;
+    page-break-after:always;
+    position:relative;
+  }
+  .cover-eyebrow{
+    font-size:0.72rem;
+    font-weight:800;
+    color:var(--ds-t3);
+    letter-spacing:.22em;
+    text-transform:uppercase;
+  }
+  .cover-spacer{flex:1;}
+  .cover-wordmark{
+    font-family:var(--ds-f);
+    font-size:7rem;
+    font-weight:900;
+    color:var(--ds-t1);
+    letter-spacing:-.04em;
+    line-height:1;
+    position:relative;
+    display:inline-block;
+    padding-bottom:.7rem;
+  }
+  .cover-wordmark::after{
+    content:'';
+    position:absolute;
+    left:0;
+    right:-3%;
+    bottom:0;
+    height:14px;
+    background:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 120 4.2' preserveAspectRatio='none'><path d='M3 2.6 Q2 2.4 3 2.15 Q58 1.75 115 0.15 Q119 1 119 2 Q119 3 115 3.9 Q58 3.55 3 2.65 Q2 2.45 3 2.6 Z' fill='%232a7a4a'/></svg>") no-repeat center / 100% 100%;
+    pointer-events:none;
+  }
+  .cover-subtitle{
+    font-family:var(--ds-fs);
+    font-style:italic;
+    font-size:2.2rem;
+    color:var(--ds-green);
+    margin-top:1.5rem;
+    line-height:1.15;
+    max-width:6in;
+    letter-spacing:-.01em;
+  }
+  .cover-tagline{
+    font-size:1.6rem;
+    font-weight:800;
+    color:var(--ds-t1);
+    margin-top:0.75rem;
+    line-height:1.25;
+    letter-spacing:-.015em;
+    max-width:7in;
+  }
+  .cover-tagline .arrow{color:var(--ds-green);}
+  .cover-foot{
+    border-top:1px solid var(--ds-t4);
+    padding-top:1rem;
+    display:flex;
+    justify-content:space-between;
+    font-size:0.78rem;
+    color:var(--ds-t2);
+    line-height:1.5;
+  }
+  .cover-foot b{font-weight:800;color:var(--ds-t1);}
+
+  /* ─── Section header pattern ─── */
+  .section-head{
+    display:flex;
+    justify-content:space-between;
+    align-items:baseline;
+    border-bottom:2px solid var(--ds-t4);
+    padding-bottom:0.5rem;
+    margin-bottom:1.25rem;
+  }
+  .section-head h1{
+    font-size:1.65rem;
+    font-weight:800;
+    letter-spacing:-.02em;
+    color:var(--ds-t1);
+  }
+  .section-head h1 .num{
+    color:var(--ds-green);
+    font-weight:900;
+    margin-right:0.4rem;
+    font-variant-numeric:tabular-nums;
+  }
+  .section-head .eyebrow{
+    font-size:0.65rem;
+    font-weight:800;
+    color:var(--ds-t3);
+    letter-spacing:.16em;
+    text-transform:uppercase;
+  }
+
+  /* ─── Headlines ─── */
+  h2.display{
+    font-family:var(--ds-fs);
+    font-size:2.4rem;
+    font-weight:400;
+    color:var(--ds-t1);
+    letter-spacing:-.015em;
+    margin:1rem 0 1.4rem;
+    line-height:1.05;
+  }
+  h2.display em{font-style:italic;color:var(--ds-green);}
+  h3{
+    font-size:1.05rem;
+    font-weight:800;
+    letter-spacing:.06em;
+    text-transform:uppercase;
+    color:var(--ds-green2);
+    margin:1.5rem 0 0.6rem;
+  }
+  h4{
+    font-size:0.95rem;
+    font-weight:800;
+    color:var(--ds-t1);
+    margin:1rem 0 0.4rem;
+  }
+  p{margin-bottom:0.65rem;color:var(--ds-t2);line-height:1.6;}
+  p strong, li strong{color:var(--ds-t1);font-weight:700;}
+  p.lead{font-size:1.02rem;line-height:1.6;color:var(--ds-t1);}
+  ul,ol{margin:0.3rem 0 0.85rem 1.3rem;color:var(--ds-t2);}
+  li{margin-bottom:.25rem;line-height:1.55;}
+  a{color:var(--ds-green);text-decoration:none;font-weight:600;}
+  code{
+    font-family:'SF Mono',Menlo,Consolas,monospace;
+    font-size:0.85em;
+    background:var(--ds-green-l);
+    color:var(--ds-green2);
+    padding:1px 5px;
+    border-radius:5px;
+    font-weight:600;
+  }
+  hr.rule{
+    border:none;
+    border-top:1px solid var(--ds-t4);
+    margin:1.5rem 0;
+  }
+
+  /* ─── Cards / callouts ─── */
+  .card{
+    background:var(--ds-card);
+    border:1px solid var(--ds-t4);
+    border-radius:var(--ds-r2);
+    padding:1rem 1.2rem;
+    margin:0.85rem 0;
+    box-shadow:var(--ds-sh1);
+    page-break-inside:avoid;
+    break-inside:avoid;
+  }
+  .card.tinted{background:var(--ds-green-l);border-color:var(--ds-green-m);}
+  .card.warn{background:var(--ds-warn-bg);border-color:var(--ds-warn-bd);}
+  .card.danger{background:var(--ds-danger-bg);border-color:var(--ds-danger-bd);}
+  .card.tinted p, .card.tinted li{color:var(--ds-t1);}
+  .card.warn p, .card.warn li{color:var(--ds-t1);}
+  .callout-eyebrow{
+    font-size:0.62rem;
+    font-weight:800;
+    letter-spacing:.18em;
+    text-transform:uppercase;
+    color:var(--ds-t3);
+    margin-bottom:.3rem;
+  }
+  .card.tinted .callout-eyebrow{color:var(--ds-green2);}
+  .card.warn .callout-eyebrow{color:var(--ds-c3);}
+  .card.danger .callout-eyebrow{color:var(--ds-c4);}
+  blockquote.pull{
+    border-left:3px solid var(--ds-green);
+    background:var(--ds-green-l);
+    padding:0.85rem 1rem 0.85rem 1.1rem;
+    margin:1rem 0;
+    border-radius:0 var(--ds-r2) var(--ds-r2) 0;
+    font-style:italic;
+    color:var(--ds-t1);
+    font-size:1rem;
+    line-height:1.55;
+    page-break-inside:avoid;
+    break-inside:avoid;
+  }
+
+  /* ─── Tables ─── */
+  table{
+    width:100%;
+    border-collapse:collapse;
+    margin:0.85rem 0;
+    font-size:0.86rem;
+    background:var(--ds-card);
+    border-radius:var(--ds-r2);
+    overflow:hidden;
+    box-shadow:var(--ds-sh1);
+    page-break-inside:avoid;
+    break-inside:avoid;
+  }
+  th,td{
+    text-align:left;
+    padding:.55rem .8rem;
+    border-bottom:1px solid var(--ds-t4);
+    vertical-align:top;
+  }
+  th{
+    background:var(--ds-green-l);
+    color:var(--ds-green2);
+    font-weight:800;
+    font-size:0.7rem;
+    letter-spacing:.06em;
+    text-transform:uppercase;
+  }
+  tr:last-child td{border-bottom:none;}
+  td.num,th.num{text-align:right;font-variant-numeric:tabular-nums;}
+  td strong{color:var(--ds-t1);font-weight:800;}
+  tr.total td{
+    background:var(--ds-card2);
+    font-weight:800;
+    color:var(--ds-t1);
+    border-top:2px solid var(--ds-green-m);
+  }
+
+  /* ─── Stat cards (snapshot) ─── */
+  .stats{
+    display:grid;
+    grid-template-columns:repeat(3,1fr);
+    gap:0.85rem;
+    margin:1rem 0;
+  }
+  .stat{
+    background:var(--ds-card);
+    border:1px solid var(--ds-t4);
+    border-radius:var(--ds-r2);
+    padding:1.1rem 1.1rem 1rem;
+    box-shadow:var(--ds-sh1);
+    page-break-inside:avoid;
+    break-inside:avoid;
+  }
+  .stat .stat-eyebrow{
+    font-size:0.6rem;
+    font-weight:800;
+    letter-spacing:.16em;
+    text-transform:uppercase;
+    color:var(--ds-t3);
+    margin-bottom:.4rem;
+  }
+  .stat .stat-value{
+    font-size:1.65rem;
+    font-weight:900;
+    color:var(--ds-t1);
+    letter-spacing:-.02em;
+    line-height:1.1;
+    margin-bottom:.3rem;
+  }
+  .stat .stat-value.green{color:var(--ds-green);}
+  .stat .stat-note{
+    font-size:0.78rem;
+    color:var(--ds-t2);
+    line-height:1.45;
+  }
+
+  /* ─── Tier cards (pricing) ─── */
+  .tiers{
+    display:grid;
+    grid-template-columns:repeat(3,1fr);
+    gap:0.85rem;
+    margin:1rem 0;
+  }
+  .tier{
+    background:var(--ds-card);
+    border:1px solid var(--ds-t4);
+    border-radius:var(--ds-r2);
+    padding:1.1rem 1.1rem;
+    box-shadow:var(--ds-sh1);
+    display:flex;
+    flex-direction:column;
+    page-break-inside:avoid;
+    break-inside:avoid;
+  }
+  .tier.featured{
+    background:var(--ds-green-l);
+    border-color:var(--ds-green);
+    box-shadow:var(--ds-sh2);
+  }
+  .tier.future{opacity:.92;}
+  .tier-name{
+    font-size:0.72rem;
+    font-weight:800;
+    letter-spacing:.16em;
+    text-transform:uppercase;
+    color:var(--ds-green2);
+    margin-bottom:.3rem;
+  }
+  .tier-price{
+    font-size:1.6rem;
+    font-weight:900;
+    color:var(--ds-t1);
+    letter-spacing:-.02em;
+    line-height:1;
+  }
+  .tier-price-suffix{
+    font-size:0.85rem;
+    font-weight:600;
+    color:var(--ds-t2);
+    margin-left:.2rem;
+  }
+  .tier-price-alt{
+    font-size:0.78rem;
+    color:var(--ds-t2);
+    margin-top:.15rem;
+    margin-bottom:.7rem;
+  }
+  .tier-divider{height:1px;background:var(--ds-t4);margin:.45rem 0 .65rem;}
+  .tier ul{
+    list-style:none;
+    margin:0;
+    padding:0;
+    font-size:0.82rem;
+    color:var(--ds-t1);
+  }
+  .tier li{
+    padding:.2rem 0 .2rem 1.1rem;
+    position:relative;
+    margin:0;
+  }
+  .tier li::before{
+    content:'';
+    position:absolute;
+    left:0;top:.55rem;
+    width:7px;height:7px;
+    border-radius:50%;
+    background:var(--ds-green);
+  }
+  .tier-tag{
+    margin-top:.6rem;
+    font-size:0.65rem;
+    font-weight:800;
+    letter-spacing:.14em;
+    text-transform:uppercase;
+    color:var(--ds-t3);
+  }
+  .tier.featured .tier-tag{color:var(--ds-green2);}
+
+  /* ─── Pipeline (surplus split) ─── */
+  .pipeline{
+    display:flex;
+    flex-direction:column;
+    gap:.45rem;
+    margin:0.85rem 0;
+  }
+  .pipeline-step{
+    background:var(--ds-card);
+    border:1px solid var(--ds-t4);
+    border-radius:var(--ds-r2);
+    padding:.7rem 1rem;
+    display:grid;
+    grid-template-columns:34px 1fr auto;
+    gap:.85rem;
+    align-items:center;
+    box-shadow:var(--ds-sh1);
+    page-break-inside:avoid;
+    break-inside:avoid;
+  }
+  .pipeline-step.head{background:var(--ds-green-l);border-color:var(--ds-green-m);}
+  .pipeline-step.tail{background:var(--ds-warn-bg);border-color:var(--ds-warn-bd);}
+  .step-num{
+    width:34px;height:34px;border-radius:50%;
+    background:var(--ds-green);color:#fff;
+    display:flex;align-items:center;justify-content:center;
+    font-weight:900;font-size:0.85rem;
+  }
+  .step-body .ttl{font-weight:800;color:var(--ds-t1);font-size:0.92rem;}
+  .step-body .desc{font-size:0.78rem;color:var(--ds-t2);margin-top:.05rem;line-height:1.45;}
+  .step-default{
+    font-size:0.7rem;
+    color:var(--ds-t3);
+    font-weight:700;
+    font-variant-numeric:tabular-nums;
+    text-align:right;
+    white-space:nowrap;
+  }
+
+  /* ─── TOC ─── */
+  .toc-wrap{padding:1.5rem 0;}
+  .toc-row{
+    display:flex;
+    align-items:baseline;
+    gap:0.75rem;
+    padding:.75rem 0;
+    border-bottom:1px dashed var(--ds-t4);
+    font-size:1rem;
+  }
+  .toc-row .num{
+    font-weight:900;
+    color:var(--ds-green);
+    width:1.6rem;
+    font-variant-numeric:tabular-nums;
+  }
+  .toc-row .title{
+    flex:1;
+    font-weight:700;
+    color:var(--ds-t1);
+  }
+  .toc-row .pg{
+    font-weight:700;
+    color:var(--ds-t3);
+    font-variant-numeric:tabular-nums;
+  }
+
+  /* ─── Two-column layout for some sections ─── */
+  .two-col{
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:0.85rem;
+    margin:0.85rem 0;
+  }
+
+  /* ─── Risk row ─── */
+  .risk{
+    background:var(--ds-card);
+    border:1px solid var(--ds-t4);
+    border-left:4px solid var(--ds-c4);
+    border-radius:var(--ds-r2);
+    padding:0.9rem 1.1rem;
+    margin:0.7rem 0;
+    page-break-inside:avoid;
+    break-inside:avoid;
+    box-shadow:var(--ds-sh1);
+  }
+  .risk .risk-name{
+    font-size:0.6rem;
+    font-weight:800;
+    letter-spacing:.16em;
+    text-transform:uppercase;
+    color:var(--ds-c4);
+    margin-bottom:.25rem;
+  }
+  .risk .risk-title{
+    font-weight:800;
+    color:var(--ds-t1);
+    font-size:0.95rem;
+    margin-bottom:.45rem;
+    line-height:1.3;
+  }
+  .risk p{margin-bottom:.4rem;font-size:0.86rem;}
+  .risk p.mit{
+    color:var(--ds-t1);
+    background:var(--ds-green-l);
+    padding:.55rem .7rem;
+    border-radius:var(--ds-r1);
+    font-size:0.86rem;
+    margin-top:.5rem;
+  }
+  .risk p.mit strong{color:var(--ds-green2);}
+
+  /* ─── Closing block ─── */
+  .closing{
+    background:linear-gradient(135deg,var(--ds-green-l) 0%,var(--ds-card2) 100%);
+    border:1px solid var(--ds-green-m);
+    border-radius:var(--ds-r3);
+    padding:1.5rem 1.7rem;
+    margin:1.5rem 0;
+    text-align:center;
+    page-break-inside:avoid;
+    break-inside:avoid;
+  }
+  .closing .arrow-line{
+    font-family:var(--ds-fs);
+    font-size:2rem;
+    font-style:italic;
+    color:var(--ds-t1);
+    line-height:1.15;
+    margin-bottom:.5rem;
+  }
+  .closing .arrow-line .arrow{color:var(--ds-green);font-style:normal;font-weight:900;}
+  .closing .signoff{
+    font-size:0.72rem;
+    font-weight:800;
+    letter-spacing:.2em;
+    text-transform:uppercase;
+    color:var(--ds-green2);
+    margin-top:.4rem;
+  }
+
+  /* ─── Avoid orphans on key elements ─── */
+  h1,h2,h3,h4{page-break-after:avoid;break-after:avoid;}
+  h2 + p, h3 + p, h4 + p{page-break-before:avoid;}
+</style>
+</head>
+<body>
+
+<!-- ════════════════════ COVER ════════════════════ -->
+<section class="cover page">
+  <div class="cover-eyebrow">Business plan · v1.0 · internal + investor ready</div>
+  <div class="cover-spacer"></div>
+  <div>
+    <div class="cover-wordmark">able.</div>
+    <div class="cover-subtitle">the business plan</div>
+    <div class="cover-tagline">from holding your breath with bills <span class="arrow">→</span> to finally able to breathe.</div>
+  </div>
+  <div class="cover-spacer"></div>
+  <div class="cover-foot">
+    <div>
+      <b>confidential</b><br>
+      do not distribute without permission
+    </div>
+    <div style="text-align:right;">
+      <b>paul johnson</b><br>
+      founder
+    </div>
+  </div>
+</section>
+
+<!-- ════════════════════ CONTENTS ════════════════════ -->
+<section class="page">
+  <div class="section-head">
+    <h1><span class="num">·</span>contents</h1>
+    <div class="eyebrow">Business plan v1.0</div>
+  </div>
+  <p style="font-size:0.88rem;">This document serves three audiences: founder/advisors (internal working doc), investors (fundraising), and mentors/partners (strategic review). Financial projections are placeholders built from industry benchmarks for early-stage consumer SaaS and flagged for editing when real cohort data arrives.</p>
+
+  <div class="toc-wrap">
+    <div class="toc-row"><span class="num">01</span><span class="title">executive summary</span><span class="pg">3</span></div>
+    <div class="toc-row"><span class="num">02</span><span class="title">the company</span><span class="pg">7</span></div>
+    <div class="toc-row"><span class="num">03</span><span class="title">the opportunity</span><span class="pg">10</span></div>
+    <div class="toc-row"><span class="num">04</span><span class="title">the product</span><span class="pg">14</span></div>
+    <div class="toc-row"><span class="num">05</span><span class="title">go-to-market</span><span class="pg">19</span></div>
+    <div class="toc-row"><span class="num">06</span><span class="title">operations</span><span class="pg">24</span></div>
+    <div class="toc-row"><span class="num">07</span><span class="title">financials + capital posture</span><span class="pg">27</span></div>
+    <div class="toc-row"><span class="num">08</span><span class="title">risk + mitigation</span><span class="pg">31</span></div>
+  </div>
+
+  <div class="card tinted">
+    <div class="callout-eyebrow">How to use this plan</div>
+    <p style="margin-bottom:0;">For investor conversations, lead with sections <strong>1, 3, 5, and 7</strong>. For mentor reviews, lead with sections <strong>2, 4, and 8</strong>. For internal decisions, every section matters. A companion financial model spreadsheet lives alongside this document where any assumption can be edited and totals recalculate automatically.</p>
+  </div>
+</section>
+
+<!-- ════════════════════ 01 EXEC SUMMARY ════════════════════ -->
+<section class="page">
+  <div class="section-head">
+    <h1><span class="num">01·</span>executive summary</h1>
+    <div class="eyebrow">The whole plan, in two pages</div>
+  </div>
+
+  <h2 class="display">able, <em>in brief</em></h2>
+
+  <p class="lead">able is a budgeting app built for people whose income doesn't arrive on the same day every two weeks — freelancers, creators, contractors, and small-business owners. The product runs on one mechanic: every time a deposit lands, able splits it across the buckets that matter (taxes off the top, bills reserved by name, then pay-yourself, debt, buffer, and free spending) so the user can see — within seconds of money arriving — what is theirs to spend, what is already promised, and what is being protected for the next bill or the next slow month.</p>
+
+  <p>The rest of the category teaches W-2 budgeting to 1099 income. able teaches a different shape of money to its actual shape: <strong>irregular in, regular out</strong>. The brand promise is the whole story:</p>
+
+  <blockquote class="pull">from unable → able.</blockquote>
+
+  <h3>The opportunity</h3>
+  <p>Over <strong>70 million</strong> Americans do independent work in a given year (MBO Partners). Roughly <strong>10 million</strong> are full-time self-employed (BLS). The creator economy adds a comparable cohort with the same income volatility. The budgeting tools they have access to — YNAB, Monarch, Copilot, Rocket Money, the long tail of spreadsheets — were built around predictable paychecks. Mint sunset on March 23, 2024, leaving the largest soft user base in the category looking for a new home, almost none of which fits variable-income workflow. The intersection of <strong>variable income + envelope-style allocation + AI guidance + emotional permission</strong> is empty. able is positioned to claim it.</p>
+
+  <h3>The founder</h3>
+  <p>able was founded by <strong>paul johnson</strong>, a solo founder who built the product because he kept watching friends earn well and still feel poor — freezing on deposits, leaking by the 30th, and blaming themselves for a tooling mismatch. The brand rules out blame. The product rules out paralysis. Paul ships, writes the marketing, runs the brand. (Full bio in section 2.)</p>
+
+  <h3>The product</h3>
+  <p>A web app at <code>becomeable.app</code>. Core mechanics:</p>
+  <ul>
+    <li><strong>per-deposit allocation engine</strong> with a fixed split order (bills → pay yourself → debt → buffer → free; taxes off the top)</li>
+    <li><strong>plaid at launch</strong> — auto-detect deposits, balance read, auto-mark-paid bills (base tier)</li>
+    <li><strong>method finance</strong> at the plus tier — wallets that hold reserved money separately <em>and</em> pay bills from inside the app</li>
+    <li><strong>AI coach</strong> with full state context — every bill, every reservation, last 10 deposits, history, forecast — built on the Anthropic API</li>
+    <li><strong>per-bill reservations</strong> that rollover each month so set-aside money is never re-used</li>
+    <li><strong>smart planning window</strong> (7/14/21/30 days) so reservations match how the user actually pays</li>
+  </ul>
+
+  <div class="card tinted">
+    <div class="callout-eyebrow">The structural moat</div>
+    <p style="margin-bottom:0;">No other budgeting app connects bank accounts, <strong>holds reserved money in actual wallets for safekeeping</strong>, and <strong>pays bills from inside the app</strong>. YNAB tells you what to set aside — it doesn't move money. Monarch and Copilot show your spending — they don't reserve. Rocket Money negotiates bills — it doesn't allocate. <strong>able closes the loop end-to-end</strong>: see the deposit → allocate it → hold it in a wallet → pay the bill from the wallet. One workflow, one app.</p>
+  </div>
+</section>
+
+<!-- ════════════════════ 01 EXEC SUMMARY (cont.) ════════════════════ -->
+<section class="page">
+  <div class="section-head">
+    <h1><span class="num">01·</span>executive summary <span style="font-weight:600;color:var(--ds-t3);font-size:1rem;">(cont.)</span></h1>
+    <div class="eyebrow">Why now · why us · why this</div>
+  </div>
+
+  <h3>The go-to-market</h3>
+  <p>Content-led. Paul has shipped a 175-piece social library, <strong>6 months of daily posts already scheduled</strong> via the live make.com cross-posting scenario, a 60-second cinematic reel, an SEO content engine with a pillar/cluster taxonomy underway, and a behavioral email system that fires on real product signals. Podcasts and influencer partnerships are the next high-leverage channels (detail in section 5). Paid ads are gated until organic baselines are clean.</p>
+
+  <h3>The financial snapshot</h3>
+  <div class="stats">
+    <div class="stat">
+      <div class="stat-eyebrow">Capital posture</div>
+      <div class="stat-value green">bootstrap-first</div>
+      <div class="stat-note">Product is shipped and self-funded; open to strategic capital, not dependent on it.</div>
+    </div>
+    <div class="stat">
+      <div class="stat-eyebrow">Year 1 ARR target</div>
+      <div class="stat-value">$240,000</div>
+      <div class="stat-note">~1,000 paying subs at blended ~$20/mo ARPU across three tiers.</div>
+    </div>
+    <div class="stat">
+      <div class="stat-eyebrow">Target contribution margin</div>
+      <div class="stat-value">~90%</div>
+      <div class="stat-note">Software economics with plaid + method per-sub costs absorbed.</div>
+    </div>
+  </div>
+
+  <div class="card warn">
+    <div class="callout-eyebrow">Placeholder flag</div>
+    <p style="margin-bottom:0;">All financial numbers in this plan are projections built from industry benchmarks for comparable early-stage consumer SaaS plus per-sub integration costs (plaid, method). When real funnel data, churn cohorts, tier mix, and CAC by channel arrive, these get replaced. See section 7 for full model and assumptions.</p>
+  </div>
+
+  <h3>Why now</h3>
+  <p>Three trends collided in 2024.</p>
+  <ol>
+    <li><strong>Mint sunset.</strong> Intuit shut Mint on March 23, 2024. A category-defining tool exited and its users are still resettling. The largest existing budgeting audience is in motion.</li>
+    <li><strong>The variable-income workforce is the fastest-growing labor cohort.</strong> Independent work has grown ~7% YoY since 2020 (MBO Partners). The creator economy projects past 480 million people globally by 2027 (Goldman Sachs). Neither cohort is well-served by paycheck-budgeting orthodoxy.</li>
+    <li><strong>AI cost has crossed the line where a personalized coach is a feature, not a moonshot.</strong> With Claude Haiku-tier inference, an always-available financial coach can be served at cents per active user per month. The product wedge — "your money has an advisor that knows what's reserved for which bill" — was uneconomic two years ago.</li>
+  </ol>
+
+  <h3>Why us</h3>
+  <p>Paul didn't build able because he saw a market opening. He built it because the same conversation kept happening with friends who earned well and still felt broke. The brand voice — short sentences, plain language, no em dashes, no blame — comes from being inside that pattern, not studying it from the outside. able's design system, brand voice, copy library, and content engine are all internally consistent because one person owns them. The speed advantage of a single-founder, full-stack operator is real and will compound until product-market fit is locked.</p>
+
+  <h3>Why this will work</h3>
+  <ul>
+    <li><strong>No direct competitor</strong> in the variable-income + envelope + AI-coach intersection. YNAB is the closest analogue and explicitly assumes paycheck cadence in its workflow.</li>
+    <li><strong>The per-deposit allocation engine is the moat.</strong> Any tool can copy the UI. Very few will rebuild around the underlying model — bills as named reservations, surplus as a deterministic waterfall, residual auto-routes to debt.</li>
+    <li><strong>The brand is honest in a category that has been performative for decades.</strong> "The problem was never you. It was the advice you were handed." That line is the entire brand and it converts because it is true.</li>
+    <li><strong>AI coach with real state.</strong> Not a wrapper around a chat box. A window into the user's own money model.</li>
+    <li><strong>Scalable from $0 to seven figures with minimal overhead.</strong> SaaS economics, no inventory, no fulfillment.</li>
+  </ul>
+
+  <h3>Capital posture</h3>
+  <p>able is <strong>not actively fundraising.</strong> The product is shipped, the brand is built, the content engine is running, and 6 months of social content is queued. The company is positioned to bootstrap to multimillion ARR on cash-flow economics. The door is open for <em>strategic</em> capital — partners who compound the GTM (creator-economy networks, podcast hosts, accounting/freelance platform leadership, fintech integration partners) or de-risk a specific bottleneck. A clean cap table and a simple SAFE structure makes that path frictionless if the right partner appears, but it is not the plan.</p>
+</section>
+
+<!-- ════════════════════ 02 THE COMPANY ════════════════════ -->
+<section class="page">
+  <div class="section-head">
+    <h1><span class="num">02·</span>the company</h1>
+    <div class="eyebrow">What able is</div>
+  </div>
+
+  <h2 class="display">what <em>able</em> is</h2>
+
+  <p class="lead">able is a budgeting app for people with inconsistent income. One founder, one product, one promise: <strong>from unable → able</strong>. The brand is built on the conviction that variable-income earners aren't bad with money — they were handed advice for a different shape of income and asked to feel ashamed when it didn't fit.</p>
+
+  <h3>The mission</h3>
+  <p>To give every freelancer, creator, and small-business owner a calm, specific, second-by-second sense of what their money is for — so they can stop holding their breath when bills land, stop leaking by the 30th, and start shipping their work without the financial fog underneath it.</p>
+
+  <h3>The belief</h3>
+  <blockquote class="pull">the problem was never you. it was the advice you were handed.<br><br>able is the system built around the actual shape of your income — irregular in, regular out — so you can see what every dollar is for the moment it arrives, and so the next bill, the next quarter, and the next slow month are already accounted for before they show up.</blockquote>
+
+  <h3>Values</h3>
+  <ul>
+    <li><strong>Plain over polished.</strong> Short sentences. No em dashes. No jargon. Real specifics over rounded claims.</li>
+    <li><strong>Calm over hype.</strong> The brand speaks in a lower register than the category. No FOMO, no countdown timers, no "transform your finances forever" promises.</li>
+    <li><strong>Customer is the hero. able is the guide.</strong> Copy that puts the user in the driver's seat. The tool never narrates itself.</li>
+    <li><strong>Honest mechanics.</strong> What the product does, the marketing says. What the product does not do, the marketing does not promise. An internal "app capabilities" document is the canonical reference and content gets fact-checked against it before it ships.</li>
+    <li><strong>Permission, not blame.</strong> Every pain frame is paired with permission. "You froze. That's a normal response to uncertainty. Here is the system that makes it stop happening."</li>
+  </ul>
+</section>
+
+<!-- ════════════════════ 02 (cont.) ════════════════════ -->
+<section class="page">
+  <div class="section-head">
+    <h1><span class="num">02·</span>the company <span style="font-weight:600;color:var(--ds-t3);font-size:1rem;">(cont.)</span></h1>
+    <div class="eyebrow">Origin · structure · founder</div>
+  </div>
+
+  <h3>Origin story (the short version)</h3>
+  <p>able started from a pattern Paul kept seeing — friends earning well and still feeling broke. One was a designer who'd freeze on a deposit because she didn't know when the next one was coming, and by the time she touched it the bills had already drained it. Another was a contractor leaking $500–$1,000 a month in small charges and unable to explain where any of it went. Another talked about Q4 like it was a tax-bill mugging that happened to him every year.</p>
+  <p>These were three different problems sharing the same root cause: budgeting tools that assume paycheck cadence, applied to income that doesn't have one. The patches each person had built — a spreadsheet, a sticky note on the bathroom mirror, a dread-spiral on the 31st — were heroic and unmaintainable.</p>
+  <p>able is the unpatched version. One workflow built around the actual shape of variable income: bills get reserved by name, taxes come off the top, surplus splits in a fixed order, the AI coach answers "what does this deposit mean for me?" with the user's real numbers in front of it. The whole product follows from that single mechanic.</p>
+
+  <h3>Legal structure (planned)</h3>
+  <table>
+    <tbody>
+      <tr><td><strong>Entity type</strong></td><td>LLC (Limited Liability Company)</td></tr>
+      <tr><td><strong>State of formation</strong></td><td><em>placeholder — confirm at funding close</em></td></tr>
+      <tr><td><strong>Ownership</strong></td><td>100% paul johnson at formation</td></tr>
+      <tr><td><strong>Tax election</strong></td><td>Default pass-through LLC; revisit S-corp election at $100K+ revenue</td></tr>
+      <tr><td><strong>Headquarters</strong></td><td><em>placeholder — confirm at funding close</em></td></tr>
+    </tbody>
+  </table>
+
+  <div class="card warn">
+    <div class="callout-eyebrow">Placeholder flag</div>
+    <p style="margin-bottom:0;">LLC formation, operating agreement, and state of formation are on the master task list. Expected completion within 30 days of any funding close.</p>
+  </div>
+
+  <h3>The team</h3>
+  <p>able launches as a single-founder operation. Early contractors are limited and only on demand:</p>
+  <ul>
+    <li><strong>Brand video / motion</strong> — Remotion-rendered reels are produced in-house; outsource only for stuck pipeline ($300–$800/project)</li>
+    <li><strong>Photography / b-roll</strong> — minimal, mostly screen-recorded product footage via a custom Playwright + ffmpeg pipeline already shipped</li>
+    <li><strong>Fractional bookkeeper</strong> starting month 6 ($150–$250/mo)</li>
+    <li><strong>Paid ads operator</strong> at month 9 if scale demands ($1,500–$3,000/mo retainer)</li>
+  </ul>
+  <p>First full-time hire projected in year 2 after PMF is locked: likely a full-stack engineer or a content/community lead, depending on whichever is the binding constraint at that point.</p>
+
+  <h3>The founder</h3>
+  <p><strong>Paul Johnson.</strong> Solo founder. Ships product, writes copy, designs the brand, runs the content engine, talks to users. Background combines product/engineering with brand and content production — the rare combination that makes a single-founder consumer SaaS viable through pre-PMF.</p>
+
+  <h3>Why solo, for now</h3>
+  <p>A co-founder is real overhead at this stage and the work hasn't yet split cleanly along skill lines. The right co-founder for able is a quantitative growth operator or a finance-product specialist, neither of which is a near-term need. Structure of the company will absorb a co-founder if the right person appears; the cap table is intentionally clean to make that easy.</p>
+</section>
+
+<!-- ════════════════════ 03 OPPORTUNITY ════════════════════ -->
+<section class="page">
+  <div class="section-head">
+    <h1><span class="num">03·</span>the opportunity</h1>
+    <div class="eyebrow">Market · customer · positioning</div>
+  </div>
+
+  <h2 class="display">the <em>market</em></h2>
+
+  <h3>The variable-income workforce</h3>
+  <ul>
+    <li><strong>70+ million</strong> Americans did independent work in 2024 (MBO Partners <em>State of Independence</em>).</li>
+    <li><strong>~10 million</strong> are full-time self-employed per BLS — the cohort with the most acute need.</li>
+    <li><strong>Gig workers</strong> (rideshare, delivery, on-demand): ~16 million in the US.</li>
+    <li><strong>Creator economy:</strong> ~50 million globally in 2024, projecting past 100 million by 2030 with US accounting for the largest paid cohort (Goldman Sachs, 2023).</li>
+    <li><strong>Growth rate:</strong> the independent workforce has grown ~7% YoY since 2020 — meaningfully faster than total labor force growth.</li>
+  </ul>
+
+  <h3>The budgeting software market</h3>
+  <p>The personal finance software market is a multi-billion-dollar category. Mint shut down on March 23, 2024 with reports of 20–30M registered users, the largest user base in the category, leaving a redistribution event still in progress. Paid budgeting SaaS leaders (YNAB, Monarch, Copilot, Rocket Money, EveryDollar) sit in the $5–$15/mo range and have collectively been adding subs faster than any year on record because of the Mint exit.</p>
+
+  <h3>The intersection is empty</h3>
+  <p>Every existing budgeting tool teaches W-2 budgeting to 1099 income. The workflow they prescribe — categorize last month's spending, set a category budget for next month, watch progress bars — assumes a known monthly inflow. For variable-income workers, that workflow fails on first contact with reality:</p>
+  <ul>
+    <li>You can't budget against a month when you don't know the month's income.</li>
+    <li>Categorizing last month's leak doesn't stop next month's leak.</li>
+    <li>The emotional load of "I missed budget again" creates avoidance, which creates the leak.</li>
+  </ul>
+  <p>able is the first product designed around the <em>moment of deposit</em> rather than the <em>categorization of spending</em>. When money arrives, every dollar gets a job. The difference is structural, not cosmetic.</p>
+
+  <blockquote class="pull">able is the first budgeting app built for people whose income doesn't arrive on the same day every two weeks — and whose mental model of money has to start at the deposit, not at the spend.</blockquote>
+
+  <h3>Addressable market (conservative estimate)</h3>
+  <table>
+    <tbody>
+      <tr><td>US full-time self-employed</td><td class="num">~10M</td></tr>
+      <tr><td>US creators with $1K+/mo earnings</td><td class="num">~5M</td></tr>
+      <tr><td>US gig + 1099 + commission earners with consistent monthly income</td><td class="num">~15M</td></tr>
+      <tr><td>Conservative target segment (full-time self-employed + serious creators + 1099 with budget urgency)</td><td class="num">~10–12M</td></tr>
+      <tr><td><strong>TAM</strong> at ARPU of $130/yr</td><td class="num"><strong>$1.3B–$1.5B</strong></td></tr>
+      <tr><td><strong>SAM</strong> (US, addressable through digital marketing)</td><td class="num"><strong>$400M–$600M</strong></td></tr>
+      <tr><td><strong>SOM</strong> (5-year realistic capture at 1–2% of SAM)</td><td class="num"><strong>$5M–$12M ARR</strong></td></tr>
+    </tbody>
+  </table>
+
+  <div class="card warn">
+    <div class="callout-eyebrow">Source note</div>
+    <p style="margin-bottom:0;">Market sizing figures are directional estimates based on publicly available data from MBO Partners, BLS, and Goldman Sachs creator-economy research. Real first-party customer research will refine these in year 1.</p>
+  </div>
+</section>
+
+<!-- ════════════════════ 03 (cont.) personas ════════════════════ -->
+<section class="page">
+  <div class="section-head">
+    <h1><span class="num">03·</span>the opportunity <span style="font-weight:600;color:var(--ds-t3);font-size:1rem;">(cont.)</span></h1>
+    <div class="eyebrow">The customer</div>
+  </div>
+
+  <h2 class="display">the target <em>customer</em></h2>
+
+  <p>able's customer research has produced three working personas, each rooted in language pulled directly from real conversations and from competitive review mining. Most users blend two of them.</p>
+
+  <div class="card">
+    <div class="callout-eyebrow">Primary persona</div>
+    <h4 style="margin-top:0;">The Freezer</h4>
+    <p>A graphic designer or developer earning $80K–$160K through 4–8 monthly invoices. When a deposit lands, she doesn't allocate it. She leaves it in checking and tells herself it's "safer untouched" because she doesn't know when the next one is coming. Her core driver is <strong>paralysis under uncertainty</strong>. Her pattern: bills come due, the frozen money has to thaw at the wrong time, the buffer she meant to build never materialized.</p>
+    <blockquote class="pull" style="margin:.5rem 0;">"when a deposit hits, i don't know when the next one is coming, so i just don't touch it."</blockquote>
+    <p style="margin-bottom:0;">She's the highest-LTV able customer because the product solves her exact failure mode on first use.</p>
+  </div>
+
+  <div class="card">
+    <div class="callout-eyebrow">Secondary persona</div>
+    <h4 style="margin-top:0;">The Leaker</h4>
+    <p>A creator or contractor earning $4K–$15K/mo who knows roughly what's coming in but has zero visibility on where it goes. She's tried Mint, YNAB, Copilot. Categorizing felt like homework; she gave up.</p>
+    <blockquote class="pull" style="margin:.5rem 0;">"by the 30th, $500 to $1,000 is gone and i genuinely don't know where."</blockquote>
+    <p style="margin-bottom:0;">She converts on the <em>forecast</em> — seeing what every dollar is <em>for</em> before it leaks.</p>
+  </div>
+
+  <div class="card">
+    <div class="callout-eyebrow">Tertiary persona</div>
+    <h4 style="margin-top:0;">The Shame Cycle</h4>
+    <p>Aware of the problem. Promises herself "next month." Doesn't change the system.</p>
+    <blockquote class="pull" style="margin:.5rem 0;">"i just need to be more disciplined."</blockquote>
+    <p style="margin-bottom:0;">She converts on permission framing in able's brand and on the small wins the product engineers in the first session — the moment a deposit becomes a clean allocation is the moment her system changes.</p>
+  </div>
+</section>
+
+<!-- ════════════════════ 03 (cont.) competitive ════════════════════ -->
+<section class="page">
+  <div class="section-head">
+    <h1><span class="num">03·</span>the opportunity <span style="font-weight:600;color:var(--ds-t3);font-size:1rem;">(cont.)</span></h1>
+    <div class="eyebrow">Competitive landscape · defensible position</div>
+  </div>
+
+  <h2 class="display">the competitive <em>landscape</em></h2>
+
+  <table>
+    <thead><tr><th>Competitor</th><th>Category</th><th>Why they're not able</th></tr></thead>
+    <tbody>
+      <tr><td><strong>YNAB</strong></td><td>Envelope budgeting · $14.99/mo</td><td>Nearest analogue. Assumes paycheck cadence. Heavy upfront setup. Steep learning curve. "Give every dollar a job" applied to a fixed monthly inflow.</td></tr>
+      <tr><td><strong>Monarch</strong></td><td>Dashboard budgeting · $14.99/mo</td><td>Beautiful dashboards, plaid-first. Positioned as Mint successor. Workflow is "see your spend, categorize it." Not built for variable income, no allocation engine.</td></tr>
+      <tr><td><strong>Copilot</strong></td><td>Apple-first dashboard · $13/mo</td><td>Strong design, AI categorization. Spending-side, not income-side. Assumes paycheck cadence in monthly views.</td></tr>
+      <tr><td><strong>Rocket Money</strong></td><td>Bill-tracker + budget · freemium</td><td>Bill negotiation is the headline feature. Budgeting is secondary. Doesn't address variable income.</td></tr>
+      <tr><td><strong>EveryDollar</strong></td><td>Ramsey-flavored zero-based · freemium</td><td>Simple zero-based budget. Assumes a single monthly income.</td></tr>
+      <tr><td><strong>Mint (sunset)</strong></td><td>Free dashboard</td><td>Shut down March 23, 2024. Its 20–30M users are still resettling.</td></tr>
+      <tr><td><strong>Excel / Google Sheets</strong></td><td>DIY</td><td>The largest "competitor" by user count. Heroic but unmaintainable.</td></tr>
+    </tbody>
+  </table>
+
+  <h3>able's defensible position</h3>
+  <p>The moat is not the UI. It's the model.</p>
+
+  <ol>
+    <li><strong>The per-deposit allocation engine.</strong> Any product can copy the screens. Very few will rebuild the underlying data model — bills as named reservations, taxes off the top, deterministic surplus waterfall, residual auto-routes to debt — because doing so requires abandoning the categorize-spending paradigm.</li>
+    <li><strong>AI coach with real state.</strong> The coach reads the user's exact reservation map, last 10 deposits with per-bill funding breakdown, last 3 months of history, and forecast. Not a chatbot bolted to a budget. A financial advisor that knows where every dollar is at this exact moment.</li>
+    <li><strong>Brand voice.</strong> The category has been performative for decades — hype, fear, gamification, blame. able's brand discipline is documented in an internal brand skill and applied uniformly across product, ads, social, email, video, and SEO. Hard to copy in spirit even when easy to copy in font choice.</li>
+    <li><strong>Content compounding.</strong> 6 months of social content scheduled, SEO cluster underway, behavioral email shipped. By the time a competitor identifies the variable-income wedge, able will have meaningful content moat.</li>
+  </ol>
+
+  <div class="card tinted">
+    <div class="callout-eyebrow">The structural moat (restated)</div>
+    <p style="margin-bottom:0;font-size:1.02rem;line-height:1.55;"><strong>No other budgeting app does all three:</strong> connect bank accounts, hold reserved money in actual wallets, and pay bills from inside the app. able is the first product to close the loop end-to-end.</p>
+  </div>
+</section>
+
+<!-- ════════════════════ 04 PRODUCT ════════════════════ -->
+<section class="page">
+  <div class="section-head">
+    <h1><span class="num">04·</span>the product</h1>
+    <div class="eyebrow">What we make · how it's different · roadmap</div>
+  </div>
+
+  <h2 class="display">the <em>product</em></h2>
+
+  <p class="lead">able is a web app at <code>becomeable.app</code>. (PWA-installable; native apps planned for year 2.) The product is built around a single mechanic — the per-deposit allocation engine — surrounded by the smallest set of features needed to make that mechanic load-bearing.</p>
+
+  <h3>The per-deposit allocation engine</h3>
+  <p>Every time the user logs a deposit, able runs a deterministic split:</p>
+
+  <div class="pipeline">
+    <div class="pipeline-step head">
+      <div class="step-num">0</div>
+      <div class="step-body">
+        <div class="ttl">Off-the-top rules</div>
+        <div class="desc">Taxes, contractor pay, owner draws as percentage rules — fire <em>before</em> the surplus split.</div>
+      </div>
+      <div class="step-default">fixed %</div>
+    </div>
+    <div class="pipeline-step">
+      <div class="step-num">1</div>
+      <div class="step-body">
+        <div class="ttl">Bills · reserved by name</div>
+        <div class="desc">Every upcoming bill in the planning window gets its required reservation, tagged to a stable bill ID.</div>
+      </div>
+      <div class="step-default">priority</div>
+    </div>
+    <div class="pipeline-step">
+      <div class="step-num">2</div>
+      <div class="step-body">
+        <div class="ttl">Pay yourself</div>
+        <div class="desc">Owner draw — the most-skipped step in self-employment, made automatic.</div>
+      </div>
+      <div class="step-default">ownerPct</div>
+    </div>
+    <div class="pipeline-step">
+      <div class="step-num">3</div>
+      <div class="step-body">
+        <div class="ttl">Extra debt payoff</div>
+        <div class="desc">Beyond the minimums on the debts page — accelerates payoff on every deposit.</div>
+      </div>
+      <div class="step-default">debtPct · 20%</div>
+    </div>
+    <div class="pipeline-step">
+      <div class="step-num">4</div>
+      <div class="step-body">
+        <div class="ttl">Savings / buffer</div>
+        <div class="desc">The cushion that covers slow months. One-way accumulation; user moves manually when needed.</div>
+      </div>
+      <div class="step-default">bufPct · 15%</div>
+    </div>
+    <div class="pipeline-step">
+      <div class="step-num">5</div>
+      <div class="step-body">
+        <div class="ttl">Yours to spend freely</div>
+        <div class="desc">What's safe to spend right now, without guilt.</div>
+      </div>
+      <div class="step-default">freePct · 5%</div>
+    </div>
+    <div class="pipeline-step tail">
+      <div class="step-num" style="background:var(--ds-c3);">↻</div>
+      <div class="step-body">
+        <div class="ttl">Residual</div>
+        <div class="desc">Anything unallocated rolls to debt by default.</div>
+      </div>
+      <div class="step-default">→ debt</div>
+    </div>
+  </div>
+
+  <h3>Key mechanics</h3>
+  <ul>
+    <li><strong>Per-bill reservations</strong> — every bill has a stable ID, and reserved money is tagged to that ID. When the bill is paid, the reservation releases.</li>
+    <li><strong>Smart planning window</strong> — user-configurable window of 7/14/21/30 days controls which bills the next deposit reserves against.</li>
+    <li><strong>Monthly auto-rollover</strong> — paid flags clear at the start of a new month, but reservations preserve so set-aside money rolls forward.</li>
+    <li><strong>Forecast</strong> — user enters expected income with a date; the dashboard shows projected coverage and shortfall at the granular bill level.</li>
+    <li><strong>Score</strong> — five habit metrics tracked monthly: bills coverage, debt progress, buffer growth, paid-yourself, within-income.</li>
+  </ul>
+</section>
+
+<!-- ════════════════════ 04 (cont.) AI Coach + trial ════════════════════ -->
+<section class="page">
+  <div class="section-head">
+    <h1><span class="num">04·</span>the product <span style="font-weight:600;color:var(--ds-t3);font-size:1rem;">(cont.)</span></h1>
+    <div class="eyebrow">AI coach · trial · what's not in able</div>
+  </div>
+
+  <h3>The AI Coach</h3>
+  <p>A chat surface. Every conversation starts with full state injected as context — bills, debts, settings, sources, obligations, dashboard headline numbers, per-bill reservations, the latest 10 deposits with funding breakdown, last 3 months of history, forecast. The user can ask anything from "is it safe to spend $400 this week?" to "what should I do with this $5K commission?" and the coach answers using their real numbers.</p>
+
+  <p>Three proactive nudges fire on real signals:</p>
+  <ol>
+    <li>Owner pay percentage is 0 but income is being logged</li>
+    <li>Buffer low and a bill is due soon</li>
+    <li>No income logged in 14+ days</li>
+  </ol>
+
+  <p>Dismissed nudges hide for 12 hours. The coach is <strong>advisory</strong> — it does not move money. The user is always the actor.</p>
+
+  <h3>Trial + subscription</h3>
+  <ul>
+    <li><strong>7 days free.</strong> Card required. No charge until day 8.</li>
+    <li>Trial users get full app access from day 1, including the active referral state.</li>
+    <li>Billing handled through Stripe; subscription portal for self-serve upgrade/downgrade/cancel.</li>
+    <li>Pricing structured as three tiers (next page).</li>
+  </ul>
+
+  <h3>What is not (yet) in able — deliberately</h3>
+  <ul>
+    <li><strong>Spending tracking.</strong> Income-side first. Spending-side will be a separate product surface, not a feature retrofit, when it ships.</li>
+    <li><strong>Multi-user / household budgets.</strong> Single-user product through year 1.</li>
+    <li><strong>Tax filing.</strong> able tells you what to set aside. It doesn't file. Integration with a tax product is on the year-2 partnership list.</li>
+  </ul>
+  <p>Restraint here is intentional. Each of those features adds drag to the per-deposit mechanic. Shipping them prematurely is how budgeting tools become the tools they're supposed to replace.</p>
+</section>
+
+<!-- ════════════════════ 04 (cont.) PRICING TIERS ════════════════════ -->
+<section class="page">
+  <div class="section-head">
+    <h1><span class="num">04·</span>the product <span style="font-weight:600;color:var(--ds-t3);font-size:1rem;">(cont.)</span></h1>
+    <div class="eyebrow">Pricing · three tiers</div>
+  </div>
+
+  <h2 class="display">pricing <em>strategy</em></h2>
+
+  <p>Three tiers. Each tier is a real capability jump, not a feature gate. The user upgrades when they want the next layer of automation, not because we paywalled an old feature.</p>
+
+  <div class="tiers">
+    <div class="tier">
+      <div class="tier-name">Essential</div>
+      <div class="tier-price">$14.99<span class="tier-price-suffix">/mo</span></div>
+      <div class="tier-price-alt">or $129/yr · save $50</div>
+      <div class="tier-divider"></div>
+      <ul>
+        <li>Per-deposit allocation engine</li>
+        <li>AI coach with full state</li>
+        <li>Per-bill reservations</li>
+        <li>Smart planning window</li>
+        <li>Forecast + Score</li>
+        <li><strong>Plaid:</strong> auto-detect deposits, balance read, auto-mark-paid</li>
+      </ul>
+      <div class="tier-tag">~93% gross margin</div>
+    </div>
+
+    <div class="tier featured">
+      <div class="tier-name">Plus</div>
+      <div class="tier-price">$29.99<span class="tier-price-suffix">/mo</span></div>
+      <div class="tier-price-alt">or $299/yr · save $60</div>
+      <div class="tier-divider"></div>
+      <ul>
+        <li>Everything in Essential</li>
+        <li><strong>Method finance:</strong> wallets that hold reserved money separately</li>
+        <li><strong>Pay bills from inside the app</strong></li>
+        <li>ACH transfers between buckets</li>
+      </ul>
+      <div class="tier-tag">~87% gross margin · the loop closes</div>
+    </div>
+
+    <div class="tier future">
+      <div class="tier-name">Pro · year 2</div>
+      <div class="tier-price">$49.99<span class="tier-price-suffix">/mo</span></div>
+      <div class="tier-price-alt">or $499/yr</div>
+      <div class="tier-divider"></div>
+      <ul>
+        <li>Everything in Plus</li>
+        <li><strong>Array:</strong> credit dispute + monitoring</li>
+        <li>Identity protection</li>
+        <li>Annual financial health report</li>
+      </ul>
+      <div class="tier-tag">roadmap · ships year 2</div>
+    </div>
+  </div>
+
+  <p style="font-size:0.85rem;">Trial: <strong>7 days free at any tier. Card required. No charge until day 8.</strong></p>
+
+  <div class="card tinted">
+    <div class="callout-eyebrow">Pricing rationale</div>
+    <p style="margin-bottom:0;">Essential at YNAB parity ($14.99/mo) — strategic alignment with the closest analogue's price perception. Plus at $29.99/mo is priced against the value of the workflow it replaces (the user no longer logs into their bank to pay bills, no longer wonders if reserved money is truly separate, no longer needs a second checking account "for taxes"). Pro at $49.99/mo positions able as a complete financial-health stack — comparable to a budgeting app + credit-monitoring + identity protection bundled. Annual prices encode "two months free" framing across all tiers.</p>
+  </div>
+
+  <h3>Product roadmap</h3>
+  <table>
+    <thead><tr><th>When</th><th>Phase</th><th>What ships</th></tr></thead>
+    <tbody>
+      <tr><td><strong>Launch</strong></td><td>Essential tier</td><td>Plaid integration: balance read, auto-detect deposits, auto-mark-paid bills</td></tr>
+      <tr><td><strong>Launch</strong></td><td>Plus tier</td><td>Method finance: wallets, bill pay from inside the app, ACH transfers</td></tr>
+      <tr><td>Year 2</td><td>Pro tier</td><td>Array: credit dispute, monitoring, identity protection, annual report</td></tr>
+      <tr><td>Year 2</td><td>Mobile</td><td>Native iOS + Android (PWA shipped first)</td></tr>
+      <tr><td>Year 2</td><td>Tax season</td><td>Quarterly estimated tax workflow + export-ready packets</td></tr>
+      <tr><td>Year 3</td><td>Multi-user</td><td>Spouse/partner shared allocations</td></tr>
+    </tbody>
+  </table>
+</section>
+
+<!-- ════════════════════ 04 (cont.) future ideas + referral ════════════════════ -->
+<section class="page">
+  <div class="section-head">
+    <h1><span class="num">04·</span>the product <span style="font-weight:600;color:var(--ds-t3);font-size:1rem;">(cont.)</span></h1>
+    <div class="eyebrow">Ideas for future · referral · mission</div>
+  </div>
+
+  <h3>Ideas for future (uncommitted)</h3>
+  <p>Surfaced from customer research and competitive whitespace; would be evaluated against the per-deposit mechanic before any commitment:</p>
+
+  <div class="two-col">
+    <div class="card">
+      <div class="callout-eyebrow">Business + personal split</div>
+      <p style="margin-bottom:0;">Separate "business able" + "personal able" workspaces with internal transfers. High-leverage for the freelancer-LLC cohort.</p>
+    </div>
+    <div class="card">
+      <div class="callout-eyebrow">Invoicing integration</div>
+      <p style="margin-bottom:0;">Pull from Stripe / Wave / Harvest so deposits arrive with their source attached.</p>
+    </div>
+    <div class="card">
+      <div class="callout-eyebrow">Tax filing partner</div>
+      <p style="margin-bottom:0;">Keeper, Collective, or similar. Revenue share, not a build.</p>
+    </div>
+    <div class="card">
+      <div class="callout-eyebrow">Debt payoff strategy</div>
+      <p style="margin-bottom:0;">Avalanche/snowball calculator with payoff projections fed by allocation data.</p>
+    </div>
+    <div class="card">
+      <div class="callout-eyebrow">Named savings goals</div>
+      <p style="margin-bottom:0;">"House down payment," "Q4 tax," each with a target and trajectory.</p>
+    </div>
+    <div class="card">
+      <div class="callout-eyebrow">Emergency override</div>
+      <p style="margin-bottom:0;">One-tap "this is a slow month" mode that auto-rebalances reservations from buffer with the user's approval.</p>
+    </div>
+    <div class="card">
+      <div class="callout-eyebrow">Collaborative coach</div>
+      <p style="margin-bottom:0;">Share a one-time coach session with an accountant or financial advisor.</p>
+    </div>
+    <div class="card">
+      <div class="callout-eyebrow">In-app learning paths</div>
+      <p style="margin-bottom:0;">Guided lessons (already wired to <code>lesson_progress</code>) on tax setup, debt, slow-month playbook.</p>
+    </div>
+  </div>
+
+  <h3>The referral system</h3>
+  <p>Every trial user gets an active referral code from day 1 (shipped 2026-04-26). A successful referral grants the inviter a billing credit and the invitee a 7-day extended trial. Structure rewards the user's natural sharing impulse without paying a percentage of subscription revenue. Mechanics will be tuned against real referral cohort data in year 1.</p>
+
+  <h3>Mission tie-in (proposed)</h3>
+  <p>A percentage of every subscription (proposed: <strong>1%</strong>) routes to financial-literacy education partners — ideally one that serves first-generation freelancers and immigrant entrepreneurs, the cohort with the highest variable-income exposure and the lowest access to professional advice. This is not a marketing add-on; it's part of why the brand exists. Structure to be formalized in year 1.</p>
+</section>
+
+<!-- ════════════════════ 05 GTM ════════════════════ -->
+<section class="page">
+  <div class="section-head">
+    <h1><span class="num">05·</span>go-to-market</h1>
+    <div class="eyebrow">How we launch and grow</div>
+  </div>
+
+  <h2 class="display">go-to-market <em>strategy</em></h2>
+
+  <h3>Positioning principle</h3>
+  <p class="lead">able's customer doesn't search for "budgeting app for inconsistent income" until she's already aware that her income is the reason every other budgeting app failed her. The work is to <em>name</em> the felt experience first — the freeze, the leak, the day-31 shame — so that when she searches, she searches for <strong>us</strong>. That shifts the marketing philosophy:</p>
+
+  <blockquote class="pull">content leads, product follows. we don't sell. we name what's been happening, and let the product be the answer.</blockquote>
+
+  <h3>The launch plan (built, in-market)</h3>
+  <p>able is not pre-launch. The product is live at <code>becomeable.app</code>, the brand is shipped, <strong>6 months of social content is queued and scheduled</strong>, the email program is wired, and the content engine is running. The GTM section therefore reads less as a launch plan and more as a <em>scale plan</em> — the channels are open and the question is throughput.</p>
+
+  <table>
+    <thead><tr><th>Phase</th><th>What</th><th>Status</th></tr></thead>
+    <tbody>
+      <tr><td>1 · Foundation</td><td>Landing page · brand voice · design system · domain DNS verified · email infra live</td><td><strong>shipped</strong></td></tr>
+      <tr><td>2 · Content factory</td><td>175-piece social library · 60s reel · SEO cluster underway · 477 captions · 6 months scheduled</td><td><strong>shipped</strong></td></tr>
+      <tr><td>3 · Distribution</td><td>Make scenario `4869011` live across IG / FB / LinkedIn · behavioral email triggers wired</td><td><strong>live</strong></td></tr>
+      <tr><td>4 · Podcasts + influencers</td><td>Founder appearances + creator-economy partnerships</td><td>month 1–6</td></tr>
+      <tr><td>5 · Paid layer</td><td>Meta + Google Search + YouTube pre-roll, gated to baseline-clean</td><td>month 4–9</td></tr>
+      <tr><td>6 · Referral amplification</td><td>Day-1 referral state · in-product moments tuned</td><td>continuous</td></tr>
+    </tbody>
+  </table>
+
+  <h3>Channels</h3>
+  <ul>
+    <li><strong>Social (organic)</strong> — IG, TikTok, LinkedIn, X. <strong>6 months of content scheduled.</strong> Signature hook patterns: freezing metaphor, day 1–31 escalation, leak visualization. Content pillars: moments / problem-frame / brand / product.</li>
+    <li><strong>Podcasts</strong> — Paul as guest on freelance / creator / SMB / variable-income personal-finance shows. Paid sponsorships on top-tier shows. 50-podcast target list. Founder-led pitch.</li>
+    <li><strong>Influencer partnerships</strong> — selected creator-economy and freelance-economy voices (10K–200K engaged). Extended trial + revenue-share comp. <em>Not</em> mass-market influencer marketing. ~30 priority targets.</li>
+    <li><strong>In-app referral</strong> — primary low-CAC growth engine. Live from day 1 of trial.</li>
+    <li><strong>SEO + content</strong> — primary long-term moat. Pillar/cluster strategy across budgeting / business / learn / taxes.</li>
+    <li><strong>Email</strong> — highest-leverage retention channel. Behavioral triggers fire on real product signals. Sender domain verified.</li>
+    <li><strong>Community</strong> — Reddit (r/freelance, r/Entrepreneur, r/personalfinance, r/digitalnomad), creator-economy Discord, Indie Hackers. Founder-led, never astroturfed.</li>
+    <li><strong>Comparison + post-Mint SEO</strong> — "best budgeting app for self-employed," "after Mint for freelancers," "YNAB vs Able for variable income." Captures decision-stage searches.</li>
+    <li><strong>Paid ads</strong> — strategic, gated until baselines clean.</li>
+    <li><strong>Partnerships (year 2+)</strong> — tax-prep services, accounting platforms, freelance marketplaces, creator-economy newsletters, fintech infra partners.</li>
+  </ul>
+</section>
+
+<!-- ════════════════════ 05 (cont.) PODCASTS + INFLUENCERS ════════════════════ -->
+<section class="page">
+  <div class="section-head">
+    <h1><span class="num">05·</span>go-to-market <span style="font-weight:600;color:var(--ds-t3);font-size:1rem;">(cont.)</span></h1>
+    <div class="eyebrow">Podcasts · influencers</div>
+  </div>
+
+  <h2 class="display"><em>podcasts</em></h2>
+
+  <p>Founder-POV on the right podcast is the highest-leverage acquisition event available to a brand-led consumer SaaS. One 60-minute appearance in front of a high-fit audience produces more qualified trial sign-ups than a month of paid ads at this price point.</p>
+
+  <h3>Target list (50 podcasts)</h3>
+
+  <table>
+    <thead><tr><th>Tier</th><th>Format</th><th>Comp</th><th>Count</th></tr></thead>
+    <tbody>
+      <tr><td><strong>Tier 1</strong></td><td>Paid sponsorship + 30–45 min interview · founder ad-read</td><td>$500–$3,000 + rev share</td><td class="num">15</td></tr>
+      <tr><td><strong>Tier 2</strong></td><td>Guest interview only · pitch-driven booking</td><td>$0 (the appearance is the value)</td><td class="num">20</td></tr>
+      <tr><td><strong>Tier 3</strong></td><td>Niche / community shows · high-fit micro-audiences</td><td>$0</td><td class="num">15</td></tr>
+    </tbody>
+  </table>
+
+  <p style="font-size:0.86rem;color:var(--ds-t2);">Examples (tier 1): <em>Indie Hackers · The Futur · Side Hustle Show · Hustle Smarter · Solopreneur Hour · The Freelance Friday Podcast · Profit First Podcast</em> + 8 more.</p>
+
+  <h3>Cadence</h3>
+  <ul>
+    <li><strong>Month 1–3:</strong> pitch + book. Target 4 confirmed appearances/mo by month 3.</li>
+    <li><strong>Month 4–9:</strong> sustain 4–6 appearances/mo. Measure per-show CAC via dedicated landing pages (<code>becomeable.app/futur</code>).</li>
+    <li><strong>Month 10+:</strong> double down on the 5 best-performing shows; recur quarterly.</li>
+  </ul>
+
+  <h3>The pitch (founder-led, not agency)</h3>
+  <p>Paul pitches each show with a personalized email referencing the most recent 1–2 episodes and tying the appearance to a specific topic the host has already explored. No PR firms, no podcast booking agencies. The founder voice is the product; outsourcing the pitch dilutes the signal.</p>
+
+  <h2 class="display" style="margin-top:1.5rem;"><em>influencer</em> partnerships</h2>
+
+  <p>able is not buying influencer spots. able is partnering with the small number of creator-economy and freelance-economy voices whose audiences already trust them on money topics.</p>
+
+  <div class="two-col">
+    <div class="card">
+      <div class="callout-eyebrow">Who</div>
+      <ul style="margin:0;font-size:0.85rem;">
+        <li>Creator-economy operators · 10K–200K engaged (3%+ engagement)</li>
+        <li>Freelance-economy voices: developers, designers, writers, agency owners</li>
+        <li>Finance-for-self-employed creators (rare and high-value)</li>
+        <li><strong>Not:</strong> mass lifestyle influencers, generic #fintok, anyone who's worked with three competitors this year</li>
+      </ul>
+    </div>
+    <div class="card tinted">
+      <div class="callout-eyebrow">The offer</div>
+      <ul style="margin:0;font-size:0.85rem;">
+        <li>30-day extended free trial code for their audience</li>
+        <li>25% revenue share on first 12 months for organic referrals</li>
+        <li>Quarterly creator-only roadmap briefing</li>
+        <li>First-look on tier launches and beta features</li>
+      </ul>
+    </div>
+  </div>
+
+  <h3>Targets</h3>
+  <ul>
+    <li><strong>Month 1–3:</strong> 5 founding creators activated</li>
+    <li><strong>Month 6:</strong> 12 active creators</li>
+    <li><strong>Month 12:</strong> 25 active creators · top 5 producing 70% of attributed conversions</li>
+  </ul>
+</section>
+
+<!-- ════════════════════ 05 (cont.) CONTENT + EMAIL + MILESTONES ════════════════════ -->
+<section class="page">
+  <div class="section-head">
+    <h1><span class="num">05·</span>go-to-market <span style="font-weight:600;color:var(--ds-t3);font-size:1rem;">(cont.)</span></h1>
+    <div class="eyebrow">Content engine · email · milestones</div>
+  </div>
+
+  <h2 class="display">the content <em>engine</em></h2>
+
+  <h3>Content pillars (weighted)</h3>
+  <ul>
+    <li><strong>The moments</strong> — calm, specific, second-person scenes about variable income (the deposit, the freeze, the 31st). <strong>35%</strong></li>
+    <li><strong>The problem-frame</strong> — day 1–31 escalation, the leak metaphor, "the problem was never you." <strong>25%</strong></li>
+    <li><strong>The founder-POV</strong> — Paul, in voice, explaining what he's seen and why able exists. <strong>20%</strong></li>
+    <li><strong>The product</strong> — actual screens and mechanics shown in motion. <strong>15%</strong></li>
+    <li><strong>The comparison / decision</strong> — "is YNAB right for variable income?" / "what to use after Mint." <strong>5%</strong></li>
+  </ul>
+
+  <h3>Volume (current state + targets)</h3>
+  <ul>
+    <li><strong>IG + Facebook + LinkedIn:</strong> <strong>6 months of daily posts already scheduled</strong> via the live make.com cross-posting scenario.</li>
+    <li><strong>TikTok:</strong> 4 videos/week (manual cadence; same library, repurposed)</li>
+    <li><strong>YouTube:</strong> 1 long-form/month, 4 shorts/week (60s reel produced; repurpose pipeline live)</li>
+    <li><strong>Blog:</strong> 2 long-form articles/week (pillar/cluster)</li>
+    <li><strong>Email:</strong> 1 newsletter/week post-launch, plus behavioral triggers continuous</li>
+  </ul>
+
+  <h2 class="display" style="margin-top:1.5rem;">the <em>email</em> program</h2>
+
+  <p>able has shipped behavioral email infrastructure end-to-end. The daily cron evaluates user state at 16:00 UTC and fires the highest-priority eligible email per user.</p>
+
+  <table>
+    <thead><tr><th>Trigger</th><th>Eligibility</th><th>Purpose</th></tr></thead>
+    <tbody>
+      <tr><td><strong>Welcome series</strong></td><td>New user</td><td>Manifesto + first-allocation walkthrough (5-email sequence)</td></tr>
+      <tr><td><strong>bill_due_tomorrow</strong></td><td>Bill due, not paid, not reserved</td><td>Reduce missed-bill anxiety</td></tr>
+      <tr><td><strong>low_buffer</strong></td><td>Buffer &lt; 14 days operating</td><td>Flag the cushion before it's a problem</td></tr>
+      <tr><td><strong>monthly_wrap</strong></td><td>First day of new month</td><td>Last month's score + this month's setup</td></tr>
+      <tr><td><strong>dormancy</strong></td><td>No app activity 7+ days</td><td>Gentle re-engagement</td></tr>
+      <tr><td><strong>weekly newsletter</strong></td><td>Weekly</td><td>Post-launch broadcast</td></tr>
+      <tr><td><strong>Cart 24h / 3d / 7d</strong></td><td>Trial-to-paid flow</td><td>Incentive ladder</td></tr>
+    </tbody>
+  </table>
+
+  <p style="font-size:0.86rem;">Sender domain verified. Open-rate baseline being established. Unsubscribe is per-type (granular preferences, not all-or-nothing).</p>
+</section>
+
+<!-- ════════════════════ 05 (cont.) MILESTONES ════════════════════ -->
+<section class="page">
+  <div class="section-head">
+    <h1><span class="num">05·</span>go-to-market <span style="font-weight:600;color:var(--ds-t3);font-size:1rem;">(cont.)</span></h1>
+    <div class="eyebrow">Year 1 milestones</div>
+  </div>
+
+  <h2 class="display">year 1 <em>milestones</em></h2>
+
+  <table>
+    <thead><tr><th>Month</th><th>Milestone</th><th class="num">Target</th></tr></thead>
+    <tbody>
+      <tr><td>month 1</td><td>Trial sign-ups</td><td class="num">200</td></tr>
+      <tr><td>month 1</td><td>Content library</td><td class="num">already shipped (6 mo scheduled)</td></tr>
+      <tr><td>month 3</td><td>Paying subs</td><td class="num">100</td></tr>
+      <tr><td>month 3</td><td>Podcast appearances confirmed</td><td class="num">4 / mo cadence</td></tr>
+      <tr><td>month 3</td><td>SEO cluster live (4 pillars)</td><td class="num">30 articles indexed</td></tr>
+      <tr><td>month 6</td><td>Paying subs</td><td class="num">350</td></tr>
+      <tr><td>month 6</td><td>Active influencer partners</td><td class="num">12</td></tr>
+      <tr><td>month 6</td><td>First profitable paid channel</td><td class="num">CAC &lt; 4-mo payback</td></tr>
+      <tr><td>month 6</td><td>Plus-tier mix</td><td class="num">15%+ of paid base</td></tr>
+      <tr><td>month 9</td><td>Paying subs</td><td class="num">700</td></tr>
+      <tr><td>month 12</td><td>Paying subs</td><td class="num"><strong>1,000+</strong></td></tr>
+      <tr class="total"><td>month 12</td><td>ARR</td><td class="num"><strong>$240,000</strong></td></tr>
+      <tr><td>month 12</td><td>Referral attribution</td><td class="num">15% of new subs</td></tr>
+      <tr><td>month 12</td><td>Podcast / influencer attribution</td><td class="num">25% combined</td></tr>
+    </tbody>
+  </table>
+
+  <div class="card warn">
+    <div class="callout-eyebrow">Placeholder flag</div>
+    <p style="margin-bottom:0;">Milestone targets are confident-but-defensible projections built from comparable consumer SaaS launch curves at this price point. Real cohort data will replace these by month 3.</p>
+  </div>
+</section>
+
+<!-- ════════════════════ 06 OPERATIONS ════════════════════ -->
+<section class="page">
+  <div class="section-head">
+    <h1><span class="num">06·</span>operations</h1>
+    <div class="eyebrow">How we actually do the work</div>
+  </div>
+
+  <h2 class="display">technology <em>stack</em></h2>
+
+  <table>
+    <thead><tr><th>Function</th><th>Tool</th><th>Monthly cost (current scale)</th></tr></thead>
+    <tbody>
+      <tr><td>Hosting (web)</td><td><strong>Netlify</strong></td><td>$0–$19</td></tr>
+      <tr><td>Backend / DB / auth</td><td><strong>Supabase</strong> (Postgres + Auth + Edge Functions)</td><td>$25</td></tr>
+      <tr><td>Payments</td><td><strong>Stripe</strong></td><td>2.9% + $0.30 / txn</td></tr>
+      <tr><td>Email</td><td><strong>Resend</strong> (sending domain verified)</td><td>$0–$20</td></tr>
+      <tr><td>AI inference</td><td><strong>Anthropic API</strong> (Claude Haiku for coach)</td><td>~$0.05–$0.20 per active sub/mo</td></tr>
+      <tr><td>Bank connection</td><td><strong>Plaid</strong> (launch)</td><td>per-active, ~$0.50/sub/mo</td></tr>
+      <tr><td>Wallets + bill pay</td><td><strong>Method Finance</strong> (Plus tier)</td><td>per-active, ~$2/sub/mo</td></tr>
+      <tr><td>Automation</td><td><strong>Make.com</strong></td><td>$9</td></tr>
+      <tr><td>Video render</td><td>Remotion (open source)</td><td>$0</td></tr>
+      <tr><td>Analytics</td><td>Supabase events + standard web analytics</td><td>$0</td></tr>
+      <tr><td>Domain</td><td><code>becomeable.app</code></td><td>~$1/mo</td></tr>
+    </tbody>
+  </table>
+
+  <h3>Edge Functions (deployed)</h3>
+  <p>All functions deployed with "Verify JWT" toggled OFF at the gateway. Source-controlled where applicable.</p>
+  <ul style="columns:2;column-gap:1.5rem;">
+    <li><code>coach-chat</code> — Coach API, Anthropic-backed</li>
+    <li><code>email-cron-daily</code> — behavioral + transactional email; 16:00 UTC</li>
+    <li><code>unsubscribe</code> — per-type unsub link</li>
+    <li><code>create-checkout</code> — Stripe checkout session</li>
+    <li><code>create-portal-session</code> — Stripe customer portal</li>
+    <li><code>stripe-webhook</code> — subscription lifecycle</li>
+    <li><code>send-referral-invite</code> — referral email</li>
+    <li><code>ai-onboard</code> — onboarding parser</li>
+  </ul>
+
+  <h3>Deployment workflow</h3>
+  <p>Netlify auto-deploys HTML from <code>main</code>. Supabase edge functions are dashboard-paste deployed. Domain DNS is managed in Cloudflare. Email infrastructure routes through Resend (Amazon SES infra) with DKIM, SPF, MX, and DMARC all verified.</p>
+
+  <h3>KPIs we watch weekly</h3>
+  <ul>
+    <li><strong>Growth:</strong> trial sign-ups, trial-to-paid conversion, MRR, net new MRR</li>
+    <li><strong>Retention:</strong> logo churn, revenue churn, cohort retention by month-of-signup</li>
+    <li><strong>Engagement:</strong> DAU/MAU, deposits logged per active user, coach messages per active user, in-app referral-share rate</li>
+    <li><strong>Unit economics:</strong> CAC by channel, blended CAC, LTV (estimated), payback period, contribution margin per sub</li>
+    <li><strong>Product health:</strong> error rates, edge function error rates, AI cost per active user, coach rate-limit hit rate</li>
+  </ul>
+</section>
+
+<!-- ════════════════════ 06 (cont.) PARTNERSHIPS + LEGAL ════════════════════ -->
+<section class="page">
+  <div class="section-head">
+    <h1><span class="num">06·</span>operations <span style="font-weight:600;color:var(--ds-t3);font-size:1rem;">(cont.)</span></h1>
+    <div class="eyebrow">Partnerships · legal · privacy · insurance</div>
+  </div>
+
+  <h2 class="display">partnerships <em>+ legal</em></h2>
+
+  <h3>Partnerships (planned)</h3>
+  <p>able's partnership strategy is gated by whether the partner adds load to the core mechanic or distracts from it.</p>
+  <ul>
+    <li><strong>Plaid</strong> — vendor, not partner. Launches with Essential tier.</li>
+    <li><strong>Method Finance</strong> — vendor + product partner. Launches with Plus tier.</li>
+    <li><strong>Array</strong> — credit dispute + monitoring vendor. Year 2 (Pro tier).</li>
+    <li><strong>Freelance platforms</strong> (Upwork, Fiverr, Contra) — content + co-marketing. Co-marketing test in year 2.</li>
+    <li><strong>Creator-economy newsletters</strong> — sponsored placement during paid-ads phase.</li>
+    <li><strong>Tax-filing partners</strong> (Keeper, Collective) — referral or integration partnerships in year 2.</li>
+    <li><strong>Financial-literacy nonprofit</strong> — mission tie-in (1% of subscription revenue, proposed).</li>
+  </ul>
+
+  <h3>Trademark + IP</h3>
+  <p>Trademark search in progress. "able" as a standalone word is unprotectable in class 9 (software) — too generic. <strong>Strategy:</strong> file <em>"Able."</em> (with stylized period) and <em>"becomeable.app"</em> wordmark + the underlined-able lockup in classes 9 (downloadable software) and 36 (financial services / fintech) immediately after LLC formation. Estimated cost: ~$1,500 across both marks in both classes.</p>
+
+  <div class="card warn">
+    <div class="callout-eyebrow">Placeholder flag</div>
+    <p style="margin-bottom:0;">Trademark filings are on the master task list. Recommended within 60 days of funding close. Legal counsel review of mark strategy advised before submission.</p>
+  </div>
+
+  <h3>Business setup</h3>
+  <ul>
+    <li>LLC (state registration)</li>
+    <li>EIN from IRS (free)</li>
+    <li>Local business license · state seller's permit / sales tax registration (SaaS taxability varies by state)</li>
+    <li>Business bank account</li>
+    <li>General liability insurance ($300–600/yr)</li>
+    <li>E&amp;O / cyber insurance with sub-limit for incident response (recommended at $1K+ paying subs)</li>
+  </ul>
+
+  <h3>Data + privacy</h3>
+  <p>able publishes standard SaaS privacy policy, terms of service, refund policy. Supabase row-level security enforces user data isolation. Customer financial data is opt-in only — the user manually enters every bill, deposit, and balance today (Plaid will be opt-in when shipped). Data is never sold. CCPA + GDPR compliance shipped via standard SaaS posture; SOC 2 readiness evaluated at $500K ARR.</p>
+
+  <h3>Insurance</h3>
+  <p>General liability through Hiscox or Next at launch. Cyber + E&amp;O within 90 days of crossing $1K paying subs. Founder health insurance is separate and not a business expense.</p>
+</section>
+
+<!-- ════════════════════ 07 FINANCIALS ════════════════════ -->
+<section class="page">
+  <div class="section-head">
+    <h1><span class="num">07·</span>financials + capital posture</h1>
+    <div class="eyebrow">The numbers</div>
+  </div>
+
+  <div class="card warn">
+    <div class="callout-eyebrow">How to read this section</div>
+    <p style="margin-bottom:0;">All numbers below are projections built from industry benchmarks for comparable early-stage consumer SaaS plus per-sub integration costs (Plaid, Method). A separate companion spreadsheet holds the live financial model where any assumption can be changed and totals recalculate automatically. When real funnel data, churn cohorts, tier mix, and CAC by channel arrive, these numbers get replaced.</p>
+  </div>
+
+  <h2 class="display">startup <em>costs</em></h2>
+
+  <p>These costs are sunk. Paul self-funded the build through 2026 Q2. <strong>The company is shipping with no debt and no prior outside capital.</strong></p>
+
+  <table>
+    <thead><tr><th>Line item</th><th>Cost</th><th>Notes</th></tr></thead>
+    <tbody>
+      <tr><td>Product build (12+ months)</td><td>self-funded labor</td><td>Full-stack development, brand, content engine</td></tr>
+      <tr><td>Domain + DNS + email infra</td><td class="num">$300</td><td><code>becomeable.app</code> + Cloudflare + Resend setup</td></tr>
+      <tr><td>Design system + brand build</td><td>self-funded labor</td><td>Tokens, components, copy library</td></tr>
+      <tr><td>Content engine (175-piece library, 60s reel, blog cluster, <strong>6 mo scheduled</strong>)</td><td>self-funded labor</td><td>Including Remotion, Playwright capture, captions</td></tr>
+      <tr><td>Supabase + Netlify + Stripe setup</td><td class="num">$0</td><td>Within free tiers initially</td></tr>
+      <tr><td>Tooling (Anthropic API, Make, etc.)</td><td class="num">~$200/mo</td><td>Running cost, not setup</td></tr>
+      <tr><td>Plaid + Method finance integration build</td><td>in progress</td><td>Launching with Essential and Plus tiers</td></tr>
+      <tr class="total"><td><strong>Total cash deployed pre-launch</strong></td><td class="num"><strong>~$3K–$5K</strong></td><td>Rest is founder labor; clean cap table</td></tr>
+    </tbody>
+  </table>
+
+  <h3>Tier mix assumptions</h3>
+  <table>
+    <thead><tr><th>Year</th><th>Essential</th><th>Plus</th><th>Pro</th><th>Blended ARPU/mo</th></tr></thead>
+    <tbody>
+      <tr><td>Year 1</td><td>85%</td><td>15%</td><td>0% (not yet shipped)</td><td>~$17.24</td></tr>
+      <tr><td>Year 2</td><td>70%</td><td>25%</td><td>5%</td><td>~$22.49</td></tr>
+      <tr><td>Year 3</td><td>60%</td><td>30%</td><td>10%</td><td>~$25.49</td></tr>
+    </tbody>
+  </table>
+  <p style="font-size:0.85rem;color:var(--ds-t2);">Annual mix assumed at 30% within each tier; the math above is computed monthly-equivalent.</p>
+</section>
+
+<!-- ════════════════════ 07 (cont.) UNIT ECONOMICS ════════════════════ -->
+<section class="page">
+  <div class="section-head">
+    <h1><span class="num">07·</span>financials <span style="font-weight:600;color:var(--ds-t3);font-size:1rem;">(cont.)</span></h1>
+    <div class="eyebrow">Unit economics · Year 1–3 projection</div>
+  </div>
+
+  <h2 class="display">unit <em>economics</em></h2>
+
+  <table>
+    <thead><tr><th>Line</th><th class="num">Essential</th><th class="num">Plus</th><th class="num">Blended (year 1)</th></tr></thead>
+    <tbody>
+      <tr><td>ARPU/mo</td><td class="num">$14.99</td><td class="num">$29.99</td><td class="num">$17.24</td></tr>
+      <tr><td>Stripe processing (2.9% + $0.30)</td><td class="num">($0.73)</td><td class="num">($1.17)</td><td class="num">($0.80)</td></tr>
+      <tr><td>Plaid (per active connected user)</td><td class="num">($0.50)</td><td class="num">($0.50)</td><td class="num">($0.50)</td></tr>
+      <tr><td>Method finance (per active user)</td><td class="num">$0</td><td class="num">($2.00)</td><td class="num">($0.30)</td></tr>
+      <tr><td>AI inference (Claude Haiku)</td><td class="num">($0.10)</td><td class="num">($0.10)</td><td class="num">($0.10)</td></tr>
+      <tr><td>Infra (Supabase, Netlify, Resend)</td><td class="num">($0.05)</td><td class="num">($0.05)</td><td class="num">($0.05)</td></tr>
+      <tr class="total"><td><strong>Contribution margin per sub / mo</strong></td><td class="num"><strong>$13.61</strong></td><td class="num"><strong>$26.17</strong></td><td class="num"><strong>$15.49</strong></td></tr>
+      <tr><td>Contribution margin %</td><td class="num">~91%</td><td class="num">~87%</td><td class="num"><strong>~90%</strong></td></tr>
+    </tbody>
+  </table>
+
+  <div class="stats">
+    <div class="stat">
+      <div class="stat-eyebrow">Monthly logo churn (assumed)</div>
+      <div class="stat-value">6.0%</div>
+      <div class="stat-note">Benchmark estimate for early-stage consumer SaaS.</div>
+    </div>
+    <div class="stat">
+      <div class="stat-eyebrow">Average sub lifetime</div>
+      <div class="stat-value">16.7 mo</div>
+      <div class="stat-note">Annual + Plus subs expected to churn lower; mix shift improves LTV.</div>
+    </div>
+    <div class="stat">
+      <div class="stat-eyebrow">LTV (margin-adjusted, year 1)</div>
+      <div class="stat-value green">~$259</div>
+      <div class="stat-note">Real cohort data replaces this by month 6.</div>
+    </div>
+  </div>
+
+  <div class="card warn">
+    <div class="callout-eyebrow">Placeholder flag</div>
+    <p style="margin-bottom:0;">Per-sub Plaid and Method costs are estimates based on published vendor pricing tiers; final per-active rates will be confirmed at integration.</p>
+  </div>
+
+  <h3>CAC target</h3>
+  <ul>
+    <li><strong>Target blended CAC:</strong> &lt;$60 (4-month payback or better).</li>
+    <li><strong>Target paid CAC at scale:</strong> &lt;$100 (8-month gross-margin payback).</li>
+  </ul>
+
+  <h3>Year 1–3 projection (bootstrap mode)</h3>
+  <table>
+    <thead><tr><th>Line</th><th class="num">Year 1</th><th class="num">Year 2</th><th class="num">Year 3</th></tr></thead>
+    <tbody>
+      <tr><td>Paying subs (end of year)</td><td class="num">1,000</td><td class="num">5,000</td><td class="num">15,000</td></tr>
+      <tr><td>Blended ARPU/mo</td><td class="num">$17.24</td><td class="num">$22.49</td><td class="num">$25.49</td></tr>
+      <tr class="total"><td><strong>ARR (end of year)</strong></td><td class="num"><strong>$207,000</strong></td><td class="num"><strong>$1,349,000</strong></td><td class="num"><strong>$4,588,000</strong></td></tr>
+      <tr><td>Revenue (full year, ramp)</td><td class="num">$115,000</td><td class="num">$750,000</td><td class="num">$2,800,000</td></tr>
+      <tr><td>COGS (Stripe + Plaid + Method + AI + infra)</td><td class="num">($11,500)</td><td class="num">($97,500)</td><td class="num">($420,000)</td></tr>
+      <tr><td>Gross profit</td><td class="num">$103,500</td><td class="num">$652,500</td><td class="num">$2,380,000</td></tr>
+      <tr><td>Paid acquisition</td><td class="num">($24,000)</td><td class="num">($180,000)</td><td class="num">($510,000)</td></tr>
+      <tr><td>Content + tooling</td><td class="num">($6,000)</td><td class="num">($24,000)</td><td class="num">($60,000)</td></tr>
+      <tr><td>Podcast sponsorships + influencer comp</td><td class="num">($12,000)</td><td class="num">($60,000)</td><td class="num">($150,000)</td></tr>
+      <tr><td>Founder draw / salaries</td><td class="num">($60,000)</td><td class="num">($120,000)</td><td class="num">($240,000)</td></tr>
+      <tr><td>First hire (year 2)</td><td class="num">$0</td><td class="num">($90,000)</td><td class="num">($110,000)</td></tr>
+      <tr><td>Support + ops contractors</td><td class="num">$0</td><td class="num">($24,000)</td><td class="num">($60,000)</td></tr>
+      <tr><td>Legal + insurance + admin</td><td class="num">($6,000)</td><td class="num">($12,000)</td><td class="num">($24,000)</td></tr>
+      <tr><td>AI + integration cost reserve</td><td class="num">($6,000)</td><td class="num">($24,000)</td><td class="num">($72,000)</td></tr>
+      <tr class="total"><td><strong>Net (pre-tax)</strong></td><td class="num"><strong>($10,500)</strong></td><td class="num"><strong>$118,500</strong></td><td class="num"><strong>$1,154,000</strong></td></tr>
+    </tbody>
+  </table>
+</section>
+
+<!-- ════════════════════ 07 (cont.) CAPITAL POSTURE ════════════════════ -->
+<section class="page">
+  <div class="section-head">
+    <h1><span class="num">07·</span>financials <span style="font-weight:600;color:var(--ds-t3);font-size:1rem;">(cont.)</span></h1>
+    <div class="eyebrow">Capital posture · optional strategic round</div>
+  </div>
+
+  <h2 class="display">capital <em>posture</em></h2>
+
+  <blockquote class="pull">able is <strong>bootstrap-first.</strong> the product is shipped, the brand is built, the content engine is running, 6 months of social posts are scheduled, the email program is live, and per-sub contribution margin is healthy from day one. cash flow funds the next quarter's marketing. the company is not actively fundraising.</blockquote>
+
+  <h3>Why bootstrap</h3>
+  <ul>
+    <li><strong>The build cost is sunk.</strong> Product, brand, content library, infrastructure exist. No large pre-launch capital ask to justify.</li>
+    <li><strong>Per-sub contribution is positive from sub #1</strong> at every tier. Adding 100 subs adds ~$1,500/mo in cash flow at year-1 mix.</li>
+    <li><strong>Integration costs (Plaid, Method) are per-active and absorbed in COGS</strong> — they scale with revenue, not as a fixed pre-revenue burn.</li>
+    <li><strong>Founder has continued income optionality</strong> outside able. Operational runway extends as long as needed.</li>
+    <li><strong>The category rewards patience.</strong> YNAB bootstrapped to $20M+ ARR. Category-leading consumer SaaS is built on cohort retention curves that take 18–36 months to confirm.</li>
+  </ul>
+
+  <h3>When able would accept external capital</h3>
+  <p>Three triggers, in priority order:</p>
+  <ol>
+    <li><strong>A strategic partner</strong> who compounds GTM (creator-economy network, podcast host who is also a check-writer, accounting/freelance platform leadership, fintech infra partner with portfolio synergy). The check is secondary; the relationship is the point.</li>
+    <li><strong>A paid acquisition stress-test.</strong> If month 6–9 data shows clean per-channel CAC payback inside 4 months and the binding constraint becomes capital to scale paid spend, a small growth round (~$150–$300K) accelerates without dilution risk.</li>
+    <li><strong>An integration acceleration.</strong> If Method or Array partner pricing requires meaningful upfront commitment (six-figure annual minimum), an integration-aligned investor de-risks the timeline.</li>
+  </ol>
+  <p>Absent one of these triggers, able does not raise.</p>
+
+  <h3>If external capital appeals — terms</h3>
+  <p>A clean SAFE keeps the path frictionless. Reference terms for a strategic partner conversation:</p>
+
+  <div class="stats">
+    <div class="stat">
+      <div class="stat-eyebrow">Structure</div>
+      <div class="stat-value" style="font-size:1.2rem;">Post-money SAFE</div>
+      <div class="stat-note">Standard YC SAFE; preserves option value on both sides.</div>
+    </div>
+    <div class="stat">
+      <div class="stat-eyebrow">Target check size</div>
+      <div class="stat-value green">$50K–$250K</div>
+      <div class="stat-note">Smaller is fine; this is not a "round."</div>
+    </div>
+    <div class="stat">
+      <div class="stat-eyebrow">Valuation cap</div>
+      <div class="stat-value">$3.0M post</div>
+      <div class="stat-note">No discount; cap is the protection. MFN standard.</div>
+    </div>
+  </div>
+
+  <h3>Use of any capital raised</h3>
+  <table>
+    <tbody>
+      <tr><td>Paid acquisition acceleration (proven channels only)</td><td class="num">50%</td></tr>
+      <tr><td>Integration costs (Method, Array, Plaid scaling)</td><td class="num">25%</td></tr>
+      <tr><td>First hire (growth or content) ahead of bootstrap timeline</td><td class="num">20%</td></tr>
+      <tr><td>Working capital reserve</td><td class="num">5%</td></tr>
+    </tbody>
+  </table>
+  <p style="font-size:0.86rem;"><strong>Zero of any raised capital goes to founder runway.</strong> The founder is committed to able regardless.</p>
+
+  <div class="card tinted">
+    <div class="callout-eyebrow">The honest framing</div>
+    <p style="margin-bottom:0;">able is a brand-led consumer SaaS in a category with proven willingness-to-pay and a structural moat (no competitor closes the connect → reserve → pay loop). It isn't a venture-grade hyperscale bet on its own — the addressable market caps the unconstrained outcome — but it is exactly the category where bootstrap-to-multimillion is normal and category-leading outcomes are real (YNAB, Calendly, Notion in their early years). The projections in this plan are confident-but-defensible — not hockey-stick, not sandbagged. The company runs lean, ships fast, and treats outside capital as an option, not a requirement.</p>
+  </div>
+</section>
+
+<!-- ════════════════════ 08 RISK ════════════════════ -->
+<section class="page">
+  <div class="section-head">
+    <h1><span class="num">08·</span>risk + mitigation</h1>
+    <div class="eyebrow">What could go wrong</div>
+  </div>
+
+  <p>Every business plan needs this section, and most phone it in. Here are the real risks able faces and what we will do about each one.</p>
+
+  <div class="risk">
+    <div class="risk-name">Risk 1</div>
+    <div class="risk-title">Trial-to-paid conversion underperforms</div>
+    <p><strong>The risk:</strong> users sign up, get a sense of the product, and don't convert at day 8 — either because the product hasn't shown enough value yet or because the price is wrong for the cohort.</p>
+    <p class="mit"><strong>Mitigation:</strong> day-1 referral state and the day-1 onboarding moment-of-allocation are designed for early value. Behavioral emails fire on real signals during the trial. If conversion is below 5% at day 8 by month 3, options ladder: lengthen the trial to 14 days, introduce a $7.99 starter tier, or pivot the onboarding flow to the lowest-friction first allocation. Price sensitivity is testable; we don't lock into a wrong answer.</p>
+  </div>
+
+  <div class="risk">
+    <div class="risk-name">Risk 2</div>
+    <div class="risk-title">Abandoned Mint users go to Monarch or Copilot instead</div>
+    <p><strong>The risk:</strong> the largest available displaced cohort migrates to better-funded competitors with more polished dashboards before able is in their consideration set.</p>
+    <p class="mit"><strong>Mitigation:</strong> able is not competing for the dashboard-budgeter — it's competing for the variable-income earner. The framing in our SEO and ads ("budget app for self-employed," "after Mint for freelancers") routes the right user to us specifically. Monarch and Copilot don't address variable income at all in their workflow; that's a category-wedge advantage, not a feature gap we can lose. The brand voice does the rest.</p>
+  </div>
+
+  <div class="risk">
+    <div class="risk-name">Risk 3</div>
+    <div class="risk-title">AI cost curve shifts</div>
+    <p><strong>The risk:</strong> Anthropic raises pricing or rate-limits change in a way that breaks the unit economics of the AI coach.</p>
+    <p class="mit"><strong>Mitigation:</strong> the coach is built against a clean abstraction; switching to a different model is a 1-week refactor. AI inference is currently $0.05–$0.20/active sub/mo — even a 5x cost increase keeps the coach profitable. The feature is high-value enough to absorb modest pricing shifts.</p>
+  </div>
+
+  <div class="risk">
+    <div class="risk-name">Risk 4</div>
+    <div class="risk-title">Plaid or Method integration cost shifts</div>
+    <p><strong>The risk:</strong> Plaid or Method finance per-active-user pricing rises in a way that compresses margin at scale, or a vendor relationship is terminated.</p>
+    <p class="mit"><strong>Mitigation:</strong> Plaid is the industry standard for bank connection; vendor risk is low. Method is the more exposed dependency. Mitigation: (1) Plus-tier price absorbs 2–3x cost increases without becoming unprofitable; (2) the manual workflow that launched the product still works as a fallback; (3) alternative infrastructure providers exist (Synapse, Dwolla, Increase, Treasury Prime) and a migration is a 4–8 week build.</p>
+  </div>
+</section>
+
+<!-- ════════════════════ 08 (cont.) MORE RISKS ════════════════════ -->
+<section class="page">
+  <div class="section-head">
+    <h1><span class="num">08·</span>risk + mitigation <span style="font-weight:600;color:var(--ds-t3);font-size:1rem;">(cont.)</span></h1>
+    <div class="eyebrow">Remaining risks · plan B · final word</div>
+  </div>
+
+  <div class="risk">
+    <div class="risk-name">Risk 5</div>
+    <div class="risk-title">A well-funded competitor adds a "variable income mode"</div>
+    <p><strong>The risk:</strong> an incumbent recognizes the wedge and bolts on a workflow for variable-income earners.</p>
+    <p class="mit"><strong>Mitigation:</strong> the moat is the mental model, not the surface. An incumbent retrofitting "variable mode" onto a categorize-spending paradigm produces a worse experience than a native build, and the incumbent's existing user base anchors them away from changing the foundational model. By the time any incumbent ships a real variable-income mode, able will have 6–12 months of compounding SEO content and a brand that speaks to the cohort with felt-truth that retrofits can't fake.</p>
+  </div>
+
+  <div class="risk">
+    <div class="risk-name">Risk 6</div>
+    <div class="risk-title">Solo founder bandwidth</div>
+    <p><strong>The risk:</strong> a single-founder operator has bandwidth caps; product velocity, marketing throughput, and customer support eventually compete for the same hours.</p>
+    <p class="mit"><strong>Mitigation:</strong> first hire is funded in year 2 specifically for this. Work has been deliberately structured so high-leverage activity (product, content, brand) is the founder's domain and lower-leverage activity transitions to fractional or part-time roles. An internal "skills suite" (8 documented brand operating skills) lets contractors plug in without ramp time.</p>
+  </div>
+
+  <div class="risk">
+    <div class="risk-name">Risk 7</div>
+    <div class="risk-title">Trust + financial data sensitivity</div>
+    <p><strong>The risk:</strong> users hesitate to enter their financial data into a new tool from a single founder; or a security incident damages trust in a category where trust is everything.</p>
+    <p class="mit"><strong>Mitigation:</strong> Supabase RLS isolates user data. SOC 2 readiness on year-2 roadmap pre-Plaid full rollout. Cyber insurance with incident-response sub-limit procured before scaling past 1,000 subs. The brand voice is honest and consistent; trust is built one shipped quarter at a time, not claimed up front.</p>
+  </div>
+
+  <div class="risk">
+    <div class="risk-name">Risk 8</div>
+    <div class="risk-title">Content engine slows before PMF is locked</div>
+    <p><strong>The risk:</strong> the content engine is currently sustained by founder labor. If founder time is consumed by support or product fires, content output slows.</p>
+    <p class="mit"><strong>Mitigation:</strong> 175-piece social library is a buffer (~6 months of material, already scheduled). SEO cluster is tooled to publish in batches. Email program is fully automated. When content output is the binding constraint, the next contractor hire is a content lead, and the budget for that is in year 2.</p>
+  </div>
+
+  <h3>Plan B (if year 1 underperforms)</h3>
+  <ul>
+    <li><strong>Slow burn, founder runway extends.</strong> Because able is bootstrap-funded, there's no investor clock. Founder draw scales down before any other line.</li>
+    <li><strong>Niche before general.</strong> Product narrows to a single sub-persona (the Freezer, most likely) and the marketing follows.</li>
+    <li><strong>Partnership-first GTM.</strong> Instead of paid acquisition, a content or tooling partnership with a freelance platform / accounting SaaS / creator newsletter becomes the primary acquisition channel.</li>
+    <li><strong>Price tested.</strong> If conversion is the binding issue, Essential is tested at $9.99. If churn is the binding issue, an annual-only push tests willingness-to-pay at the lower-CAC tier.</li>
+    <li><strong>Drop the Plus tier temporarily.</strong> If Method integration cost or complexity becomes a drag without commensurate Plus conversion, the Plus tier is paused and engineering refocuses on Essential.</li>
+    <li><strong>Strategic capital optionality.</strong> A small strategic round (~$150–$300K) under the SAFE structure outlined in section 7.</li>
+  </ul>
+
+  <div class="closing">
+    <div class="arrow-line">from <em>unable</em> <span class="arrow">→</span> able.</div>
+    <p style="color:var(--ds-t1);margin-bottom:0;font-size:0.95rem;">the problem was never you. it was the advice you were handed. able is the system built around the actual shape of your income — irregular in, regular out — so you can finally <strong>able to breathe</strong>.</p>
+    <div class="signoff">end of plan · v1.0</div>
+  </div>
+</section>
+
+</body>
+</html>

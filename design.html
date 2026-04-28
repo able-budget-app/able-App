@@ -1,0 +1,908 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex,nofollow">
+<title>Able · Design document</title>
+<link rel="icon" type="image/svg+xml" href="/favicon.svg">
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --ds-page:#f0f7f2;
+    --ds-card:#ffffff;
+    --ds-card2:#f7fbf8;
+    --ds-t1:#111c16;
+    --ds-t2:#4a5c52;
+    --ds-t3:#8ca898;
+    --ds-t4:#c4d8cc;
+    --ds-green:#2a7a4a;
+    --ds-green2:#1f6038;
+    --ds-green-l:#eaf5ee;
+    --ds-green-m:#b8e0c8;
+    --ds-c1:#2a7a4a;
+    --ds-c2:#3d9e78;
+    --ds-c3:#c97c0a;
+    --ds-c4:#c04060;
+    --ds-c5:#3570b8;
+    --ds-f:'Bricolage Grotesque', -apple-system, BlinkMacSystemFont, sans-serif;
+    --ds-r1:12px;
+    --ds-r2:18px;
+    --ds-r3:26px;
+    --ds-sh1:0 1px 4px rgba(0,0,0,.05), 0 2px 8px rgba(0,0,0,.04);
+    --ds-sh2:0 2px 8px rgba(0,0,0,.05), 0 4px 16px rgba(0,0,0,.06);
+    --ds-sh3:0 4px 16px rgba(0,0,0,.07), 0 8px 28px rgba(0,0,0,.08);
+  }
+  *{box-sizing:border-box;margin:0;padding:0;}
+  html{scroll-behavior:smooth;}
+  body{
+    background:var(--ds-page);
+    color:var(--ds-t1);
+    font-family:var(--ds-f);
+    font-size:16px;
+    line-height:1.6;
+    min-height:100vh;
+  }
+  a{color:var(--ds-green);text-decoration:none;font-weight:600;}
+  a:hover{text-decoration:underline;}
+  code{
+    font-family:'SF Mono', Menlo, Consolas, monospace;
+    font-size:0.88em;
+    background:var(--ds-green-l);
+    color:var(--ds-green2);
+    padding:2px 6px;
+    border-radius:6px;
+    font-weight:600;
+  }
+  pre code{background:transparent;padding:0;}
+
+  /* ── Layout shell ── */
+  .shell{
+    display:grid;
+    grid-template-columns:240px 1fr;
+    max-width:1280px;
+    margin:0 auto;
+    gap:0;
+  }
+  @media (max-width:880px){
+    .shell{grid-template-columns:1fr;}
+    .toc{display:none;}
+  }
+
+  /* ── Header ── */
+  .top{
+    grid-column:1 / -1;
+    padding:2.5rem 2.5rem 1.5rem;
+    border-bottom:1px solid var(--ds-t4);
+    background:var(--ds-card);
+    margin-bottom:2.5rem;
+  }
+  .top-inner{max-width:1180px;margin:0 auto;display:flex;justify-content:space-between;align-items:flex-end;flex-wrap:wrap;gap:1.5rem;}
+  .brand-wordmark{font-family:var(--ds-f);font-size:2.5rem;font-weight:900;color:var(--ds-t1);letter-spacing:-.03em;line-height:1;position:relative;display:inline-block;}
+  .brand-wordmark::after{content:'';position:absolute;left:0;right:-4%;bottom:-4px;height:6px;background:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 120 4.2' preserveAspectRatio='none'><path d='M3 2.6 Q2 2.4 3 2.15 Q58 1.75 115 0.15 Q119 1 119 2 Q119 3 115 3.9 Q58 3.55 3 2.65 Q2 2.45 3 2.6 Z' fill='%232a7a4a'/></svg>") no-repeat center / 100% 100%;pointer-events:none;}
+  .top-title{font-size:0.75rem;color:var(--ds-t3);font-weight:700;letter-spacing:.18em;text-transform:uppercase;margin-top:.4rem;}
+  .top-meta{font-size:0.85rem;color:var(--ds-t2);font-weight:500;text-align:right;}
+  .top-meta b{color:var(--ds-t1);font-weight:800;}
+
+  /* ── TOC ── */
+  .toc{
+    position:sticky;
+    top:0;
+    align-self:start;
+    height:100vh;
+    overflow-y:auto;
+    padding:2rem 1rem 2rem 2.5rem;
+    font-size:0.85rem;
+  }
+  .toc h4{font-size:0.7rem;font-weight:800;letter-spacing:.14em;text-transform:uppercase;color:var(--ds-t3);margin-bottom:.75rem;}
+  .toc a{display:block;padding:6px 12px;border-radius:8px;color:var(--ds-t2);font-weight:600;font-size:0.85rem;line-height:1.4;transition:background .15s;}
+  .toc a:hover{background:var(--ds-green-l);color:var(--ds-green);text-decoration:none;}
+  .toc a.muted{color:var(--ds-t3);font-weight:500;padding-left:18px;}
+
+  /* ── Main column ── */
+  main{padding:0 2.5rem 6rem;max-width:880px;}
+  section{margin-bottom:4rem;scroll-margin-top:1rem;}
+  section > h2{
+    font-size:2rem;
+    font-weight:800;
+    letter-spacing:-.02em;
+    margin-bottom:1.25rem;
+    padding-bottom:.6rem;
+    border-bottom:2px solid var(--ds-t4);
+  }
+  section > h2 .num{
+    display:inline-block;
+    color:var(--ds-green);
+    font-weight:900;
+    margin-right:0.6rem;
+    font-variant-numeric:tabular-nums;
+  }
+  h3{font-size:1.25rem;font-weight:800;letter-spacing:-.01em;margin:2rem 0 .75rem;color:var(--ds-t1);}
+  h4{font-size:1rem;font-weight:800;margin:1.5rem 0 .5rem;color:var(--ds-t1);}
+  p{margin-bottom:1rem;color:var(--ds-t2);}
+  p strong, li strong{color:var(--ds-t1);font-weight:700;}
+  ul,ol{margin:0 0 1rem 1.4rem;color:var(--ds-t2);}
+  li{margin-bottom:.4rem;line-height:1.6;}
+
+  /* ── Lead paragraph (intro) ── */
+  .lead{font-size:1.15rem;line-height:1.65;color:var(--ds-t1);}
+
+  /* ── Cards / callouts ── */
+  .card{
+    background:var(--ds-card);
+    border:1px solid var(--ds-t4);
+    border-radius:var(--ds-r2);
+    padding:1.5rem 1.75rem;
+    margin:1.25rem 0;
+    box-shadow:var(--ds-sh1);
+  }
+  .card.tinted{background:var(--ds-green-l);border-color:var(--ds-green-m);}
+  .card.warn{background:#fef3e0;border-color:#e9c98a;}
+  .card.danger{background:#fdeef2;border-color:#e9b3c1;}
+  .callout-eyebrow{font-size:0.7rem;font-weight:800;letter-spacing:.16em;text-transform:uppercase;color:var(--ds-t3);margin-bottom:.4rem;}
+  .card.tinted .callout-eyebrow{color:var(--ds-green2);}
+  .card.warn .callout-eyebrow{color:var(--ds-c3);}
+  .card.danger .callout-eyebrow{color:var(--ds-c4);}
+
+  /* ── Tables ── */
+  table{
+    width:100%;
+    border-collapse:collapse;
+    margin:1.25rem 0;
+    font-size:0.92rem;
+    background:var(--ds-card);
+    border-radius:var(--ds-r2);
+    overflow:hidden;
+    box-shadow:var(--ds-sh1);
+  }
+  th,td{
+    text-align:left;
+    padding:.7rem 1rem;
+    border-bottom:1px solid var(--ds-t4);
+    vertical-align:top;
+  }
+  th{
+    background:var(--ds-green-l);
+    color:var(--ds-green2);
+    font-weight:800;
+    font-size:0.78rem;
+    letter-spacing:.06em;
+    text-transform:uppercase;
+  }
+  tr:last-child td{border-bottom:none;}
+  tr:hover td{background:var(--ds-card2);}
+  td code{font-size:0.85em;}
+
+  /* ── Color swatches ── */
+  .swatch-grid{
+    display:grid;
+    grid-template-columns:repeat(auto-fill, minmax(170px, 1fr));
+    gap:14px;
+    margin:1.5rem 0;
+  }
+  .swatch{
+    background:var(--ds-card);
+    border:1px solid var(--ds-t4);
+    border-radius:var(--ds-r2);
+    overflow:hidden;
+    box-shadow:var(--ds-sh1);
+  }
+  .swatch-color{height:80px;}
+  .swatch-info{padding:10px 12px;font-size:0.8rem;}
+  .swatch-info .name{font-weight:800;color:var(--ds-t1);}
+  .swatch-info .token{font-family:'SF Mono',Menlo,monospace;color:var(--ds-t3);font-size:0.72rem;letter-spacing:0;}
+  .swatch-info .hex{font-family:'SF Mono',Menlo,monospace;color:var(--ds-t2);font-size:0.72rem;letter-spacing:0;}
+
+  /* ── Type scale demo ── */
+  .type-row{
+    display:flex;
+    align-items:baseline;
+    gap:1rem;
+    padding:.75rem 0;
+    border-bottom:1px dashed var(--ds-t4);
+  }
+  .type-row:last-child{border-bottom:none;}
+  .type-row .label{
+    flex:0 0 90px;
+    font-size:0.7rem;
+    font-weight:800;
+    color:var(--ds-t3);
+    letter-spacing:.06em;
+    text-transform:uppercase;
+  }
+  .type-row .sample{flex:1;color:var(--ds-t1);font-weight:800;letter-spacing:-.02em;}
+  .type-row .meta{font-size:0.78rem;color:var(--ds-t3);font-family:'SF Mono',Menlo,monospace;}
+
+  /* ── Radius + shadow showcase ── */
+  .specimen-row{display:flex;gap:14px;flex-wrap:wrap;margin:1rem 0;}
+  .specimen{
+    flex:1;
+    min-width:140px;
+    background:var(--ds-card);
+    padding:1.5rem 1rem;
+    text-align:center;
+    font-size:0.78rem;
+    color:var(--ds-t2);
+    font-weight:700;
+  }
+  .specimen .ttl{color:var(--ds-t1);font-size:0.95rem;font-weight:800;margin-bottom:.25rem;}
+  .specimen .tok{font-family:'SF Mono',Menlo,monospace;color:var(--ds-t3);font-size:0.7rem;}
+
+  /* ── Screen captures ── */
+  .phones{
+    display:grid;
+    grid-template-columns:repeat(auto-fill, minmax(260px, 1fr));
+    gap:1.75rem;
+    margin:2rem 0;
+  }
+  .phone{
+    background:var(--ds-card);
+    border-radius:var(--ds-r3);
+    overflow:hidden;
+    box-shadow:var(--ds-sh3);
+    transition:transform .25s ease, box-shadow .25s ease;
+  }
+  .phone:hover{transform:translateY(-3px);}
+  .phone img{display:block;width:100%;height:auto;}
+  .phone-cap{padding:1rem 1.1rem 1.25rem;}
+  .phone-cap .ttl{font-size:0.95rem;font-weight:800;color:var(--ds-t1);letter-spacing:-.01em;}
+  .phone-cap .desc{font-size:0.85rem;color:var(--ds-t2);margin-top:.25rem;line-height:1.5;}
+
+  /* ── Mermaid block ── */
+  .mermaid-wrap{
+    background:var(--ds-card);
+    border:1px solid var(--ds-t4);
+    border-radius:var(--ds-r2);
+    padding:1.5rem;
+    margin:1.5rem 0;
+    box-shadow:var(--ds-sh1);
+    text-align:center;
+    overflow-x:auto;
+  }
+  .mermaid-wrap .mermaid{font-family:var(--ds-f) !important;}
+
+  /* ── Code blocks ── */
+  pre{
+    background:var(--ds-card);
+    border:1px solid var(--ds-t4);
+    border-radius:var(--ds-r2);
+    padding:1.1rem 1.25rem;
+    margin:1.25rem 0;
+    overflow-x:auto;
+    font-family:'SF Mono',Menlo,Consolas,monospace;
+    font-size:0.85rem;
+    line-height:1.55;
+    color:var(--ds-t1);
+    box-shadow:var(--ds-sh1);
+  }
+
+  /* ── Pipeline (visual fallback under the mermaid) ── */
+  .pipeline{
+    display:flex;
+    flex-direction:column;
+    gap:.6rem;
+    margin:1.25rem 0;
+  }
+  .pipeline-step{
+    background:var(--ds-card);
+    border:1px solid var(--ds-t4);
+    border-radius:var(--ds-r2);
+    padding:1rem 1.25rem;
+    display:grid;
+    grid-template-columns:42px 1fr;
+    gap:1rem;
+    align-items:center;
+    box-shadow:var(--ds-sh1);
+  }
+  .pipeline-step.head{background:var(--ds-green-l);border-color:var(--ds-green-m);}
+  .pipeline-step.bucket{background:var(--ds-card2);border-color:var(--ds-t4);}
+  .step-num{
+    width:42px;height:42px;border-radius:50%;
+    background:var(--ds-green);color:white;
+    display:flex;align-items:center;justify-content:center;
+    font-weight:900;font-size:1rem;
+  }
+  .step-body .ttl{font-weight:800;color:var(--ds-t1);font-size:1rem;}
+  .step-body .desc{font-size:0.85rem;color:var(--ds-t2);margin-top:.15rem;line-height:1.5;}
+  .step-body code{font-size:0.78em;}
+
+  /* ── Footer ── */
+  footer{
+    grid-column:1 / -1;
+    margin-top:5rem;
+    padding:2.5rem 2.5rem 4rem;
+    border-top:1px solid var(--ds-t4);
+    background:var(--ds-card);
+    text-align:center;
+    color:var(--ds-t3);
+    font-size:0.85rem;
+  }
+  footer p{color:var(--ds-t3);margin-bottom:.4rem;}
+  footer .arrow{color:var(--ds-green);font-weight:900;letter-spacing:-.01em;font-size:1.1rem;}
+</style>
+</head>
+<body>
+
+<div class="shell">
+
+  <!-- ═══════════════ HEADER ═══════════════ -->
+  <header class="top">
+    <div class="top-inner">
+      <div>
+        <div class="brand-wordmark">Able</div>
+        <div class="top-title">Design document</div>
+      </div>
+      <div class="top-meta">
+        <div><b>Last updated</b> 2026-04-26</div>
+        <div>Source of truth · <code>app.html</code> · <code>index.html</code> · <code>supabase/</code></div>
+      </div>
+    </div>
+  </header>
+
+  <!-- ═══════════════ TOC ═══════════════ -->
+  <nav class="toc">
+    <h4>Contents</h4>
+    <a href="#what">1 · What Able is</a>
+    <a href="#stack">2 · Tech stack</a>
+    <a href="#ia">3 · Information architecture</a>
+    <a href="#money">4 · Money-math model</a>
+    <a href="#data">5 · Data model</a>
+    <a href="#settings">6 · Settings</a>
+    <a href="#onboarding">7 · Onboarding</a>
+    <a href="#coach">8 · AI Coach</a>
+    <a href="#edge">9 · Edge Functions</a>
+    <a href="#sub">10 · Subscription</a>
+    <a href="#design-system">11 · Design system</a>
+    <a class="muted" href="#colors">— Colors</a>
+    <a class="muted" href="#type">— Type</a>
+    <a class="muted" href="#radii">— Radius + shadow</a>
+    <a class="muted" href="#voice">— Voice</a>
+    <a href="#layout">12 · Layout · screens</a>
+    <a href="#not-shipped">13 · NOT shipped</a>
+    <a href="#deploy">14 · Deployment</a>
+    <a href="#open">15 · Open questions</a>
+  </nav>
+
+  <!-- ═══════════════ MAIN ═══════════════ -->
+  <main>
+
+    <!-- 1 ──────────────────────────────────────────── -->
+    <section id="what">
+      <h2><span class="num">1</span>What Able is</h2>
+      <p class="lead">Able is a budgeting app for people with <strong>inconsistent income</strong> — freelancers, creators, solo business owners, contractors. It is built around one promise: <em>From Unable → Able</em>.</p>
+      <p>The product is a <strong>per-deposit allocation engine with manual income/bill entry and an AI advisor (the Coach)</strong>. Every time the user logs a deposit, the app splits it across buckets in a fixed order. The user enters bills, debts, income sources, and balance manually. There is no Plaid auto-sync, no spending tracking, no auto-mark-paid. The Coach is a chat that has full read access to the user's allocation state.</p>
+      <p>That's the entire product. Everything else is in service of those two loops: <strong>log deposit → see allocation</strong> and <strong>ask Coach → get specific advice</strong>.</p>
+
+      <h3>Why it exists</h3>
+      <p>The audience this app serves doesn't have a "spending problem" — they have a <em>timing</em> problem. Money lands on Day 1, leaks out by Day 14, and Day 30 is the panic. Generic budgeting tools (Mint, YNAB, spreadsheets) assume regular income and ask the user to track every transaction. Able inverts that: the user does almost nothing day-to-day, but every deposit is processed through a rule engine that sets aside money for taxes, bills, owner pay, debt, and a buffer <em>before</em> it can be spent.</p>
+
+      <h3>Who it is for</h3>
+      <p>Three working personas:</p>
+      <ul>
+        <li><strong>The Freezer</strong> — avoids opening the banking app. Wants permission and clarity.</li>
+        <li><strong>The Leaker</strong> — knows roughly where money goes but can't stop it draining. Wants structure.</li>
+        <li><strong>The Shame-Cycle</strong> — has tried YNAB / spreadsheets / envelopes, fell off, blames self. Wants something that survives a missed week.</li>
+      </ul>
+    </section>
+
+    <!-- 2 ──────────────────────────────────────────── -->
+    <section id="stack">
+      <h2><span class="num">2</span>Tech stack at a glance</h2>
+      <table>
+        <thead><tr><th>Layer</th><th>Choice</th><th>Notes</th></tr></thead>
+        <tbody>
+          <tr><td>Frontend</td><td><strong>Single static HTML file</strong> (<code>app.html</code>, ~9.5k LOC)</td><td>Inline CSS + vanilla JS, no build step.</td></tr>
+          <tr><td>Marketing site</td><td><code>index.html</code> + <code>/learn</code> · <code>/budgeting</code> · <code>/business</code> · <code>/taxes</code> · <code>/compare</code> · <code>/calculators</code> · <code>/legal</code></td><td>Static HTML, no SSR.</td></tr>
+          <tr><td>Hosting</td><td><strong>Netlify</strong> (auto-deploy from <code>main</code>)</td><td>Edge Functions are <em>not</em> on Netlify.</td></tr>
+          <tr><td>Auth + DB</td><td><strong>Supabase</strong> (PKCE, <code>localStorage</code>)</td><td><code>user_data</code>, <code>profiles</code>, <code>coach_messages</code>, <code>lesson_progress</code>. RLS on all four.</td></tr>
+          <tr><td>Server logic</td><td><strong>Supabase Edge Functions</strong> (Deno)</td><td>One function per concern.</td></tr>
+          <tr><td>Payments</td><td><strong>Stripe</strong> Checkout + Customer Portal + webhook</td><td>Subscription state managed via service-role webhook.</td></tr>
+          <tr><td>Email</td><td><strong>Resend</strong></td><td>Triggered by <code>email-cron-daily</code> at 16:00 UTC.</td></tr>
+          <tr><td>AI</td><td><strong>Anthropic Claude</strong></td><td>Called from <code>coach-chat</code> Edge Function.</td></tr>
+        </tbody>
+      </table>
+      <div class="card tinted">
+        <div class="callout-eyebrow">Why a single HTML file</div>
+        <p style="color:var(--ds-t1);">Shipping speed for a one-person team. The price is that <code>app.html</code> is large; the upside is zero build chain and trivial debugging in any browser. When a section gets large enough, it gets extracted (the brand stylesheet at <code>/brand/_brand.css</code> is one such extraction).</p>
+      </div>
+    </section>
+
+    <!-- 3 ──────────────────────────────────────────── -->
+    <section id="ia">
+      <h2><span class="num">3</span>Information architecture</h2>
+      <p>Two top-level surfaces sit before the bottom-nav appears: the <strong>auth screen</strong> and the <strong>paywall</strong>. Once authenticated <em>and</em> with access, the bottom navigation reveals four groups.</p>
+      <div class="mermaid-wrap"><pre class="mermaid">
+flowchart LR
+    AUTH["Auth screen"] -->|sign in| GATE{"hasAccess?"}
+    GATE -->|active / trialing / lifetime| APP["App shell"]
+    GATE -->|inactive / past_due| PAY["Paywall"]
+    PAY -->|Stripe checkout| GATE
+    APP --> ALLOC["Allocate · home"]
+    APP --> PLAN["Plan · forecast / bills / debt / what-if"]
+    APP --> SCORE["Score"]
+    APP --> MORE["More · learn / refer / settings"]
+    classDef screen fill:#ffffff,stroke:#c4d8cc,color:#111c16
+    classDef gate fill:#fef3e0,stroke:#c97c0a,color:#111c16
+    classDef shell fill:#eaf5ee,stroke:#2a7a4a,color:#111c16
+    class AUTH,PAY,ALLOC,PLAN,SCORE,MORE screen
+    class GATE gate
+    class APP shell
+      </pre></div>
+
+      <h3>Page inventory</h3>
+      <table>
+        <thead><tr><th>Page ID</th><th>Line</th><th>Purpose</th></tr></thead>
+        <tbody>
+          <tr><td><code>page-home</code></td><td>1291</td><td>The dashboard. Deposit input, headline numbers, upcoming bills, recent allocations.</td></tr>
+          <tr><td><code>page-forecast</code></td><td>1411</td><td>Expected income with dates. Pre-allocate a known future deposit.</td></tr>
+          <tr><td><code>page-debt</code></td><td>1456</td><td>Debts table + extra-payoff plan.</td></tr>
+          <tr><td><code>page-bills</code></td><td>1490</td><td>Bills table (name, amount, frequency, due date), per-bill reservations.</td></tr>
+          <tr><td><code>page-score</code></td><td>1522</td><td>Financial health score + reasons.</td></tr>
+          <tr><td><code>page-whatif</code></td><td>1549</td><td>Scenario modeling — "what if I lost a client?"</td></tr>
+          <tr><td><code>page-settings</code></td><td>1588</td><td>All knobs.</td></tr>
+          <tr><td><code>page-refer</code></td><td>1713</td><td>Referral invites + earned-month tracking.</td></tr>
+          <tr><td><code>page-learn</code></td><td>1770</td><td>In-app lessons (<code>lesson_progress</code> table).</td></tr>
+        </tbody>
+      </table>
+    </section>
+
+    <!-- 4 ──────────────────────────────────────────── -->
+    <section id="money">
+      <h2><span class="num">4</span>Money-math model — the engine</h2>
+      <p class="lead">This is the heart of Able. Every deposit flows through the pipeline in this exact order:</p>
+
+      <div class="mermaid-wrap"><pre class="mermaid">
+flowchart TD
+    D(["Deposit logged"]) --> OTT
+    OTT["Off-the-top rules<br/>Taxes · contractor split · owner-pay<br/>(if defined as fixed allocations)"]
+    OTT --> BILLS
+    BILLS["Bills — reservations<br/>Reserve against actual upcoming bills<br/>in the planning window (7/14/21/30d)"]
+    BILLS --> SPLIT
+    SPLIT["Surplus split — of what's LEFT"]
+    SPLIT --> PY["Pay yourself · ownerPct<br/>default 0%"]
+    SPLIT --> DEBT["Extra debt payoff · debtPct<br/>default 20%"]
+    SPLIT --> BUF["Savings / buffer · bufPct<br/>default 15%"]
+    SPLIT --> FREE["Yours to spend freely · freePct<br/>default 5%"]
+    PY --> RES["Residual → rolls to debt"]
+    DEBT --> RES
+    BUF --> RES
+    FREE --> RES
+    classDef stage fill:#eaf5ee,stroke:#2a7a4a,stroke-width:2px,color:#111c16
+    classDef bucket fill:#ffffff,stroke:#c4d8cc,color:#111c16
+    classDef tail fill:#fef3e0,stroke:#c97c0a,color:#111c16
+    class OTT,BILLS,SPLIT stage
+    class PY,DEBT,BUF,FREE bucket
+    class RES tail
+      </pre></div>
+
+      <h3>Vocabulary discipline</h3>
+      <p>Use these labels verbatim in any user-facing copy:</p>
+      <ul>
+        <li><strong>"Pay yourself"</strong> — not "owner pay" in UI.</li>
+        <li><strong>"Extra debt payoff"</strong> — not just "debt".</li>
+        <li><strong>"Savings / buffer"</strong> — <em>never</em> "smoothing reserve".</li>
+        <li><strong>"Yours to spend freely"</strong> or "Spend freely".</li>
+      </ul>
+
+      <div class="card danger">
+        <div class="callout-eyebrow">Common copy mistakes</div>
+        <ul style="margin-bottom:0;">
+          <li><strong>Wrong:</strong> "Taxes / bills / smoothing / debt / free" — wrong order, wrong vocab.</li>
+          <li><strong>Wrong:</strong> "The buffer auto-releases when bills come due." It doesn't — buffer is one-way accumulation.</li>
+          <li><strong>Wrong:</strong> "Plaid syncs your accounts." Not shipped. Phase B comment only.</li>
+        </ul>
+      </div>
+
+      <h3>Per-bill reservations</h3>
+      <p>Money set aside for bills is tracked <strong>per-bill</strong>, not as a scalar pool. State lives at <code>S.settings.reservations: { [billId]: amount }</code>. The dashboard headline numbers (<code>balance</code>, <code>reserved_total</code>, <code>available_to_spend</code>) all derive from this map plus the user-entered <code>balance</code>.</p>
+
+      <h3>The smart bill window</h3>
+      <p><code>billsInWindow(days)</code> is the engine's view of "what's coming up." Marking April's truck loan paid on April 25 still surfaces May 5 in the window — the next deposit reserves fresh for it. This is what makes "set it and forget it" actually work for monthly bills.</p>
+
+      <h3>Auto month rollover</h3>
+      <p><code>autoRolloverIfNewMonth()</code> runs on every load path. Detects month change, clears <code>paid</code> flags, <strong>preserves reservations</strong> so set-aside money rolls forward, updates <code>allocResetMonth</code>. It does NOT auto-archive into <code>month_history</code> — that's a manual <code>resetMonth()</code> for users who want a clean record.</p>
+    </section>
+
+    <!-- 5 ──────────────────────────────────────────── -->
+    <section id="data">
+      <h2><span class="num">5</span>Data model</h2>
+      <h3>Client-side state (<code>S</code>)</h3>
+      <p>Stored as a single JSON blob in <code>user_data.data</code> (JSONB column). The shape is the JSON the client serializes; there is no normalized schema.</p>
+      <pre><code>S = {
+  bills:    [ { id, name, amount, dueDay, frequency, paid, ... } ],
+  debts:    [ { name, balance, minPayment, ratePct, dueDay } ],
+  income:   [ /* historical deposits with allocation breakdowns */ ],
+  forecast: [ /* expected income */ ],
+  sources:  [ /* user-defined income source labels */ ],
+  obligations: [ /* off-the-top fixed allocation rules */ ],
+  settings: {
+    debtPct, bufPct, freePct, ownerPct,         // surplus split
+    window,                                     // 7|14|21|30
+    reservations: { [billId]: amount },         // per-bill earmarks
+    balance,                                    // user-entered total
+    allocResetMonth,                            // 'YYYY-MM' anchor
+    lastOccurrenceCheck,                        // ISO date
+    emailReminders: { ... },                    // 5 toggles
+  },
+  profile: { skipped, name, business, ... },
+}</code></pre>
+
+      <h3>Supabase tables + trust model</h3>
+      <div class="mermaid-wrap"><pre class="mermaid">
+flowchart LR
+    CLIENT["Browser client<br/>anon key + RLS"]
+    CLIENT -->|read/write own row| UD[("user_data")]
+    CLIENT -->|read own row| PR[("profiles")]
+    CLIENT -->|read/write own rows| LP[("lesson_progress")]
+    CLIENT -->|SELECT only| CM[("coach_messages")]
+    STRIPE["Stripe"] -->|service_role| WH["stripe-webhook<br/>Edge Function"]
+    WH -->|writes subscription_status| PR
+    USER["User question"] -->|JSON POST| CC["coach-chat<br/>Edge Function"]
+    CC -->|service_role write| CM
+    CC -->|reads context| UD
+    classDef table fill:#ffffff,stroke:#3570b8,color:#111c16
+    classDef ef fill:#eaf5ee,stroke:#2a7a4a,color:#111c16
+    classDef ext fill:#fef3e0,stroke:#c97c0a,color:#111c16
+    class UD,PR,LP,CM table
+    class WH,CC ef
+    class STRIPE,USER,CLIENT ext
+      </pre></div>
+      <table>
+        <thead><tr><th>Table</th><th>PK</th><th>Purpose</th><th>Client write?</th></tr></thead>
+        <tbody>
+          <tr><td><code>user_data</code></td><td><code>id</code></td><td>One row per user. Full <code>S</code> object as JSONB.</td><td>Yes (RLS).</td></tr>
+          <tr><td><code>profiles</code></td><td><code>id</code></td><td><code>subscription_status</code>, Stripe IDs.</td><td><strong>No</strong> — service role only.</td></tr>
+          <tr><td><code>coach_messages</code></td><td><code>(user_id, ts)</code></td><td>Coach chat history.</td><td><strong>No</strong> — service role only.</td></tr>
+          <tr><td><code>lesson_progress</code></td><td><code>(user_id, lesson_id)</code></td><td>Per-lesson completion.</td><td>Yes (RLS).</td></tr>
+        </tbody>
+      </table>
+    </section>
+
+    <!-- 6 ──────────────────────────────────────────── -->
+    <section id="settings">
+      <h2><span class="num">6</span>Settings — what the user can tune</h2>
+      <ol>
+        <li><strong>Fixed allocations</strong> — off-the-top rules (taxes, contractor split, owner pay). Fire BEFORE the surplus split.</li>
+        <li><strong>Planning window</strong> — 7 / 14 / 21 / 30 days.</li>
+        <li><strong>Surplus split</strong> — sliders for pay yourself / debt / buffer / free spending. Sum ≤ 100.</li>
+        <li><strong>Income sources</strong> — user-defined dropdown labels.</li>
+        <li><strong>Email reminders</strong> — 5 toggles: <code>bill_reminder</code>, <code>low_buffer</code>, <code>monthly_wrap</code>, <code>dormancy</code>, <code>weekly</code>.</li>
+        <li><strong>Subscription</strong> — opens Stripe customer portal.</li>
+        <li><strong>Account</strong> — email, replay tour, contact support, close month, clear data, sign out.</li>
+      </ol>
+    </section>
+
+    <!-- 7 ──────────────────────────────────────────── -->
+    <section id="onboarding">
+      <h2><span class="num">7</span>Onboarding</h2>
+      <p>Triggers if the user has no bills AND has not skipped (<code>profile.skipped !== true</code>). 9 questions, AI-parsed by the <code>ai-onboard</code> Edge Function. Skip is allowed.</p>
+      <ol>
+        <li>Welcome</li>
+        <li>Name + business</li>
+        <li>Income payment structure</li>
+        <li>Income sources list</li>
+        <li>Contractor / commission splits</li>
+        <li>Monthly bills (table)</li>
+        <li>Debts (name, min payment, rate %, due, balance)</li>
+        <li>Goals / priorities</li>
+        <li>Pay yourself percentage (default 10%)</li>
+      </ol>
+    </section>
+
+    <!-- 8 ──────────────────────────────────────────── -->
+    <section id="coach">
+      <h2><span class="num">8</span>AI Coach</h2>
+      <p class="lead">A real chat with full state context. <strong>Advisory only</strong> — it does not move money.</p>
+
+      <h3>What the Coach can see</h3>
+      <p><code>buildCoachState()</code> ships these fields to the model:</p>
+      <ul>
+        <li>All bills, debts, settings, sources, obligations, profile</li>
+        <li>Headline numbers: <code>balance</code>, <code>reserved_total</code>, <code>available_to_spend</code></li>
+        <li><code>reservations_by_bill</code> — per-bill <code>{bill, amount, reserved, days_until}</code></li>
+        <li><code>past_due_bills</code> — monthly bills past due day, not paid</li>
+        <li><code>latest_deposit</code> — most recent income with funding breakdown (<code>funded_prior</code> / <code>funded_now</code> / <code>partial</code> / <code>uncovered</code>)</li>
+        <li><code>balance_neutral</code> flag on "Tell me where it goes" reallocations</li>
+        <li>Last 3 months of history + forecast data</li>
+      </ul>
+
+      <div class="card warn">
+        <div class="callout-eyebrow">Sync rule</div>
+        <p style="color:var(--ds-t1);margin-bottom:0;">Updates to <code>buildCoachState</code> MUST be mirrored in the system prompt — it's the only way the model knows to reference the new fields.</p>
+      </div>
+
+      <h3>Proactive nudges</h3>
+      <ol>
+        <li>Owner pay percentage = 0 but income has been logged.</li>
+        <li>Buffer low + bills due soon.</li>
+        <li>No income logged in 14+ days.</li>
+      </ol>
+      <p>Dismissed nudges are suppressed for 12 hours (anti-nag).</p>
+    </section>
+
+    <!-- 9 ──────────────────────────────────────────── -->
+    <section id="edge">
+      <h2><span class="num">9</span>Edge Functions</h2>
+      <p>All deployed on Supabase. <strong>Verify JWT must be OFF</strong> on every public-facing function (gateway-level auth would block our PKCE flow).</p>
+      <table>
+        <thead><tr><th>Function</th><th>Purpose</th></tr></thead>
+        <tbody>
+          <tr><td><code>coach-chat</code></td><td>Claude API for the Coach</td></tr>
+          <tr><td><code>email-cron-daily</code></td><td>Daily transactional + behavioral emails (16:00 UTC)</td></tr>
+          <tr><td><code>unsubscribe</code></td><td>Email unsub link handler</td></tr>
+          <tr><td><code>create-checkout</code></td><td>Stripe Checkout session</td></tr>
+          <tr><td><code>create-portal-session</code></td><td>Stripe Customer Portal</td></tr>
+          <tr><td><code>stripe-webhook</code></td><td>Subscription lifecycle</td></tr>
+          <tr><td><code>send-referral-invite</code></td><td>Referral email send</td></tr>
+          <tr><td><code>ai-onboard</code></td><td>Onboarding free-text parser</td></tr>
+        </tbody>
+      </table>
+    </section>
+
+    <!-- 10 ──────────────────────────────────────────── -->
+    <section id="sub">
+      <h2><span class="num">10</span>Subscription &amp; paywall</h2>
+      <h3>Pricing</h3>
+      <ul>
+        <li><strong>Monthly:</strong> $14.99/mo</li>
+        <li><strong>Annual:</strong> $129/yr · framing "Save $50" or "Two months free"</li>
+        <li><strong>Lifetime:</strong> dropped for new sign-ups; existing <code>lifetime</code> users grandfathered.</li>
+      </ul>
+
+      <h3>Trial</h3>
+      <p><strong>7 days. Card required.</strong> Verbatim app text: <em>"Card required. You won't be charged until day 8. Cancel anytime in Settings."</em></p>
+
+      <h3>Access gate</h3>
+      <pre><code>// app.html:2131
+const hasAccess = ['active', 'trialing', 'lifetime'].includes(status);</code></pre>
+      <p><code>subscription_status</code> enum: <code>trialing</code> · <code>active</code> · <code>past_due</code> · <code>inactive</code> · <code>lifetime</code>.</p>
+    </section>
+
+    <!-- 11 ──────────────────────────────────────────── -->
+    <section id="design-system">
+      <h2><span class="num">11</span>Visual design system</h2>
+      <p>Verbatim tokens from <code>app.html</code>. The brand skill (<code>~/.claude/skills/able-brand/</code>) is canonical for voice and visual rules.</p>
+
+      <h3 id="colors">Colors</h3>
+      <div class="swatch-grid">
+        <div class="swatch"><div class="swatch-color" style="background:#f0f7f2;"></div><div class="swatch-info"><div class="name">Page</div><div class="token">--ds-page</div><div class="hex">#f0f7f2</div></div></div>
+        <div class="swatch"><div class="swatch-color" style="background:#ffffff;border-bottom:1px solid #c4d8cc;"></div><div class="swatch-info"><div class="name">Card</div><div class="token">--ds-card</div><div class="hex">#ffffff</div></div></div>
+        <div class="swatch"><div class="swatch-color" style="background:#f7fbf8;"></div><div class="swatch-info"><div class="name">Card 2</div><div class="token">--ds-card2</div><div class="hex">#f7fbf8</div></div></div>
+        <div class="swatch"><div class="swatch-color" style="background:#111c16;"></div><div class="swatch-info"><div class="name">Body text</div><div class="token">--ds-t1</div><div class="hex">#111c16</div></div></div>
+        <div class="swatch"><div class="swatch-color" style="background:#4a5c52;"></div><div class="swatch-info"><div class="name">Secondary</div><div class="token">--ds-t2</div><div class="hex">#4a5c52</div></div></div>
+        <div class="swatch"><div class="swatch-color" style="background:#8ca898;"></div><div class="swatch-info"><div class="name">Muted</div><div class="token">--ds-t3</div><div class="hex">#8ca898</div></div></div>
+        <div class="swatch"><div class="swatch-color" style="background:#c4d8cc;"></div><div class="swatch-info"><div class="name">Border</div><div class="token">--ds-t4</div><div class="hex">#c4d8cc</div></div></div>
+        <div class="swatch"><div class="swatch-color" style="background:#2a7a4a;"></div><div class="swatch-info"><div class="name">Brand primary</div><div class="token">--ds-green</div><div class="hex">#2a7a4a</div></div></div>
+        <div class="swatch"><div class="swatch-color" style="background:#1f6038;"></div><div class="swatch-info"><div class="name">Brand dark</div><div class="token">--ds-green2</div><div class="hex">#1f6038</div></div></div>
+        <div class="swatch"><div class="swatch-color" style="background:#eaf5ee;"></div><div class="swatch-info"><div class="name">Brand light</div><div class="token">--ds-green-l</div><div class="hex">#eaf5ee</div></div></div>
+        <div class="swatch"><div class="swatch-color" style="background:#b8e0c8;"></div><div class="swatch-info"><div class="name">Brand mid</div><div class="token">--ds-green-m</div><div class="hex">#b8e0c8</div></div></div>
+        <div class="swatch"><div class="swatch-color" style="background:#3d9e78;"></div><div class="swatch-info"><div class="name">Cat. teal</div><div class="token">--ds-c2</div><div class="hex">#3d9e78</div></div></div>
+        <div class="swatch"><div class="swatch-color" style="background:#c97c0a;"></div><div class="swatch-info"><div class="name">Warn / amber</div><div class="token">--ds-c3</div><div class="hex">#c97c0a</div></div></div>
+        <div class="swatch"><div class="swatch-color" style="background:#c04060;"></div><div class="swatch-info"><div class="name">Debt / danger</div><div class="token">--ds-c4</div><div class="hex">#c04060</div></div></div>
+        <div class="swatch"><div class="swatch-color" style="background:#3570b8;"></div><div class="swatch-info"><div class="name">Info / link</div><div class="token">--ds-c5</div><div class="hex">#3570b8</div></div></div>
+      </div>
+
+      <h3 id="type">Typography</h3>
+      <p>One face only: <strong>Bricolage Grotesque</strong>, weights 400–900. System sans fallback. Do not introduce a second display face.</p>
+      <div class="card">
+        <div class="type-row"><div class="label">H1</div><div class="sample" style="font-size:3rem;">From Unable → Able</div><div class="meta">clamp 2.25–3.75rem</div></div>
+        <div class="type-row"><div class="label">H2</div><div class="sample" style="font-size:2.25rem;">Every dollar gets a job.</div><div class="meta">clamp 2–3rem</div></div>
+        <div class="type-row"><div class="label">H3</div><div class="sample" style="font-size:1.5rem;">Set aside before you spend.</div><div class="meta">1.25–1.5rem</div></div>
+        <div class="type-row"><div class="label">Body</div><div class="sample" style="font-size:1rem;font-weight:500;color:var(--ds-t2);">Money lands on Day 1, leaks out by Day 14, and Day 30 is the panic.</div><div class="meta">1rem · 500</div></div>
+        <div class="type-row"><div class="label">Eyebrow</div><div class="sample" style="font-size:0.7rem;font-weight:800;letter-spacing:.16em;text-transform:uppercase;color:var(--ds-t3);">CARD REQUIRED · NO CHARGE UNTIL DAY 8</div><div class="meta">0.7rem · 800 · 0.16em</div></div>
+      </div>
+
+      <h3 id="radii">Radius scale</h3>
+      <div class="specimen-row">
+        <div class="specimen" style="border-radius:12px;border:1.5px solid var(--ds-t4);"><div class="ttl">12px</div><div class="tok">--ds-r1</div><div>inputs · chips</div></div>
+        <div class="specimen" style="border-radius:18px;border:1.5px solid var(--ds-t4);"><div class="ttl">18px</div><div class="tok">--ds-r2</div><div>cards</div></div>
+        <div class="specimen" style="border-radius:26px;border:1.5px solid var(--ds-t4);"><div class="ttl">26px</div><div class="tok">--ds-r3</div><div>hero · phone · sheet</div></div>
+      </div>
+
+      <h3>Shadow scale</h3>
+      <div class="specimen-row">
+        <div class="specimen" style="border-radius:18px;box-shadow:var(--ds-sh1);"><div class="ttl">sh1</div><div class="tok">--ds-sh1</div><div>ambient</div></div>
+        <div class="specimen" style="border-radius:18px;box-shadow:var(--ds-sh2);"><div class="ttl">sh2</div><div class="tok">--ds-sh2</div><div>hover lift</div></div>
+        <div class="specimen" style="border-radius:18px;box-shadow:var(--ds-sh3);"><div class="ttl">sh3</div><div class="tok">--ds-sh3</div><div>modal · sheet</div></div>
+      </div>
+
+      <h3>Motion rules</h3>
+      <ul>
+        <li><strong>Scroll reveal:</strong> <code>.reveal</code> fade-up, <code>0.6s ease</code>, threshold <code>0.12</code>.</li>
+        <li><strong>Problem-beat stagger:</strong> <code>180ms</code> between items. Do not loop.</li>
+        <li><strong>Phone float:</strong> <code>6s ease-in-out</code>. No bounce, no parallax.</li>
+        <li><strong>Hover:</strong> subtle shadow + 1px lift. No color flips.</li>
+        <li><strong>Allowed celebration:</strong> the checkmark pop on completion. Sparingly.</li>
+      </ul>
+
+      <h3 id="voice">Voice + microcopy</h3>
+      <ul>
+        <li><strong>Short sentences. Plain language. No em dashes.</strong></li>
+        <li>Warm, calm, specific. Not hype.</li>
+        <li><strong>Customer is the hero. Able is the guide.</strong></li>
+        <li>Permission, not blame. <em>"The problem was never you. It was the advice you were handed."</em></li>
+        <li>Identity language. "You are able to..." not "Able does X for you."</li>
+        <li>Real specifics over claims. "$500–$1,000 leaks every month" beats "save more money."</li>
+      </ul>
+
+      <div class="card tinted">
+        <div class="callout-eyebrow">Day 1–31 anchor</div>
+        <p style="color:var(--ds-t1);">Verbatim and load-bearing — never paraphrase loosely:</p>
+        <ul style="margin-bottom:0;color:var(--ds-t1);">
+          <li><strong>Day 1:</strong> Money comes in. Just in time. Breathe a little.</li>
+          <li><strong>Day 7:</strong> A snack here, a subscription there.</li>
+          <li><strong>Day 14:</strong> The leak begins.</li>
+          <li><strong>Day 30:</strong> "Where did that $1,000 go?"</li>
+          <li><strong>Day 31:</strong> Shame. Guilt. Avoidance.</li>
+        </ul>
+      </div>
+
+      <h3>Anti-patterns</h3>
+      <div class="card danger">
+        <ul style="margin-bottom:0;">
+          <li>Em dashes anywhere in copy. (Use periods or line breaks.)</li>
+          <li>"We" / "our team" voice.</li>
+          <li>Tool-as-hero phrasing ("Able tells you what to do").</li>
+          <li>Stock-photo people. Use phone mockups + abstract green gradients.</li>
+          <li>Multiple display faces.</li>
+          <li>Bouncy motion, parallax, autoplaying carousels.</li>
+          <li>Pricing without the "7-day free trial" line.</li>
+          <li>Pain framing that blames the user.</li>
+        </ul>
+      </div>
+    </section>
+
+    <!-- 12 ──────────────────────────────────────────── -->
+    <section id="layout">
+      <h2><span class="num">12</span>Layout — screen-by-screen</h2>
+      <p>Live captures from the demo seed at iPhone 14 Pro vertical (390×844 @2×). Re-run <code>scripts/capture-design-screens.py</code> after any UI change.</p>
+      <div class="phones">
+        <figure class="phone">
+          <img src="docs/design-screens/01-auth.png" alt="Auth screen">
+          <figcaption class="phone-cap">
+            <div class="ttl">Auth</div>
+            <div class="desc">Wordmark, pill-toggle Sign in / Create account, Google OAuth above email/password.</div>
+          </figcaption>
+        </figure>
+        <figure class="phone">
+          <img src="docs/design-screens/02-paywall.png" alt="Paywall">
+          <figcaption class="phone-cap">
+            <div class="ttl">Paywall</div>
+            <div class="desc">Annual selected by default with "Save $41" badge. Card-required fine print is verbatim and load-bearing.</div>
+          </figcaption>
+        </figure>
+        <figure class="phone">
+          <img src="docs/design-screens/03-onboarding.png" alt="Onboarding step 1">
+          <figcaption class="phone-cap">
+            <div class="ttl">Onboarding (1 of 9)</div>
+            <div class="desc">AI-style intro, primary CTA, quiet "Skip for now and explore" escape. AI-parsed answers via <code>ai-onboard</code>.</div>
+          </figcaption>
+        </figure>
+        <figure class="phone">
+          <img src="docs/design-screens/04-home.png" alt="Allocate / Home">
+          <figcaption class="phone-cap">
+            <div class="ttl">Allocate · home</div>
+            <div class="desc">Past-due card (amber), green hero with Add balance + Log income, monthly score band, bottom nav, Coach FAB.</div>
+          </figcaption>
+        </figure>
+        <figure class="phone">
+          <img src="docs/design-screens/05-bills.png" alt="Plan / Bills">
+          <figcaption class="phone-cap">
+            <div class="ttl">Plan · Bills</div>
+            <div class="desc">Sub-tabs (Forecast · Bills · Debt · What-if), monthly total, per-bill funded badges + due day + amount.</div>
+          </figcaption>
+        </figure>
+        <figure class="phone">
+          <img src="docs/design-screens/06-settings.png" alt="Settings">
+          <figcaption class="phone-cap">
+            <div class="ttl">More · Settings</div>
+            <div class="desc">Planning-window pill, surplus split sliders. Friendly preset CTA on the recommendation.</div>
+          </figcaption>
+        </figure>
+        <figure class="phone">
+          <img src="docs/design-screens/07-score.png" alt="Score">
+          <figcaption class="phone-cap">
+            <div class="ttl">Score</div>
+            <div class="desc">Big number in a sage card, tier label, and the five contributing bands. "How you earn points" makes the rubric explicit.</div>
+          </figcaption>
+        </figure>
+        <figure class="phone">
+          <img src="docs/design-screens/08-coach.png" alt="Coach panel">
+          <figcaption class="phone-cap">
+            <div class="ttl">Coach</div>
+            <div class="desc">Floating sheet from FAB. Header explains state visibility. Conversation history pinned above the input bar.</div>
+          </figcaption>
+        </figure>
+        <figure class="phone">
+          <img src="docs/design-screens/09-more.png" alt="More / Learn">
+          <figcaption class="phone-cap">
+            <div class="ttl">More · Learn</div>
+            <div class="desc">Default landing for the More group. Sub-tabs Learn · Refer · Settings. Money Literacy Score + courses + streak.</div>
+          </figcaption>
+        </figure>
+      </div>
+    </section>
+
+    <!-- 13 ──────────────────────────────────────────── -->
+    <section id="not-shipped">
+      <h2><span class="num">13</span>What is NOT shipped</h2>
+      <p>The most-asked-about part of the doc. If a piece of content claims any of these, it is wrong.</p>
+      <table>
+        <thead><tr><th>Feature</th><th>Status</th></tr></thead>
+        <tbody>
+          <tr><td>Plaid auto-import deposits</td><td>NOT shipped (Phase B comment only)</td></tr>
+          <tr><td>Auto-mark-paid bills</td><td>NOT shipped (manual checkbox only)</td></tr>
+          <tr><td>Buffer auto-release into bills</td><td>NOT shipped (one-way accumulation)</td></tr>
+          <tr><td>Spending tracking</td><td>NOT shipped (income-side only)</td></tr>
+          <tr><td>Bill auto-categorization</td><td>NOT shipped (no categories at all)</td></tr>
+          <tr><td>CSV import</td><td>NOT shipped</td></tr>
+          <tr><td>Bank connection of any kind</td><td>NOT shipped</td></tr>
+          <tr><td>The Coach moving money</td><td>NOT shipped (advisory only)</td></tr>
+          <tr><td>"Smoothing reserve" as a named feature</td><td>NOT a named feature (it's "buffer")</td></tr>
+          <tr><td>Taxes inside the surplus split</td><td>NOT — taxes are off-the-top fixed allocations</td></tr>
+          <tr><td>No-card trial</td><td>NOT — card is required</td></tr>
+        </tbody>
+      </table>
+      <div class="card warn">
+        <div class="callout-eyebrow">Process discipline</div>
+        <p style="color:var(--ds-t1);margin-bottom:0;">When marketing wants something this list disallows, that's a product roadmap conversation — not a content edit. Ship the product change first, then update the <code>able-app-capabilities</code> skill, then write the marketing.</p>
+      </div>
+    </section>
+
+    <!-- 14 ──────────────────────────────────────────── -->
+    <section id="deploy">
+      <h2><span class="num">14</span>Deployment</h2>
+      <ul>
+        <li><strong>Static HTML</strong> auto-deploys from <code>main</code> to Netlify on every push.</li>
+        <li><strong>Edge Functions</strong> deploy via <code>scripts/deploy-functions.sh &lt;name&gt;</code>. The CLI flow runs <code>deno check</code> locally first.</li>
+        <li><strong>Database changes</strong> — paste SQL into Supabase dashboard. Files in <code>supabase/*.sql</code> are the source of truth.</li>
+        <li><strong>Environment</strong> — Stripe keys, Anthropic key, Resend key, Supabase service role — all set in Edge Function secrets.</li>
+      </ul>
+      <p>Health checks: <code>functions-check.yml</code> runs <code>deno check</code> on every PR; <code>functions-healthcheck.yml</code> pings <code>create-checkout</code> every 5 minutes and opens a GitHub issue on 5xx/timeout.</p>
+    </section>
+
+    <!-- 15 ──────────────────────────────────────────── -->
+    <section id="open">
+      <h2><span class="num">15</span>Open questions / live tensions</h2>
+      <ol>
+        <li><strong><code>app.html</code> is approaching the limit of "single file is simpler."</strong> At ~9.5k LOC, debugging is fine, but cognitive load grows fast. Settings and onboarding are the next extraction candidates.</li>
+        <li><strong>Plaid (Phase B).</strong> Coach state and reservations model are designed to absorb live-bank data without a rewrite. <code>S.settings.balance</code> can become a Plaid-derived value with minimal churn.</li>
+        <li><strong>Buffer automation.</strong> Today the buffer is one-way. The honest answer in marketing is "you transfer manually." If we ship automation, that's code → skill update → content rewrite, in that order.</li>
+        <li><strong>Pricing.</strong> Currently $14.99/mo + $129/yr (reverted from $9.99/$79). Trial-with-card is converting better than trial-no-card was at the lower price.</li>
+        <li><strong>Coach trust.</strong> The system prompt forbids the Coach from inventing actions it can't take. Any "I moved $200 to your buffer" in production is a regression.</li>
+      </ol>
+    </section>
+
+  </main>
+
+  <footer>
+    <p><span class="arrow">From Unable → Able.</span></p>
+    <p>This is a living artifact. When you change the product, change the doc in the same PR.</p>
+    <p style="margin-top:1rem;font-size:0.78rem;">See also: <a href="DESIGN.md"><code>DESIGN.md</code></a> · <code>~/.claude/skills/able-app-capabilities/</code> · <code>~/.claude/skills/able-brand/</code></p>
+  </footer>
+
+</div>
+
+<script type="module">
+  import mermaid from 'https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.esm.min.mjs';
+  mermaid.initialize({
+    startOnLoad: true,
+    theme: 'base',
+    themeVariables: {
+      fontFamily: '"Bricolage Grotesque", -apple-system, sans-serif',
+      primaryColor: '#eaf5ee',
+      primaryTextColor: '#111c16',
+      primaryBorderColor: '#2a7a4a',
+      lineColor: '#4a5c52',
+      secondaryColor: '#ffffff',
+      tertiaryColor: '#f7fbf8',
+      background: '#ffffff',
+      mainBkg: '#ffffff',
+      nodeTextColor: '#111c16',
+    },
+    flowchart: { curve: 'basis', padding: 14 },
+  });
+</script>
+
+</body>
+</html>

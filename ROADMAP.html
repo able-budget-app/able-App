@@ -1,0 +1,1678 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Able Roadmap — Q2 2026</title>
+<style>
+  :root {
+    --green: #19a974;
+    --green-dark: #128055;
+    --green-soft: #e8f6ee;
+    --ink: #0e1011;
+    --ink-2: #1a1d1f;
+    --paper: #faf9f5;
+    --paper-2: #ffffff;
+    --line: #e6e3da;
+    --line-strong: #cdc9bd;
+    --text: #1a1d1f;
+    --muted: #6b6b6b;
+    --amber: #c87a14;
+    --amber-soft: #fbf0dc;
+    --blue: #2754c5;
+    --blue-soft: #e3eaf9;
+    --red: #b3261e;
+    --red-soft: #fbeae8;
+  }
+  * { box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+  body {
+    margin: 0;
+    background: var(--paper);
+    color: var(--text);
+    font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Text', 'Segoe UI', Roboto, sans-serif;
+    font-size: 15px;
+    line-height: 1.6;
+  }
+  .container {
+    display: grid;
+    grid-template-columns: 240px 1fr;
+    max-width: 1280px;
+    margin: 0 auto;
+    gap: 0;
+  }
+  /* Sidebar */
+  nav.toc {
+    position: sticky;
+    top: 0;
+    align-self: start;
+    height: 100vh;
+    padding: 28px 18px 28px 28px;
+    border-right: 1px solid var(--line);
+    background: var(--paper);
+    overflow-y: auto;
+  }
+  nav.toc .brand {
+    font-weight: 900;
+    font-size: 18px;
+    letter-spacing: -0.01em;
+    margin-bottom: 4px;
+    color: var(--ink);
+  }
+  nav.toc .brand .underline {
+    position: relative;
+    display: inline-block;
+  }
+  nav.toc .brand .underline::after {
+    content: "";
+    position: absolute;
+    left: 0;
+    right: -4%;
+    bottom: -2px;
+    height: 2px;
+    background: var(--green);
+  }
+  nav.toc .sub {
+    font-size: 11px;
+    color: var(--muted);
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    margin-bottom: 26px;
+  }
+  nav.toc ol {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    counter-reset: tocnum;
+  }
+  nav.toc li {
+    counter-increment: tocnum;
+    margin-bottom: 6px;
+    font-size: 13px;
+  }
+  nav.toc a {
+    color: var(--ink-2);
+    text-decoration: none;
+    display: block;
+    padding: 6px 8px;
+    border-radius: 6px;
+    transition: background 0.15s;
+  }
+  nav.toc a:hover {
+    background: var(--green-soft);
+    color: var(--green-dark);
+  }
+  nav.toc li::before {
+    content: counter(tocnum, decimal-leading-zero);
+    color: var(--muted);
+    font-weight: 600;
+    margin-right: 8px;
+    font-size: 11px;
+  }
+  /* Main */
+  main {
+    padding: 48px 56px 120px 56px;
+    max-width: 980px;
+  }
+  h1 {
+    font-size: 44px;
+    line-height: 1.05;
+    letter-spacing: -0.02em;
+    font-weight: 900;
+    margin: 0 0 6px 0;
+    color: var(--ink);
+  }
+  h1 .accent {
+    color: var(--green);
+  }
+  .meta {
+    font-size: 12px;
+    color: var(--muted);
+    text-transform: uppercase;
+    letter-spacing: 0.14em;
+    margin-bottom: 36px;
+  }
+  h2 {
+    font-size: 26px;
+    line-height: 1.2;
+    letter-spacing: -0.01em;
+    font-weight: 900;
+    margin: 56px 0 14px 0;
+    color: var(--ink);
+    padding-top: 18px;
+    border-top: 2px solid var(--ink);
+  }
+  h2 .num {
+    color: var(--green);
+    font-weight: 900;
+    margin-right: 12px;
+  }
+  h3 {
+    font-size: 18px;
+    font-weight: 800;
+    letter-spacing: -0.005em;
+    margin: 28px 0 10px 0;
+    color: var(--ink);
+  }
+  h4 {
+    font-size: 14px;
+    font-weight: 800;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--ink-2);
+    margin: 22px 0 8px 0;
+  }
+  p { margin: 0 0 14px 0; }
+  ul, ol { margin: 0 0 14px 0; padding-left: 22px; }
+  li { margin-bottom: 6px; }
+  a { color: var(--green-dark); }
+  code {
+    font-family: 'SF Mono', Menlo, monospace;
+    font-size: 0.88em;
+    background: rgba(0,0,0,0.05);
+    padding: 1px 5px;
+    border-radius: 3px;
+  }
+  /* Hero card */
+  .tldr {
+    background: var(--ink);
+    color: #fff;
+    border-radius: 14px;
+    padding: 28px 32px;
+    margin-bottom: 32px;
+    position: relative;
+    overflow: hidden;
+  }
+  .tldr::before {
+    content: "";
+    position: absolute;
+    top: -40%;
+    right: -10%;
+    width: 320px;
+    height: 320px;
+    background: radial-gradient(circle, rgba(25,169,116,0.4) 0%, transparent 65%);
+    pointer-events: none;
+  }
+  .tldr h2 {
+    margin: 0 0 12px 0;
+    color: #fff;
+    border: none;
+    padding: 0;
+    font-size: 14px;
+    text-transform: uppercase;
+    letter-spacing: 0.16em;
+    font-weight: 700;
+  }
+  .tldr p {
+    color: rgba(255,255,255,0.92);
+    font-size: 16px;
+    margin-bottom: 12px;
+    position: relative;
+  }
+  .tldr strong { color: var(--green); }
+  /* Pills */
+  .pill {
+    display: inline-block;
+    padding: 2px 9px;
+    border-radius: 999px;
+    font-size: 11px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    line-height: 1.6;
+    vertical-align: middle;
+  }
+  .pill-done { background: var(--green-soft); color: var(--green-dark); }
+  .pill-progress { background: var(--amber-soft); color: var(--amber); }
+  .pill-defer { background: var(--blue-soft); color: var(--blue); }
+  .pill-reject { background: var(--red-soft); color: var(--red); }
+  .pill-pending { border: 1px solid var(--line-strong); color: var(--muted); background: transparent; }
+  .pill-accept { background: var(--green-soft); color: var(--green-dark); }
+  /* Cards */
+  .card {
+    background: var(--paper-2);
+    border: 1px solid var(--line);
+    border-radius: 12px;
+    padding: 22px 26px;
+    margin-bottom: 16px;
+  }
+  .card.green { border-left: 4px solid var(--green); }
+  .card.amber { border-left: 4px solid var(--amber); }
+  .card.blue { border-left: 4px solid var(--blue); }
+  /* Status block grid */
+  .grid-3 {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 14px;
+    margin-bottom: 18px;
+  }
+  .stat-card {
+    background: var(--paper-2);
+    border: 1px solid var(--line);
+    border-radius: 10px;
+    padding: 16px 18px;
+  }
+  .stat-card h4 {
+    margin-top: 0;
+    font-size: 12px;
+    color: var(--muted);
+  }
+  .stat-card ul { padding-left: 16px; margin-bottom: 0; font-size: 13px; }
+  .stat-card li { margin-bottom: 3px; }
+  /* Dependency flow */
+  .flow {
+    background: var(--ink);
+    color: #fff;
+    border-radius: 14px;
+    padding: 28px 32px;
+    text-align: center;
+    margin: 24px 0 32px 0;
+  }
+  .flow .step {
+    display: inline-block;
+    background: rgba(255,255,255,0.06);
+    border: 1px solid rgba(255,255,255,0.12);
+    border-radius: 8px;
+    padding: 10px 16px;
+    margin: 4px;
+    font-size: 13px;
+    font-weight: 600;
+  }
+  .flow .step.locked { background: var(--green); border-color: var(--green); }
+  .flow .arrow {
+    color: var(--green);
+    font-size: 18px;
+    margin: 6px 0;
+    display: block;
+  }
+  .flow .caption {
+    margin-top: 14px;
+    font-size: 12px;
+    color: rgba(255,255,255,0.6);
+    font-style: italic;
+  }
+  /* Decision gates table */
+  .gate {
+    background: var(--paper-2);
+    border: 1px solid var(--line);
+    border-radius: 12px;
+    padding: 20px 24px;
+    margin-bottom: 12px;
+    display: grid;
+    grid-template-columns: 80px 1fr;
+    gap: 18px;
+    align-items: start;
+  }
+  .gate .id {
+    background: var(--ink);
+    color: var(--green);
+    font-weight: 900;
+    font-size: 22px;
+    border-radius: 8px;
+    padding: 10px 0;
+    text-align: center;
+    letter-spacing: -0.02em;
+  }
+  .gate h3 {
+    margin: 0 0 6px 0;
+    font-size: 16px;
+  }
+  .gate .options {
+    font-size: 13px;
+    color: var(--muted);
+    margin-bottom: 10px;
+  }
+  .gate .rec {
+    background: var(--green-soft);
+    border-left: 3px solid var(--green);
+    padding: 10px 14px;
+    border-radius: 4px;
+    font-size: 13px;
+  }
+  .gate .rec strong { color: var(--green-dark); }
+  .gate .why {
+    margin-top: 8px;
+    font-size: 12px;
+    color: var(--muted);
+    font-style: italic;
+  }
+  /* Phase blocks */
+  .phase {
+    background: var(--paper-2);
+    border: 1px solid var(--line);
+    border-radius: 14px;
+    padding: 26px 30px;
+    margin-bottom: 22px;
+    border-top: 6px solid var(--green);
+  }
+  .phase.phase-0 { border-top-color: var(--ink); }
+  .phase.phase-1 { border-top-color: var(--green); }
+  .phase.phase-2 { border-top-color: var(--green); }
+  .phase.phase-3 { border-top-color: var(--amber); }
+  .phase.phase-4 { border-top-color: var(--blue); }
+  .phase.phase-5 { border-top-color: #6e3fc4; }
+  .phase-header {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    margin-bottom: 6px;
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+  .phase-num {
+    font-size: 11px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.16em;
+    color: var(--muted);
+  }
+  .phase h3 {
+    font-size: 22px;
+    margin: 0;
+    letter-spacing: -0.01em;
+  }
+  .phase .duration {
+    font-size: 12px;
+    color: var(--muted);
+    background: var(--paper);
+    padding: 3px 10px;
+    border-radius: 999px;
+    border: 1px solid var(--line);
+  }
+  .phase .goal {
+    font-size: 14px;
+    color: var(--ink-2);
+    background: var(--paper);
+    border-left: 3px solid var(--ink);
+    padding: 10px 14px;
+    border-radius: 4px;
+    margin: 12px 0 18px 0;
+  }
+  .workstream {
+    border-top: 1px solid var(--line);
+    padding-top: 14px;
+    margin-top: 14px;
+  }
+  .workstream h4 {
+    margin: 0 0 6px 0;
+    font-size: 13px;
+  }
+  .workstream h4 .ws-id {
+    color: var(--green);
+    margin-right: 8px;
+  }
+  .workstream .ws-meta {
+    font-size: 11px;
+    color: var(--muted);
+    margin-bottom: 8px;
+  }
+  .exit {
+    margin-top: 16px;
+    padding: 12px 16px;
+    background: var(--ink);
+    color: #fff;
+    border-radius: 8px;
+    font-size: 13px;
+  }
+  .exit strong { color: var(--green); text-transform: uppercase; letter-spacing: 0.08em; font-size: 11px; display: block; margin-bottom: 4px; }
+  /* Tables */
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 8px 0 22px 0;
+    font-size: 13px;
+    background: var(--paper-2);
+    border: 1px solid var(--line);
+    border-radius: 10px;
+    overflow: hidden;
+  }
+  th {
+    background: var(--ink);
+    color: #fff;
+    text-align: left;
+    padding: 10px 14px;
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    font-weight: 700;
+  }
+  td {
+    padding: 12px 14px;
+    border-top: 1px solid var(--line);
+    vertical-align: top;
+  }
+  tr:first-child td { border-top: none; }
+  /* Anti-pattern table */
+  .anti-table td:first-child { color: var(--red); font-weight: 600; }
+  .anti-table td:last-child { color: var(--green-dark); font-weight: 600; }
+  /* Question list */
+  .questions ol { padding-left: 0; counter-reset: qnum; list-style: none; }
+  .questions li {
+    counter-increment: qnum;
+    background: var(--paper-2);
+    border: 1px solid var(--line);
+    border-left: 3px solid var(--green);
+    padding: 14px 18px 14px 56px;
+    border-radius: 8px;
+    margin-bottom: 10px;
+    position: relative;
+  }
+  .questions li::before {
+    content: "Q" counter(qnum);
+    position: absolute;
+    left: 14px;
+    top: 14px;
+    background: var(--ink);
+    color: var(--green);
+    font-weight: 800;
+    font-size: 11px;
+    padding: 4px 8px;
+    border-radius: 4px;
+  }
+  .questions .rec-tag {
+    display: block;
+    margin-top: 6px;
+    font-size: 12px;
+    color: var(--muted);
+    font-style: italic;
+  }
+  /* Locked decisions */
+  .locked-list {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 10px;
+    margin-bottom: 16px;
+  }
+  .locked-item {
+    background: var(--paper-2);
+    border: 1px dashed var(--line-strong);
+    border-radius: 8px;
+    padding: 12px 16px;
+    font-size: 13px;
+  }
+  .locked-item strong { color: var(--ink); display: block; margin-bottom: 2px; }
+  .locked-item .tbd { color: var(--muted); font-style: italic; }
+  /* Footer note */
+  .footnote {
+    margin-top: 60px;
+    padding: 24px;
+    background: var(--ink);
+    color: rgba(255,255,255,0.85);
+    border-radius: 12px;
+    font-size: 13px;
+  }
+  .footnote h4 {
+    color: var(--green);
+    margin: 0 0 10px 0;
+    font-size: 12px;
+    letter-spacing: 0.16em;
+  }
+  /* ============================================
+     Interactive decision form
+     ============================================ */
+  .decision-toolbar {
+    position: sticky;
+    top: 0;
+    z-index: 10;
+    background: var(--paper);
+    padding: 14px 0 12px 0;
+    margin: 14px 0 18px 0;
+    border-bottom: 1px solid var(--line);
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    flex-wrap: wrap;
+  }
+  .decision-toolbar .counter {
+    font-size: 13px;
+    font-weight: 700;
+    color: var(--ink);
+    background: var(--paper-2);
+    border: 1px solid var(--line);
+    padding: 6px 12px;
+    border-radius: 999px;
+  }
+  .decision-toolbar .counter .num { color: var(--green); }
+  .decision-toolbar .saved {
+    font-size: 12px;
+    color: var(--muted);
+    font-style: italic;
+    margin-left: auto;
+  }
+  .decision-toolbar button {
+    font-family: inherit;
+    font-size: 13px;
+    font-weight: 700;
+    padding: 8px 14px;
+    border-radius: 8px;
+    border: 1px solid var(--line-strong);
+    background: var(--paper-2);
+    color: var(--ink-2);
+    cursor: pointer;
+    transition: all 0.15s;
+  }
+  .decision-toolbar button:hover { background: var(--ink); color: #fff; border-color: var(--ink); }
+  .decision-toolbar button.primary { background: var(--green); color: #fff; border-color: var(--green); }
+  .decision-toolbar button.primary:hover { background: var(--green-dark); border-color: var(--green-dark); }
+  .decision-toolbar button.danger:hover { background: var(--red); border-color: var(--red); color: #fff; }
+  .decision-toolbar .filename {
+    font-family: 'SF Mono', Menlo, monospace;
+    font-size: 11px;
+    color: var(--muted);
+    background: rgba(0,0,0,0.04);
+    padding: 4px 8px;
+    border-radius: 4px;
+  }
+  .decision-card {
+    background: var(--paper-2);
+    border: 1px solid var(--line);
+    border-radius: 12px;
+    padding: 22px 26px;
+    margin-bottom: 14px;
+    transition: border-color 0.2s, box-shadow 0.2s;
+  }
+  .decision-card.decided {
+    border-color: var(--green);
+    box-shadow: 0 0 0 1px var(--green);
+  }
+  .decision-card .head {
+    display: flex;
+    align-items: baseline;
+    gap: 10px;
+    margin-bottom: 8px;
+    flex-wrap: wrap;
+  }
+  .decision-card .id-tag {
+    display: inline-block;
+    background: var(--ink);
+    color: var(--green);
+    font-weight: 900;
+    font-size: 13px;
+    letter-spacing: 0.04em;
+    padding: 4px 10px;
+    border-radius: 6px;
+  }
+  .decision-card.decided .id-tag { background: var(--green); color: #fff; }
+  .decision-card h3 {
+    margin: 0;
+    font-size: 17px;
+  }
+  .decision-card .why {
+    font-size: 12.5px;
+    color: var(--muted);
+    margin: 0 0 12px 0;
+    line-height: 1.5;
+  }
+  .decision-card .rec-callout {
+    background: var(--green-soft);
+    border-left: 3px solid var(--green);
+    padding: 9px 12px;
+    border-radius: 4px;
+    font-size: 12.5px;
+    margin-bottom: 14px;
+    color: var(--ink-2);
+  }
+  .decision-card .rec-callout strong {
+    color: var(--green-dark);
+    text-transform: uppercase;
+    font-size: 10px;
+    letter-spacing: 0.1em;
+    display: block;
+    margin-bottom: 3px;
+  }
+  .sub-decision {
+    border-top: 1px dashed var(--line);
+    padding: 12px 0 6px 0;
+    margin-top: 8px;
+  }
+  .sub-decision:first-of-type {
+    border-top: 0;
+    padding-top: 4px;
+    margin-top: 0;
+  }
+  .sub-decision .sub-q {
+    font-size: 13.5px;
+    color: var(--ink-2);
+    margin-bottom: 8px;
+    line-height: 1.45;
+  }
+  .sub-decision .sub-q .sub-id {
+    background: var(--paper);
+    border: 1px solid var(--line);
+    font-size: 10px;
+    font-weight: 800;
+    color: var(--muted);
+    padding: 2px 6px;
+    border-radius: 4px;
+    margin-right: 6px;
+    vertical-align: 2px;
+  }
+  .opts {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+  }
+  .opts label {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    background: var(--paper);
+    border: 1.5px solid var(--line);
+    border-radius: 7px;
+    padding: 7px 12px;
+    font-size: 13px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.12s;
+    user-select: none;
+    color: var(--ink-2);
+  }
+  .opts label:hover {
+    border-color: var(--ink-2);
+    background: var(--paper-2);
+  }
+  .opts input[type="radio"],
+  .opts input[type="checkbox"] {
+    position: absolute;
+    opacity: 0;
+    pointer-events: none;
+  }
+  .opts label:has(input:checked) {
+    background: var(--ink);
+    border-color: var(--ink);
+    color: #fff;
+  }
+  .opts label.recommended::after {
+    content: "★";
+    position: absolute;
+    top: -7px;
+    right: -7px;
+    background: var(--green);
+    color: #fff;
+    font-size: 10px;
+    font-weight: 800;
+    width: 16px;
+    height: 16px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    line-height: 1;
+  }
+  .field { margin-top: 12px; }
+  .field-label {
+    display: block;
+    font-size: 11px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--muted);
+    margin-bottom: 6px;
+  }
+  .field input[type="text"],
+  .field textarea {
+    width: 100%;
+    font-family: inherit;
+    font-size: 13.5px;
+    padding: 10px 12px;
+    border: 1px solid var(--line);
+    border-radius: 8px;
+    background: var(--paper);
+    color: var(--ink);
+    resize: vertical;
+    transition: border-color 0.15s;
+  }
+  .field textarea { min-height: 60px; line-height: 1.5; }
+  .field input:focus,
+  .field textarea:focus {
+    outline: none;
+    border-color: var(--green);
+    background: var(--paper-2);
+  }
+  .decided-bar {
+    margin-top: 16px;
+    padding-top: 14px;
+    border-top: 1px solid var(--line);
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  .decided-bar label {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 13px;
+    font-weight: 700;
+    cursor: pointer;
+    color: var(--ink-2);
+  }
+  .decided-bar input[type="checkbox"] {
+    width: 18px;
+    height: 18px;
+    cursor: pointer;
+    accent-color: var(--green);
+  }
+  .decided-bar .badge {
+    margin-left: auto;
+    font-size: 10px;
+    font-weight: 800;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    padding: 4px 10px;
+    border-radius: 999px;
+    background: var(--paper);
+    color: var(--muted);
+    border: 1px solid var(--line);
+  }
+  .decision-card.decided .decided-bar .badge {
+    background: var(--green);
+    color: #fff;
+    border-color: var(--green);
+  }
+  .locked-list .locked-item.is-decided {
+    border-style: solid;
+    border-color: var(--green);
+    background: var(--green-soft);
+  }
+  .locked-list .locked-item.is-decided strong { color: var(--green-dark); }
+  .locked-list .locked-item .answer {
+    font-size: 12.5px;
+    color: var(--ink-2);
+    font-weight: 600;
+  }
+  .locked-list .locked-item .ans-notes {
+    font-size: 11px;
+    color: var(--muted);
+    margin-top: 4px;
+    font-style: italic;
+    white-space: pre-wrap;
+  }
+  /* Mobile */
+  @media (max-width: 880px) {
+    .container { grid-template-columns: 1fr; }
+    nav.toc { position: static; height: auto; border-right: none; border-bottom: 1px solid var(--line); }
+    main { padding: 32px 22px 80px 22px; }
+    h1 { font-size: 32px; }
+    .grid-3 { grid-template-columns: 1fr; }
+    .gate { grid-template-columns: 1fr; }
+    .gate .id { width: 80px; }
+    .locked-list { grid-template-columns: 1fr; }
+    .decision-toolbar .saved { margin-left: 0; width: 100%; }
+  }
+</style>
+</head>
+<body>
+<div class="container">
+
+  <nav class="toc">
+    <div class="brand">Become <span class="underline">Able</span></div>
+    <div class="sub">Q2 2026 Roadmap</div>
+    <ol>
+      <li><a href="#tldr">TL;DR</a></li>
+      <li><a href="#status">Status check</a></li>
+      <li><a href="#dependency">Dependency flow</a></li>
+      <li><a href="#decisions">Decision gates</a></li>
+      <li><a href="#phase-0">Phase 0 — Decision lock</a></li>
+      <li><a href="#phase-1">Phase 1 — Capability lock</a></li>
+      <li><a href="#phase-2">Phase 2 — Polish</a></li>
+      <li><a href="#phase-3">Phase 3 — Asset capture</a></li>
+      <li><a href="#phase-4">Phase 4 — Content rewrite</a></li>
+      <li><a href="#phase-5">Phase 5 — Engines</a></li>
+      <li><a href="#anti">Anti-patterns</a></li>
+      <li><a href="#audit">Kelty audit verdicts</a></li>
+      <li><a href="#questions">Open questions</a></li>
+      <li><a href="#locked">Locked decisions</a></li>
+    </ol>
+  </nav>
+
+  <main>
+    <h1>The Q2 <span class="accent">Roadmap</span></h1>
+    <div class="meta">Drafted 2026-04-27 · Owner: Paul · Trigger: Plaid pay-as-you-go + Kelty audit</div>
+
+    <section class="tldr" id="tldr">
+      <h2>TL;DR</h2>
+      <p>The next <strong>~10 weeks</strong> are about locking the product so we stop rewriting marketing. Plaid is the trigger.</p>
+      <p>Once Plaid + Analyzer + Tax + Methodology + Brand + Tour are locked, the existing <strong>175-piece social library</strong>, the paused <strong>9-article blog cluster</strong>, the landing page, the email sequence, and the ads all get a <strong>single coordinated rewrite</strong> — instead of a rolling rewrite every time the product moves.</p>
+      <p>The discipline: <strong>product → brand → capabilities skill → content</strong>. In that order. Anything that violates that order creates rework.</p>
+    </section>
+
+    <h2 id="status"><span class="num">01</span>Status check</h2>
+    <p>Where we are today, before the plan starts.</p>
+
+    <div class="grid-3">
+      <div class="stat-card">
+        <h4>Product (becomeable.app)</h4>
+        <ul>
+          <li><span class="pill pill-done">Live</span> Allocator, buckets, reservations, smart window, Coach, Stripe, email cron, day-1 referral, tour, brand-aligned auth/dashboard</li>
+          <li><span class="pill pill-progress">Open</span> Plaid integration, Analyzer, Tour empty-account gate, Coach SSE</li>
+        </ul>
+      </div>
+      <div class="stat-card">
+        <h4>Marketing</h4>
+        <ul>
+          <li><span class="pill pill-done">Live</span> Landing site, brand system, email infra, 175-piece social library on Drive, Make scenario built, Remotion reel, 10 footage MP4s</li>
+          <li><span class="pill pill-progress">Paused</span> PYF blog (2/11), business cluster (2/?), product shots library</li>
+          <li><span class="pill pill-pending">Not started</span> SEO engine, social engine cadence</li>
+        </ul>
+      </div>
+      <div class="stat-card">
+        <h4>Just changed</h4>
+        <ul>
+          <li>Plaid → pay-as-you-go this week</li>
+          <li>Kelty audit: confirms wedge, flags bank sync + tax + methodology + price gaps</li>
+          <li>Analyzer feature defined (allocate slice of every deposit toward big upcoming bills)</li>
+          <li>Brand lock identified as cross-cutting requirement</li>
+        </ul>
+      </div>
+    </div>
+
+    <h2 id="dependency"><span class="num">02</span>The dependency principle</h2>
+    <p>Why this doc exists. If you write at any layer before the layer above is locked, you rewrite. Every loop back up costs 1-3 days. The whole sequence is engineered to stop that.</p>
+
+    <div class="flow">
+      <div class="step locked">Product capabilities</div>
+      <span class="arrow">↓</span>
+      <div class="step locked">Brand spec (logo, color, type, motion)</div>
+      <span class="arrow">↓</span>
+      <div class="step">Capabilities skill (single source of truth)</div>
+      <span class="arrow">↓</span>
+      <div class="step">Landing + tour + in-app copy</div>
+      <span class="arrow">↓</span>
+      <div class="step">Long-form content (blog, video scripts)</div>
+      <span class="arrow">↓</span>
+      <div class="step">Short-form (social, ads, emails)</div>
+      <span class="arrow">↓</span>
+      <div class="step">Distribution engines (SEO, social cadence)</div>
+      <div class="caption">Each layer locks downstream. Skip a step and you rewrite.</div>
+    </div>
+
+    <h2 id="decisions"><span class="num">03</span>Decision gates — answer these BEFORE Phase 1 starts</h2>
+    <p>Seven gates cascade through everything below. Each card asks one thing. Pick options, write notes, tick "Decided." Your answers auto-save in this browser. When you're done, click <strong>Save to file</strong> to download <code>ROADMAP_DECISIONS.md</code> — Claude reads that file at session start so your notes carry across conversations.</p>
+
+    <div class="decision-toolbar">
+      <div class="counter"><span class="num" id="dc-decided">0</span> of <span id="dc-total">7</span> decided</div>
+      <button class="primary" id="dc-save" type="button">Save to file</button>
+      <button id="dc-copy" type="button">Copy markdown</button>
+      <button id="dc-show" type="button">Show markdown</button>
+      <button class="danger" id="dc-reset" type="button">Reset</button>
+      <span class="filename">→ save as ROADMAP_DECISIONS.md</span>
+      <span class="saved" id="dc-saved">Loading…</span>
+    </div>
+
+    <div id="decision-form-root"><!-- JS renders decision cards here --></div>
+
+    <details style="margin-top: 24px;">
+      <summary style="cursor: pointer; font-weight: 700; padding: 8px 0; color: var(--ink-2);">Show raw markdown preview</summary>
+      <pre id="dc-md-preview" style="background: var(--ink); color: #d6e6df; padding: 18px; border-radius: 10px; font-size: 12px; line-height: 1.5; overflow: auto; white-space: pre-wrap; max-height: 400px;"></pre>
+    </details>
+
+    <h4 style="margin-top: 28px;">Bonus deferred decisions (not blocking)</h4>
+    <table>
+      <tr><th style="width: 30%;">Item</th><th>Verdict</th></tr>
+      <tr><td>Native mobile (iOS/Android)</td><td><span class="pill pill-defer">Defer Q4</span> PWA holds for Q2</td></tr>
+      <tr><td>Community (Discord/Circle)</td><td><span class="pill pill-defer">Defer Q3</span> Light Discord post-launch</td></tr>
+      <tr><td>Net worth / investment tracking</td><td><span class="pill pill-reject">Permanent defer</span> Not the wedge</td></tr>
+      <tr><td>Subscription detection</td><td><span class="pill pill-accept">Free w/ Plaid</span> Falls out of B.2</td></tr>
+    </table>
+
+    <h2 id="phases"><span class="num">04</span>Phases (dependency-ordered)</h2>
+
+    <div class="phase phase-0" id="phase-0">
+      <div class="phase-header">
+        <div>
+          <div class="phase-num">Phase 0</div>
+          <h3>Decision lock</h3>
+        </div>
+        <span class="duration">~2 days · this week</span>
+      </div>
+      <div class="goal">Goal: answer D1–D7 so nothing in Phase 1 has to be redone.</div>
+      <ul>
+        <li>Answer D1–D7 (above)</li>
+        <li>Read Plaid docs for chosen scope: Link Token / Item flow, Auth + Identity, Transactions endpoint, pricing breakdown for chosen products</li>
+        <li>Pick methodology name (D5)</li>
+        <li>Sketch the 5 rules of the methodology</li>
+        <li>Brand audit pass: catalog every wordmark instance, color token, type variant, motion pattern in use</li>
+      </ul>
+      <div class="exit"><strong>Exit criteria</strong>All seven decisions written into "Locked decisions" at the bottom of this doc. No Phase 1 work begins until this is done.</div>
+    </div>
+
+    <div class="phase phase-1" id="phase-1">
+      <div class="phase-header">
+        <div>
+          <div class="phase-num">Phase 1</div>
+          <h3>Capability + brand lock</h3>
+        </div>
+        <span class="duration">3-6 weeks</span>
+      </div>
+      <div class="goal">Goal: ship every capability we'll be marketing in Q2, and freeze the brand. Nothing else gets to start until this exits.</div>
+
+      <div class="workstream">
+        <h4><span class="ws-id">A</span>Plaid integration</h4>
+        <div class="ws-meta">3-4 weeks · gates Workstream B</div>
+        <ul>
+          <li>Link Token + Item creation flow</li>
+          <li>Account + balance read (B.1)</li>
+          <li>Transactions sync + deposit detection rules (B.2 if D1 = B.1+B.2)</li>
+          <li>Plaid pricing meter dashboard (track per-user cost vs subscription revenue)</li>
+          <li>Edge Functions <code>plaid-link</code> + <code>plaid-webhook</code> (Verify JWT OFF)</li>
+          <li>Schema: <code>plaid_items</code>, <code>plaid_accounts</code>, <code>plaid_transactions</code></li>
+          <li>Onboarding: choose "connect bank" OR "manual entry" — both must work</li>
+        </ul>
+      </div>
+
+      <div class="workstream">
+        <h4><span class="ws-id">B</span>Analyzer</h4>
+        <div class="ws-meta">1 week · depends on A (B.2) if Plaid-driven</div>
+        <ul>
+          <li>Rules-based v1 per D6</li>
+          <li>Reads last N deposits (Plaid or manual)</li>
+          <li>Reads upcoming bills in next 30/60/90 days</li>
+          <li>For each big bill, suggests % of each deposit to reserve</li>
+          <li>User accepts or edits the suggested split</li>
+          <li>Surface in deposit allocation modal as "Analyzer suggests…"</li>
+        </ul>
+      </div>
+
+      <div class="workstream">
+        <h4><span class="ws-id">C</span>Tax elevation</h4>
+        <div class="ws-meta">1-2 weeks · depends on D3 = elevate</div>
+        <ul>
+          <li>Tax bucket gets quarterly projection (estimated annual income → quarterly owed)</li>
+          <li>Q1/Q2/Q3/Q4 due dates surfaced in Next 14</li>
+          <li>"Tax owed" line on dashboard</li>
+          <li>Tax-specific copy in onboarding</li>
+        </ul>
+      </div>
+
+      <div class="workstream">
+        <h4><span class="ws-id">D</span>Methodology in-product</h4>
+        <div class="ws-meta">2-3 days · depends on D5</div>
+        <ul>
+          <li>Named in onboarding ("Welcome to The [Name] Method")</li>
+          <li>5 rules surfaced (Score tab? Settings? Tour step?)</li>
+          <li>Footer or About link to "The [Name] Method" explainer page</li>
+        </ul>
+      </div>
+
+      <div class="workstream">
+        <h4><span class="ws-id">E</span>Tour redo</h4>
+        <div class="ws-meta">3-4 days · MUST be last in Phase 1</div>
+        <ul>
+          <li>Rewrite tour against final capabilities (Plaid, Analyzer, Tax, Methodology)</li>
+          <li>Empty-account gate (per pending work item #2)</li>
+          <li>New tour step for bank connection</li>
+          <li>New tour step for Analyzer</li>
+        </ul>
+      </div>
+
+      <div class="workstream">
+        <h4><span class="ws-id">F</span>Brand lock <span class="pill pill-progress" style="margin-left: 6px;">NEW</span></h4>
+        <div class="ws-meta">3-5 days · runs parallel to A-E · MUST close before Phase 3</div>
+        <ul>
+          <li>Audit every brand surface (in-app + landing + email + social + video)</li>
+          <li>Lock the canonical wordmark (one variant — kill the rest)</li>
+          <li>Lock color tokens (primary green, ink, paper, accents) into a single source — <code>BRAND.md</code> + <code>_brand.css</code></li>
+          <li>Lock typography scale (display, body, mono) and weights</li>
+          <li>Lock motion patterns (page transitions, button hovers, modal in/out)</li>
+          <li>Lock photography / iconography rules (line weight, corner radius, etc.)</li>
+          <li>Output: <code>BRAND.md</code> as the single source of truth — every content piece references it</li>
+        </ul>
+      </div>
+
+      <div class="exit"><strong>Exit criteria</strong>All Phase 1 features in production. Capabilities skill (<code>~/.claude/skills/able-app-capabilities/</code>) fully updated. <code>BRAND.md</code> finalized and committed. <code>DESIGN.md</code> updated if any UI patterns changed. Pricing decision (D2) re-confirmed before Phase 4.</div>
+    </div>
+
+    <div class="phase phase-2" id="phase-2">
+      <div class="phase-header">
+        <div>
+          <div class="phase-num">Phase 2</div>
+          <h3>Design + UX polish</h3>
+        </div>
+        <span class="duration">1-2 weeks · can overlap end of Phase 1</span>
+      </div>
+      <div class="goal">Goal: app feels premium enough to justify the price. Audit point: "execution underdelivers on the depth that justifies $14.99."</div>
+      <ul>
+        <li>Empty states for every screen (Plan/Score/Coach for new users)</li>
+        <li>Plaid connection flow polish — this is the new first impression</li>
+        <li>Mobile PWA polish — install prompt, splash screen, status bar color</li>
+        <li>Tour empty-account gate</li>
+        <li>Microcopy pass on all new strings (use <code>able-product-copy</code> skill)</li>
+        <li>Run <code>simplify</code> skill on touched code</li>
+        <li>Final pass against <code>BRAND.md</code> — every screen on-spec</li>
+      </ul>
+      <div class="exit"><strong>Exit criteria</strong>New-user walkthrough on a fresh account feels good end-to-end. Capture this as the screenshot baseline (Phase 3).</div>
+    </div>
+
+    <div class="phase phase-3" id="phase-3">
+      <div class="phase-header">
+        <div>
+          <div class="phase-num">Phase 3</div>
+          <h3>Asset capture + skill update</h3>
+        </div>
+        <span class="duration">3-5 days</span>
+      </div>
+      <div class="goal">Goal: single source of truth refreshed, then frozen long enough to do content rewrites against.</div>
+      <ul>
+        <li>Update <code>~/.claude/skills/able-app-capabilities/</code> with everything from Phase 1</li>
+        <li>Capture <strong>product screenshots</strong> (stills, not video) of every key screen post-Plaid:
+          <ul>
+            <li>Connect bank flow</li>
+            <li>Dashboard with real bank data</li>
+            <li>Analyzer suggestion modal</li>
+            <li>Tax projection view</li>
+            <li>Methodology page</li>
+          </ul>
+        </li>
+        <li>Build phone-frame product-shot library (the gap from 2026-04-27 pivot memo)</li>
+        <li>Re-record marketing footage clips against new UI (<code>scripts/record-clips.py</code>)</li>
+      </ul>
+      <div class="exit"><strong>Exit criteria</strong>A folder of crisp, on-brand stills + clips that match shipped product 1:1. This is the asset library every content piece below pulls from.</div>
+    </div>
+
+    <div class="phase phase-4" id="phase-4">
+      <div class="phase-header">
+        <div>
+          <div class="phase-num">Phase 4</div>
+          <h3>Content rewrite (coordinated sprint)</h3>
+        </div>
+        <span class="duration">2-3 weeks</span>
+      </div>
+      <div class="goal">Goal: every piece of marketing now references the real, current product. Done as a single sprint, NOT incrementally, so messaging is coordinated.</div>
+
+      <h4 style="margin-top: 18px;">Order matters within this phase too:</h4>
+      <ol>
+        <li><strong>Landing page</strong> (becomeable.app) — sets the tone everything else inherits</li>
+        <li><strong>Methodology explainer page</strong> (new) — "The [Name] Method" — landing + footer link</li>
+        <li><strong>Pricing page</strong> — re-confirm or update per D2</li>
+        <li><strong>PYF blog cluster</strong> — resume from 2/11 (rewrite the 2 if capabilities changed, draft 9 more)</li>
+        <li><strong>Business cluster</strong> — continue</li>
+        <li><strong>Email sequence</strong> — onboarding + behavioral triggers updated for Plaid + new bucket vocab</li>
+        <li><strong>Social caption library</strong> (175 pieces) — sweep for false claims; rewrite ones that referenced manual-only entry</li>
+        <li><strong>Ad copy</strong> (Meta, Google, YouTube, TikTok) — use <code>able-paid-ads</code> skill, keyed to new capabilities</li>
+        <li><strong>Video scripts</strong> — refresh "Day 1-31" and product-demo scripts to reference Plaid</li>
+      </ol>
+      <div class="exit"><strong>Exit criteria</strong>Every public surface says the same thing about what Able is. No stale claims.</div>
+    </div>
+
+    <div class="phase phase-5" id="phase-5">
+      <div class="phase-header">
+        <div>
+          <div class="phase-num">Phase 5</div>
+          <h3>Distribution engines (ongoing)</h3>
+        </div>
+        <span class="duration">Kicks off after Phase 4</span>
+      </div>
+      <div class="goal">Goal: sustainable cadence, not one-time bursts.</div>
+      <ul>
+        <li><strong>Social engine</strong> — activate Make scenario <code>4869011</code> (per <code>make_scenario_state</code> memo); set posting cadence; refill caption library on a monthly cycle</li>
+        <li><strong>SEO engine</strong> — pillar/cluster expansion plan; weekly publish cadence; backlink + technical SEO baseline (use <code>able-seo</code> skill)</li>
+        <li><strong>Email cadence</strong> — broadcast schedule beyond triggers (newsletter? methodology drip?)</li>
+        <li><strong>Video cadence</strong> — short-form (Reels/TikTok/Shorts) + long-form (YouTube)</li>
+        <li><strong>Repurposing flow</strong> — blog → NotebookLM → YouTube (per existing <code>social_roadmap</code> plan)</li>
+      </ul>
+    </div>
+
+    <h2 id="anti"><span class="num">05</span>Anti-patterns — what NOT to do</h2>
+    <p>The "no backtrack" rule, in concrete form.</p>
+
+    <table class="anti-table">
+      <tr>
+        <th style="width: 50%;">Don't do this</th>
+        <th>Do this instead</th>
+      </tr>
+      <tr><td>Rewrite blog posts before capabilities skill is updated</td><td>Lock capabilities first; rewrite once</td></tr>
+      <tr><td>Run ads on $14.99/$129 then change pricing</td><td>Re-confirm D2 before Phase 4 starts</td></tr>
+      <tr><td>Shoot product video against current UI before Phase 2 polish</td><td>Capture stills/clips in Phase 3, after polish</td></tr>
+      <tr><td>Promise "auto-pays your bills" if shipping B.2 only</td><td>Match copy to actual D1 scope</td></tr>
+      <tr><td>Name methodology AFTER writing content with generic terms</td><td>Lock D5 in Phase 0</td></tr>
+      <tr><td>Build household/partner schema mid-Plaid sprint</td><td>Defer per D4 — revisit Q3</td></tr>
+      <tr><td>Activate social posting engine on stale captions</td><td>Wait for Phase 4 caption sweep</td></tr>
+      <tr><td>Refine logo / color / type during content rewrite</td><td>Lock brand in Phase 1 Workstream F. Freeze. Don't touch.</td></tr>
+      <tr><td>Re-export 175 social pieces because the green hex changed</td><td>Lock color tokens in <code>BRAND.md</code> before Phase 4</td></tr>
+    </table>
+
+    <h2 id="audit"><span class="num">06</span>Kelty audit — what we accept, defer, reject</h2>
+    <p>Every recommendation from the 2026-04-27 audit, with our verdict and where it lives.</p>
+
+    <table>
+      <tr>
+        <th style="width: 38%;">Audit recommendation</th>
+        <th style="width: 18%;">Verdict</th>
+        <th>Where it lives</th>
+      </tr>
+      <tr><td>Add bank sync</td><td><span class="pill pill-accept">Accept</span></td><td>Phase 1 Workstream A (Plaid)</td></tr>
+      <tr><td>Add tax planning</td><td><span class="pill pill-accept">Accept</span></td><td>Phase 1 Workstream C</td></tr>
+      <tr><td>Name the methodology</td><td><span class="pill pill-accept">Accept</span></td><td>D5 → Phase 1 Workstream D</td></tr>
+      <tr><td>Build community</td><td><span class="pill pill-defer">Defer Q3</span></td><td>Light Discord post-launch</td></tr>
+      <tr><td>Native mobile app</td><td><span class="pill pill-defer">Defer Q4</span></td><td>PWA holds for now</td></tr>
+      <tr><td>Add household / partner</td><td><span class="pill pill-defer">Defer Q3</span></td><td>D4</td></tr>
+      <tr><td>Subscription detection</td><td><span class="pill pill-accept">Accept (free)</span></td><td>Falls out of Phase 1 A B.2</td></tr>
+      <tr><td>Net worth tracking</td><td><span class="pill pill-reject">Reject</span></td><td>Not the wedge</td></tr>
+      <tr><td>Investment tracking</td><td><span class="pill pill-reject">Reject</span></td><td>Not the wedge</td></tr>
+      <tr><td>Lower price to undercut YNAB</td><td><span class="pill pill-defer">Re-eval post-Phase 2</span></td><td>D2</td></tr>
+      <tr><td>Lean harder on freezing/leak narrative</td><td><span class="pill pill-accept">Accept</span></td><td>Phase 4 — copy direction</td></tr>
+      <tr><td>"Office Hours" workshops</td><td><span class="pill pill-defer">Maybe Q3</span></td><td>After Phase 5 cadence is steady</td></tr>
+      <tr><td>Refund tracking (Simplifi)</td><td><span class="pill pill-reject">Reject</span></td><td>Low signal</td></tr>
+      <tr><td>AI auto-categorization (Copilot)</td><td><span class="pill pill-defer">Maybe Q3</span></td><td>Layer onto Plaid Phase 2</td></tr>
+      <tr><td>Long-term planning view (Origin)</td><td><span class="pill pill-defer">Maybe Q3</span></td><td>Could pair with tax projections</td></tr>
+    </table>
+
+    <h2 id="questions"><span class="num">07</span>Open questions for Paul</h2>
+    <p>Sharpen the plan. Numbered so you can answer "Q1: …" rapidly.</p>
+
+    <ol class="questions">
+      <li><strong>Plaid scope</strong> — comfortable with B.1 + B.2 only for v1? Or do you want B.3 (auto-mark-paid) in v1 too? B.3 adds ~2 weeks + UX complexity around "did the user actually pay it or did Plaid mis-detect."</li>
+      <li><strong>Plaid pricing ceiling</strong> — what's the per-user cost ceiling at which Plaid stops being economic at $14.99/mo? We need a guardrail (e.g. "if a user costs >$3/mo in Plaid fees, throttle their refresh rate").</li>
+      <li><strong>Manual entry path</strong> — keep it after Plaid? My rec: keep, default to "connect bank" but make manual a visible option for the privacy-first crowd.</li>
+      <li><strong>Tax elevation</strong> — is the existing <code>taxes</code> bucket already doing quarterly projections, or just acting as a savings bucket? If it's already capable, this is a UI surfacing job not a build job.</li>
+      <li><strong>Methodology name</strong> — your call. Seed options: "The Able Method," "The Floor Method," "The Five-Bucket Rule," "The Reservation Method." Or something brand-new.</li>
+      <li><strong>Methodology rules</strong> — sketch them now? Straw man:
+        <ul>
+          <li>Know your floor (bills + tax = the unmissable amount)</li>
+          <li>Reserve before you decide (every deposit fills the floor first)</li>
+          <li>Pay yourself before extras (smoothing/buffer come before free spending)</li>
+          <li>Build the buffer before the splurge (one month of floor in reserve before discretionary)</li>
+          <li>Score what you did, not what you planned (monthly score = what actually happened)</li>
+        </ul>
+      </li>
+      <li><strong>Tiered pricing model</strong> (D2 long-term) — open to Starter ($7.99 manual-only) / Pro ($14.99 Plaid+Analyzer+Tax+Coach) / Founder ($99 lifetime grandfather)? Phase 5+ but needs early thinking — tiering changes paywall code.</li>
+      <li><strong>Marketing freeze window</strong> — pause all paid ads + new content from Phase 1 start until Phase 4 ships? My rec: yes, except retention emails and existing organic social.</li>
+      <li><strong>Other terminal's content cluster work</strong> — keep going during freeze? My rec: pause new drafts until capabilities skill is updated; existing 4 drafts are fine to keep but don't publish.</li>
+      <li><strong>Make scenario <code>4869011</code></strong> — leave paused per pivot memo? My rec: yes, until Phase 4 caption sweep is done.</li>
+      <li><strong>Audit rejections</strong> — anything in my "reject" or "defer" column above that you actually want to fight for?</li>
+      <li><strong>Brand revision scope</strong> (D7) — anything you already know you want to change before lock? Wordmark variants, color palette, typography, motion? Or full audit-and-freeze with no major changes?</li>
+    </ol>
+
+    <h2 id="locked"><span class="num">08</span>Locked decisions</h2>
+    <p>Live summary of what you've decided in section 03 above. Updates as you tick "Decided." Once all seven are locked, this is the contract for Phase 1.</p>
+
+    <div class="locked-list" id="locked-list-root"><!-- JS renders here --></div>
+
+    <div class="footnote">
+      <h4>HOW TO USE THIS DOC</h4>
+      <p><strong>Daily.</strong> Open this file at session start. Find current phase. Pick next undone item.</p>
+      <p><strong>Weekly.</strong> Update status check at top. Move items between phases if scope shifts.</p>
+      <p><strong>When tempted to start something out of order.</strong> Re-read "Anti-patterns." If it violates dependency order, don't start.</p>
+      <p><strong>When scope creeps.</strong> Add to "Bonus deferred decisions" or "Audit rejections" — don't bolt onto current phase.</p>
+      <p style="margin-bottom: 0;"><em>The plan is a living doc. Edit it. But don't skip the phases.</em></p>
+    </div>
+
+  </main>
+</div>
+
+<script>
+(function () {
+  'use strict';
+
+  const STORAGE_KEY = 'able-roadmap-decisions-v1';
+
+  // ============================================
+  // Decision schema (single source of truth)
+  // ============================================
+  const DECISIONS = [
+    {
+      id: 'D1',
+      title: 'Plaid integration & onboarding intake',
+      why: 'When a user signs up, what do we ask Plaid for? This determines build time, every marketing claim we can make, and the first-impression of onboarding.',
+      rec: 'B.1 + B.2 + AI categorization on intake. Default 6-month lookback (let user pick). Defer auto-mark-paid (B.3) to Q3.',
+      sub: [
+        { id: 'D1.1', q: 'Show live bank balance on the dashboard?', type: 'radio', options: ['Yes', 'No'], rec: 'Yes' },
+        { id: 'D1.2', q: 'Pull transaction history at signup so the Analyzer can detect recurring deposits + bills?', type: 'radio', options: ['Yes', 'No'], rec: 'Yes' },
+        { id: 'D1.3', q: 'Lookback windows to OFFER the user at signup (pick all that apply, max 24mo per Plaid):', type: 'checkbox', options: ['3 months', '6 months', '12 months', '24 months'], rec: ['3 months', '6 months', '12 months'] },
+        { id: 'D1.4', q: 'Default lookback (the option pre-selected on the screen):', type: 'radio', options: ['3 months', '6 months', '12 months', '24 months'], rec: '6 months' },
+        { id: 'D1.5', q: 'Should our AI re-categorize transactions on top of Plaid’s labels (e.g. "Verizon" → "phone bill" not "utilities")?', type: 'radio', options: ['Yes (v1)', 'Defer Q3', 'No'], rec: 'Yes (v1)' },
+        { id: 'D1.6', q: 'When Plaid sees a bill charge, auto-mark that bill paid? (B.3 — adds detection-error risk)', type: 'radio', options: ['Yes (v1)', 'Defer Q3', 'No'], rec: 'Defer Q3' },
+        { id: 'D1.7', q: 'Keep manual entry path after Plaid ships (for privacy-first users)?', type: 'radio', options: ['Keep both paths', 'Plaid only', 'Hide manual unless privacy mode'], rec: 'Keep both paths' }
+      ]
+    },
+    {
+      id: 'D2',
+      title: 'Pricing direction',
+      why: 'Every ad, landing CTA, email, paywall, and social caption references price. Changing price after content rewrites = rewriting again.',
+      rec: 'Hold $14.99/$129 through Phase 1-2. You just reverted a price drop — don’t whipsaw. Re-evaluate after Plaid + Analyzer + Tax ship.',
+      sub: [
+        { id: 'D2.1', q: 'What’s the price for the Plaid + Analyzer + Tax v1 launch?', type: 'radio', options: ['Hold $14.99/mo + $129/yr', 'Drop to $9.99/mo + $89/yr', 'Tier into Starter / Pro / Founder', 'Other (note below)'], rec: 'Hold $14.99/mo + $129/yr' }
+      ]
+    },
+    {
+      id: 'D3',
+      title: 'Tax bucket depth',
+      why: 'Tax is the #1 freelancer pain after cash flow. Without first-class tax, we lose to Origin/QBSE on the tax angle.',
+      rec: 'Elevate. ~1-2 weeks of work; massive marketing payoff. Likely a UI surfacing job not a from-scratch build.',
+      sub: [
+        { id: 'D3.1', q: 'Tax bucket: keep simple savings bucket, or first-class with quarterly projections?', type: 'radio', options: ['Keep current (shallow)', 'Elevate to first-class (quarterly projections, due dates, dashboard line)'], rec: 'Elevate to first-class (quarterly projections, due dates, dashboard line)' }
+      ]
+    },
+    {
+      id: 'D4',
+      title: 'Household / partner access',
+      why: 'If yes, schema work has to happen NOW before everything else hits the DB and migrations get nasty.',
+      rec: 'Defer to Q3. Schema change + auth complexity, not the wedge. Monarch owns this; we shouldn’t fight there yet.',
+      sub: [
+        { id: 'D4.1', q: 'Should two people on the same household be able to share an Able workspace?', type: 'radio', options: ['Yes, build in Q2', 'Defer to Q3', 'Defer to Q4 (after user-count data)'], rec: 'Defer to Q3' }
+      ]
+    },
+    {
+      id: 'D5',
+      title: 'Methodology name & rules',
+      why: 'YNAB owns "zero-based budgeting" because they named it. Named methodology becomes the spine of every blog post, video, podcast appearance.',
+      rec: 'Adopt. Pick a name + 5 teachable rules, surface in onboarding + footer + content.',
+      sub: [
+        { id: 'D5.1', q: 'Name the methodology, or stay generic?', type: 'radio', options: ['Adopt a named system', 'Leave generic'], rec: 'Adopt a named system' },
+        { id: 'D5.2', q: 'If adopt — which name?', type: 'radio', options: ['The Able Method', 'The Floor Method', 'The Five-Bucket Rule', 'The Reservation Method', 'Custom (write below)'], rec: 'The Able Method' },
+        { id: 'D5.3', q: 'Custom name (only if you picked Custom above):', type: 'text', placeholder: 'e.g. "The Floor Method"' },
+        { id: 'D5.4', q: 'The 5 rules of the methodology (edit the straw man freely):', type: 'textarea', placeholder: 'One rule per line.', defaultValue: '1. Know your floor — bills + tax = the unmissable amount\n2. Reserve before you decide — every deposit fills the floor first\n3. Pay yourself before extras — smoothing/buffer come before free spending\n4. Build the buffer before the splurge — one month of floor in reserve before discretionary\n5. Score what you did, not what you planned — monthly score = what actually happened' }
+      ]
+    },
+    {
+      id: 'D6',
+      title: 'Analyzer scope',
+      why: 'The Analyzer suggests how each deposit splits across buckets so big upcoming bills are pre-funded. Affects build cost + ongoing API spend.',
+      rec: 'Rules-based v1. Ship the floor. LLM layer can come later as a Coach feature.',
+      sub: [
+        { id: 'D6.1', q: 'How smart should v1 be?', type: 'radio', options: ['Rules-based v1 (deterministic, no AI calls)', 'LLM-suggested v1 (AI proposes, user accepts/edits)', 'Hybrid (rules default + "Ask Coach" optional)'], rec: 'Rules-based v1 (deterministic, no AI calls)' }
+      ]
+    },
+    {
+      id: 'D7',
+      title: 'Brand revisions before lock',
+      why: 'Brand changes mid-rewrite = re-export 175 social pieces + reshoot product stills + redo every video frame. The most expensive thing to rewrite.',
+      rec: 'Short refinement window (3-5 days), then freeze. Catalog inconsistencies, pick canonical version of each surface, commit.',
+      sub: [
+        { id: 'D7.1', q: 'Refine the brand before locking, or lock as-is?', type: 'radio', options: ['Lock current brand as-is', 'Refine first (3-5 days), then lock'], rec: 'Refine first (3-5 days), then lock' },
+        { id: 'D7.2', q: 'If refining — what specifically? (wordmark variants, color shift, type, motion, photography rules…)', type: 'textarea', placeholder: 'Free-form list of things to fix before freeze.' }
+      ]
+    }
+  ];
+
+  // ============================================
+  // State (persisted to localStorage)
+  // ============================================
+  function loadState() {
+    try {
+      const raw = localStorage.getItem(STORAGE_KEY);
+      if (!raw) return { decisions: {}, lastSaved: null };
+      const parsed = JSON.parse(raw);
+      return parsed && typeof parsed === 'object' ? parsed : { decisions: {}, lastSaved: null };
+    } catch (e) {
+      return { decisions: {}, lastSaved: null };
+    }
+  }
+
+  function saveState() {
+    state.lastSaved = new Date().toISOString();
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
+    updateSavedIndicator();
+  }
+
+  const state = loadState();
+
+  function getDecisionState(dId) {
+    if (!state.decisions[dId]) {
+      state.decisions[dId] = { sub: {}, notes: '', decided: false };
+    }
+    return state.decisions[dId];
+  }
+
+  // ============================================
+  // Renderers
+  // ============================================
+  function escapeHtml(s) {
+    return String(s).replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+  }
+
+  function renderSub(dId, sub) {
+    const dState = getDecisionState(dId);
+    const cur = dState.sub[sub.id];
+    const subIdSafe = sub.id.replace(/\./g, '_');
+
+    if (sub.type === 'radio') {
+      const opts = sub.options.map(opt => {
+        const checked = cur === opt ? ' checked' : '';
+        const isRec = sub.rec === opt;
+        return `<label class="${isRec ? 'recommended' : ''}" title="${isRec ? 'Recommended' : ''}">
+          <input type="radio" name="${subIdSafe}" value="${escapeHtml(opt)}" data-d="${dId}" data-sub="${sub.id}"${checked}>
+          <span>${escapeHtml(opt)}</span>
+        </label>`;
+      }).join('');
+      return `<div class="sub-decision">
+        <div class="sub-q"><span class="sub-id">${sub.id}</span>${escapeHtml(sub.q)}</div>
+        <div class="opts">${opts}</div>
+      </div>`;
+    }
+
+    if (sub.type === 'checkbox') {
+      const curArr = Array.isArray(cur) ? cur : [];
+      const recArr = Array.isArray(sub.rec) ? sub.rec : [];
+      const opts = sub.options.map(opt => {
+        const checked = curArr.includes(opt) ? ' checked' : '';
+        const isRec = recArr.includes(opt);
+        return `<label class="${isRec ? 'recommended' : ''}" title="${isRec ? 'Recommended' : ''}">
+          <input type="checkbox" value="${escapeHtml(opt)}" data-d="${dId}" data-sub="${sub.id}"${checked}>
+          <span>${escapeHtml(opt)}</span>
+        </label>`;
+      }).join('');
+      return `<div class="sub-decision">
+        <div class="sub-q"><span class="sub-id">${sub.id}</span>${escapeHtml(sub.q)}</div>
+        <div class="opts">${opts}</div>
+      </div>`;
+    }
+
+    if (sub.type === 'text') {
+      const val = cur != null ? String(cur) : '';
+      return `<div class="sub-decision">
+        <div class="sub-q"><span class="sub-id">${sub.id}</span>${escapeHtml(sub.q)}</div>
+        <div class="field"><input type="text" data-d="${dId}" data-sub="${sub.id}" placeholder="${escapeHtml(sub.placeholder || '')}" value="${escapeHtml(val)}"></div>
+      </div>`;
+    }
+
+    if (sub.type === 'textarea') {
+      const val = cur != null ? String(cur) : (sub.defaultValue || '');
+      return `<div class="sub-decision">
+        <div class="sub-q"><span class="sub-id">${sub.id}</span>${escapeHtml(sub.q)}</div>
+        <div class="field"><textarea rows="6" data-d="${dId}" data-sub="${sub.id}" placeholder="${escapeHtml(sub.placeholder || '')}">${escapeHtml(val)}</textarea></div>
+      </div>`;
+    }
+
+    return '';
+  }
+
+  function renderCard(d) {
+    const dState = getDecisionState(d.id);
+    const decidedClass = dState.decided ? ' decided' : '';
+    const subs = d.sub.map(s => renderSub(d.id, s)).join('');
+
+    return `<div class="decision-card${decidedClass}" data-card="${d.id}">
+      <div class="head">
+        <span class="id-tag">${d.id}</span>
+        <h3>${escapeHtml(d.title)}</h3>
+      </div>
+      <div class="why">${escapeHtml(d.why)}</div>
+      <div class="rec-callout"><strong>Recommendation</strong>${escapeHtml(d.rec)}</div>
+      ${subs}
+      <div class="field">
+        <label class="field-label">Notes (anything you want Claude to know — context, edge cases, things to research, future thoughts)</label>
+        <textarea rows="3" data-d="${d.id}" data-notes="1" placeholder="Free-form. Saved automatically.">${escapeHtml(dState.notes || '')}</textarea>
+      </div>
+      <div class="decided-bar">
+        <label>
+          <input type="checkbox" data-d="${d.id}" data-decided="1"${dState.decided ? ' checked' : ''}>
+          Decided — lock this
+        </label>
+        <span class="badge">${dState.decided ? '✓ Locked' : 'Open'}</span>
+      </div>
+    </div>`;
+  }
+
+  function renderForm() {
+    const root = document.getElementById('decision-form-root');
+    if (!root) return;
+    root.innerHTML = DECISIONS.map(renderCard).join('');
+    attachFormHandlers();
+    updateCounter();
+    renderLocked();
+    updateMarkdownPreview();
+  }
+
+  function renderLocked() {
+    const root = document.getElementById('locked-list-root');
+    if (!root) return;
+    root.innerHTML = DECISIONS.map(d => {
+      const dState = getDecisionState(d.id);
+      const isDecided = !!dState.decided;
+      const summary = summarizeDecision(d, dState);
+      const notes = (dState.notes || '').trim();
+      return `<div class="locked-item${isDecided ? ' is-decided' : ''}">
+        <strong>${d.id} — ${escapeHtml(d.title)}</strong>
+        <div class="answer">${isDecided ? escapeHtml(summary) : '<span class="tbd">TBD</span>'}</div>
+        ${isDecided && notes ? `<div class="ans-notes">“${escapeHtml(notes)}”</div>` : ''}
+      </div>`;
+    }).join('');
+  }
+
+  function summarizeDecision(d, dState) {
+    const parts = [];
+    for (const sub of d.sub) {
+      const cur = dState.sub[sub.id];
+      if (cur == null || cur === '' || (Array.isArray(cur) && cur.length === 0)) continue;
+      let val = Array.isArray(cur) ? cur.join(', ') : String(cur);
+      if (sub.type === 'textarea') val = val.split('\n')[0] + (val.includes('\n') ? '…' : '');
+      parts.push(`${sub.id}: ${val}`);
+    }
+    return parts.length ? parts.join(' · ') : 'no sub-answers';
+  }
+
+  function updateCounter() {
+    const total = DECISIONS.length;
+    let decided = 0;
+    for (const d of DECISIONS) if (getDecisionState(d.id).decided) decided++;
+    const numEl = document.getElementById('dc-decided');
+    const totEl = document.getElementById('dc-total');
+    if (numEl) numEl.textContent = String(decided);
+    if (totEl) totEl.textContent = String(total);
+  }
+
+  function updateSavedIndicator() {
+    const el = document.getElementById('dc-saved');
+    if (!el) return;
+    if (!state.lastSaved) { el.textContent = 'Not saved yet'; return; }
+    const t = new Date(state.lastSaved);
+    const now = new Date();
+    const diff = (now - t) / 1000;
+    let rel;
+    if (diff < 5) rel = 'just now';
+    else if (diff < 60) rel = `${Math.floor(diff)}s ago`;
+    else if (diff < 3600) rel = `${Math.floor(diff / 60)}m ago`;
+    else rel = t.toLocaleTimeString();
+    el.textContent = `Auto-saved ${rel}`;
+  }
+
+  // ============================================
+  // Event handlers
+  // ============================================
+  function attachFormHandlers() {
+    const root = document.getElementById('decision-form-root');
+    if (!root) return;
+
+    root.addEventListener('change', onChange);
+    root.addEventListener('input', onInput);
+  }
+
+  function onChange(e) {
+    const t = e.target;
+    if (!t || !t.dataset) return;
+    const dId = t.dataset.d;
+    if (!dId) return;
+    const dState = getDecisionState(dId);
+
+    if (t.dataset.decided === '1') {
+      dState.decided = !!t.checked;
+      const card = document.querySelector(`[data-card="${dId}"]`);
+      if (card) card.classList.toggle('decided', dState.decided);
+      const badge = card && card.querySelector('.decided-bar .badge');
+      if (badge) badge.textContent = dState.decided ? '✓ Locked' : 'Open';
+      const idTag = card && card.querySelector('.id-tag');
+      if (idTag) {/* CSS handles via .decided ancestor */}
+      saveState();
+      updateCounter();
+      renderLocked();
+      updateMarkdownPreview();
+      return;
+    }
+
+    const subId = t.dataset.sub;
+    if (subId) {
+      if (t.type === 'radio') {
+        dState.sub[subId] = t.value;
+      } else if (t.type === 'checkbox') {
+        const arr = Array.isArray(dState.sub[subId]) ? [...dState.sub[subId]] : [];
+        if (t.checked) {
+          if (!arr.includes(t.value)) arr.push(t.value);
+        } else {
+          const idx = arr.indexOf(t.value);
+          if (idx >= 0) arr.splice(idx, 1);
+        }
+        dState.sub[subId] = arr;
+      }
+      saveState();
+      renderLocked();
+      updateMarkdownPreview();
+    }
+  }
+
+  function onInput(e) {
+    const t = e.target;
+    if (!t || !t.dataset) return;
+    const dId = t.dataset.d;
+    if (!dId) return;
+    const dState = getDecisionState(dId);
+
+    if (t.dataset.notes === '1') {
+      dState.notes = t.value;
+      saveState();
+      renderLocked();
+      updateMarkdownPreview();
+      return;
+    }
+
+    const subId = t.dataset.sub;
+    if (subId && (t.tagName === 'TEXTAREA' || t.type === 'text')) {
+      dState.sub[subId] = t.value;
+      saveState();
+      renderLocked();
+      updateMarkdownPreview();
+    }
+  }
+
+  // ============================================
+  // Markdown export
+  // ============================================
+  function buildMarkdown() {
+    const now = new Date();
+    const ts = now.toISOString().replace('T', ' ').slice(0, 16);
+    let decided = 0;
+    for (const d of DECISIONS) if (getDecisionState(d.id).decided) decided++;
+
+    let md = `# Able Roadmap — Locked Decisions\n`;
+    md += `*Saved ${ts} from ROADMAP.html — ${decided} of ${DECISIONS.length} decided*\n\n`;
+    md += `> This file is the contract for Phase 1. Edit via ROADMAP.html (auto-saves to browser localStorage), then click **Save to file** to download a fresh copy.\n`;
+    md += `> Claude reads this file at session start to pick up Paul's locked answers and notes.\n\n`;
+    md += `---\n\n`;
+
+    for (const d of DECISIONS) {
+      const dState = getDecisionState(d.id);
+      md += `## ${d.id} — ${d.title}\n`;
+      md += `**Status:** ${dState.decided ? '✅ Decided' : '⏳ Open'}\n\n`;
+
+      let anyAnswer = false;
+      for (const sub of d.sub) {
+        const cur = dState.sub[sub.id];
+        if (cur == null || cur === '' || (Array.isArray(cur) && cur.length === 0)) continue;
+        anyAnswer = true;
+        const val = Array.isArray(cur) ? cur.join(', ') : String(cur);
+        const isMultiline = val.includes('\n');
+        if (isMultiline) {
+          md += `- **${sub.id}** — ${stripQ(sub.q)}\n`;
+          for (const line of val.split('\n')) md += `    > ${line}\n`;
+        } else {
+          md += `- **${sub.id}** — ${stripQ(sub.q)} → \`${val}\`\n`;
+        }
+      }
+      if (!anyAnswer) md += `_No sub-answers yet._\n`;
+
+      const notes = (dState.notes || '').trim();
+      if (notes) {
+        md += `\n**Notes:**\n`;
+        for (const line of notes.split('\n')) md += `> ${line}\n`;
+      }
+      md += `\n---\n\n`;
+    }
+
+    md += `_End of decisions. To update: open ROADMAP.html, edit, click Save to file._\n`;
+    return md;
+  }
+
+  function stripQ(q) {
+    return q.replace(/[?:]+$/, '').trim();
+  }
+
+  function updateMarkdownPreview() {
+    const el = document.getElementById('dc-md-preview');
+    if (el) el.textContent = buildMarkdown();
+  }
+
+  // ============================================
+  // Toolbar buttons
+  // ============================================
+  function downloadMarkdown() {
+    const md = buildMarkdown();
+    const blob = new Blob([md], { type: 'text/markdown;charset=utf-8' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = 'ROADMAP_DECISIONS.md';
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    setTimeout(() => URL.revokeObjectURL(url), 1000);
+  }
+
+  async function copyMarkdown() {
+    const md = buildMarkdown();
+    try {
+      await navigator.clipboard.writeText(md);
+      flashSaved('Copied to clipboard');
+    } catch (e) {
+      flashSaved('Copy failed — use Show markdown');
+    }
+  }
+
+  function flashSaved(msg) {
+    const el = document.getElementById('dc-saved');
+    if (!el) return;
+    const prev = el.textContent;
+    el.textContent = msg;
+    el.style.color = 'var(--green-dark)';
+    setTimeout(() => { el.style.color = ''; updateSavedIndicator(); }, 1500);
+  }
+
+  function showMarkdown() {
+    const details = document.querySelector('details');
+    if (details) {
+      details.open = true;
+      details.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
+  }
+
+  function resetAll() {
+    const ok = confirm('Reset all decisions? This clears your saved answers and notes from this browser. The file you already saved on disk is untouched.');
+    if (!ok) return;
+    state.decisions = {};
+    state.lastSaved = null;
+    localStorage.removeItem(STORAGE_KEY);
+    renderForm();
+    flashSaved('Reset');
+  }
+
+  // ============================================
+  // Init
+  // ============================================
+  function init() {
+    renderForm();
+    document.getElementById('dc-save').addEventListener('click', downloadMarkdown);
+    document.getElementById('dc-copy').addEventListener('click', copyMarkdown);
+    document.getElementById('dc-show').addEventListener('click', showMarkdown);
+    document.getElementById('dc-reset').addEventListener('click', resetAll);
+    updateSavedIndicator();
+    setInterval(updateSavedIndicator, 30000);
+  }
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', init);
+  } else {
+    init();
+  }
+})();
+</script>
+</body>
+</html>
