@@ -2212,7 +2212,7 @@ async function openMfaEnroll() {
     const stale = (data?.totp || []).find(f => f.status !== 'verified');
     if (stale) await sbGet().auth.mfa.unenroll({ factorId: stale.id }).catch(()=>{});
   } catch(_) {}
-  const { data, error } = await sbGet().auth.mfa.enroll({ factorType: 'totp', friendlyName: 'Authenticator app' });
+  const { data, error } = await sbGet().auth.mfa.enroll({ factorType: 'totp', friendlyName: 'Authenticator app', issuer: 'Able' });
   if (error) {
     alert('Could not start two-factor setup: ' + error.message);
     return;
