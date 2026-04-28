@@ -20,3 +20,27 @@ marketing-footage/social-export/_raw/
 marketing-footage/social-export/singles/
 marketing-footage/social-export/carousels/
 marketing-footage/social-export/reels/
+
+# Marketing footage — raw assets and rendered MP4s are heavy and re-buildable
+# via scripts/record-clips.py / render-* scripts. Keep manifest.json.
+marketing-footage/_raw/
+marketing-footage/lifestyle-base/
+marketing-footage/product-shots/
+marketing-footage/*.mp4
+
+# Cinematic Remotion sub-project (~660MB, separate workflow)
+able-reel/
+
+# Generated PDFs at repo root — regenerable from docs/*.md via the
+# headless-Chrome script in /tmp/make_policy_pdfs.py
+/*.pdf
+
+# Captured app/landing screen images — regenerable via
+# scripts/capture-design-screens.py and scripts/capture-product-shots.py
+docs/design-screens/
+
+# Skill packaging zips — built from ~/.claude/skills/. Keep SKILL.md.
+able-skills-upload/*.zip
+
+# Per-user Claude Code state (settings, session locks)
+.claude/
