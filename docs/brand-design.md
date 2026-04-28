@@ -14,8 +14,9 @@ Applies to every piece of customer-facing copy, inside and outside the app.
 - **Warm, calm, specific.** Not hype. Not corporate. Not therapy-speak.
 - **No em dashes** (`—`). Ever. Use periods, commas, or hyphens instead. Em dashes read as AI-generated.
 - **No emojis** in product or marketing copy.
-- **Money is energy** (when the emotional angle fits). Scarcity contracts you; abundance opens you up. Most of what you fear does not happen, or it happens and you survive it.
 - **Empathy first, numbers second.** Acknowledge the feeling, then pivot to a concrete next action.
+- **No founder POV.** Faceless brand. No "Paul," no "we," no "our team." The customer is always the subject.
+- **Money-as-energy framing is Coach-only.** Not a public brand voice. Lives in the AI Coach where it handles user stress with empathy. See `~/.claude/skills/able-product-copy/` for Coach voice rules.
 - **The reader is the hero. Able is the guide.** Never put Able in the spotlight.
 - **Avoid corporate speak:** leverage, utilize, solution, seamless, empower, unlock potential, level up, game-changer.
 
@@ -33,6 +34,17 @@ Applies to every piece of customer-facing copy, inside and outside the app.
 - **Not anti-Ramsey.** Classic personal finance is "the foundation most Americans still use" and works for steady paychecks. Able extends those principles to variable income. Never frame as replacing or rejecting classic advice.
 - **Not anti-other apps.** Honest comparisons only. If a competitor wins at something (e.g., YNAB has bank sync and we don't), say so.
 - **Secular.** Giving is a user-defined category, not a first line.
+
+---
+
+## 1.5. Underline rule (brand element)
+
+The Able sharpie underline is a brand element, not just a logo treatment. Two locks:
+
+- **The logo wordmark and its sharpie underline are one asset.** Always paired. Same SVG, same green, same taper, same rounded ends, same slight smile curve. Spec in section 5 below.
+- **The same underline treatment is the ONLY underline allowed anywhere in Able's content.** Headlines, key terms, callouts, decorative emphasis: all use the same SVG sharpie path with the same green and the same taper. Do not use CSS `text-decoration: underline`. Do not draw a different underline shape. Do not change the green to mint or to a different brand color when the underline appears in body content.
+
+When in doubt, no underline at all is better than a non-brand underline. Underlining is a strong move and should be reserved for one or two key moments per surface.
 
 ---
 

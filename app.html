@@ -1175,18 +1175,18 @@ posthog.init('phc_B6PH36QxpExnyBYhfScFFF6LhDvoyxuFr6PypJuxxky3', {
       <div class="plan-card-top">
         <div>
           <div class="plan-name">Monthly</div>
-          <div class="plan-desc">7 days free, then $14.99/month. Cancel anytime.</div>
+          <div class="plan-desc">30 days free, then $14.99/month. Cancel anytime.</div>
         </div>
         <div class="plan-price">$14.99<span>/mo</span></div>
       </div>
     </div>
 
     <div class="plan-card selected" id="plan-annual" role="radio" aria-checked="true" tabindex="0" onclick="selectPlan('annual')" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();selectPlan('annual');}">
-      <div class="plan-badge">Save $41</div>
+      <div class="plan-badge">Save $50</div>
       <div class="plan-card-top">
         <div>
           <div class="plan-name">Annual</div>
-          <div class="plan-desc">7 days free, then $129/year. Save $50 with annual.</div>
+          <div class="plan-desc">30 days free, then $129/year. Save $50 with annual.</div>
         </div>
         <div>
           <div class="plan-price">$129<span>/yr</span></div>
@@ -1196,9 +1196,9 @@ posthog.init('phc_B6PH36QxpExnyBYhfScFFF6LhDvoyxuFr6PypJuxxky3', {
     </div>
 
     <div style="margin-top:1.25rem;">
-      <button class="btn btn-primary" onclick="startCheckout()" id="checkout-btn">Start your free 7-day trial →</button>
+      <button class="btn btn-primary" onclick="startCheckout()" id="checkout-btn">Start your free 30-day trial →</button>
     </div>
-    <div id="checkout-fine" style="text-align:center;margin-top:.6rem;font-size:11px;color:var(--ds-t3);font-weight:600;letter-spacing:.02em;line-height:1.5;">Card required. You won't be charged until day 8. Cancel anytime in Settings.</div>
+    <div id="checkout-fine" style="text-align:center;margin-top:.6rem;font-size:11px;color:var(--ds-t3);font-weight:600;letter-spacing:.02em;line-height:1.5;">Card required. You won't be charged until day 31. Cancel anytime in Settings.</div>
     <div id="paywall-error" style="display:none;margin-top:.75rem;background:#fdeef2;border:1.5px solid rgba(192,64,96,.3);border-radius:var(--ds-r1);padding:12px 14px;font-size:13px;font-weight:600;color:var(--ds-c4);font-family:var(--ds-f);"></div>
     <div style="text-align:center;margin-top:1.25rem;font-size:11px;color:var(--ds-t3);font-weight:600;letter-spacing:.03em;">
       Secured by Stripe · Cancel anytime from Settings
@@ -1691,6 +1691,21 @@ posthog.init('phc_B6PH36QxpExnyBYhfScFFF6LhDvoyxuFr6PypJuxxky3', {
           <div style="font-size:11px;color:var(--ds-t3);font-weight:600;margin-top:5px;margin-left:28px;">Update card, view invoices, change plan, or cancel. Handled securely by Stripe.</div>
         </button>
       </div>
+      <div class="sec">Security</div>
+      <div class="card" id="security-card" style="display:flex;flex-direction:column;gap:10px;">
+        <div style="font-size:13px;font-weight:600;color:var(--ds-t2);line-height:1.6;">Two-factor authentication adds a one-time code from your authenticator app on top of your password. Required to connect a bank account.</div>
+        <div id="mfa-status-card" style="display:flex;align-items:center;justify-content:space-between;gap:12px;padding:14px 16px;background:var(--ds-page);border:1.5px solid var(--ds-t4);border-radius:var(--ds-r1);">
+          <div style="display:flex;align-items:center;gap:10px;">
+            <svg id="mfa-status-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" style="color:var(--ds-t3);flex-shrink:0;"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+            <div>
+              <div id="mfa-status-label" style="font-weight:800;font-size:14px;color:var(--ds-t1);">Loading…</div>
+              <div id="mfa-status-sub" style="font-size:11px;color:var(--ds-t3);font-weight:600;margin-top:2px;"></div>
+            </div>
+          </div>
+          <button class="btn btn-sm" id="mfa-action-btn" onclick="onMfaActionClick()" style="white-space:nowrap;">…</button>
+        </div>
+        <div style="font-size:11px;color:var(--ds-t3);font-weight:600;line-height:1.5;">Lost access to your authenticator? Email <a href="mailto:hello@becomeable.app" style="color:var(--ds-green);font-weight:700;text-decoration:none;">hello@becomeable.app</a> from the address on your account and we'll verify your identity and reset two-factor for you.</div>
+      </div>
       <div class="sec">Account</div>
       <div class="card" style="display:flex;flex-direction:column;gap:10px;">
         <div style="font-size:13px;font-weight:600;color:var(--ds-t2);margin-bottom:6px;">Signed in as <strong id="settings-email" style="color:var(--ds-t1);"></strong></div>
@@ -1846,6 +1861,29 @@ posthog.init('phc_B6PH36QxpExnyBYhfScFFF6LhDvoyxuFr6PypJuxxky3', {
 </div>
 
 <!-- MODALS -->
+<div class="modal-bg" id="modal-mfa-enroll" style="display:none;" onclick="if(event.target===this)closeMfaEnroll()">
+  <div class="modal" style="max-width:440px;">
+    <button class="modal-close" onclick="closeMfaEnroll()" aria-label="Close"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button>
+    <div class="modal-title">Set up two-factor authentication</div>
+    <div id="mfa-enroll-body">
+      <div style="font-size:13px;color:var(--ds-t2);font-weight:600;line-height:1.6;margin-bottom:1rem;">Open your authenticator app (1Password, Google Authenticator, Authy, or similar) and scan this QR code.</div>
+      <div style="display:flex;justify-content:center;background:#fff;border:1.5px solid var(--ds-t4);border-radius:var(--ds-r1);padding:18px;margin-bottom:1rem;">
+        <img id="mfa-qr-img" alt="Two-factor QR code" style="width:200px;height:200px;display:block;">
+      </div>
+      <div style="font-size:11px;color:var(--ds-t3);font-weight:600;text-align:center;margin-bottom:.5rem;">Can't scan? Enter this key manually:</div>
+      <div id="mfa-secret-text" style="font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:12px;font-weight:700;color:var(--ds-t1);background:var(--ds-page);border:1.5px solid var(--ds-t4);border-radius:var(--ds-r1);padding:10px 14px;text-align:center;letter-spacing:.05em;margin-bottom:1.25rem;word-break:break-all;"></div>
+      <div class="field" style="margin-bottom:.5rem;">
+        <label>Enter the 6-digit code from your app</label>
+        <input type="text" inputmode="numeric" pattern="[0-9]*" maxlength="6" id="mfa-enroll-code" placeholder="123456" autocomplete="one-time-code" style="font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:18px;letter-spacing:.3em;text-align:center;">
+      </div>
+      <div id="mfa-enroll-error" style="display:none;font-size:12px;color:var(--ds-c4);font-weight:700;margin-bottom:.5rem;"></div>
+      <div class="modal-actions">
+        <button class="btn" onclick="closeMfaEnroll()">Cancel</button>
+        <button class="btn btn-primary" id="mfa-enroll-verify-btn" onclick="verifyMfaEnroll()">Verify and turn on</button>
+      </div>
+    </div>
+  </div>
+</div>
 <div class="modal-bg" id="modal-add-bill" style="display:none;">
   <div class="modal">
     <button class="modal-close" onclick="closeModal('modal-add-bill')" aria-label="Close"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button>
@@ -2114,6 +2152,210 @@ async function doSignOut() {
 }
 
 // ═══════════════════════════════════════
+// MFA (TOTP)
+// ═══════════════════════════════════════
+// In-flight enrollment factor id, used by verifyMfaEnroll. Cleared after
+// success/cancel so a stale id can't be re-verified later.
+let _mfaEnrollFactorId = null;
+
+// Helper: returns the verified TOTP factor for the current user, or null.
+async function _getVerifiedTotpFactor() {
+  try {
+    const { data, error } = await sbGet().auth.mfa.listFactors();
+    if (error) return null;
+    return (data?.totp || []).find(f => f.status === 'verified') || null;
+  } catch(_) { return null; }
+}
+
+// Renders the Settings → Security card based on current factor + AAL state.
+async function refreshMfaStatus() {
+  const label = document.getElementById('mfa-status-label');
+  const sub = document.getElementById('mfa-status-sub');
+  const btn = document.getElementById('mfa-action-btn');
+  const icon = document.getElementById('mfa-status-icon');
+  if (!label || !btn) return;
+  const factor = await _getVerifiedTotpFactor();
+  if (factor) {
+    label.textContent = 'Two-factor authentication is on';
+    sub.textContent = 'Authenticator app';
+    btn.textContent = 'Turn off';
+    btn.dataset.action = 'disable';
+    if (icon) icon.style.color = 'var(--ds-green)';
+  } else {
+    label.textContent = 'Two-factor authentication is off';
+    sub.textContent = 'Recommended for everyone, required to connect a bank';
+    btn.textContent = 'Set up';
+    btn.dataset.action = 'enroll';
+    if (icon) icon.style.color = 'var(--ds-t3)';
+  }
+}
+
+function onMfaActionClick() {
+  const btn = document.getElementById('mfa-action-btn');
+  if (!btn) return;
+  if (btn.dataset.action === 'disable') return disableMfa();
+  return openMfaEnroll();
+}
+
+async function openMfaEnroll() {
+  const modal = document.getElementById('modal-mfa-enroll');
+  const errEl = document.getElementById('mfa-enroll-error');
+  const codeEl = document.getElementById('mfa-enroll-code');
+  const verifyBtn = document.getElementById('mfa-enroll-verify-btn');
+  if (errEl) { errEl.style.display = 'none'; errEl.textContent = ''; }
+  if (codeEl) codeEl.value = '';
+  if (verifyBtn) { verifyBtn.disabled = false; verifyBtn.textContent = 'Verify and turn on'; }
+  // Defensive: if a stale unverified factor exists from an abandoned attempt,
+  // Supabase will reject a second enroll. Clean it up first.
+  try {
+    const { data } = await sbGet().auth.mfa.listFactors();
+    const stale = (data?.totp || []).find(f => f.status !== 'verified');
+    if (stale) await sbGet().auth.mfa.unenroll({ factorId: stale.id }).catch(()=>{});
+  } catch(_) {}
+  const { data, error } = await sbGet().auth.mfa.enroll({ factorType: 'totp', friendlyName: 'Authenticator app' });
+  if (error) {
+    alert('Could not start two-factor setup: ' + error.message);
+    return;
+  }
+  _mfaEnrollFactorId = data.id;
+  document.getElementById('mfa-qr-img').src = data.totp.qr_code;
+  document.getElementById('mfa-secret-text').textContent = data.totp.secret;
+  modal.style.display = 'flex';
+  setTimeout(() => { codeEl && codeEl.focus(); }, 60);
+}
+
+function closeMfaEnroll() {
+  const modal = document.getElementById('modal-mfa-enroll');
+  if (modal) modal.style.display = 'none';
+  // If user backs out before verifying, drop the unverified factor so they can
+  // start fresh next time without a "factor already exists" error.
+  if (_mfaEnrollFactorId) {
+    sbGet().auth.mfa.unenroll({ factorId: _mfaEnrollFactorId }).catch(()=>{});
+    _mfaEnrollFactorId = null;
+  }
+}
+
+async function verifyMfaEnroll() {
+  const codeEl = document.getElementById('mfa-enroll-code');
+  const errEl = document.getElementById('mfa-enroll-error');
+  const btn = document.getElementById('mfa-enroll-verify-btn');
+  const code = (codeEl?.value || '').replace(/\s/g, '');
+  if (!/^\d{6}$/.test(code)) {
+    errEl.textContent = 'Enter the 6-digit code from your authenticator.';
+    errEl.style.display = 'block';
+    return;
+  }
+  if (!_mfaEnrollFactorId) {
+    errEl.textContent = 'Setup expired. Close this and try again.';
+    errEl.style.display = 'block';
+    return;
+  }
+  btn.disabled = true; btn.textContent = 'Verifying…';
+  const { error } = await sbGet().auth.mfa.challengeAndVerify({ factorId: _mfaEnrollFactorId, code });
+  if (error) {
+    errEl.textContent = 'That code didn\'t match. Try the next code your app shows.';
+    errEl.style.display = 'block';
+    btn.disabled = false; btn.textContent = 'Verify and turn on';
+    return;
+  }
+  _mfaEnrollFactorId = null;
+  document.getElementById('modal-mfa-enroll').style.display = 'none';
+  await refreshMfaStatus();
+  if (window.Able?.track) Able.track('mfa_enrolled');
+}
+
+async function disableMfa() {
+  const ok = confirm('Turn off two-factor authentication? You\'ll be asked to set it up again before connecting a bank account.');
+  if (!ok) return;
+  const factor = await _getVerifiedTotpFactor();
+  if (!factor) { await refreshMfaStatus(); return; }
+  const { error } = await sbGet().auth.mfa.unenroll({ factorId: factor.id });
+  if (error) { alert('Could not turn off two-factor: ' + error.message); return; }
+  await refreshMfaStatus();
+  if (window.Able?.track) Able.track('mfa_disabled');
+}
+
+// Renders the AAL2 challenge in place of the auth screen. Called from
+// onAuthStateChange when a user with a verified TOTP factor signs in but the
+// session is still aal1.
+function showMfaChallenge(factorId) {
+  const authBox = document.querySelector('.auth-box');
+  document.getElementById('auth-screen').style.display = 'flex';
+  document.getElementById('paywall-screen').style.display = 'none';
+  document.getElementById('app').style.display = 'none';
+  const onb = document.getElementById('onboard-screen'); if (onb) onb.style.display = 'none';
+  if (!authBox) return;
+  authBox.innerHTML = `
+    <div style="text-align:center;padding:1rem 0;font-family:var(--ds-f);">
+      <div class="brand-wordmark-wrap" style="margin-bottom:.4rem;"><div class="brand-wordmark">Able</div></div>
+      <div style="font-size:18px;color:var(--ds-t1);font-weight:900;margin:1.25rem 0 .4rem;letter-spacing:-.02em;">Two-factor code</div>
+      <div style="font-size:13px;color:var(--ds-t2);font-weight:600;line-height:1.5;margin:0 auto 1.25rem;max-width:300px;">Enter the 6-digit code from your authenticator app.</div>
+      <input type="text" inputmode="numeric" pattern="[0-9]*" maxlength="6" id="mfa-challenge-code" placeholder="123456" autocomplete="one-time-code" style="font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:22px;letter-spacing:.3em;text-align:center;width:100%;background:var(--ds-page);border:1.5px solid var(--ds-t4);border-radius:var(--ds-r1);padding:14px;color:var(--ds-t1);font-weight:700;outline:none;margin-bottom:.85rem;">
+      <div id="mfa-challenge-error" style="display:none;font-size:12px;color:var(--ds-c4);font-weight:700;margin-bottom:.5rem;"></div>
+      <button class="btn btn-primary" id="mfa-challenge-btn" style="width:100%;margin-bottom:.5rem;" onclick="submitMfaChallenge('${factorId}')">Continue</button>
+      <button class="btn btn-ghost btn-sm" onclick="doSignOut()">Sign out</button>
+      <div style="font-size:11px;color:var(--ds-t3);font-weight:600;margin-top:1rem;line-height:1.5;">Lost access to your authenticator? Email <a href="mailto:hello@becomeable.app" style="color:var(--ds-green);font-weight:700;text-decoration:none;">hello@becomeable.app</a> from the address on your account.</div>
+    </div>
+  `;
+  setTimeout(() => {
+    const el = document.getElementById('mfa-challenge-code');
+    if (!el) return;
+    el.focus();
+    el.addEventListener('keydown', (e) => {
+      if (e.key === 'Enter') submitMfaChallenge(factorId);
+    });
+  }, 60);
+}
+
+async function submitMfaChallenge(factorId) {
+  const codeEl = document.getElementById('mfa-challenge-code');
+  const errEl = document.getElementById('mfa-challenge-error');
+  const btn = document.getElementById('mfa-challenge-btn');
+  const code = (codeEl?.value || '').replace(/\s/g, '');
+  if (!/^\d{6}$/.test(code)) {
+    errEl.textContent = 'Enter the 6-digit code.';
+    errEl.style.display = 'block';
+    return;
+  }
+  btn.disabled = true; btn.textContent = 'Verifying…';
+  const { error } = await sbGet().auth.mfa.challengeAndVerify({ factorId, code });
+  if (error) {
+    errEl.textContent = 'That code didn\'t match. Try the next code your app shows.';
+    errEl.style.display = 'block';
+    btn.disabled = false; btn.textContent = 'Continue';
+    return;
+  }
+  // Re-fire the auth state pipeline now that we're at aal2.
+  const { data: { user } } = await sbGet().auth.getUser();
+  await onAuthStateChange(user);
+}
+
+// Reusable gate for any flow that requires aal2 (notably Plaid Link).
+// Returns true if the session is already aal2, false otherwise (and shows the
+// appropriate next step: enrollment or challenge).
+async function ensureMfaForPlaid() {
+  try {
+    const { data: aal } = await sbGet().auth.mfa.getAuthenticatorAssuranceLevel();
+    if (aal?.currentLevel === 'aal2') return true;
+    const factor = await _getVerifiedTotpFactor();
+    if (factor) {
+      // Verified factor exists but session is aal1 — this is rare since the
+      // login flow gates on it, but defensive in case the session aged out.
+      showMfaChallenge(factor.id);
+      return false;
+    }
+    // No factor at all — send them to set it up.
+    alert('Connecting your bank requires two-factor authentication. We\'ll set it up first.');
+    if (typeof goTo === 'function') goTo('settings');
+    setTimeout(() => openMfaEnroll(), 250);
+    return false;
+  } catch(e) {
+    console.debug('ensureMfaForPlaid error:', e);
+    return false;
+  }
+}
+
+// ═══════════════════════════════════════
 // SUBSCRIPTION CHECK
 // ═══════════════════════════════════════
 async function checkSubscription(userId) {
@@ -2163,6 +2405,17 @@ async function onAuthStateChange(user) {
   }
   currentUser=user;
   if(window.posthog) posthog.identify(user.id, { email: user.email });
+
+  // MFA gate: if the user has a verified TOTP factor but the session is still
+  // at aal1, halt here and require the 6-digit challenge before any app data
+  // is fetched or rendered. submitMfaChallenge() re-enters this function.
+  try {
+    const { data: aal } = await sbGet().auth.mfa.getAuthenticatorAssuranceLevel();
+    if (aal && aal.currentLevel === 'aal1' && aal.nextLevel === 'aal2') {
+      const factor = await _getVerifiedTotpFactor();
+      if (factor) { showMfaChallenge(factor.id); return; }
+    }
+  } catch(_) { /* fail open: don't lock users out on a transient error */ }
 
   // signup_completed: fires once per user per browser. We check user.created_at
   // against now to make sure this is a genuine first-time sign-in, not just
@@ -2855,7 +3108,7 @@ function renderSubscriptionPlan(status) {
   const el=document.getElementById('settings-plan');
   if(!el) return;
   const label={
-    trialing: 'Free trial (7 days)',
+    trialing: 'Free trial (30 days)',
     active: 'Active subscription',
     past_due: 'Past due. Update your card',
     incomplete: 'Incomplete. Finish checkout',
@@ -5105,6 +5358,7 @@ function loadSettingsPage(){
     const el = document.getElementById('ep-'+key);
     if (el) el.checked = ep[key] !== false;
   });
+  refreshMfaStatus();
 }
 
 function toggleEmailPref(key,val){
