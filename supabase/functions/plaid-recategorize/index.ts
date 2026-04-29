@@ -176,12 +176,40 @@ Output ONLY a JSON array. One object per input transaction, in the SAME ORDER. N
 # Decision rules
 
 1. Plaid's plaid_detailed field is the strongest signal. Use it first.
-2. **Bill vs discretionary on GENERAL_SERVICES / GENERAL_MERCHANDISE**: if merchant_name looks recurring (Netflix, Spotify, Adobe, Verizon, T-Mobile, ConEd, gym chains), classify as bill with is_recurring_likely=true. If one-off (Amazon, Target, local store), classify as discretionary.
-3. **Income vs transfer on inflows**: client / business sources are income. Self-funded transfers (own bank to own bank, brokerage transfers, Venmo from yourself) are transfer.
-3a. **Venmo / Zelle / Cash App outflows to a named person who is not the user** (e.g. "VENMO TO MOM", "ZELLE TO J SMITH"): classify as **discretionary**, NOT transfer. Personal payments and gifts are spending, not internal transfers. "Transfer" is reserved for movement between the user's own accounts.
-4. **Mortgages are bills.** Even though Plaid puts them in LOAN_PAYMENTS_MORTGAGE, classify as bill so they show up correctly in Able's Bills list.
-5. When ambiguous, lower the confidence (≤ 0.6) and pick the safer category (discretionary over bill, transfer over income).
-6. is_recurring_likely is true only when the merchant pattern itself suggests recurrence (Netflix, rent, insurance), not just based on a single transaction.
+
+2. **A bill is a RECURRING SUBSCRIPTION OR UTILITY, not a single purchase.** If you would put the merchant on a budget under "monthly fixed costs," it's a bill. If it's something the user might or might not buy this month, it's discretionary. Default to discretionary when in doubt.
+
+   Bill examples:
+   - Rent / mortgage payments
+   - Utilities (electric, gas, water, internet, phone, trash)
+   - Insurance premiums (auto, home, health, life)
+   - Streaming and SaaS subscriptions with steady monthly amounts (Netflix, Spotify, Adobe, Notion, Figma, Dropbox)
+   - Recurring gym / climbing / studio memberships when the merchant clearly sells memberships
+   - Storage units, car payments routed as bill
+   - HOA fees, recurring loan auto-debits
+
+   Discretionary (NOT bill) — these all look like single purchases even though the merchant is named:
+   - Airlines, hotels, ride-share, Airbnb (TRAVEL_TRANSPORTATION)
+   - Bike shops, hardware stores, electronics retailers (GENERAL_MERCHANDISE_*)
+   - Restaurants, takeout, groceries, coffee, bars
+   - Gas stations
+   - Apparel, online shopping (Amazon, Target, Etsy)
+   - Big one-off purchases at any merchant (e.g. a $2,000 charge at a furniture store)
+
+3. **Use the amount + merchant pattern to break ties.**
+   - Plaid GENERAL_MERCHANDISE_*, GENERAL_SERVICES_*, TRAVEL_*, FOOD_AND_DRINK_*, ENTERTAINMENT_*, PERSONAL_CARE_* default to **discretionary**. Only flip to bill if the merchant_name explicitly matches a recurring-software / utility / subscription pattern from the list above.
+   - Plaid RENT_AND_UTILITIES_*, INSURANCE_* default to **bill**.
+   - Plaid LOAN_PAYMENTS_MORTGAGE → bill. Other LOAN_PAYMENTS_* → debt_payment.
+
+4. **Income vs transfer on inflows**: client / business sources are income. Self-funded transfers (own bank to own bank, brokerage transfers, Venmo from yourself) are transfer.
+
+4a. **Venmo / Zelle / Cash App outflows to a named person who is not the user** (e.g. "VENMO TO MOM", "ZELLE TO J SMITH"): classify as **discretionary**, NOT transfer. Personal payments and gifts are spending, not internal transfers. "Transfer" is reserved for movement between the user's own accounts.
+
+5. **Mortgages are bills.** Even though Plaid puts them in LOAN_PAYMENTS_MORTGAGE, classify as bill so they show up correctly in Able's Bills list.
+
+6. When ambiguous, lower the confidence (≤ 0.6) and pick the safer category (**discretionary over bill**, transfer over income). It is far better to miss a bill (the user will add it manually) than to bury a one-off discretionary purchase in their bills list.
+
+7. is_recurring_likely is true only when the merchant pattern itself suggests recurrence (Netflix, rent, insurance), not just based on a single transaction.
 
 # Label rules
 
