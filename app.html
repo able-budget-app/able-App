@@ -3075,13 +3075,21 @@ async function obHandlePlaidSuccess(public_token, metadata, lookback) {
 
   try {
     const t0 = performance.now();
-    const { data, error } = await sbGet().functions.invoke('plaid-exchange-public-token', {
+    // 60s timeout — exchange has historically run in <3s, but the
+    // Supabase gateway occasionally hangs and we don't want to leave
+    // the user staring at "Linking…" forever.
+    const exchangePromise = sbGet().functions.invoke('plaid-exchange-public-token', {
       body: {
         public_token,
         institution: metadata?.institution ? { id: metadata.institution.institution_id, name: metadata.institution.name } : null,
         lookback_months: lookback,
       }
     });
+    const timeoutPromise = new Promise((_, reject) => setTimeout(
+      () => reject(new Error('plaid-exchange-public-token timeout after 60s')),
+      60000,
+    ));
+    const { data, error } = await Promise.race([exchangePromise, timeoutPromise]);
     console.log('[Plaid] exchange', Math.round(performance.now() - t0), 'ms', error ? { error } : { ok: true });
     if (error) throw error;
     if (data && data.error) throw new Error(data.error);
