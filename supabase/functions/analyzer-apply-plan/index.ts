@@ -17,7 +17,14 @@
 //       debts?: boolean,
 //       tax_allocation?: boolean,
 //       surplus_split?: boolean
-//     }                            // default: all true
+//     },                           // default: all true
+//     overrides?: {                // optional user-edited values; when
+//       income_sources?: ...,      // present, used in place of the plan's
+//       bills?: ...,               // version of that section.
+//       debts?: ...,
+//       tax_allocation?: ...,
+//       surplus_split?: ...
+//     }
 //   }
 //
 // Returns: { applied_sections, plan_status }
@@ -41,9 +48,7 @@ type SectionFlags = {
   surplus_split?: boolean;
 };
 
-type Body = { plan_id: string; sections?: SectionFlags };
-
-type AnalyzerPlan = {
+type AnalyzerPlanShape = {
   income_sources?: { name: string }[];
   bills?: {
     name: string;
@@ -58,10 +63,7 @@ type AnalyzerPlan = {
     rate_estimate?: number | null;
     balance_estimate?: number | null;
   }[];
-  tax_allocation?: {
-    suggested_pct: number;
-    evidence_summary?: string;
-  };
+  tax_allocation?: { suggested_pct: number; evidence_summary?: string };
   surplus_split?: {
     owner_pct: number;
     debt_pct: number;
@@ -69,6 +71,14 @@ type AnalyzerPlan = {
     free_pct: number;
   };
 };
+
+type Body = {
+  plan_id: string;
+  sections?: SectionFlags;
+  overrides?: Partial<AnalyzerPlanShape>;
+};
+
+type AnalyzerPlan = AnalyzerPlanShape;
 
 Deno.serve(async (req) => {
   if (req.method === 'OPTIONS') return new Response('ok', { headers: corsHeaders });
@@ -109,14 +119,29 @@ Deno.serve(async (req) => {
 
     const plan = planRow.plan_json as AnalyzerPlan;
 
+    // Merge user overrides on top of the plan. For any section the user
+    // edited, the override array/object replaces the plan's version
+    // entirely. Sections without an override use the plan's data.
+    const o = body.overrides ?? {};
+    const effective: AnalyzerPlan = {
+      income_sources: o.income_sources ?? plan.income_sources,
+      bills:          o.bills          ?? plan.bills,
+      debts:          o.debts          ?? plan.debts,
+      tax_allocation: o.tax_allocation ?? plan.tax_allocation,
+      surplus_split:  o.surplus_split  ?? plan.surplus_split,
+    };
+
     const { data: ud, error: udErr } = await admin
       .from('user_data')
       .select('*')
       .eq('id', userId)
       .single();
-    if (udErr) return json({ error: udErr.message }, 500);
+    if (udErr && udErr.code !== 'PGRST116') {
+      // PGRST116 = no rows; that's fine, we'll create one.
+      return json({ error: udErr.message }, 500);
+    }
 
-    const next = mergePlan(ud ?? { id: userId }, plan, flags);
+    const next = mergePlan(ud ?? { id: userId }, effective, flags);
 
     const { error: writeErr } = await admin
       .from('user_data')
