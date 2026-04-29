@@ -2758,14 +2758,9 @@ const OB_QUESTIONS = [
 let obStep = 0;
 let obAnswers = {};
 let obResult = null;
-// Tracks the post-link pipeline: {step:0..3, error:string|null, plan_id, summary_for_coach}.
-// Phases: 0=plaid-sync, 1=plaid-classify-pending, 2=plaid-recurring-refresh, 3=plaid-analyze.
-let obPipelineState = null;
-
 function startOnboarding() {
   obStep = 0;
   obAnswers = {};
-  obPipelineState = null;
   renderObStep();
 }
 
@@ -2834,9 +2829,23 @@ function renderObStep() {
     // manually" (which advances immediately).
     const connected = obAnswers.plaid_connect && obAnswers.plaid_connect.plaid_item_row_id;
     if (connected) {
+      const status = obAnswers.plaid_pipeline?.status;
+      const stepLabel = ({
+        sync: 'Reading recent transactions',
+        classify: 'Sorting your spending',
+        recurring: 'Spotting recurring bills',
+        analyze: 'Drafting your Floor-First plan',
+      })[obAnswers.plaid_pipeline?.step] || 'Reading your account';
+      const liveLine = status === 'running'
+        ? `<div style="font-size:12px;font-weight:500;color:#3d7a52;margin-top:6px;display:flex;align-items:center;gap:6px;"><span style="display:inline-block;width:10px;height:10px;border:2px solid #c8e0d0;border-top-color:#3d9e78;border-radius:50%;animation:ob-spin .7s linear infinite;"></span>${stepLabel}…</div>`
+        : status === 'success'
+          ? `<div style="font-size:12px;font-weight:600;color:#3d7a52;margin-top:6px;">✓ Plan ready.</div>`
+          : '';
       inputArea.innerHTML = `
+        <style>@keyframes ob-spin{to{transform:rotate(360deg);}}</style>
         <div style="background:#ecf5ee;border:1px solid #c8e0d0;border-radius:var(--ds-r1);padding:1rem;font-size:14px;color:#2a7a4a;font-weight:600;">
-          Bank connected. I'll look back ${obAnswers.plaid_connect.lookback_months} months once we finish setup.
+          Bank connected. I'm reading ${obAnswers.plaid_connect.lookback_months} months in the background while you finish setup.
+          ${liveLine}
         </div>`;
       document.getElementById('ob-back-btn').style.display = obStep > 0 ? 'inline-block' : 'none';
       document.getElementById('ob-next-btn').style.display = 'inline-flex';
@@ -2953,18 +2962,22 @@ function obNext() {
   if (q.type === 'welcome') {
     // No input to validate, just advance
   } else if (q.type === 'plaid') {
-    // If a bank is connected and we haven't yet generated a plan, run the
-    // post-link pipeline instead of advancing to the next text question.
-    // The pipeline either succeeds (and we jump straight to `goals`,
-    // skipping the text questions whose answers it derives) or fails
-    // (and we fall through to the manual flow on the user's request).
-    const connected = obAnswers.plaid_connect && obAnswers.plaid_connect.plaid_item_row_id;
-    const planReady = obAnswers.plaid_plan && obAnswers.plaid_plan.plan_id;
-    if (connected && !planReady) {
-      obRunPlaidPipeline();
-      return;
+    // Pipeline runs in the background once the bank connects (kicked off
+    // from obHandlePlaidSuccess). Continue just advances the user to the
+    // next onboarding step; obBuildWithAI checks pipeline status at the
+    // end and either uses the plan or gracefully falls back.
+    if (obAnswers.plaid_connect?.plaid_item_row_id) {
+      // Skip past the data-collection text questions the analyzer is
+      // expected to answer (sources / contractors / bills / debts) and
+      // land on `goals`. If the pipeline ultimately fails, those will
+      // be empty — handled in the dashboard with a banner.
+      const goalsIdx = OB_QUESTIONS.findIndex((q) => q.key === 'goals');
+      if (goalsIdx > obStep) {
+        obStep = goalsIdx;
+        renderObStep();
+        return;
+      }
     }
-    // Either bank skipped or plan already generated — advance normally.
   } else if (q.type === 'choice') {
     if (!obAnswers[q.key]) {
       // Should be guarded by the disabled button, but double-check.
@@ -3145,6 +3158,10 @@ async function obHandlePlaidSuccess(public_token, metadata, lookback) {
       institution_name: metadata?.institution?.name || null,
       account_count: Array.isArray(data.accounts) ? data.accounts.length : 0,
     };
+    // Fire the pipeline in the background. The user keeps moving through
+    // onboarding; obBuildWithAI checks status at the end. We never block
+    // signup on this completing.
+    obRunPlaidPipeline().catch((err) => console.error('[Pipeline] background run failed:', err));
     renderObStep();
   } catch (e) {
     console.error('plaid-exchange failed:', e);
@@ -3167,17 +3184,11 @@ function obSkipPlaidConnect() {
 }
 
 // ─── Post-link pipeline (7b) ─────────────────────────────────────────
-// Once a bank is linked, run sync → classify → recurring → analyze
-// before advancing the onboarding flow. The analyzer plan is persisted
-// to analyzer_plans server-side; the client just needs the plan_id +
-// summary so the Coach (7c) can present it.
-
-const OB_PIPELINE_STEPS = [
-  { key: 'sync',      fn: 'plaid-sync',              label: 'Reading recent transactions' },
-  { key: 'classify',  fn: 'plaid-classify-pending',  label: 'Sorting income, bills, and discretionary' },
-  { key: 'recurring', fn: 'plaid-recurring-refresh', label: 'Finding your recurring bills and income' },
-  { key: 'analyze',   fn: 'plaid-analyze',           label: 'Drafting your Floor-First plan' },
-];
+// Runs in the BACKGROUND once a bank is linked. The user keeps moving
+// through onboarding while sync → classify → recurring → analyze run
+// in parallel. The analyzer plan is persisted to analyzer_plans
+// server-side; the client just needs the plan_id + summary so the
+// review screen (7c) can present it.
 
 // Pull a useful detail string out of a Supabase functions.invoke error.
 // `error.context` is the underlying Response object — its body holds the
@@ -3223,18 +3234,21 @@ async function obExtractInvokeError(error) {
   return detail;
 }
 
+// Background pipeline. Runs after Plaid Link succeeds while the user
+// continues through the rest of onboarding. State lives on
+// obAnswers.plaid_pipeline and obAnswers.plaid_plan so obBuildWithAI
+// can decide at the end whether to show the plan review or fall back.
+//
+// We never block the user on this completing — if it fails we still
+// land them in the dashboard, with a banner that lets them retry.
 async function obRunPlaidPipeline() {
   const itemRowId = obAnswers.plaid_connect?.plaid_item_row_id;
-  if (!itemRowId) {
-    console.warn('obRunPlaidPipeline called with no plaid_item_row_id');
-    return;
-  }
-  obPipelineState = { step: 0, error: null };
-  obRenderPipeline();
+  if (!itemRowId) return;
 
-  // Build a profile hint from the in-memory onboarding answers. These
-  // haven't been persisted yet at this point — the analyzer needs them
-  // inline.
+  obAnswers.plaid_pipeline = { status: 'running', step: 'sync', startedAt: Date.now(), recurringSkipped: false, attempts: 0 };
+  // Refresh the connected-bank panel if the user is still looking at it.
+  if (OB_QUESTIONS[obStep]?.type === 'plaid') renderObStep();
+
   const profile_hint = {
     name: obAnswers.name_business || undefined,
     business: obAnswers.name_business || undefined,
@@ -3244,158 +3258,94 @@ async function obRunPlaidPipeline() {
   const sb = sbGet();
 
   try {
-    // Step 0: sync
-    obPipelineState.step = 0; obRenderPipeline();
-    {
-      const t0 = performance.now();
-      const { data, error } = await obInvokeWithTimeout(sb, 'plaid-sync', { plaid_item_row_id: itemRowId }, 90000);
-      console.log('[Pipeline] sync', Math.round(performance.now() - t0), 'ms', error ? { error } : data);
-      if (error) throw new Error('sync: ' + (await obExtractInvokeError(error)));
-      if (data && data.error) throw new Error('sync: ' + data.error);
+    obAnswers.plaid_pipeline.step = 'sync';
+    if (OB_QUESTIONS[obStep]?.type === 'plaid') renderObStep();
+    await obPipelineStep('sync', () => obInvokeWithTimeout(sb, 'plaid-sync', { plaid_item_row_id: itemRowId }, 90000));
+
+    obAnswers.plaid_pipeline.step = 'classify';
+    if (OB_QUESTIONS[obStep]?.type === 'plaid') renderObStep();
+    let iterations = 0;
+    while (iterations < 10) {
+      const data = await obPipelineStep('classify', () => obInvokeWithTimeout(sb, 'plaid-classify-pending', {}, 120000));
+      if (!data || data.remaining === 0 || data.classified === 0) break;
+      iterations++;
     }
 
-    // Step 1: classify-pending. Each invocation now processes ≤50 txns
-    // (server-side cap) so the client loops up to 10 times to cover
-    // typical 6-month histories. 120s per-call timeout absorbs any one
-    // slow Anthropic batch but bails on a true gateway hang.
-    obPipelineState.step = 1; obRenderPipeline();
-    {
-      let iterations = 0;
-      while (iterations < 10) {
-        const t0 = performance.now();
-        const { data, error } = await obInvokeWithTimeout(sb, 'plaid-classify-pending', {}, 120000);
-        console.log('[Pipeline] classify', Math.round(performance.now() - t0), 'ms', error ? { error } : data);
-        if (error) throw new Error('classify: ' + (await obExtractInvokeError(error)));
-        if (data && data.error) throw new Error('classify: ' + data.error);
-        if (!data || data.remaining === 0 || data.classified === 0) break;
-        iterations++;
-      }
+    obAnswers.plaid_pipeline.step = 'recurring';
+    if (OB_QUESTIONS[obStep]?.type === 'plaid') renderObStep();
+    try {
+      await obPipelineStep('recurring', () => obInvokeWithTimeout(sb, 'plaid-recurring-refresh', { plaid_item_row_id: itemRowId }, 60000));
+    } catch (e) {
+      // Recurring is nice-to-have; the analyzer falls back to deriving
+      // recurrence from raw transactions.
+      console.warn('[Pipeline] recurring soft-failed:', e);
+      obAnswers.plaid_pipeline.recurringSkipped = true;
     }
 
-    // Step 2: recurring-refresh. Soft-fail with a 60s timeout — Plaid's
-    // /transactions/recurring/get returns PRODUCT_NOT_READY (or just hangs)
-    // for freshly-linked Items in sandbox. Recurring streams are nice-to-have
-    // for the analyzer (it falls back to deriving recurrence from raw
-    // transactions), so a failure here shouldn't block the pipeline.
-    obPipelineState.step = 2; obRenderPipeline();
-    {
-      const t0 = performance.now();
-      try {
-        const { data, error } = await obInvokeWithTimeout(sb, 'plaid-recurring-refresh', { plaid_item_row_id: itemRowId }, 60000);
-        console.log('[Pipeline] recurring', Math.round(performance.now() - t0), 'ms', error ? { error } : data);
-        if (error) throw new Error(await obExtractInvokeError(error));
-        if (data && data.error) throw new Error(data.error);
-      } catch (e) {
-        console.warn('[Pipeline] recurring failed, continuing without recurring streams:', e);
-        obPipelineState.skippedSteps = obPipelineState.skippedSteps || [];
-        obPipelineState.skippedSteps.push(2);
-        Able.track?.('onboarding_plaid_pipeline_recurring_skipped', {
-          message: (e && e.message) || String(e),
-        });
-      }
-    }
+    obAnswers.plaid_pipeline.step = 'analyze';
+    if (OB_QUESTIONS[obStep]?.type === 'plaid') renderObStep();
+    const data = await obPipelineStep('analyze', () => obInvokeWithTimeout(sb, 'plaid-analyze', { plaid_item_row_id: itemRowId, profile_hint }, 120000));
+    if (!data?.plan_id) throw new Error('analyze returned no plan_id');
 
-    // Step 3: analyze
-    obPipelineState.step = 3; obRenderPipeline();
-    {
-      const t0 = performance.now();
-      const { data, error } = await obInvokeWithTimeout(sb, 'plaid-analyze', { plaid_item_row_id: itemRowId, profile_hint }, 120000);
-      console.log('[Pipeline] analyze', Math.round(performance.now() - t0), 'ms', error ? { error } : { ok: true, plan_id: data?.plan_id });
-      if (error) throw new Error('analyze: ' + (await obExtractInvokeError(error)));
-      if (data && data.error) throw new Error('analyze: ' + data.error);
-      if (!data?.plan_id) throw new Error('analyze: no plan_id returned');
-
-      obAnswers.plaid_plan = {
-        plan_id: data.plan_id,
-        summary_for_coach: data.summary_for_coach || null,
-        input_summary: data.input_summary || null,
-      };
-    }
-
-    // Done. Skip the text questions whose answers the analyzer derived
-    // (sources, contractors, bills, debts) and land on `goals`.
+    obAnswers.plaid_plan = {
+      plan_id: data.plan_id,
+      summary_for_coach: data.summary_for_coach || null,
+      input_summary: data.input_summary || null,
+    };
+    obAnswers.plaid_pipeline.status = 'success';
+    obAnswers.plaid_pipeline.finishedAt = Date.now();
     Able.track?.('onboarding_plaid_pipeline_success', {
-      plan_id: obAnswers.plaid_plan.plan_id,
+      plan_id: data.plan_id,
+      duration_ms: obAnswers.plaid_pipeline.finishedAt - obAnswers.plaid_pipeline.startedAt,
     });
-    const goalsIdx = OB_QUESTIONS.findIndex((q) => q.key === 'goals');
-    obStep = goalsIdx >= 0 ? goalsIdx : Math.min(obStep + 1, OB_QUESTIONS.length - 1);
-    obPipelineState = null;
-    renderObStep();
+    if (OB_QUESTIONS[obStep]?.type === 'plaid') renderObStep();
   } catch (e) {
     console.error('[Pipeline] failed:', e);
+    obAnswers.plaid_pipeline.status = 'failed';
+    obAnswers.plaid_pipeline.error = (e && e.message) || String(e);
+    obAnswers.plaid_pipeline.finishedAt = Date.now();
     Able.track?.('onboarding_plaid_pipeline_failed', {
-      step: obPipelineState?.step ?? -1,
-      message: (e && e.message) || String(e),
+      step: obAnswers.plaid_pipeline.step,
+      message: obAnswers.plaid_pipeline.error,
     });
-    obPipelineState.error = (e && e.message) || 'Something went wrong';
-    obRenderPipeline();
   }
 }
 
-function obRenderPipeline() {
-  const inputArea = document.getElementById('ob-input-area');
-  if (!inputArea) return;
-
-  const state = obPipelineState || { step: 0, error: null };
-  const skipped = new Set(state.skippedSteps || []);
-  const stepHtml = OB_PIPELINE_STEPS.map((s, i) => {
-    let icon, color;
-    if (state.error && i === state.step) {
-      icon = '×'; color = '#c85a5a';
-    } else if (skipped.has(i) && i < state.step) {
-      icon = '–'; color = '#9aa19a';
-    } else if (i < state.step) {
-      icon = '✓'; color = '#3d9e78';
-    } else if (i === state.step) {
-      icon = '<span class="ob-spinner"></span>'; color = 'var(--ds-t1)';
-    } else {
-      icon = '○'; color = 'var(--ds-t3)';
+// Wrap a single pipeline step with one automatic retry on failure.
+// Two attempts × 120s per-call timeout = up to 240s budget per step,
+// which is generous given that real successful runs are 30-90s.
+async function obPipelineStep(name, invokeFn) {
+  let lastErr = null;
+  for (let attempt = 0; attempt < 2; attempt++) {
+    const t0 = performance.now();
+    try {
+      const { data, error } = await invokeFn();
+      console.log(`[Pipeline] ${name}${attempt > 0 ? ' retry' : ''}`, Math.round(performance.now() - t0), 'ms', error ? { error } : data);
+      if (error) throw new Error(`${name}: ${await obExtractInvokeError(error)}`);
+      if (data && data.error) throw new Error(`${name}: ${data.error}`);
+      return data;
+    } catch (e) {
+      lastErr = e;
+      console.warn(`[Pipeline] ${name} attempt ${attempt + 1} failed in ${Math.round(performance.now() - t0)}ms:`, e.message);
+      obAnswers.plaid_pipeline.attempts = (obAnswers.plaid_pipeline.attempts || 0) + 1;
     }
-    return `
-      <div style="display:flex;align-items:center;gap:10px;padding:8px 0;font-size:13px;font-weight:600;color:${color};">
-        <span style="display:inline-flex;width:18px;justify-content:center;font-weight:800;">${icon}</span>
-        <span>${s.label}</span>
-      </div>`;
-  }).join('');
-
-  let footer = '';
-  if (state.error) {
-    footer = `
-      <div style="margin-top:1rem;padding:.75rem;background:#fdecec;border:1px solid #f3c5c5;border-radius:var(--ds-r1);font-size:12px;color:#a04545;font-weight:600;">
-        ${state.error}
-      </div>
-      <button type="button" class="btn btn-primary" onclick="obRunPlaidPipeline()" style="width:100%;margin-top:.75rem;">Try again</button>
-      <button type="button" class="btn-ghost btn-sm" onclick="obAbandonPipelineToManual()" style="width:100%;margin-top:.5rem;">Enter the rest manually →</button>`;
   }
-
-  inputArea.innerHTML = `
-    <style>
-      .ob-spinner{display:inline-block;width:12px;height:12px;border:2px solid var(--ds-t4);border-top-color:var(--ds-t1);border-radius:50%;animation:ob-spin .7s linear infinite;}
-      @keyframes ob-spin{to{transform:rotate(360deg);}}
-    </style>
-    <div style="background:#ecf5ee;border:1px solid #c8e0d0;border-radius:var(--ds-r1);padding:1rem;">
-      <div style="font-size:13px;font-weight:700;color:#2a7a4a;margin-bottom:.5rem;">Reading your account</div>
-      ${stepHtml}
-    </div>
-    ${footer}`;
-
-  // Hide the navigation buttons while the pipeline runs. The error footer
-  // provides its own retry/skip controls.
-  document.getElementById('ob-back-btn').style.display = 'none';
-  document.getElementById('ob-next-btn').style.display = 'none';
+  throw lastErr;
 }
 
-// User clicked "Enter the rest manually" after a pipeline failure. We
-// keep the bank linkage intact (no point throwing it away) but advance
-// to the next text question so the user can fill in by hand.
-function obAbandonPipelineToManual() {
-  obPipelineState = null;
-  if (obStep < OB_QUESTIONS.length - 1) {
-    obStep++;
-    renderObStep();
-  } else {
-    obBuildWithAI();
+// Wait for the background pipeline to finish, up to maxWaitMs. Returns
+// the final status. Used by obBuildWithAI when the user reaches the end
+// of onboarding before the pipeline finishes.
+async function obWaitForPipeline(maxWaitMs = 30000) {
+  const p = obAnswers.plaid_pipeline;
+  if (!p) return 'none';
+  if (p.status !== 'running') return p.status;
+  const deadline = Date.now() + maxWaitMs;
+  while (Date.now() < deadline) {
+    if (obAnswers.plaid_pipeline.status !== 'running') break;
+    await new Promise((r) => setTimeout(r, 1000));
   }
+  return obAnswers.plaid_pipeline.status;
 }
 
 // Legacy helper retained for the ai-onboard fallback only. Plan-based
