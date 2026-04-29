@@ -19,7 +19,11 @@ import { createClient } from 'npm:@supabase/supabase-js@2';
 const SUPABASE_URL = Deno.env.get('SUPABASE_URL')!;
 const SERVICE_ROLE = Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')!;
 const BATCH_SIZE = 50;
-const MAX_PER_RUN = 500; // hard cap so we don't blow the function timeout
+// Each batch of 50 takes ~60-80s on Haiku 4.5 (~170 tokens output per txn).
+// Supabase Edge Functions have a ~150s wall clock, so we ship one batch per
+// invocation and let the client loop. The client's iteration cap controls
+// the absolute upper bound on transactions classified per pipeline run.
+const MAX_PER_RUN = 50;
 
 const corsHeaders = {
   'Access-Control-Allow-Origin': '*',
@@ -85,10 +89,14 @@ Deno.serve(async (req) => {
 
     let classified = 0;
     let batches = 0;
+    const t0 = Date.now();
+    console.log(`plaid-classify-pending: starting, ${rows.length} txns to process (max ${MAX_PER_RUN}/run)`);
 
     for (let i = 0; i < rows.length; i += BATCH_SIZE) {
       const batch = rows.slice(i, i + BATCH_SIZE);
+      const tBatch = Date.now();
       const classifications = await classifyBatch(batch);
+      console.log(`plaid-classify-pending: batch ${batches + 1} (${batch.length} txns) in ${Date.now() - tBatch}ms`);
       batches++;
 
       // Build a lookup by plaid_transaction_id since the recategorize fn echoes
