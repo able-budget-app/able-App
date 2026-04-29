@@ -2754,10 +2754,14 @@ const OB_QUESTIONS = [
 let obStep = 0;
 let obAnswers = {};
 let obResult = null;
+// Tracks the post-link pipeline: {step:0..3, error:string|null, plan_id, summary_for_coach}.
+// Phases: 0=plaid-sync, 1=plaid-classify-pending, 2=plaid-recurring-refresh, 3=plaid-analyze.
+let obPipelineState = null;
 
 function startOnboarding() {
   obStep = 0;
   obAnswers = {};
+  obPipelineState = null;
   renderObStep();
 }
 
@@ -2907,8 +2911,18 @@ function obNext() {
   if (q.type === 'welcome') {
     // No input to validate, just advance
   } else if (q.type === 'plaid') {
-    // No input to validate. Either obStartPlaidLink set obAnswers.plaid_connect
-    // on success, or obSkipPlaidConnect already advanced. Either way, just go.
+    // If a bank is connected and we haven't yet generated a plan, run the
+    // post-link pipeline instead of advancing to the next text question.
+    // The pipeline either succeeds (and we jump straight to `goals`,
+    // skipping the text questions whose answers it derives) or fails
+    // (and we fall through to the manual flow on the user's request).
+    const connected = obAnswers.plaid_connect && obAnswers.plaid_connect.plaid_item_row_id;
+    const planReady = obAnswers.plaid_plan && obAnswers.plaid_plan.plan_id;
+    if (connected && !planReady) {
+      obRunPlaidPipeline();
+      return;
+    }
+    // Either bank skipped or plan already generated — advance normally.
   } else if (q.type === 'table') {
     saveTableRows();
     // Filter out empty rows
@@ -2950,11 +2964,28 @@ async function obBuildWithAI() {
   document.getElementById('ob-building').style.display = 'block';
   document.getElementById('ob-progress').style.width = '100%';
 
+  // If the Plaid pipeline ran successfully, the analyzer plan is already
+  // persisted in analyzer_plans and contains everything ai-onboard would
+  // have produced. Skip the ai-onboard call and synthesize obResult from
+  // the plan so the existing review/confirm flow takes over. 7c will
+  // replace this with real confirmation cards.
+  if (obAnswers.plaid_plan && obAnswers.plaid_plan.plan_id) {
+    try {
+      obResult = await obSynthesizeResultFromPlan(obAnswers.plaid_plan.plan_id);
+      renderObReview();
+      return;
+    } catch (e) {
+      console.error('Plan-based onboarding synthesis failed:', e);
+      alert('Could not load your plan: ' + e.message + '\n\nFalling back to manual setup.');
+      // Fall through to ai-onboard.
+    }
+  }
+
   try {
     // ai-onboard predates Plaid and expects flat string answers. The plaid_connect
     // entry is a structured object with DB IDs; it would confuse the prompt and
     // it isn't needed here (the bank data flows through plaid-analyze separately).
-    const { plaid_connect: _plaid, ...answersForAI } = obAnswers;
+    const { plaid_connect: _plaid, plaid_plan: _plan, ...answersForAI } = obAnswers;
     const { data, error } = await sbGet().functions.invoke('ai-onboard', {
       body: { answers: answersForAI }
     });
@@ -3081,6 +3112,247 @@ function obSkipPlaidConnect() {
   } else {
     obBuildWithAI();
   }
+}
+
+// ─── Post-link pipeline (7b) ─────────────────────────────────────────
+// Once a bank is linked, run sync → classify → recurring → analyze
+// before advancing the onboarding flow. The analyzer plan is persisted
+// to analyzer_plans server-side; the client just needs the plan_id +
+// summary so the Coach (7c) can present it.
+
+const OB_PIPELINE_STEPS = [
+  { key: 'sync',      fn: 'plaid-sync',              label: 'Reading recent transactions' },
+  { key: 'classify',  fn: 'plaid-classify-pending',  label: 'Sorting income, bills, and discretionary' },
+  { key: 'recurring', fn: 'plaid-recurring-refresh', label: 'Finding your recurring bills and income' },
+  { key: 'analyze',   fn: 'plaid-analyze',           label: 'Drafting your Floor-First plan' },
+];
+
+async function obRunPlaidPipeline() {
+  const itemRowId = obAnswers.plaid_connect?.plaid_item_row_id;
+  if (!itemRowId) {
+    console.warn('obRunPlaidPipeline called with no plaid_item_row_id');
+    return;
+  }
+  obPipelineState = { step: 0, error: null };
+  obRenderPipeline();
+
+  // Build a profile hint from the in-memory onboarding answers. These
+  // haven't been persisted yet at this point — the analyzer needs them
+  // inline.
+  const profile_hint = {
+    name: obAnswers.name_business || undefined,
+    business: obAnswers.name_business || undefined,
+    income_payment_structure: obAnswers.income || undefined,
+  };
+
+  const sb = sbGet();
+
+  try {
+    // Step 0: sync
+    obPipelineState.step = 0; obRenderPipeline();
+    {
+      const t0 = performance.now();
+      const { data, error } = await sb.functions.invoke('plaid-sync', {
+        body: { plaid_item_row_id: itemRowId }
+      });
+      console.log('[Pipeline] sync', Math.round(performance.now() - t0), 'ms', error ? { error } : data);
+      if (error) throw new Error('sync: ' + (error.message || 'failed'));
+      if (data && data.error) throw new Error('sync: ' + data.error);
+    }
+
+    // Step 1: classify-pending. Loop until remaining=0 (max 5 iterations,
+    // each handles up to 500 txns; 2,500-txn ceiling is way past v1 needs).
+    obPipelineState.step = 1; obRenderPipeline();
+    {
+      let iterations = 0;
+      while (iterations < 5) {
+        const t0 = performance.now();
+        const { data, error } = await sb.functions.invoke('plaid-classify-pending', { body: {} });
+        console.log('[Pipeline] classify', Math.round(performance.now() - t0), 'ms', error ? { error } : data);
+        if (error) throw new Error('classify: ' + (error.message || 'failed'));
+        if (data && data.error) throw new Error('classify: ' + data.error);
+        if (!data || data.remaining === 0 || data.classified === 0) break;
+        iterations++;
+      }
+    }
+
+    // Step 2: recurring-refresh
+    obPipelineState.step = 2; obRenderPipeline();
+    {
+      const t0 = performance.now();
+      const { data, error } = await sb.functions.invoke('plaid-recurring-refresh', {
+        body: { plaid_item_row_id: itemRowId }
+      });
+      console.log('[Pipeline] recurring', Math.round(performance.now() - t0), 'ms', error ? { error } : data);
+      if (error) throw new Error('recurring: ' + (error.message || 'failed'));
+      if (data && data.error) throw new Error('recurring: ' + data.error);
+    }
+
+    // Step 3: analyze
+    obPipelineState.step = 3; obRenderPipeline();
+    {
+      const t0 = performance.now();
+      const { data, error } = await sb.functions.invoke('plaid-analyze', {
+        body: { plaid_item_row_id: itemRowId, profile_hint }
+      });
+      console.log('[Pipeline] analyze', Math.round(performance.now() - t0), 'ms', error ? { error } : { ok: true, plan_id: data?.plan_id });
+      if (error) throw new Error('analyze: ' + (error.message || 'failed'));
+      if (data && data.error) throw new Error('analyze: ' + data.error);
+      if (!data?.plan_id) throw new Error('analyze: no plan_id returned');
+
+      obAnswers.plaid_plan = {
+        plan_id: data.plan_id,
+        summary_for_coach: data.summary_for_coach || null,
+        input_summary: data.input_summary || null,
+      };
+    }
+
+    // Done. Skip the text questions whose answers the analyzer derived
+    // (sources, contractors, bills, debts) and land on `goals`.
+    Able.track?.('onboarding_plaid_pipeline_success', {
+      plan_id: obAnswers.plaid_plan.plan_id,
+    });
+    const goalsIdx = OB_QUESTIONS.findIndex((q) => q.key === 'goals');
+    obStep = goalsIdx >= 0 ? goalsIdx : Math.min(obStep + 1, OB_QUESTIONS.length - 1);
+    obPipelineState = null;
+    renderObStep();
+  } catch (e) {
+    console.error('[Pipeline] failed:', e);
+    Able.track?.('onboarding_plaid_pipeline_failed', {
+      step: obPipelineState?.step ?? -1,
+      message: (e && e.message) || String(e),
+    });
+    obPipelineState.error = (e && e.message) || 'Something went wrong';
+    obRenderPipeline();
+  }
+}
+
+function obRenderPipeline() {
+  const inputArea = document.getElementById('ob-input-area');
+  if (!inputArea) return;
+
+  const state = obPipelineState || { step: 0, error: null };
+  const stepHtml = OB_PIPELINE_STEPS.map((s, i) => {
+    let icon, color;
+    if (state.error && i === state.step) {
+      icon = '×'; color = '#c85a5a';
+    } else if (i < state.step) {
+      icon = '✓'; color = '#3d9e78';
+    } else if (i === state.step) {
+      icon = '<span class="ob-spinner"></span>'; color = 'var(--ds-t1)';
+    } else {
+      icon = '○'; color = 'var(--ds-t3)';
+    }
+    return `
+      <div style="display:flex;align-items:center;gap:10px;padding:8px 0;font-size:13px;font-weight:600;color:${color};">
+        <span style="display:inline-flex;width:18px;justify-content:center;font-weight:800;">${icon}</span>
+        <span>${s.label}</span>
+      </div>`;
+  }).join('');
+
+  let footer = '';
+  if (state.error) {
+    footer = `
+      <div style="margin-top:1rem;padding:.75rem;background:#fdecec;border:1px solid #f3c5c5;border-radius:var(--ds-r1);font-size:12px;color:#a04545;font-weight:600;">
+        ${state.error}
+      </div>
+      <button type="button" class="btn btn-primary" onclick="obRunPlaidPipeline()" style="width:100%;margin-top:.75rem;">Try again</button>
+      <button type="button" class="btn-ghost btn-sm" onclick="obAbandonPipelineToManual()" style="width:100%;margin-top:.5rem;">Enter the rest manually →</button>`;
+  }
+
+  inputArea.innerHTML = `
+    <style>
+      .ob-spinner{display:inline-block;width:12px;height:12px;border:2px solid var(--ds-t4);border-top-color:var(--ds-t1);border-radius:50%;animation:ob-spin .7s linear infinite;}
+      @keyframes ob-spin{to{transform:rotate(360deg);}}
+    </style>
+    <div style="background:#ecf5ee;border:1px solid #c8e0d0;border-radius:var(--ds-r1);padding:1rem;">
+      <div style="font-size:13px;font-weight:700;color:#2a7a4a;margin-bottom:.5rem;">Reading your account</div>
+      ${stepHtml}
+    </div>
+    ${footer}`;
+
+  // Hide the navigation buttons while the pipeline runs. The error footer
+  // provides its own retry/skip controls.
+  document.getElementById('ob-back-btn').style.display = 'none';
+  document.getElementById('ob-next-btn').style.display = 'none';
+}
+
+// User clicked "Enter the rest manually" after a pipeline failure. We
+// keep the bank linkage intact (no point throwing it away) but advance
+// to the next text question so the user can fill in by hand.
+function obAbandonPipelineToManual() {
+  obPipelineState = null;
+  if (obStep < OB_QUESTIONS.length - 1) {
+    obStep++;
+    renderObStep();
+  } else {
+    obBuildWithAI();
+  }
+}
+
+// Read the analyzer plan from analyzer_plans (already persisted by
+// plaid-analyze) and shape it into the same flat structure that ai-onboard
+// returns, so renderObReview/obConfirm don't need to know which path
+// produced the data. Anything not in the plan falls back to onboarding
+// answers (e.g. user's stated goals) or sensible defaults.
+async function obSynthesizeResultFromPlan(planId) {
+  const { data: row, error } = await sbGet()
+    .from('analyzer_plans')
+    .select('plan_json, coach_summary')
+    .eq('id', planId)
+    .single();
+  if (error) throw new Error(error.message || 'Could not load plan');
+  if (!row || !row.plan_json) throw new Error('Plan row was empty');
+
+  const p = row.plan_json;
+
+  const bills = Array.isArray(p.bills) ? p.bills.map((b) => ({
+    name: b.name,
+    amount: Number(b.amount) || 0,
+    due: b.due_day_of_month != null ? String(b.due_day_of_month) : '',
+  })) : [];
+
+  const debts = Array.isArray(p.debts) ? p.debts.map((d) => ({
+    name: d.name,
+    min: Number(d.min_payment) || 0,
+    rate: d.rate_estimate != null ? Math.round(Number(d.rate_estimate) * 100) : 0,
+    due: d.due_day_of_month != null ? String(d.due_day_of_month) : '',
+    balance: d.balance_estimate != null ? Number(d.balance_estimate) : 0,
+  })) : [];
+
+  const sources = Array.isArray(p.income_sources) ? p.income_sources.map((s) => ({
+    name: s.name,
+    avg: Number(s.average_amount) || 0,
+    frequency: s.frequency || 'IRREGULAR',
+  })) : [];
+
+  const taxPct = p.tax_allocation && Number(p.tax_allocation.suggested_pct) || 0;
+  const obligations = taxPct > 0 ? [{ type: 'tax', label: 'Taxes', pct: taxPct }] : [];
+
+  const split = p.surplus_split || {};
+  const settings = {
+    ownerPct: Number(split.owner_pct) || 10,
+    debtPct:  Number(split.debt_pct)  || (debts.length ? 20 : 5),
+    bufPct:   Number(split.reserve_pct) || 15,
+    freePct:  Number(split.free_pct)  || 0,
+  };
+
+  // Best-effort name parse from `name_business` ("I'm Paul. I run …").
+  const rawName = (obAnswers.name_business || '').trim();
+  let parsedName = '';
+  const m = rawName.match(/^\s*(?:i'?m|my name is)\s+([A-Za-z][\w'-]*)/i);
+  if (m) parsedName = m[1];
+  else if (rawName) parsedName = rawName.split(/[.,\s]/)[0];
+
+  return {
+    bills, debts, sources,
+    obligations,
+    settings,
+    name: parsedName,
+    business_type: rawName || '',
+    goals: obAnswers.goals || '',
+    coach_summary: row.coach_summary || null,
+  };
 }
 
 function renderObReview() {

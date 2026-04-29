@@ -1,5 +1,28 @@
+// plaid-analyze
+// Builds a Floor-First Budgeting plan from a Plaid item's classified history.
+//
+// POST body:
+//   { plaid_item_row_id: string,
+//     profile_hint?: { name?: string, business?: string, income_payment_structure?: string } }
+//
+// Returns:
+//   { plan_id, plan, input_summary, usage }
+//
+// Behavior:
+//   - Loads plaid_items row (lookback_months) for the authed user.
+//   - Loads classified plaid_transactions for accounts inside that item.
+//   - Loads plaid_recurring_streams for that item.
+//   - Aggregates into a compact payload, calls Sonnet 4.6 once.
+//   - Parses the JSON plan from the response.
+//   - Inserts a row into analyzer_plans with status='pending' and returns plan_id.
+//
+// The Coach (7c) reads the row by plan_id and walks the user through it.
+
+import { createClient } from 'npm:@supabase/supabase-js@2';
 import Anthropic from 'npm:@anthropic-ai/sdk@^0.40.0';
 
+const SUPABASE_URL = Deno.env.get('SUPABASE_URL')!;
+const SERVICE_ROLE = Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')!;
 const ANTHROPIC_API_KEY = Deno.env.get('ANTHROPIC_API_KEY')!;
 
 const corsHeaders = {
@@ -55,14 +78,119 @@ type AnalyzerInput = {
   lookback_months: 6 | 12 | 24;
 };
 
+type Body = {
+  plaid_item_row_id: string;
+  profile_hint?: AnalyzerInput['profile'];
+};
+
 Deno.serve(async (req) => {
   if (req.method === 'OPTIONS') return new Response('ok', { headers: corsHeaders });
   if (req.method !== 'POST') return json({ error: 'POST only' }, 405);
 
   try {
-    const input = (await req.json()) as AnalyzerInput;
-    const validation = validateInput(input);
-    if (validation) return json({ error: validation }, 400);
+    const authHeader = req.headers.get('Authorization') ?? '';
+    const userClient = createClient(SUPABASE_URL, SERVICE_ROLE, {
+      global: { headers: { Authorization: authHeader } },
+    });
+    const { data: userRes, error: userErr } = await userClient.auth.getUser();
+    if (userErr || !userRes.user) return json({ error: 'Unauthorized' }, 401);
+    const userId = userRes.user.id;
+
+    const body = (await req.json()) as Body;
+    if (!body?.plaid_item_row_id) {
+      return json({ error: 'plaid_item_row_id required' }, 400);
+    }
+
+    const admin = createClient(SUPABASE_URL, SERVICE_ROLE);
+
+    const { data: item, error: itemErr } = await admin
+      .from('plaid_items')
+      .select('id, user_id, lookback_months')
+      .eq('id', body.plaid_item_row_id)
+      .single();
+    if (itemErr || !item) return json({ error: 'Item not found' }, 404);
+    if (item.user_id !== userId) return json({ error: 'Forbidden' }, 403);
+
+    const lookback = item.lookback_months as 6 | 12 | 24;
+
+    // Accounts inside this item — used to scope transactions.
+    const { data: accounts, error: acctErr } = await admin
+      .from('plaid_accounts')
+      .select('id')
+      .eq('plaid_item_id', item.id);
+    if (acctErr) return json({ error: 'Failed to load accounts: ' + acctErr.message }, 500);
+    const accountIds = (accounts ?? []).map((a) => a.id);
+    if (accountIds.length === 0) {
+      return json({ error: 'No accounts found for this item' }, 400);
+    }
+
+    // Classified transactions for those accounts.
+    const { data: txnRows, error: txnErr } = await admin
+      .from('plaid_transactions')
+      .select(
+        'plaid_transaction_id, name, merchant_name, amount, date, able_category, able_label, able_confidence, able_is_recurring_likely',
+      )
+      .eq('user_id', userId)
+      .in('plaid_account_id', accountIds)
+      .not('able_category', 'is', null)
+      .order('date', { ascending: false });
+    if (txnErr) return json({ error: 'Failed to load transactions: ' + txnErr.message }, 500);
+
+    const categorized_transactions: CategorizedTxn[] = (txnRows ?? []).map((r) => ({
+      transaction_id: r.plaid_transaction_id,
+      name: r.name ?? undefined,
+      merchant_name: r.merchant_name,
+      amount: Number(r.amount),
+      date: r.date,
+      classification: {
+        category: r.able_category as Category,
+        label: r.able_label ?? '',
+        confidence: Number(r.able_confidence ?? 0),
+        is_recurring_likely: !!r.able_is_recurring_likely,
+      },
+    }));
+
+    if (categorized_transactions.length === 0) {
+      return json({ error: 'No classified transactions yet — run plaid-classify-pending first' }, 400);
+    }
+
+    // Recurring streams for this item.
+    const { data: streamRows, error: streamErr } = await admin
+      .from('plaid_recurring_streams')
+      .select(
+        'stream_id, direction, merchant_name, description, personal_finance_category_detailed, frequency, status, is_active, average_amount, last_amount, iso_currency_code, predicted_next_date, first_date, last_date, transaction_ids',
+      )
+      .eq('plaid_item_id', item.id);
+    if (streamErr) return json({ error: 'Failed to load recurring streams: ' + streamErr.message }, 500);
+
+    const inflow_streams: RecurringStream[] = [];
+    const outflow_streams: RecurringStream[] = [];
+    for (const s of streamRows ?? []) {
+      const stream: RecurringStream = {
+        stream_id: s.stream_id,
+        merchant_name: s.merchant_name,
+        description: s.description ?? undefined,
+        personal_finance_category: { detailed: s.personal_finance_category_detailed ?? undefined },
+        average_amount: { amount: Number(s.average_amount ?? 0), iso_currency_code: s.iso_currency_code ?? 'USD' },
+        last_amount: s.last_amount != null ? { amount: Number(s.last_amount) } : undefined,
+        frequency: s.frequency ?? 'UNKNOWN',
+        status: s.status ?? undefined,
+        is_active: s.is_active ?? undefined,
+        predicted_next_date: s.predicted_next_date ?? undefined,
+        first_date: s.first_date ?? undefined,
+        last_date: s.last_date ?? undefined,
+        transaction_ids: s.transaction_ids ?? undefined,
+      };
+      if (s.direction === 'inflow') inflow_streams.push(stream);
+      else outflow_streams.push(stream);
+    }
+
+    const input: AnalyzerInput = {
+      categorized_transactions,
+      recurring_streams: { inflow_streams, outflow_streams },
+      profile: body.profile_hint ?? {},
+      lookback_months: lookback,
+    };
 
     const aggregated = aggregate(input);
 
@@ -86,13 +214,38 @@ Deno.serve(async (req) => {
 
     const plan = parsePlan(text);
 
+    // Persist. Mark any prior pending/presenting plans for this user as superseded.
+    await admin
+      .from('analyzer_plans')
+      .update({ status: 'superseded' })
+      .eq('user_id', userId)
+      .in('status', ['pending', 'presenting']);
+
+    const summaryForCoach = typeof plan?.summary_for_coach === 'string' ? plan.summary_for_coach : null;
+
+    const { data: planRow, error: planErr } = await admin
+      .from('analyzer_plans')
+      .insert({
+        user_id: userId,
+        plaid_item_id: item.id,
+        lookback_months: lookback,
+        plan_json: plan,
+        coach_summary: summaryForCoach,
+        status: 'pending',
+      })
+      .select('id')
+      .single();
+    if (planErr) return json({ error: 'Failed to persist plan: ' + planErr.message }, 500);
+
     return json({
+      plan_id: planRow.id,
       plan,
+      summary_for_coach: summaryForCoach,
       input_summary: {
-        transaction_count: input.categorized_transactions.length,
-        inflow_streams_count: input.recurring_streams.inflow_streams.length,
-        outflow_streams_count: input.recurring_streams.outflow_streams.length,
-        lookback_months: input.lookback_months,
+        transaction_count: categorized_transactions.length,
+        inflow_streams_count: inflow_streams.length,
+        outflow_streams_count: outflow_streams.length,
+        lookback_months: lookback,
       },
       usage: response.usage,
     });
@@ -107,19 +260,6 @@ function json(body: unknown, status = 200) {
     status,
     headers: { ...corsHeaders, 'Content-Type': 'application/json' },
   });
-}
-
-function validateInput(input: AnalyzerInput): string | null {
-  if (!input || typeof input !== 'object') return 'Missing body';
-  if (!Array.isArray(input.categorized_transactions)) return 'categorized_transactions must be an array';
-  if (!input.recurring_streams) return 'recurring_streams required';
-  if (!Array.isArray(input.recurring_streams.inflow_streams) || !Array.isArray(input.recurring_streams.outflow_streams)) {
-    return 'recurring_streams.inflow_streams and outflow_streams required';
-  }
-  if (![6, 12, 24].includes(input.lookback_months)) {
-    return 'lookback_months must be 6, 12, or 24';
-  }
-  return null;
 }
 
 // Aggregate raw transactions into a compact payload for the LLM.
@@ -165,21 +305,18 @@ function aggregate(input: AnalyzerInput) {
   const totalTax = sum(Object.values(monthlyTax));
   const incomeVariability = computeVariability(monthlyGross);
 
-  // Top tax payments (full detail) so the model can derive the rate cleanly.
   const topTaxPayments = byCategory.tax_payment
     .slice()
     .sort((a, b) => b.amount - a.amount)
     .slice(0, 12)
     .map(slimTxn);
 
-  // Top income deposits (full detail) so the model can sense variability.
   const topIncomeDeposits = byCategory.income
     .slice()
     .sort((a, b) => Math.abs(b.amount) - Math.abs(a.amount))
     .slice(0, 12)
     .map(slimTxn);
 
-  // Lumpy non-recurring outflows >$200 — might be debt payoffs, lump-sum tax, etc.
   const lumpyOutflows = txns
     .filter((t) => t.amount > 200 && !t.classification.is_recurring_likely
       && (t.classification.category === 'debt_payment' || t.classification.category === 'tax_payment' || t.classification.category === 'bill'))
