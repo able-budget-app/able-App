@@ -48,7 +48,9 @@ Deno.serve(async (req) => {
     const anthropic = new Anthropic({ apiKey: ANTHROPIC_API_KEY });
     const response = await anthropic.messages.create({
       model: 'claude-haiku-4-5',
-      max_tokens: 4000,
+      // ~170 tokens per classified txn × MAX_BATCH (50) = ~8.5k tokens of
+      // output. 16k gives ~2x headroom for verbose merchant names.
+      max_tokens: 16000,
       system: [
         { type: 'text', text: SYSTEM_PROMPT, cache_control: { type: 'ephemeral' } },
       ],
@@ -62,6 +64,11 @@ Deno.serve(async (req) => {
       .map((b) => b.text)
       .join('\n')
       .trim();
+
+    console.log(
+      `plaid-recategorize: input=${transactions.length} txns, response_text_len=${text.length}, ` +
+      `stop=${response.stop_reason}, model=${response.model}`,
+    );
 
     const classifications = parseClassifications(text, transactions);
 
@@ -98,14 +105,48 @@ function buildUserMessage(transactions: PlaidTxnInput[]): string {
 function parseClassifications(text: string, inputs: PlaidTxnInput[]): Classification[] {
   // Tolerate a leading code fence even though the prompt forbids it.
   const stripped = text.replace(/^```(?:json)?\s*/i, '').replace(/\s*```$/, '');
-  const start = stripped.indexOf('[');
-  const end = stripped.lastIndexOf(']');
-  if (start === -1 || end === -1) {
+
+  let parsed: unknown = null;
+
+  // 1. Try to extract a top-level JSON array.
+  const arrStart = stripped.indexOf('[');
+  const arrEnd = stripped.lastIndexOf(']');
+  if (arrStart !== -1 && arrEnd !== -1 && arrEnd > arrStart) {
+    try {
+      parsed = JSON.parse(stripped.slice(arrStart, arrEnd + 1));
+    } catch {
+      parsed = null;
+    }
+  }
+
+  // 2. Fallback: model wrapped the array in an object like
+  //    { "classifications": [...] }.
+  if (!Array.isArray(parsed)) {
+    const objStart = stripped.indexOf('{');
+    const objEnd = stripped.lastIndexOf('}');
+    if (objStart !== -1 && objEnd !== -1 && objEnd > objStart) {
+      try {
+        const obj = JSON.parse(stripped.slice(objStart, objEnd + 1)) as Record<string, unknown>;
+        for (const key of ['classifications', 'results', 'transactions', 'data', 'output']) {
+          if (Array.isArray(obj?.[key])) { parsed = obj[key]; break; }
+        }
+      } catch {
+        /* fall through */
+      }
+    }
+  }
+
+  if (!Array.isArray(parsed)) {
+    console.error('plaid-recategorize: no JSON array found. raw output:', text.slice(0, 1500));
     throw new Error('Model did not return a JSON array');
   }
-  const parsed = JSON.parse(stripped.slice(start, end + 1));
-  if (!Array.isArray(parsed) || parsed.length !== inputs.length) {
-    throw new Error(`Classification count mismatch: got ${parsed?.length}, expected ${inputs.length}`);
+
+  if (parsed.length !== inputs.length) {
+    console.error(
+      `plaid-recategorize: count mismatch (got ${parsed.length}, expected ${inputs.length}). raw output:`,
+      text.slice(0, 1500),
+    );
+    throw new Error(`Classification count mismatch: got ${parsed.length}, expected ${inputs.length}`);
   }
   return parsed as Classification[];
 }

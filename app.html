@@ -3176,16 +3176,36 @@ async function obRunPlaidPipeline() {
       }
     }
 
-    // Step 2: recurring-refresh
+    // Step 2: recurring-refresh. Soft-fail with a 60s timeout — Plaid's
+    // /transactions/recurring/get returns PRODUCT_NOT_READY (or just hangs)
+    // for freshly-linked Items in sandbox. Recurring streams are nice-to-have
+    // for the analyzer (it falls back to deriving recurrence from raw
+    // transactions), so a failure here shouldn't block the pipeline.
     obPipelineState.step = 2; obRenderPipeline();
     {
       const t0 = performance.now();
-      const { data, error } = await sb.functions.invoke('plaid-recurring-refresh', {
-        body: { plaid_item_row_id: itemRowId }
-      });
-      console.log('[Pipeline] recurring', Math.round(performance.now() - t0), 'ms', error ? { error } : data);
-      if (error) throw new Error('recurring: ' + (error.message || 'failed'));
-      if (data && data.error) throw new Error('recurring: ' + data.error);
+      try {
+        const result = await Promise.race([
+          sb.functions.invoke('plaid-recurring-refresh', {
+            body: { plaid_item_row_id: itemRowId }
+          }),
+          new Promise((_, reject) => setTimeout(
+            () => reject(new Error('timeout after 60s')),
+            60000,
+          )),
+        ]);
+        const { data, error } = result;
+        console.log('[Pipeline] recurring', Math.round(performance.now() - t0), 'ms', error ? { error } : data);
+        if (error) throw new Error(error.message || 'failed');
+        if (data && data.error) throw new Error(data.error);
+      } catch (e) {
+        console.warn('[Pipeline] recurring failed, continuing without recurring streams:', e);
+        obPipelineState.skippedSteps = obPipelineState.skippedSteps || [];
+        obPipelineState.skippedSteps.push(2);
+        Able.track?.('onboarding_plaid_pipeline_recurring_skipped', {
+          message: (e && e.message) || String(e),
+        });
+      }
     }
 
     // Step 3: analyze
@@ -3232,10 +3252,13 @@ function obRenderPipeline() {
   if (!inputArea) return;
 
   const state = obPipelineState || { step: 0, error: null };
+  const skipped = new Set(state.skippedSteps || []);
   const stepHtml = OB_PIPELINE_STEPS.map((s, i) => {
     let icon, color;
     if (state.error && i === state.step) {
       icon = '×'; color = '#c85a5a';
+    } else if (skipped.has(i) && i < state.step) {
+      icon = '–'; color = '#9aa19a';
     } else if (i < state.step) {
       icon = '✓'; color = '#3d9e78';
     } else if (i === state.step) {
