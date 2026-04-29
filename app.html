@@ -2951,8 +2951,12 @@ async function obBuildWithAI() {
   document.getElementById('ob-progress').style.width = '100%';
 
   try {
+    // ai-onboard predates Plaid and expects flat string answers. The plaid_connect
+    // entry is a structured object with DB IDs; it would confuse the prompt and
+    // it isn't needed here (the bank data flows through plaid-analyze separately).
+    const { plaid_connect: _plaid, ...answersForAI } = obAnswers;
     const { data, error } = await sbGet().functions.invoke('ai-onboard', {
-      body: { answers: obAnswers }
+      body: { answers: answersForAI }
     });
     if (error) throw error;
     if (data && data.error) throw new Error(data.error);
