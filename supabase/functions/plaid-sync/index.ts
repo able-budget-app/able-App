@@ -88,22 +88,39 @@ Deno.serve(async (req) => {
     let lastStatus: TransactionsSyncRes['transactions_update_status'] | undefined;
     let lastHasMore = true;
 
+    const tStart = Date.now();
+    console.log(`plaid-sync: starting, item=${item.id}, days_requested=${daysRequested}, cursor=${cursor ? 'present' : 'fresh'}`);
+
     for (let page = 0; page < MAX_PAGES && lastHasMore; page++) {
-      const resp: TransactionsSyncRes = await transactionsSync({
-        access_token: item.access_token,
-        cursor,
-        count: 500,
-        options: {
-          include_personal_finance_category: true,
-          ...(cursor ? {} : { days_requested: daysRequested }),
-        },
-      });
+      const tPage = Date.now();
+      // Cap each Plaid call at 40s. /transactions/sync on a fresh Item can
+      // hang while Plaid's HISTORICAL_UPDATE is still pending; we'd rather
+      // surface a clean error than get EarlyDrop'd by Supabase's wall clock.
+      const resp = await Promise.race([
+        transactionsSync({
+          access_token: item.access_token,
+          cursor,
+          count: 500,
+          options: {
+            include_personal_finance_category: true,
+            ...(cursor ? {} : { days_requested: daysRequested }),
+          },
+        }),
+        new Promise<TransactionsSyncRes>((_, reject) => setTimeout(
+          () => reject(new Error(`Plaid /transactions/sync timeout after 40s on page ${page}`)),
+          40000,
+        )),
+      ]);
+      console.log(`plaid-sync: page ${page} fetched in ${Date.now() - tPage}ms (added=${resp.added.length}, modified=${resp.modified.length}, removed=${resp.removed.length}, has_more=${resp.has_more}, status=${resp.transactions_update_status})`);
 
       // Refresh balances from this page's accounts list.
+      const tAcc = Date.now();
       await upsertAccounts(admin, item.id, userId, resp.accounts, accountMap);
+      console.log(`plaid-sync: page ${page} accounts upsert in ${Date.now() - tAcc}ms`);
 
       // Persist transactions.
       if (resp.added.length) {
+        const tIns = Date.now();
         const rows = resp.added
           .map((t) => buildTxnRow(userId, accountMap, t))
           .filter((r): r is NonNullable<typeof r> => r !== null);
@@ -114,6 +131,7 @@ Deno.serve(async (req) => {
           if (error) console.error('insert added txns failed:', error);
         }
         totalAdded += resp.added.length;
+        console.log(`plaid-sync: page ${page} inserted ${rows.length} added txns in ${Date.now() - tIns}ms`);
       }
 
       if (resp.modified.length) {
@@ -155,6 +173,7 @@ Deno.serve(async (req) => {
       updatePayload.historical_sync_complete = true;
     }
     await admin.from('plaid_items').update(updatePayload).eq('id', item.id);
+    console.log(`plaid-sync: done in ${Date.now() - tStart}ms, total added=${totalAdded}, modified=${totalModified}, removed=${totalRemoved}, status=${lastStatus}`);
 
     return json({
       added: totalAdded,
