@@ -10,7 +10,7 @@
 
 1. **Know your floor.** Bills plus tax equal the amount you can't miss.
 2. **Every deposit fills the floor first.** Not month by month. Deposit by deposit.
-3. **Smooth before you spend.** Variable income gets averaged before free money exists.
+3. **Build your reserve before you spend.** Slow months get paid by the reserve, not by next month's panic.
 4. **One month ahead = Able.** When next month's floor is already reserved, you've arrived.
 5. **Score reality, not the plan.** The month is judged on what happened, not what you intended.
 
@@ -24,13 +24,13 @@ Floor-First Budgeting is a money method for people whose income doesn't land on 
 
 The premise is simple. Before any dollar gets to vote on dinner, it has to cover the floor: your bills and your taxes. That's the amount you can't miss. Everything else is downstream.
 
-Most budgeting tools are built around a monthly cycle. You sit down on the 1st, divide what you have, and hope the math holds. Floor-First doesn't work that way. Every deposit, whether it's $400 or $4,000, gets allocated the moment it lands. The floor fills first. Smoothing fills next. Free spending is what's left.
+Most budgeting tools are built around a monthly cycle. You sit down on the 1st, divide what you have, and hope the math holds. Floor-First doesn't work that way. Every deposit, whether it's $400 or $4,000, gets allocated the moment it lands. The floor fills first. Your reserve fills next. Free spending is what's left.
 
 **The five rules:**
 
 1. **Know your floor.** Bills plus tax equal the amount you can't miss.
 2. **Every deposit fills the floor first.** Not month by month. Deposit by deposit.
-3. **Smooth before you spend.** Variable income gets averaged before free money exists.
+3. **Build your reserve before you spend.** Slow months get paid by the reserve, not by next month's panic.
 4. **One month ahead = Able.** When next month's floor is already reserved, you've arrived.
 5. **Score reality, not the plan.** The month is judged on what happened, not what you intended.
 
@@ -43,7 +43,8 @@ Rule 4 is the destination. When next month's floor is reserved before next month
 - **Always** capitalize: **Floor-First Budgeting** (proper noun, like "Zero-Based Budgeting")
 - **Never** call it: "the Able method" (too brand-locked for third-party contexts), "envelope budgeting" (different system), "anti-monthly budgeting" (negative framing)
 - **The floor** = bills + tax. Not "the essentials." Not "fixed costs." *Floor.*
-- **Reserve** is the verb. Money is *reserved*, not allocated, not assigned, not budgeted.
+- **Reserve** does double duty: as a verb ("every deposit reserves for next month's bills") and as a noun ("build your reserve" = the savings cushion that covers slow months). The two uses share the same word on purpose — you reserve until you have a reserve.
+- **Never** use "smoothing" or "smoothing reserve" in user-facing copy. The methodology rule is "Build your reserve before you spend." The mechanic is the reserve, not smoothing. (Internal app code still uses `bufPct` / "buffer" — rename pending.)
 - **Able** (capital A) = the state of being one month ahead. Rule 4 destination.
 
 ---

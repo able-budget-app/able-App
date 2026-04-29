@@ -1,0 +1,124 @@
+{
+  "transactions": [
+    {
+      "transaction_id": "txn_001",
+      "name": "STRIPE TRANSFER ST-X8KR2P",
+      "merchant_name": "Stripe",
+      "amount": -1850.00,
+      "date": "2026-04-22",
+      "personal_finance_category": { "primary": "INCOME", "detailed": "INCOME_OTHER_INCOME", "confidence_level": "HIGH" }
+    },
+    {
+      "transaction_id": "txn_002",
+      "name": "ACME CORP DIRECT DEP",
+      "merchant_name": "Acme Corp",
+      "amount": -3500.00,
+      "date": "2026-04-15",
+      "personal_finance_category": { "primary": "INCOME", "detailed": "INCOME_WAGES", "confidence_level": "HIGH" }
+    },
+    {
+      "transaction_id": "txn_003",
+      "name": "VERIZON WIRELESS PAYMENT",
+      "merchant_name": "Verizon",
+      "amount": 145.32,
+      "date": "2026-04-22",
+      "personal_finance_category": { "primary": "RENT_AND_UTILITIES", "detailed": "RENT_AND_UTILITIES_TELEPHONE", "confidence_level": "HIGH" }
+    },
+    {
+      "transaction_id": "txn_004",
+      "name": "ADOBE *CREATIVE CLOUD",
+      "merchant_name": "Adobe",
+      "amount": 59.99,
+      "date": "2026-04-08",
+      "personal_finance_category": { "primary": "GENERAL_SERVICES", "detailed": "GENERAL_SERVICES_OTHER_GENERAL_SERVICES", "confidence_level": "HIGH" }
+    },
+    {
+      "transaction_id": "txn_005",
+      "name": "RENT PAYMENT 8th Ave",
+      "merchant_name": null,
+      "amount": 2400.00,
+      "date": "2026-04-01",
+      "personal_finance_category": { "primary": "RENT_AND_UTILITIES", "detailed": "RENT_AND_UTILITIES_RENT", "confidence_level": "HIGH" }
+    },
+    {
+      "transaction_id": "txn_006",
+      "name": "EFTPS TAX PAYMENT 1040ES",
+      "merchant_name": "IRS",
+      "amount": 1300.00,
+      "date": "2026-04-15",
+      "personal_finance_category": { "primary": "GOVERNMENT_AND_NON_PROFIT", "detailed": "GOVERNMENT_AND_NON_PROFIT_TAX_PAYMENT", "confidence_level": "HIGH" }
+    },
+    {
+      "transaction_id": "txn_007",
+      "name": "CHASE CREDIT CRD AUTOPAY",
+      "merchant_name": "Chase",
+      "amount": 145.00,
+      "date": "2026-04-12",
+      "personal_finance_category": { "primary": "LOAN_PAYMENTS", "detailed": "LOAN_PAYMENTS_CREDIT_CARD_PAYMENT", "confidence_level": "HIGH" }
+    },
+    {
+      "transaction_id": "txn_008",
+      "name": "VENMO TO MOM",
+      "merchant_name": "Venmo",
+      "amount": 200.00,
+      "date": "2026-04-10",
+      "personal_finance_category": { "primary": "TRANSFER_OUT", "detailed": "TRANSFER_OUT_OTHER_TRANSFER_OUT", "confidence_level": "MEDIUM" }
+    },
+    {
+      "transaction_id": "txn_009",
+      "name": "TFR TO SAVINGS *9912",
+      "merchant_name": null,
+      "amount": 500.00,
+      "date": "2026-04-22",
+      "personal_finance_category": { "primary": "TRANSFER_OUT", "detailed": "TRANSFER_OUT_ACCOUNT_TRANSFER", "confidence_level": "HIGH" }
+    },
+    {
+      "transaction_id": "txn_010",
+      "name": "TRADER JOE'S #214",
+      "merchant_name": "Trader Joe's",
+      "amount": 87.43,
+      "date": "2026-04-19",
+      "personal_finance_category": { "primary": "FOOD_AND_DRINK", "detailed": "FOOD_AND_DRINK_GROCERIES", "confidence_level": "HIGH" }
+    },
+    {
+      "transaction_id": "txn_011",
+      "name": "AMAZON.COM*MK4LX9",
+      "merchant_name": "Amazon",
+      "amount": 42.18,
+      "date": "2026-04-18",
+      "personal_finance_category": { "primary": "GENERAL_MERCHANDISE", "detailed": "GENERAL_MERCHANDISE_ONLINE_MARKETPLACES", "confidence_level": "HIGH" }
+    },
+    {
+      "transaction_id": "txn_012",
+      "name": "NETFLIX.COM",
+      "merchant_name": "Netflix",
+      "amount": 15.49,
+      "date": "2026-04-05",
+      "personal_finance_category": { "primary": "ENTERTAINMENT", "detailed": "ENTERTAINMENT_TV_AND_MOVIES", "confidence_level": "HIGH" }
+    },
+    {
+      "transaction_id": "txn_013",
+      "name": "GEICO INSURANCE PREMIUM",
+      "merchant_name": "Geico",
+      "amount": 122.50,
+      "date": "2026-04-03",
+      "personal_finance_category": { "primary": "GENERAL_SERVICES", "detailed": "GENERAL_SERVICES_INSURANCE", "confidence_level": "HIGH" }
+    },
+    {
+      "transaction_id": "txn_014",
+      "name": "ZELLE FROM J SMITH CLIENT",
+      "merchant_name": null,
+      "amount": -1200.00,
+      "date": "2026-04-09",
+      "personal_finance_category": { "primary": "TRANSFER_IN", "detailed": "TRANSFER_IN_OTHER_TRANSFER_IN", "confidence_level": "MEDIUM" }
+    },
+    {
+      "transaction_id": "txn_015",
+      "name": "SHELL OIL 88",
+      "merchant_name": "Shell",
+      "amount": 52.31,
+      "date": "2026-04-17",
+      "personal_finance_category": { "primary": "TRANSPORTATION", "detailed": "TRANSPORTATION_GAS", "confidence_level": "HIGH" }
+    }
+  ]
+}

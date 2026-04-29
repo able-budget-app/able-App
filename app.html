@@ -90,8 +90,8 @@ input,select,button,textarea{font-family:inherit;}
 .brand-wordmark--green{color:var(--ds-green);}
 .brand-wordmark-wrap{text-align:center;}
 .auth-tagline{text-align:center;font-size:13px;color:var(--ds-t3);font-weight:600;margin-bottom:1.75rem;letter-spacing:.02em;}
-.auth-tabs{display:flex;gap:2px;background:var(--ds-green-l);border-radius:100px;padding:4px;margin-bottom:1.5rem;}
-.auth-tab{flex:1;padding:9px;border:none;border-radius:100px;background:transparent;color:var(--ds-t2);font-family:var(--ds-f);font-size:13px;font-weight:700;cursor:pointer;transition:all .2s;letter-spacing:-.01em;}
+.auth-tabs{display:flex;gap:2px;background:var(--ds-green-l);border-radius:var(--ds-r1);padding:4px;margin-bottom:1.5rem;}
+.auth-tab{flex:1;padding:9px;border:none;border-radius:8px;background:transparent;color:var(--ds-t2);font-family:var(--ds-f);font-size:13px;font-weight:700;cursor:pointer;transition:all .2s;letter-spacing:-.01em;}
 .auth-tab.active{background:var(--ds-card);color:var(--ds-green);box-shadow:0 2px 8px rgba(42,122,74,.12);}
 .auth-error{background:#fdeef2;border:1.5px solid rgba(192,64,96,.3);border-radius:var(--ds-r1);padding:12px 14px;font-size:13px;font-weight:600;color:var(--ds-c4);margin-bottom:1rem;display:none;font-family:var(--ds-f);}
 .auth-success{background:var(--ds-green-l);border:1.5px solid var(--ds-green-m);border-radius:var(--ds-r1);padding:12px 14px;font-size:13px;font-weight:600;color:var(--ds-green);margin-bottom:1rem;display:none;font-family:var(--ds-f);}
@@ -2122,13 +2122,21 @@ async function doSignup() {
   if(pass.length<6){showAuthError('Password must be at least 6 characters.');return;}
   const btn=document.getElementById('signup-btn');
   btn.textContent='Creating account...';btn.disabled=true;
-  const {error}=await sbGet().auth.signUp({email,password:pass});
+  const {data,error}=await sbGet().auth.signUp({email,password:pass});
   btn.textContent='Create account';btn.disabled=false;
   if(error){showAuthError(error.message);return;}
   // signup_completed now fires from onAuthStateChange so it covers both
   // email and Google OAuth signups from a single place, after identify()
   // has tied the event to the user id.
-  showAuthSuccess('Account created! Check your email for a confirmation link, then come back here to sign in.');
+  // When Confirm Email is OFF in Supabase, signUp returns a session and onAuthStateChange
+  // fires SIGNED_IN immediately — no message needed. When ON, no session is returned
+  // and the user must verify before signing in. data.session distinguishes the two.
+  if (data?.session) {
+    // Auto-signed in. onAuthStateChange will swap to the post-auth UI.
+    return;
+  }
+  const okEl = document.getElementById('auth-success');
+  if (okEl) showAuthSuccess('Account created! Check your email for a confirmation link, then come back here to sign in.');
 }
 
 async function showForgotPassword() {
@@ -2359,6 +2367,11 @@ async function ensureMfaForPlaid() {
 // SUBSCRIPTION CHECK
 // ═══════════════════════════════════════
 async function checkSubscription(userId) {
+  // Local dev bypass: localhost has no real Stripe webhook landing, so polling
+  // would always time out. Production hostnames (becomeable.app) hit the real check.
+  if (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1') {
+    return true;
+  }
   // Check cache first — avoids round trip for returning users
   const cached = sessionStorage.getItem('able_access_'+userId);
   if(cached === 'true') {
@@ -2679,6 +2692,12 @@ const OB_QUESTIONS = [
     placeholder: "Client payments come in chunks, sometimes $3k, sometimes $8k. Trailer sales are bigger but less often."
   },
   {
+    key: 'plaid_connect',
+    type: 'plaid',
+    msg: "Connect your bank to auto-fill your bills, income, and categories.",
+    hint: "I'll read the last few months and propose a plan you can edit. Or skip and enter it manually."
+  },
+  {
     key: 'sources',
     type: 'text',
     msg: "What are the main ways money comes in?",
@@ -2742,6 +2761,20 @@ function startOnboarding() {
   renderObStep();
 }
 
+// Desktop ergonomics: Enter advances to next step. Skip when focus is on a
+// textarea (newline) or when shift/cmd is held (lets users paste multi-line).
+document.addEventListener('keydown', (e) => {
+  if (e.key !== 'Enter' || e.shiftKey || e.metaKey || e.ctrlKey) return;
+  const onb = document.getElementById('onboard-screen');
+  if (!onb || onb.style.display !== 'flex') return;
+  const tag = (e.target.tagName || '').toLowerCase();
+  if (tag === 'textarea') return;
+  const btn = document.getElementById('ob-next-btn');
+  if (!btn || btn.disabled || btn.offsetParent === null) return;
+  e.preventDefault();
+  btn.click();
+});
+
 // Escape hatch: drop the user into the app with an empty slate + clear
 // next-steps card on the home page. Marks profile.skipped so the
 // onboarding gate doesn't re-fire on next login.
@@ -2766,6 +2799,9 @@ function renderObStep() {
   document.getElementById('ob-step-label').textContent = `Step ${obStep + 1} of ${OB_QUESTIONS.length}`;
   document.getElementById('ob-msg').innerHTML = `<div>${q.msg}</div><div style="font-size:13px;color:var(--text3);font-weight:500;line-height:1.6;margin-top:.5rem;">${q.hint}</div>`;
 
+  // Default: show the Continue button. The plaid type may hide it.
+  document.getElementById('ob-next-btn').style.display = 'inline-flex';
+
   const inputArea = document.getElementById('ob-input-area');
 
   if (q.type === 'welcome') {
@@ -2784,6 +2820,35 @@ function renderObStep() {
     inputArea.innerHTML = html;
     document.getElementById('ob-back-btn').style.display = obStep > 0 ? 'inline-block' : 'none';
     document.getElementById('ob-next-btn').textContent = obStep === OB_QUESTIONS.length - 1 ? 'Build my budget →' : 'Continue →';
+  } else if (q.type === 'plaid') {
+    // Plaid connect step. The standard Continue button is hidden; the user
+    // either connects (which advances on success) or clicks "skip and enter
+    // manually" (which advances immediately).
+    const connected = obAnswers.plaid_connect && obAnswers.plaid_connect.plaid_item_row_id;
+    if (connected) {
+      inputArea.innerHTML = `
+        <div style="background:#ecf5ee;border:1px solid #c8e0d0;border-radius:var(--ds-r1);padding:1rem;font-size:14px;color:#2a7a4a;font-weight:600;">
+          Bank connected. I'll look back ${obAnswers.plaid_connect.lookback_months} months once we finish setup.
+        </div>`;
+      document.getElementById('ob-back-btn').style.display = obStep > 0 ? 'inline-block' : 'none';
+      document.getElementById('ob-next-btn').style.display = 'inline-flex';
+      document.getElementById('ob-next-btn').textContent = 'Continue →';
+    } else {
+      const lookback = obAnswers.plaid_connect?.lookback_months || 6;
+      const opt = (m) => `
+        <label style="display:flex;align-items:center;gap:8px;padding:10px 12px;border:1px solid var(--ds-line);border-radius:8px;cursor:pointer;font-size:13px;font-weight:600;${m === lookback ? 'background:#ecf5ee;border-color:#3d9e78;' : ''}">
+          <input type="radio" name="ob-plaid-lookback" value="${m}" ${m === lookback ? 'checked' : ''} style="margin:0;">
+          ${m} months
+        </label>`;
+      inputArea.innerHTML = `
+        <div style="font-size:13px;font-weight:700;color:var(--ds-t2);margin-bottom:.5rem;">How far back should I look?</div>
+        <div style="display:flex;gap:8px;margin-bottom:1.25rem;">${opt(6)}${opt(12)}${opt(24)}</div>
+        <button type="button" id="ob-plaid-connect" class="btn-primary" onclick="obStartPlaidLink()" style="width:100%;margin-bottom:.5rem;">Connect bank</button>
+        <button type="button" class="btn-ghost btn-sm" onclick="obSkipPlaidConnect()" style="width:100%;">Skip and enter manually →</button>
+        <div id="ob-plaid-error" style="display:none;color:#c85a5a;font-size:12px;font-weight:600;margin-top:.5rem;"></div>`;
+      document.getElementById('ob-back-btn').style.display = obStep > 0 ? 'inline-block' : 'none';
+      document.getElementById('ob-next-btn').style.display = 'none';
+    }
   } else {
     // text type
     inputArea.innerHTML = `<textarea class="ob-input" id="ob-text-input" rows="3" placeholder="${q.placeholder || ''}">${obAnswers[q.key] || ''}</textarea>`;
@@ -2841,6 +2906,9 @@ function obNext() {
 
   if (q.type === 'welcome') {
     // No input to validate, just advance
+  } else if (q.type === 'plaid') {
+    // No input to validate. Either obStartPlaidLink set obAnswers.plaid_connect
+    // on success, or obSkipPlaidConnect already advanced. Either way, just go.
   } else if (q.type === 'table') {
     saveTableRows();
     // Filter out empty rows
@@ -2895,6 +2963,119 @@ async function obBuildWithAI() {
     alert('Setup failed: ' + e.message + '\n\nYou can try again or start with a blank account.');
     document.getElementById('ob-question-area').style.display = 'block';
     document.getElementById('ob-building').style.display = 'none';
+  }
+}
+
+// ─── Plaid Link integration (onboarding step) ────────────────────────
+// Lazy-loads the Plaid Link script the first time the user reaches the
+// connect-bank step. Saves ~50KB for users who skip.
+function ensurePlaidLinkScript() {
+  return new Promise((resolve, reject) => {
+    if (typeof window.Plaid !== 'undefined') return resolve();
+    const existing = document.querySelector('script[data-plaid-link]');
+    if (existing) {
+      existing.addEventListener('load', () => resolve());
+      existing.addEventListener('error', () => reject(new Error('Plaid Link failed to load')));
+      return;
+    }
+    const s = document.createElement('script');
+    s.src = 'https://cdn.plaid.com/link/v2/stable/link-initialize.js';
+    s.dataset.plaidLink = '1';
+    s.onload = () => resolve();
+    s.onerror = () => reject(new Error('Plaid Link failed to load'));
+    document.head.appendChild(s);
+  });
+}
+
+async function obStartPlaidLink() {
+  const btn = document.getElementById('ob-plaid-connect');
+  const errEl = document.getElementById('ob-plaid-error');
+  const lookbackInput = document.querySelector('input[name="ob-plaid-lookback"]:checked');
+  const lookback = lookbackInput ? parseInt(lookbackInput.value, 10) : 6;
+
+  if (errEl) { errEl.style.display = 'none'; errEl.textContent = ''; }
+  if (btn) { btn.disabled = true; btn.textContent = 'Loading…'; }
+
+  try {
+    await ensurePlaidLinkScript();
+
+    const { data, error } = await sbGet().functions.invoke('plaid-link-token', {
+      body: { mode: 'new', lookback_months: lookback }
+    });
+    if (error) throw error;
+    if (data && data.error) throw new Error(data.error);
+    if (!data?.link_token) throw new Error('No link_token returned');
+
+    const handler = window.Plaid.create({
+      token: data.link_token,
+      onSuccess: (public_token, metadata) => obHandlePlaidSuccess(public_token, metadata, lookback),
+      onExit: (err) => {
+        if (btn) { btn.disabled = false; btn.textContent = 'Connect bank'; }
+        if (err && errEl) {
+          errEl.textContent = err.display_message || err.error_message || 'Connection canceled';
+          errEl.style.display = 'block';
+        }
+      },
+      onEvent: (eventName) => {
+        // Surface helpful for debugging while we're integrating.
+        console.debug('[Plaid Link]', eventName);
+      },
+    });
+    handler.open();
+  } catch (e) {
+    console.error('plaid-link-token failed:', e);
+    if (btn) { btn.disabled = false; btn.textContent = 'Connect bank'; }
+    if (errEl) {
+      errEl.textContent = 'Could not start the bank connection: ' + (e.message || 'unknown error');
+      errEl.style.display = 'block';
+    }
+  }
+}
+
+async function obHandlePlaidSuccess(public_token, metadata, lookback) {
+  console.log('[Plaid] onSuccess fired, public_token:', public_token?.slice(0, 20) + '…', 'lookback:', lookback);
+  const btn = document.getElementById('ob-plaid-connect');
+  const errEl = document.getElementById('ob-plaid-error');
+  if (btn) { btn.disabled = true; btn.textContent = 'Linking…'; }
+
+  try {
+    const t0 = performance.now();
+    const { data, error } = await sbGet().functions.invoke('plaid-exchange-public-token', {
+      body: {
+        public_token,
+        institution: metadata?.institution ? { id: metadata.institution.institution_id, name: metadata.institution.name } : null,
+        lookback_months: lookback,
+      }
+    });
+    console.log('[Plaid] exchange', Math.round(performance.now() - t0), 'ms', error ? { error } : { ok: true });
+    if (error) throw error;
+    if (data && data.error) throw new Error(data.error);
+
+    obAnswers.plaid_connect = {
+      plaid_item_row_id: data.plaid_item_row_id,
+      item_id: data.item_id,
+      lookback_months: data.lookback_months,
+      institution_name: metadata?.institution?.name || null,
+      account_count: Array.isArray(data.accounts) ? data.accounts.length : 0,
+    };
+    renderObStep();
+  } catch (e) {
+    console.error('plaid-exchange failed:', e);
+    if (btn) { btn.disabled = false; btn.textContent = 'Connect bank'; }
+    if (errEl) {
+      errEl.textContent = 'Saved your link but could not finish setup: ' + (e.message || 'unknown error');
+      errEl.style.display = 'block';
+    }
+  }
+}
+
+function obSkipPlaidConnect() {
+  obAnswers.plaid_connect = { skipped: true };
+  if (obStep < OB_QUESTIONS.length - 1) {
+    obStep++;
+    renderObStep();
+  } else {
+    obBuildWithAI();
   }
 }
 
@@ -6434,8 +6615,41 @@ window.addEventListener('load', async () => {
     const loadingDiv = document.createElement('div');
     loadingDiv.id = 'checkout-return-loading';
     loadingDiv.style.cssText = 'position:fixed;inset:0;display:flex;align-items:center;justify-content:center;background:var(--ds-page);z-index:9999;font-family:var(--ds-f);';
-    loadingDiv.innerHTML = `<div style="text-align:center;padding:2rem;"><div class="brand-wordmark-wrap" style="margin-bottom:.75rem;"><div class="brand-wordmark brand-wordmark--xl brand-wordmark--green">Able</div></div><div style="display:inline-flex;align-items:center;gap:10px;margin-top:1.25rem;padding:10px 18px;background:var(--ds-card);border-radius:100px;box-shadow:var(--ds-sh1);"><div style="width:10px;height:10px;border-radius:50%;background:var(--ds-green);animation:dsPulse 1.2s ease-in-out infinite;"></div><div style="font-size:13px;color:var(--ds-t2);font-weight:700;letter-spacing:.02em;">Confirming your subscription. Usually takes a few seconds.</div></div></div><style>@keyframes dsPulse{0%,100%{opacity:.4;transform:scale(.9)}50%{opacity:1;transform:scale(1.1)}}</style>`;
+    loadingDiv.innerHTML = `<div style="text-align:center;padding:2rem;"><div class="brand-wordmark-wrap" style="margin-bottom:.75rem;"><div class="brand-wordmark brand-wordmark--xl brand-wordmark--green">Able</div></div><div style="display:inline-flex;align-items:center;gap:10px;margin-top:1.25rem;padding:10px 18px;background:var(--ds-card);border-radius:var(--ds-r1);box-shadow:var(--ds-sh1);"><div style="width:10px;height:10px;border-radius:50%;background:var(--ds-green);animation:dsPulse 1.2s ease-in-out infinite;"></div><div style="font-size:13px;color:var(--ds-t2);font-weight:700;letter-spacing:.02em;">Confirming your subscription. Usually takes a few seconds.</div></div></div><style>@keyframes dsPulse{0%,100%{opacity:.4;transform:scale(.9)}50%{opacity:1;transform:scale(1.1)}}</style>`;
     document.body.appendChild(loadingDiv);
+    // Escape hatch: if no auth session lands within 3s, the post-auth flow that
+    // dismisses this loader will never run. Fall back to the auth screen so the
+    // user isn't stuck on an indefinite loading state.
+    // Escape hatch v2: getSession() can hang on bad sessions, so race it against
+    // a 1s timeout. After 6s, nuke the loader regardless — at that point the
+    // post-auth flow has clearly failed and any visible state beats indefinite spin.
+    setTimeout(async () => {
+      console.log('[Able v2] escape-hatch fired');
+      const stuck = document.getElementById('checkout-return-loading');
+      if(!stuck) { console.log('[Able v2] loader already gone'); return; }
+      let hasSession = false;
+      try {
+        const sessionPromise = window._sb.auth.getSession().then(r => !!r?.data?.session);
+        const timeout = new Promise(r => setTimeout(() => r('timeout'), 1000));
+        const result = await Promise.race([sessionPromise, timeout]);
+        if (result === 'timeout') { console.log('[Able v2] getSession timed out'); }
+        else { hasSession = result; }
+      } catch(e) { console.log('[Able v2] getSession threw:', e); }
+      console.log('[Able v2] hasSession=', hasSession, 'url=', window.location.href);
+      if(hasSession) return;
+      stuck.remove();
+      document.getElementById('auth-screen').style.display = 'flex';
+    }, 3000);
+    // Nuclear: 6s in, if checkout-return-loading is still visible, kill it.
+    setTimeout(() => {
+      const nukeStuck = document.getElementById('checkout-return-loading');
+      if (nukeStuck) {
+        console.log('[Able v2] nuclear loader removal at 6s');
+        nukeStuck.remove();
+        const auth = document.getElementById('auth-screen');
+        if (auth && auth.style.display === 'none') auth.style.display = 'flex';
+      }
+    }, 6000);
   } else {
     document.getElementById('auth-screen').style.display = 'flex';
     document.getElementById('paywall-screen').style.display = 'none';

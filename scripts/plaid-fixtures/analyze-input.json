@@ -1,0 +1,209 @@
+{
+  "lookback_months": 6,
+  "profile": {
+    "name": "Sarah",
+    "business": "Freelance brand designer",
+    "income_payment_structure": "Mix of monthly retainers and project-based deposits via Stripe and Zelle"
+  },
+  "recurring_streams": {
+    "inflow_streams": [
+      {
+        "stream_id": "inflow_stripe",
+        "merchant_name": "Stripe",
+        "description": "STRIPE TRANSFER",
+        "frequency": "MONTHLY",
+        "status": "MATURE",
+        "is_active": true,
+        "average_amount": { "amount": -1180.00, "iso_currency_code": "USD" },
+        "last_amount": { "amount": -1850.00 },
+        "predicted_next_date": "2026-05-22",
+        "first_date": "2025-11-04",
+        "last_date": "2026-04-22",
+        "personal_finance_category": { "primary": "INCOME", "detailed": "INCOME_OTHER_INCOME" }
+      },
+      {
+        "stream_id": "inflow_acme",
+        "merchant_name": "Acme Corp",
+        "description": "ACME CORP DIRECT DEP",
+        "frequency": "MONTHLY",
+        "status": "MATURE",
+        "is_active": true,
+        "average_amount": { "amount": -3500.00, "iso_currency_code": "USD" },
+        "last_amount": { "amount": -3500.00 },
+        "predicted_next_date": "2026-05-15",
+        "first_date": "2025-11-15",
+        "last_date": "2026-04-15",
+        "personal_finance_category": { "primary": "INCOME", "detailed": "INCOME_WAGES" }
+      },
+      {
+        "stream_id": "inflow_zelle_client",
+        "merchant_name": null,
+        "description": "ZELLE FROM J SMITH CLIENT",
+        "frequency": "MONTHLY",
+        "status": "MATURE",
+        "is_active": true,
+        "average_amount": { "amount": -1200.00, "iso_currency_code": "USD" },
+        "last_amount": { "amount": -1200.00 },
+        "predicted_next_date": "2026-05-09",
+        "first_date": "2025-11-09",
+        "last_date": "2026-04-09",
+        "personal_finance_category": { "primary": "TRANSFER_IN", "detailed": "TRANSFER_IN_OTHER_TRANSFER_IN" }
+      }
+    ],
+    "outflow_streams": [
+      {
+        "stream_id": "outflow_rent",
+        "merchant_name": null,
+        "description": "RENT PAYMENT 8th Ave",
+        "frequency": "MONTHLY",
+        "status": "MATURE",
+        "is_active": true,
+        "average_amount": { "amount": 2400.00, "iso_currency_code": "USD" },
+        "last_amount": { "amount": 2400.00 },
+        "predicted_next_date": "2026-05-01",
+        "first_date": "2025-11-01",
+        "last_date": "2026-04-01",
+        "personal_finance_category": { "primary": "RENT_AND_UTILITIES", "detailed": "RENT_AND_UTILITIES_RENT" }
+      },
+      {
+        "stream_id": "outflow_verizon",
+        "merchant_name": "Verizon",
+        "description": "VERIZON WIRELESS",
+        "frequency": "MONTHLY",
+        "status": "MATURE",
+        "is_active": true,
+        "average_amount": { "amount": 144.85, "iso_currency_code": "USD" },
+        "last_amount": { "amount": 145.32 },
+        "predicted_next_date": "2026-05-22",
+        "first_date": "2025-11-22",
+        "last_date": "2026-04-22",
+        "personal_finance_category": { "primary": "RENT_AND_UTILITIES", "detailed": "RENT_AND_UTILITIES_TELEPHONE" }
+      },
+      {
+        "stream_id": "outflow_adobe",
+        "merchant_name": "Adobe",
+        "description": "ADOBE *CREATIVE CLOUD",
+        "frequency": "MONTHLY",
+        "status": "MATURE",
+        "is_active": true,
+        "average_amount": { "amount": 59.99, "iso_currency_code": "USD" },
+        "last_amount": { "amount": 59.99 },
+        "predicted_next_date": "2026-05-08",
+        "first_date": "2025-11-08",
+        "last_date": "2026-04-08",
+        "personal_finance_category": { "primary": "GENERAL_SERVICES", "detailed": "GENERAL_SERVICES_OTHER_GENERAL_SERVICES" }
+      },
+      {
+        "stream_id": "outflow_netflix",
+        "merchant_name": "Netflix",
+        "description": "NETFLIX.COM",
+        "frequency": "MONTHLY",
+        "status": "MATURE",
+        "is_active": true,
+        "average_amount": { "amount": 15.49, "iso_currency_code": "USD" },
+        "last_amount": { "amount": 15.49 },
+        "predicted_next_date": "2026-05-05",
+        "first_date": "2025-11-05",
+        "last_date": "2026-04-05",
+        "personal_finance_category": { "primary": "ENTERTAINMENT", "detailed": "ENTERTAINMENT_TV_AND_MOVIES" }
+      },
+      {
+        "stream_id": "outflow_geico",
+        "merchant_name": "Geico",
+        "description": "GEICO INSURANCE PREMIUM",
+        "frequency": "MONTHLY",
+        "status": "MATURE",
+        "is_active": true,
+        "average_amount": { "amount": 122.50, "iso_currency_code": "USD" },
+        "last_amount": { "amount": 122.50 },
+        "predicted_next_date": "2026-05-03",
+        "first_date": "2025-11-03",
+        "last_date": "2026-04-03",
+        "personal_finance_category": { "primary": "GENERAL_SERVICES", "detailed": "GENERAL_SERVICES_INSURANCE" }
+      },
+      {
+        "stream_id": "outflow_coned",
+        "merchant_name": "Con Edison",
+        "description": "CON EDISON UTILITY",
+        "frequency": "MONTHLY",
+        "status": "MATURE",
+        "is_active": true,
+        "average_amount": { "amount": 92.40, "iso_currency_code": "USD" },
+        "last_amount": { "amount": 88.10 },
+        "predicted_next_date": "2026-05-15",
+        "first_date": "2025-11-15",
+        "last_date": "2026-04-15",
+        "personal_finance_category": { "primary": "RENT_AND_UTILITIES", "detailed": "RENT_AND_UTILITIES_GAS_AND_ELECTRICITY" }
+      },
+      {
+        "stream_id": "outflow_chase_cc",
+        "merchant_name": "Chase",
+        "description": "CHASE CREDIT CRD AUTOPAY",
+        "frequency": "MONTHLY",
+        "status": "MATURE",
+        "is_active": true,
+        "average_amount": { "amount": 105.00, "iso_currency_code": "USD" },
+        "last_amount": { "amount": 145.00 },
+        "predicted_next_date": "2026-05-12",
+        "first_date": "2025-11-12",
+        "last_date": "2026-04-12",
+        "personal_finance_category": { "primary": "LOAN_PAYMENTS", "detailed": "LOAN_PAYMENTS_CREDIT_CARD_PAYMENT" }
+      }
+    ]
+  },
+  "categorized_transactions": [
+    { "transaction_id": "t_inc_apr_acme", "name": "ACME CORP DIRECT DEP", "merchant_name": "Acme Corp", "amount": -3500.00, "date": "2026-04-15", "classification": { "category": "income", "label": "Acme Corp retainer", "confidence": 0.97, "is_recurring_likely": true } },
+    { "transaction_id": "t_inc_apr_zelle", "name": "ZELLE FROM J SMITH CLIENT", "merchant_name": null, "amount": -1200.00, "date": "2026-04-09", "classification": { "category": "income", "label": "Zelle from J Smith", "confidence": 0.86, "is_recurring_likely": true } },
+    { "transaction_id": "t_inc_apr_stripe1", "name": "STRIPE TRANSFER", "merchant_name": "Stripe", "amount": -1850.00, "date": "2026-04-22", "classification": { "category": "income", "label": "Stripe payout", "confidence": 0.95, "is_recurring_likely": true } },
+
+    { "transaction_id": "t_inc_mar_acme", "name": "ACME CORP DIRECT DEP", "merchant_name": "Acme Corp", "amount": -3500.00, "date": "2026-03-15", "classification": { "category": "income", "label": "Acme Corp retainer", "confidence": 0.97, "is_recurring_likely": true } },
+    { "transaction_id": "t_inc_mar_zelle", "name": "ZELLE FROM J SMITH CLIENT", "merchant_name": null, "amount": -1200.00, "date": "2026-03-09", "classification": { "category": "income", "label": "Zelle from J Smith", "confidence": 0.86, "is_recurring_likely": true } },
+    { "transaction_id": "t_inc_mar_stripe1", "name": "STRIPE TRANSFER", "merchant_name": "Stripe", "amount": -425.00, "date": "2026-03-08", "classification": { "category": "income", "label": "Stripe payout", "confidence": 0.95, "is_recurring_likely": true } },
+    { "transaction_id": "t_inc_mar_stripe2", "name": "STRIPE TRANSFER", "merchant_name": "Stripe", "amount": -1100.00, "date": "2026-03-25", "classification": { "category": "income", "label": "Stripe payout", "confidence": 0.95, "is_recurring_likely": true } },
+
+    { "transaction_id": "t_inc_feb_acme", "name": "ACME CORP DIRECT DEP", "merchant_name": "Acme Corp", "amount": -3500.00, "date": "2026-02-15", "classification": { "category": "income", "label": "Acme Corp retainer", "confidence": 0.97, "is_recurring_likely": true } },
+    { "transaction_id": "t_inc_feb_zelle", "name": "ZELLE FROM J SMITH CLIENT", "merchant_name": null, "amount": -1200.00, "date": "2026-02-09", "classification": { "category": "income", "label": "Zelle from J Smith", "confidence": 0.86, "is_recurring_likely": true } },
+    { "transaction_id": "t_inc_feb_stripe", "name": "STRIPE TRANSFER", "merchant_name": "Stripe", "amount": -740.00, "date": "2026-02-19", "classification": { "category": "income", "label": "Stripe payout", "confidence": 0.95, "is_recurring_likely": true } },
+    { "transaction_id": "t_inc_feb_proj", "name": "ZELLE FROM K WONG", "merchant_name": null, "amount": -4500.00, "date": "2026-02-21", "classification": { "category": "income", "label": "K Wong project payment", "confidence": 0.78, "is_recurring_likely": false } },
+
+    { "transaction_id": "t_inc_jan_acme", "name": "ACME CORP DIRECT DEP", "merchant_name": "Acme Corp", "amount": -3500.00, "date": "2026-01-15", "classification": { "category": "income", "label": "Acme Corp retainer", "confidence": 0.97, "is_recurring_likely": true } },
+    { "transaction_id": "t_inc_jan_zelle", "name": "ZELLE FROM J SMITH CLIENT", "merchant_name": null, "amount": -1200.00, "date": "2026-01-09", "classification": { "category": "income", "label": "Zelle from J Smith", "confidence": 0.86, "is_recurring_likely": true } },
+    { "transaction_id": "t_inc_jan_stripe", "name": "STRIPE TRANSFER", "merchant_name": "Stripe", "amount": -380.00, "date": "2026-01-29", "classification": { "category": "income", "label": "Stripe payout", "confidence": 0.95, "is_recurring_likely": true } },
+
+    { "transaction_id": "t_inc_dec_acme", "name": "ACME CORP DIRECT DEP", "merchant_name": "Acme Corp", "amount": -3500.00, "date": "2025-12-15", "classification": { "category": "income", "label": "Acme Corp retainer", "confidence": 0.97, "is_recurring_likely": true } },
+    { "transaction_id": "t_inc_dec_zelle", "name": "ZELLE FROM J SMITH CLIENT", "merchant_name": null, "amount": -1200.00, "date": "2025-12-09", "classification": { "category": "income", "label": "Zelle from J Smith", "confidence": 0.86, "is_recurring_likely": true } },
+    { "transaction_id": "t_inc_dec_stripe", "name": "STRIPE TRANSFER", "merchant_name": "Stripe", "amount": -1620.00, "date": "2025-12-19", "classification": { "category": "income", "label": "Stripe payout", "confidence": 0.95, "is_recurring_likely": true } },
+
+    { "transaction_id": "t_inc_nov_acme", "name": "ACME CORP DIRECT DEP", "merchant_name": "Acme Corp", "amount": -3500.00, "date": "2025-11-15", "classification": { "category": "income", "label": "Acme Corp retainer", "confidence": 0.97, "is_recurring_likely": true } },
+    { "transaction_id": "t_inc_nov_zelle", "name": "ZELLE FROM J SMITH CLIENT", "merchant_name": null, "amount": -1200.00, "date": "2025-11-09", "classification": { "category": "income", "label": "Zelle from J Smith", "confidence": 0.86, "is_recurring_likely": true } },
+    { "transaction_id": "t_inc_nov_stripe", "name": "STRIPE TRANSFER", "merchant_name": "Stripe", "amount": -880.00, "date": "2025-11-04", "classification": { "category": "income", "label": "Stripe payout", "confidence": 0.95, "is_recurring_likely": true } },
+
+    { "transaction_id": "t_bill_apr_rent", "name": "RENT PAYMENT 8th Ave", "merchant_name": null, "amount": 2400.00, "date": "2026-04-01", "classification": { "category": "bill", "label": "Rent", "confidence": 0.98, "is_recurring_likely": true } },
+    { "transaction_id": "t_bill_apr_vz", "name": "VERIZON WIRELESS", "merchant_name": "Verizon", "amount": 145.32, "date": "2026-04-22", "classification": { "category": "bill", "label": "Verizon phone", "confidence": 0.95, "is_recurring_likely": true } },
+    { "transaction_id": "t_bill_apr_adobe", "name": "ADOBE *CREATIVE CLOUD", "merchant_name": "Adobe", "amount": 59.99, "date": "2026-04-08", "classification": { "category": "bill", "label": "Adobe Creative Cloud", "confidence": 0.92, "is_recurring_likely": true } },
+    { "transaction_id": "t_bill_apr_netflix", "name": "NETFLIX.COM", "merchant_name": "Netflix", "amount": 15.49, "date": "2026-04-05", "classification": { "category": "bill", "label": "Netflix", "confidence": 0.96, "is_recurring_likely": true } },
+    { "transaction_id": "t_bill_apr_geico", "name": "GEICO INSURANCE PREMIUM", "merchant_name": "Geico", "amount": 122.50, "date": "2026-04-03", "classification": { "category": "bill", "label": "Geico auto insurance", "confidence": 0.94, "is_recurring_likely": true } },
+    { "transaction_id": "t_bill_apr_coned", "name": "CON EDISON UTILITY", "merchant_name": "Con Edison", "amount": 88.10, "date": "2026-04-15", "classification": { "category": "bill", "label": "Con Edison utility", "confidence": 0.96, "is_recurring_likely": true } },
+
+    { "transaction_id": "t_bill_mar_rent", "name": "RENT PAYMENT 8th Ave", "merchant_name": null, "amount": 2400.00, "date": "2026-03-01", "classification": { "category": "bill", "label": "Rent", "confidence": 0.98, "is_recurring_likely": true } },
+    { "transaction_id": "t_bill_mar_coned", "name": "CON EDISON UTILITY", "merchant_name": "Con Edison", "amount": 96.20, "date": "2026-03-15", "classification": { "category": "bill", "label": "Con Edison utility", "confidence": 0.96, "is_recurring_likely": true } },
+
+    { "transaction_id": "t_bill_feb_rent", "name": "RENT PAYMENT 8th Ave", "merchant_name": null, "amount": 2400.00, "date": "2026-02-01", "classification": { "category": "bill", "label": "Rent", "confidence": 0.98, "is_recurring_likely": true } },
+    { "transaction_id": "t_bill_feb_coned", "name": "CON EDISON UTILITY", "merchant_name": "Con Edison", "amount": 102.40, "date": "2026-02-15", "classification": { "category": "bill", "label": "Con Edison utility", "confidence": 0.96, "is_recurring_likely": true } },
+
+    { "transaction_id": "t_debt_apr_chase", "name": "CHASE CREDIT CRD AUTOPAY", "merchant_name": "Chase", "amount": 145.00, "date": "2026-04-12", "classification": { "category": "debt_payment", "label": "Chase CC payment", "confidence": 0.98, "is_recurring_likely": true } },
+    { "transaction_id": "t_debt_mar_chase", "name": "CHASE CREDIT CRD AUTOPAY", "merchant_name": "Chase", "amount": 78.00, "date": "2026-03-12", "classification": { "category": "debt_payment", "label": "Chase CC payment", "confidence": 0.98, "is_recurring_likely": true } },
+    { "transaction_id": "t_debt_feb_chase", "name": "CHASE CREDIT CRD AUTOPAY", "merchant_name": "Chase", "amount": 92.00, "date": "2026-02-12", "classification": { "category": "debt_payment", "label": "Chase CC payment", "confidence": 0.98, "is_recurring_likely": true } },
+    { "transaction_id": "t_debt_jan_chase", "name": "CHASE CREDIT CRD AUTOPAY", "merchant_name": "Chase", "amount": 110.00, "date": "2026-01-12", "classification": { "category": "debt_payment", "label": "Chase CC payment", "confidence": 0.98, "is_recurring_likely": true } },
+
+    { "transaction_id": "t_tax_apr", "name": "EFTPS TAX PAYMENT 1040ES", "merchant_name": "IRS", "amount": 1300.00, "date": "2026-04-15", "classification": { "category": "tax_payment", "label": "IRS quarterly Q1", "confidence": 0.99, "is_recurring_likely": false } },
+    { "transaction_id": "t_tax_jan", "name": "EFTPS TAX PAYMENT 1040ES", "merchant_name": "IRS", "amount": 1400.00, "date": "2026-01-15", "classification": { "category": "tax_payment", "label": "IRS quarterly Q4-2025", "confidence": 0.99, "is_recurring_likely": false } },
+    { "transaction_id": "t_tax_dec_state", "name": "NYS DTF TAX PAYMENT", "merchant_name": "NY State Tax", "amount": 320.00, "date": "2025-12-22", "classification": { "category": "tax_payment", "label": "NY State income tax", "confidence": 0.95, "is_recurring_likely": false } },
+
+    { "transaction_id": "t_tfr_apr_savings", "name": "TFR TO SAVINGS *9912", "merchant_name": null, "amount": 500.00, "date": "2026-04-22", "classification": { "category": "transfer", "label": "Transfer to savings", "confidence": 0.92, "is_recurring_likely": false } },
+
+    { "transaction_id": "t_disc_apr_tj", "name": "TRADER JOE'S #214", "merchant_name": "Trader Joe's", "amount": 87.43, "date": "2026-04-19", "classification": { "category": "discretionary", "label": "Trader Joe's", "confidence": 0.95, "is_recurring_likely": false } },
+    { "transaction_id": "t_disc_apr_amz", "name": "AMAZON.COM*MK4LX9", "merchant_name": "Amazon", "amount": 42.18, "date": "2026-04-18", "classification": { "category": "discretionary", "label": "Amazon", "confidence": 0.85, "is_recurring_likely": false } },
+    { "transaction_id": "t_disc_apr_shell", "name": "SHELL OIL 88", "merchant_name": "Shell", "amount": 52.31, "date": "2026-04-17", "classification": { "category": "discretionary", "label": "Shell gas", "confidence": 0.92, "is_recurring_likely": false } }
+  ]
+}
