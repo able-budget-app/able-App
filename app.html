@@ -3439,27 +3439,45 @@ function renderObReview() {
 
   if (r.debts && r.debts.length) {
     const totalDebt = r.debts.reduce((s,d) => s + (d.balance||0), 0);
+    const debtsTitle = totalDebt > 0
+      ? `${r.debts.length} debts · $${Math.round(totalDebt).toLocaleString()} total`
+      : `${r.debts.length} debts`;
     html += `<div class="ob-summary-section">
-      <div class="ob-summary-title">${r.debts.length} debts · $${Math.round(totalDebt).toLocaleString()} total</div>`;
+      <div class="ob-summary-title">${debtsTitle}</div>`;
     r.debts.forEach(d => {
-      html += `<div class="ob-summary-row"><span>${d.name} (${d.rate}%)</span><span class="ob-summary-row-right">$${Math.round(d.balance).toLocaleString()}</span></div>`;
+      const ratePart = d.rate > 0 ? ` (${d.rate}%)` : '';
+      const right = d.balance > 0
+        ? `$${Math.round(d.balance).toLocaleString()}`
+        : (d.min > 0 ? `$${Math.round(d.min)}/mo min` : '');
+      html += `<div class="ob-summary-row"><span>${d.name}${ratePart}</span><span class="ob-summary-row-right">${right}</span></div>`;
     });
     html += `</div>`;
   }
 
   if (r.sources && r.sources.length) {
+    const sourceLabels = r.sources.map((s) => {
+      if (typeof s === 'string') return s;
+      return s.name || 'Income source';
+    });
     html += `<div class="ob-summary-section">
       <div class="ob-summary-title">Income sources</div>
-      <div style="font-size:14px;font-weight:600;color:var(--text2);">${r.sources.join(' · ')}</div>
+      <div style="font-size:14px;font-weight:600;color:var(--text2);">${sourceLabels.join(' · ')}</div>
     </div>`;
   }
 
   if (r.obligations && r.obligations.length) {
     html += `<div class="ob-summary-section">
-      <div class="ob-summary-title">Commission rules</div>`;
+      <div class="ob-summary-title">Off-the-top allocations</div>`;
     r.obligations.forEach(o => {
-      const display = o.type === 'percent' ? `${o.value}%` : `$${o.value}`;
-      html += `<div class="ob-summary-row"><span>${o.name} <span style="color:var(--text3);font-weight:500;">when ${o.triggersOn}</span></span><span class="ob-summary-row-right">${display}</span></div>`;
+      // Two shapes are possible here. The analyzer-derived shape uses
+      // {type:'tax', label, pct}; the legacy ai-onboard shape uses
+      // {name, type:'percent'|'dollar', value, triggersOn}.
+      const label = o.label || o.name || 'Allocation';
+      const pct = o.pct != null ? o.pct : (o.type === 'percent' ? o.value : null);
+      const dollar = o.type === 'dollar' || o.type === 'fixed' ? o.value : null;
+      const display = pct != null ? `${pct}%` : (dollar != null ? `$${dollar}` : '');
+      const trigger = o.triggersOn ? `<span style="color:var(--text3);font-weight:500;"> when ${o.triggersOn}</span>` : '';
+      html += `<div class="ob-summary-row"><span>${label}${trigger}</span><span class="ob-summary-row-right">${display}</span></div>`;
     });
     html += `</div>`;
   }
@@ -3467,9 +3485,10 @@ function renderObReview() {
   if (r.settings) {
     html += `<div class="ob-summary-section">
       <div class="ob-summary-title">Allocation strategy</div>
-      <div class="ob-summary-row"><span>Extra to debt</span><span class="ob-summary-row-right">${r.settings.debtPct}%</span></div>
-      <div class="ob-summary-row"><span>Extra to buffer</span><span class="ob-summary-row-right">${r.settings.bufPct}%</span></div>
-      <div class="ob-summary-row"><span>Extra to free spending</span><span class="ob-summary-row-right">${r.settings.freePct}%</span></div>
+      <div class="ob-summary-row"><span>Owner draw</span><span class="ob-summary-row-right">${r.settings.ownerPct || 0}%</span></div>
+      <div class="ob-summary-row"><span>Extra to debt</span><span class="ob-summary-row-right">${r.settings.debtPct || 0}%</span></div>
+      <div class="ob-summary-row"><span>Extra to buffer</span><span class="ob-summary-row-right">${r.settings.bufPct || 0}%</span></div>
+      <div class="ob-summary-row"><span>Extra to free spending</span><span class="ob-summary-row-right">${r.settings.freePct || 0}%</span></div>
     </div>`;
   }
 
