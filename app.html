@@ -2737,10 +2737,14 @@ const OB_QUESTIONS = [
   },
   {
     key: 'goals',
-    type: 'text',
+    type: 'choice',
     msg: "What matters most to you right now?",
-    hint: "Pay off debt fast, build a safety net, just stay on top of bills. Be honest about priorities.",
-    placeholder: "I want to crush my credit card debt first, then build up a few months of buffer."
+    hint: "I'll tilt your plan toward this. You can change it anytime.",
+    choices: [
+      { value: 'crush_debt',   label: 'Crush debt',          sub: 'More of every dollar pays off what you owe.' },
+      { value: 'build_safety', label: 'Build a safety net',  sub: 'More set aside for slow months and surprises.' },
+      { value: 'balanced',     label: 'Balanced',            sub: 'Mix between debt payoff, buffer, and free spending.' }
+    ]
   },
   {
     key: 'pay_self',
@@ -2853,6 +2857,28 @@ function renderObStep() {
       document.getElementById('ob-back-btn').style.display = obStep > 0 ? 'inline-block' : 'none';
       document.getElementById('ob-next-btn').style.display = 'none';
     }
+  } else if (q.type === 'choice') {
+    const selected = obAnswers[q.key] || '';
+    const cards = q.choices.map((c) => {
+      const isSel = c.value === selected;
+      return `
+        <button type="button" class="ob-choice-card${isSel ? ' selected' : ''}" data-value="${c.value}" onclick="obSelectChoice('${c.value}')">
+          <div class="ob-choice-label">${c.label}</div>
+          <div class="ob-choice-sub">${c.sub}</div>
+        </button>`;
+    }).join('');
+    inputArea.innerHTML = `
+      <style>
+        .ob-choice-card{display:block;width:100%;text-align:left;padding:14px 16px;margin-bottom:10px;background:#fff;border:1px solid var(--ds-line);border-radius:var(--ds-r1);cursor:pointer;transition:border-color .12s,background .12s;}
+        .ob-choice-card:hover{border-color:#3d9e78;}
+        .ob-choice-card.selected{border-color:#3d9e78;background:#ecf5ee;}
+        .ob-choice-label{font-size:15px;font-weight:800;color:var(--ds-t1);margin-bottom:3px;letter-spacing:-.01em;}
+        .ob-choice-sub{font-size:13px;font-weight:500;color:var(--ds-t3);line-height:1.45;}
+      </style>
+      ${cards}`;
+    document.getElementById('ob-back-btn').style.display = obStep > 0 ? 'inline-block' : 'none';
+    document.getElementById('ob-next-btn').textContent = obStep === OB_QUESTIONS.length - 1 ? 'Build my budget →' : 'Continue →';
+    document.getElementById('ob-next-btn').disabled = !selected;
   } else {
     // text type
     inputArea.innerHTML = `<textarea class="ob-input" id="ob-text-input" rows="3" placeholder="${q.placeholder || ''}">${obAnswers[q.key] || ''}</textarea>`;
@@ -2860,6 +2886,14 @@ function renderObStep() {
     document.getElementById('ob-next-btn').textContent = obStep === OB_QUESTIONS.length - 1 ? 'Build my budget →' : 'Continue →';
     setTimeout(() => document.getElementById('ob-text-input')?.focus(), 100);
   }
+}
+
+function obSelectChoice(value) {
+  const q = OB_QUESTIONS[obStep];
+  if (!q || q.type !== 'choice') return;
+  obAnswers[q.key] = value;
+  // Re-render so the card highlights and the Continue button enables.
+  renderObStep();
 }
 
 function buildTableRow(columns, row, rowIdx) {
@@ -2923,6 +2957,11 @@ function obNext() {
       return;
     }
     // Either bank skipped or plan already generated — advance normally.
+  } else if (q.type === 'choice') {
+    if (!obAnswers[q.key]) {
+      // Should be guarded by the disabled button, but double-check.
+      return;
+    }
   } else if (q.type === 'table') {
     saveTableRows();
     // Filter out empty rows
@@ -3394,12 +3433,17 @@ async function obSynthesizeResultFromPlan(planId) {
   const obligations = taxPct > 0 ? [{ type: 'tax', label: 'Taxes', pct: taxPct }] : [];
 
   const split = p.surplus_split || {};
-  const settings = {
+  let settings = {
     ownerPct: Number(split.owner_pct) || 10,
     debtPct:  Number(split.debt_pct)  || (debts.length ? 20 : 5),
     bufPct:   Number(split.reserve_pct) || 15,
     freePct:  Number(split.free_pct)  || 0,
   };
+
+  // Apply the user's stated priority on top of the analyzer's split.
+  // Owner draw is preserved (user sets it via pay_self separately) and the
+  // remaining 100 - owner is divided per the chosen preset.
+  settings = applyGoalPreset(settings, obAnswers.goals);
 
   // Best-effort name parse from `name_business` ("I'm Paul. I run …").
   const rawName = (obAnswers.name_business || '').trim();
@@ -3414,8 +3458,40 @@ async function obSynthesizeResultFromPlan(planId) {
     settings,
     name: parsedName,
     business_type: rawName || '',
-    goals: obAnswers.goals || '',
+    goals: GOAL_LABELS[obAnswers.goals] || obAnswers.goals || '',
     coach_summary: row.coach_summary || null,
+  };
+}
+
+// Lookup of goals choice value → human-readable label, used when we save
+// to S.profile.goals so the rest of the app sees something readable.
+const GOAL_LABELS = {
+  crush_debt:   'Crush debt',
+  build_safety: 'Build a safety net',
+  balanced:     'Balanced',
+};
+
+// Surplus-split presets the user picks via the goals question. We keep
+// the analyzer's owner_pct as-is and divide the remaining (100 - owner)
+// using the preset's debt:buffer:free ratio. Unknown / missing goals
+// (e.g. legacy answers from before the choice picker landed) leave the
+// split untouched.
+function applyGoalPreset(settings, goals) {
+  const presets = {
+    crush_debt:   { debt: 35, buffer: 15, free: 40 },
+    build_safety: { debt: 10, buffer: 40, free: 40 },
+    balanced:     null, // analyzer defaults
+  };
+  const p = presets[goals];
+  if (!p) return settings;
+  const owner = Math.max(0, Math.min(100, settings.ownerPct || 0));
+  const remaining = Math.max(0, 100 - owner);
+  const totalRatio = p.debt + p.buffer + p.free;
+  return {
+    ...settings,
+    debtPct: Math.round(remaining * p.debt   / totalRatio),
+    bufPct:  Math.round(remaining * p.buffer / totalRatio),
+    freePct: Math.round(remaining * p.free   / totalRatio),
   };
 }
 
