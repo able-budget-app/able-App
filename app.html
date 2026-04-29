@@ -3003,18 +3003,15 @@ async function obBuildWithAI() {
   document.getElementById('ob-building').style.display = 'block';
   document.getElementById('ob-progress').style.width = '100%';
 
-  // If the Plaid pipeline ran successfully, the analyzer plan is already
-  // persisted in analyzer_plans and contains everything ai-onboard would
-  // have produced. Skip the ai-onboard call and synthesize obResult from
-  // the plan so the existing review/confirm flow takes over. 7c will
-  // replace this with real confirmation cards.
+  // If the Plaid pipeline ran successfully, the analyzer plan is
+  // persisted in analyzer_plans. Show the per-section confirmation
+  // cards (7c) instead of the legacy auto-apply review.
   if (obAnswers.plaid_plan && obAnswers.plaid_plan.plan_id) {
     try {
-      obResult = await obSynthesizeResultFromPlan(obAnswers.plaid_plan.plan_id);
-      renderObReview();
+      await obRenderPlanReview(obAnswers.plaid_plan.plan_id);
       return;
     } catch (e) {
-      console.error('Plan-based onboarding synthesis failed:', e);
+      console.error('Plan review failed to render:', e);
       alert('Could not load your plan: ' + e.message + '\n\nFalling back to manual setup.');
       // Fall through to ai-onboard.
     }
@@ -3393,11 +3390,8 @@ function obAbandonPipelineToManual() {
   }
 }
 
-// Read the analyzer plan from analyzer_plans (already persisted by
-// plaid-analyze) and shape it into the same flat structure that ai-onboard
-// returns, so renderObReview/obConfirm don't need to know which path
-// produced the data. Anything not in the plan falls back to onboarding
-// answers (e.g. user's stated goals) or sensible defaults.
+// Legacy helper retained for the ai-onboard fallback only. Plan-based
+// onboarding now uses obRenderPlanReview + analyzer-apply-plan instead.
 async function obSynthesizeResultFromPlan(planId) {
   const { data: row, error } = await sbGet()
     .from('analyzer_plans')
@@ -3440,12 +3434,8 @@ async function obSynthesizeResultFromPlan(planId) {
     freePct:  Number(split.free_pct)  || 0,
   };
 
-  // Apply the user's stated priority on top of the analyzer's split.
-  // Owner draw is preserved (user sets it via pay_self separately) and the
-  // remaining 100 - owner is divided per the chosen preset.
   settings = applyGoalPreset(settings, obAnswers.goals);
 
-  // Best-effort name parse from `name_business` ("I'm Paul. I run …").
   const rawName = (obAnswers.name_business || '').trim();
   let parsedName = '';
   const m = rawName.match(/^\s*(?:i'?m|my name is)\s+([A-Za-z][\w'-]*)/i);
@@ -3495,9 +3485,462 @@ function applyGoalPreset(settings, goals) {
   };
 }
 
+// ─── 7c plan confirmation cards ──────────────────────────────────────
+// When the Plaid pipeline produced an analyzer plan, render it as a
+// stack of accept / edit / reject cards instead of auto-applying.
+// State lives on obPlanReview so card handlers can mutate it before
+// the user clicks Apply.
+let obPlanReview = null;
+
+async function obRenderPlanReview(planId) {
+  const sb = sbGet();
+  const { data: row, error } = await sb
+    .from('analyzer_plans')
+    .select('plan_json, coach_summary, status')
+    .eq('id', planId)
+    .single();
+  if (error) throw new Error(error.message || 'Could not load plan');
+  if (!row || !row.plan_json) throw new Error('Plan row was empty');
+
+  const plan = row.plan_json;
+
+  // Seed editable copies. Apply the user's pay_self + goals choice into
+  // the surplus split up front so the user sees the same numbers the
+  // legacy review would have shown.
+  const baseSplit = plan.surplus_split || { owner_pct: 10, debt_pct: 20, reserve_pct: 15, free_pct: 55 };
+  const pyfRaw = parseFloat(obAnswers.pay_self);
+  const ownerOverride = (!isNaN(pyfRaw) && pyfRaw >= 0 && pyfRaw <= 100) ? pyfRaw : baseSplit.owner_pct;
+  let split = { ...baseSplit, owner_pct: ownerOverride };
+  // Re-apply preset using the new owner % so the four buckets sum to 100.
+  const presetSettings = applyGoalPreset(
+    { ownerPct: ownerOverride, debtPct: baseSplit.debt_pct, bufPct: baseSplit.reserve_pct, freePct: baseSplit.free_pct },
+    obAnswers.goals,
+  );
+  split = {
+    owner_pct:   presetSettings.ownerPct,
+    debt_pct:    presetSettings.debtPct,
+    reserve_pct: presetSettings.bufPct,
+    free_pct:    presetSettings.freePct,
+  };
+
+  obPlanReview = {
+    plan_id: planId,
+    plan_json: plan,
+    coach_summary: row.coach_summary || null,
+    sections: {
+      income_sources: { decision: 'accept', editing: false, items: clone(plan.income_sources || []) },
+      bills:          { decision: 'accept', editing: false, items: clone(plan.bills || []) },
+      debts:          { decision: 'accept', editing: false, items: clone(plan.debts || []) },
+      tax_allocation: { decision: 'accept', editing: false, suggested_pct: plan.tax_allocation?.suggested_pct ?? 0 },
+      surplus_split:  { decision: 'accept', editing: false, ...split },
+    },
+    submitting: false,
+    error: null,
+  };
+
+  document.getElementById('ob-question-area').style.display = 'none';
+  document.getElementById('ob-building').style.display = 'none';
+  document.getElementById('ob-review').style.display = 'block';
+  // The plan-review UI provides its own action footer; hide the static
+  // Start over / Looks good buttons that the legacy renderObReview uses.
+  const legacyActions = document.querySelector('#ob-review .ob-actions');
+  if (legacyActions) legacyActions.style.display = 'none';
+  obRenderPlanReviewUI();
+}
+
+function clone(v) { return JSON.parse(JSON.stringify(v)); }
+
+function obSetSectionDecision(key, decision) {
+  if (!obPlanReview?.sections?.[key]) return;
+  obPlanReview.sections[key].decision = decision;
+  if (decision === 'reject') obPlanReview.sections[key].editing = false;
+  obRenderPlanReviewUI();
+}
+
+function obToggleSectionEdit(key) {
+  if (!obPlanReview?.sections?.[key]) return;
+  const s = obPlanReview.sections[key];
+  // Pull any in-flight edits out of the DOM before re-rendering.
+  obCommitSectionEdits(key);
+  s.editing = !s.editing;
+  if (s.editing) s.decision = 'accept';
+  obRenderPlanReviewUI();
+}
+
+// Read the values out of any open editor for a section back into state.
+// Called before re-render or before submit so user changes aren't lost.
+function obCommitSectionEdits(key) {
+  if (!obPlanReview?.sections?.[key]) return;
+  const s = obPlanReview.sections[key];
+  if (!s.editing) return;
+  if (key === 'tax_allocation') {
+    const el = document.getElementById('plan-tax-pct');
+    if (el) {
+      const n = parseFloat(el.value);
+      s.suggested_pct = (!isNaN(n) && n >= 0 && n <= 50) ? n : s.suggested_pct;
+    }
+  } else if (key === 'surplus_split') {
+    const get = (id) => {
+      const el = document.getElementById(id);
+      const n = el ? parseFloat(el.value) : NaN;
+      return isNaN(n) ? null : n;
+    };
+    const owner = get('plan-split-owner');
+    const debt  = get('plan-split-debt');
+    const buf   = get('plan-split-buffer');
+    const free  = get('plan-split-free');
+    if (owner != null) s.owner_pct = owner;
+    if (debt  != null) s.debt_pct = debt;
+    if (buf   != null) s.reserve_pct = buf;
+    if (free  != null) s.free_pct = free;
+  } else if (key === 'income_sources') {
+    s.items = readPlanRows('plan-sources-rows', ['name']).map((r) => ({ name: r.name, average_amount: 0 }));
+  } else if (key === 'bills') {
+    s.items = readPlanRows('plan-bills-rows', ['name', 'amount', 'due_day_of_month']).map((r) => ({
+      name: r.name,
+      amount: Number(r.amount) || 0,
+      due_day_of_month: r.due_day_of_month ? Number(r.due_day_of_month) : null,
+    }));
+  } else if (key === 'debts') {
+    s.items = readPlanRows('plan-debts-rows', ['name', 'min_payment', 'rate_estimate', 'due_day_of_month', 'balance_estimate']).map((r) => ({
+      name: r.name,
+      min_payment: Number(r.min_payment) || 0,
+      rate_estimate: r.rate_estimate ? (Number(r.rate_estimate) / 100) : null,
+      due_day_of_month: r.due_day_of_month ? Number(r.due_day_of_month) : null,
+      balance_estimate: r.balance_estimate ? Number(r.balance_estimate) : null,
+    }));
+  }
+}
+
+function readPlanRows(containerId, fields) {
+  const container = document.getElementById(containerId);
+  if (!container) return [];
+  const rows = container.querySelectorAll('.plan-row');
+  const out = [];
+  rows.forEach((row) => {
+    const obj = {};
+    fields.forEach((f) => {
+      const inp = row.querySelector(`[data-field="${f}"]`);
+      obj[f] = inp ? inp.value.trim() : '';
+    });
+    if (Object.values(obj).some((v) => v)) out.push(obj);
+  });
+  return out;
+}
+
+// Preset row for the surplus-split editor (Crush debt / Build safety /
+// Balanced). Recomputes the four buckets honoring the current owner %.
+function obSplitPreset(name) {
+  const s = obPlanReview?.sections?.surplus_split;
+  if (!s) return;
+  const presets = {
+    crush_debt:   { debt: 35, buffer: 15, free: 40 },
+    build_safety: { debt: 10, buffer: 40, free: 40 },
+    balanced:     { debt: 20, buffer: 25, free: 55 },
+  };
+  const p = presets[name];
+  if (!p) return;
+  const owner = Math.max(0, Math.min(100, Number(s.owner_pct) || 0));
+  const remaining = Math.max(0, 100 - owner);
+  const total = p.debt + p.buffer + p.free;
+  s.debt_pct    = Math.round(remaining * p.debt   / total);
+  s.reserve_pct = Math.round(remaining * p.buffer / total);
+  s.free_pct    = Math.round(remaining * p.free   / total);
+  obRenderPlanReviewUI();
+}
+
+function obAddPlanRow(key) {
+  const s = obPlanReview?.sections?.[key];
+  if (!s) return;
+  obCommitSectionEdits(key);
+  if (key === 'income_sources') s.items.push({ name: '', average_amount: 0 });
+  else if (key === 'bills')      s.items.push({ name: '', amount: 0, due_day_of_month: null });
+  else if (key === 'debts')      s.items.push({ name: '', min_payment: 0, rate_estimate: null, due_day_of_month: null, balance_estimate: null });
+  obRenderPlanReviewUI();
+}
+
+function obRemovePlanRow(key, idx) {
+  const s = obPlanReview?.sections?.[key];
+  if (!s || !Array.isArray(s.items)) return;
+  obCommitSectionEdits(key);
+  s.items.splice(idx, 1);
+  obRenderPlanReviewUI();
+}
+
+function obRenderPlanReviewUI() {
+  const r = obPlanReview;
+  if (!r) return;
+  const root = document.getElementById('ob-summary');
+  if (!root) return;
+
+  const acceptedCount = Object.values(r.sections).filter((s) => s.decision === 'accept').length;
+
+  let html = `
+    <style>
+      .plan-card{background:#fff;border:1px solid var(--ds-line);border-radius:var(--ds-r1);padding:14px 16px;margin-bottom:12px;}
+      .plan-card.rejected{opacity:.55;}
+      .plan-card-head{display:flex;align-items:flex-start;justify-content:space-between;gap:12px;margin-bottom:10px;}
+      .plan-card-title{font-size:14px;font-weight:800;color:var(--ds-t1);letter-spacing:-.01em;}
+      .plan-card-sub{font-size:12px;font-weight:600;color:var(--ds-t3);margin-top:2px;}
+      .plan-actions{display:flex;gap:6px;flex-shrink:0;}
+      .plan-btn{padding:5px 10px;font-size:12px;font-weight:700;border-radius:6px;border:1px solid var(--ds-line);background:#fff;color:var(--ds-t2);cursor:pointer;}
+      .plan-btn:hover{border-color:#3d9e78;}
+      .plan-btn.on-accept{background:#ecf5ee;border-color:#3d9e78;color:#2a7a4a;}
+      .plan-btn.on-reject{background:#fdecec;border-color:#c85a5a;color:#a04545;}
+      .plan-row-list{display:flex;flex-direction:column;gap:4px;}
+      .plan-list-row{display:flex;justify-content:space-between;font-size:13px;font-weight:600;color:var(--ds-t2);padding:4px 0;}
+      .plan-list-row .meta{color:var(--ds-t3);font-weight:500;}
+      .plan-edit-area{margin-top:10px;padding-top:10px;border-top:1px dashed var(--ds-line);}
+      .plan-row{display:grid;gap:6px;margin-bottom:6px;}
+      .plan-row input{padding:6px 8px;font-size:13px;border:1px solid var(--ds-line);border-radius:6px;width:100%;}
+      .plan-row .x{padding:0 8px;font-size:18px;background:none;border:none;color:var(--ds-t3);cursor:pointer;}
+      .plan-presets{display:flex;gap:6px;margin-bottom:10px;}
+      .plan-presets button{flex:1;padding:8px 10px;font-size:12px;font-weight:700;border:1px solid var(--ds-line);background:#fff;border-radius:6px;cursor:pointer;}
+      .plan-presets button:hover{border-color:#3d9e78;}
+      .plan-split-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;}
+      .plan-split-grid label{display:flex;flex-direction:column;font-size:11px;font-weight:700;color:var(--ds-t3);text-transform:uppercase;letter-spacing:.04em;gap:4px;}
+      .plan-split-sum{margin-top:8px;font-size:12px;font-weight:700;color:var(--ds-t2);}
+      .plan-coach{background:#ecf5ee;border:1px solid #c8e0d0;border-radius:var(--ds-r1);padding:14px 16px;margin-bottom:14px;font-size:13px;line-height:1.55;color:#2a4a35;font-weight:500;}
+      .plan-error{background:#fdecec;border:1px solid #f3c5c5;border-radius:var(--ds-r1);padding:.75rem;font-size:12px;color:#a04545;font-weight:600;margin-bottom:10px;}
+      .plan-footer-bar{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-top:6px;}
+    </style>`;
+
+  if (r.coach_summary) {
+    html += `<div class="plan-coach">${escapeHtml(r.coach_summary)}</div>`;
+  }
+  if (r.error) {
+    html += `<div class="plan-error">${escapeHtml(r.error)}</div>`;
+  }
+
+  html += renderPlanCard('income_sources', 'Income sources', r.sections.income_sources, () => {
+    const items = r.sections.income_sources.items || [];
+    if (!items.length) return `<div style="font-size:13px;color:var(--ds-t3);">None detected.</div>`;
+    return `<div class="plan-row-list">${items.map((s) => `
+      <div class="plan-list-row"><span>${escapeHtml(s.name || 'Unnamed source')}</span><span class="meta">${s.average_amount ? `~$${Math.round(s.average_amount).toLocaleString()}/mo` : ''}</span></div>
+    `).join('')}</div>`;
+  }, () => {
+    const items = r.sections.income_sources.items || [];
+    return `
+      <div id="plan-sources-rows">
+        ${items.map((s, i) => `
+          <div class="plan-row" style="grid-template-columns:1fr 32px;">
+            <input data-field="name" type="text" placeholder="Source name" value="${escapeAttr(s.name || '')}">
+            <button type="button" class="x" onclick="obRemovePlanRow('income_sources', ${i})" title="Remove">×</button>
+          </div>
+        `).join('')}
+      </div>
+      <button type="button" class="btn-ghost btn btn-sm" onclick="obAddPlanRow('income_sources')" style="margin-top:.25rem;">+ Add source</button>`;
+  });
+
+  html += renderPlanCard('bills', `${r.sections.bills.items.length} monthly bills`, r.sections.bills, () => {
+    const items = r.sections.bills.items || [];
+    if (!items.length) return `<div style="font-size:13px;color:var(--ds-t3);">No recurring bills detected.</div>`;
+    return `<div class="plan-row-list">${items.map((b) => `
+      <div class="plan-list-row"><span>${escapeHtml(b.name || '—')}</span><span class="meta">$${Math.round(b.amount || 0).toLocaleString()}${b.due_day_of_month ? ` · day ${b.due_day_of_month}` : ''}</span></div>
+    `).join('')}</div>`;
+  }, () => {
+    const items = r.sections.bills.items || [];
+    return `
+      <div id="plan-bills-rows">
+        ${items.map((b, i) => `
+          <div class="plan-row" style="grid-template-columns:1.4fr .8fr .6fr 32px;">
+            <input data-field="name" type="text" placeholder="Bill name" value="${escapeAttr(b.name || '')}">
+            <input data-field="amount" type="number" placeholder="Amount" value="${b.amount ?? ''}">
+            <input data-field="due_day_of_month" type="number" placeholder="Due day" value="${b.due_day_of_month ?? ''}">
+            <button type="button" class="x" onclick="obRemovePlanRow('bills', ${i})" title="Remove">×</button>
+          </div>
+        `).join('')}
+      </div>
+      <button type="button" class="btn-ghost btn btn-sm" onclick="obAddPlanRow('bills')" style="margin-top:.25rem;">+ Add bill</button>`;
+  });
+
+  html += renderPlanCard('debts', `${r.sections.debts.items.length} debts`, r.sections.debts, () => {
+    const items = r.sections.debts.items || [];
+    if (!items.length) return `<div style="font-size:13px;color:var(--ds-t3);">No debt payments detected.</div>`;
+    return `<div class="plan-row-list">${items.map((d) => {
+      const balance = d.balance_estimate != null ? `$${Math.round(d.balance_estimate).toLocaleString()}` : `$${Math.round(d.min_payment || 0)}/mo min`;
+      const rate = d.rate_estimate != null ? ` · ${Math.round(d.rate_estimate * 100)}%` : '';
+      return `<div class="plan-list-row"><span>${escapeHtml(d.name || '—')}${rate}</span><span class="meta">${balance}</span></div>`;
+    }).join('')}</div>`;
+  }, () => {
+    const items = r.sections.debts.items || [];
+    return `
+      <div id="plan-debts-rows">
+        ${items.map((d, i) => `
+          <div class="plan-row" style="grid-template-columns:1.4fr .7fr .5fr .5fr .9fr 32px;">
+            <input data-field="name" type="text" placeholder="Debt name" value="${escapeAttr(d.name || '')}">
+            <input data-field="min_payment" type="number" placeholder="Min" value="${d.min_payment ?? ''}">
+            <input data-field="rate_estimate" type="number" placeholder="Rate %" value="${d.rate_estimate != null ? Math.round(d.rate_estimate * 100) : ''}">
+            <input data-field="due_day_of_month" type="number" placeholder="Due" value="${d.due_day_of_month ?? ''}">
+            <input data-field="balance_estimate" type="number" placeholder="Balance" value="${d.balance_estimate ?? ''}">
+            <button type="button" class="x" onclick="obRemovePlanRow('debts', ${i})" title="Remove">×</button>
+          </div>
+        `).join('')}
+      </div>
+      <button type="button" class="btn-ghost btn btn-sm" onclick="obAddPlanRow('debts')" style="margin-top:.25rem;">+ Add debt</button>`;
+  });
+
+  html += renderPlanCard('tax_allocation', 'Off-the-top taxes', r.sections.tax_allocation, () => {
+    const pct = r.sections.tax_allocation.suggested_pct;
+    if (!pct) return `<div style="font-size:13px;color:var(--ds-t3);">No tax allocation suggested.</div>`;
+    return `<div class="plan-list-row"><span>Reserve from every deposit</span><span class="meta">${pct}%</span></div>`;
+  }, () => {
+    return `
+      <label style="display:flex;flex-direction:column;font-size:11px;font-weight:700;color:var(--ds-t3);text-transform:uppercase;letter-spacing:.04em;gap:4px;">
+        Tax % off the top
+        <input id="plan-tax-pct" type="number" min="0" max="50" value="${r.sections.tax_allocation.suggested_pct ?? 0}" style="padding:6px 8px;font-size:13px;border:1px solid var(--ds-line);border-radius:6px;">
+      </label>`;
+  });
+
+  html += renderPlanCard('surplus_split', 'Allocation strategy', r.sections.surplus_split, () => {
+    const s = r.sections.surplus_split;
+    return `<div class="plan-row-list">
+      <div class="plan-list-row"><span>Owner draw</span><span class="meta">${s.owner_pct}%</span></div>
+      <div class="plan-list-row"><span>Extra to debt</span><span class="meta">${s.debt_pct}%</span></div>
+      <div class="plan-list-row"><span>Extra to buffer</span><span class="meta">${s.reserve_pct}%</span></div>
+      <div class="plan-list-row"><span>Extra to free spending</span><span class="meta">${s.free_pct}%</span></div>
+    </div>`;
+  }, () => {
+    const s = r.sections.surplus_split;
+    const sum = (s.owner_pct||0) + (s.debt_pct||0) + (s.reserve_pct||0) + (s.free_pct||0);
+    return `
+      <div class="plan-presets">
+        <button type="button" onclick="obSplitPreset('crush_debt')">Crush debt</button>
+        <button type="button" onclick="obSplitPreset('build_safety')">Build safety</button>
+        <button type="button" onclick="obSplitPreset('balanced')">Balanced</button>
+      </div>
+      <div class="plan-split-grid">
+        <label>Owner draw <input id="plan-split-owner" type="number" min="0" max="100" value="${s.owner_pct}"></label>
+        <label>Extra to debt <input id="plan-split-debt" type="number" min="0" max="100" value="${s.debt_pct}"></label>
+        <label>Extra to buffer <input id="plan-split-buffer" type="number" min="0" max="100" value="${s.reserve_pct}"></label>
+        <label>Extra to free <input id="plan-split-free" type="number" min="0" max="100" value="${s.free_pct}"></label>
+      </div>
+      <div class="plan-split-sum" style="${sum === 100 ? 'color:#2a7a4a;' : 'color:#a04545;'}">Sum: ${sum}% ${sum === 100 ? '✓' : '· must total 100'}</div>`;
+  });
+
+  const submitting = r.submitting;
+  const buttonLabel = submitting
+    ? 'Applying…'
+    : (acceptedCount > 0 ? `Apply ${acceptedCount} section${acceptedCount === 1 ? '' : 's'} →` : 'Skip and continue →');
+  html += `
+    <div class="plan-footer-bar">
+      <button type="button" class="btn-ghost btn-sm" onclick="obRestart()" ${submitting ? 'disabled' : ''}>Start over</button>
+      <button type="button" class="btn btn-primary" onclick="obSubmitPlanReview()" ${submitting ? 'disabled' : ''} style="flex:1;">${buttonLabel}</button>
+    </div>`;
+
+  root.innerHTML = html;
+}
+
+function renderPlanCard(key, title, section, viewFn, editFn) {
+  const decision = section.decision || 'accept';
+  const editing  = !!section.editing;
+  const cardClass = decision === 'reject' ? 'plan-card rejected' : 'plan-card';
+  const acceptOn = decision === 'accept' ? 'on-accept' : '';
+  const rejectOn = decision === 'reject' ? 'on-reject' : '';
+  const body = editing ? `<div class="plan-edit-area">${editFn()}</div>` : viewFn();
+  return `
+    <div class="${cardClass}">
+      <div class="plan-card-head">
+        <div>
+          <div class="plan-card-title">${title}</div>
+        </div>
+        <div class="plan-actions">
+          <button type="button" class="plan-btn ${acceptOn}" onclick="obSetSectionDecision('${key}', 'accept')">Accept</button>
+          <button type="button" class="plan-btn" onclick="obToggleSectionEdit('${key}')">${editing ? 'Done' : 'Edit'}</button>
+          <button type="button" class="plan-btn ${rejectOn}" onclick="obSetSectionDecision('${key}', 'reject')">Skip</button>
+        </div>
+      </div>
+      ${body}
+    </div>`;
+}
+
+function escapeHtml(s) {
+  return String(s ?? '').replace(/[&<>"']/g, (c) => ({ '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;' }[c]));
+}
+function escapeAttr(s) { return escapeHtml(s); }
+
+async function obSubmitPlanReview() {
+  const r = obPlanReview;
+  if (!r) return;
+
+  // Pull any open editor values into state.
+  for (const key of Object.keys(r.sections)) obCommitSectionEdits(key);
+
+  // Validate the surplus split if it's accepted.
+  const split = r.sections.surplus_split;
+  if (split.decision === 'accept') {
+    const sum = (split.owner_pct||0) + (split.debt_pct||0) + (split.reserve_pct||0) + (split.free_pct||0);
+    if (sum !== 100) {
+      r.error = `Allocation strategy must total 100% (currently ${sum}%). Edit it or skip.`;
+      obRenderPlanReviewUI();
+      return;
+    }
+  }
+  r.error = null;
+  r.submitting = true;
+  obRenderPlanReviewUI();
+
+  const sections = {};
+  const overrides = {};
+  for (const [key, s] of Object.entries(r.sections)) {
+    const accept = s.decision === 'accept';
+    sections[key] = accept;
+    if (!accept) continue;
+    if (key === 'income_sources') overrides.income_sources = (s.items || []).filter((x) => x.name);
+    if (key === 'bills')           overrides.bills          = (s.items || []).filter((x) => x.name);
+    if (key === 'debts')           overrides.debts          = (s.items || []).filter((x) => x.name);
+    if (key === 'tax_allocation')  overrides.tax_allocation = { suggested_pct: s.suggested_pct };
+    if (key === 'surplus_split')   overrides.surplus_split  = { owner_pct: s.owner_pct, debt_pct: s.debt_pct, reserve_pct: s.reserve_pct, free_pct: s.free_pct };
+  }
+
+  try {
+    const sb = sbGet();
+    const { data, error } = await sb.functions.invoke('analyzer-apply-plan', {
+      body: { plan_id: r.plan_id, sections, overrides }
+    });
+    if (error) throw new Error(error.message || 'apply failed');
+    if (data && data.error) throw new Error(data.error);
+
+    // Refresh S from cloud so the dashboard reflects the merge.
+    const { data: ud, error: udErr } = await sb.from('user_data').select('*').eq('id', currentUser.id).single();
+    if (udErr) throw udErr;
+    if (ud) {
+      S.bills      = ud.bills || [];
+      S.debts      = (ud.debts || []).map((d) => ({ ...d, orig: d.orig != null ? d.orig : d.balance }));
+      S.sources    = ud.sources || [];
+      S.settings   = ud.settings || S.settings;
+      S.obligations= ud.obligations || [];
+      S.profile    = ud.profile || S.profile || {};
+    }
+    // Also save the user's stated goals + name parsing so profile is complete.
+    S.profile = S.profile || {};
+    if (obAnswers.name_business) S.profile.business_type = obAnswers.name_business;
+    const rawName = (obAnswers.name_business || '').trim();
+    const m = rawName.match(/^\s*(?:i'?m|my name is)\s+([A-Za-z][\w'-]*)/i);
+    S.profile.name = m ? m[1] : (rawName ? rawName.split(/[.,\s]/)[0] : (S.profile.name || ''));
+    S.profile.goals = GOAL_LABELS[obAnswers.goals] || obAnswers.goals || S.profile.goals || '';
+    await saveUserData();
+
+    // Done. Open the app.
+    document.getElementById('onboard-screen').style.display = 'none';
+    document.getElementById('app').style.display = 'block';
+    document.getElementById('nav-user').textContent = currentUser.email;
+    populateSources();
+    refreshHome();
+  } catch (e) {
+    console.error('analyzer-apply-plan failed:', e);
+    r.submitting = false;
+    r.error = 'Could not apply plan: ' + (e.message || 'unknown error') + '. Try again, or click Start over to enter manually.';
+    obRenderPlanReviewUI();
+  }
+}
+
 function renderObReview() {
   document.getElementById('ob-building').style.display = 'none';
   document.getElementById('ob-review').style.display = 'block';
+  // Restore the static action footer in case obRenderPlanReview hid it.
+  const legacyActions = document.querySelector('#ob-review .ob-actions');
+  if (legacyActions) legacyActions.style.display = '';
   const r = obResult;
   const sum = document.getElementById('ob-summary');
 
