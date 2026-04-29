@@ -18,11 +18,11 @@ import { createClient } from 'npm:@supabase/supabase-js@2';
 
 const SUPABASE_URL = Deno.env.get('SUPABASE_URL')!;
 const SERVICE_ROLE = Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')!;
+// Free-tier Supabase Edge Functions cap each invocation at ~50-60s wall
+// clock. With Anthropic batches of ~37s and DB writes parallelized below
+// (was eating ~30s sequentially), one batch of 50 fits inside the limit.
+// One batch per invocation; the client loops as needed.
 const BATCH_SIZE = 50;
-// Each batch of 50 takes ~60-80s on Haiku 4.5 (~170 tokens output per txn).
-// Supabase Edge Functions have a ~150s wall clock, so we ship one batch per
-// invocation and let the client loop. The client's iteration cap controls
-// the absolute upper bound on transactions classified per pipeline run.
 const MAX_PER_RUN = 50;
 
 const corsHeaders = {
@@ -104,26 +104,38 @@ Deno.serve(async (req) => {
       const byPlaidId = new Map<string, Classification>();
       for (const c of classifications) byPlaidId.set(c.id, c);
 
+      // Parallelize the per-row updates. Sequential await per row was eating
+      // ~30s of wall clock on a 50-row batch (free tier: ~50s ceiling). With
+      // Promise.all the whole batch finishes in 1-3s.
       const now = new Date().toISOString();
-      for (const row of batch) {
-        const c = byPlaidId.get(row.plaid_transaction_id);
-        if (!c) continue;
-        const { error } = await admin
-          .from('plaid_transactions')
-          .update({
-            able_category: c.category,
-            able_label: c.label,
-            able_confidence: c.confidence,
-            able_is_recurring_likely: c.is_recurring_likely,
-            able_classified_at: now,
-          })
-          .eq('id', row.id);
-        if (error) {
-          console.error(`update classification failed for ${row.id}:`, error);
-        } else {
-          classified++;
-        }
-      }
+      const tDb = Date.now();
+      const updates = batch
+        .map((row) => {
+          const c = byPlaidId.get(row.plaid_transaction_id);
+          if (!c) return null;
+          return admin
+            .from('plaid_transactions')
+            .update({
+              able_category: c.category,
+              able_label: c.label,
+              able_confidence: c.confidence,
+              able_is_recurring_likely: c.is_recurring_likely,
+              able_classified_at: now,
+            })
+            .eq('id', row.id)
+            .then(({ error }) => {
+              if (error) {
+                console.error(`update classification failed for ${row.id}:`, error);
+                return false;
+              }
+              return true;
+            });
+        })
+        .filter((p): p is NonNullable<typeof p> => p !== null);
+      const results = await Promise.all(updates);
+      const okCount = results.filter(Boolean).length;
+      classified += okCount;
+      console.log(`plaid-classify-pending: db updates (${results.length}) in ${Date.now() - tDb}ms, ${okCount} ok`);
     }
 
     const remaining = Math.max(0, (pendCount ?? rows.length) - classified);
