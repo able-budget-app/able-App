@@ -2681,59 +2681,15 @@ const OB_QUESTIONS = [
     key: 'name_business',
     type: 'text',
     msg: "What's your name, and what do you do to make money?",
-    hint: "Keep it casual. Just tell me who you are and what kind of work puts money in your account.",
-    placeholder: "I'm Paul. I run a marketing agency and also build custom trailers on the side."
+    hint: "Keep it casual. Tell me who you are and what kind of work puts money in your account.",
+    placeholder: "Your name and what you do"
   },
   {
     key: 'income',
     type: 'text',
     msg: "How do you typically get paid?",
-    hint: "Think lump sums, client deposits, irregular payments, weekly paychecks. Whatever's true for you.",
-    placeholder: "Client payments come in chunks, sometimes $3k, sometimes $8k. Trailer sales are bigger but less often."
-  },
-  {
-    key: 'plaid_connect',
-    type: 'plaid',
-    msg: "Connect your bank to auto-fill your bills, income, and categories.",
-    hint: "I'll read the last few months and propose a plan you can edit. Or skip and enter it manually."
-  },
-  {
-    key: 'sources',
-    type: 'text',
-    msg: "What are the main ways money comes in?",
-    hint: "List each income source separately. Client payments, Airbnb, product sales, salary, etc.",
-    placeholder: "Marketing clients, trailer sales, Airbnb rental, occasional consulting"
-  },
-  {
-    key: 'contractors',
-    type: 'text',
-    msg: "Do you pay anyone out of those income sources?",
-    hint: "Contractors, trainers, commission splits, platform fees. Anything that comes off the top when money hits. If not, just say no.",
-    placeholder: "No, I keep all of it. OR: Yes, my trainer Jordan gets 40% of lesson payments."
-  },
-  {
-    key: 'bills',
-    type: 'table',
-    msg: "List your fixed monthly bills.",
-    hint: "Rent, car, insurance, utilities, subscriptions. Anything that repeats every month. Add as many rows as you need.",
-    columns: [
-      {field: 'name', label: 'Name', placeholder: 'Mortgage', type: 'text'},
-      {field: 'amount', label: 'Amount', placeholder: '2500', type: 'number'},
-      {field: 'due', label: 'Due', placeholder: '15th', type: 'text'}
-    ]
-  },
-  {
-    key: 'debts',
-    type: 'table',
-    msg: "Now list any debt you're paying down.",
-    hint: "Credit cards, car loans, student loans. Add as many rows as you have. Skip this if you have no debt.",
-    columns: [
-      {field: 'name', label: 'Name', placeholder: 'Chase CC', type: 'text'},
-      {field: 'min', label: 'Min Payment', placeholder: '260', type: 'number'},
-      {field: 'rate', label: 'Rate %', placeholder: '22', type: 'number'},
-      {field: 'due', label: 'Due', placeholder: '15th', type: 'text'},
-      {field: 'balance', label: 'Balance', placeholder: '9051', type: 'number'}
-    ]
+    hint: "Lump sums, client deposits, irregular payments, weekly paychecks. Whatever's true for you.",
+    placeholder: "How money usually shows up"
   },
   {
     key: 'goals',
@@ -2749,9 +2705,17 @@ const OB_QUESTIONS = [
   {
     key: 'pay_self',
     type: 'text',
-    msg: "Last one. How much do you pay yourself?",
-    hint: "Most entrepreneurs don't pay themselves. You're going to. Even 5% is a start. Enter a number from 0 to 100. Leave blank for our default of 10%.",
+    optional: true,
+    defaultValue: '10',
+    msg: "How much do you pay yourself?",
+    hint: "Even 5% is a start. Enter a number from 0 to 100, or leave blank for our default of 10%.",
     placeholder: "10"
+  },
+  {
+    key: 'plaid_connect',
+    type: 'plaid',
+    msg: "Last step. Connect your bank.",
+    hint: "I'll read the last few months and draft a plan you can review. This usually finishes while we wrap up. Or skip and add things manually."
   }
 ];
 
@@ -2881,12 +2845,13 @@ function renderObStep() {
     }).join('');
     inputArea.innerHTML = `
       <style>
-        .ob-choice-card{display:flex;align-items:flex-start;gap:14px;width:100%;text-align:left;padding:14px 16px;margin-bottom:10px;background:#fff;border:1px solid var(--ds-line);border-radius:var(--ds-r1);cursor:pointer;transition:border-color .12s,background .12s;}
-        .ob-choice-card:hover{border-color:#3d9e78;}
+        .ob-choice-card{display:flex;align-items:flex-start;gap:14px;width:100%;text-align:left;padding:14px 16px;margin-bottom:10px;background:#fff;border:1.5px solid var(--ds-line);border-radius:var(--ds-r1);cursor:pointer;transition:border-color .12s,background .12s;}
+        .ob-choice-card:hover{border-color:#3d9e78;background:#f7fbf8;}
+        .ob-choice-card:hover .ob-choice-radio{border-color:#3d9e78;}
         .ob-choice-card.selected{border-color:#3d9e78;background:#ecf5ee;}
-        .ob-choice-radio{flex-shrink:0;width:20px;height:20px;border-radius:50%;border:2px solid var(--ds-line);background:#fff;display:inline-flex;align-items:center;justify-content:center;margin-top:2px;transition:border-color .12s;}
+        .ob-choice-radio{flex-shrink:0;width:22px;height:22px;border-radius:50%;border:2.5px solid #b5beb6;background:#fff;display:inline-flex;align-items:center;justify-content:center;margin-top:2px;transition:border-color .12s;}
         .ob-choice-card.selected .ob-choice-radio{border-color:#3d9e78;}
-        .ob-choice-radio-dot{width:10px;height:10px;border-radius:50%;background:#3d9e78;transform:scale(0);transition:transform .12s;}
+        .ob-choice-radio-dot{width:11px;height:11px;border-radius:50%;background:#3d9e78;transform:scale(0);transition:transform .12s;}
         .ob-choice-card.selected .ob-choice-radio-dot{transform:scale(1);}
         .ob-choice-text{display:flex;flex-direction:column;}
         .ob-choice-label{font-size:15px;font-weight:800;color:var(--ds-t1);margin-bottom:3px;letter-spacing:-.01em;}
@@ -2963,21 +2928,8 @@ function obNext() {
     // No input to validate, just advance
   } else if (q.type === 'plaid') {
     // Pipeline runs in the background once the bank connects (kicked off
-    // from obHandlePlaidSuccess). Continue just advances the user to the
-    // next onboarding step; obBuildWithAI checks pipeline status at the
-    // end and either uses the plan or gracefully falls back.
-    if (obAnswers.plaid_connect?.plaid_item_row_id) {
-      // Skip past the data-collection text questions the analyzer is
-      // expected to answer (sources / contractors / bills / debts) and
-      // land on `goals`. If the pipeline ultimately fails, those will
-      // be empty — handled in the dashboard with a banner.
-      const goalsIdx = OB_QUESTIONS.findIndex((q) => q.key === 'goals');
-      if (goalsIdx > obStep) {
-        obStep = goalsIdx;
-        renderObStep();
-        return;
-      }
-    }
+    // from obHandlePlaidSuccess). Continue from the connected state runs
+    // obBuildWithAI which will wait for the pipeline (or fall back).
   } else if (q.type === 'choice') {
     if (!obAnswers[q.key]) {
       // Should be guarded by the disabled button, but double-check.
@@ -2992,10 +2944,15 @@ function obNext() {
     // text type
     const val = document.getElementById('ob-text-input').value.trim();
     if (!val) {
-      document.getElementById('ob-text-input').focus();
-      return;
+      if (q.optional) {
+        obAnswers[q.key] = q.defaultValue ?? '';
+      } else {
+        document.getElementById('ob-text-input').focus();
+        return;
+      }
+    } else {
+      obAnswers[q.key] = val;
     }
-    obAnswers[q.key] = val;
   }
 
   if (obStep < OB_QUESTIONS.length - 1) {
@@ -3024,25 +2981,77 @@ async function obBuildWithAI() {
   document.getElementById('ob-building').style.display = 'block';
   document.getElementById('ob-progress').style.width = '100%';
 
-  // If the Plaid pipeline ran successfully, the analyzer plan is
-  // persisted in analyzer_plans. Show the per-section confirmation
-  // cards (7c) instead of the legacy auto-apply review.
-  if (obAnswers.plaid_plan && obAnswers.plaid_plan.plan_id) {
+  // If the user skipped Plaid entirely, fall through to the legacy
+  // ai-onboard flow with whatever answers we have. (No bank data, no
+  // analyzer plan, just the personal answers.)
+  if (!obAnswers.plaid_connect?.plaid_item_row_id) {
+    return obBuildViaAiOnboard();
+  }
+
+  // Wait for the background pipeline. We show a live status screen
+  // while it runs so the user knows progress is happening (no idle
+  // spinner). The wait budget is generous — the pipeline takes 2-4
+  // minutes typically.
+  const status = await obWaitForPipelineWithStatus(5 * 60 * 1000);
+
+  if (status === 'success' && obAnswers.plaid_plan?.plan_id) {
     try {
       await obRenderPlanReview(obAnswers.plaid_plan.plan_id);
       return;
     } catch (e) {
       console.error('Plan review failed to render:', e);
-      alert('Could not load your plan: ' + e.message + '\n\nFalling back to manual setup.');
-      // Fall through to ai-onboard.
+      // Fall through to ai-onboard with manual answers.
     }
   }
 
+  // Pipeline failed or timed out. Land in dashboard with a banner so
+  // the user isn't blocked. Keeping them in onboarding any longer
+  // hurts more than it helps.
+  return obBuildViaAiOnboard();
+}
+
+// Render a live status panel while the background pipeline finishes.
+// Polls obAnswers.plaid_pipeline.status every second and updates the
+// step label so the user sees progress, not a frozen spinner.
+async function obWaitForPipelineWithStatus(maxWaitMs) {
+  const buildingEl = document.getElementById('ob-building');
+  const stepLabels = {
+    sync:      'Reading recent transactions',
+    classify:  'Sorting income, bills, and discretionary',
+    recurring: 'Spotting recurring bills and income',
+    analyze:   'Drafting your Floor-First plan',
+  };
+  const renderStatus = () => {
+    if (!buildingEl) return;
+    const p = obAnswers.plaid_pipeline;
+    if (!p) return;
+    const label = stepLabels[p.step] || 'Finishing up';
+    buildingEl.innerHTML = `
+      <style>@keyframes ob-spin{to{transform:rotate(360deg);}}</style>
+      <div style="display:flex;flex-direction:column;align-items:center;justify-content:center;padding:3rem 1.5rem;text-align:center;">
+        <div style="width:36px;height:36px;border:3px solid #c8e0d0;border-top-color:#3d9e78;border-radius:50%;animation:ob-spin .8s linear infinite;margin-bottom:1.5rem;"></div>
+        <div style="font-size:18px;font-weight:800;color:var(--ds-t1);letter-spacing:-.01em;margin-bottom:.5rem;">${label}…</div>
+        <div style="font-size:13px;font-weight:500;color:var(--ds-t3);max-width:400px;line-height:1.6;">
+          I'm drafting your plan from your bank history. This usually takes 2 to 4 minutes. Hang tight.
+        </div>
+      </div>`;
+  };
+
+  renderStatus();
+  const deadline = Date.now() + maxWaitMs;
+  while (Date.now() < deadline) {
+    const p = obAnswers.plaid_pipeline;
+    if (!p) return 'none';
+    if (p.status !== 'running') return p.status;
+    renderStatus();
+    await new Promise((r) => setTimeout(r, 1000));
+  }
+  return obAnswers.plaid_pipeline?.status || 'running';
+}
+
+async function obBuildViaAiOnboard() {
   try {
-    // ai-onboard predates Plaid and expects flat string answers. The plaid_connect
-    // entry is a structured object with DB IDs; it would confuse the prompt and
-    // it isn't needed here (the bank data flows through plaid-analyze separately).
-    const { plaid_connect: _plaid, plaid_plan: _plan, ...answersForAI } = obAnswers;
+    const { plaid_connect: _plaid, plaid_plan: _plan, plaid_pipeline: _pipe, ...answersForAI } = obAnswers;
     const { data, error } = await sbGet().functions.invoke('ai-onboard', {
       body: { answers: answersForAI }
     });
@@ -3052,9 +3061,12 @@ async function obBuildWithAI() {
     renderObReview();
   } catch(e) {
     console.error('AI onboard failed:', e);
-    alert('Setup failed: ' + e.message + '\n\nYou can try again or start with a blank account.');
-    document.getElementById('ob-question-area').style.display = 'block';
-    document.getElementById('ob-building').style.display = 'none';
+    // Last-resort: open an empty dashboard. Better than stranding them.
+    document.getElementById('onboard-screen').style.display = 'none';
+    document.getElementById('app').style.display = 'block';
+    document.getElementById('nav-user').textContent = currentUser?.email || '';
+    populateSources();
+    refreshHome();
   }
 }
 
