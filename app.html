@@ -3131,6 +3131,26 @@ const OB_PIPELINE_STEPS = [
 // `error.context` is the underlying Response object — its body holds the
 // actual server error JSON, which is way more useful than the generic
 // "Edge Function returned a non-2xx status code" message.
+// Wrap functions.invoke with a wall-clock timeout. The Supabase client
+// has no built-in timeout and hangs indefinitely if the gateway drops
+// the request mid-flight (we hit this on classify and recurring during
+// 7b sandbox testing). On timeout we throw a clear "<fn> timeout after
+// Ns" so the inline error UI surfaces it instead of stalling forever.
+async function obInvokeWithTimeout(sb, fnName, body, timeoutMs) {
+  let timer;
+  const timeout = new Promise((_, reject) => {
+    timer = setTimeout(() => reject(new Error(`${fnName} timeout after ${Math.round(timeoutMs / 1000)}s`)), timeoutMs);
+  });
+  try {
+    return await Promise.race([
+      sb.functions.invoke(fnName, { body }),
+      timeout,
+    ]);
+  } finally {
+    clearTimeout(timer);
+  }
+}
+
 async function obExtractInvokeError(error) {
   if (!error) return 'unknown error';
   let detail = error.message || 'failed';
@@ -3176,22 +3196,22 @@ async function obRunPlaidPipeline() {
     obPipelineState.step = 0; obRenderPipeline();
     {
       const t0 = performance.now();
-      const { data, error } = await sb.functions.invoke('plaid-sync', {
-        body: { plaid_item_row_id: itemRowId }
-      });
+      const { data, error } = await obInvokeWithTimeout(sb, 'plaid-sync', { plaid_item_row_id: itemRowId }, 90000);
       console.log('[Pipeline] sync', Math.round(performance.now() - t0), 'ms', error ? { error } : data);
       if (error) throw new Error('sync: ' + (await obExtractInvokeError(error)));
       if (data && data.error) throw new Error('sync: ' + data.error);
     }
 
-    // Step 1: classify-pending. Loop until remaining=0 (max 5 iterations,
-    // each handles up to 500 txns; 2,500-txn ceiling is way past v1 needs).
+    // Step 1: classify-pending. Each invocation now processes ≤50 txns
+    // (server-side cap) so the client loops up to 10 times to cover
+    // typical 6-month histories. 120s per-call timeout absorbs any one
+    // slow Anthropic batch but bails on a true gateway hang.
     obPipelineState.step = 1; obRenderPipeline();
     {
       let iterations = 0;
-      while (iterations < 5) {
+      while (iterations < 10) {
         const t0 = performance.now();
-        const { data, error } = await sb.functions.invoke('plaid-classify-pending', { body: {} });
+        const { data, error } = await obInvokeWithTimeout(sb, 'plaid-classify-pending', {}, 120000);
         console.log('[Pipeline] classify', Math.round(performance.now() - t0), 'ms', error ? { error } : data);
         if (error) throw new Error('classify: ' + (await obExtractInvokeError(error)));
         if (data && data.error) throw new Error('classify: ' + data.error);
@@ -3209,16 +3229,7 @@ async function obRunPlaidPipeline() {
     {
       const t0 = performance.now();
       try {
-        const result = await Promise.race([
-          sb.functions.invoke('plaid-recurring-refresh', {
-            body: { plaid_item_row_id: itemRowId }
-          }),
-          new Promise((_, reject) => setTimeout(
-            () => reject(new Error('timeout after 60s')),
-            60000,
-          )),
-        ]);
-        const { data, error } = result;
+        const { data, error } = await obInvokeWithTimeout(sb, 'plaid-recurring-refresh', { plaid_item_row_id: itemRowId }, 60000);
         console.log('[Pipeline] recurring', Math.round(performance.now() - t0), 'ms', error ? { error } : data);
         if (error) throw new Error(await obExtractInvokeError(error));
         if (data && data.error) throw new Error(data.error);
@@ -3236,9 +3247,7 @@ async function obRunPlaidPipeline() {
     obPipelineState.step = 3; obRenderPipeline();
     {
       const t0 = performance.now();
-      const { data, error } = await sb.functions.invoke('plaid-analyze', {
-        body: { plaid_item_row_id: itemRowId, profile_hint }
-      });
+      const { data, error } = await obInvokeWithTimeout(sb, 'plaid-analyze', { plaid_item_row_id: itemRowId, profile_hint }, 120000);
       console.log('[Pipeline] analyze', Math.round(performance.now() - t0), 'ms', error ? { error } : { ok: true, plan_id: data?.plan_id });
       if (error) throw new Error('analyze: ' + (await obExtractInvokeError(error)));
       if (data && data.error) throw new Error('analyze: ' + data.error);
