@@ -781,6 +781,10 @@ input,select,button,textarea{font-family:inherit;}
 .tour-step-label{font-size:10px;font-weight:800;letter-spacing:.12em;text-transform:uppercase;opacity:.55;margin-bottom:6px;}
 .tour-title{font-family:var(--ds-f);font-size:1.15rem;font-weight:800;margin-bottom:6px;line-height:1.3;letter-spacing:-.02em;}
 .tour-body{font-size:13.5px;font-weight:500;line-height:1.55;opacity:.92;}
+.tour-intro{font-size:13.5px;font-weight:600;line-height:1.45;opacity:.85;margin-bottom:8px;}
+.tour-bullets{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:6px;}
+.tour-bullets li{position:relative;padding-left:16px;font-size:13px;font-weight:500;line-height:1.45;opacity:.92;}
+.tour-bullets li::before{content:'';position:absolute;left:0;top:7px;width:5px;height:5px;border-radius:50%;background:var(--ds-green-m);}
 .tour-actions{display:flex;justify-content:space-between;align-items:center;margin-top:14px;gap:10px;}
 .tour-dots{display:flex;gap:5px;}
 .tour-dot{width:6px;height:6px;border-radius:50%;background:rgba(255,255,255,.25);transition:all .25s;}
@@ -5726,7 +5730,12 @@ function refreshHome(){
 
 function renderDashboard(){
   const ti=totalIn();
-  const score=computeMonthlyScore();
+  // Tour mode shows demo score numbers so a brand-new account sees a
+  // populated example. endTour calls refreshHome and the real (zero)
+  // values come back automatically.
+  const score = document.body.classList.contains('tour-active')
+    ? TOUR_DEMO_SCORE
+    : computeMonthlyScore();
 
   // Eyebrow shows current month so the hero reads as "this month's snapshot".
   const eyebrowEl=document.getElementById('db-hero-eyebrow');
@@ -7663,25 +7672,46 @@ const TOUR_STEPS = [
     tab: 'home',
     spotlight: '#db-hero',
     title: "Your money, right now.",
-    body: "Top of every page: what's in your accounts, what's reserved for upcoming bills, and what's safe to spend today. Tap Log income whenever new money lands and Able will route it for you."
+    intro: "Top of every page:",
+    bullets: [
+      "What's in your accounts",
+      "What's reserved for upcoming bills",
+      "What's safe to spend today",
+      "Tap Log income whenever new money lands",
+    ],
   },
   {
     tab: 'home',
     spotlight: '.db-score-card',
     title: "Five habits, one score.",
-    body: "Bills covered, debt paid, buffer built, paying yourself, living within your income. The closer to all five, the closer to 100. Tap any chip to dig in."
+    intro: "Closer to all five, closer to 100.",
+    bullets: [
+      "Bills covered",
+      "Debt paid down",
+      "Buffer built",
+      "Paying yourself",
+      "Living within your income",
+    ],
   },
   {
     tab: 'home',
     spotlight: '.db-actions-grid:first-of-type',
     title: "Next 14 days, and the Coach.",
-    body: "One tap shows every bill due and every expected payment for the next two weeks. The Coach reads your actual numbers and tells you how the month is shaping up."
+    bullets: [
+      "Every bill due in the next two weeks",
+      "Every expected payment, in date order",
+      "Coach reads your numbers and tells you how the month's shaping up",
+    ],
   },
   {
     tab: 'home',
     spotlight: '.db-actions-grid:nth-of-type(2)',
     title: "Add what's coming.",
-    body: "Log a new bill or an expected payment from here. Every bill you add gets reserved against from each deposit until it's covered."
+    bullets: [
+      "Log a new bill",
+      "Log expected income",
+      "Every bill gets reserved against each deposit until it's covered",
+    ],
   },
 
   // ── Plan tab ──────────────────────────────────────────────────
@@ -7690,28 +7720,45 @@ const TOUR_STEPS = [
     subTab: 'forecast',
     spotlight: '.sub-tab[data-sub="forecast"]',
     title: "Plan ahead.",
-    body: "Forecast is where you log expected income — invoices, retainers, anything you're already counting on. Future deposits get pre-allocated so nothing surprises you."
+    intro: "Forecast is for expected income.",
+    bullets: [
+      "Invoices, retainers, anything you're counting on",
+      "Future deposits get pre-allocated",
+      "Nothing catches you off guard",
+    ],
   },
   {
     tab: 'plan',
     subTab: 'bills',
     spotlight: '.sub-tab[data-sub="bills"]',
     title: "Bills, in one place.",
-    body: "Every recurring obligation. Add, edit, mark paid. Each one gets reserved against from each deposit, so the floor is always covered first."
+    bullets: [
+      "Add, edit, mark paid",
+      "Each one reserved against from every deposit",
+      "Floor stays covered first",
+    ],
   },
   {
     tab: 'plan',
     subTab: 'debt',
     spotlight: '.sub-tab[data-sub="debt"]',
     title: "Pay down debt.",
-    body: "Highest-interest first by default. Whatever you set as Extra to debt in your split goes here automatically each surplus."
+    bullets: [
+      "Highest interest first by default",
+      "Extra-to-debt from your split lands here automatically",
+      "Track payoff progress per debt",
+    ],
   },
   {
     tab: 'plan',
     subTab: 'whatif',
     spotlight: '.sub-tab[data-sub="whatif"]',
     title: "Run a what-if.",
-    body: "Try a different split or a new income scenario before you commit. No save needed — just play."
+    bullets: [
+      "Try a different split",
+      "Try a new income scenario",
+      "Nothing saves until you commit",
+    ],
   },
 
   // ── Score tab ─────────────────────────────────────────────────
@@ -7719,7 +7766,11 @@ const TOUR_STEPS = [
     tab: 'score',
     spotlight: '#page-score',
     title: "Track your discipline.",
-    body: "Full breakdown of this month's score, plus the trend across months. Higher means fewer surprises — and that's the whole point."
+    bullets: [
+      "Full breakdown of this month's score",
+      "Trend across months",
+      "Higher means fewer surprises",
+    ],
   },
 
   // ── More tab ──────────────────────────────────────────────────
@@ -7728,29 +7779,55 @@ const TOUR_STEPS = [
     subTab: 'refer',
     spotlight: '.sub-tab[data-sub="refer"]',
     title: "Earn free Able.",
-    body: "Every 3 friends who start a trial = a free month. Every 5 who convert = a free year. Unlocked from day one — go share it if you've got a friend who'd benefit."
+    bullets: [
+      "Every 3 friends who start a trial = a free month",
+      "Every 5 who convert to paid = a free year",
+    ],
   },
   {
     tab: 'more',
     subTab: 'learn',
     spotlight: '.sub-tab[data-sub="learn"]',
     title: "Learn the method.",
-    body: "Short articles on Floor-First Budgeting — how to actually use Able well. Read one when you've got two minutes."
+    bullets: [
+      "Short articles on Floor-First Budgeting",
+      "How to actually use Able well",
+      "Two minutes each",
+    ],
   },
   {
     tab: 'more',
     subTab: 'settings',
     spotlight: '.sub-tab[data-sub="settings"]',
     title: "Tune the plan.",
-    body: "Change your surplus split, planning window, account, subscription. The green Coach button at the bottom is always there too — tap any time."
+    bullets: [
+      "Change your surplus split",
+      "Adjust your planning window",
+      "Manage account and subscription",
+      "Green Coach button is always there too",
+    ],
   }
 ];
+
+// Demo numbers shown on the Score card while the tour is active. Real
+// values restore when endTour calls refreshHome. Lets a brand-new
+// account see what a populated month feels like during the walkthrough
+// instead of staring at all zeros.
+const TOUR_DEMO_SCORE = {
+  hasData: true,
+  total: 78,
+  gradeLabel: 'On Track',
+  components: { bills: 26, debt: 14, buffer: 11, pay: 16, budget: 12 },
+};
 
 let tourStep = 0;
 
 function startTour() {
   tourStep = 0;
   document.body.classList.add('tour-active');
+  // Re-render the dashboard so the score card picks up demo numbers
+  // for the duration of the tour instead of staring at all zeros.
+  if (typeof refreshHome === 'function') { try { refreshHome(); } catch(_){} }
   renderTourStep();
 }
 
@@ -7800,11 +7877,16 @@ function renderTourStep() {
     bubble.className = 'tour-bubble';
     const dots = TOUR_STEPS.map((_,i) => `<div class="tour-dot ${i===tourStep?'active':''}"></div>`).join('');
     const isLast = tourStep === TOUR_STEPS.length - 1;
+    const introHtml = step.intro ? `<div class="tour-intro">${step.intro}</div>` : '';
+    const bulletsHtml = (step.bullets && step.bullets.length)
+      ? `<ul class="tour-bullets">${step.bullets.map((b) => `<li>${b}</li>`).join('')}</ul>`
+      : (step.body ? `<div class="tour-body">${step.body}</div>` : '');
     bubble.innerHTML = `
       <div class="tour-bubble-arrow"></div>
       <div class="tour-step-label">Step ${tourStep+1} of ${TOUR_STEPS.length}</div>
       <div class="tour-title">${step.title}</div>
-      <div class="tour-body">${step.body}</div>
+      ${introHtml}
+      ${bulletsHtml}
       <div class="tour-actions">
         <div class="tour-dots">${dots}</div>
         <div style="display:flex;gap:6px;align-items:center;">
