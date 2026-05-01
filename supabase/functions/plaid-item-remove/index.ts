@@ -8,12 +8,70 @@
 //
 // Auth: requires the user's bearer token. The row's user_id must match
 // the authenticated user.
+//
+// _shared/plaid.ts is inlined below so this function deploys
+// self-contained from the Supabase dashboard.
 
 import { createClient } from 'npm:@supabase/supabase-js@2';
-import { itemRemove, PlaidApiError } from '../_shared/plaid.ts';
 
 const SUPABASE_URL = Deno.env.get('SUPABASE_URL')!;
 const SERVICE_ROLE = Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')!;
+const PLAID_ENV = Deno.env.get('PLAID_ENV') ?? 'sandbox';
+const PLAID_HOSTS: Record<string, string> = {
+  sandbox: 'https://sandbox.plaid.com',
+  development: 'https://development.plaid.com',
+  production: 'https://production.plaid.com',
+};
+const PLAID_HOST = PLAID_HOSTS[PLAID_ENV] ?? PLAID_HOSTS.sandbox;
+
+type PlaidErrorBody = {
+  error_type: string;
+  error_code: string;
+  error_message: string;
+  display_message?: string | null;
+  request_id?: string;
+};
+
+class PlaidApiError extends Error {
+  status: number;
+  plaid: PlaidErrorBody;
+  constructor(status: number, plaid: PlaidErrorBody) {
+    super(`Plaid ${plaid.error_code}: ${plaid.error_message}`);
+    this.status = status;
+    this.plaid = plaid;
+  }
+}
+
+async function plaidApi<TReq extends Record<string, unknown>, TRes>(
+  path: string,
+  body: TReq,
+): Promise<TRes> {
+  const clientId = Deno.env.get('PLAID_CLIENT_ID');
+  const secret = Deno.env.get('PLAID_SECRET');
+  if (!clientId || !secret) {
+    throw new Error('PLAID_CLIENT_ID and PLAID_SECRET must be set');
+  }
+  const res = await fetch(`${PLAID_HOST}${path}`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ client_id: clientId, secret, ...body }),
+  });
+  const text = await res.text();
+  let parsed: unknown = null;
+  try { parsed = text ? JSON.parse(text) : null; } catch { /* non-JSON body */ }
+  if (!res.ok) {
+    const err = (parsed ?? {
+      error_type: 'API_ERROR',
+      error_code: 'UNKNOWN',
+      error_message: text || `HTTP ${res.status}`,
+    }) as PlaidErrorBody;
+    throw new PlaidApiError(res.status, err);
+  }
+  return parsed as TRes;
+}
+
+const itemRemove = (access_token: string) =>
+  plaidApi<{ access_token: string }, { request_id: string }>('/item/remove', { access_token });
 
 const corsHeaders = {
   'Access-Control-Allow-Origin': '*',
