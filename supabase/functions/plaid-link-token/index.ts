@@ -32,6 +32,9 @@ type Body = {
   mode?: 'new' | 'update';
   lookback_months?: 6 | 12 | 24;
   plaid_item_row_id?: string;
+  // Update-mode only: set when reconnecting after NEW_ACCOUNTS_AVAILABLE
+  // so the user can pick which new accounts to share.
+  account_selection_enabled?: boolean;
 };
 
 Deno.serve(async (req) => {
@@ -81,6 +84,9 @@ Deno.serve(async (req) => {
       ...(PLAID_WEBHOOK_URL ? { webhook: PLAID_WEBHOOK_URL } : {}),
       ...(accessToken ? { access_token: accessToken } : {}),
       ...(mode === 'new' ? { transactions: { days_requested: dayMap[lookback] } } : {}),
+      ...(mode === 'update' && body.account_selection_enabled
+        ? { update: { account_selection_enabled: true } }
+        : {}),
     });
 
     return json({

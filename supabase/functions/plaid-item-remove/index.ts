@@ -1,0 +1,87 @@
+// plaid-item-remove
+// Honors Plaid's required user-offboarding flow. Calls /item/remove with
+// the user's access_token and deletes the plaid_items row, which
+// cascades to plaid_accounts, plaid_transactions, and
+// plaid_recurring_streams via FK on delete cascade.
+//
+// POST body: { plaid_item_row_id: string }
+//
+// Auth: requires the user's bearer token. The row's user_id must match
+// the authenticated user.
+
+import { createClient } from 'npm:@supabase/supabase-js@2';
+import { itemRemove, PlaidApiError } from '../_shared/plaid.ts';
+
+const SUPABASE_URL = Deno.env.get('SUPABASE_URL')!;
+const SERVICE_ROLE = Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')!;
+
+const corsHeaders = {
+  'Access-Control-Allow-Origin': '*',
+  'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type',
+  'Access-Control-Allow-Methods': 'POST, OPTIONS',
+};
+
+type Body = { plaid_item_row_id?: string };
+
+Deno.serve(async (req) => {
+  if (req.method === 'OPTIONS') return new Response('ok', { headers: corsHeaders });
+  if (req.method !== 'POST') return json({ error: 'POST only' }, 405);
+
+  try {
+    const authHeader = req.headers.get('Authorization') ?? '';
+    const userClient = createClient(SUPABASE_URL, SERVICE_ROLE, {
+      global: { headers: { Authorization: authHeader } },
+    });
+    const { data: userRes, error: userErr } = await userClient.auth.getUser();
+    if (userErr || !userRes.user) return json({ error: 'Unauthorized' }, 401);
+    const userId = userRes.user.id;
+
+    const body: Body = await req.json().catch(() => ({}));
+    if (!body.plaid_item_row_id) return json({ error: 'plaid_item_row_id required' }, 400);
+
+    const admin = createClient(SUPABASE_URL, SERVICE_ROLE);
+    const { data: item, error: fetchErr } = await admin
+      .from('plaid_items')
+      .select('id, user_id, access_token, institution_name')
+      .eq('id', body.plaid_item_row_id)
+      .single();
+    if (fetchErr || !item) return json({ error: 'Item not found' }, 404);
+    if (item.user_id !== userId) return json({ error: 'Forbidden' }, 403);
+
+    // Tell Plaid first. If the call succeeds, the access_token is
+    // invalidated and we should drop the row regardless. If Plaid
+    // returns ITEM_NOT_FOUND we treat that as already-removed and
+    // proceed to delete the row anyway.
+    try {
+      await itemRemove(item.access_token);
+    } catch (e) {
+      if (e instanceof PlaidApiError && e.plaid.error_code === 'ITEM_NOT_FOUND') {
+        console.warn(`item ${item.id} already removed at Plaid; proceeding with local delete`);
+      } else {
+        console.error('plaid /item/remove failed:', e);
+        return json({ error: (e as Error).message }, 502);
+      }
+    }
+
+    const { error: delErr } = await admin
+      .from('plaid_items')
+      .delete()
+      .eq('id', item.id);
+    if (delErr) {
+      console.error('plaid_items delete failed:', delErr);
+      return json({ error: delErr.message }, 500);
+    }
+
+    return json({ ok: true, institution_name: item.institution_name });
+  } catch (e) {
+    console.error('plaid-item-remove error:', e);
+    return json({ error: (e as Error).message }, 500);
+  }
+});
+
+function json(body: unknown, status = 200) {
+  return new Response(JSON.stringify(body), {
+    status,
+    headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+  });
+}

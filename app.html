@@ -1671,6 +1671,13 @@ posthog.init('phc_B6PH36QxpExnyBYhfScFFF6LhDvoyxuFr6PypJuxxky3', {
           <button class="btn btn-primary btn-sm" onclick="addSource()">Add</button>
         </div>
       </div>
+      <div class="sec">Connected accounts</div>
+      <div class="card">
+        <div style="font-size:13px;color:var(--ds-t2);font-weight:600;margin-bottom:1rem;line-height:1.6;">Banks Able reads transactions from. Disconnecting stops the sync and removes the data from your account.</div>
+        <div id="connected-accounts-list"><div class="empty-state" style="padding:1.25rem;">Loading…</div></div>
+        <button class="btn btn-primary btn-sm" id="connect-another-bank-btn" style="margin-top:.85rem;width:100%;" onclick="settingsConnectBank()">+ Connect a bank</button>
+        <div id="connect-bank-error" style="color:var(--ds-c4);font-size:12px;font-weight:600;margin-top:.5rem;display:none;"></div>
+      </div>
       <div class="sec">Email reminders</div>
       <div class="card">
         <div style="font-size:13px;color:var(--ds-t2);font-weight:600;line-height:1.6;margin-bottom:1rem;">We'll send these to the email on file. Unsubscribe anytime.</div>
@@ -6784,6 +6791,7 @@ function loadSettingsPage(){
   });
   updateWindowHint(win);
   updateSplitPreview();renderSourcesList();renderFixedAllocList();
+  loadConnectedAccounts();
   // All email prefs default ON (treat undefined as true). Each cron-driven email
   // sender on the backend respects the matching key on email_prefs.
   const ep = S.email_prefs || {};
@@ -6792,6 +6800,208 @@ function loadSettingsPage(){
     if (el) el.checked = ep[key] !== false;
   });
   refreshMfaStatus();
+}
+
+// ─── Connected accounts (Plaid items) ────────────────────────────────
+// Reads plaid_items + plaid_accounts and renders a card per institution
+// with a Disconnect button. Re-runs on demand after a disconnect /
+// fresh link succeeds.
+async function loadConnectedAccounts() {
+  const listEl = document.getElementById('connected-accounts-list');
+  if (!listEl || !currentUser) return;
+  try {
+    const sb = sbGet();
+    const { data: items, error: itemsErr } = await sb
+      .from('plaid_items')
+      .select('id, institution_name, status, error_message, consent_expiration_at, created_at')
+      .order('created_at', { ascending: true });
+    if (itemsErr) throw itemsErr;
+
+    if (!items || items.length === 0) {
+      listEl.innerHTML = `<div class="empty-state" style="padding:1.25rem;">No banks connected yet. Connect one below so Able can read transactions.</div>`;
+      return;
+    }
+
+    const itemIds = items.map((i) => i.id);
+    const { data: accounts } = await sb
+      .from('plaid_accounts')
+      .select('plaid_item_id, name, mask, type, subtype')
+      .in('plaid_item_id', itemIds);
+
+    const accountsByItem = {};
+    (accounts || []).forEach((a) => {
+      (accountsByItem[a.plaid_item_id] = accountsByItem[a.plaid_item_id] || []).push(a);
+    });
+
+    listEl.innerHTML = items.map((item) => {
+      const accs = accountsByItem[item.id] || [];
+      const accLabel = accs.length
+        ? accs.map((a) => a.mask ? `${a.name || a.subtype || 'account'} ····${a.mask}` : (a.name || a.subtype || 'account')).join(' · ')
+        : 'No accounts';
+      const status = item.status || 'active';
+      const statusBadge = status === 'active' ? '' : `
+        <span style="display:inline-block;font-size:10px;font-weight:800;letter-spacing:.06em;text-transform:uppercase;color:var(--ds-c4);background:#fdeef2;padding:3px 7px;border-radius:100px;margin-left:8px;">${statusLabel(status)}</span>`;
+      // pending_disconnect is what we set when NEW_ACCOUNTS_AVAILABLE fires;
+      // pass account_selection_enabled so the user can pick the new accounts.
+      const wantsAccountSelect = status === 'pending_disconnect';
+      const reconnectBtn = (status === 'error' || status === 'pending_expiration' || status === 'pending_disconnect') ? `
+        <button class="btn btn-sm btn-primary" onclick="settingsRunUpdateMode('${item.id}', ${wantsAccountSelect})" style="font-size:12px;">Reconnect</button>` : '';
+      return `
+        <div style="display:flex;align-items:flex-start;justify-content:space-between;gap:12px;padding:14px 0;border-bottom:1px solid var(--ds-t4);">
+          <div style="flex:1;min-width:0;">
+            <div style="font-weight:800;font-size:14px;color:var(--ds-t1);letter-spacing:-.01em;">${escapeHtml(item.institution_name || 'Connected bank')}${statusBadge}</div>
+            <div style="font-size:11px;color:var(--ds-t3);font-weight:600;margin-top:3px;line-height:1.5;word-break:break-word;">${escapeHtml(accLabel)}</div>
+            ${item.error_message ? `<div style="font-size:11px;color:var(--ds-c4);font-weight:600;margin-top:5px;line-height:1.5;">${escapeHtml(item.error_message)}</div>` : ''}
+          </div>
+          <div style="display:flex;gap:6px;flex-shrink:0;">
+            ${reconnectBtn}
+            <button class="btn btn-sm" onclick="settingsDisconnectBank('${item.id}', ${JSON.stringify(item.institution_name || 'this bank').replace(/"/g, '&quot;')})" style="font-size:12px;color:var(--ds-c4);">Disconnect</button>
+          </div>
+        </div>`;
+    }).join('');
+  } catch (e) {
+    console.error('loadConnectedAccounts failed:', e);
+    listEl.innerHTML = `<div class="empty-state" style="padding:1.25rem;color:var(--ds-c4);">Could not load connected accounts. ${escapeHtml(e.message || '')}</div>`;
+  }
+}
+
+function statusLabel(status) {
+  switch (status) {
+    case 'error': return 'Reconnect needed';
+    case 'pending_expiration': return 'Expiring soon';
+    case 'pending_disconnect': return 'Action needed';
+    case 'revoked': return 'Revoked';
+    default: return status;
+  }
+}
+
+async function settingsDisconnectBank(plaidItemRowId, institutionName) {
+  if (!confirm(`Disconnect ${institutionName}? Able will stop syncing transactions from this bank and the data will be removed from your account.`)) return;
+  const errEl = document.getElementById('connect-bank-error');
+  if (errEl) { errEl.style.display = 'none'; errEl.textContent = ''; }
+  try {
+    const { data, error } = await sbGet().functions.invoke('plaid-item-remove', {
+      body: { plaid_item_row_id: plaidItemRowId }
+    });
+    if (error) throw error;
+    if (data && data.error) throw new Error(data.error);
+    Able.track?.('plaid_item_removed', { institution_name: institutionName });
+    await loadConnectedAccounts();
+  } catch (e) {
+    console.error('plaid-item-remove failed:', e);
+    if (errEl) {
+      errEl.textContent = 'Could not disconnect: ' + (e.message || 'unknown error');
+      errEl.style.display = 'block';
+    }
+  }
+}
+
+// Connect-bank entry point from Settings. Same Plaid Link flow as
+// onboarding but without the surrounding question pipeline. After link,
+// triggers the same post-link pipeline (sync → classify → recurring →
+// analyze) so the user gets a Floor-First plan they can review.
+async function settingsConnectBank() {
+  const btn = document.getElementById('connect-another-bank-btn');
+  const errEl = document.getElementById('connect-bank-error');
+  if (errEl) { errEl.style.display = 'none'; errEl.textContent = ''; }
+  if (btn) { btn.disabled = true; btn.textContent = 'Loading…'; }
+
+  try {
+    await ensurePlaidLinkScript();
+    const { data, error } = await sbGet().functions.invoke('plaid-link-token', {
+      body: { mode: 'new', lookback_months: 6 }
+    });
+    if (error) throw error;
+    if (data && data.error) throw new Error(data.error);
+    if (!data?.link_token) throw new Error('No link_token returned');
+
+    const handler = window.Plaid.create({
+      token: data.link_token,
+      onSuccess: async (public_token, metadata) => {
+        if (btn) btn.textContent = 'Linking…';
+        try {
+          const { data: ex, error: exErr } = await sbGet().functions.invoke('plaid-exchange-public-token', {
+            body: {
+              public_token,
+              institution: metadata?.institution
+                ? { id: metadata.institution.institution_id, name: metadata.institution.name }
+                : null,
+              lookback_months: 6,
+            }
+          });
+          if (exErr) throw exErr;
+          if (ex && ex.error) throw new Error(ex.error);
+          // Kick off the standard pipeline in the background. Don't block UX.
+          if (ex?.plaid_item_row_id) {
+            sbGet().functions.invoke('plaid-sync', { body: { plaid_item_row_id: ex.plaid_item_row_id } })
+              .catch((e) => console.warn('post-link plaid-sync failed:', e));
+          }
+          Able.track?.('plaid_item_added_from_settings', {
+            institution_name: metadata?.institution?.name,
+          });
+          await loadConnectedAccounts();
+        } catch (e) {
+          console.error('post-link flow failed:', e);
+          if (errEl) { errEl.textContent = 'Linked, but follow-up sync failed: ' + (e.message || 'unknown error'); errEl.style.display = 'block'; }
+        } finally {
+          if (btn) { btn.disabled = false; btn.textContent = '+ Connect a bank'; }
+        }
+      },
+      onExit: (err) => {
+        if (btn) { btn.disabled = false; btn.textContent = '+ Connect a bank'; }
+        if (err && errEl) {
+          errEl.textContent = err.display_message || err.error_message || 'Connection canceled';
+          errEl.style.display = 'block';
+        }
+      },
+    });
+    handler.open();
+  } catch (e) {
+    console.error('settingsConnectBank failed:', e);
+    if (btn) { btn.disabled = false; btn.textContent = '+ Connect a bank'; }
+    if (errEl) { errEl.textContent = 'Could not start connection: ' + (e.message || 'unknown error'); errEl.style.display = 'block'; }
+  }
+}
+
+// Re-link the same item in update mode. Used when an item is in error /
+// pending_expiration / pending_disconnect.
+async function settingsRunUpdateMode(plaidItemRowId, accountSelectionEnabled) {
+  const errEl = document.getElementById('connect-bank-error');
+  if (errEl) { errEl.style.display = 'none'; errEl.textContent = ''; }
+  try {
+    await ensurePlaidLinkScript();
+    const { data, error } = await sbGet().functions.invoke('plaid-link-token', {
+      body: {
+        mode: 'update',
+        plaid_item_row_id: plaidItemRowId,
+        account_selection_enabled: !!accountSelectionEnabled,
+      }
+    });
+    if (error) throw error;
+    if (data && data.error) throw new Error(data.error);
+    if (!data?.link_token) throw new Error('No link_token returned');
+
+    const handler = window.Plaid.create({
+      token: data.link_token,
+      onSuccess: async () => {
+        // Update mode doesn't return a new public_token to exchange — Plaid
+        // resolves the existing Item in place. Just refresh the list so the
+        // status badge clears.
+        Able.track?.('plaid_item_update_completed');
+        await loadConnectedAccounts();
+      },
+      onExit: (err) => {
+        if (err && errEl) {
+          errEl.textContent = err.display_message || err.error_message || 'Reconnect canceled';
+          errEl.style.display = 'block';
+        }
+      },
+    });
+    handler.open();
+  } catch (e) {
+    console.error('settingsRunUpdateMode failed:', e);
+    if (errEl) { errEl.textContent = 'Could not start reconnect: ' + (e.message || 'unknown error'); errEl.style.display = 'block'; }
+  }
 }
 
 function toggleEmailPref(key,val){

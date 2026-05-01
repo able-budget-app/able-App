@@ -173,6 +173,12 @@ async function dispatch(
         updates.error_code = ev.error?.error_code ?? null;
         updates.error_message = ev.error?.error_message ?? null;
         break;
+      case 'LOGIN_REPAIRED':
+        // Update mode succeeded — clear the prompt.
+        updates.status = 'active';
+        updates.error_code = null;
+        updates.error_message = null;
+        break;
       case 'PENDING_EXPIRATION':
         updates.status = 'pending_expiration';
         updates.consent_expiration_at = ev.consent_expiration_time ?? null;
@@ -192,8 +198,10 @@ async function dispatch(
         }
         break;
       case 'NEW_ACCOUNTS_AVAILABLE':
-        // Surface to UI via item state. User must run Link in update mode.
-        updates.status = 'pending_disconnect'; // closest existing flag
+        // Surface to UI via item state. User must run Link in update mode
+        // with account_selection_enabled to choose the new accounts.
+        updates.status = 'pending_disconnect';
+        updates.error_message = 'New accounts are available at this bank — reconnect to choose which ones to share.';
         break;
       case 'WEBHOOK_UPDATE_ACKNOWLEDGED':
         // Nothing to do.
