@@ -1750,16 +1750,6 @@ posthog.init('phc_B6PH36QxpExnyBYhfScFFF6LhDvoyxuFr6PypJuxxky3', {
 <div class="page" id="page-refer">
   <div style="max-width:780px;margin:0 auto;">
 
-    <!-- Locked state (non-paid users) -->
-    <div id="refer-locked" style="display:none;">
-      <div class="sec">Refer friends</div>
-      <div class="card" style="text-align:center;padding:2rem 1.5rem;">
-        <div style="font-size:1.4rem;font-weight:900;color:var(--ds-t1);letter-spacing:-.02em;margin-bottom:.5rem;">Reactivate to refer.</div>
-        <div style="font-size:14px;color:var(--ds-t2);font-weight:500;line-height:1.6;">Referrals are open while your subscription is active. Reactivate to start earning free months and a free year as friends join.</div>
-      </div>
-    </div>
-
-    <!-- Active state (paid users) -->
     <div id="refer-active" style="display:none;">
       <div class="sec">Earn free months and a free year</div>
       <div class="card" style="margin-bottom:1rem;">
@@ -4559,17 +4549,7 @@ function referEscapeHtml(s){return String(s).replace(/&/g,'&amp;').replace(/</g,
 
 async function enterReferPage() {
   if(!currentUser) return;
-  const locked=document.getElementById('refer-locked');
-  const active=document.getElementById('refer-active');
-  const status=await fetchSubscriptionStatus(currentUser.id);
-  const hasAccess=status==='active'||status==='trialing'||status==='lifetime';
-  if(!hasAccess){
-    locked.style.display='block';
-    active.style.display='none';
-    return;
-  }
-  locked.style.display='none';
-  active.style.display='block';
+  document.getElementById('refer-active').style.display='block';
   await loadReferralData();
 }
 
