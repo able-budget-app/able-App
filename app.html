@@ -765,9 +765,14 @@ input,select,button,textarea{font-family:inherit;}
 }
 
 /* ═══════ GUIDED TOUR ═══════ */
-.tour-overlay{position:fixed;inset:0;background:rgba(0,0,0,.55);z-index:9998;animation:fadeIn .25s ease;}
+/* Overlay is transparent — it only catches outside-clicks to end the
+   tour, never dims the page. The user must be able to see what we're
+   highlighting (especially page content like Forecast / Bills / Debt). */
+.tour-overlay{position:fixed;inset:0;background:transparent;z-index:9998;animation:fadeIn .25s ease;}
 @keyframes fadeIn{from{opacity:0}to{opacity:1}}
-.tour-spotlight{position:fixed;z-index:9999;border-radius:10px;box-shadow:0 0 0 9999px rgba(0,0,0,.55),0 0 20px rgba(42,122,74,.4);pointer-events:none;transition:all .35s cubic-bezier(.4,0,.2,1);}
+/* Spotlight is a green ring + outer glow — no dim. The bright ring +
+   bubble draw the eye; the rest of the screen stays fully readable. */
+.tour-spotlight{position:fixed;z-index:9999;border-radius:10px;box-shadow:0 0 0 3px rgba(61,158,120,.95),0 0 0 6px rgba(61,158,120,.25),0 0 32px rgba(42,122,74,.55);pointer-events:none;transition:all .35s cubic-bezier(.4,0,.2,1);}
 .tour-bubble{position:fixed;z-index:10000;background:var(--ds-t1);color:white;border-radius:18px;padding:18px 20px;max-width:340px;box-shadow:0 16px 48px rgba(0,0,0,.3);font-family:var(--ds-f);animation:bubbleIn .3s ease;}
 @keyframes bubbleIn{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
 .tour-bubble-arrow{position:absolute;width:0;height:0;border:9px solid transparent;}
@@ -784,6 +789,14 @@ input,select,button,textarea{font-family:inherit;}
 .tour-btn:hover{transform:translateY(-1px);}
 .tour-skip{background:transparent;color:rgba(255,255,255,.55);border:none;font-family:var(--ds-f);font-weight:700;font-size:12px;cursor:pointer;padding:6px 10px;}
 .tour-skip:hover{color:var(--white);}
+/* While the tour is running, force the structural cards on the
+   dashboard to be visible even on a brand-new (empty) account. The
+   user wants to see WHERE their money / score / actions will appear,
+   even if the values are zeros. The empty-state welcome card is hidden
+   so the real cards take its place. */
+body.tour-active #home-welcome{display:none!important;}
+body.tour-active #page-home .db-hero{display:block!important;}
+body.tour-active #page-home .db-action-card{display:flex!important;}
 
 /* ═══════ SUB-NAV (Plan / More) ═══════ */
 .sub-nav{max-width:980px;margin:0 auto;padding:1rem 1.5rem 0;}
@@ -2994,6 +3007,12 @@ async function obBuildWithAI() {
   // minutes typically.
   const status = await obWaitForPipelineWithStatus(5 * 60 * 1000);
 
+  // User chose to walk the app instead of staring at the spinner.
+  // obStartTourWhilePipelineRuns has already swapped us into the
+  // dashboard and mounted the floating status pill — nothing left to
+  // do here.
+  if (status === 'handed_off') return;
+
   if (status === 'success' && obAnswers.plaid_plan?.plan_id) {
     try {
       await obRenderPlanReview(obAnswers.plaid_plan.plan_id);
@@ -3013,40 +3032,240 @@ async function obBuildWithAI() {
 // Render a live status panel while the background pipeline finishes.
 // Polls obAnswers.plaid_pipeline.status every second and updates the
 // step label so the user sees progress, not a frozen spinner.
+//
+// After ~3s the panel grows a "Take the tour" CTA that hands off to
+// obStartTourWhilePipelineRuns — the user lands in the dashboard with
+// a floating status pill while the pipeline finishes in the background.
 async function obWaitForPipelineWithStatus(maxWaitMs) {
   const buildingEl = document.getElementById('ob-building');
+  const startedAt = Date.now();
+  const tourCtaDelayMs = 3000;
+  let handedOff = false;
+  // CTA handler exposed for the inline onclick.
+  window._obHandOffToTour = () => { handedOff = true; };
+
   const stepLabels = {
     sync:      'Reading recent transactions',
     classify:  'Sorting income, bills, and discretionary',
     recurring: 'Spotting recurring bills and income',
     analyze:   'Drafting your Floor-First plan',
   };
-  const renderStatus = () => {
-    if (!buildingEl) return;
-    const p = obAnswers.plaid_pipeline;
-    if (!p) return;
-    const label = stepLabels[p.step] || 'Finishing up';
+
+  // Mount the static frame once, then patch only the label + CTA when
+  // they change. Re-rendering the whole tree every tick re-fires the
+  // fade-in animation and visually flashes the CTA.
+  if (buildingEl) {
     buildingEl.innerHTML = `
-      <style>@keyframes ob-spin{to{transform:rotate(360deg);}}</style>
+      <style>@keyframes ob-spin{to{transform:rotate(360deg);}} @keyframes ob-fadein{from{opacity:0;transform:translateY(6px);}to{opacity:1;transform:translateY(0);}}</style>
       <div style="display:flex;flex-direction:column;align-items:center;justify-content:center;padding:3rem 1.5rem;text-align:center;">
         <div style="width:36px;height:36px;border:3px solid #c8e0d0;border-top-color:#3d9e78;border-radius:50%;animation:ob-spin .8s linear infinite;margin-bottom:1.5rem;"></div>
-        <div style="font-size:18px;font-weight:800;color:var(--ds-t1);letter-spacing:-.01em;margin-bottom:.5rem;">${label}…</div>
+        <div id="ob-build-label" style="font-size:18px;font-weight:800;color:var(--ds-t1);letter-spacing:-.01em;margin-bottom:.5rem;"></div>
         <div style="font-size:13px;font-weight:500;color:var(--ds-t3);max-width:400px;line-height:1.6;">
-          I'm drafting your plan from your bank history. This usually takes 2 to 4 minutes. Hang tight.
+          I'm drafting your plan from your bank history. This usually takes 2 to 4 minutes.
+        </div>
+        <div id="ob-build-cta" style="display:none;margin-top:2rem;padding-top:1.5rem;border-top:1px solid var(--ds-bd);max-width:400px;width:100%;animation:ob-fadein .35s ease;">
+          <div style="font-size:14px;font-weight:700;color:var(--ds-t1);margin-bottom:.5rem;">No need to wait around.</div>
+          <div style="font-size:13px;font-weight:500;color:var(--ds-t3);line-height:1.5;margin-bottom:1rem;">Walk through the app while I finish. I'll tap you when your plan's ready.</div>
+          <button type="button" class="btn btn-primary" onclick="obStartTourWhilePipelineRuns()" style="width:100%;">Take the tour →</button>
         </div>
       </div>`;
+  }
+
+  let lastLabel = '';
+  let ctaShown = false;
+  const patchStatus = () => {
+    const p = obAnswers.plaid_pipeline;
+    if (!p) return;
+    const label = (stepLabels[p.step] || 'Finishing up') + '…';
+    if (label !== lastLabel) {
+      const el = document.getElementById('ob-build-label');
+      if (el) el.textContent = label;
+      lastLabel = label;
+    }
+    if (!ctaShown && Date.now() - startedAt >= tourCtaDelayMs) {
+      const cta = document.getElementById('ob-build-cta');
+      if (cta) cta.style.display = 'block';
+      ctaShown = true;
+    }
   };
 
-  renderStatus();
+  patchStatus();
   const deadline = Date.now() + maxWaitMs;
   while (Date.now() < deadline) {
+    if (handedOff) { window._obHandOffToTour = null; return 'handed_off'; }
     const p = obAnswers.plaid_pipeline;
-    if (!p) return 'none';
-    if (p.status !== 'running') return p.status;
-    renderStatus();
+    if (!p) { window._obHandOffToTour = null; return 'none'; }
+    if (p.status !== 'running') { window._obHandOffToTour = null; return p.status; }
+    patchStatus();
     await new Promise((r) => setTimeout(r, 1000));
   }
+  window._obHandOffToTour = null;
   return obAnswers.plaid_pipeline?.status || 'running';
+}
+
+// "Take the tour" CTA handler. Saves a minimal profile so the
+// onboarding gate doesn't re-fire, swaps to the dashboard, mounts the
+// floating status pill, and starts the existing guided tour.
+async function obStartTourWhilePipelineRuns() {
+  if (typeof window._obHandOffToTour === 'function') window._obHandOffToTour();
+
+  // Persist enough profile that S.profile is truthy on next sign-in,
+  // which is what the auth-flow gate (around line 2622) checks.
+  S.profile = S.profile || {};
+  const rawName = (obAnswers.name_business || '').trim();
+  if (rawName) {
+    S.profile.business_type = rawName;
+    const m = rawName.match(/^\s*(?:i'?m|my name is)\s+([A-Za-z][\w'-]*)/i);
+    S.profile.name = m ? m[1] : (rawName.split(/[.,\s]/)[0] || S.profile.name || '');
+  }
+  S.profile.goals = GOAL_LABELS[obAnswers.goals] || obAnswers.goals || S.profile.goals || '';
+  S.profile.onboarding_via_tour = true;
+  try { await saveUserData(); } catch (e) { console.warn('saveUserData (tour handoff) failed:', e); }
+
+  document.getElementById('onboard-screen').style.display = 'none';
+  document.getElementById('app').style.display = 'block';
+  document.getElementById('nav-user').textContent = currentUser?.email || '';
+  populateSources();
+  refreshHome();
+  goTo('home');
+
+  obMountStatusPill();
+  // Prevent the auth-flow auto-tour from also firing later.
+  S.settings = S.settings || {};
+  S.settings.tour_done = false;
+  setTimeout(() => { try { startTour(); } catch (e) { console.warn('startTour failed:', e); } }, 350);
+
+  Able.track?.('onboarding_tour_handoff', {
+    pipeline_step: obAnswers.plaid_pipeline?.step,
+  });
+}
+
+// ─── Floating pipeline status pill ───────────────────────────────────
+// Anchored to the top of the viewport so it sits clear of the bottom
+// nav and the tour bubble. Polls obAnswers.plaid_pipeline; when the
+// pipeline finishes the pill morphs from "Building plan…" to
+// "Plan ready! Review →" (or to a Try-again state on failure).
+function obMountStatusPill() {
+  if (document.getElementById('ob-status-pill')) return;
+  const pill = document.createElement('div');
+  pill.id = 'ob-status-pill';
+  document.body.appendChild(pill);
+
+  // Inject pill styles + responsive layout once. Bottom-right on
+  // desktop (clear of the top nav), bottom-centered on narrow
+  // viewports so it still has room without going edge-to-edge.
+  if (!document.getElementById('ob-status-pill-style')) {
+    const s = document.createElement('style');
+    s.id = 'ob-status-pill-style';
+    s.textContent = `
+      @keyframes ob-pill-spin{to{transform:rotate(360deg);}}
+      @keyframes ob-pill-pulse{0%,100%{box-shadow:0 8px 24px rgba(0,0,0,.22);}50%{box-shadow:0 8px 32px rgba(61,158,120,.55);}}
+      @keyframes ob-pill-fadein{from{opacity:0;transform:translateY(8px);}to{opacity:1;transform:translateY(0);}}
+      #ob-status-pill{position:fixed;bottom:20px;right:20px;z-index:10001;background:var(--ds-t1);color:#fff;border-radius:100px;padding:10px 16px;box-shadow:0 8px 24px rgba(0,0,0,.22);font-family:var(--ds-f);font-weight:700;font-size:13px;display:flex;align-items:center;gap:10px;max-width:calc(100vw - 40px);animation:ob-pill-fadein .25s ease;}
+      #ob-status-pill.ready{background:linear-gradient(135deg,#2a7a4a,#3d9e78);animation:ob-pill-fadein .25s ease, ob-pill-pulse 1.6s ease-in-out infinite 1s;cursor:pointer;}
+      #ob-status-pill.failed{background:#7a2a2a;}
+      #ob-status-pill .pill-spinner{width:14px;height:14px;border:2px solid rgba(255,255,255,.35);border-top-color:#fff;border-radius:50%;animation:ob-pill-spin .8s linear infinite;flex-shrink:0;}
+      #ob-status-pill .pill-btn{background:rgba(255,255,255,.18);border:none;color:#fff;font-family:var(--ds-f);font-weight:800;font-size:12px;padding:5px 10px;border-radius:100px;cursor:pointer;letter-spacing:-.01em;}
+      #ob-status-pill .pill-btn:hover{background:rgba(255,255,255,.28);}
+      #ob-status-pill .pill-step{opacity:.7;font-weight:500;font-size:12px;}
+      @media (max-width:560px){
+        #ob-status-pill{left:16px;right:16px;bottom:16px;justify-content:center;max-width:none;}
+      }
+    `;
+    document.head.appendChild(s);
+  }
+
+  obStatusPillRender();
+  if (window._obPillTimer) clearInterval(window._obPillTimer);
+  window._obPillTimer = setInterval(() => {
+    obStatusPillRender();
+    const p = obAnswers.plaid_pipeline;
+    if (p && p.status !== 'running') {
+      clearInterval(window._obPillTimer);
+      window._obPillTimer = null;
+    }
+  }, 1000);
+}
+
+function obStatusPillRender() {
+  const pill = document.getElementById('ob-status-pill');
+  if (!pill) return;
+  const p = obAnswers.plaid_pipeline;
+  if (!p) { pill.remove(); return; }
+
+  const stepLabels = {
+    sync:      'Reading transactions',
+    classify:  'Sorting income & bills',
+    recurring: 'Spotting recurring items',
+    analyze:   'Drafting your plan',
+  };
+
+  pill.classList.remove('ready', 'failed');
+  pill.onclick = null;
+
+  if (p.status === 'running') {
+    pill.innerHTML = `
+      <span class="pill-spinner"></span>
+      <span>Building your plan</span>
+      <span class="pill-step">· ${stepLabels[p.step] || 'almost there'}</span>
+    `;
+  } else if (p.status === 'success') {
+    pill.classList.add('ready');
+    pill.onclick = () => obOpenPlanReviewFromTour();
+    pill.innerHTML = `
+      <span style="display:inline-flex;align-items:center;justify-content:center;width:18px;height:18px;background:rgba(255,255,255,.22);border-radius:50%;">
+        <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+      </span>
+      <span>Plan ready!</span>
+      <button class="pill-btn" onclick="event.stopPropagation();obOpenPlanReviewFromTour();">Review →</button>
+    `;
+  } else {
+    // failed / timed out
+    pill.classList.add('failed');
+    pill.innerHTML = `
+      <span>Couldn't finish analyzing</span>
+      <button class="pill-btn" onclick="obRetryPipelineFromTour();">Try again</button>
+      <button class="pill-btn" onclick="obDismissStatusPill();" style="background:rgba(255,255,255,.1);">Dismiss</button>
+    `;
+  }
+}
+
+function obDismissStatusPill() {
+  if (window._obPillTimer) { clearInterval(window._obPillTimer); window._obPillTimer = null; }
+  const pill = document.getElementById('ob-status-pill');
+  if (pill) pill.remove();
+}
+
+async function obRetryPipelineFromTour() {
+  // Restart the pipeline in the background. The pill flips back to
+  // "Building plan…" the moment status returns to running.
+  obAnswers.plaid_pipeline = { status: 'running', step: 'sync', startedAt: Date.now(), recurringSkipped: false, attempts: 0 };
+  obStatusPillRender();
+  if (!window._obPillTimer) {
+    window._obPillTimer = setInterval(() => {
+      obStatusPillRender();
+      const p = obAnswers.plaid_pipeline;
+      if (p && p.status !== 'running') { clearInterval(window._obPillTimer); window._obPillTimer = null; }
+    }, 1000);
+  }
+  obRunPlaidPipeline().catch((err) => console.error('[Pipeline] retry failed:', err));
+}
+
+// User tapped "Review →" on the pill. Tear down any tour UI, swap
+// back to the onboarding screen, render the analyzer plan review
+// cards. obSubmitPlanReview already navigates back into the app on
+// apply, and we drop the pill there.
+function obOpenPlanReviewFromTour() {
+  if (!obAnswers.plaid_plan?.plan_id) return;
+  if (typeof clearTourUI === 'function') clearTourUI();
+  S.settings = S.settings || {};
+  S.settings.tour_done = true; // suppress auto-tour reload after apply
+  obDismissStatusPill();
+  document.getElementById('app').style.display = 'none';
+  document.getElementById('onboard-screen').style.display = 'flex';
+  obRenderPlanReview(obAnswers.plaid_plan.plan_id).catch((e) => {
+    console.error('Plan review failed to render from pill:', e);
+  });
 }
 
 async function obBuildViaAiOnboard() {
@@ -7353,38 +7572,96 @@ function getCurrentPage(){
 // ═══════════════════════════════════════
 // GUIDED TOUR
 // ═══════════════════════════════════════
+// The tour walks the user through the actual content of each tab,
+// not just the nav buttons. Steps are grouped: dashboard (home) →
+// Plan sub-tabs → Score → More sub-tabs. Each step's `spotlight`
+// targets a real section so the bubble lands on something meaningful.
 const TOUR_STEPS = [
+  // ── Allocate (home) ────────────────────────────────────────────
   {
     tab: 'home',
-    title: "Your money at a glance.",
-    body: "The green hero shows what's in your accounts, what's reserved for upcoming bills, and what's safe to spend. Tap Tell me where it goes when you have unallocated money, or Log income when new money lands."
+    spotlight: '#db-hero',
+    title: "Your money, right now.",
+    body: "Top of every page: what's in your accounts, what's reserved for upcoming bills, and what's safe to spend today. Tap Log income whenever new money lands and Able will route it for you."
   },
   {
     tab: 'home',
-    title: "Next 14 days.",
-    body: "Tap that card to see every bill due and every expected income payment in date order. No spreadsheet, no surprise."
+    spotlight: '.db-score-card',
+    title: "Five habits, one score.",
+    body: "Bills covered, debt paid, buffer built, paying yourself, living within your income. The closer to all five, the closer to 100. Tap any chip to dig in."
+  },
+  {
+    tab: 'home',
+    spotlight: '.db-actions-grid:first-of-type',
+    title: "Next 14 days, and the Coach.",
+    body: "One tap shows every bill due and every expected payment for the next two weeks. The Coach reads your actual numbers and tells you how the month is shaping up."
+  },
+  {
+    tab: 'home',
+    spotlight: '.db-actions-grid:nth-of-type(2)',
+    title: "Add what's coming.",
+    body: "Log a new bill or an expected payment from here. Every bill you add gets reserved against from each deposit until it's covered."
+  },
+
+  // ── Plan tab ──────────────────────────────────────────────────
+  {
+    tab: 'plan',
+    subTab: 'forecast',
+    spotlight: '.sub-tab[data-sub="forecast"]',
+    title: "Plan ahead.",
+    body: "Forecast is where you log expected income — invoices, retainers, anything you're already counting on. Future deposits get pre-allocated so nothing surprises you."
   },
   {
     tab: 'plan',
-    title: "Plan ahead.",
-    body: "Bills, debts, expected income, and what-if scenarios — one tab, sub-tabs inside. Add bills here so Able knows what to reserve for. Add expected income so future deposits get pre-planned."
+    subTab: 'bills',
+    spotlight: '.sub-tab[data-sub="bills"]',
+    title: "Bills, in one place.",
+    body: "Every recurring obligation. Add, edit, mark paid. Each one gets reserved against from each deposit, so the floor is always covered first."
   },
   {
-    tab: 'score',
-    title: "Track your discipline.",
-    body: "Bills covered, paying yourself, extra to debt, buffer growth, living within income. Five things, 100 points. Higher means fewer surprises."
+    tab: 'plan',
+    subTab: 'debt',
+    spotlight: '.sub-tab[data-sub="debt"]',
+    title: "Pay down debt.",
+    body: "Highest-interest first by default. Whatever you set as Extra to debt in your split goes here automatically each surplus."
   },
+  {
+    tab: 'plan',
+    subTab: 'whatif',
+    spotlight: '.sub-tab[data-sub="whatif"]',
+    title: "Run a what-if.",
+    body: "Try a different split or a new income scenario before you commit. No save needed — just play."
+  },
+
+  // ── Score tab ─────────────────────────────────────────────────
+  {
+    tab: 'score',
+    spotlight: '#page-score',
+    title: "Track your discipline.",
+    body: "Full breakdown of this month's score, plus the trend across months. Higher means fewer surprises — and that's the whole point."
+  },
+
+  // ── More tab ──────────────────────────────────────────────────
   {
     tab: 'more',
     subTab: 'refer',
     spotlight: '.sub-tab[data-sub="refer"]',
-    title: "Refer friends, earn free Able.",
-    body: "Every 3 friends who start a trial = a free month. Every 5 who convert = a free year. Unlocked from day 1, so go share it now if you've got a friend who'd benefit."
+    title: "Earn free Able.",
+    body: "Every 3 friends who start a trial = a free month. Every 5 who convert = a free year. Unlocked from day one — go share it if you've got a friend who'd benefit."
   },
   {
     tab: 'more',
-    title: "Learn, adjust, ask.",
-    body: "Articles in Learn. Settings is where you tune your split, change the planning window, and manage your subscription. The green chat button is Coach — tap any time for advice on your actual numbers."
+    subTab: 'learn',
+    spotlight: '.sub-tab[data-sub="learn"]',
+    title: "Learn the method.",
+    body: "Short articles on Floor-First Budgeting — how to actually use Able well. Read one when you've got two minutes."
+  },
+  {
+    tab: 'more',
+    subTab: 'settings',
+    spotlight: '.sub-tab[data-sub="settings"]',
+    title: "Tune the plan.",
+    body: "Change your surplus split, planning window, account, subscription. The green Coach button at the bottom is always there too — tap any time."
   }
 ];
 
@@ -7392,6 +7669,7 @@ let tourStep = 0;
 
 function startTour() {
   tourStep = 0;
+  document.body.classList.add('tour-active');
   renderTourStep();
 }
 
@@ -7410,14 +7688,27 @@ function renderTourStep() {
   setTimeout(() => {
     const targetEl = step.spotlight ? document.querySelector(step.spotlight) : groupTab;
     if(!targetEl) { tourStep++; return renderTourStep(); }
+
+    // Scroll the target into view first so we measure against the
+    // post-scroll position. Sub-tabs and nav-tabs are sticky/fixed and
+    // don't need scrolling; content cards (db-hero, db-score-card,
+    // page wrappers) usually do.
+    const isInteractiveNav = targetEl.classList.contains('nav-tab') || targetEl.classList.contains('sub-tab');
+    if (!isInteractiveNav) {
+      try { targetEl.scrollIntoView({ behavior: 'instant', block: 'center' }); } catch(_) {}
+    }
+
+    // Re-measure after scroll.
     const rect = targetEl.getBoundingClientRect();
     const pad = 6;
 
-    // Overlay
+    // Overlay — transparent click-catcher. Visually invisible (no
+    // dim), but it still swallows page clicks so the user can't
+    // accidentally navigate away mid-tour. Skip / Next on the bubble
+    // (higher z-index) are the only exits.
     const overlay = document.createElement('div');
     overlay.className = 'tour-overlay';
     overlay.id = 'tour-overlay';
-    overlay.onclick = () => endTour(false);
     document.body.appendChild(overlay);
 
     // Spotlight
@@ -7434,9 +7725,9 @@ function renderTourStep() {
     const bubble = document.createElement('div');
     bubble.id = 'tour-bubble';
     const isMobile = window.innerWidth <= 800;
-    bubble.className = 'tour-bubble ' + (isMobile ? 'arrow-down' : 'arrow-up');
     const dots = TOUR_STEPS.map((_,i) => `<div class="tour-dot ${i===tourStep?'active':''}"></div>`).join('');
     const isLast = tourStep === TOUR_STEPS.length - 1;
+    bubble.className = 'tour-bubble arrow-up'; // overwritten after measurement
     bubble.innerHTML = `
       <div class="tour-bubble-arrow"></div>
       <div class="tour-step-label">Step ${tourStep+1} of ${TOUR_STEPS.length}</div>
@@ -7452,31 +7743,47 @@ function renderTourStep() {
     `;
     document.body.appendChild(bubble);
 
-    // Position bubble - mobile flips above tab, desktop below
     const bRect = bubble.getBoundingClientRect();
-    if(isMobile) {
-      // On mobile: center horizontally, place bubble above the nav with arrow pointing down
+    const margin = 16;
+
+    if (isMobile) {
+      // Mobile: center horizontally, prefer above the spotlight so the
+      // bubble doesn't slide under the bottom nav. Flip below if there
+      // isn't room above.
       let left = (window.innerWidth - bRect.width) / 2;
       if(left < 12) left = 12;
-      bubble.style.top = (rect.top - bRect.height - 16) + 'px';
+      const wantAbove = rect.top >= bRect.height + margin;
+      if (wantAbove) {
+        bubble.classList.add('arrow-down');
+        bubble.style.top = (rect.top - bRect.height - margin) + 'px';
+      } else {
+        bubble.classList.add('arrow-up');
+        bubble.style.top = (rect.bottom + margin) + 'px';
+      }
       bubble.style.left = left + 'px';
-      // Adjust arrow to point at the tab
       const arrow = bubble.querySelector('.tour-bubble-arrow');
-      if(arrow) {
+      if (arrow) {
         const tabCenterX = rect.left + rect.width/2;
-        const bubbleCenterX = left + bRect.width/2;
         const arrowOffset = Math.max(16, Math.min(bRect.width - 32, tabCenterX - left - 8));
         arrow.style.left = arrowOffset + 'px';
       }
     } else {
+      // Desktop: prefer below, flip above if no room.
       let left = rect.left - 20;
       const maxLeft = window.innerWidth - bRect.width - 16;
-      if(left > maxLeft) left = maxLeft;
-      if(left < 16) left = 16;
-      bubble.style.top = (rect.bottom + 16) + 'px';
+      if (left > maxLeft) left = maxLeft;
+      if (left < 16) left = 16;
+      const wantBelow = window.innerHeight - rect.bottom >= bRect.height + margin;
+      if (wantBelow) {
+        bubble.classList.add('arrow-up');
+        bubble.style.top = (rect.bottom + margin) + 'px';
+      } else {
+        bubble.classList.add('arrow-down');
+        bubble.style.top = Math.max(margin, rect.top - bRect.height - margin) + 'px';
+      }
       bubble.style.left = left + 'px';
     }
-  }, 100);
+  }, 120);
 }
 
 function nextTourStep() {
@@ -7493,11 +7800,14 @@ function clearTourUI() {
 
 function endTour(completed) {
   clearTourUI();
+  document.body.classList.remove('tour-active');
   S.settings.tour_done = true;
   save();
-  // Navigate back to home
+  // Navigate back to home and re-render so refreshHome restores the
+  // correct empty / populated card visibility based on real data.
   const homeTab = document.querySelector('.nav-tab');
   if(homeTab) homeTab.click();
+  if (typeof refreshHome === 'function') { try { refreshHome(); } catch(_){} }
 }
 
 function replayTour() {
