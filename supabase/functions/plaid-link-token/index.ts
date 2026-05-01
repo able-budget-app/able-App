@@ -61,6 +61,11 @@ type Body = {
   lookback_months?: 6 | 12 | 24;
   plaid_item_row_id?: string;
   account_selection_enabled?: boolean;
+  // OAuth redirect URI. Required by Plaid for OAuth-based institutions
+  // (Chase, Capital One, USAA, etc.). Must be registered in the Plaid
+  // dashboard as an allowed URI. Front-end passes
+  // `${window.location.origin}/app.html`.
+  redirect_uri?: string;
 };
 
 Deno.serve(async (req) => {
@@ -114,6 +119,7 @@ Deno.serve(async (req) => {
     if (mode === 'update' && body.account_selection_enabled) {
       reqBody.update = { account_selection_enabled: true };
     }
+    if (body.redirect_uri) reqBody.redirect_uri = body.redirect_uri;
 
     const link = await plaidApi<typeof reqBody, { link_token: string; expiration: string; request_id: string }>(
       '/link/token/create',

@@ -2655,6 +2655,12 @@ async function onAuthStateChange(user) {
       document.getElementById('paywall-screen').style.display='none';
       document.getElementById('app').style.display='none';
       document.getElementById('onboard-screen').style.display='flex';
+
+      // OAuth return mid-onboarding: restore obAnswers/obStep and reopen
+      // Plaid Link before startOnboarding wipes the in-memory state.
+      const oauthResumed = await tryResumePlaidOauth();
+      if (oauthResumed) return;
+
       startOnboarding();
       return;
     }
@@ -2666,6 +2672,13 @@ async function onAuthStateChange(user) {
     document.getElementById('nav-user').textContent=user.email;
     populateSources();
     refreshHome();
+
+    // OAuth return: if the URL has ?oauth_state_id and we saved a Plaid
+    // Link token before the redirect, reopen Link silently to finish.
+    // Skip the tour and coach nudges in this case so we don't pile UI
+    // on top of Link.
+    const oauthResumed = await tryResumePlaidOauth();
+    if (oauthResumed) return;
 
     // First-time users (post-onboarding, never run the tour) get auto-fired
     // into the guided tour so they see the dashboard structure + the day-1
@@ -3300,6 +3313,91 @@ async function obBuildViaAiOnboard() {
   }
 }
 
+// ─── Plaid OAuth redirect handling ───────────────────────────────────
+// Banks like Chase / Capital One / USAA require OAuth: Link bounces the
+// user to the bank's site, the bank redirects back with
+// ?oauth_state_id=... in the URL, and we resume Link with the same
+// link_token and `receivedRedirectUri: window.location.href`. We
+// persist the link_token + context to localStorage before opening Link
+// so the round-trip survives the navigation.
+const OAUTH_STORAGE_KEY = 'able_plaid_oauth_state';
+
+function plaidRedirectUri() {
+  // Must match an "allowed redirect URI" registered in the Plaid dashboard.
+  return window.location.origin + '/app.html';
+}
+function persistOauthLink(state) {
+  try { localStorage.setItem(OAUTH_STORAGE_KEY, JSON.stringify(state)); } catch (_) { /* noop */ }
+}
+function readOauthLink() {
+  try {
+    const raw = localStorage.getItem(OAUTH_STORAGE_KEY);
+    return raw ? JSON.parse(raw) : null;
+  } catch (_) { return null; }
+}
+function clearOauthLink() {
+  try { localStorage.removeItem(OAUTH_STORAGE_KEY); } catch (_) { /* noop */ }
+}
+function stripOauthQueryParams() {
+  try {
+    const url = new URL(window.location.href);
+    url.searchParams.delete('oauth_state_id');
+    window.history.replaceState({}, '', url.toString());
+  } catch (_) { /* noop */ }
+}
+
+// Called after auth-flow completes. If we're on an OAuth return URL
+// AND we saved a link_token before the redirect, reopen Link with
+// receivedRedirectUri so the OAuth handoff completes.
+async function tryResumePlaidOauth() {
+  const params = new URLSearchParams(window.location.search);
+  if (!params.get('oauth_state_id')) return false;
+  const state = readOauthLink();
+  if (!state || !state.token) {
+    clearOauthLink();
+    stripOauthQueryParams();
+    return false;
+  }
+
+  try { await ensurePlaidLinkScript(); } catch (e) {
+    console.error('OAuth resume: Plaid Link script failed to load', e);
+    clearOauthLink();
+    stripOauthQueryParams();
+    return false;
+  }
+
+  // Restore onboarding state if the user was mid-flow before OAuth bounce.
+  if (state.context === 'onboarding') {
+    if (state.obAnswers) obAnswers = state.obAnswers;
+    if (state.obStep != null) obStep = state.obStep;
+  }
+
+  const handler = window.Plaid.create({
+    token: state.token,
+    receivedRedirectUri: window.location.href,
+    onSuccess: async (public_token, metadata) => {
+      clearOauthLink();
+      stripOauthQueryParams();
+      if (state.context === 'onboarding') {
+        await obHandlePlaidSuccess(public_token, metadata, state.lookback || 6);
+      } else if (state.context === 'settings_new') {
+        await settingsHandlePostLink(public_token, metadata);
+      } else if (state.context === 'settings_update') {
+        // Update mode resolves the existing Item; no exchange needed.
+        Able.track?.('plaid_item_update_completed');
+        if (typeof loadConnectedAccounts === 'function') await loadConnectedAccounts();
+      }
+    },
+    onExit: (err) => {
+      clearOauthLink();
+      stripOauthQueryParams();
+      if (err) console.warn('OAuth resume exit:', err);
+    },
+  });
+  handler.open();
+  return true;
+}
+
 // ─── Plaid Link integration (onboarding step) ────────────────────────
 // Lazy-loads the Plaid Link script the first time the user reaches the
 // connect-bank step. Saves ~50KB for users who skip.
@@ -3334,16 +3432,30 @@ async function obStartPlaidLink() {
     await ensurePlaidLinkScript();
 
     const { data, error } = await sbGet().functions.invoke('plaid-link-token', {
-      body: { mode: 'new', lookback_months: lookback }
+      body: { mode: 'new', lookback_months: lookback, redirect_uri: plaidRedirectUri() }
     });
     if (error) throw error;
     if (data && data.error) throw new Error(data.error);
     if (!data?.link_token) throw new Error('No link_token returned');
 
+    // Persist for OAuth round-trip BEFORE opening Link. Cleared by
+    // onSuccess / onExit; restored on next page load by tryResumePlaidOauth.
+    persistOauthLink({
+      token: data.link_token,
+      context: 'onboarding',
+      lookback,
+      obAnswers,
+      obStep,
+    });
+
     const handler = window.Plaid.create({
       token: data.link_token,
-      onSuccess: (public_token, metadata) => obHandlePlaidSuccess(public_token, metadata, lookback),
+      onSuccess: (public_token, metadata) => {
+        clearOauthLink();
+        obHandlePlaidSuccess(public_token, metadata, lookback);
+      },
       onExit: (err) => {
+        clearOauthLink();
         if (btn) { btn.disabled = false; btn.textContent = 'Connect bank'; }
         if (err && errEl) {
           errEl.textContent = err.display_message || err.error_message || 'Connection canceled';
@@ -6909,37 +7021,25 @@ async function settingsConnectBank() {
   try {
     await ensurePlaidLinkScript();
     const { data, error } = await sbGet().functions.invoke('plaid-link-token', {
-      body: { mode: 'new', lookback_months: 6 }
+      body: { mode: 'new', lookback_months: 6, redirect_uri: plaidRedirectUri() }
     });
     if (error) throw error;
     if (data && data.error) throw new Error(data.error);
     if (!data?.link_token) throw new Error('No link_token returned');
 
+    persistOauthLink({
+      token: data.link_token,
+      context: 'settings_new',
+      lookback: 6,
+    });
+
     const handler = window.Plaid.create({
       token: data.link_token,
       onSuccess: async (public_token, metadata) => {
+        clearOauthLink();
         if (btn) btn.textContent = 'Linking…';
         try {
-          const { data: ex, error: exErr } = await sbGet().functions.invoke('plaid-exchange-public-token', {
-            body: {
-              public_token,
-              institution: metadata?.institution
-                ? { id: metadata.institution.institution_id, name: metadata.institution.name }
-                : null,
-              lookback_months: 6,
-            }
-          });
-          if (exErr) throw exErr;
-          if (ex && ex.error) throw new Error(ex.error);
-          // Kick off the standard pipeline in the background. Don't block UX.
-          if (ex?.plaid_item_row_id) {
-            sbGet().functions.invoke('plaid-sync', { body: { plaid_item_row_id: ex.plaid_item_row_id } })
-              .catch((e) => console.warn('post-link plaid-sync failed:', e));
-          }
-          Able.track?.('plaid_item_added_from_settings', {
-            institution_name: metadata?.institution?.name,
-          });
-          await loadConnectedAccounts();
+          await settingsHandlePostLink(public_token, metadata);
         } catch (e) {
           console.error('post-link flow failed:', e);
           if (errEl) { errEl.textContent = 'Linked, but follow-up sync failed: ' + (e.message || 'unknown error'); errEl.style.display = 'block'; }
@@ -6948,6 +7048,7 @@ async function settingsConnectBank() {
         }
       },
       onExit: (err) => {
+        clearOauthLink();
         if (btn) { btn.disabled = false; btn.textContent = '+ Connect a bank'; }
         if (err && errEl) {
           errEl.textContent = err.display_message || err.error_message || 'Connection canceled';
@@ -6963,6 +7064,29 @@ async function settingsConnectBank() {
   }
 }
 
+// Shared post-Link handler for settings_new (both inline and OAuth-resume paths).
+async function settingsHandlePostLink(public_token, metadata) {
+  const { data: ex, error: exErr } = await sbGet().functions.invoke('plaid-exchange-public-token', {
+    body: {
+      public_token,
+      institution: metadata?.institution
+        ? { id: metadata.institution.institution_id, name: metadata.institution.name }
+        : null,
+      lookback_months: 6,
+    }
+  });
+  if (exErr) throw exErr;
+  if (ex && ex.error) throw new Error(ex.error);
+  if (ex?.plaid_item_row_id) {
+    sbGet().functions.invoke('plaid-sync', { body: { plaid_item_row_id: ex.plaid_item_row_id } })
+      .catch((e) => console.warn('post-link plaid-sync failed:', e));
+  }
+  Able.track?.('plaid_item_added_from_settings', {
+    institution_name: metadata?.institution?.name,
+  });
+  if (typeof loadConnectedAccounts === 'function') await loadConnectedAccounts();
+}
+
 // Re-link the same item in update mode. Used when an item is in error /
 // pending_expiration / pending_disconnect.
 async function settingsRunUpdateMode(plaidItemRowId, accountSelectionEnabled) {
@@ -6975,11 +7099,18 @@ async function settingsRunUpdateMode(plaidItemRowId, accountSelectionEnabled) {
         mode: 'update',
         plaid_item_row_id: plaidItemRowId,
         account_selection_enabled: !!accountSelectionEnabled,
+        redirect_uri: plaidRedirectUri(),
       }
     });
     if (error) throw error;
     if (data && data.error) throw new Error(data.error);
     if (!data?.link_token) throw new Error('No link_token returned');
+
+    persistOauthLink({
+      token: data.link_token,
+      context: 'settings_update',
+      plaid_item_row_id: plaidItemRowId,
+    });
 
     const handler = window.Plaid.create({
       token: data.link_token,
@@ -6987,10 +7118,12 @@ async function settingsRunUpdateMode(plaidItemRowId, accountSelectionEnabled) {
         // Update mode doesn't return a new public_token to exchange — Plaid
         // resolves the existing Item in place. Just refresh the list so the
         // status badge clears.
+        clearOauthLink();
         Able.track?.('plaid_item_update_completed');
         await loadConnectedAccounts();
       },
       onExit: (err) => {
+        clearOauthLink();
         if (err && errEl) {
           errEl.textContent = err.display_message || err.error_message || 'Reconnect canceled';
           errEl.style.display = 'block';
