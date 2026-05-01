@@ -3693,6 +3693,16 @@ async function obRenderPlanReview(planId) {
 
   const plan = row.plan_json;
 
+  // Plaid only sees what flows through the connected accounts. Private
+  // debts (medical, family loans, brand-new cards) and accounts at
+  // other banks won't show up. Ask the user once before plan review so
+  // we can merge anything the analyzer missed into the Debts card.
+  if (!obAnswers.extra_debts_asked) {
+    const extras = await obAskExtraDebts(plan);
+    obAnswers.extra_debts = extras;
+    obAnswers.extra_debts_asked = true;
+  }
+
   // Seed editable copies. Apply the user's pay_self + goals choice into
   // the surplus split up front so the user sees the same numbers the
   // legacy review would have shown.
@@ -3712,6 +3722,8 @@ async function obRenderPlanReview(planId) {
     free_pct:    presetSettings.freePct,
   };
 
+  const seededDebts = clone(plan.debts || []);
+  const userExtras = (obAnswers.extra_debts || []).map((d) => ({ ...d, source: 'user_added' }));
   obPlanReview = {
     plan_id: planId,
     plan_json: plan,
@@ -3719,7 +3731,7 @@ async function obRenderPlanReview(planId) {
     sections: {
       income_sources: { decision: 'accept', editing: false, items: clone(plan.income_sources || []) },
       bills:          { decision: 'accept', editing: false, items: clone(plan.bills || []) },
-      debts:          { decision: 'accept', editing: false, items: clone(plan.debts || []) },
+      debts:          { decision: 'accept', editing: false, items: [...seededDebts, ...userExtras] },
       tax_allocation: { decision: 'accept', editing: false, suggested_pct: plan.tax_allocation?.suggested_pct ?? 0 },
       surplus_split:  { decision: 'accept', editing: false, ...split },
     },
@@ -3738,6 +3750,95 @@ async function obRenderPlanReview(planId) {
 }
 
 function clone(v) { return JSON.parse(JSON.stringify(v)); }
+
+// Interstitial between pipeline-success and plan-review. Wording
+// shifts based on whether the analyzer surfaced any debts:
+//   - found N: "Any OTHER debts I should know about?"
+//   - found 0: "Any debts I should know about?"
+// Resolves with an array of { name, balance_estimate, min_payment,
+// rate_estimate, due_day_of_month } that gets merged into the Debts
+// card on the plan-review screen.
+function obAskExtraDebts(planJson) {
+  return new Promise((resolve) => {
+    const buildingEl = document.getElementById('ob-building');
+    const found = (planJson.debts || []).length;
+    const headline = found > 0
+      ? `I spotted ${found === 1 ? 'one debt' : `${found} debts`} in your transactions. Any other debts I should know about?`
+      : `Any debts I should know about?`;
+    const sub = found > 0
+      ? `Things I might have missed. Credit cards you pay off in full, accounts at another bank, personal or medical debt.`
+      : `Credit cards, car loans, student loans, medical or personal debt. Add what you're paying down.`;
+
+    document.getElementById('ob-question-area').style.display = 'none';
+    document.getElementById('ob-review').style.display = 'none';
+    buildingEl.style.display = 'block';
+
+    let rows = [{}];
+
+    const renderRows = () => rows.map((r, i) => `
+      <div class="ob-table-row" data-row="${i}">
+        <input class="ob-table-input" data-field="name" type="text" placeholder="Name" value="${r.name || ''}" title="Name">
+        <input class="ob-table-input" data-field="balance" type="number" placeholder="Balance" value="${r.balance ?? ''}" title="Balance">
+        <input class="ob-table-input" data-field="min" type="number" placeholder="Min payment" value="${r.min ?? ''}" title="Min payment">
+        <input class="ob-table-input" data-field="rate" type="number" step="0.01" placeholder="Rate %" value="${r.rate ?? ''}" title="Rate %">
+        <button type="button" class="ob-table-x" onclick="window._obExtraDebtsRemove(${i})" title="Remove">×</button>
+      </div>
+    `).join('');
+
+    const render = () => {
+      buildingEl.innerHTML = `
+        <div style="padding:2.5rem 1.5rem;max-width:640px;margin:0 auto;">
+          <div style="font-size:18px;font-weight:800;color:var(--ds-t1);letter-spacing:-.01em;margin-bottom:.5rem;">${headline}</div>
+          <div style="font-size:13px;font-weight:500;color:var(--ds-t3);line-height:1.6;margin-bottom:1.5rem;">${sub}</div>
+          <div id="ob-extra-debts-rows">${renderRows()}</div>
+          <button type="button" class="btn-ghost btn btn-sm" onclick="window._obExtraDebtsAdd()" style="margin-top:.5rem;">+ Add another</button>
+          <div style="display:flex;gap:.5rem;justify-content:flex-end;margin-top:2rem;border-top:1px solid var(--ds-bd);padding-top:1.25rem;">
+            <button type="button" class="btn btn-ghost" onclick="window._obExtraDebtsSubmit(true)">No, none of those</button>
+            <button type="button" class="btn btn-primary" onclick="window._obExtraDebtsSubmit(false)">Continue →</button>
+          </div>
+        </div>
+      `;
+    };
+
+    const readRows = () => {
+      const out = [];
+      document.querySelectorAll('#ob-extra-debts-rows .ob-table-row').forEach((row) => {
+        const obj = {};
+        row.querySelectorAll('.ob-table-input').forEach((inp) => {
+          obj[inp.dataset.field] = inp.value.trim();
+        });
+        out.push(obj);
+      });
+      return out;
+    };
+
+    window._obExtraDebtsAdd = () => { rows = readRows(); rows.push({}); render(); };
+    window._obExtraDebtsRemove = (i) => {
+      rows = readRows();
+      rows.splice(i, 1);
+      if (rows.length === 0) rows.push({});
+      render();
+    };
+    window._obExtraDebtsSubmit = (skipped) => {
+      const raw = skipped ? [] : readRows();
+      window._obExtraDebtsAdd = null;
+      window._obExtraDebtsRemove = null;
+      window._obExtraDebtsSubmit = null;
+      const items = raw
+        .filter((r) => r.name)
+        .map((r) => ({
+          name: r.name,
+          balance_estimate: parseFloat(r.balance) || 0,
+          min_payment: parseFloat(r.min) || 0,
+          rate_estimate: r.rate === '' ? null : parseFloat(r.rate),
+          due_day_of_month: null,
+        }));
+      resolve(items);
+    };
+
+    render();
+  });
+}
 
 function obSetSectionDecision(key, decision) {
   if (!obPlanReview?.sections?.[key]) return;
@@ -7698,10 +7799,6 @@ function renderTourStep() {
       try { targetEl.scrollIntoView({ behavior: 'instant', block: 'center' }); } catch(_) {}
     }
 
-    // Re-measure after scroll.
-    const rect = targetEl.getBoundingClientRect();
-    const pad = 6;
-
     // Overlay — transparent click-catcher. Visually invisible (no
     // dim), but it still swallows page clicks so the user can't
     // accidentally navigate away mid-tour. Skip / Next on the bubble
@@ -7715,19 +7812,14 @@ function renderTourStep() {
     const spot = document.createElement('div');
     spot.className = 'tour-spotlight';
     spot.id = 'tour-spotlight';
-    spot.style.top = (rect.top - pad) + 'px';
-    spot.style.left = (rect.left - pad) + 'px';
-    spot.style.width = (rect.width + pad*2) + 'px';
-    spot.style.height = (rect.height + pad*2) + 'px';
     document.body.appendChild(spot);
 
     // Bubble
     const bubble = document.createElement('div');
     bubble.id = 'tour-bubble';
-    const isMobile = window.innerWidth <= 800;
+    bubble.className = 'tour-bubble';
     const dots = TOUR_STEPS.map((_,i) => `<div class="tour-dot ${i===tourStep?'active':''}"></div>`).join('');
     const isLast = tourStep === TOUR_STEPS.length - 1;
-    bubble.className = 'tour-bubble arrow-up'; // overwritten after measurement
     bubble.innerHTML = `
       <div class="tour-bubble-arrow"></div>
       <div class="tour-step-label">Step ${tourStep+1} of ${TOUR_STEPS.length}</div>
@@ -7743,47 +7835,75 @@ function renderTourStep() {
     `;
     document.body.appendChild(bubble);
 
-    const bRect = bubble.getBoundingClientRect();
-    const margin = 16;
+    positionTourUI(targetEl);
 
-    if (isMobile) {
-      // Mobile: center horizontally, prefer above the spotlight so the
-      // bubble doesn't slide under the bottom nav. Flip below if there
-      // isn't room above.
-      let left = (window.innerWidth - bRect.width) / 2;
-      if(left < 12) left = 12;
-      const wantAbove = rect.top >= bRect.height + margin;
-      if (wantAbove) {
-        bubble.classList.add('arrow-down');
-        bubble.style.top = (rect.top - bRect.height - margin) + 'px';
-      } else {
-        bubble.classList.add('arrow-up');
-        bubble.style.top = (rect.bottom + margin) + 'px';
-      }
-      bubble.style.left = left + 'px';
-      const arrow = bubble.querySelector('.tour-bubble-arrow');
-      if (arrow) {
-        const tabCenterX = rect.left + rect.width/2;
-        const arrowOffset = Math.max(16, Math.min(bRect.width - 32, tabCenterX - left - 8));
-        arrow.style.left = arrowOffset + 'px';
-      }
-    } else {
-      // Desktop: prefer below, flip above if no room.
-      let left = rect.left - 20;
-      const maxLeft = window.innerWidth - bRect.width - 16;
-      if (left > maxLeft) left = maxLeft;
-      if (left < 16) left = 16;
-      const wantBelow = window.innerHeight - rect.bottom >= bRect.height + margin;
-      if (wantBelow) {
-        bubble.classList.add('arrow-up');
-        bubble.style.top = (rect.bottom + margin) + 'px';
-      } else {
-        bubble.classList.add('arrow-down');
-        bubble.style.top = Math.max(margin, rect.top - bRect.height - margin) + 'px';
-      }
-      bubble.style.left = left + 'px';
-    }
+    // Keep the spotlight + bubble glued to the target while the user
+    // scrolls or resizes. Capture phase + passive so scroll inside any
+    // nested container also fires it. Listener handles live in
+    // _tourListeners so clearTourUI can detach them.
+    const reposition = () => positionTourUI(targetEl);
+    window.addEventListener('scroll', reposition, { passive: true, capture: true });
+    window.addEventListener('resize', reposition);
+    _tourListeners = { reposition };
   }, 120);
+}
+
+let _tourListeners = null;
+
+function positionTourUI(targetEl) {
+  const rect = targetEl.getBoundingClientRect();
+  const pad = 6;
+  const spot = document.getElementById('tour-spotlight');
+  if (spot) {
+    spot.style.top = (rect.top - pad) + 'px';
+    spot.style.left = (rect.left - pad) + 'px';
+    spot.style.width = (rect.width + pad*2) + 'px';
+    spot.style.height = (rect.height + pad*2) + 'px';
+  }
+  const bubble = document.getElementById('tour-bubble');
+  if (!bubble) return;
+  const bRect = bubble.getBoundingClientRect();
+  const margin = 16;
+  const isMobile = window.innerWidth <= 800;
+  bubble.classList.remove('arrow-up', 'arrow-down');
+
+  if (isMobile) {
+    // Mobile: center horizontally, prefer above the spotlight so the
+    // bubble doesn't slide under the bottom nav. Flip below if there
+    // isn't room above.
+    let left = (window.innerWidth - bRect.width) / 2;
+    if (left < 12) left = 12;
+    const wantAbove = rect.top >= bRect.height + margin;
+    if (wantAbove) {
+      bubble.classList.add('arrow-down');
+      bubble.style.top = (rect.top - bRect.height - margin) + 'px';
+    } else {
+      bubble.classList.add('arrow-up');
+      bubble.style.top = (rect.bottom + margin) + 'px';
+    }
+    bubble.style.left = left + 'px';
+    const arrow = bubble.querySelector('.tour-bubble-arrow');
+    if (arrow) {
+      const tabCenterX = rect.left + rect.width/2;
+      const arrowOffset = Math.max(16, Math.min(bRect.width - 32, tabCenterX - left - 8));
+      arrow.style.left = arrowOffset + 'px';
+    }
+  } else {
+    // Desktop: prefer below, flip above if no room.
+    let left = rect.left - 20;
+    const maxLeft = window.innerWidth - bRect.width - 16;
+    if (left > maxLeft) left = maxLeft;
+    if (left < 16) left = 16;
+    const wantBelow = window.innerHeight - rect.bottom >= bRect.height + margin;
+    if (wantBelow) {
+      bubble.classList.add('arrow-up');
+      bubble.style.top = (rect.bottom + margin) + 'px';
+    } else {
+      bubble.classList.add('arrow-down');
+      bubble.style.top = Math.max(margin, rect.top - bRect.height - margin) + 'px';
+    }
+    bubble.style.left = left + 'px';
+  }
 }
 
 function nextTourStep() {
@@ -7792,6 +7912,11 @@ function nextTourStep() {
 }
 
 function clearTourUI() {
+  if (_tourListeners) {
+    window.removeEventListener('scroll', _tourListeners.reposition, { capture: true });
+    window.removeEventListener('resize', _tourListeners.reposition);
+    _tourListeners = null;
+  }
   ['tour-overlay','tour-spotlight','tour-bubble'].forEach(id => {
     const el = document.getElementById(id);
     if(el) el.remove();
