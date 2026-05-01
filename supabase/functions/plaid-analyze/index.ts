@@ -214,6 +214,14 @@ Deno.serve(async (req) => {
 
     const plan = parsePlan(text);
 
+    // Round the surplus split to multiples of 5 and force the four
+    // buckets to sum to exactly 100. The model is inconsistent here
+    // (e.g. 0/11/44/44 = 99) and the user-facing review shows these
+    // numbers verbatim, so they should look intentional.
+    if (plan && plan.surplus_split) {
+      plan.surplus_split = normalizeSurplusSplit(plan.surplus_split);
+    }
+
     // Persist. Mark any prior pending/presenting plans for this user as superseded.
     await admin
       .from('analyzer_plans')
@@ -429,6 +437,41 @@ function parsePlan(text: string) {
   return JSON.parse(stripped.slice(start, end + 1));
 }
 
+// Round the four split buckets to multiples of 5 and ensure they sum to
+// exactly 100. Adjustments land on the largest bucket so smaller
+// categories keep the proportion the model intended.
+function normalizeSurplusSplit(split: Record<string, unknown>): Record<string, unknown> {
+  const keys = ['owner_pct', 'debt_pct', 'reserve_pct', 'free_pct'] as const;
+  const rounded: Record<string, number> = {};
+  for (const k of keys) {
+    let v = Number(split[k]);
+    if (!Number.isFinite(v) || v < 0) v = 0;
+    if (v > 100) v = 100;
+    rounded[k] = Math.round(v / 5) * 5;
+  }
+  let sum = keys.reduce((s, k) => s + rounded[k], 0);
+
+  // Sanity fallback: if the model produced something nonsensical,
+  // use Floor-First defaults rather than try to repair.
+  if (sum < 50 || sum > 130) {
+    return { ...split, owner_pct: 10, debt_pct: 20, reserve_pct: 15, free_pct: 55 };
+  }
+
+  let safety = 40;
+  while (sum !== 100 && safety-- > 0) {
+    const largest = keys.reduce((acc, k) => (rounded[k] > rounded[acc] ? k : acc), keys[0]);
+    if (sum < 100) {
+      rounded[largest] += 5;
+      sum += 5;
+    } else {
+      rounded[largest] = Math.max(0, rounded[largest] - 5);
+      sum -= 5;
+    }
+  }
+
+  return { ...split, ...rounded };
+}
+
 const SYSTEM_PROMPT = `You are the Analyzer for Able, a per-deposit budgeting app for entrepreneurs with variable income.
 
 After Plaid connects, you propose a complete Floor-First Budgeting plan based on the user's actual transaction history. The Coach presents your proposal to the user for confirmation. Every section must include evidence (transaction IDs or stream IDs) so the user can verify what you're seeing.
@@ -525,7 +568,7 @@ Return ONLY this JSON object. No prose. No markdown fences.
    - reserve_pct: 15 (raise to 25-30 if variability ≥ 6, lower to 10 if variability ≤ 3). This is "bufPct" in app code; the API speaks the user-facing word.
    - free_pct: whatever brings the sum to ≤ 100
 
-   The four MUST sum to 100 or less. Aim for exactly 100 unless a deliberate underfill is justified in the reasoning.
+   **All four percentages MUST be multiples of 5 (0, 5, 10, 15, 20, 25, ...) and the four MUST sum to exactly 100.** No 11s, 44s, or other irregular numbers. Pick clean, presentable values.
 
 4. **Tax allocation**:
    - If tax_payments are visible: derive suggested_pct from totals.tax_paid / totals.gross_income, rounded to nearest whole %. Confidence "high" if ≥ 4 quarters of evidence, "medium" if 2-3 quarters, "low" if 0-1.
