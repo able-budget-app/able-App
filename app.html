@@ -373,6 +373,16 @@ input,select,button,textarea{font-family:inherit;}
 .modal-close:hover{background:var(--ds-t4);color:var(--ds-t1);}
 .modal-close:focus{outline:none;box-shadow:0 0 0 3px rgba(42,122,74,.2);}
 .modal-actions{display:flex;gap:10px;justify-content:flex-end;margin-top:1.5rem;}
+.fa-src-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:8px;margin-top:6px;}
+.fa-src-card{display:flex;align-items:center;gap:12px;width:100%;text-align:left;padding:10px 12px;background:#fff;border:1.5px solid var(--ds-line);border-radius:var(--ds-r1);cursor:pointer;font-family:var(--ds-f);transition:border-color .12s,background .12s;}
+.fa-src-card:hover{border-color:#3d9e78;background:#f7fbf8;}
+.fa-src-card:hover .fa-src-radio{border-color:#3d9e78;}
+.fa-src-card.selected{border-color:#3d9e78;background:#ecf5ee;}
+.fa-src-radio{flex-shrink:0;width:20px;height:20px;border-radius:50%;border:2.5px solid #b5beb6;background:#fff;display:inline-flex;align-items:center;justify-content:center;transition:border-color .12s;}
+.fa-src-card.selected .fa-src-radio{border-color:#3d9e78;}
+.fa-src-radio-dot{width:10px;height:10px;border-radius:50%;background:#3d9e78;transform:scale(0);transition:transform .12s;}
+.fa-src-card.selected .fa-src-radio-dot{transform:scale(1);}
+.fa-src-label{font-size:14px;font-weight:700;color:var(--ds-t1);letter-spacing:-.01em;}
 @media (max-width:600px){
   .modal-bg{align-items:flex-end;padding:0;}
   .modal{max-width:100%;border-radius:var(--ds-r3) var(--ds-r3) 0 0;padding:1.5rem 1.25rem 0;max-height:92vh;max-height:92dvh;animation:sheetSlideUp .3s cubic-bezier(.34,1.2,.64,1);}
@@ -1983,8 +1993,8 @@ posthog.init('phc_B6PH36QxpExnyBYhfScFFF6LhDvoyxuFr6PypJuxxky3', {
       </select></div>
     </div>
     <div class="field" style="margin-bottom:12px;">
-      <label>Applies to (none checked = all income)</label>
-      <div id="fa-sources" style="display:flex;flex-wrap:wrap;gap:8px;margin-top:6px;"></div>
+      <label>Applies to (none selected = all income)</label>
+      <div id="fa-sources" class="fa-src-grid"></div>
     </div>
     <div id="fa-error" style="color:var(--ds-c4);font-size:13px;font-weight:600;margin-bottom:10px;display:none;"></div>
     <div class="modal-actions">
@@ -6945,12 +6955,11 @@ function openFixedAllocModal(idx){
   errEl.style.display='none';
   const sourcesEl=document.getElementById('fa-sources');
   const sources=S.sources||[];
-  // Render source checkboxes
-  sourcesEl.innerHTML=sources.map((s,i)=>`
-    <label style="display:inline-flex;align-items:center;gap:6px;padding:6px 10px;background:var(--ds-page);border-radius:100px;font-size:12px;font-weight:700;color:var(--ds-t1);cursor:pointer;">
-      <input type="checkbox" class="fa-src-check" data-source="${escapeFa(s)}" style="margin:0;">
-      ${escapeFa(s)}
-    </label>`).join('');
+  sourcesEl.innerHTML=sources.map((s)=>`
+    <button type="button" class="fa-src-card" data-source="${escapeFa(s)}" onclick="this.classList.toggle('selected')">
+      <span class="fa-src-radio" aria-hidden="true"><span class="fa-src-radio-dot"></span></span>
+      <span class="fa-src-label">${escapeFa(s)}</span>
+    </button>`).join('');
   if(typeof idx==='number'){
     const o=S.obligations[idx];
     if(!o) return;
@@ -6960,11 +6969,10 @@ function openFixedAllocModal(idx){
     document.getElementById('fa-label').value=o.label||'';
     document.getElementById('fa-pct').value=o.percentage||'';
     document.getElementById('fa-dest').value=o.destination||'external_transfer';
-    setTimeout(()=>{
-      document.querySelectorAll('.fa-src-check').forEach(cb=>{
-        cb.checked=(o.enabledSources||[]).includes(cb.dataset.source);
-      });
-    },0);
+    const enabled=new Set(o.enabledSources||[]);
+    document.querySelectorAll('.fa-src-card').forEach(card=>{
+      card.classList.toggle('selected',enabled.has(card.dataset.source));
+    });
   } else {
     delete modal.dataset.editIdx;
     titleEl.textContent='Add fixed allocation';
@@ -6983,7 +6991,7 @@ function saveFixedAlloc(){
   const label=document.getElementById('fa-label').value.trim();
   const pct=parseFloat(document.getElementById('fa-pct').value);
   const dest=document.getElementById('fa-dest').value;
-  const checked=[...document.querySelectorAll('.fa-src-check')].filter(c=>c.checked).map(c=>c.dataset.source);
+  const checked=[...document.querySelectorAll('.fa-src-card.selected')].map(c=>c.dataset.source);
   const showErr=(m)=>{errEl.textContent=m;errEl.style.display='block';};
   if(!label){showErr('Give the rule a label.');return;}
   if(isNaN(pct)||pct<=0){showErr('Percentage must be greater than zero.');return;}
