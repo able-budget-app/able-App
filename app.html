@@ -1677,6 +1677,7 @@ posthog.init('phc_B6PH36QxpExnyBYhfScFFF6LhDvoyxuFr6PypJuxxky3', {
         <div id="connected-accounts-list"><div class="empty-state" style="padding:1.25rem;">Loading…</div></div>
         <button class="btn btn-primary btn-sm" id="connect-another-bank-btn" style="margin-top:.85rem;width:100%;" onclick="settingsConnectBank()">+ Connect a bank</button>
         <div id="connect-bank-error" style="color:var(--ds-c4);font-size:12px;font-weight:600;margin-top:.5rem;display:none;"></div>
+        <div style="font-size:11px;color:var(--ds-t3);font-weight:500;line-height:1.5;margin-top:.85rem;">By connecting, you authorize Plaid to share your account data with Able. Read <a href="https://plaid.com/legal/#end-user-privacy-policy" target="_blank" rel="noopener" style="color:var(--ds-green);text-decoration:underline;">Plaid's privacy policy</a>.</div>
       </div>
       <div class="sec">Email reminders</div>
       <div class="card">
@@ -1980,6 +1981,22 @@ posthog.init('phc_B6PH36QxpExnyBYhfScFFF6LhDvoyxuFr6PypJuxxky3', {
     <div class="field" style="margin-bottom:1rem;"><label>Amount</label><input type="number" id="preview-amount" min="0" step="0.01" oninput="onPreviewAmountChange()"></div>
     <div id="preview-jobs"></div>
     <div class="modal-actions"><button class="btn" onclick="cancelAllocPreview()">Cancel</button><button class="btn btn-primary" onclick="confirmAlloc()">Confirm &amp; log it</button></div>
+  </div>
+</div>
+<div class="modal-bg" id="modal-bank-prompt" style="display:none;">
+  <div class="modal" style="max-width:440px;">
+    <button class="modal-close" onclick="dismissBankPrompt()" aria-label="Close"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button>
+    <div style="display:flex;justify-content:center;margin-bottom:1rem;">
+      <div style="width:56px;height:56px;border-radius:50%;background:var(--ds-green-l);display:flex;align-items:center;justify-content:center;color:var(--ds-green);">
+        <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="5" width="18" height="14" rx="2"/><line x1="3" y1="10" x2="21" y2="10"/><line x1="7" y1="15" x2="11" y2="15"/></svg>
+      </div>
+    </div>
+    <div class="modal-title" style="text-align:center;margin-bottom:.5rem;">Connect your bank to finish setup.</div>
+    <div style="font-size:14px;color:var(--ds-t2);font-weight:500;line-height:1.6;text-align:center;margin-bottom:1.25rem;">Able works best when it can read your transactions and draft a Floor-First plan automatically. Takes about a minute.</div>
+    <button class="btn btn-primary" id="bank-prompt-connect-btn" onclick="bankPromptConnect()" style="width:100%;margin-bottom:.5rem;">Connect now</button>
+    <button class="btn btn-ghost btn-sm" onclick="dismissBankPrompt()" style="width:100%;">Skip for now</button>
+    <div id="bank-prompt-error" style="color:var(--ds-c4);font-size:12px;font-weight:600;margin-top:.5rem;display:none;"></div>
+    <div style="font-size:11px;color:var(--ds-t3);font-weight:500;line-height:1.5;margin-top:1rem;text-align:center;">By connecting, you authorize Plaid to share your account data with Able. Read <a href="https://plaid.com/legal/#end-user-privacy-policy" target="_blank" rel="noopener" style="color:var(--ds-green);text-decoration:underline;">Plaid's privacy policy</a>.</div>
   </div>
 </div>
 <div class="modal-bg" id="modal-fixed-alloc" style="display:none;">
@@ -2688,6 +2705,10 @@ async function onAuthStateChange(user) {
       setTimeout(() => startTour(), 600);
     } else {
       evalCoachNudges();
+      // Existing testers who finished onboarding before Plaid shipped
+      // need a nudge to connect their bank. Skipped while the tour
+      // runs since the modal would stack on top.
+      maybeShowBankPrompt();
     }
   } catch(e) {
     // Don't auto-reload — that turns any silent JS error post-sign-in into an
@@ -2863,7 +2884,8 @@ function renderObStep() {
         <div style="display:flex;gap:8px;margin-bottom:1.25rem;">${opt(6)}${opt(12)}${opt(24)}</div>
         <button type="button" id="ob-plaid-connect" class="btn-primary" onclick="obStartPlaidLink()" style="width:100%;margin-bottom:.5rem;">Connect bank</button>
         <button type="button" class="btn-ghost btn-sm" onclick="obSkipPlaidConnect()" style="width:100%;">Skip and enter manually →</button>
-        <div id="ob-plaid-error" style="display:none;color:#c85a5a;font-size:12px;font-weight:600;margin-top:.5rem;"></div>`;
+        <div id="ob-plaid-error" style="display:none;color:#c85a5a;font-size:12px;font-weight:600;margin-top:.5rem;"></div>
+        <div style="font-size:11px;color:var(--ds-t3);font-weight:500;line-height:1.5;margin-top:1rem;text-align:center;">By connecting, you authorize Plaid to share your account data with Able. Read <a href="https://plaid.com/legal/#end-user-privacy-policy" target="_blank" rel="noopener" style="color:var(--ds-green);text-decoration:underline;">Plaid's privacy policy</a>.</div>`;
       document.getElementById('ob-back-btn').style.display = obStep > 0 ? 'inline-block' : 'none';
       document.getElementById('ob-next-btn').style.display = 'none';
     }
@@ -7060,6 +7082,83 @@ async function settingsConnectBank() {
   } catch (e) {
     console.error('settingsConnectBank failed:', e);
     if (btn) { btn.disabled = false; btn.textContent = '+ Connect a bank'; }
+    if (errEl) { errEl.textContent = 'Could not start connection: ' + (e.message || 'unknown error'); errEl.style.display = 'block'; }
+  }
+}
+
+// One-time-per-session prompt for users who finished onboarding without
+// linking a bank (e.g., earlier testers). Fires after auth-flow lands
+// them on the dashboard. sessionStorage flag means it doesn't re-show
+// inside the same tab session if they dismissed it; next login fires
+// it again until a bank is connected.
+async function maybeShowBankPrompt() {
+  if (!currentUser) return;
+  if (sessionStorage.getItem('able_bank_prompt_dismissed') === '1') return;
+  try {
+    const { count, error } = await sbGet()
+      .from('plaid_items')
+      .select('id', { count: 'exact', head: true });
+    if (error) throw error;
+    if ((count ?? 0) > 0) return;
+  } catch (e) {
+    console.warn('maybeShowBankPrompt query failed:', e);
+    return;
+  }
+  const modal = document.getElementById('modal-bank-prompt');
+  if (modal) modal.style.display = 'flex';
+}
+
+function dismissBankPrompt() {
+  try { sessionStorage.setItem('able_bank_prompt_dismissed', '1'); } catch (_) { /* noop */ }
+  const modal = document.getElementById('modal-bank-prompt');
+  if (modal) modal.style.display = 'none';
+}
+
+async function bankPromptConnect() {
+  const btn = document.getElementById('bank-prompt-connect-btn');
+  const errEl = document.getElementById('bank-prompt-error');
+  if (errEl) { errEl.style.display = 'none'; errEl.textContent = ''; }
+  if (btn) { btn.disabled = true; btn.textContent = 'Loading…'; }
+
+  try {
+    await ensurePlaidLinkScript();
+    const { data, error } = await sbGet().functions.invoke('plaid-link-token', {
+      body: { mode: 'new', lookback_months: 6, redirect_uri: plaidRedirectUri() }
+    });
+    if (error) throw error;
+    if (data && data.error) throw new Error(data.error);
+    if (!data?.link_token) throw new Error('No link_token returned');
+
+    persistOauthLink({ token: data.link_token, context: 'settings_new', lookback: 6 });
+
+    const handler = window.Plaid.create({
+      token: data.link_token,
+      onSuccess: async (public_token, metadata) => {
+        clearOauthLink();
+        if (btn) btn.textContent = 'Linking…';
+        try {
+          await settingsHandlePostLink(public_token, metadata);
+          dismissBankPrompt();
+        } catch (e) {
+          console.error('post-link flow failed:', e);
+          if (errEl) { errEl.textContent = 'Linked, but follow-up sync failed: ' + (e.message || 'unknown error'); errEl.style.display = 'block'; }
+        } finally {
+          if (btn) { btn.disabled = false; btn.textContent = 'Connect now'; }
+        }
+      },
+      onExit: (err) => {
+        clearOauthLink();
+        if (btn) { btn.disabled = false; btn.textContent = 'Connect now'; }
+        if (err && errEl) {
+          errEl.textContent = err.display_message || err.error_message || 'Connection canceled';
+          errEl.style.display = 'block';
+        }
+      },
+    });
+    handler.open();
+  } catch (e) {
+    console.error('bankPromptConnect failed:', e);
+    if (btn) { btn.disabled = false; btn.textContent = 'Connect now'; }
     if (errEl) { errEl.textContent = 'Could not start connection: ' + (e.message || 'unknown error'); errEl.style.display = 'block'; }
   }
 }
