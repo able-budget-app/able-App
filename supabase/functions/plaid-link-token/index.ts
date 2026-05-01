@@ -6,21 +6,49 @@
 //     mode?: 'new' | 'update',                  // default 'new'
 //     lookback_months?: 6 | 12 | 24,            // default 6 (D1.4 lock)
 //     plaid_item_row_id?: string                // required if mode='update'
+//     account_selection_enabled?: boolean       // update mode + NEW_ACCOUNTS_AVAILABLE
 //   }
 //
 // Returns: { link_token, expiration, mode }
 //
-// Per Able's Plaid v1 architecture decisions (2026-04-28):
-//   - products = ["transactions"] only (Balance auto-initializes)
-//   - lookback options 6/12/24 (no 3mo)
-//   - webhook URL from PLAID_WEBHOOK_URL env if set
+// _shared/plaid.ts is inlined below so the function deploys
+// self-contained from the Supabase dashboard.
 
 import { createClient } from 'npm:@supabase/supabase-js@2';
-import { linkTokenCreate } from '../_shared/plaid.ts';
 
 const SUPABASE_URL = Deno.env.get('SUPABASE_URL')!;
 const SERVICE_ROLE = Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')!;
 const PLAID_WEBHOOK_URL = Deno.env.get('PLAID_WEBHOOK_URL') ?? undefined;
+const PLAID_ENV = Deno.env.get('PLAID_ENV') ?? 'sandbox';
+const PLAID_HOSTS: Record<string, string> = {
+  sandbox: 'https://sandbox.plaid.com',
+  development: 'https://development.plaid.com',
+  production: 'https://production.plaid.com',
+};
+const PLAID_HOST = PLAID_HOSTS[PLAID_ENV] ?? PLAID_HOSTS.sandbox;
+
+async function plaidApi<TReq extends Record<string, unknown>, TRes>(
+  path: string,
+  body: TReq,
+): Promise<TRes> {
+  const clientId = Deno.env.get('PLAID_CLIENT_ID');
+  const secret = Deno.env.get('PLAID_SECRET');
+  if (!clientId || !secret) {
+    throw new Error('PLAID_CLIENT_ID and PLAID_SECRET must be set');
+  }
+  const res = await fetch(`${PLAID_HOST}${path}`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ client_id: clientId, secret, ...body }),
+  });
+  const text = await res.text();
+  let parsed: unknown = null;
+  try { parsed = text ? JSON.parse(text) : null; } catch { /* non-JSON */ }
+  if (!res.ok) {
+    throw new Error(`Plaid ${path} failed: ${text || res.status}`);
+  }
+  return parsed as TRes;
+}
 
 const corsHeaders = {
   'Access-Control-Allow-Origin': '*',
@@ -32,8 +60,6 @@ type Body = {
   mode?: 'new' | 'update';
   lookback_months?: 6 | 12 | 24;
   plaid_item_row_id?: string;
-  // Update-mode only: set when reconnecting after NEW_ACCOUNTS_AVAILABLE
-  // so the user can pick which new accounts to share.
   account_selection_enabled?: boolean;
 };
 
@@ -75,19 +101,24 @@ Deno.serve(async (req) => {
 
     const dayMap: Record<6 | 12 | 24, number> = { 6: 180, 12: 365, 24: 730 };
 
-    const link = await linkTokenCreate({
+    const reqBody: Record<string, unknown> = {
       user: { client_user_id: userId },
       client_name: 'Able',
       products: mode === 'update' ? [] : ['transactions'],
       country_codes: ['US'],
       language: 'en',
-      ...(PLAID_WEBHOOK_URL ? { webhook: PLAID_WEBHOOK_URL } : {}),
-      ...(accessToken ? { access_token: accessToken } : {}),
-      ...(mode === 'new' ? { transactions: { days_requested: dayMap[lookback] } } : {}),
-      ...(mode === 'update' && body.account_selection_enabled
-        ? { update: { account_selection_enabled: true } }
-        : {}),
-    });
+    };
+    if (PLAID_WEBHOOK_URL) reqBody.webhook = PLAID_WEBHOOK_URL;
+    if (accessToken) reqBody.access_token = accessToken;
+    if (mode === 'new') reqBody.transactions = { days_requested: dayMap[lookback] };
+    if (mode === 'update' && body.account_selection_enabled) {
+      reqBody.update = { account_selection_enabled: true };
+    }
+
+    const link = await plaidApi<typeof reqBody, { link_token: string; expiration: string; request_id: string }>(
+      '/link/token/create',
+      reqBody,
+    );
 
     return json({
       link_token: link.link_token,
