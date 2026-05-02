@@ -47,13 +47,13 @@ Deno.serve(async (req) => {
   if (req.method !== 'POST') return json({ error: 'POST only' }, 405);
 
   try {
+    // Two callers: a logged-in user (JWT in Authorization) or an internal
+    // service-role caller (the webhook / cron). The latter passes the
+    // service role key directly so it can sync items for users who are
+    // offline. Bearer-equal-to-service-role is the trust boundary.
     const authHeader = req.headers.get('Authorization') ?? '';
-    const userClient = createClient(SUPABASE_URL, SERVICE_ROLE, {
-      global: { headers: { Authorization: authHeader } },
-    });
-    const { data: userRes, error: userErr } = await userClient.auth.getUser();
-    if (userErr || !userRes.user) return json({ error: 'Unauthorized' }, 401);
-    const userId = userRes.user.id;
+    const bearerToken = authHeader.replace(/^Bearer\s+/i, '');
+    const isServiceCall = !!bearerToken && bearerToken === SERVICE_ROLE;
 
     const body: Body = await req.json();
     if (!body?.plaid_item_row_id) {
@@ -68,7 +68,16 @@ Deno.serve(async (req) => {
       .eq('id', body.plaid_item_row_id)
       .single();
     if (itemErr || !item) return json({ error: 'Item not found' }, 404);
-    if (item.user_id !== userId) return json({ error: 'Forbidden' }, 403);
+
+    if (!isServiceCall) {
+      const userClient = createClient(SUPABASE_URL, SERVICE_ROLE, {
+        global: { headers: { Authorization: authHeader } },
+      });
+      const { data: userRes, error: userErr } = await userClient.auth.getUser();
+      if (userErr || !userRes.user) return json({ error: 'Unauthorized' }, 401);
+      if (item.user_id !== userRes.user.id) return json({ error: 'Forbidden' }, 403);
+    }
+    const userId = item.user_id;
 
     // Build a quick lookup of Plaid account_id → plaid_accounts.id (our PK).
     const { data: accountRows } = await admin
@@ -175,6 +184,13 @@ Deno.serve(async (req) => {
     await admin.from('plaid_items').update(updatePayload).eq('id', item.id);
     console.log(`plaid-sync: done in ${Date.now() - tStart}ms, total added=${totalAdded}, modified=${totalModified}, removed=${totalRemoved}, status=${lastStatus}`);
 
+    // Auto-classify the just-synced transactions in the background. Skip
+    // when nothing changed to save LLM calls. Defer via EdgeRuntime.waitUntil
+    // so this handler returns fast.
+    if (totalAdded > 0 || totalModified > 0) {
+      scheduleBackgroundClassify(item.id);
+    }
+
     return json({
       added: totalAdded,
       modified: totalModified,
@@ -194,6 +210,35 @@ function json(body: unknown, status = 200) {
     status,
     headers: { ...corsHeaders, 'Content-Type': 'application/json' },
   });
+}
+
+// Fire plaid-classify-batch in the background so newly-synced transactions
+// get the able_category overlay applied within a minute or two without
+// blocking this handler's response.
+function scheduleBackgroundClassify(plaidItemRowId: string): void {
+  const url = `${SUPABASE_URL}/functions/v1/plaid-classify-batch`;
+  const work = fetch(url, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      Authorization: `Bearer ${SERVICE_ROLE}`,
+    },
+    body: JSON.stringify({ plaid_item_row_id: plaidItemRowId }),
+  })
+    .then(async (r) => {
+      const text = await r.text().catch(() => '');
+      if (!r.ok) {
+        console.error(`sync→classify failed for item ${plaidItemRowId} (${r.status}): ${text}`);
+      } else {
+        console.log(`sync→classify ok for item ${plaidItemRowId}: ${text}`);
+      }
+    })
+    .catch((e) => console.error(`sync→classify threw for item ${plaidItemRowId}:`, e));
+
+  const er = (globalThis as unknown as {
+    EdgeRuntime?: { waitUntil?: (p: Promise<unknown>) => void };
+  }).EdgeRuntime;
+  if (er?.waitUntil) er.waitUntil(work);
 }
 
 async function upsertAccounts(

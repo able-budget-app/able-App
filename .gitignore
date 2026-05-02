@@ -1,3 +1,8 @@
+# Local env files (service role keys, etc — never commit)
+.env
+.env.local
+.env.*.local
+
 # macOS
 .DS_Store
 
@@ -44,3 +49,14 @@ able-skills-upload/*.zip
 
 # Per-user Claude Code state (settings, session locks)
 .claude/
+
+# Competitor screenshot dump (one-off audit input; not part of the app)
+Other App Screenshots /
+
+# Icon animation experiment — source PNG, render script, and rendered
+# outputs. One-off; not used by the app or build.
+/icon-1024.png
+/icon-animation.html
+/icon-animation.gif
+/icon-animation.mp4
+/scripts/render-icon-animation.py

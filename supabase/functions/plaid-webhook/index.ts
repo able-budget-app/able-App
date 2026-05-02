@@ -182,11 +182,16 @@ async function dispatch(
   const now = new Date().toISOString();
   const updates: Record<string, unknown> = { last_webhook_at: now };
 
+  let triggerSync = false;
   if (ev.webhook_type === 'TRANSACTIONS') {
     if (ev.webhook_code === 'SYNC_UPDATES_AVAILABLE') {
-      // Caller / cron will call plaid-sync. Just stamp the timestamp.
       if (ev.initial_update_complete) updates.initial_sync_complete = true;
       if (ev.historical_update_complete) updates.historical_sync_complete = true;
+      // Pull immediately. Without this the user has to open the app for
+      // their data to land, which was the dominant cause of "missing
+      // deposits". Sync runs in the background via EdgeRuntime.waitUntil
+      // so this handler still returns 200 inside Plaid's 10s budget.
+      triggerSync = true;
     }
     if (ev.webhook_code === 'RECURRING_TRANSACTIONS_UPDATE') {
       // Caller / cron will call plaid-recurring-refresh.
@@ -234,10 +239,50 @@ async function dispatch(
     }
   }
 
-  await admin
+  const { data: updatedItem, error: updateErr } = await admin
     .from('plaid_items')
     .update(updates)
-    .eq('plaid_item_id', itemId);
+    .eq('plaid_item_id', itemId)
+    .select('id')
+    .maybeSingle();
+  if (updateErr) {
+    console.error(`failed to update plaid_items for ${itemId}:`, updateErr);
+  }
+
+  if (triggerSync && updatedItem?.id) {
+    scheduleBackgroundSync(updatedItem.id);
+  }
+}
+
+// Fire plaid-sync in the background so the webhook handler can return 200
+// inside Plaid's 10-second budget. plaid-sync accepts a service-role caller
+// and looks up the user from the item row.
+function scheduleBackgroundSync(plaidItemRowId: string): void {
+  const url = `${SUPABASE_URL}/functions/v1/plaid-sync`;
+  const work = fetch(url, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      Authorization: `Bearer ${SERVICE_ROLE}`,
+    },
+    body: JSON.stringify({ plaid_item_row_id: plaidItemRowId }),
+  })
+    .then(async (r) => {
+      const text = await r.text().catch(() => '');
+      if (!r.ok) {
+        console.error(`webhook→sync failed for item ${plaidItemRowId} (${r.status}): ${text}`);
+      } else {
+        console.log(`webhook→sync ok for item ${plaidItemRowId}: ${text}`);
+      }
+    })
+    .catch((e) => console.error(`webhook→sync threw for item ${plaidItemRowId}:`, e));
+
+  const er = (globalThis as unknown as { EdgeRuntime?: { waitUntil?: (p: Promise<unknown>) => void } }).EdgeRuntime;
+  if (er?.waitUntil) {
+    er.waitUntil(work);
+  }
+  // If EdgeRuntime is unavailable (local dev), the in-flight fetch should
+  // still complete before the runtime is reaped.
 }
 
 // ─── Helpers ──────────────────────────────────────────────────────────
