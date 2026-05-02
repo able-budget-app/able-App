@@ -6258,7 +6258,7 @@ function renderHistory(){
           ${hasJobs?`<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="color:var(--ds-t3);transform:rotate(${expanded?'90':'0'}deg);transition:transform .2s;flex-shrink:0;"><polyline points="9 18 15 12 9 6"/></svg>`:'<span style="width:14px;"></span>'}
           <div style="min-width:0;">
             <div style="font-size:13px;font-weight:800;color:var(--ds-t1);letter-spacing:-.01em;display:flex;align-items:center;flex-wrap:wrap;">${h.source}${badge}</div>
-            <div style="font-size:11px;color:var(--ds-t3);font-weight:600;">${h.date}${hasJobs?' · tap to see breakdown':''}${h.mergedWithPlaidTxnId?` · matched bank deposit ${f2(h.deposited_amount||0)}`:''}</div>
+            <div style="font-size:11px;color:var(--ds-t3);font-weight:600;">${h.date}${hasJobs?' · tap to see breakdown':''}${h.mergedWithPlaidTxnId?` · matched deposit${h.gross_amount && h.gross_amount > h.amount + 0.01 ? ` · originally ${f2(h.gross_amount)}` : ''}`:''}</div>
           </div>
         </div>
         <div style="display:flex;align-items:center;gap:6px;">
@@ -8412,6 +8412,13 @@ async function dedupPlaidWithHistory(){
       return aT - bT;
     });
     const winner = candidates[0];
+    // Preserve the original gross amount (user's invoiced/intended figure)
+    // and replace `amount` with the actual deposited net so totalIn() and
+    // every downstream sum reflects real money in the bank. The allocation
+    // breakdown in winner.jobs stays based on gross — that was the user's
+    // distribution intent at log time. The history row shows both.
+    if (winner.gross_amount === undefined) winner.gross_amount = winner.amount;
+    winner.amount = plaidAmt;
     winner.mergedWithPlaidTxnId = ptx.plaid_transaction_id;
     winner.deposited_amount = plaidAmt;
     winner.merged_at = Date.now();
