@@ -8026,10 +8026,19 @@ async function inboxSkip(txnRowId){
 // Same backend the Income Inbox uses. Outflow chips differ from inflow chips.
 const ACTIVITY_LOOKBACK_DAYS = 90;
 const ACTIVITY_PAGE_LIMIT = 250;
+// Inflow and outflow chip sets are now symmetric: a refund of a bill should
+// land back in the Bill category (negative amount), a return on a discretionary
+// purchase in Spending, a tax refund in Tax, etc. The DB enum already supports
+// it; the override row's `direction` column keeps inflow/outflow patterns
+// distinct so a "Netflix refund → bill" override doesn't affect the actual
+// outflow charges from the same merchant.
 const ACTIVITY_INFLOW_CATS = [
   { value: 'income',         label: 'Income' },
+  { value: 'bill',           label: 'Bill refund' },
+  { value: 'discretionary',  label: 'Spending refund' },
+  { value: 'debt_payment',   label: 'Debt refund' },
+  { value: 'tax_payment',    label: 'Tax refund' },
   { value: 'transfer',       label: 'Transfer' },
-  { value: 'discretionary',  label: 'Refund / other' },
 ];
 const ACTIVITY_OUTFLOW_CATS = [
   { value: 'bill',           label: 'Bill' },
@@ -8150,9 +8159,14 @@ function openReclassifyModal(txnRowId){
   const errEl = document.getElementById('reclassify-error');
   const justOnce = document.getElementById('reclassify-just-once');
   const taxBox = document.getElementById('reclassify-tax-deductible');
+  const saveBtn = document.getElementById('reclassify-save-btn');
   if (errEl) { errEl.style.display = 'none'; errEl.textContent = ''; }
   if (justOnce) justOnce.checked = false;
   if (taxBox) taxBox.checked = !!row.is_tax_deductible;
+  // Reset save-button state. applyReclassify disables it during the API call;
+  // on success we close the modal but never re-enable, so subsequent opens
+  // would land on a permanently-disabled button until the next page reload.
+  if (saveBtn) saveBtn.removeAttribute('disabled');
 
   const isInflow = (row.amount ?? 0) < 0;
   const display = Math.abs(row.amount ?? 0).toLocaleString(undefined, { style: 'currency', currency: 'USD' });
