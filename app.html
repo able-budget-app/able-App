@@ -1547,6 +1547,10 @@ posthog.init('phc_B6PH36QxpExnyBYhfScFFF6LhDvoyxuFr6PypJuxxky3', {
 
 <!-- DEBT -->
 <div class="page" id="page-debt">
+  <!-- Interest cost card — only renders when Plaid sees actual interest
+       charges in the last 30 days. Helps users see the real annualized
+       cost of carrying balances without lecturing them. -->
+  <div id="debt-interest-card"></div>
   <div class="two-col">
     <div>
       <div class="sec">Your debts, highest interest first</div>
@@ -6704,6 +6708,8 @@ function addBill(){
 // DEBT
 // ═══════════════════════════════════════
 function renderDebtPage(){
+  // Async — fires-and-forgets, populates the card when query returns.
+  renderInterestCostCard();
   const el=document.getElementById('debt-list-el');el.innerHTML='';
   // Migrate: ensure every debt has an id
   let dirty=false;
@@ -8527,6 +8533,44 @@ async function dedupPlaidWithHistory(){
     Able.track?.('plaid_history_dedup', { merged_count: mergedCount });
   }
   return mergedCount;
+}
+
+// ═══════════════════════════════════════
+// CC INTEREST COST CARD (Debt page)
+// ═══════════════════════════════════════
+// Surfaces real interest paid in the last 30 days plus an annualized
+// projection — visibility nudge without lecturing. Only renders when
+// Plaid sees actual interest charges (so users without revolving balances
+// don't see an empty card).
+async function renderInterestCostCard() {
+  const card = document.getElementById('debt-interest-card');
+  if (!card) return;
+  const since = new Date();
+  since.setDate(since.getDate() - 30);
+  const sinceIso = since.toISOString().slice(0, 10);
+  try {
+    const { data, error } = await sbGet()
+      .from('plaid_transactions')
+      .select('amount, name, personal_finance_category_detailed')
+      .gte('date', sinceIso)
+      .gt('amount', 0)
+      .eq('personal_finance_category_detailed', 'BANK_FEES_INTEREST_CHARGE')
+      .limit(200);
+    if (error || !data || data.length === 0) { card.innerHTML = ''; return; }
+    const total = data.reduce((s, r) => s + Math.abs(r.amount ?? 0), 0);
+    if (total < 1) { card.innerHTML = ''; return; }
+    const fmt = (n) => n.toLocaleString(undefined, { style: 'currency', currency: 'USD' });
+    const annualized = total * 12;
+    card.innerHTML = `
+      <div class="card" style="background:linear-gradient(135deg,#fde0e0 0%,#fad8d8 100%);border-left:4px solid var(--coral);margin-bottom:1.25rem;padding:14px 16px;">
+        <div style="font-size:11px;font-weight:800;letter-spacing:.08em;text-transform:uppercase;color:var(--coral);margin-bottom:4px;">Interest paid · last 30 days</div>
+        <div style="font-size:1.4rem;font-weight:900;color:var(--ds-t1);letter-spacing:-.02em;">${fmt(total)}</div>
+        <div style="font-size:12px;color:var(--ds-t2);font-weight:700;margin-top:6px;line-height:1.5;">That's <strong>${fmt(annualized)} a year</strong> if nothing changes. Every dollar of interest is money that didn't go to your balance.</div>
+      </div>`;
+  } catch (e) {
+    console.warn('renderInterestCostCard failed:', e);
+    card.innerHTML = '';
+  }
 }
 
 function downloadTaxCsv(){
