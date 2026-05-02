@@ -1210,6 +1210,12 @@ posthog.init('phc_B6PH36QxpExnyBYhfScFFF6LhDvoyxuFr6PypJuxxky3', {
     </div>
     <div class="auth-error" id="auth-error"></div>
     <div class="auth-success" id="auth-success"></div>
+    <!-- Resend confirmation email — only shown after a signup that requires
+         email confirmation. Populated by showSignupResendOption. -->
+    <div id="auth-resend-wrap" style="display:none;margin-bottom:1rem;text-align:center;">
+      <button type="button" id="auth-resend-btn" onclick="resendSignupConfirmation()" style="background:none;border:none;font-family:var(--ds-f);font-size:13px;font-weight:700;color:var(--ds-green);cursor:pointer;padding:6px 10px;text-decoration:underline;">Didn't get it? Resend confirmation email</button>
+      <div id="auth-resend-note" style="font-size:12px;font-weight:600;color:var(--ds-t3);margin-top:4px;display:none;"></div>
+    </div>
     <!-- Google button — works for both sign in and sign up -->
     <button onclick="doGoogleAuth()" style="width:100%;padding:13px;border-radius:var(--ds-r1);border:1.5px solid var(--ds-t4);background:var(--ds-card);font-family:var(--ds-f);font-size:14px;font-weight:700;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:10px;transition:all .18s;margin-bottom:1rem;color:var(--ds-t1);" onmouseover="this.style.borderColor='var(--ds-green)';this.style.background='var(--ds-green-l)'" onmouseout="this.style.borderColor='var(--ds-t4)';this.style.background='var(--ds-card)'">
       <svg width="18" height="18" viewBox="0 0 48 48"><path fill="#FFC107" d="M43.6 20H24v8h11.3C33.6 32.6 29.3 36 24 36c-6.6 0-12-5.4-12-12s5.4-12 12-12c3 0 5.8 1.1 7.9 3l5.7-5.7C34.1 6.5 29.3 4 24 4 12.9 4 4 12.9 4 24s8.9 20 20 20c11 0 19.7-8 19.7-20 0-1.3-.1-2.7-.1-4z"/><path fill="#FF3D00" d="M6.3 14.7l6.6 4.8C14.5 16 19 12 24 12c3 0 5.8 1.1 7.9 3l5.7-5.7C34.1 6.5 29.3 4 24 4 16.3 4 9.7 8.3 6.3 14.7z"/><path fill="#4CAF50" d="M24 44c5.2 0 9.9-1.9 13.5-5l-6.2-5.2C29.5 35.6 26.9 36 24 36c-5.2 0-9.6-3.3-11.2-8l-6.6 5.1C9.6 39.6 16.3 44 24 44z"/><path fill="#1976D2" d="M43.6 20H24v8h11.3c-.9 2.6-2.6 4.7-4.8 6.2l6.2 5.2C40.5 36.2 44 30.6 44 24c0-1.3-.1-2.7-.4-4z"/></svg>
@@ -1494,6 +1500,10 @@ posthog.init('phc_B6PH36QxpExnyBYhfScFFF6LhDvoyxuFr6PypJuxxky3', {
     </div>
   </div>
 
+  <!-- Floor pace · 7-day strip. Hidden by loadPaceLine when there's no
+       Plaid data yet or no bills/baseline to anchor a floor against. -->
+  <div id="home-paceline" style="display:none;margin-top:1.25rem;"></div>
+
   <!-- INCOME THIS MONTH -->
   <div class="sec" style="margin-top:1.5rem;">Income this month</div>
   <div id="history-list"><div class="empty-state">No income logged yet this month. Tap "Log income" above to start.</div></div>
@@ -1547,6 +1557,10 @@ posthog.init('phc_B6PH36QxpExnyBYhfScFFF6LhDvoyxuFr6PypJuxxky3', {
 
 <!-- DEBT -->
 <div class="page" id="page-debt">
+  <!-- Payoff-date card — leading callout. Uses last-90-day Plaid debt-payment
+       pace (floored at sum of minimums) to project a single "debt-free by"
+       date. Renders only when there are debts with a balance. -->
+  <div id="debt-payoff-card"></div>
   <!-- Interest cost card — only renders when Plaid sees actual interest
        charges in the last 30 days. Helps users see the real annualized
        cost of carrying balances without lecturing them. -->
@@ -1690,6 +1704,10 @@ posthog.init('phc_B6PH36QxpExnyBYhfScFFF6LhDvoyxuFr6PypJuxxky3', {
     <span>Activity</span>
     <button class="btn btn-sm btn-ghost" onclick="openTaxExportModal()" style="margin-left:auto;font-size:12px;">Tax export →</button>
   </div>
+
+  <!-- Recurring outflows surfaced from plaid_recurring_streams. Hidden by
+       loadRecurringScan when there's no detected recurring activity. -->
+  <div id="recurring-section" style="display:none;margin-bottom:1.25rem;"></div>
   <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin-bottom:.85rem;">
     <input type="text" id="activity-search" placeholder="Search merchant, name, or label…" oninput="onActivitySearchInput()" style="flex:1;min-width:200px;font-family:var(--ds-f);font-size:13px;font-weight:600;padding:8px 12px;border:1.5px solid var(--ds-line);border-radius:var(--ds-r1);background:white;color:var(--ds-t1);outline:none;">
     <select id="activity-range" onchange="renderActivityPage()" style="font-family:var(--ds-f);font-size:12px;font-weight:700;padding:6px 10px;border:1px solid var(--ds-line);border-radius:var(--ds-r1);background:white;color:var(--ds-t1);">
@@ -2282,7 +2300,7 @@ function switchAuthTab(tab, btn) {
 }
 function showAuthError(msg){const el=document.getElementById('auth-error');el.textContent=msg;el.style.display='block';document.getElementById('auth-success').style.display='none';}
 function showAuthSuccess(msg){const el=document.getElementById('auth-success');el.textContent=msg;el.style.display='block';document.getElementById('auth-error').style.display='none';}
-function hideAuthMessages(){document.getElementById('auth-error').style.display='none';document.getElementById('auth-success').style.display='none';}
+function hideAuthMessages(){document.getElementById('auth-error').style.display='none';document.getElementById('auth-success').style.display='none';if(typeof hideSignupResendOption==='function')hideSignupResendOption();}
 
 async function doGoogleAuth() {
   const {error} = await sbGet().auth.signInWithOAuth({
@@ -2366,6 +2384,60 @@ async function doSignup() {
   }
   const okEl = document.getElementById('auth-success');
   if (okEl) showAuthSuccess('Account created! Check your email for a confirmation link, then come back here to sign in.');
+  showSignupResendOption(email);
+}
+
+// Stash the most recent signup email so the resend button can re-call
+// auth.resend without the user having to retype it. Reset on signin / signout.
+let _lastSignupEmail = null;
+
+function showSignupResendOption(email) {
+  _lastSignupEmail = email || null;
+  const wrap = document.getElementById('auth-resend-wrap');
+  if (wrap) wrap.style.display = email ? 'block' : 'none';
+  const note = document.getElementById('auth-resend-note');
+  if (note) { note.style.display = 'none'; note.textContent = ''; }
+  const btn = document.getElementById('auth-resend-btn');
+  if (btn) { btn.disabled = false; btn.textContent = "Didn't get it? Resend confirmation email"; }
+}
+
+function hideSignupResendOption() {
+  const wrap = document.getElementById('auth-resend-wrap');
+  if (wrap) wrap.style.display = 'none';
+  _lastSignupEmail = null;
+}
+
+async function resendSignupConfirmation() {
+  const email = _lastSignupEmail;
+  if (!email) return;
+  const btn = document.getElementById('auth-resend-btn');
+  const note = document.getElementById('auth-resend-note');
+  if (!btn) return;
+  // 60-second client cooldown so the button can't be hammered.
+  btn.disabled = true;
+  let remaining = 60;
+  btn.textContent = `Sending…`;
+  try {
+    const { error } = await sbGet().auth.resend({ type: 'signup', email });
+    if (error) throw error;
+    if (note) { note.textContent = `Sent to ${email}. Check your inbox (and spam).`; note.style.display = 'block'; }
+    Able.track?.('signup_confirmation_resent', { email });
+  } catch (e) {
+    if (note) { note.textContent = (e && e.message) ? `Couldn't resend: ${e.message}` : `Couldn't resend. Try again in a moment.`; note.style.display = 'block'; }
+  }
+  // Cooldown countdown — re-enable after 60s regardless of success/failure
+  // so users hit by transient errors aren't permanently locked out.
+  const tick = () => {
+    if (remaining <= 0) {
+      btn.disabled = false;
+      btn.textContent = "Resend confirmation email";
+      return;
+    }
+    btn.textContent = `Resend in ${remaining}s`;
+    remaining--;
+    setTimeout(tick, 1000);
+  };
+  tick();
 }
 
 async function showForgotPassword() {
@@ -2986,6 +3058,10 @@ const OB_QUESTIONS = [
   {
     key: 'pay_self',
     type: 'text',
+    inputType: 'number',
+    inputMin: 0,
+    inputMax: 100,
+    inputStep: 1,
     optional: true,
     defaultValue: '10',
     msg: "How much do you pay yourself?",
@@ -3003,9 +3079,50 @@ const OB_QUESTIONS = [
 let obStep = 0;
 let obAnswers = {};
 let obResult = null;
+
+// ─── Intake session persistence ──────────────────────────────────────
+// sessionStorage (not local) so a tab close = fresh start, but a reload
+// or crash recovers in-progress answers. Mirrors what tryResumePlaidOauth
+// already does for the OAuth bounce — we just generalize it to all
+// non-OAuth interruptions.
+const _OB_SESSION_KEY = 'able_ob_session_v1';
+const _OB_SESSION_MAX_AGE_MS = 24 * 60 * 60 * 1000;
+
+function obSaveSession() {
+  try {
+    sessionStorage.setItem(_OB_SESSION_KEY, JSON.stringify({
+      obAnswers, obStep, savedAt: Date.now(),
+    }));
+  } catch (_) { /* quota / private mode — silently skip */ }
+}
+
+function obClearSession() {
+  try { sessionStorage.removeItem(_OB_SESSION_KEY); } catch (_) {}
+}
+
+// Read saved state. Returns true if a valid session was restored into
+// the live obAnswers + obStep. Otherwise leaves both untouched.
+function obTryResumeSession() {
+  let raw;
+  try { raw = sessionStorage.getItem(_OB_SESSION_KEY); } catch (_) { return false; }
+  if (!raw) return false;
+  try {
+    const saved = JSON.parse(raw);
+    if (!saved || typeof saved.obStep !== 'number' || !saved.obAnswers) { obClearSession(); return false; }
+    if (Date.now() - (saved.savedAt || 0) > _OB_SESSION_MAX_AGE_MS) { obClearSession(); return false; }
+    if (saved.obStep < 0 || saved.obStep >= OB_QUESTIONS.length) { obClearSession(); return false; }
+    obAnswers = saved.obAnswers;
+    obStep = saved.obStep;
+    return true;
+  } catch (_) { obClearSession(); return false; }
+}
+
 function startOnboarding() {
-  obStep = 0;
-  obAnswers = {};
+  // Try to resume mid-flow first. If nothing saved (or expired), reset.
+  if (!obTryResumeSession()) {
+    obStep = 0;
+    obAnswers = {};
+  }
   renderObStep();
 }
 
@@ -3030,6 +3147,7 @@ function skipOnboarding() {
   S.profile = S.profile || {};
   S.profile.skipped = true;
   save();
+  obClearSession();
   Able.track('onboarding_skipped');
   document.getElementById('onboard-screen').style.display = 'none';
   document.getElementById('app').style.display = 'block';
@@ -3038,6 +3156,10 @@ function skipOnboarding() {
 }
 
 function renderObStep() {
+  // Checkpoint to sessionStorage on every step transition. Captures all
+  // state changes that flow through here (answer captures, navigation,
+  // multiselect chip toggles).
+  obSaveSession();
   const q = OB_QUESTIONS[obStep];
   document.getElementById('ob-question-area').style.display = 'block';
   document.getElementById('ob-building').style.display = 'none';
@@ -3165,8 +3287,17 @@ function renderObStep() {
     document.getElementById('ob-next-btn').textContent = obStep === OB_QUESTIONS.length - 1 ? 'Build my budget →' : 'Continue →';
     document.getElementById('ob-next-btn').disabled = selected.size === 0 && !otherText.trim();
   } else {
-    // text type
-    inputArea.innerHTML = `<textarea class="ob-input" id="ob-text-input" rows="3" placeholder="${q.placeholder || ''}">${obAnswers[q.key] || ''}</textarea>`;
+    // text type — render as a typed input when q.inputType is set, otherwise
+    // a free-text textarea. Number inputs get min/max/step so users can't enter
+    // "5%" or other strings that silently coerce to NaN downstream.
+    if (q.inputType === 'number') {
+      const minAttr = q.inputMin != null ? ` min="${q.inputMin}"` : '';
+      const maxAttr = q.inputMax != null ? ` max="${q.inputMax}"` : '';
+      const stepAttr = q.inputStep != null ? ` step="${q.inputStep}"` : '';
+      inputArea.innerHTML = `<input class="ob-input" id="ob-text-input" type="number"${minAttr}${maxAttr}${stepAttr} inputmode="decimal" placeholder="${q.placeholder || ''}" value="${obAnswers[q.key] != null ? String(obAnswers[q.key]).replace(/"/g, '&quot;') : ''}">`;
+    } else {
+      inputArea.innerHTML = `<textarea class="ob-input" id="ob-text-input" rows="3" placeholder="${q.placeholder || ''}">${obAnswers[q.key] || ''}</textarea>`;
+    }
     document.getElementById('ob-back-btn').style.display = obStep > 0 ? 'inline-block' : 'none';
     document.getElementById('ob-next-btn').textContent = obStep === OB_QUESTIONS.length - 1 ? 'Build my budget →' : 'Continue →';
     setTimeout(() => document.getElementById('ob-text-input')?.focus(), 100);
@@ -3186,6 +3317,9 @@ function obSetMultiOther(val) {
   const q = OB_QUESTIONS[obStep];
   if (!q) return;
   obAnswers[q.key + '_other'] = val;
+  // Persist this mid-step answer mutation; we don't re-render (would
+  // steal focus) so the renderObStep checkpoint won't fire here.
+  obSaveSession();
   // Don't re-render (would steal focus from the text field). Just toggle
   // the next button's disabled state inline.
   const selected = new Set(obAnswers[q.key] || []);
@@ -3352,6 +3486,7 @@ async function obBuildWithAI() {
 
   if (status === 'success' && obAnswers.plaid_plan?.plan_id) {
     try {
+      await obShowPersonalizationBeat();
       await obRenderPlanReview(obAnswers.plaid_plan.plan_id);
       return;
     } catch (e) {
@@ -3381,24 +3516,53 @@ async function obWaitForPipelineWithStatus(maxWaitMs) {
   // CTA handler exposed for the inline onclick.
   window._obHandOffToTour = () => { handedOff = true; };
 
-  const stepLabels = {
-    sync:      'Reading recent transactions',
-    classify:  'Sorting income, bills, and discretionary',
-    recurring: 'Spotting recurring bills and income',
-    analyze:   'Drafting your Floor-First plan',
-  };
+  // 4 internal pipeline phases collapse into 3 user-visible rows: sync
+  // and classify both read as "Reading transactions" (classify means
+  // nothing to the user and runs back-to-back with sync).
+  const STEPS = [
+    { label: 'Reading transactions' },
+    { label: 'Spotting recurring items' },
+    { label: 'Drafting your plan' },
+  ];
+  const stepIdxMap = { sync: 0, classify: 0, recurring: 1, analyze: 2 };
+  const institutionName = (obAnswers.plaid_connect?.institution_name || 'Your bank').trim();
 
-  // Mount the static frame once, then patch only the label + CTA when
-  // they change. Re-rendering the whole tree every tick re-fires the
-  // fade-in animation and visually flashes the CTA.
+  const checkSvg = '<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>';
+  const renderRows = (curIdx) => STEPS.map((s, i) => {
+    if (i < curIdx) {
+      return `<div style="display:flex;align-items:center;gap:.85rem;padding:.5rem 0;">
+        <div style="width:22px;height:22px;border-radius:50%;background:#3d9e78;color:#fff;display:flex;align-items:center;justify-content:center;flex-shrink:0;">${checkSvg}</div>
+        <div style="font-size:14px;font-weight:600;color:var(--ds-t3);letter-spacing:-.005em;">${s.label}</div>
+      </div>`;
+    }
+    if (i === curIdx) {
+      return `<div style="display:flex;align-items:center;gap:.85rem;padding:.5rem 0;">
+        <div style="width:22px;height:22px;border-radius:50%;border:2px solid #c8e0d0;border-top-color:#3d9e78;animation:ob-spin .8s linear infinite;flex-shrink:0;box-sizing:border-box;"></div>
+        <div style="font-size:14px;font-weight:800;color:var(--ds-t1);letter-spacing:-.005em;">${s.label}…</div>
+      </div>`;
+    }
+    return `<div style="display:flex;align-items:center;gap:.85rem;padding:.5rem 0;">
+      <div style="width:22px;height:22px;border-radius:50%;border:2px solid var(--ds-bd);flex-shrink:0;box-sizing:border-box;"></div>
+      <div style="font-size:14px;font-weight:600;color:var(--ds-t3);letter-spacing:-.005em;opacity:.65;">${s.label}</div>
+    </div>`;
+  }).join('');
+
+  // Mount the static frame once, then patch only the checklist + CTA
+  // when they change. Re-rendering the whole tree every tick re-fires
+  // the fade-in animation and visually flashes the CTA.
   if (buildingEl) {
     buildingEl.innerHTML = `
       <style>@keyframes ob-spin{to{transform:rotate(360deg);}} @keyframes ob-fadein{from{opacity:0;transform:translateY(6px);}to{opacity:1;transform:translateY(0);}}</style>
-      <div style="display:flex;flex-direction:column;align-items:center;justify-content:center;padding:3rem 1.5rem;text-align:center;">
-        <div style="width:36px;height:36px;border:3px solid #c8e0d0;border-top-color:#3d9e78;border-radius:50%;animation:ob-spin .8s linear infinite;margin-bottom:1.5rem;"></div>
-        <div id="ob-build-label" style="font-size:18px;font-weight:800;color:var(--ds-t1);letter-spacing:-.01em;margin-bottom:.5rem;"></div>
-        <div style="font-size:13px;font-weight:500;color:var(--ds-t3);max-width:400px;line-height:1.6;">
-          I'm drafting your plan from your bank history. This usually takes 2 to 4 minutes.
+      <div style="display:flex;flex-direction:column;align-items:center;justify-content:center;padding:2.5rem 1.5rem;text-align:center;">
+        <div style="display:flex;align-items:center;gap:0;margin-bottom:1.5rem;">
+          <div style="padding:.5rem 1rem;background:#eef2f1;border:1px solid var(--ds-bd);border-radius:100px;font-size:13px;font-weight:800;color:var(--ds-t1);letter-spacing:-.005em;max-width:160px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">${escapeHtml(institutionName)}</div>
+          <div style="width:28px;height:2px;background:#3d9e78;flex-shrink:0;"></div>
+          <div style="padding:.5rem 1rem;background:#3d9e78;color:#fff;border-radius:100px;font-size:13px;font-weight:800;letter-spacing:-.005em;">Able</div>
+        </div>
+        <div style="font-size:20px;font-weight:800;color:var(--ds-t1);letter-spacing:-.015em;margin-bottom:1.25rem;">Building your plan</div>
+        <div id="ob-build-checklist" style="text-align:left;min-width:240px;margin-bottom:1.25rem;">${renderRows(0)}</div>
+        <div style="font-size:13px;font-weight:500;color:var(--ds-t3);max-width:400px;line-height:1.55;">
+          Reading your bank history. Usually 2 to 4 minutes.
         </div>
         <div id="ob-build-cta" style="display:none;margin-top:2rem;padding-top:1.5rem;border-top:1px solid var(--ds-bd);max-width:400px;width:100%;animation:ob-fadein .35s ease;">
           <div style="font-size:14px;font-weight:700;color:var(--ds-t1);margin-bottom:.5rem;">No need to wait around.</div>
@@ -3408,16 +3572,16 @@ async function obWaitForPipelineWithStatus(maxWaitMs) {
       </div>`;
   }
 
-  let lastLabel = '';
+  let lastStepIdx = -1;
   let ctaShown = false;
   const patchStatus = () => {
     const p = obAnswers.plaid_pipeline;
     if (!p) return;
-    const label = (stepLabels[p.step] || 'Finishing up') + '…';
-    if (label !== lastLabel) {
-      const el = document.getElementById('ob-build-label');
-      if (el) el.textContent = label;
-      lastLabel = label;
+    const idx = stepIdxMap[p.step] ?? 0;
+    if (idx !== lastStepIdx) {
+      const el = document.getElementById('ob-build-checklist');
+      if (el) el.innerHTML = renderRows(idx);
+      lastStepIdx = idx;
     }
     if (!ctaShown && Date.now() - startedAt >= tourCtaDelayMs) {
       const cta = document.getElementById('ob-build-cta');
@@ -3438,6 +3602,42 @@ async function obWaitForPipelineWithStatus(maxWaitMs) {
   }
   window._obHandOffToTour = null;
   return obAnswers.plaid_pipeline?.status || 'running';
+}
+
+// Personalization beat between Plaid pipeline success and plan review.
+// One screen, ~2 seconds, zero questions — the emotional payoff for the
+// 2-4 minute wait the user just sat through. Reuses the same first-name
+// parser as obStartTourWhilePipelineRuns so the greeting matches what
+// the dashboard will use.
+function obShowPersonalizationBeat() {
+  return new Promise((resolve) => {
+    const buildingEl = document.getElementById('ob-building');
+    if (!buildingEl) { resolve(); return; }
+
+    const rawName = (obAnswers.name_business || '').trim();
+    const m = rawName.match(/^\s*(?:i'?m|my name is)\s+([A-Za-z][\w'-]*)/i);
+    const firstName = (m ? m[1] : (rawName.split(/[.,\s]/)[0] || '')).trim();
+    const greeting = firstName ? `Building your floor plan, ${firstName}.` : 'Building your floor plan.';
+
+    buildingEl.style.display = 'block';
+    buildingEl.innerHTML = `
+      <style>
+        @keyframes ob-beat-fade{from{opacity:0;transform:translateY(10px);}to{opacity:1;transform:translateY(0);}}
+        @keyframes ob-beat-bar{from{width:0;}to{width:100%;}}
+      </style>
+      <div style="display:flex;flex-direction:column;align-items:center;justify-content:center;padding:4rem 1.5rem;text-align:center;animation:ob-beat-fade .45s ease;">
+        <div style="font-size:12px;font-weight:800;color:var(--ds-t3);letter-spacing:.12em;text-transform:uppercase;margin-bottom:1.25rem;">Floor-First</div>
+        <div style="font-size:26px;font-weight:800;color:var(--ds-t1);letter-spacing:-.02em;line-height:1.2;max-width:420px;margin-bottom:.85rem;">${greeting}</div>
+        <div style="font-size:14px;font-weight:500;color:var(--ds-t3);max-width:380px;line-height:1.55;">A quick review next, then we're done.</div>
+        <div style="margin-top:2.25rem;width:120px;height:3px;background:var(--ds-bd);border-radius:2px;overflow:hidden;">
+          <div style="height:100%;background:#3d9e78;border-radius:2px;animation:ob-beat-bar 1.8s linear forwards;"></div>
+        </div>
+      </div>`;
+
+    Able.track?.('onboarding_personalization_beat_shown', { has_name: !!firstName });
+
+    setTimeout(resolve, 1900);
+  });
 }
 
 // "Take the tour" CTA handler. Saves a minimal profile so the
@@ -3592,7 +3792,7 @@ async function obRetryPipelineFromTour() {
 // back to the onboarding screen, render the analyzer plan review
 // cards. obSubmitPlanReview already navigates back into the app on
 // apply, and we drop the pill there.
-function obOpenPlanReviewFromTour() {
+async function obOpenPlanReviewFromTour() {
   if (!obAnswers.plaid_plan?.plan_id) return;
   if (typeof clearTourUI === 'function') clearTourUI();
   S.settings = S.settings || {};
@@ -3600,9 +3800,12 @@ function obOpenPlanReviewFromTour() {
   obDismissStatusPill();
   document.getElementById('app').style.display = 'none';
   document.getElementById('onboard-screen').style.display = 'flex';
-  obRenderPlanReview(obAnswers.plaid_plan.plan_id).catch((e) => {
+  try {
+    await obShowPersonalizationBeat();
+    await obRenderPlanReview(obAnswers.plaid_plan.plan_id);
+  } catch (e) {
     console.error('Plan review failed to render from pill:', e);
-  });
+  }
 }
 
 async function obBuildViaAiOnboard() {
@@ -4510,11 +4713,19 @@ function obRenderPlanReviewUI() {
       .plan-coach .num{font-weight:800;color:#1f3a28;background:rgba(255,255,255,.55);padding:1px 5px;border-radius:4px;}
       .plan-coach .closer{font-weight:700;color:#1f3a28;display:block;padding-top:8px;border-top:1px dashed rgba(42,74,53,.25);}
       .plan-error{background:#fdecec;border:1px solid #f3c5c5;border-radius:var(--ds-r1);padding:.75rem;font-size:12px;color:#a04545;font-weight:600;margin-bottom:10px;}
+      .plan-degraded{background:#fff7e6;border:1px solid #f0d8a8;border-radius:var(--ds-r1);padding:12px 14px;font-size:13px;color:#6b4a1a;font-weight:600;line-height:1.5;margin-bottom:12px;}
       .plan-footer-bar{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-top:6px;}
     </style>`;
 
   if (r.coach_summary) {
     html += `<div class="plan-coach">${formatCoachSummary(r.coach_summary)}</div>`;
+  }
+  // Degraded-mode banner: when recurring soft-failed during the pipeline,
+  // the analyzer ran without stream data and likely produced aggregate
+  // "(unresolved)" placeholder rows instead of itemized bills/debts.
+  // Surface this so the user knows why their plan looks thin.
+  if (obAnswers.plaid_pipeline?.recurringSkipped) {
+    html += `<div class="plan-degraded">Some bills are still grouped together. Plaid is finishing its first pass on your recurring charges. Add specifics below, or come back in a bit.</div>`;
   }
   if (r.error) {
     html += `<div class="plan-error">${escapeHtml(r.error)}</div>`;
@@ -4805,6 +5016,7 @@ async function obSubmitPlanReview() {
     S.profile.name = m ? m[1] : (rawName ? rawName.split(/[.,\s]/)[0] : (S.profile.name || ''));
     S.profile.goals = GOAL_LABELS[obAnswers.goals] || obAnswers.goals || S.profile.goals || '';
     await saveUserData();
+    obClearSession();
 
     // Done. Open the app.
     document.getElementById('onboard-screen').style.display = 'none';
@@ -4923,6 +5135,7 @@ async function obConfirm() {
 
   // Save to cloud
   await saveUserData();
+  obClearSession();
 
   // Go to app
   document.getElementById('onboard-screen').style.display = 'none';
@@ -4939,6 +5152,7 @@ function obRestart() {
   obStep = 0;
   obAnswers = {};
   obResult = null;
+  obClearSession();
   renderObStep();
 }
 
@@ -5270,7 +5484,7 @@ function billMonthlyAmount(b){
 const totalBills=()=>S.bills.reduce((s,b)=>s+billMonthlyAmount(b),0);
 const remainingBills=()=>S.bills.filter(b=>!b.paid).reduce((s,b)=>s+billMonthlyAmount(b),0);
 const paidBills=()=>S.bills.filter(b=>b.paid).reduce((s,b)=>s+billMonthlyAmount(b),0);
-const allocWindow=()=>parseInt(S.settings.allocateWindow)||14;
+const allocWindow=()=>Math.max(1,parseInt(S.settings.allocateWindow)||14);
 // Build a Date for day-of-month `d` in (year, month), clamping to the last valid day
 // of that month so `d=31` in Feb doesn't overflow into March.
 function monthlyDueDate(year,month,d){
@@ -6248,6 +6462,7 @@ function refreshHome(){
   // whatever's already merged, then a re-render after dedup catches new ones.
   dedupPlaidWithHistory().then((merged) => { if (merged > 0) renderHistory(); }).catch(() => {});
   renderHistory();
+  loadPaceLine().catch(() => {});
 }
 
 function renderDashboard(){
@@ -6701,7 +6916,20 @@ function delBill(i){
   }
   if(!confirm('Delete "'+b.name+'"?'))return;
   if (b.id) _clearReservation(b.id);
-  S.bills.splice(i,1);save();renderBillsPage();renderUpcoming();refreshHome();
+  S.bills.splice(i,1);
+  // Belt-and-suspenders: drop any reservation keyed against a bill that no
+  // longer exists. Cheap, idempotent, prevents orphan-reservation drift even
+  // if a legacy bill was deleted before it ever got an id.
+  _pruneOrphanReservations();
+  save();renderBillsPage();renderUpcoming();refreshHome();
+}
+function _pruneOrphanReservations(){
+  const r = S.settings && S.settings.reservations;
+  if (!r || typeof r !== 'object') return;
+  const liveIds = new Set((S.bills||[]).map(b => b.id).filter(Boolean));
+  for (const k of Object.keys(r)) {
+    if (!liveIds.has(k)) delete r[k];
+  }
 }
 function openAddBillModal(editIdx){
   const modal=document.getElementById('modal-add-bill');
@@ -6820,7 +7048,8 @@ function addBill(){
 // DEBT
 // ═══════════════════════════════════════
 function renderDebtPage(){
-  // Async — fires-and-forgets, populates the card when query returns.
+  // Async — fires-and-forgets, populates each card when its query returns.
+  renderPayoffEstimateCard();
   renderInterestCostCard();
   const el=document.getElementById('debt-list-el');el.innerHTML='';
   // Migrate: ensure every debt has an id
@@ -6945,6 +7174,15 @@ function syncLinkedBill(debt){
 function renderTimeline(){
   const extra=parseFloat(document.getElementById('extra-pay').value)||0;
   const sorted=[...S.debts].map((d,i)=>({...d,oi:i})).sort((a,b)=>b.rate-a.rate);
+  // No debts → Math.max(...[]) is -Infinity, which fed setMonth and produced
+  // "Debt-free by Invalid Date. -Infinity months." in the summary. Short-circuit.
+  if (sorted.length === 0) {
+    const el = document.getElementById('tl-list');
+    if (el) el.innerHTML = '';
+    const sumEl = document.getElementById('tl-summary');
+    if (sumEl) sumEl.innerHTML = `<div style="background:var(--ds-card);border:1px solid var(--ds-line);border-radius:var(--r-sm);padding:12px 14px;font-size:12px;font-weight:600;color:var(--ds-t3);margin-top:.5rem;">Add a debt below to see your payoff timeline.</div>`;
+    return;
+  }
   let debts=sorted.map(d=>({...d,bal:d.balance,paidMonth:null}));
   let freed=0;const MAX=120;
   for(let mo=1;mo<=MAX;mo++){
@@ -7914,7 +8152,9 @@ function billPastDue(bill){
   const freq = bill.freq || 'monthly';
   if (freq !== 'monthly') return null;
   const dueDay = parseInt(bill.due);
-  if (isNaN(dueDay)) return null;
+  // Reject NaN AND out-of-range — dueDay=0 slips past isNaN and used to make every
+  // day flag past-due (the $3,428 ghost-bill bug from a placeholder analyzer row).
+  if (isNaN(dueDay) || dueDay < 1 || dueDay > 31) return null;
   const now = new Date(); now.setHours(0,0,0,0);
   const todayDay = now.getDate();
   if (dueDay >= todayDay) return null;
@@ -8229,6 +8469,257 @@ function _formatPfc(detailed, primary){
 let _activityRows = [];
 let _activeReclassifyTxn = null;
 let _activeReclassifyCat = null;
+
+// Floor-pace sparkline on the home tab. Loads month-to-date Plaid spend,
+// derives a daily floor from monthly bills + observed-discretionary
+// baseline (last 60 days of 'spending' outflows / 2 = monthly avg), and
+// renders a 7-day strip showing where the user is pacing vs. plan.
+// Hidden when there's no Plaid history yet or no bills/baseline to
+// anchor against — the line would be meaningless.
+async function loadPaceLine(){
+  const wrap = document.getElementById('home-paceline');
+  if (!wrap) return;
+  // Tour mode dashboards use demo numbers; pace line on top of fake data
+  // would be misleading. Hide for the duration of the tour.
+  if (document.body.classList.contains('tour-active')) { wrap.style.display = 'none'; return; }
+  try {
+    const sb = sbGet();
+    const today = new Date();
+    const monthStart = new Date(today.getFullYear(), today.getMonth(), 1);
+    const lookbackStart = new Date(today.getTime() - 60 * 86400000);
+    const dayCount = Math.floor((today - monthStart) / 86400000) + 1; // 1..31
+    // Local YYYY-MM-DD — toISOString() shifts the date for users east of
+    // UTC (local-midnight becomes the previous calendar day in UTC).
+    const fmt = (d) => `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`;
+
+    const { data, error } = await sb
+      .from('plaid_transactions')
+      .select('date, amount, able_category')
+      .gte('date', fmt(lookbackStart));
+    if (error) throw error;
+
+    // Discretionary baseline = last-60-day 'discretionary' outflows / 2.
+    // Excludes bills and debt because Able pre-reserves those — they
+    // aren't part of the variable daily-burn the user is pacing against.
+    const spendOutflows = (data || []).filter((t) => t.able_category === 'discretionary' && (t.amount ?? 0) > 0);
+    const monthlyDiscretionary = spendOutflows.reduce((s, t) => s + t.amount, 0) / 2;
+
+    const monthlyBills = (typeof totalBills === 'function') ? totalBills() : 0;
+    const daysInMonth = new Date(today.getFullYear(), today.getMonth() + 1, 0).getDate();
+    const monthlyFloor = monthlyBills + monthlyDiscretionary;
+
+    // Not enough data to anchor a floor. Show a skeleton if Plaid is connected
+    // (so the user knows we're still mapping their spending), otherwise hide.
+    if (monthlyFloor < 1) {
+      const { count: itemCount } = await sb
+        .from('plaid_items')
+        .select('id', { count: 'exact', head: true });
+      if ((itemCount ?? 0) > 0) {
+        wrap.style.display = 'block';
+        wrap.innerHTML = `
+          <div style="background:white;border:1px solid var(--ds-line);border-radius:var(--ds-r2);padding:1rem 1.25rem;box-shadow:var(--ds-sh1);">
+            <div style="font-size:11px;font-weight:800;letter-spacing:.1em;text-transform:uppercase;color:var(--ds-t3);margin-bottom:.4rem;">Floor pace</div>
+            <div style="font-size:13px;font-weight:600;color:var(--ds-t3);line-height:1.55;">Able is still mapping your spending pattern. Once a few weeks of activity are in, you'll see your pace against your floor here.</div>
+          </div>`;
+      } else {
+        wrap.style.display = 'none';
+      }
+      return;
+    }
+    const dailyFloor = monthlyFloor / daysInMonth;
+
+    // MTD actual cumulative — outflows that match what monthlyFloor covers.
+    const mtdByDate = new Map();
+    for (const t of data) {
+      if (!t.date || !t.able_category) continue;
+      if (!['bill', 'discretionary', 'debt_payment'].includes(t.able_category)) continue;
+      if ((t.amount ?? 0) <= 0) continue;
+      const d = new Date(t.date + 'T00:00:00');
+      if (d < monthStart) continue;
+      mtdByDate.set(t.date, (mtdByDate.get(t.date) || 0) + t.amount);
+    }
+
+    const stripDays = Math.min(7, dayCount);
+    const stripStart = new Date(today.getFullYear(), today.getMonth(), today.getDate() - (stripDays - 1));
+
+    const actualPts = [];
+    const floorPts = [];
+    let runningActual = 0;
+    for (let d = 0; d < dayCount; d++) {
+      const date = new Date(monthStart.getFullYear(), monthStart.getMonth(), 1 + d);
+      const dateStr = fmt(date);
+      runningActual += mtdByDate.get(dateStr) || 0;
+      if (date >= stripStart) {
+        actualPts.push(runningActual);
+        floorPts.push(dailyFloor * (d + 1));
+      }
+    }
+
+    const W = 280, H = 60, padX = 6, padY = 8;
+    const innerW = W - padX * 2;
+    const innerH = H - padY * 2;
+    const maxY = Math.max(...actualPts, ...floorPts, 1);
+    const xs = (i) => padX + (stripDays > 1 ? (i / (stripDays - 1)) * innerW : innerW / 2);
+    const ys = (v) => padY + innerH - (v / maxY) * innerH;
+    const actualPath = actualPts.map((v, i) => `${i === 0 ? 'M' : 'L'}${xs(i).toFixed(1)},${ys(v).toFixed(1)}`).join(' ');
+    const floorPath = floorPts.map((v, i) => `${i === 0 ? 'M' : 'L'}${xs(i).toFixed(1)},${ys(v).toFixed(1)}`).join(' ');
+
+    const gap = actualPts[actualPts.length - 1] - floorPts[floorPts.length - 1];
+    const overUnder = gap >= 0 ? 'over' : 'under';
+    const gapColor = gap >= 0 ? '#c25656' : '#3d9e78';
+    const gapStr = Math.abs(gap).toLocaleString(undefined, { style: 'currency', currency: 'USD', maximumFractionDigits: 0 });
+
+    wrap.style.display = 'block';
+    wrap.innerHTML = `
+      <div style="background:white;border:1px solid var(--ds-line);border-radius:var(--ds-r2);padding:1rem 1.25rem;box-shadow:var(--ds-sh1);">
+        <div style="display:flex;align-items:center;justify-content:space-between;gap:.75rem;margin-bottom:.5rem;flex-wrap:wrap;">
+          <div style="font-size:11px;font-weight:800;letter-spacing:.1em;text-transform:uppercase;color:var(--ds-t3);">Floor pace · last ${stripDays} ${stripDays === 1 ? 'day' : 'days'}</div>
+          <div style="font-size:13px;font-weight:800;color:${gapColor};letter-spacing:-.005em;">${gapStr} ${overUnder} floor today</div>
+        </div>
+        <svg width="100%" height="${H}" viewBox="0 0 ${W} ${H}" preserveAspectRatio="none" style="display:block;">
+          <path d="${floorPath}" fill="none" stroke="var(--ds-t3)" stroke-width="1.5" stroke-dasharray="3,3" opacity=".55"/>
+          <path d="${actualPath}" fill="none" stroke="${gapColor}" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+        <div style="display:flex;align-items:center;gap:1.25rem;margin-top:.5rem;font-size:11px;font-weight:600;color:var(--ds-t3);">
+          <span style="display:inline-flex;align-items:center;gap:.45rem;"><span style="display:inline-block;width:16px;height:0;border-top:1.5px dashed var(--ds-t3);"></span>Floor</span>
+          <span style="display:inline-flex;align-items:center;gap:.45rem;"><span style="display:inline-block;width:16px;height:2px;background:${gapColor};"></span>You</span>
+        </div>
+      </div>
+    `;
+  } catch (e) {
+    console.warn('paceLine failed:', e);
+    wrap.style.display = 'none';
+  }
+}
+
+// Recurring-outflow scan surfaced at the top of the Activity tab. Reads
+// from plaid_recurring_streams (already populated by plaid-recurring-refresh
+// during the onboarding pipeline and on every Plaid sync). The "Mark as
+// leak" toggle stores stream_ids in S.settings.leak_streams (browser-only,
+// persisted via saveUserData) — Coach picks them up via buildCoachState
+// and can reason about cuts. No backend changes; no cancel-for-me CTA.
+async function loadRecurringScan(){
+  const wrap = document.getElementById('recurring-section');
+  if (!wrap) return;
+  try {
+    const sb = sbGet();
+    const { data, error } = await sb
+      .from('plaid_recurring_streams')
+      .select('id, stream_id, merchant_name, description, frequency, status, is_active, average_amount, last_amount, last_date, predicted_next_date')
+      .eq('direction', 'outflow')
+      .eq('is_active', true)
+      .neq('status', 'TOMBSTONED')
+      .order('last_amount', { ascending: false, nullsFirst: false });
+    if (error) throw error;
+    const streams = (data || []).filter((s) => Math.abs(s.last_amount ?? s.average_amount ?? 0) > 0.5);
+    // Cache for Coach context (in-memory only; rebuilt on each tab load).
+    S.recurring_outflow_streams = streams;
+    if (streams.length === 0) {
+      // Distinguish "Plaid still computing recurring streams" (show skeleton)
+      // from "no Plaid connected" (hide entirely). Cheap count query — only
+      // fires when the streams table is empty.
+      const { count: itemCount } = await sb
+        .from('plaid_items')
+        .select('id', { count: 'exact', head: true });
+      if ((itemCount ?? 0) > 0) {
+        wrap.style.display = 'block';
+        wrap.innerHTML = `
+          <div style="background:white;border:1px solid var(--ds-line);border-radius:var(--ds-r2);padding:1rem 1.25rem;box-shadow:var(--ds-sh1);">
+            <div style="font-size:14px;font-weight:900;color:var(--ds-t1);letter-spacing:-.01em;margin-bottom:.35rem;">Recurring charges Able spotted</div>
+            <div style="font-size:12px;font-weight:600;color:var(--ds-t3);line-height:1.55;">Able is still mapping your recurring charges. This usually finishes within an hour of connecting your bank.</div>
+          </div>`;
+      } else {
+        wrap.style.display = 'none';
+      }
+      return;
+    }
+
+    S.settings = S.settings || {};
+    const leakSet = new Set(S.settings.leak_streams || []);
+    const leakCount = streams.filter((s) => leakSet.has(s.stream_id)).length;
+    const monthlyTotal = streams.reduce((sum, s) => sum + _recurringMonthly(s), 0);
+    const monthlyLeak = streams.filter((s) => leakSet.has(s.stream_id))
+      .reduce((sum, s) => sum + _recurringMonthly(s), 0);
+
+    const rowsHtml = streams.map((s) => {
+      const amt = Math.abs(s.last_amount ?? s.average_amount ?? 0);
+      const amtStr = amt.toLocaleString(undefined, { style: 'currency', currency: 'USD' });
+      const freqStr = _formatRecurringFreq(s.frequency);
+      const lastStr = s.last_date ? _formatActivityDay(s.last_date) : 'recently';
+      const name = s.merchant_name || s.description || 'Unknown';
+      const isLeak = leakSet.has(s.stream_id);
+      return `
+        <div class="recurring-row" style="display:flex;align-items:center;gap:.85rem;padding:.7rem .25rem;border-bottom:1px solid var(--ds-line);">
+          <div style="flex:1;min-width:0;">
+            <div style="font-size:14px;font-weight:800;color:var(--ds-t1);letter-spacing:-.005em;text-overflow:ellipsis;overflow:hidden;white-space:nowrap;">${escapeHtml(name)}</div>
+            <div style="font-size:12px;font-weight:600;color:var(--ds-t3);margin-top:2px;">${amtStr} ${freqStr} · last ${escapeHtml(lastStr)}</div>
+          </div>
+          <button type="button" onclick="toggleLeakFlag('${escapeHtml(s.stream_id)}')" class="recurring-leak-btn" data-leak="${isLeak ? '1' : '0'}" style="${_leakBtnStyle(isLeak)}">${isLeak ? 'Leak ✓' : 'Mark as leak'}</button>
+        </div>`;
+    }).join('');
+
+    const totalStr = monthlyTotal.toLocaleString(undefined, { style: 'currency', currency: 'USD', maximumFractionDigits: 0 });
+    const leakLine = leakCount > 0
+      ? `<span style="color:#c25656;font-weight:800;">${leakCount} tagged as leak${leakCount === 1 ? '' : 's'} · ${monthlyLeak.toLocaleString(undefined, { style: 'currency', currency: 'USD', maximumFractionDigits: 0 })}/mo</span>`
+      : `Tag the ones that feel like leaks. Coach sees them.`;
+
+    wrap.style.display = 'block';
+    wrap.innerHTML = `
+      <div style="background:white;border:1px solid var(--ds-line);border-radius:var(--ds-r2);padding:1rem 1.25rem;box-shadow:var(--ds-sh1);">
+        <div style="display:flex;align-items:baseline;justify-content:space-between;gap:.75rem;margin-bottom:.25rem;flex-wrap:wrap;">
+          <div style="font-size:14px;font-weight:900;color:var(--ds-t1);letter-spacing:-.01em;">Recurring charges Able spotted</div>
+          <div style="font-size:12px;font-weight:700;color:var(--ds-t3);">~${totalStr}/mo across ${streams.length}</div>
+        </div>
+        <div style="font-size:12px;font-weight:600;color:var(--ds-t3);margin-bottom:.65rem;">${leakLine}</div>
+        <div>${rowsHtml}</div>
+      </div>
+    `;
+  } catch (e) {
+    console.warn('recurringScan failed:', e);
+    wrap.style.display = 'none';
+  }
+}
+
+function _recurringMonthly(s){
+  const amt = Math.abs(s.last_amount ?? s.average_amount ?? 0);
+  switch (s.frequency) {
+    case 'WEEKLY':       return amt * 52 / 12;
+    case 'BIWEEKLY':     return amt * 26 / 12;
+    case 'SEMI_MONTHLY': return amt * 2;
+    case 'MONTHLY':      return amt;
+    case 'ANNUALLY':     return amt / 12;
+    default:             return amt; // UNKNOWN — best-guess monthly
+  }
+}
+
+function _formatRecurringFreq(f){
+  switch (f) {
+    case 'WEEKLY':       return 'weekly';
+    case 'BIWEEKLY':     return 'biweekly';
+    case 'SEMI_MONTHLY': return 'twice a month';
+    case 'MONTHLY':      return 'monthly';
+    case 'ANNUALLY':     return 'yearly';
+    default:             return 'recurring';
+  }
+}
+
+function _leakBtnStyle(isLeak){
+  return isLeak
+    ? 'background:#fdeef2;border:1px solid #f4cdd6;color:#c25656;font-family:var(--ds-f);font-size:12px;font-weight:800;padding:6px 12px;border-radius:100px;cursor:pointer;letter-spacing:-.005em;flex-shrink:0;'
+    : 'background:white;border:1px solid var(--ds-line);color:var(--ds-t2);font-family:var(--ds-f);font-size:12px;font-weight:700;padding:6px 12px;border-radius:100px;cursor:pointer;letter-spacing:-.005em;flex-shrink:0;';
+}
+
+async function toggleLeakFlag(streamId){
+  if (!streamId) return;
+  S.settings = S.settings || {};
+  const list = Array.isArray(S.settings.leak_streams) ? S.settings.leak_streams.slice() : [];
+  const idx = list.indexOf(streamId);
+  if (idx >= 0) list.splice(idx, 1); else list.push(streamId);
+  S.settings.leak_streams = list;
+  try { await saveUserData(); } catch (e) { console.warn('saveUserData (leak toggle) failed:', e); }
+  Able.track?.('recurring_leak_toggled', { marked: idx < 0, total_leaks: list.length });
+  loadRecurringScan().catch(() => {});
+}
 
 async function renderActivityPage(opts){
   const list = document.getElementById('activity-list');
@@ -8689,6 +9180,101 @@ async function dedupPlaidWithHistory(){
     Able.track?.('plaid_history_dedup', { merged_count: mergedCount });
   }
   return mergedCount;
+}
+
+// ═══════════════════════════════════════
+// PAYOFF ESTIMATE CARD (Debt page)
+// ═══════════════════════════════════════
+// Leading callout on the Debt page: "At this pace, debt-free by [Month
+// Year]." Pace = last-90-day Plaid debt-payment outflows / 3, floored at
+// sum of S.debts minimums. Uses the same snowball simulation as
+// renderTimeline, but driven by observed pace rather than form input.
+// Single number, no chart (per audit; chart is phase 2 once we have
+// month snapshots). Hides when the user has no debts on file.
+async function renderPayoffEstimateCard(){
+  const card = document.getElementById('debt-payoff-card');
+  if (!card) return;
+  if (!Array.isArray(S.debts) || S.debts.length === 0) { card.innerHTML = ''; return; }
+  const totalBalance = S.debts.reduce((s, d) => s + (d.balance || 0), 0);
+  if (totalBalance < 1) { card.innerHTML = ''; return; }
+
+  const sumMins = S.debts.reduce((s, d) => s + (d.min || 0), 0);
+
+  // Observed monthly pace from Plaid. Floors at sumMins so a Plaid gap
+  // (missed sync, partial month) can't make us project worse than the
+  // user's stated minimums.
+  let monthlyPace = sumMins;
+  let paceSource = 'minimums';
+  try {
+    const sb = sbGet();
+    const since = new Date();
+    since.setDate(since.getDate() - 90);
+    const sinceIso = since.toISOString().slice(0, 10);
+    const { data, error } = await sb
+      .from('plaid_transactions')
+      .select('amount')
+      .gte('date', sinceIso)
+      .gt('amount', 0)
+      .eq('able_category', 'debt_payment')
+      .limit(500);
+    if (!error && Array.isArray(data) && data.length > 0) {
+      const observedAvg = data.reduce((s, r) => s + Math.abs(r.amount ?? 0), 0) / 3;
+      if (observedAvg > monthlyPace) {
+        monthlyPace = observedAvg;
+        paceSource = 'plaid';
+      }
+    }
+  } catch (_) { /* fall through to minimums */ }
+
+  const extra = Math.max(0, monthlyPace - sumMins);
+
+  // Same snowball math as renderTimeline (line ~7023): apply interest,
+  // pay minimums, then route extra + freed-up minimums to the highest-rate
+  // remaining debt. MAX caps the simulation at 10 years.
+  const sorted = [...S.debts].sort((a, b) => (b.rate || 0) - (a.rate || 0));
+  const debts = sorted.map((d) => ({ ...d, bal: d.balance, paidMonth: null }));
+  let freed = 0;
+  const MAX = 120;
+  for (let mo = 1; mo <= MAX; mo++) {
+    let avail = extra + freed;
+    for (const d of debts) {
+      if (d.bal <= 0.01) continue;
+      d.bal = Math.max(0, d.bal + d.bal * ((d.rate || 0) / 100 / 12) - (d.min || 0));
+    }
+    for (const d of debts) {
+      if (d.bal <= 0.01 || avail <= 0.01) continue;
+      const pay = Math.min(d.bal, avail);
+      d.bal -= pay;
+      avail -= pay;
+    }
+    debts.forEach((d) => { if (d.bal <= 0.01 && !d.paidMonth) { d.paidMonth = mo; freed += (d.min || 0); } });
+    if (debts.every((d) => d.bal <= 0.01)) break;
+  }
+
+  const lastMonth = Math.max(...debts.map((d) => d.paidMonth || MAX));
+  const fmt0 = (n) => n.toLocaleString(undefined, { style: 'currency', currency: 'USD', maximumFractionDigits: 0 });
+  const paceLine = paceSource === 'plaid'
+    ? `Based on your last 90 days of debt payments (~${fmt0(monthlyPace)}/mo).`
+    : `Based on your stated minimums (~${fmt0(monthlyPace)}/mo). Anything extra you send gets you there sooner.`;
+
+  if (lastMonth < MAX) {
+    const dt = new Date();
+    dt.setMonth(dt.getMonth() + lastMonth);
+    const dateStr = dt.toLocaleDateString('en-US', { month: 'long', year: 'numeric' });
+    card.innerHTML = `
+      <div class="card" style="background:linear-gradient(135deg,#e6f4ec 0%,#d8edd6 100%);border-left:4px solid var(--ds-green);margin-bottom:1.25rem;padding:14px 16px;">
+        <div style="font-size:11px;font-weight:800;letter-spacing:.08em;text-transform:uppercase;color:var(--ds-green);margin-bottom:4px;">At this pace</div>
+        <div style="font-size:1.4rem;font-weight:900;color:var(--ds-t1);letter-spacing:-.02em;">Debt-free by <strong>${dateStr}</strong></div>
+        <div style="font-size:12px;color:var(--ds-t2);font-weight:600;margin-top:6px;line-height:1.5;">${paceLine} About ${lastMonth} ${lastMonth === 1 ? 'month' : 'months'} from today.</div>
+      </div>`;
+  } else {
+    card.innerHTML = `
+      <div class="card" style="background:linear-gradient(135deg,#fde0e0 0%,#fad8d8 100%);border-left:4px solid var(--coral);margin-bottom:1.25rem;padding:14px 16px;">
+        <div style="font-size:11px;font-weight:800;letter-spacing:.08em;text-transform:uppercase;color:var(--coral);margin-bottom:4px;">At this pace</div>
+        <div style="font-size:1.4rem;font-weight:900;color:var(--ds-t1);letter-spacing:-.02em;">Balances aren't shrinking</div>
+        <div style="font-size:12px;color:var(--ds-t2);font-weight:600;margin-top:6px;line-height:1.5;">${paceLine} Even an extra $25 a month makes a real dent. Try the Payoff timeline below.</div>
+      </div>`;
+  }
 }
 
 // ═══════════════════════════════════════
@@ -9309,7 +9895,7 @@ function goTo(target){
   if(page==='whatif'){document.getElementById('wi-empty').style.display='block';document.getElementById('wi-result').style.display='none';}
   if(page==='learn')renderLearn();
   if(page==='refer')enterReferPage();
-  if(page==='activity')renderActivityPage();
+  if(page==='activity'){renderActivityPage();loadRecurringScan().catch(()=>{});}
 }
 
 // ═══════════════════════════════════════
@@ -12875,6 +13461,32 @@ function buildCoachState() {
     reservations_by_bill: reservationsByBill,
     past_due_bills: pastDue,
     latest_deposit: latestDeposit,
+    // Recurring outflows the user can see on the Activity tab. Cached
+    // by loadRecurringScan; absent if the user hasn't visited Activity
+    // since this session started. leak_streams (stream_ids) are also in
+    // settings; expanded here as named entries so Coach can reason about
+    // specific charges by name + monthly cost.
+    recurring_outflows: Array.isArray(S.recurring_outflow_streams)
+      ? S.recurring_outflow_streams.map((s) => ({
+          stream_id: s.stream_id,
+          name: s.merchant_name || s.description || 'Unknown',
+          amount: Math.abs(s.last_amount ?? s.average_amount ?? 0),
+          frequency: s.frequency,
+          monthly: (typeof _recurringMonthly === 'function') ? _recurringMonthly(s) : null,
+          last_date: s.last_date,
+          marked_leak: Array.isArray(S.settings?.leak_streams) && S.settings.leak_streams.includes(s.stream_id),
+        }))
+      : undefined,
+    tagged_leaks: Array.isArray(S.recurring_outflow_streams) && Array.isArray(S.settings?.leak_streams)
+      ? S.recurring_outflow_streams
+          .filter((s) => S.settings.leak_streams.includes(s.stream_id))
+          .map((s) => ({
+            name: s.merchant_name || s.description || 'Unknown',
+            amount: Math.abs(s.last_amount ?? s.average_amount ?? 0),
+            frequency: s.frequency,
+            monthly: (typeof _recurringMonthly === 'function') ? _recurringMonthly(s) : null,
+          }))
+      : undefined,
     history: (S.history || []).slice(0, 10).map(h => ({
       id: h.id,
       amount: h.amount, source: h.source, date: h.date,
@@ -13080,6 +13692,9 @@ async function coachSend() {
     let errMsg;
     if (/daily cap/i.test(raw)) {
       errMsg = raw;
+    } else if (/credit.?balance|credits.*low|quota.*exceeded|insufficient.*credit/i.test(raw)) {
+      // Anthropic 4xx when our API balance is depleted. Don't leak raw API text.
+      errMsg = "Coach is temporarily offline. We're working on it — try again in a few minutes.";
     } else if (/rate.?limit|429|too many requests/i.test(raw)) {
       errMsg = "Coach is briefly overwhelmed. Try again in a moment.";
     } else if (/overloaded|529|503/i.test(raw)) {
@@ -13146,11 +13761,17 @@ function evalCoachNudges() {
     }
   }
 
-  // Show the first one that hasn't been dismissed recently.
+  // Show the first one that hasn't been dismissed recently. Two-layer guard:
+  // (1) sessionStorage — once dismissed, don't re-show in the same browser
+  //     session even if cooldown has elapsed (covers the case where eval fires
+  //     repeatedly from navigation in a long session).
+  // (2) localStorage cooldown — 24h between repeats across sessions.
   for (const nudge of nudges) {
     const key = 'able_coach_nudge_' + nudge.id;
+    const seenKey = key + '_seen_session';
+    if (sessionStorage.getItem(seenKey)) continue;
     const last = parseInt(localStorage.getItem(key) || '0', 10);
-    if ((Date.now() - last) >= 12 * 3600 * 1000) {
+    if ((Date.now() - last) >= 24 * 3600 * 1000) {
       // Stagger the render so the app finishes loading first.
       setTimeout(() => showCoachNudge(nudge), 1200);
       return;
@@ -13185,7 +13806,10 @@ function dismissCoachNudge() {
   const el = document.getElementById('coach-nudge');
   if (!el) return;
   const id = el.dataset.nudgeId;
-  if (id) localStorage.setItem('able_coach_nudge_' + id, String(Date.now()));
+  if (id) {
+    localStorage.setItem('able_coach_nudge_' + id, String(Date.now()));
+    sessionStorage.setItem('able_coach_nudge_' + id + '_seen_session', '1');
+  }
   el.classList.remove('visible');
   setTimeout(() => el.remove(), 260);
 }
