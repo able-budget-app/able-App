@@ -2183,7 +2183,7 @@ async function doLogin() {
   if(!email||!pass){showAuthError('Please enter your email and password.');return;}
   const btn=document.getElementById('login-btn');
   btn.textContent='Signing in...';btn.disabled=true;
-  const {error}=await sbGet().auth.signInWithPassword({email,password:pass});
+  const {data, error}=await sbGet().auth.signInWithPassword({email,password:pass});
   btn.textContent='Sign in';btn.disabled=false;
   if(error){
     if(error.message.toLowerCase().includes('confirm')||error.message.toLowerCase().includes('not confirmed')){
@@ -2193,6 +2193,13 @@ async function doLogin() {
     }
     return;
   }
+  // Drive the post-auth flow ourselves rather than waiting for the
+  // Supabase onAuthStateChange listener to fire SIGNED_IN. After a Stripe
+  // checkout roundtrip the listener can be in a bad state (getSession
+  // hangs, INITIAL_SESSION never resolves, SIGNED_IN gets swallowed) and
+  // the user sees the button reset with no progress. The guard inside
+  // onAuthStateChange dedupes if the listener does eventually fire.
+  if (data?.user) onAuthStateChange(data.user);
 }
 
 async function doSignup() {
@@ -2214,7 +2221,9 @@ async function doSignup() {
   // fires SIGNED_IN immediately — no message needed. When ON, no session is returned
   // and the user must verify before signing in. data.session distinguishes the two.
   if (data?.session) {
-    // Auto-signed in. onAuthStateChange will swap to the post-auth UI.
+    // Auto-signed in. Drive the post-auth flow ourselves so we don't
+    // depend on the listener firing reliably (see doLogin comment above).
+    if (data.session.user) onAuthStateChange(data.session.user);
     return;
   }
   const okEl = document.getElementById('auth-success');
@@ -2490,6 +2499,13 @@ async function fetchSubscriptionStatus(userId) {
   } catch { return null; }
 }
 
+// Guard against concurrent runs. Two call paths can land here at the same
+// time after a Stripe checkout return: the Supabase onAuthStateChange
+// listener (when SIGNED_IN finally fires) and the manual call from
+// doLogin/doSignup that we rely on when the listener is in a bad state.
+// Without this, post-auth side effects (signup_completed event, user_data
+// fetch, screen swap) can fire twice.
+let _authFlowRunning = false;
 async function onAuthStateChange(user) {
   if(!user){
     if(window.posthog) posthog.reset();
@@ -2498,6 +2514,15 @@ async function onAuthStateChange(user) {
     document.getElementById('app').style.display='none';
     return;
   }
+  if(_authFlowRunning){
+    console.debug('onAuthStateChange already running, skipping duplicate for', user.email);
+    return;
+  }
+  _authFlowRunning = true;
+  try { await _onAuthStateChangeImpl(user); }
+  finally { _authFlowRunning = false; }
+}
+async function _onAuthStateChangeImpl(user) {
   currentUser=user;
   if(window.posthog) posthog.identify(user.id, { email: user.email });
 
