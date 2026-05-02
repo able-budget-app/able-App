@@ -47,6 +47,7 @@ type Classification = {
 
 type TxnRow = {
   id: string;
+  user_id: string;
   plaid_transaction_id: string;
   name: string | null;
   merchant_name: string | null;
@@ -55,6 +56,14 @@ type TxnRow = {
   personal_finance_category_primary: string | null;
   personal_finance_category_detailed: string | null;
   personal_finance_category_confidence: string | null;
+};
+
+type Override = {
+  match_kind: 'merchant' | 'name_substring';
+  match_value: string;       // already lowercased + trimmed when read
+  direction: 'inflow' | 'outflow' | 'both';
+  able_category: Classification['category'];
+  able_label: string | null;
 };
 
 Deno.serve(async (req) => {
@@ -81,7 +90,7 @@ Deno.serve(async (req) => {
     let query = admin
       .from('plaid_transactions')
       .select(
-        'id, plaid_transaction_id, name, merchant_name, amount, date, ' +
+        'id, user_id, plaid_transaction_id, name, merchant_name, amount, date, ' +
           'personal_finance_category_primary, personal_finance_category_detailed, ' +
           'personal_finance_category_confidence',
       )
@@ -115,17 +124,92 @@ Deno.serve(async (req) => {
       return json({ classified: 0, batches: 0, scanned: 0 });
     }
 
+    // Pull every override for the users whose rows we're about to classify,
+    // in one query. Match in-memory and split rows into "override-hit"
+    // (skip LLM) and "needs LLM" buckets. The override path is faster AND
+    // cheaper since each hit is a manual user label that should be
+    // authoritative going forward.
+    const userIds = Array.from(new Set(rows.map((r) => r.user_id)));
+    const overridesByUser = await fetchOverridesByUser(admin, userIds);
+    const overrideHits: { row: TxnRow; override: Override }[] = [];
+    const llmRows: TxnRow[] = [];
+    for (const row of rows) {
+      const userOverrides = overridesByUser.get(row.user_id) ?? [];
+      const hit = pickOverride(row, userOverrides);
+      if (hit) overrideHits.push({ row, override: hit });
+      else llmRows.push(row);
+    }
+    console.log(
+      `plaid-classify-batch: override hits=${overrideHits.length}, ` +
+      `LLM rows=${llmRows.length}`,
+    );
+
     let classified = 0;
+    let classifiedViaOverride = 0;
     let batches = 0;
     const failures: string[] = [];
 
-    // Slice the rows into BATCH_SIZE chunks, then process them in waves of
-    // PARALLELISM concurrent batches. Each batch is one LLM call + one
-    // bulk update, so this keeps wall-clock low even on backfills.
-    const chunks: TxnRow[][] = [];
-    for (let i = 0; i < rows.length; i += BATCH_SIZE) {
-      chunks.push(rows.slice(i, i + BATCH_SIZE));
+    // Apply override hits first. No LLM call — we already know the
+    // category. One update per row, fanned out concurrently.
+    if (overrideHits.length > 0) {
+      const now = new Date().toISOString();
+      const results = await Promise.allSettled(
+        overrideHits.map(({ row, override }) =>
+          admin
+            .from('plaid_transactions')
+            .update({
+              able_category: override.able_category,
+              able_label: override.able_label
+                ?? row.merchant_name
+                ?? row.name
+                ?? override.match_value,
+              able_confidence: 1.0,
+              able_is_recurring_likely: false,
+              able_classified_at: now,
+            })
+            .eq('id', row.id),
+        ),
+      );
+      for (const r of results) {
+        if (r.status === 'fulfilled' && !r.value.error) {
+          classified++;
+          classifiedViaOverride++;
+        } else if (r.status === 'rejected') {
+          console.error('override update threw:', r.reason);
+          failures.push(`override update threw: ${String(r.reason)}`);
+        } else if (r.status === 'fulfilled' && r.value.error) {
+          console.error('override update failed:', r.value.error);
+          failures.push(`override update failed: ${r.value.error.message}`);
+        }
+      }
     }
+
+    if (llmRows.length === 0) {
+      console.log(
+        `plaid-classify-batch: done — classified=${classified} ` +
+        `(via_override=${classifiedViaOverride}, via_llm=0), ` +
+        `batches=0, failures=${failures.length}`,
+      );
+      return json({
+        classified,
+        classified_via_override: classifiedViaOverride,
+        classified_via_llm: 0,
+        batches: 0,
+        scanned: rows.length,
+        failures,
+      });
+    }
+
+    // Slice the LLM-bound rows into BATCH_SIZE chunks, then process them
+    // in waves of PARALLELISM concurrent batches. Each batch is one LLM
+    // call + one bulk update, so this keeps wall-clock low even on
+    // backfills.
+    const chunks: TxnRow[][] = [];
+    for (let i = 0; i < llmRows.length; i += BATCH_SIZE) {
+      chunks.push(llmRows.slice(i, i + BATCH_SIZE));
+    }
+
+    let classifiedViaLlm = 0;
 
     const processOne = async (batch: TxnRow[], batchIdx: number): Promise<void> => {
       try {
@@ -161,6 +245,7 @@ Deno.serve(async (req) => {
           }
         }
         classified += okCount;
+        classifiedViaLlm += okCount;
         batches++;
       } catch (e) {
         const msg = (e as Error).message ?? String(e);
@@ -176,10 +261,19 @@ Deno.serve(async (req) => {
     }
 
     console.log(
-      `plaid-classify-batch: done — classified=${classified}, batches=${batches}, failures=${failures.length}`,
+      `plaid-classify-batch: done — classified=${classified} ` +
+      `(via_override=${classifiedViaOverride}, via_llm=${classifiedViaLlm}), ` +
+      `batches=${batches}, failures=${failures.length}`,
     );
 
-    return json({ classified, batches, scanned: rows.length, failures });
+    return json({
+      classified,
+      classified_via_override: classifiedViaOverride,
+      classified_via_llm: classifiedViaLlm,
+      batches,
+      scanned: rows.length,
+      failures,
+    });
   } catch (e) {
     console.error('plaid-classify-batch error:', e);
     return json({ error: (e as Error).message }, 500);
@@ -215,6 +309,75 @@ async function callRecategorize(rows: TxnRow[]): Promise<Classification[]> {
     throw new Error('plaid-recategorize: missing classifications array');
   }
   return parsed.classifications;
+}
+
+// Fetch every override owned by the given users, in one round-trip.
+// Returns Map<user_id, Override[]>. match_value is normalized
+// (lowercased + trimmed) at read time so the runtime compare is direct.
+async function fetchOverridesByUser(
+  admin: ReturnType<typeof createClient>,
+  userIds: string[],
+): Promise<Map<string, Override[]>> {
+  if (userIds.length === 0) return new Map();
+  const { data, error } = await admin
+    .from('user_classification_overrides')
+    .select('user_id, match_kind, match_value, direction, able_category, able_label')
+    .in('user_id', userIds);
+  if (error) {
+    console.error('fetchOverridesByUser failed:', error);
+    return new Map();
+  }
+  const map = new Map<string, Override[]>();
+  for (const row of (data ?? []) as Array<{
+    user_id: string;
+    match_kind: 'merchant' | 'name_substring';
+    match_value: string;
+    direction: 'inflow' | 'outflow' | 'both';
+    able_category: Classification['category'];
+    able_label: string | null;
+  }>) {
+    const list = map.get(row.user_id) ?? [];
+    list.push({
+      match_kind: row.match_kind,
+      match_value: (row.match_value ?? '').toLowerCase().trim(),
+      direction: row.direction,
+      able_category: row.able_category,
+      able_label: row.able_label,
+    });
+    map.set(row.user_id, list);
+  }
+  return map;
+}
+
+// Pick the most-specific override that applies to this transaction, if any.
+// Specificity order: merchant kind > name_substring kind; within the same
+// kind, longer match_value wins. Direction filter respects the txn's sign:
+// inflows (amount < 0) accept 'inflow' or 'both'; outflows accept 'outflow'
+// or 'both'. Empty match_value never matches anything.
+function pickOverride(row: TxnRow, overrides: Override[]): Override | null {
+  if (overrides.length === 0) return null;
+  const merchantKey = (row.merchant_name ?? '').toLowerCase().trim();
+  const nameLower = (row.name ?? '').toLowerCase();
+  const isInflow = (row.amount ?? 0) < 0;
+  const direction = isInflow ? 'inflow' : 'outflow';
+
+  const candidates = overrides.filter((o) => {
+    if (o.match_value.length === 0) return false;
+    if (o.direction !== 'both' && o.direction !== direction) return false;
+    if (o.match_kind === 'merchant') {
+      return merchantKey.length > 0 && merchantKey === o.match_value;
+    }
+    return nameLower.includes(o.match_value);
+  });
+
+  if (candidates.length === 0) return null;
+  candidates.sort((a, b) => {
+    if (a.match_kind !== b.match_kind) {
+      return a.match_kind === 'merchant' ? -1 : 1;
+    }
+    return b.match_value.length - a.match_value.length;
+  });
+  return candidates[0];
 }
 
 function json(body: unknown, status = 200) {

@@ -3,12 +3,13 @@
 -- ══════════════════════════════════════════════════════════════════════
 -- Run this in the Supabase SQL editor after `rls_policies.sql` is in place.
 --
--- Five tables:
---   plaid_items              one row per linked institution
---   plaid_accounts           accounts inside an item (checking, savings, CC)
---   plaid_transactions       raw Plaid txn + Able classification
---   plaid_recurring_streams  cached output of /transactions/recurring/get
---   analyzer_plans           Floor-First plan proposals + lifecycle status
+-- Six tables:
+--   plaid_items                    one row per linked institution
+--   plaid_accounts                 accounts inside an item (checking, savings, CC)
+--   plaid_transactions             raw Plaid txn + Able classification
+--   plaid_recurring_streams        cached output of /transactions/recurring/get
+--   analyzer_plans                 Floor-First plan proposals + lifecycle status
+--   user_classification_overrides  per-user sender→category memory (Income Inbox)
 --
 -- All tables are per-user. Browser uses anon key (RLS-scoped).
 -- Edge functions use SERVICE_ROLE (bypasses RLS).
@@ -190,6 +191,55 @@ create index if not exists analyzer_plans_pending_idx
   on public.analyzer_plans (user_id) where status in ('pending','presenting');
 
 
+-- ─── user_classification_overrides ───────────────────────────────────
+-- Per-user memory of sender → category mappings. Populated by the Income
+-- Inbox UI when the user manually labels a transaction. plaid-classify-batch
+-- consults this table BEFORE invoking the LLM and applies any matching
+-- override directly (skipping the LLM call entirely for known patterns).
+--
+-- match_kind:
+--   'merchant'       — exact (case-insensitive) match against
+--                      plaid_transactions.merchant_name. Best for clear
+--                      brand names (Airbnb, Stripe, Square, Shopify).
+--   'name_substring' — case-insensitive substring match against
+--                      plaid_transactions.name. Best for processors with
+--                      stripped descriptions where the sender hides in
+--                      the free-text name field (e.g. "VENMO ACME LLC").
+--
+-- direction:
+--   'inflow'  — apply only when amount < 0 (money received). E.g. an
+--               Airbnb override of `income` should NOT also flip
+--               outflows (paid stays) to income.
+--   'outflow' — apply only when amount > 0 (money spent).
+--   'both'    — sign-agnostic. Use for processors that only ever flow
+--               one way for the user (e.g. Stripe payouts are always
+--               inflows; the user never has Stripe outflows).
+--
+-- match_value is stored case-insensitively (lowercased on write) so the
+-- runtime comparison is a straight string compare. Trim whitespace too.
+--
+-- (user_id, match_kind, match_value, direction) is unique so the same
+-- pattern can't be defined twice with different categories.
+create table if not exists public.user_classification_overrides (
+  id              uuid primary key default gen_random_uuid(),
+  user_id         uuid not null references auth.users(id) on delete cascade,
+  match_kind      text not null check (match_kind in ('merchant','name_substring')),
+  match_value     text not null,
+  direction       text not null default 'both'
+                    check (direction in ('inflow','outflow','both')),
+  able_category   text not null
+                    check (able_category in ('income','bill','debt_payment','tax_payment','transfer','discretionary')),
+  able_label      text,
+  created_at      timestamptz not null default now(),
+  updated_at      timestamptz not null default now(),
+
+  unique (user_id, match_kind, match_value, direction)
+);
+
+create index if not exists user_classification_overrides_user_idx
+  on public.user_classification_overrides (user_id);
+
+
 -- ─── updated_at triggers ─────────────────────────────────────────────
 -- Keep updated_at fresh on every UPDATE.
 create or replace function public.touch_updated_at()
@@ -223,6 +273,12 @@ create trigger plaid_recurring_streams_touch_updated_at
 drop trigger if exists analyzer_plans_touch_updated_at on public.analyzer_plans;
 create trigger analyzer_plans_touch_updated_at
   before update on public.analyzer_plans
+  for each row execute function public.touch_updated_at();
+
+drop trigger if exists user_classification_overrides_touch_updated_at
+  on public.user_classification_overrides;
+create trigger user_classification_overrides_touch_updated_at
+  before update on public.user_classification_overrides
   for each row execute function public.touch_updated_at();
 
 
@@ -298,4 +354,36 @@ drop policy if exists "analyzer_plans: user sees own rows" on public.analyzer_pl
 
 create policy "analyzer_plans: user sees own rows"
   on public.analyzer_plans for select
+  using (user_id = auth.uid());
+
+
+-- ─── user_classification_overrides ───────────────────────────────────
+-- Browser owns this table directly: user creates/edits/deletes overrides
+-- from the Income Inbox UI. RLS scopes every operation to their own rows.
+-- Edge functions read via service_role (bypasses RLS) when classifying.
+alter table public.user_classification_overrides enable row level security;
+drop policy if exists "user_overrides: user sees own rows"
+  on public.user_classification_overrides;
+drop policy if exists "user_overrides: user inserts own rows"
+  on public.user_classification_overrides;
+drop policy if exists "user_overrides: user updates own rows"
+  on public.user_classification_overrides;
+drop policy if exists "user_overrides: user deletes own rows"
+  on public.user_classification_overrides;
+
+create policy "user_overrides: user sees own rows"
+  on public.user_classification_overrides for select
+  using (user_id = auth.uid());
+
+create policy "user_overrides: user inserts own rows"
+  on public.user_classification_overrides for insert
+  with check (user_id = auth.uid());
+
+create policy "user_overrides: user updates own rows"
+  on public.user_classification_overrides for update
+  using (user_id = auth.uid())
+  with check (user_id = auth.uid());
+
+create policy "user_overrides: user deletes own rows"
+  on public.user_classification_overrides for delete
   using (user_id = auth.uid());
