@@ -2193,13 +2193,22 @@ async function doLogin() {
     }
     return;
   }
-  // Drive the post-auth flow ourselves rather than waiting for the
-  // Supabase onAuthStateChange listener to fire SIGNED_IN. After a Stripe
-  // checkout roundtrip the listener can be in a bad state (getSession
-  // hangs, INITIAL_SESSION never resolves, SIGNED_IN gets swallowed) and
-  // the user sees the button reset with no progress. The guard inside
-  // onAuthStateChange dedupes if the listener does eventually fire.
-  if (data?.user) onAuthStateChange(data.user);
+  // After successful auth, the Supabase client can be wedged from an
+  // earlier post-Stripe load — getSession(), getAuthenticatorAssuranceLevel(),
+  // and other auth-state-dependent calls hang indefinitely, which silently
+  // blocks the in-place auth flow. Verified: signInWithPassword returns 200
+  // with a full session, but anything we await inside _onAuthStateChangeImpl
+  // never resolves. signInWithPassword has already persisted the session to
+  // localStorage, so a clean reload to a query-free URL bypasses the wedged
+  // state entirely; the fresh page restores the session normally and
+  // INITIAL_SESSION fires the auth flow as designed.
+  if (data?.user) {
+    if (window.location.search) {
+      window.location.replace(window.location.pathname);
+      return;
+    }
+    onAuthStateChange(data.user);
+  }
 }
 
 async function doSignup() {
@@ -2221,9 +2230,16 @@ async function doSignup() {
   // fires SIGNED_IN immediately — no message needed. When ON, no session is returned
   // and the user must verify before signing in. data.session distinguishes the two.
   if (data?.session) {
-    // Auto-signed in. Drive the post-auth flow ourselves so we don't
-    // depend on the listener firing reliably (see doLogin comment above).
-    if (data.session.user) onAuthStateChange(data.session.user);
+    // Auto-signed in. Same wedge-bypass as doLogin: if there's a query
+    // string in the URL (e.g. ?checkout=success), reload to a clean URL
+    // so the in-place flow doesn't get blocked on a hung auth call.
+    if (data.session.user) {
+      if (window.location.search) {
+        window.location.replace(window.location.pathname);
+        return;
+      }
+      onAuthStateChange(data.session.user);
+    }
     return;
   }
   const okEl = document.getElementById('auth-success');
