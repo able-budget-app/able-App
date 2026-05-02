@@ -713,15 +713,15 @@ Return ONLY this JSON object. No prose. No markdown fences.
 
 5. **Bills selection**:
    - **Primary source**: outflow_streams with status MATURE or EARLY_DETECTION and is_active=true. Skip TOMBSTONED.
-   - **Fallback when outflow_streams is empty or sparse (fewer than 3 active streams)**: use entries from `detected_recurring_outflows` where category='bill' and confidence is 'high' or 'medium'. Plaid's recurring detection sometimes returns PRODUCT_NOT_READY for hours-to-days after a fresh bank connect, leaving outflow_streams empty even though real recurring bills exist in the transactions. The detected_recurring_outflows array is computed directly from already-classified transactions to bridge that gap. NEVER emit aggregate placeholder rows like "Recurring bills (unresolved)" — itemize what you can see.
+   - **Fallback when outflow_streams is empty or sparse (fewer than 3 active streams)**: use entries from detected_recurring_outflows where category is 'bill' and confidence is 'high' or 'medium'. Plaid's recurring detection sometimes returns PRODUCT_NOT_READY for hours-to-days after a fresh bank connect, leaving outflow_streams empty even though real recurring bills exist in the transactions. The detected_recurring_outflows array is computed directly from already-classified transactions to bridge that gap. NEVER emit aggregate placeholder rows like "Recurring bills (unresolved)" — itemize what you can see.
    - Mortgage payments are bills, not debts.
    - Frequency mapping: Plaid MONTHLY → "monthly", WEEKLY → "weekly", BIWEEKLY → "biweekly", ANNUALLY → "annual", SEMI_MONTHLY/UNKNOWN → "monthly" (most common case). For detected entries, use frequency_estimate the same way.
    - due_day_of_month: derive from predicted_next_date or last_date for streams. For detected entries, use inferred_due_day. Null if you can't tell.
-   - When using detected entries, set `name` to detected_merchant and `amount` to average_amount. Cite the evidence_transaction_ids array if your output schema includes evidence fields.
+   - When using detected entries, set name to detected_merchant and amount to average_amount. Cite the evidence_transaction_ids array if your output schema includes evidence fields.
 
 6. **Debts selection**:
    - **Primary source**: outflow streams matching credit cards, auto loans, student loans, personal loans (Plaid LOAN_PAYMENTS_*).
-   - **Fallback when outflow_streams is empty or sparse**: use entries from `detected_recurring_outflows` where category='debt_payment' and confidence is 'high' or 'medium'. Same reason as bills — placeholder "(unresolved) debt payments" rows are forbidden when itemized data is available.
+   - **Fallback when outflow_streams is empty or sparse**: use entries from detected_recurring_outflows where category is 'debt_payment' and confidence is 'high' or 'medium'. Same reason as bills — placeholder "(unresolved) debt payments" rows are forbidden when itemized data is available.
    - min_payment = average_amount (assume the user has been paying close to minimum unless amounts are wildly variable).
    - rate_estimate: only fill if highly confident (e.g., merchant indicates a known issuer). Otherwise null.
    - balance_estimate: only fill if you can derive from history (e.g., visible payoff trajectory). Otherwise null.
