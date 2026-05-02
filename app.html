@@ -1052,6 +1052,27 @@ body.tour-active #page-home .db-action-card{display:flex!important;}
 .past-due-banner-sub{font-size:11px;color:var(--ds-t2);font-weight:600;margin-top:2px;line-height:1.4;}
 .past-due-banner-cta{background:var(--ds-c4);color:white;border:none;font-family:var(--ds-f);font-size:12px;font-weight:800;padding:8px 13px;border-radius:100px;cursor:pointer;letter-spacing:-.01em;flex-shrink:0;}
 .past-due-banner-cta:hover{background:#a83a52;}
+.inbox-banner{display:flex;align-items:center;gap:12px;background:var(--ds-green-l);border-left:4px solid var(--ds-green);border-radius:var(--ds-r2);padding:12px 14px;margin-bottom:.85rem;box-shadow:var(--ds-sh1);font-family:var(--ds-f);}
+.inbox-banner-icon{width:32px;height:32px;border-radius:50%;background:var(--ds-green);color:white;display:flex;align-items:center;justify-content:center;flex-shrink:0;}
+.inbox-banner-body{flex:1;min-width:0;}
+.inbox-banner-title{font-size:13px;font-weight:800;color:var(--ds-green);letter-spacing:-.01em;}
+.inbox-banner-sub{font-size:11px;color:var(--ds-t2);font-weight:600;margin-top:2px;line-height:1.4;}
+.inbox-banner-cta{background:var(--ds-green);color:white;border:none;font-family:var(--ds-f);font-size:12px;font-weight:800;padding:8px 13px;border-radius:100px;cursor:pointer;letter-spacing:-.01em;flex-shrink:0;}
+.inbox-banner-cta:hover{background:#22633c;}
+.inbox-row{display:flex;align-items:flex-start;gap:10px;padding:12px 0;border-bottom:1px solid var(--ds-line);}
+.inbox-row:last-child{border-bottom:none;}
+.inbox-row-info{flex:1;min-width:0;}
+.inbox-row-amount{font-size:15px;font-weight:900;color:var(--ds-green);letter-spacing:-.01em;}
+.inbox-row-source{font-size:13px;font-weight:700;color:var(--ds-t1);margin-top:2px;letter-spacing:-.01em;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+.inbox-row-meta{font-size:11px;color:var(--ds-t2);font-weight:600;margin-top:2px;line-height:1.4;}
+.inbox-row-actions{display:flex;flex-wrap:wrap;gap:6px;margin-top:8px;}
+.inbox-action{background:white;border:1.5px solid var(--ds-line);color:var(--ds-t1);font-family:var(--ds-f);font-size:11px;font-weight:800;padding:6px 11px;border-radius:100px;cursor:pointer;letter-spacing:-.01em;transition:all .15s;}
+.inbox-action:hover{border-color:var(--ds-green);color:var(--ds-green);}
+.inbox-action.inbox-action-skip{color:var(--ds-t3);}
+.inbox-action.inbox-action-skip:hover{border-color:var(--ds-t2);color:var(--ds-t2);}
+.inbox-action[disabled]{opacity:.5;cursor:wait;}
+.inbox-empty{padding:32px 16px;text-align:center;color:var(--ds-t2);font-size:13px;font-weight:600;}
+.inbox-loading{padding:32px 16px;text-align:center;color:var(--ds-t2);font-size:13px;font-weight:600;}
 /* Rows inside the past-due review modal */
 .past-due-row{display:flex;align-items:center;gap:12px;padding:11px 14px;background:var(--ds-page);border-radius:var(--ds-r1);margin-bottom:7px;}
 .past-due-row-info{flex:1;min-width:0;}
@@ -1343,6 +1364,11 @@ posthog.init('phc_B6PH36QxpExnyBYhfScFFF6LhDvoyxuFr6PypJuxxky3', {
 
   <!-- Past-due bills banner — visible only when monthly bills missed their due day -->
   <div id="past-due-banner"></div>
+
+  <!-- Income Inbox banner — surfaces low-confidence inflows for the user to label.
+       Each label trains user_classification_overrides so future matching txns
+       skip the LLM entirely. Empty when there's nothing to review. -->
+  <div id="income-inbox-banner"></div>
 
   <!-- HERO GRID — money (left/top) + score (right/bottom on mobile). -->
   <div class="db-hero-grid">
@@ -2037,6 +2063,21 @@ posthog.init('phc_B6PH36QxpExnyBYhfScFFF6LhDvoyxuFr6PypJuxxky3', {
       <div class="field"><label>Source</label><select id="ei-source"></select></div>
     </div>
     <div class="modal-actions"><button class="btn" onclick="closeModal('modal-edit-income')">Cancel</button><button class="btn btn-primary" onclick="saveEditIncome()">Save changes</button></div>
+  </div>
+</div>
+
+<!-- Income Inbox: surfaces low-confidence inflows so the user can teach Able
+     how to classify their money. Each label writes a user_classification_overrides
+     row so future matching transactions skip the LLM. -->
+<div class="modal-bg" id="modal-income-inbox" style="display:none;" onclick="if(event.target===this)closeIncomeInbox()">
+  <div class="modal" style="max-width:520px;">
+    <button class="modal-close" onclick="closeIncomeInbox()" aria-label="Close"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button>
+    <div class="modal-title">Review your income</div>
+    <div style="font-size:12px;color:var(--ds-t2);font-weight:600;margin-bottom:14px;line-height:1.6;">We weren't sure how to label these. Tap a button to teach Able for next time — every label trains future syncs.</div>
+    <div id="income-inbox-list" style="max-height:60vh;overflow-y:auto;">
+      <div class="inbox-loading">Loading…</div>
+    </div>
+    <div id="income-inbox-error" style="color:var(--ds-c4);font-size:12px;font-weight:600;margin-top:.75rem;display:none;"></div>
   </div>
 </div>
 
@@ -5929,6 +5970,7 @@ function refreshHome(){
   renderDashboard();
   renderHeroMoney();
   renderPastDueBanner();
+  renderIncomeInboxBanner();
   renderHistory();
 }
 
@@ -7603,6 +7645,185 @@ function renderPastDueBanner(){
 function openPastDueModal(){
   document.getElementById('modal-past-due').style.display = 'flex';
   renderPastDue();
+}
+
+// ─── Income Inbox ────────────────────────────────────────────────────
+// Surfaces low-confidence inflows so the user can label them. Each label
+// writes a user_classification_overrides row so future matching txns
+// skip the LLM. RLS scopes every read to the current user.
+const INBOX_CONFIDENCE_THRESHOLD = 0.7;
+const INBOX_PAGE_LIMIT = 100;
+// Holds the rows currently rendered in the modal so action handlers can
+// fetch the row metadata without re-querying.
+let _inboxRows = [];
+
+function _inboxQuery() {
+  // Inflows (negative amount) the LLM was unsure about. Excludes already
+  // user-overridden rows (confidence = 1.0).
+  return sbGet()
+    .from('plaid_transactions')
+    .select('id, plaid_transaction_id, name, merchant_name, amount, date, able_category, able_label, able_confidence')
+    .lt('amount', 0)
+    .lt('able_confidence', INBOX_CONFIDENCE_THRESHOLD)
+    .not('able_classified_at', 'is', null);
+}
+
+async function renderIncomeInboxBanner(){
+  const el = document.getElementById('income-inbox-banner');
+  if (!el || !currentUser) return;
+  try {
+    const { count, error } = await _inboxQuery()
+      .select('id', { count: 'exact', head: true });
+    if (error) {
+      console.warn('inbox count query failed:', error);
+      el.innerHTML = '';
+      return;
+    }
+    const n = count ?? 0;
+    if (n === 0) { el.innerHTML = ''; return; }
+    el.innerHTML = `
+      <div class="inbox-banner" role="status">
+        <div class="inbox-banner-icon">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M22 12h-6l-2 3h-4l-2-3H2"/><path d="M5.45 5.11 2 12v6a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2v-6l-3.45-6.89A2 2 0 0 0 16.76 4H7.24a2 2 0 0 0-1.79 1.11Z"/></svg>
+        </div>
+        <div class="inbox-banner-body">
+          <div class="inbox-banner-title">${n} deposit${n>1?'s':''} need a label</div>
+          <div class="inbox-banner-sub">Teach Able which inflows are income, transfers, or refunds. Each label trains future syncs.</div>
+        </div>
+        <button class="inbox-banner-cta" onclick="openIncomeInbox()">Review</button>
+      </div>`;
+  } catch (e) {
+    console.warn('renderIncomeInboxBanner threw:', e);
+    el.innerHTML = '';
+  }
+}
+
+async function openIncomeInbox(){
+  const modal = document.getElementById('modal-income-inbox');
+  if (!modal) return;
+  modal.style.display = 'flex';
+  const list = document.getElementById('income-inbox-list');
+  const errEl = document.getElementById('income-inbox-error');
+  if (errEl) { errEl.style.display = 'none'; errEl.textContent = ''; }
+  if (list) list.innerHTML = `<div class="inbox-loading">Loading…</div>`;
+  try {
+    const { data, error } = await _inboxQuery()
+      .order('date', { ascending: false })
+      .limit(INBOX_PAGE_LIMIT);
+    if (error) throw error;
+    _inboxRows = data || [];
+    renderIncomeInboxList();
+  } catch (e) {
+    console.error('openIncomeInbox failed:', e);
+    if (list) list.innerHTML = `<div class="inbox-empty">Could not load review list.</div>`;
+    if (errEl) { errEl.textContent = 'Load failed: ' + (e.message || 'unknown error'); errEl.style.display = 'block'; }
+  }
+}
+
+function closeIncomeInbox(){
+  const modal = document.getElementById('modal-income-inbox');
+  if (modal) modal.style.display = 'none';
+  // Refresh the banner count in case the user labeled some rows.
+  renderIncomeInboxBanner();
+}
+
+function renderIncomeInboxList(){
+  const list = document.getElementById('income-inbox-list');
+  if (!list) return;
+  if (_inboxRows.length === 0) {
+    list.innerHTML = `<div class="inbox-empty">All caught up. Future deposits we're unsure about will land here.</div>`;
+    return;
+  }
+  list.innerHTML = _inboxRows.map((r) => {
+    // Plaid sign convention: amount < 0 = inflow. Display as positive.
+    const amount = Math.abs(Number(r.amount) || 0);
+    const source = r.merchant_name || r.name || 'Unknown source';
+    const dateLabel = r.date ? new Date(r.date + 'T00:00:00').toLocaleDateString('en-US',{month:'short',day:'numeric',year:'numeric'}) : '';
+    const currentLabel = r.able_label ? `· currently "${escapeHtml(r.able_label)}"` : '';
+    const confLabel = r.able_confidence != null ? `${Math.round(r.able_confidence*100)}% sure` : '';
+    return `
+      <div class="inbox-row" id="inbox-row-${r.id}">
+        <div class="inbox-row-info">
+          <div class="inbox-row-amount">+${f2(amount)}</div>
+          <div class="inbox-row-source">${escapeHtml(source)}</div>
+          <div class="inbox-row-meta">${dateLabel} · ${escapeHtml(r.able_category || 'unclassified')} · ${confLabel} ${currentLabel}</div>
+          <div class="inbox-row-actions">
+            <button class="inbox-action" onclick="inboxClassify('${r.id}','income')">Income</button>
+            <button class="inbox-action" onclick="inboxClassify('${r.id}','transfer')">Transfer</button>
+            <button class="inbox-action" onclick="inboxClassify('${r.id}','discretionary','Refund')">Refund</button>
+            <button class="inbox-action inbox-action-skip" onclick="inboxSkip('${r.id}')">Skip</button>
+          </div>
+        </div>
+      </div>`;
+  }).join('');
+}
+
+// Derive the override match_kind + match_value for a given txn row. Prefer
+// merchant_name (clean brand string) when available; otherwise fall back
+// to a substring extracted from name. Strips common processor prefixes
+// ("VENMO ", "PAYPAL ", "ZELLE FROM ", "CASH APP ") so the override
+// matches the SENDER, not the processor.
+function _deriveOverride(row){
+  const merchant = (row.merchant_name || '').trim();
+  if (merchant.length > 0) {
+    return { kind: 'merchant', value: merchant.toLowerCase() };
+  }
+  const raw = (row.name || '').trim();
+  if (raw.length === 0) return null;
+  const stripped = raw
+    .replace(/^(venmo|paypal|cash\s*app|cashapp|zelle)\s+(payment\s+from\s+|transfer\s+from\s+|from\s+|to\s+)?/i, '')
+    .replace(/^(zelle\s+payment\s+from\s+)/i, '')
+    .trim();
+  // If stripping consumed everything, the name was JUST the processor.
+  // Use the processor token itself as the substring (e.g. bare "Venmo")
+  // — that's the right behavior for the user's first label of a
+  // stripped-description deposit.
+  const value = (stripped.length >= 3 ? stripped : raw).toLowerCase();
+  return { kind: 'name_substring', value };
+}
+
+async function inboxClassify(txnRowId, category, labelOverride){
+  const row = _inboxRows.find((r) => r.id === txnRowId);
+  if (!row) return;
+  const buttons = document.querySelectorAll(`#inbox-row-${txnRowId} .inbox-action`);
+  buttons.forEach((b) => b.setAttribute('disabled', 'disabled'));
+
+  const override = _deriveOverride(row);
+  const body = {
+    txn_row_id: txnRowId,
+    able_category: category,
+    able_label: labelOverride || (category === 'income' ? (row.merchant_name || row.name || 'Income') : undefined),
+    create_override: !!override,
+    override_kind: override?.kind,
+    override_value: override?.value,
+    override_direction: 'inflow',
+  };
+
+  try {
+    const { data, error } = await sbGet().functions.invoke('plaid-classify-override', { body });
+    if (error) throw error;
+    if (data && data.error) throw new Error(data.error);
+    Able.track?.('income_inbox_label_applied', { category, override_kind: override?.kind || null });
+    // Drop the row from the in-memory list and re-render.
+    _inboxRows = _inboxRows.filter((r) => r.id !== txnRowId);
+    renderIncomeInboxList();
+  } catch (e) {
+    console.error('inboxClassify failed:', e);
+    buttons.forEach((b) => b.removeAttribute('disabled'));
+    const errEl = document.getElementById('income-inbox-error');
+    if (errEl) {
+      errEl.textContent = 'Could not save label: ' + (e.message || 'unknown error');
+      errEl.style.display = 'block';
+    }
+  }
+}
+
+function inboxSkip(txnRowId){
+  // Local-only: drop from the visible list. The row stays at its current
+  // classification in the DB and will resurface in a future inbox session
+  // (since it still meets the < 0.7 confidence threshold).
+  _inboxRows = _inboxRows.filter((r) => r.id !== txnRowId);
+  renderIncomeInboxList();
 }
 function renderPastDue(){
   const list = document.getElementById('past-due-list');
