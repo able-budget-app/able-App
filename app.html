@@ -7872,12 +7872,40 @@ async function inboxClassify(txnRowId, category, labelOverride){
   }
 }
 
-function inboxSkip(txnRowId){
-  // Local-only: drop from the visible list. The row stays at its current
-  // classification in the DB and will resurface in a future inbox session
-  // (since it still meets the < 0.7 confidence threshold).
-  _inboxRows = _inboxRows.filter((r) => r.id !== txnRowId);
-  renderIncomeInboxList();
+async function inboxSkip(txnRowId){
+  // Skip = exclude permanently. Bumps the row's confidence to 1.0 with its
+  // existing category so it falls out of the inbox filter for good. No
+  // override row is written — the user's "skip" intent is a per-row decision,
+  // not a pattern to teach. If the LLM was wrong about the category, the user
+  // can fix it later from the activity page.
+  const row = _inboxRows.find((r) => r.id === txnRowId);
+  if (!row) return;
+  const buttons = document.querySelectorAll(`#inbox-row-${txnRowId} .inbox-action`);
+  buttons.forEach((b) => b.setAttribute('disabled', 'disabled'));
+  try {
+    const { data, error } = await sbGet().functions.invoke('plaid-classify-override', {
+      body: {
+        txn_row_id: txnRowId,
+        able_category: row.able_category || 'discretionary',
+        able_label: row.able_label || row.merchant_name || row.name || 'Skipped',
+        create_override: false,
+      },
+    });
+    if (error) throw error;
+    if (data && data.error) throw new Error(data.error);
+    Able.track?.('income_inbox_skip', {});
+    _inboxRows = _inboxRows.filter((r) => r.id !== txnRowId);
+    renderIncomeInboxList();
+    renderIncomeInboxBanner();
+  } catch (e) {
+    console.error('inboxSkip failed:', e);
+    buttons.forEach((b) => b.removeAttribute('disabled'));
+    const errEl = document.getElementById('income-inbox-error');
+    if (errEl) {
+      errEl.textContent = 'Could not skip row: ' + (e.message || 'unknown error');
+      errEl.style.display = 'block';
+    }
+  }
 }
 function renderPastDue(){
   const list = document.getElementById('past-due-list');
