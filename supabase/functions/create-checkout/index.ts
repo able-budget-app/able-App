@@ -68,7 +68,7 @@ Deno.serve(async (req) => {
     })
 
     if (mode === 'subscription') {
-      params.set('subscription_data[trial_period_days]', '7')
+      params.set('subscription_data[trial_period_days]', '30')
       params.set('payment_method_collection', 'always')
       // carry the user id onto the subscription object too, so webhook
       // subscription.* events can link back without needing the session
