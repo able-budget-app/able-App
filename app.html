@@ -2943,11 +2943,22 @@ const OB_QUESTIONS = [
     placeholder: "Your name and what you do"
   },
   {
-    key: 'income',
-    type: 'text',
-    msg: "How do you typically get paid?",
-    hint: "Lump sums, client deposits, irregular payments, weekly paychecks. Whatever's true for you.",
-    placeholder: "How money usually shows up"
+    key: 'intake_channels',
+    type: 'multiselect',
+    msg: "How does money usually reach your bank?",
+    hint: "Pick all that apply. Able will pre-fill the source picker and watch for these in your transactions.",
+    choices: [
+      { value: 'direct_deposit', label: 'Direct deposit' },
+      { value: 'stripe',         label: 'Stripe' },
+      { value: 'paypal',         label: 'PayPal' },
+      { value: 'venmo',          label: 'Venmo' },
+      { value: 'zelle',          label: 'Zelle' },
+      { value: 'cashapp',        label: 'Cash App' },
+      { value: 'square',         label: 'Square' },
+      { value: 'marketplace',    label: 'Marketplace (Airbnb, Etsy, etc.)' },
+      { value: 'check_cash',     label: 'Paper check or cash' },
+    ],
+    allowOther: true,
   },
   {
     key: 'goals',
@@ -3120,6 +3131,27 @@ function renderObStep() {
     document.getElementById('ob-back-btn').style.display = obStep > 0 ? 'inline-block' : 'none';
     document.getElementById('ob-next-btn').textContent = obStep === OB_QUESTIONS.length - 1 ? 'Build my budget →' : 'Continue →';
     document.getElementById('ob-next-btn').disabled = !selected;
+  } else if (q.type === 'multiselect') {
+    const selected = new Set(obAnswers[q.key] || []);
+    const otherText = obAnswers[q.key + '_other'] || '';
+    const chips = q.choices.map((c) => {
+      const isSel = selected.has(c.value);
+      return `<button type="button" class="ob-multi-chip${isSel ? ' selected' : ''}" data-value="${c.value}" onclick="obToggleMulti('${c.value}')">${c.label}</button>`;
+    }).join('');
+    inputArea.innerHTML = `
+      <style>
+        .ob-multi-chips{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:14px;}
+        .ob-multi-chip{background:#fff;border:1.5px solid var(--ds-line);color:var(--ds-t1);font-family:var(--ds-f);font-size:13px;font-weight:800;padding:9px 15px;border-radius:100px;cursor:pointer;letter-spacing:-.01em;transition:all .12s;}
+        .ob-multi-chip:hover{border-color:#3d9e78;color:#3d9e78;}
+        .ob-multi-chip.selected{background:#3d9e78;color:#fff;border-color:#3d9e78;}
+        .ob-multi-other{width:100%;font-family:var(--ds-f);font-size:14px;font-weight:600;padding:11px 14px;border:1.5px solid var(--ds-line);border-radius:var(--ds-r1);background:#fff;color:var(--ds-t1);outline:none;}
+        .ob-multi-other:focus{border-color:#3d9e78;}
+      </style>
+      <div class="ob-multi-chips">${chips}</div>
+      ${q.allowOther ? `<input type="text" class="ob-multi-other" id="ob-multi-other" placeholder="Anything else? (optional)" value="${otherText.replace(/"/g, '&quot;')}" oninput="obSetMultiOther(this.value)">` : ''}`;
+    document.getElementById('ob-back-btn').style.display = obStep > 0 ? 'inline-block' : 'none';
+    document.getElementById('ob-next-btn').textContent = obStep === OB_QUESTIONS.length - 1 ? 'Build my budget →' : 'Continue →';
+    document.getElementById('ob-next-btn').disabled = selected.size === 0 && !otherText.trim();
   } else {
     // text type
     inputArea.innerHTML = `<textarea class="ob-input" id="ob-text-input" rows="3" placeholder="${q.placeholder || ''}">${obAnswers[q.key] || ''}</textarea>`;
@@ -3127,6 +3159,26 @@ function renderObStep() {
     document.getElementById('ob-next-btn').textContent = obStep === OB_QUESTIONS.length - 1 ? 'Build my budget →' : 'Continue →';
     setTimeout(() => document.getElementById('ob-text-input')?.focus(), 100);
   }
+}
+
+function obToggleMulti(val) {
+  const q = OB_QUESTIONS[obStep];
+  if (!q || q.type !== 'multiselect') return;
+  const cur = new Set(obAnswers[q.key] || []);
+  if (cur.has(val)) cur.delete(val); else cur.add(val);
+  obAnswers[q.key] = [...cur];
+  renderObStep();
+}
+
+function obSetMultiOther(val) {
+  const q = OB_QUESTIONS[obStep];
+  if (!q) return;
+  obAnswers[q.key + '_other'] = val;
+  // Don't re-render (would steal focus from the text field). Just toggle
+  // the next button's disabled state inline.
+  const selected = new Set(obAnswers[q.key] || []);
+  const btn = document.getElementById('ob-next-btn');
+  if (btn) btn.disabled = selected.size === 0 && !val.trim();
 }
 
 function obSelectChoice(value) {
@@ -3194,6 +3246,30 @@ function obNext() {
       // Should be guarded by the disabled button, but double-check.
       return;
     }
+  } else if (q.type === 'multiselect') {
+    // Read latest Other text from the input (oninput handler keeps it in
+    // sync, but capture defensively in case focus + Continue race).
+    const otherInput = document.getElementById('ob-multi-other');
+    if (otherInput) obAnswers[q.key + '_other'] = otherInput.value.trim();
+    const selected = obAnswers[q.key] || [];
+    const otherText = obAnswers[q.key + '_other'] || '';
+    if (selected.length === 0 && !otherText) {
+      // Disabled-button guard, but double-check.
+      return;
+    }
+    // Persist chips to the live state immediately so the source picker
+    // shows them on the very next screen (Allocate sheet) without waiting
+    // for plan apply. intake_channels lives inside settings (JSONB) so
+    // we don't need a user_data column migration to ship.
+    if (Array.isArray(S.sources)) {
+      const labelByValue = (q.choices || []).reduce((m, c) => { m[c.value] = c.label; return m; }, {});
+      const fromChips = selected.map((v) => labelByValue[v]).filter(Boolean);
+      S.sources = [...new Set([...S.sources, ...fromChips])];
+      S.settings = S.settings || {};
+      S.settings.intake_channels = selected.slice();
+      S.settings.intake_channels_other = otherText || '';
+      save();
+    }
   } else if (q.type === 'table') {
     saveTableRows();
     // Filter out empty rows
@@ -3228,6 +3304,9 @@ function obBack() {
   else if (q.type === 'text') {
     const input = document.getElementById('ob-text-input');
     if (input) obAnswers[q.key] = input.value.trim();
+  } else if (q.type === 'multiselect') {
+    const otherInput = document.getElementById('ob-multi-other');
+    if (otherInput) obAnswers[q.key + '_other'] = otherInput.value.trim();
   }
   if (obStep > 0) {
     obStep--;
@@ -3878,10 +3957,31 @@ async function obRunPlaidPipeline() {
   // Refresh the connected-bank panel if the user is still looking at it.
   if (OB_QUESTIONS[obStep]?.type === 'plaid') renderObStep();
 
+  // Convert intake chip selections + the optional "Other" text into a
+  // single human-readable string the analyzer LLM can use as context.
+  // Falls back to the legacy free-text 'income' answer if a returning
+  // user already had it in localStorage.
+  let income_hint = obAnswers.income || undefined;
+  if (Array.isArray(obAnswers.intake_channels) && obAnswers.intake_channels.length > 0) {
+    const labelByValue = {
+      direct_deposit: 'Direct deposit',
+      stripe: 'Stripe',
+      paypal: 'PayPal',
+      venmo: 'Venmo',
+      zelle: 'Zelle',
+      cashapp: 'Cash App',
+      square: 'Square',
+      marketplace: 'Marketplace payouts (Airbnb/Etsy/etc.)',
+      check_cash: 'Paper check or cash',
+    };
+    const labels = obAnswers.intake_channels.map((v) => labelByValue[v] || v);
+    income_hint = labels.join(', ');
+    if (obAnswers.intake_channels_other) income_hint += `. Also: ${obAnswers.intake_channels_other}`;
+  }
   const profile_hint = {
     name: obAnswers.name_business || undefined,
     business: obAnswers.name_business || undefined,
-    income_payment_structure: obAnswers.income || undefined,
+    income_payment_structure: income_hint,
   };
 
   const sb = sbGet();
