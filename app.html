@@ -1344,6 +1344,14 @@ posthog.init('phc_B6PH36QxpExnyBYhfScFFF6LhDvoyxuFr6PypJuxxky3', {
   </div>
 </div>
 
+<!-- Income Inbox banner — surfaces low-confidence inflows for the user to label.
+     Each label trains user_classification_overrides so future matching txns
+     skip the LLM entirely. Empty when there's nothing to review. Lives at
+     the global layout level so it's visible across every tab, not just Allocate. -->
+<div id="income-inbox-banner-wrap" style="max-width:1100px;margin:0 auto;padding:0 1rem;">
+  <div id="income-inbox-banner"></div>
+</div>
+
 <!-- ALLOCATE -->
 <div class="page active" id="page-home">
   <!-- Empty-state welcome for first-time users (no history + no bills) -->
@@ -1364,11 +1372,6 @@ posthog.init('phc_B6PH36QxpExnyBYhfScFFF6LhDvoyxuFr6PypJuxxky3', {
 
   <!-- Past-due bills banner — visible only when monthly bills missed their due day -->
   <div id="past-due-banner"></div>
-
-  <!-- Income Inbox banner — surfaces low-confidence inflows for the user to label.
-       Each label trains user_classification_overrides so future matching txns
-       skip the LLM entirely. Empty when there's nothing to review. -->
-  <div id="income-inbox-banner"></div>
 
   <!-- HERO GRID — money (left/top) + score (right/bottom on mobile). -->
   <div class="db-hero-grid">
@@ -7701,20 +7704,33 @@ function openPastDueModal(){
 // writes a user_classification_overrides row so future matching txns
 // skip the LLM. RLS scopes every read to the current user.
 const INBOX_CONFIDENCE_THRESHOLD = 0.7;
+// Transfer-classified inflows below this confidence land in the inbox so users
+// can correct false-negative income (e.g. Venmo from a client misread as P2P).
+const INBOX_TRANSFER_REVIEW_THRESHOLD = 0.85;
 const INBOX_PAGE_LIMIT = 100;
 // Holds the rows currently rendered in the modal so action handlers can
 // fetch the row metadata without re-querying.
 let _inboxRows = [];
 
-// Inflows (negative amount) the LLM was unsure about. Excludes already
-// user-overridden rows (confidence = 1.0). Chaining .select() twice in
-// supabase-js drops the count modifier, so the count and list queries
-// each build their own chain from sbGet() rather than sharing a base.
+// Inflows worth labeling. Two cases land in the inbox:
+//   1. Truly low-conf rows (any category, confidence < 0.7) — the LLM was unsure.
+//   2. Transfer-classified inflows with confidence < 0.85 — the LLM said
+//      "transfer" but wasn't sure; these are the most common false-negative
+//      income (e.g. a Venmo from a client classified as P2P transfer).
+// High-confidence transfers (>= 0.85) are trusted and stay out of the inbox.
+// Excludes user-overridden rows (confidence = 1.0).
+//
+// Chaining .select() twice in supabase-js drops the count modifier, so the
+// count and list queries each build their own chain from sbGet() rather than
+// sharing a base.
 function _inboxFiltered(builder) {
   return builder
     .lt('amount', 0)
-    .lt('able_confidence', INBOX_CONFIDENCE_THRESHOLD)
-    .not('able_classified_at', 'is', null);
+    .not('able_classified_at', 'is', null)
+    .or(
+      `able_confidence.lt.${INBOX_CONFIDENCE_THRESHOLD},` +
+      `and(able_category.eq.transfer,able_confidence.lt.${INBOX_TRANSFER_REVIEW_THRESHOLD})`,
+    );
 }
 
 async function renderIncomeInboxBanner(){
