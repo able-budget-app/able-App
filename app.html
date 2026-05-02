@@ -3500,11 +3500,64 @@ async function obStartPlaidLink() {
   }
 }
 
+// Returns the most recent non-revoked plaid_items row for this user +
+// institution, or null. RLS scopes the query to the current user.
+// Used to prevent duplicate-Item creation when a user re-links the same
+// bank (which would pull every transaction twice — see 2026-04-30 dupe
+// incident on item 4a18cecb-…).
+async function findExistingPlaidItemForInstitution(institutionId) {
+  if (!institutionId) return null;
+  try {
+    const { data, error } = await sbGet()
+      .from('plaid_items')
+      .select('id, status, institution_name')
+      .eq('institution_id', institutionId)
+      .neq('status', 'revoked')
+      .order('created_at', { ascending: false })
+      .limit(1);
+    if (error) {
+      console.warn('findExistingPlaidItemForInstitution query failed:', error);
+      return null;
+    }
+    return Array.isArray(data) && data.length > 0 ? data[0] : null;
+  } catch (e) {
+    console.warn('findExistingPlaidItemForInstitution threw:', e);
+    return null;
+  }
+}
+
 async function obHandlePlaidSuccess(public_token, metadata, lookback) {
   console.log('[Plaid] onSuccess fired, public_token:', public_token?.slice(0, 20) + '…', 'lookback:', lookback);
   const btn = document.getElementById('ob-plaid-connect');
   const errEl = document.getElementById('ob-plaid-error');
   if (btn) { btn.disabled = true; btn.textContent = 'Linking…'; }
+
+  // Guard against same-institution re-link (e.g. user resumed onboarding
+  // after a prior link, or signed in with an existing account that has
+  // this bank). Don't exchange — that would create a duplicate Item.
+  const institutionId = metadata?.institution?.institution_id || null;
+  const institutionName = metadata?.institution?.name || null;
+  if (institutionId) {
+    const existing = await findExistingPlaidItemForInstitution(institutionId);
+    if (existing) {
+      console.warn('[Plaid] institution already linked, skipping exchange:', existing);
+      Able.track?.('plaid_duplicate_link_blocked', { context: 'onboarding', institution_name: existing.institution_name || institutionName });
+      obAnswers.plaid_connect = {
+        plaid_item_row_id: existing.id,
+        item_id: null,
+        lookback_months: lookback,
+        institution_name: existing.institution_name || institutionName,
+        account_count: 0,
+        already_linked: true,
+      };
+      // Re-run the post-link pipeline against the existing item so the
+      // build step has a fresh plan to render. Sync is cursor-based, so
+      // this is cheap if everything is already up to date.
+      obRunPlaidPipeline().catch((err) => console.error('[Pipeline] background run failed:', err));
+      renderObStep();
+      return;
+    }
+  }
 
   try {
     const t0 = performance.now();
@@ -7165,6 +7218,27 @@ async function bankPromptConnect() {
 
 // Shared post-Link handler for settings_new (both inline and OAuth-resume paths).
 async function settingsHandlePostLink(public_token, metadata) {
+  // Guard against duplicate-Item creation when the user re-links a bank
+  // that's already connected. Plaid Link will happily mint a new public
+  // token for the same institution; exchanging it creates a second
+  // plaid_items row pulling from the same accounts and every transaction
+  // appears twice. Offer to re-link the existing item in update mode.
+  const institutionId = metadata?.institution?.institution_id || null;
+  const institutionName = metadata?.institution?.name || null;
+  if (institutionId) {
+    const existing = await findExistingPlaidItemForInstitution(institutionId);
+    if (existing) {
+      Able.track?.('plaid_duplicate_link_blocked', { context: 'settings', institution_name: existing.institution_name || institutionName });
+      const friendly = existing.institution_name || institutionName || 'This bank';
+      const wantsUpdate = confirm(`${friendly} is already connected to Able. Reconnect it to fix sync issues instead?`);
+      if (wantsUpdate && typeof settingsRunUpdateMode === 'function') {
+        await settingsRunUpdateMode(existing.id, false);
+      }
+      if (typeof loadConnectedAccounts === 'function') await loadConnectedAccounts();
+      return;
+    }
+  }
+
   const { data: ex, error: exErr } = await sbGet().functions.invoke('plaid-exchange-public-token', {
     body: {
       public_token,

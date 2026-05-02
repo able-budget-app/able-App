@@ -205,6 +205,14 @@ Output ONLY a JSON array. One object per input transaction, in the SAME ORDER. N
 
 4a. **Venmo / Zelle / Cash App outflows to a named person who is not the user** (e.g. "VENMO TO MOM", "ZELLE TO J SMITH"): classify as **discretionary**, NOT transfer. Personal payments and gifts are spending, not internal transfers. "Transfer" is reserved for movement between the user's own accounts.
 
+4b. **Marketplace / processor payouts on inflows are income, not discretionary or transfer.** When amount is NEGATIVE (inflow / credit) AND merchant_name or name matches a marketplace or payment processor, default to **income** — the user is the host / seller / payee, not the customer:
+   - Airbnb, VRBO, Vrbo, Booking.com host payouts → income (host payout). The Airbnb-as-discretionary rule under rule 2 applies ONLY to OUTFLOWS (positive amount = the user paying for a stay).
+   - Stripe, Square, Shopify, Toast, Clover payouts → income (client payment / sales).
+   - PayPal, Venmo, Cash App, Zelle inflows from a business / company name (e.g. "PAYPAL TRANSFER ACME LLC", "VENMO ACME CO", "ZELLE FROM ACME LLC") → income. Inflows clearly from a known person (e.g. "VENMO FROM MOM") are transfer if the user is moving their own money, otherwise income/transfer per rule 4.
+   - Etsy, eBay, Upwork, Fiverr, Gumroad, Substack, Patreon payouts → income.
+   - Amazon Payments, Google Pay, Apple Pay business payouts → income.
+   Only override to a different category if the description strongly suggests a refund (e.g. "REFUND", "RETURN", "REVERSAL"), in which case choose **discretionary** with confidence ≤ 0.6 and a label like "Refund — <merchant>".
+
 5. **Mortgages are bills.** Even though Plaid puts them in LOAN_PAYMENTS_MORTGAGE, classify as bill so they show up correctly in Able's Bills list.
 
 6. When ambiguous, lower the confidence (≤ 0.6) and pick the safer category (**discretionary over bill**, transfer over income). It is far better to miss a bill (the user will add it manually) than to bury a one-off discretionary purchase in their bills list.
