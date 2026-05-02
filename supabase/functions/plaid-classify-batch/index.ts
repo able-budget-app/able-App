@@ -15,7 +15,7 @@
 //
 // Auth: requires service role bearer.
 
-import { createClient } from 'npm:@supabase/supabase-js@2';
+import { createClient, type SupabaseClient } from 'npm:@supabase/supabase-js@2';
 
 const SUPABASE_URL = Deno.env.get('SUPABASE_URL')!;
 const SERVICE_ROLE = Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')!;
@@ -315,7 +315,7 @@ async function callRecategorize(rows: TxnRow[]): Promise<Classification[]> {
 // Returns Map<user_id, Override[]>. match_value is normalized
 // (lowercased + trimmed) at read time so the runtime compare is direct.
 async function fetchOverridesByUser(
-  admin: ReturnType<typeof createClient>,
+  admin: SupabaseClient,
   userIds: string[],
 ): Promise<Map<string, Override[]>> {
   if (userIds.length === 0) return new Map();
