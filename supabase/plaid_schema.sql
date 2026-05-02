@@ -111,13 +111,21 @@ create table if not exists public.plaid_transactions (
   -- Per-transaction tax-deductible flag. Optional; set by the user from the
   -- Activity reclassify modal. Drives the Tax export rollup.
   is_tax_deductible                        boolean not null default false,
+  -- Optional business label. Free-form text so users with one business or
+  -- a side-hustle don't need a heavyweight profile system. Null = personal.
+  -- Used for filtering on Activity, business breakdowns in Tax export, and
+  -- as the v1 substrate for the future multi-profile Pro tier.
+  business_label                           text,
   created_at                               timestamptz not null default now(),
   updated_at                               timestamptz not null default now()
 );
 
--- Idempotent ALTER for existing tables that pre-date is_tax_deductible.
+-- Idempotent ALTER for existing tables that pre-date is_tax_deductible /
+-- business_label.
 alter table public.plaid_transactions
   add column if not exists is_tax_deductible boolean not null default false;
+alter table public.plaid_transactions
+  add column if not exists business_label text;
 
 create index if not exists plaid_transactions_user_date_idx
   on public.plaid_transactions (user_id, date desc);
@@ -128,6 +136,10 @@ create index if not exists plaid_transactions_unclassified_idx
 -- Tax export filter: deductible rows for the user, by date desc.
 create index if not exists plaid_transactions_tax_deductible_idx
   on public.plaid_transactions (user_id, date desc) where is_tax_deductible = true;
+-- Business-tagged rows for the user, by date desc.
+create index if not exists plaid_transactions_business_idx
+  on public.plaid_transactions (user_id, business_label, date desc)
+  where business_label is not null;
 
 
 -- ─── plaid_recurring_streams ─────────────────────────────────────────

@@ -47,6 +47,9 @@ type Body = {
   // Optional tax-deductible flag — when present, sets is_tax_deductible on
   // the row (used by the Tax export view). Omitted = leave field as-is.
   is_tax_deductible?: boolean;
+  // Optional business label — when present (including empty string to clear),
+  // sets business_label on the row. Omitted = leave field as-is.
+  business_label?: string | null;
 };
 
 Deno.serve(async (req) => {
@@ -110,6 +113,14 @@ Deno.serve(async (req) => {
     };
     if (typeof body.is_tax_deductible === 'boolean') {
       updatePayload.is_tax_deductible = body.is_tax_deductible;
+    }
+    if (Object.prototype.hasOwnProperty.call(body, 'business_label')) {
+      // Empty string or null both clear the tag; non-empty trims whitespace
+      // so duplicate labels with stray spaces collapse.
+      const raw = body.business_label;
+      updatePayload.business_label = (typeof raw === 'string' && raw.trim().length > 0)
+        ? raw.trim()
+        : null;
     }
     const { error: updErr } = await admin
       .from('plaid_transactions')
