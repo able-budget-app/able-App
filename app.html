@@ -1688,8 +1688,17 @@ posthog.init('phc_B6PH36QxpExnyBYhfScFFF6LhDvoyxuFr6PypJuxxky3', {
 <div class="page" id="page-activity">
   <div class="sec" style="display:flex;align-items:center;gap:12px;flex-wrap:wrap;">
     <span>Activity</span>
-    <span style="font-size:11px;font-weight:700;color:var(--ds-t3);letter-spacing:.04em;text-transform:uppercase;">Last 90 days</span>
     <button class="btn btn-sm btn-ghost" onclick="openTaxExportModal()" style="margin-left:auto;font-size:12px;">Tax export →</button>
+  </div>
+  <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin-bottom:.85rem;">
+    <input type="text" id="activity-search" placeholder="Search merchant, name, or label…" oninput="onActivitySearchInput()" style="flex:1;min-width:200px;font-family:var(--ds-f);font-size:13px;font-weight:600;padding:8px 12px;border:1.5px solid var(--ds-line);border-radius:var(--ds-r1);background:white;color:var(--ds-t1);outline:none;">
+    <select id="activity-range" onchange="renderActivityPage()" style="font-family:var(--ds-f);font-size:12px;font-weight:700;padding:6px 10px;border:1px solid var(--ds-line);border-radius:var(--ds-r1);background:white;color:var(--ds-t1);">
+      <option value="30">Last 30 days</option>
+      <option value="90" selected>Last 90 days</option>
+      <option value="180">Last 6 months</option>
+      <option value="365">Last 12 months</option>
+      <option value="0">All time</option>
+    </select>
     <select id="activity-business-filter" onchange="renderActivityPage()" style="font-family:var(--ds-f);font-size:12px;font-weight:700;padding:6px 10px;border:1px solid var(--ds-line);border-radius:var(--ds-r1);background:white;color:var(--ds-t1);">
       <option value="all">All businesses</option>
     </select>
@@ -1705,6 +1714,9 @@ posthog.init('phc_B6PH36QxpExnyBYhfScFFF6LhDvoyxuFr6PypJuxxky3', {
     </select>
   </div>
   <div id="activity-list"><div class="empty-state">Loading…</div></div>
+  <div id="activity-load-more" style="text-align:center;margin-top:1rem;display:none;">
+    <button class="btn btn-sm btn-ghost" onclick="loadMoreActivity()">Load older transactions →</button>
+  </div>
 </div>
 
 <!-- Tax export modal — opened from Activity page header. Filters every
@@ -8169,6 +8181,8 @@ async function inboxSkip(txnRowId){
 // Same backend the Income Inbox uses. Outflow chips differ from inflow chips.
 const ACTIVITY_LOOKBACK_DAYS = 90;
 const ACTIVITY_PAGE_LIMIT = 250;
+let _activityCurrentLimit = ACTIVITY_PAGE_LIMIT;
+let _activitySearchTimer = null;
 // Inflow and outflow chip sets are now symmetric: a refund of a bill should
 // land back in the Bill category (negative amount), a return on a discretionary
 // purchase in Spending, a tax refund in Tax, etc. The DB enum already supports
@@ -8216,22 +8230,29 @@ let _activityRows = [];
 let _activeReclassifyTxn = null;
 let _activeReclassifyCat = null;
 
-async function renderActivityPage(){
+async function renderActivityPage(opts){
   const list = document.getElementById('activity-list');
   if (!list) return;
+  // Reset pagination unless caller passed { append: true } from loadMoreActivity.
+  if (!opts || !opts.append) _activityCurrentLimit = ACTIVITY_PAGE_LIMIT;
   list.innerHTML = `<div class="empty-state">Loading…</div>`;
   const filterEl = document.getElementById('activity-filter');
   const filter = filterEl ? filterEl.value : 'all';
-  const since = new Date();
-  since.setDate(since.getDate() - ACTIVITY_LOOKBACK_DAYS);
-  const sinceIso = since.toISOString().slice(0,10);
+  const rangeEl = document.getElementById('activity-range');
+  const lookbackDays = rangeEl ? parseInt(rangeEl.value, 10) : ACTIVITY_LOOKBACK_DAYS;
+  const searchEl = document.getElementById('activity-search');
+  const searchRaw = (searchEl ? searchEl.value : '').trim();
   try {
     let q = sbGet()
       .from('plaid_transactions')
       .select('id, plaid_transaction_id, name, merchant_name, amount, date, able_category, able_label, able_confidence, personal_finance_category_primary, personal_finance_category_detailed, is_tax_deductible, business_label')
-      .gte('date', sinceIso)
       .order('date', { ascending: false })
-      .limit(ACTIVITY_PAGE_LIMIT);
+      .limit(_activityCurrentLimit);
+    if (lookbackDays > 0) {
+      const since = new Date();
+      since.setDate(since.getDate() - lookbackDays);
+      q = q.gte('date', since.toISOString().slice(0,10));
+    }
     if (filter === '__deductible__') {
       q = q.eq('is_tax_deductible', true);
     } else if (filter !== 'all') {
@@ -8244,12 +8265,29 @@ async function renderActivityPage(){
     } else if (businessFilter !== 'all') {
       q = q.eq('business_label', businessFilter);
     }
+    if (searchRaw.length >= 2) {
+      // Server-side ILIKE across the human-readable text fields. Escape
+      // PostgREST wildcards so a stray '*' or '%' in user input doesn't
+      // change semantics.
+      const safe = searchRaw.replace(/[*%,]/g, ' ').trim();
+      const pat = `*${safe}*`;
+      q = q.or(
+        `merchant_name.ilike.${pat},` +
+        `name.ilike.${pat},` +
+        `able_label.ilike.${pat},` +
+        `business_label.ilike.${pat}`,
+      );
+    }
     const { data, error } = await q;
     if (error) throw error;
     _activityRows = data || [];
     _refreshBusinessFilterOptions();
+    const loadMoreEl = document.getElementById('activity-load-more');
     if (_activityRows.length === 0) {
-      list.innerHTML = `<div class="empty-state">No transactions in the last ${ACTIVITY_LOOKBACK_DAYS} days${filter==='all' ? '' : ` matching "${filter}"`}.</div>`;
+      const rangeNote = lookbackDays > 0 ? ` in the last ${lookbackDays} days` : '';
+      const searchNote = searchRaw.length >= 2 ? ` matching "${escapeHtml(searchRaw)}"` : '';
+      list.innerHTML = `<div class="empty-state">No transactions${rangeNote}${searchNote}.</div>`;
+      if (loadMoreEl) loadMoreEl.style.display = 'none';
       return;
     }
     // Group by date for visual breaks.
@@ -8264,10 +8302,28 @@ async function renderActivityPage(){
       return `<div class="act-day">${dayLabel}</div>` + rows.map(_renderActivityRow).join('');
     }).join('');
     list.innerHTML = html;
+    // Show "Load older" only when we hit the page limit (likely more rows
+    // exist beyond it). When we got fewer than the limit, we have everything.
+    if (loadMoreEl) loadMoreEl.style.display = _activityRows.length >= _activityCurrentLimit ? 'block' : 'none';
   } catch (e) {
     console.error('renderActivityPage failed:', e);
     list.innerHTML = `<div class="empty-state">Could not load activity: ${escapeHtml(e.message || 'unknown error')}</div>`;
   }
+}
+
+function loadMoreActivity(){
+  // Double the limit and re-query. Cheap on the DB; we already have a
+  // user_id+date index. Keeps the implementation trivial vs cursor-based
+  // pagination.
+  _activityCurrentLimit += ACTIVITY_PAGE_LIMIT;
+  renderActivityPage({ append: true });
+}
+
+function onActivitySearchInput(){
+  // Debounce the server-side .or() query so we're not hammering Supabase
+  // on every keystroke. 300ms is the usual sweet spot for search-as-you-type.
+  if (_activitySearchTimer) clearTimeout(_activitySearchTimer);
+  _activitySearchTimer = setTimeout(() => { renderActivityPage(); }, 300);
 }
 
 function _refreshBusinessFilterOptions(){
