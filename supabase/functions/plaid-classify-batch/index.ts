@@ -132,20 +132,28 @@ Deno.serve(async (req) => {
     const userIds = Array.from(new Set(rows.map((r) => r.user_id)));
     const overridesByUser = await fetchOverridesByUser(admin, userIds);
     const overrideHits: { row: TxnRow; override: Override }[] = [];
+    const heuristicHits: { row: TxnRow; result: HeuristicHit }[] = [];
     const llmRows: TxnRow[] = [];
     for (const row of rows) {
       const userOverrides = overridesByUser.get(row.user_id) ?? [];
       const hit = pickOverride(row, userOverrides);
-      if (hit) overrideHits.push({ row, override: hit });
-      else llmRows.push(row);
+      if (hit) { overrideHits.push({ row, override: hit }); continue; }
+      // Plaid PFC + direction is enough to confidently classify a wide
+      // class of transactions (rent, utilities, loans, transfers, taxes).
+      // Skip the LLM for those — same backend cost as override hits.
+      const heuristic = pickPfcHeuristic(row);
+      if (heuristic) { heuristicHits.push({ row, result: heuristic }); continue; }
+      llmRows.push(row);
     }
     console.log(
       `plaid-classify-batch: override hits=${overrideHits.length}, ` +
+      `PFC heuristic hits=${heuristicHits.length}, ` +
       `LLM rows=${llmRows.length}`,
     );
 
     let classified = 0;
     let classifiedViaOverride = 0;
+    let classifiedViaHeuristic = 0;
     let batches = 0;
     const failures: string[] = [];
 
@@ -184,15 +192,49 @@ Deno.serve(async (req) => {
       }
     }
 
+    // Apply PFC-heuristic hits. Same shape as override path: direct UPDATE,
+    // no LLM call. Confidence 0.85 — high but below the override 1.0 so a
+    // user who disagrees can still teach Able with an inbox label.
+    if (heuristicHits.length > 0) {
+      const now = new Date().toISOString();
+      const results = await Promise.allSettled(
+        heuristicHits.map(({ row, result }) =>
+          admin
+            .from('plaid_transactions')
+            .update({
+              able_category: result.category,
+              able_label: row.merchant_name ?? row.name ?? result.label,
+              able_confidence: 0.85,
+              able_is_recurring_likely: result.is_recurring_likely,
+              able_classified_at: now,
+            })
+            .eq('id', row.id),
+        ),
+      );
+      for (const r of results) {
+        if (r.status === 'fulfilled' && !r.value.error) {
+          classified++;
+          classifiedViaHeuristic++;
+        } else if (r.status === 'rejected') {
+          console.error('heuristic update threw:', r.reason);
+          failures.push(`heuristic update threw: ${String(r.reason)}`);
+        } else if (r.status === 'fulfilled' && r.value.error) {
+          console.error('heuristic update failed:', r.value.error);
+          failures.push(`heuristic update failed: ${r.value.error.message}`);
+        }
+      }
+    }
+
     if (llmRows.length === 0) {
       console.log(
         `plaid-classify-batch: done — classified=${classified} ` +
-        `(via_override=${classifiedViaOverride}, via_llm=0), ` +
+        `(via_override=${classifiedViaOverride}, via_heuristic=${classifiedViaHeuristic}, via_llm=0), ` +
         `batches=0, failures=${failures.length}`,
       );
       return json({
         classified,
         classified_via_override: classifiedViaOverride,
+        classified_via_heuristic: classifiedViaHeuristic,
         classified_via_llm: 0,
         batches: 0,
         scanned: rows.length,
@@ -262,13 +304,14 @@ Deno.serve(async (req) => {
 
     console.log(
       `plaid-classify-batch: done — classified=${classified} ` +
-      `(via_override=${classifiedViaOverride}, via_llm=${classifiedViaLlm}), ` +
+      `(via_override=${classifiedViaOverride}, via_heuristic=${classifiedViaHeuristic}, via_llm=${classifiedViaLlm}), ` +
       `batches=${batches}, failures=${failures.length}`,
     );
 
     return json({
       classified,
       classified_via_override: classifiedViaOverride,
+      classified_via_heuristic: classifiedViaHeuristic,
       classified_via_llm: classifiedViaLlm,
       batches,
       scanned: rows.length,
@@ -385,4 +428,100 @@ function json(body: unknown, status = 200) {
     status,
     headers: { ...corsHeaders, 'Content-Type': 'application/json' },
   });
+}
+
+// ─────────────────────────────────────────────────────────────────────
+// Plaid PFC heuristic
+// ─────────────────────────────────────────────────────────────────────
+// For a wide class of transactions, Plaid's personal_finance_category is
+// good enough that an LLM call is wasted spend. This map covers the
+// confident cases — rent, utilities, loan payments, transfers, taxes,
+// straightforward income types. Anything ambiguous (food, entertainment,
+// general merchandise, personal care, medical, etc.) falls through to
+// the LLM where context matters.
+//
+// Direction guards: INCOME_* only auto-classifies on inflows (amount<0),
+// LOAN_PAYMENTS_* on outflows (amount>0). Transfers either direction.
+// Heuristic confidence lands at 0.85 — high but below override 1.0 so a
+// user who disagrees can teach Able with an inbox label.
+type HeuristicHit = {
+  category: Classification['category'];
+  label: string;
+  is_recurring_likely: boolean;
+};
+
+const PFC_BILL_DETAIL = new Set([
+  'RENT_AND_UTILITIES_RENT',
+  'RENT_AND_UTILITIES_INTERNET_AND_CABLE',
+  'RENT_AND_UTILITIES_TELEPHONE',
+  'RENT_AND_UTILITIES_GAS_AND_ELECTRICITY',
+  'RENT_AND_UTILITIES_WATER',
+  'RENT_AND_UTILITIES_OTHER_UTILITIES',
+  'RENT_AND_UTILITIES_SEWAGE_AND_WASTE_MANAGEMENT',
+  'LOAN_PAYMENTS_MORTGAGE_PAYMENT',
+  'BANK_FEES_INTEREST_CHARGE',
+  'BANK_FEES_OVERDRAFT_FEES',
+  'BANK_FEES_INSUFFICIENT_FUNDS',
+]);
+
+const PFC_DEBT_DETAIL = new Set([
+  'LOAN_PAYMENTS_CAR_PAYMENT',
+  'LOAN_PAYMENTS_CREDIT_CARD_PAYMENT',
+  'LOAN_PAYMENTS_PERSONAL_LOAN_PAYMENT',
+  'LOAN_PAYMENTS_STUDENT_LOAN_PAYMENT',
+  'LOAN_PAYMENTS_OTHER_PAYMENT',
+]);
+
+const PFC_INCOME_DETAIL = new Set([
+  'INCOME_WAGES',
+  'INCOME_RETIREMENT_PENSION',
+  'INCOME_DIVIDENDS',
+  'INCOME_INTEREST_EARNED',
+  'INCOME_TAX_REFUND',
+  'INCOME_UNEMPLOYMENT',
+]);
+
+const PFC_TRANSFER_DETAIL = new Set([
+  'TRANSFER_IN_DEPOSIT',
+  'TRANSFER_OUT_WITHDRAWAL',
+  'TRANSFER_IN_ACCOUNT_TRANSFER',
+  'TRANSFER_OUT_ACCOUNT_TRANSFER',
+  'TRANSFER_IN_SAVINGS',
+  'TRANSFER_OUT_SAVINGS',
+  'TRANSFER_IN_INVESTMENT_AND_RETIREMENT_FUNDS',
+  'TRANSFER_OUT_INVESTMENT_AND_RETIREMENT_FUNDS',
+  'TRANSFER_OUT_OTHER',
+]);
+
+const PFC_TAX_DETAIL = new Set([
+  'GOVERNMENT_AND_NON_PROFIT_TAX_PAYMENT',
+]);
+
+function pickPfcHeuristic(row: TxnRow): HeuristicHit | null {
+  const detail = row.personal_finance_category_detailed;
+  if (!detail) return null;
+  const conf = (row.personal_finance_category_confidence ?? '').toUpperCase();
+  // Plaid PFC confidence: VERY_HIGH | HIGH | MEDIUM | LOW | UNKNOWN.
+  // Only trust HIGH+ for the heuristic — LOW/UNKNOWN goes to the LLM.
+  if (conf !== 'HIGH' && conf !== 'VERY_HIGH') return null;
+  const isInflow = (row.amount ?? 0) < 0;
+  const isOutflow = (row.amount ?? 0) > 0;
+  const baseLabel = row.merchant_name ?? row.name ?? detail;
+
+  if (PFC_BILL_DETAIL.has(detail) && isOutflow) {
+    return { category: 'bill', label: baseLabel, is_recurring_likely: true };
+  }
+  if (PFC_DEBT_DETAIL.has(detail) && isOutflow) {
+    return { category: 'debt_payment', label: baseLabel, is_recurring_likely: true };
+  }
+  if (PFC_INCOME_DETAIL.has(detail) && isInflow) {
+    return { category: 'income', label: baseLabel, is_recurring_likely: detail === 'INCOME_WAGES' || detail === 'INCOME_RETIREMENT_PENSION' };
+  }
+  if (PFC_TRANSFER_DETAIL.has(detail)) {
+    return { category: 'transfer', label: baseLabel, is_recurring_likely: false };
+  }
+  if (PFC_TAX_DETAIL.has(detail) && isOutflow) {
+    return { category: 'tax_payment', label: baseLabel, is_recurring_likely: false };
+  }
+  return null;
 }
