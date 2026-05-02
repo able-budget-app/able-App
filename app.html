@@ -2639,11 +2639,13 @@ async function _onAuthStateChangeImpl(user) {
 
   if(document.getElementById('settings-email')) document.getElementById('settings-email').textContent=user.email;
 
-  // Clear checkout success param from URL
-  const params=new URLSearchParams(window.location.search);
-  const isFromCheckout = params.get('checkout')==='success';
+  // The URL is already clean — we strip ?checkout=success at page load
+  // before Supabase client init (avoids a wedge). The "came from checkout"
+  // signal lives in sessionStorage. Clear the flag once we read it so a
+  // future reload doesn't re-trigger the post-checkout polling path.
+  const isFromCheckout = sessionStorage.getItem('able_post_checkout') === '1';
   if(isFromCheckout){
-    window.history.replaceState({},'',window.location.pathname);
+    try { sessionStorage.removeItem('able_post_checkout'); } catch (_) { /* noop */ }
     Able.trackOnce('trial_started');
     console.debug('[Able] From checkout, waiting 2.5s for webhook...');
     await new Promise(r=>setTimeout(r,2500));
@@ -8805,6 +8807,23 @@ window.addEventListener('load', async () => {
   }
 
   window._stripe = Stripe(STRIPE_KEY);
+
+  // Strip ?checkout=success from the URL BEFORE Supabase client init.
+  // Verified 2026-05-01 in fresh incognito: when supabase.createClient runs
+  // with `detectSessionInUrl: true` + `flowType: 'pkce'` against a URL with
+  // a non-auth query string (?checkout=success), the client wedges —
+  // getSession(), getAuthenticatorAssuranceLevel(), and other auth-state
+  // calls hang indefinitely. The bounce-to-sign-in escape-hatch fires and
+  // the user gets stuck. Replacing the URL to a clean pathname before
+  // createClient sidesteps the wedge entirely. We persist the
+  // "came from checkout" signal in sessionStorage so the rest of the
+  // post-auth flow (subscription polling, "Confirming subscription" loader)
+  // still knows what happened. Flag is cleared after auth flow completes.
+  if (window.location.search.includes('checkout=success')) {
+    try { sessionStorage.setItem('able_post_checkout', '1'); } catch (_) { /* noop */ }
+    try { history.replaceState({}, '', window.location.pathname); } catch (_) { /* noop */ }
+  }
+
   window._sb = supabase.createClient(SUPABASE_URL, SUPABASE_KEY, {
     auth: {
       detectSessionInUrl: true,
@@ -8822,7 +8841,7 @@ window.addEventListener('load', async () => {
   });
 
   // On checkout return, hide everything and show clean loading instead of auth screen flash
-  const isCheckoutReturn = window.location.search.includes('checkout=success');
+  const isCheckoutReturn = sessionStorage.getItem('able_post_checkout') === '1';
   if(isCheckoutReturn) {
     document.getElementById('auth-screen').style.display = 'none';
     document.getElementById('paywall-screen').style.display = 'none';
