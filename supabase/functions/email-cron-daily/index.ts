@@ -145,8 +145,10 @@ Deno.serve(async (req) => {
         if (ok) results.bill_due++; else results.errors++;
       }
 
-      // Low buffer warning
-      const monthlyBills = ((userData.bills ?? []) as any[]).reduce((s: number, b: any) => s + (b.amount || 0), 0);
+      // Low buffer warning. Compare buffer against UNPAID bills only — including
+      // paid ones inflated the threshold so the warning fired against money the
+      // user had already covered.
+      const monthlyBills = ((userData.bills ?? []) as any[]).filter(b => !b.paid).reduce((s: number, b: any) => s + (b.amount || 0), 0);
       const buffer = parseFloat(userData.buffer) || 0;
       if (monthlyBills > 0 && buffer < monthlyBills * 0.5 && prefs.low_buffer !== false && !sentSince(userId, 'low_buffer', fourteenDaysAgoMs)) {
         const ok = await sendLowBuffer(admin, email, userData, buffer, monthlyBills);
