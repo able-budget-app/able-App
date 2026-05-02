@@ -1073,6 +1073,27 @@ body.tour-active #page-home .db-action-card{display:flex!important;}
 .inbox-action[disabled]{opacity:.5;cursor:wait;}
 .inbox-empty{padding:32px 16px;text-align:center;color:var(--ds-t2);font-size:13px;font-weight:600;}
 .inbox-loading{padding:32px 16px;text-align:center;color:var(--ds-t2);font-size:13px;font-weight:600;}
+/* Activity page (transactions list) */
+.act-day{font-size:11px;font-weight:800;letter-spacing:.08em;text-transform:uppercase;color:var(--ds-t3);margin:1.1rem 0 .45rem;}
+.act-row{display:flex;align-items:center;gap:12px;background:var(--ds-card);border-radius:var(--ds-r2);padding:12px 14px;margin-bottom:6px;cursor:pointer;box-shadow:var(--ds-sh1);transition:transform .12s,box-shadow .12s;}
+.act-row:hover{transform:translateY(-1px);box-shadow:var(--ds-sh2);}
+.act-row:active{transform:translateY(0);}
+.act-row-info{flex:1;min-width:0;}
+.act-row-name{font-size:13px;font-weight:800;color:var(--ds-t1);letter-spacing:-.01em;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+.act-row-meta{font-size:11px;color:var(--ds-t3);font-weight:600;margin-top:2px;line-height:1.4;}
+.act-row-amount{font-size:14px;font-weight:900;letter-spacing:-.01em;flex-shrink:0;}
+.act-row-amount.in{color:var(--ds-green);}
+.act-row-amount.out{color:var(--ds-t1);}
+.act-cat-badge{display:inline-block;font-size:10px;font-weight:800;letter-spacing:.04em;text-transform:uppercase;padding:2px 7px;border-radius:100px;background:var(--ds-card2);color:var(--ds-t2);}
+.act-cat-badge.income{background:#dff0e3;color:#2a7a4a;}
+.act-cat-badge.bill{background:#fff3d6;color:#9a6e0c;}
+.act-cat-badge.discretionary{background:#eee9f7;color:#6a4ea3;}
+.act-cat-badge.debt_payment{background:#fde0e0;color:#a83434;}
+.act-cat-badge.tax_payment{background:#e3eaf2;color:#3a4f6b;}
+.act-cat-badge.transfer{background:#e6e6e6;color:#555;}
+.rc-chip{background:white;border:1.5px solid var(--ds-line);color:var(--ds-t1);font-family:var(--ds-f);font-size:12px;font-weight:800;padding:8px 14px;border-radius:100px;cursor:pointer;letter-spacing:-.01em;transition:all .15s;}
+.rc-chip:hover{border-color:var(--ds-green);color:var(--ds-green);}
+.rc-chip[disabled]{opacity:.5;cursor:wait;}
 /* Rows inside the past-due review modal */
 .past-due-row{display:flex;align-items:center;gap:12px;padding:11px 14px;background:var(--ds-page);border-radius:var(--ds-r1);margin-bottom:7px;}
 .past-due-row-info{flex:1;min-width:0;}
@@ -1333,6 +1354,7 @@ posthog.init('phc_B6PH36QxpExnyBYhfScFFF6LhDvoyxuFr6PypJuxxky3', {
     <button class="sub-tab" data-sub="forecast" onclick="goTo('forecast')">Forecast</button>
     <button class="sub-tab" data-sub="bills" onclick="goTo('bills')">Bills</button>
     <button class="sub-tab" data-sub="debt" onclick="goTo('debt')">Debt</button>
+    <button class="sub-tab" data-sub="activity" onclick="goTo('activity')">Activity</button>
     <button class="sub-tab" data-sub="whatif" onclick="goTo('whatif')">What-if</button>
   </div>
 </div>
@@ -1646,6 +1668,44 @@ posthog.init('phc_B6PH36QxpExnyBYhfScFFF6LhDvoyxuFr6PypJuxxky3', {
       <div id="wi-scenarios-list"><div class="empty-state">Run a few scenarios to compare them here.</div></div>
       <button class="btn btn-sm" style="margin-top:.65rem;width:100%;display:none;" id="wi-save-btn" onclick="saveWhatIfScenario()">Save this scenario</button>
     </div>
+  </div>
+</div>
+
+<!-- ACTIVITY — flat list of every transaction. Tap a row to reclassify; the
+     same plaid-classify-override Edge Function the Income Inbox uses writes
+     the new category and (optionally) a user_classification_overrides row so
+     future matching txns auto-classify the same way. -->
+<div class="page" id="page-activity">
+  <div class="sec" style="display:flex;align-items:center;gap:12px;flex-wrap:wrap;">
+    <span>Activity</span>
+    <span style="font-size:11px;font-weight:700;color:var(--ds-t3);letter-spacing:.04em;text-transform:uppercase;">Last 90 days</span>
+    <select id="activity-filter" onchange="renderActivityPage()" style="margin-left:auto;font-family:var(--ds-f);font-size:12px;font-weight:700;padding:6px 10px;border:1px solid var(--ds-line);border-radius:var(--ds-r1);background:white;color:var(--ds-t1);">
+      <option value="all">All transactions</option>
+      <option value="income">Income</option>
+      <option value="bill">Bills</option>
+      <option value="discretionary">Discretionary</option>
+      <option value="debt_payment">Debt payments</option>
+      <option value="tax_payment">Tax payments</option>
+      <option value="transfer">Transfers</option>
+    </select>
+  </div>
+  <div id="activity-list"><div class="empty-state">Loading…</div></div>
+</div>
+
+<!-- Reclassify modal — opened from any Activity row. Same backend as the
+     Income Inbox; chip set differs based on direction (inflow vs outflow). -->
+<div class="modal-bg" id="modal-reclassify" style="display:none;" onclick="if(event.target===this)closeReclassifyModal()">
+  <div class="modal" style="max-width:460px;">
+    <button class="modal-close" onclick="closeReclassifyModal()" aria-label="Close"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button>
+    <div class="modal-title">Reclassify transaction</div>
+    <div id="reclassify-summary" style="background:var(--ds-card2);border-radius:var(--ds-r1);padding:14px 16px;margin-bottom:1rem;"></div>
+    <div style="font-size:11px;font-weight:800;letter-spacing:.06em;text-transform:uppercase;color:var(--ds-t3);margin-bottom:.5rem;">New category</div>
+    <div id="reclassify-chips" style="display:flex;flex-wrap:wrap;gap:8px;margin-bottom:1rem;"></div>
+    <label style="display:flex;align-items:center;gap:9px;font-size:12px;font-weight:600;color:var(--ds-t2);cursor:pointer;user-select:none;">
+      <input type="checkbox" id="reclassify-just-once" style="margin:0;width:16px;height:16px;">
+      <span>Just this transaction — don't teach Able to classify similar ones this way.</span>
+    </label>
+    <div id="reclassify-error" style="color:var(--ds-c4);font-size:12px;font-weight:600;margin-top:.85rem;display:none;"></div>
   </div>
 </div>
 
@@ -7923,6 +7983,170 @@ async function inboxSkip(txnRowId){
     }
   }
 }
+
+// ═══════════════════════════════════════
+// ACTIVITY PAGE
+// ═══════════════════════════════════════
+// Flat list of every Plaid transaction the user has, last 90 days.
+// Tap a row → reclassify modal → plaid-classify-override Edge Function.
+// Same backend the Income Inbox uses. Outflow chips differ from inflow chips.
+const ACTIVITY_LOOKBACK_DAYS = 90;
+const ACTIVITY_PAGE_LIMIT = 250;
+const ACTIVITY_INFLOW_CATS = [
+  { value: 'income',         label: 'Income' },
+  { value: 'transfer',       label: 'Transfer' },
+  { value: 'discretionary',  label: 'Refund / other' },
+];
+const ACTIVITY_OUTFLOW_CATS = [
+  { value: 'bill',           label: 'Bill' },
+  { value: 'discretionary',  label: 'Discretionary' },
+  { value: 'debt_payment',   label: 'Debt payment' },
+  { value: 'tax_payment',    label: 'Tax payment' },
+  { value: 'transfer',       label: 'Transfer' },
+];
+let _activityRows = [];
+let _activeReclassifyTxn = null;
+
+async function renderActivityPage(){
+  const list = document.getElementById('activity-list');
+  if (!list) return;
+  list.innerHTML = `<div class="empty-state">Loading…</div>`;
+  const filterEl = document.getElementById('activity-filter');
+  const filter = filterEl ? filterEl.value : 'all';
+  const since = new Date();
+  since.setDate(since.getDate() - ACTIVITY_LOOKBACK_DAYS);
+  const sinceIso = since.toISOString().slice(0,10);
+  try {
+    let q = sbGet()
+      .from('plaid_transactions')
+      .select('id, plaid_transaction_id, name, merchant_name, amount, date, able_category, able_label, able_confidence')
+      .gte('date', sinceIso)
+      .order('date', { ascending: false })
+      .limit(ACTIVITY_PAGE_LIMIT);
+    if (filter !== 'all') q = q.eq('able_category', filter);
+    const { data, error } = await q;
+    if (error) throw error;
+    _activityRows = data || [];
+    if (_activityRows.length === 0) {
+      list.innerHTML = `<div class="empty-state">No transactions in the last ${ACTIVITY_LOOKBACK_DAYS} days${filter==='all' ? '' : ` matching "${filter}"`}.</div>`;
+      return;
+    }
+    // Group by date for visual breaks.
+    const byDay = new Map();
+    for (const r of _activityRows) {
+      const list = byDay.get(r.date) || [];
+      list.push(r);
+      byDay.set(r.date, list);
+    }
+    const html = [...byDay.entries()].map(([day, rows]) => {
+      const dayLabel = _formatActivityDay(day);
+      return `<div class="act-day">${dayLabel}</div>` + rows.map(_renderActivityRow).join('');
+    }).join('');
+    list.innerHTML = html;
+  } catch (e) {
+    console.error('renderActivityPage failed:', e);
+    list.innerHTML = `<div class="empty-state">Could not load activity: ${escapeHtml(e.message || 'unknown error')}</div>`;
+  }
+}
+
+function _formatActivityDay(iso){
+  try {
+    const d = new Date(iso + 'T00:00:00');
+    return d.toLocaleDateString(undefined, { weekday: 'short', month: 'short', day: 'numeric' });
+  } catch (_) { return iso; }
+}
+
+function _renderActivityRow(r){
+  const isInflow = (r.amount ?? 0) < 0;
+  const display = Math.abs(r.amount ?? 0).toLocaleString(undefined, { style: 'currency', currency: 'USD' });
+  const sign = isInflow ? '+' : '−';
+  const cat = r.able_category || 'unclassified';
+  const catLabel = (cat || 'unclassified').replace('_',' ');
+  const name = r.merchant_name || r.name || 'Unknown';
+  return `
+    <div class="act-row" onclick="openReclassifyModal('${r.id}')">
+      <div class="act-row-info">
+        <div class="act-row-name">${escapeHtml(name)}</div>
+        <div class="act-row-meta">
+          <span class="act-cat-badge ${cat}">${escapeHtml(catLabel)}</span>
+          ${r.able_label ? ` · ${escapeHtml(r.able_label)}` : ''}
+        </div>
+      </div>
+      <div class="act-row-amount ${isInflow ? 'in' : 'out'}">${sign}${display}</div>
+    </div>`;
+}
+
+function openReclassifyModal(txnRowId){
+  const row = _activityRows.find((r) => r.id === txnRowId);
+  if (!row) return;
+  _activeReclassifyTxn = row;
+  const modal = document.getElementById('modal-reclassify');
+  const summary = document.getElementById('reclassify-summary');
+  const chips = document.getElementById('reclassify-chips');
+  const errEl = document.getElementById('reclassify-error');
+  const justOnce = document.getElementById('reclassify-just-once');
+  if (errEl) { errEl.style.display = 'none'; errEl.textContent = ''; }
+  if (justOnce) justOnce.checked = false;
+
+  const isInflow = (row.amount ?? 0) < 0;
+  const display = Math.abs(row.amount ?? 0).toLocaleString(undefined, { style: 'currency', currency: 'USD' });
+  const sign = isInflow ? '+' : '−';
+  const name = row.merchant_name || row.name || 'Unknown';
+  const conf = Math.round((row.able_confidence ?? 0) * 100);
+  summary.innerHTML = `
+    <div style="font-size:18px;font-weight:900;color:${isInflow ? 'var(--ds-green)' : 'var(--ds-t1)'};letter-spacing:-.01em;margin-bottom:4px;">${sign}${display}</div>
+    <div style="font-size:13px;font-weight:800;color:var(--ds-t1);">${escapeHtml(name)}</div>
+    <div style="font-size:11px;font-weight:600;color:var(--ds-t3);margin-top:3px;">${_formatActivityDay(row.date)} · currently <span class="act-cat-badge ${row.able_category || 'unclassified'}">${escapeHtml((row.able_category || 'unclassified').replace('_',' '))}</span> · ${conf}% sure${row.able_label ? ' · "' + escapeHtml(row.able_label) + '"' : ''}</div>`;
+
+  const cats = isInflow ? ACTIVITY_INFLOW_CATS : ACTIVITY_OUTFLOW_CATS;
+  chips.innerHTML = cats.map((c) => `<button class="rc-chip" onclick="applyReclassify('${c.value}')">${escapeHtml(c.label)}</button>`).join('');
+  modal.style.display = 'flex';
+}
+
+function closeReclassifyModal(){
+  const modal = document.getElementById('modal-reclassify');
+  if (modal) modal.style.display = 'none';
+  _activeReclassifyTxn = null;
+}
+
+async function applyReclassify(category){
+  const row = _activeReclassifyTxn;
+  if (!row) return;
+  const chips = document.querySelectorAll('#reclassify-chips .rc-chip');
+  chips.forEach((b) => b.setAttribute('disabled', 'disabled'));
+  const errEl = document.getElementById('reclassify-error');
+  if (errEl) { errEl.style.display = 'none'; errEl.textContent = ''; }
+  const justOnce = document.getElementById('reclassify-just-once');
+  const createOverride = !(justOnce && justOnce.checked);
+  const override = createOverride ? _deriveOverride(row) : null;
+  const isInflow = (row.amount ?? 0) < 0;
+  const body = {
+    txn_row_id: row.id,
+    able_category: category,
+    able_label: row.able_label || row.merchant_name || row.name || category,
+    create_override: !!override,
+    override_kind: override?.kind,
+    override_value: override?.value,
+    override_direction: isInflow ? 'inflow' : 'outflow',
+  };
+  try {
+    const { data, error } = await sbGet().functions.invoke('plaid-classify-override', { body });
+    if (error) throw error;
+    if (data && data.error) throw new Error(data.error);
+    Able.track?.('activity_reclassify', { category, just_once: !createOverride, direction: isInflow ? 'inflow' : 'outflow' });
+    closeReclassifyModal();
+    renderActivityPage();
+    renderIncomeInboxBanner();
+  } catch (e) {
+    console.error('applyReclassify failed:', e);
+    chips.forEach((b) => b.removeAttribute('disabled'));
+    if (errEl) {
+      errEl.textContent = 'Could not save: ' + (e.message || 'unknown error');
+      errEl.style.display = 'block';
+    }
+  }
+}
+
 function renderPastDue(){
   const list = document.getElementById('past-due-list');
   if (!list) return;
@@ -8428,7 +8652,7 @@ async function clearAllData(){
 // ═══════════════════════════════════════
 const PAGE_TO_GROUP = {
   home:'home',
-  forecast:'plan', bills:'plan', debt:'plan', whatif:'plan',
+  forecast:'plan', bills:'plan', debt:'plan', whatif:'plan', activity:'plan',
   score:'score',
   learn:'more', refer:'more', settings:'more',
 };
@@ -8472,6 +8696,7 @@ function goTo(target){
   if(page==='whatif'){document.getElementById('wi-empty').style.display='block';document.getElementById('wi-result').style.display='none';}
   if(page==='learn')renderLearn();
   if(page==='refer')enterReferPage();
+  if(page==='activity')renderActivityPage();
 }
 
 // ═══════════════════════════════════════
