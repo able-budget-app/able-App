@@ -17,7 +17,10 @@ Deno.serve(async (req) => {
     const SUPABASE_URL = Deno.env.get('SUPABASE_URL')!
     const SERVICE_ROLE = Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')!
     const RESEND_API_KEY = Deno.env.get('RESEND_API_KEY')!
-    const FROM_EMAIL = Deno.env.get('FROM_EMAIL') || 'Able <hello@becomeable.app>'
+    // Match email-cron-daily fallback. The custom domain isn't verified
+    // yet, so falling back to it would silently bounce — use the Resend
+    // sandbox sender until verification lands, then set FROM_EMAIL env.
+    const FROM_EMAIL = Deno.env.get('FROM_EMAIL') || 'Able <onboarding@resend.dev>'
     const APP_URL = (Deno.env.get('APP_URL') || 'https://becomeable.app').trim().replace(/\/$/, '')
 
     const userClient = createClient(SUPABASE_URL, SERVICE_ROLE, {

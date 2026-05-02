@@ -3604,6 +3604,20 @@ async function obWaitForPipelineWithStatus(maxWaitMs) {
   return obAnswers.plaid_pipeline?.status || 'running';
 }
 
+// Pulls the user's first name out of the free-text "name + business"
+// answer. Handles "I'm Paul Johnson" / "my name is Paul" / "Paul Johnson"
+// / "Acme Coffee" → "Acme". Skips leading numeric tokens so "123
+// Consulting" returns "Consulting" instead of "123" — Coach saying
+// "Hi 123" reads broken.
+function _obParseFirstName(raw){
+  const s = (raw || '').trim();
+  if (!s) return '';
+  const m = s.match(/^\s*(?:i'?m|my name is)\s+([A-Za-z][\w'-]*)/i);
+  if (m) return m[1];
+  const tokens = s.split(/[.,\s]+/).filter(Boolean);
+  return tokens.find((t) => /^[A-Za-z]/.test(t)) || '';
+}
+
 // Personalization beat between Plaid pipeline success and plan review.
 // One screen, ~2 seconds, zero questions — the emotional payoff for the
 // 2-4 minute wait the user just sat through. Reuses the same first-name
@@ -3614,9 +3628,7 @@ function obShowPersonalizationBeat() {
     const buildingEl = document.getElementById('ob-building');
     if (!buildingEl) { resolve(); return; }
 
-    const rawName = (obAnswers.name_business || '').trim();
-    const m = rawName.match(/^\s*(?:i'?m|my name is)\s+([A-Za-z][\w'-]*)/i);
-    const firstName = (m ? m[1] : (rawName.split(/[.,\s]/)[0] || '')).trim();
+    const firstName = _obParseFirstName(obAnswers.name_business);
     const greeting = firstName ? `Building your floor plan, ${firstName}.` : 'Building your floor plan.';
 
     buildingEl.style.display = 'block';
@@ -3652,8 +3664,7 @@ async function obStartTourWhilePipelineRuns() {
   const rawName = (obAnswers.name_business || '').trim();
   if (rawName) {
     S.profile.business_type = rawName;
-    const m = rawName.match(/^\s*(?:i'?m|my name is)\s+([A-Za-z][\w'-]*)/i);
-    S.profile.name = m ? m[1] : (rawName.split(/[.,\s]/)[0] || S.profile.name || '');
+    S.profile.name = _obParseFirstName(rawName) || S.profile.name || '';
   }
   S.profile.goals = GOAL_LABELS[obAnswers.goals] || obAnswers.goals || S.profile.goals || '';
   S.profile.onboarding_via_tour = true;
@@ -4339,10 +4350,7 @@ async function obSynthesizeResultFromPlan(planId) {
   settings = applyGoalPreset(settings, obAnswers.goals);
 
   const rawName = (obAnswers.name_business || '').trim();
-  let parsedName = '';
-  const m = rawName.match(/^\s*(?:i'?m|my name is)\s+([A-Za-z][\w'-]*)/i);
-  if (m) parsedName = m[1];
-  else if (rawName) parsedName = rawName.split(/[.,\s]/)[0];
+  const parsedName = _obParseFirstName(rawName);
 
   return {
     bills, debts, sources,
@@ -5012,8 +5020,7 @@ async function obSubmitPlanReview() {
     S.profile = S.profile || {};
     if (obAnswers.name_business) S.profile.business_type = obAnswers.name_business;
     const rawName = (obAnswers.name_business || '').trim();
-    const m = rawName.match(/^\s*(?:i'?m|my name is)\s+([A-Za-z][\w'-]*)/i);
-    S.profile.name = m ? m[1] : (rawName ? rawName.split(/[.,\s]/)[0] : (S.profile.name || ''));
+    S.profile.name = _obParseFirstName(rawName) || S.profile.name || '';
     S.profile.goals = GOAL_LABELS[obAnswers.goals] || obAnswers.goals || S.profile.goals || '';
     await saveUserData();
     obClearSession();
@@ -5527,8 +5534,14 @@ function billOccurrencesInWindow(bill,days){
     let anchor=bill.due?new Date(bill.due):null;
     if(!anchor||isNaN(+anchor)) return {count:0,nextDays:999};
     anchor.setHours(0,0,0,0);
-    // Roll forward to the next occurrence on or after today
-    while(anchor<now){anchor=new Date(anchor.getTime()+interval*86400000);}
+    // Roll forward to the next occurrence on or after today. Direct date
+    // math instead of a loop — a stale anchor (e.g. due='2022-01-01') used
+    // to spin thousands of iterations on every render.
+    if(anchor<now){
+      const ms=interval*86400000;
+      const steps=Math.ceil((now-anchor)/ms);
+      anchor=new Date(anchor.getTime()+steps*ms);
+    }
     const first=Math.round((anchor-now)/86400000);
     if(first>days)return {count:0,nextDays:first};
     const count=Math.floor((days-first)/interval)+1;
@@ -5626,7 +5639,13 @@ function billOccurrenceDates(bill,days){
     let anchor=bill.due?new Date(bill.due):null;
     if(!anchor||isNaN(+anchor)) return [];
     anchor.setHours(0,0,0,0);
-    while(anchor<now) anchor=new Date(anchor.getTime()+interval*86400000);
+    // Direct date math vs. an iteration loop — same perf reason as
+    // billOccurrencesInWindow above.
+    if(anchor<now){
+      const ms=interval*86400000;
+      const steps=Math.ceil((now-anchor)/ms);
+      anchor=new Date(anchor.getTime()+steps*ms);
+    }
     while(Math.round((anchor-now)/86400000)<=days){
       out.push(new Date(anchor));
       anchor=new Date(anchor.getTime()+interval*86400000);
