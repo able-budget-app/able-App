@@ -8872,6 +8872,40 @@ window.addEventListener('load', async () => {
       } catch(e) { console.log('[Able v2] getSession threw:', e); }
       console.log('[Able v2] hasSession=', hasSession, 'url=', window.location.href);
       if(hasSession) return;
+
+      // getSession() is wedged. Peek at localStorage directly — if a
+      // session token is sitting there, the user IS authenticated and the
+      // Supabase client is just stuck. Drive the post-auth flow ourselves
+      // using the user object parsed straight from localStorage. This
+      // bypasses every auth-state-derived call (getSession, MFA check) that
+      // would otherwise hang on this wedged client. _onAuthStateChangeImpl
+      // will then make a normal user_data SELECT (RLS-scoped, separate code
+      // path that does work) and progress into the app.
+      let lsUser = null;
+      try {
+        for (const k of Object.keys(localStorage)) {
+          if (k.startsWith('sb-') && k.endsWith('-auth-token')) {
+            const raw = localStorage.getItem(k);
+            if (raw) {
+              const parsed = JSON.parse(raw);
+              if (parsed?.access_token && parsed?.user?.id) lsUser = parsed.user;
+            }
+            break;
+          }
+        }
+      } catch (e) { console.log('[Able v2] localStorage peek threw:', e); }
+      if (lsUser && typeof onAuthStateChange === 'function') {
+        console.log('[Able v2] localStorage has session; manually driving auth flow for', lsUser.email);
+        // Don't remove the loader — onAuthStateChange will swap to its own
+        // "Loading your account" loading state inside .auth-box and then
+        // into the app. Removing this overlay now would expose the auth
+        // screen behind it for a frame.
+        try { await onAuthStateChange(lsUser); }
+        catch (e) { console.error('[Able v2] manual auth flow failed:', e); }
+        return;
+      }
+
+      // No session in localStorage either. Genuinely unauthenticated.
       stuck.remove();
       document.getElementById('auth-screen').style.display = 'flex';
     }, 3000);
