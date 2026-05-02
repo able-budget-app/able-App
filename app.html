@@ -7441,6 +7441,8 @@ async function settingsHandlePostLink(public_token, metadata) {
     }
   }
 
+  const friendly = metadata?.institution?.name || 'your bank';
+  showToast(`Connecting ${friendly}…`, { duration: 4000 });
   const { data: ex, error: exErr } = await sbGet().functions.invoke('plaid-exchange-public-token', {
     body: {
       public_token,
@@ -7453,8 +7455,29 @@ async function settingsHandlePostLink(public_token, metadata) {
   if (exErr) throw exErr;
   if (ex && ex.error) throw new Error(ex.error);
   if (ex?.plaid_item_row_id) {
+    showToast(`Connected ${friendly}. Pulling transactions…`, { duration: 5000 });
+    // Fire-and-forget sync, but report when it finishes so the user knows
+    // it's safe to look at Activity / dashboard for the new data.
     sbGet().functions.invoke('plaid-sync', { body: { plaid_item_row_id: ex.plaid_item_row_id } })
-      .catch((e) => console.warn('post-link plaid-sync failed:', e));
+      .then(({ data, error }) => {
+        if (error || (data && data.error)) {
+          console.warn('post-link plaid-sync failed:', error || data?.error);
+          showToast(`Connected ${friendly}, but the first sync hit a snag. We'll retry automatically.`, { duration: 6000 });
+          return;
+        }
+        const imported = (data && (data.transactions_added ?? data.imported ?? data.txn_count)) || null;
+        const msg = imported != null
+          ? `${friendly}: ${imported} transaction${imported===1?'':'s'} imported.`
+          : `${friendly} sync complete.`;
+        showToast(msg, { duration: 6000 });
+        // Refresh dashboard + activity if visible.
+        try { if (typeof refreshHome === 'function') refreshHome(); } catch (_) {}
+        try { if (typeof renderActivityPage === 'function' && document.getElementById('page-activity')?.classList.contains('active')) renderActivityPage(); } catch (_) {}
+      })
+      .catch((e) => {
+        console.warn('post-link plaid-sync failed:', e);
+        showToast(`Connected ${friendly}, but the first sync hit a snag. We'll retry automatically.`, { duration: 6000 });
+      });
   }
   Able.track?.('plaid_item_added_from_settings', {
     institution_name: metadata?.institution?.name,
