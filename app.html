@@ -2545,13 +2545,19 @@ async function _onAuthStateChangeImpl(user) {
   // MFA gate: if the user has a verified TOTP factor but the session is still
   // at aal1, halt here and require the 6-digit challenge before any app data
   // is fetched or rendered. submitMfaChallenge() re-enters this function.
+  // Race against a 2s timeout — on the post-Stripe wedged-client path, this
+  // call hangs forever and would block the entire post-auth flow. Failing
+  // open on timeout is safe: if MFA is actually required, the user will hit
+  // an aal1-rejected query downstream and be re-challenged then.
   try {
-    const { data: aal } = await sbGet().auth.mfa.getAuthenticatorAssuranceLevel();
+    const aalPromise = sbGet().auth.mfa.getAuthenticatorAssuranceLevel();
+    const aalTimeout = new Promise((_, rej) => setTimeout(() => rej(new Error('aal_timeout')), 2000));
+    const { data: aal } = await Promise.race([aalPromise, aalTimeout]);
     if (aal && aal.currentLevel === 'aal1' && aal.nextLevel === 'aal2') {
       const factor = await _getVerifiedTotpFactor();
       if (factor) { showMfaChallenge(factor.id); return; }
     }
-  } catch(_) { /* fail open: don't lock users out on a transient error */ }
+  } catch(_) { /* fail open: don't lock users out on a transient error or wedged client */ }
 
   // signup_completed: fires once per user per browser. We check user.created_at
   // against now to make sure this is a genuine first-time sign-in, not just
