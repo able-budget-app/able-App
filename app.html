@@ -7706,12 +7706,12 @@ const INBOX_PAGE_LIMIT = 100;
 // fetch the row metadata without re-querying.
 let _inboxRows = [];
 
-function _inboxQuery() {
-  // Inflows (negative amount) the LLM was unsure about. Excludes already
-  // user-overridden rows (confidence = 1.0).
-  return sbGet()
-    .from('plaid_transactions')
-    .select('id, plaid_transaction_id, name, merchant_name, amount, date, able_category, able_label, able_confidence')
+// Inflows (negative amount) the LLM was unsure about. Excludes already
+// user-overridden rows (confidence = 1.0). Chaining .select() twice in
+// supabase-js drops the count modifier, so the count and list queries
+// each build their own chain from sbGet() rather than sharing a base.
+function _inboxFiltered(builder) {
+  return builder
     .lt('amount', 0)
     .lt('able_confidence', INBOX_CONFIDENCE_THRESHOLD)
     .not('able_classified_at', 'is', null);
@@ -7719,10 +7719,11 @@ function _inboxQuery() {
 
 async function renderIncomeInboxBanner(){
   const el = document.getElementById('income-inbox-banner');
-  if (!el || !currentUser) return;
+  if (!el) return;
   try {
-    const { count, error } = await _inboxQuery()
-      .select('id', { count: 'exact', head: true });
+    const { count, error } = await _inboxFiltered(
+      sbGet().from('plaid_transactions').select('id', { count: 'exact', head: true })
+    );
     if (error) {
       console.warn('inbox count query failed:', error);
       el.innerHTML = '';
@@ -7756,7 +7757,11 @@ async function openIncomeInbox(){
   if (errEl) { errEl.style.display = 'none'; errEl.textContent = ''; }
   if (list) list.innerHTML = `<div class="inbox-loading">Loading…</div>`;
   try {
-    const { data, error } = await _inboxQuery()
+    const { data, error } = await _inboxFiltered(
+      sbGet()
+        .from('plaid_transactions')
+        .select('id, plaid_transaction_id, name, merchant_name, amount, date, able_category, able_label, able_confidence')
+    )
       .order('date', { ascending: false })
       .limit(INBOX_PAGE_LIMIT);
     if (error) throw error;
