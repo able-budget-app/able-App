@@ -332,6 +332,19 @@ function aggregate(input: AnalyzerInput) {
     .slice(0, 15)
     .map(slimTxn);
 
+  // Fallback for fresh Plaid connections where /transactions/recurring/get
+  // returns PRODUCT_NOT_READY (can take minutes to hours after first sync).
+  // Without this, the LLM sees an empty outflow_streams array, follows
+  // "Source from outflow_streams" literally, and emits aggregate "(unresolved)
+  // recurring bills $X" placeholders instead of itemized rows. We compute
+  // recurring candidates directly from already-classified bill + debt_payment
+  // transactions so the LLM has named merchants to work with even when
+  // streams are absent.
+  const detected_recurring_outflows = detectRecurringFromTxns([
+    ...byCategory.bill,
+    ...byCategory.debt_payment,
+  ]);
+
   return {
     monthly_summary: {
       months_observed: Object.keys(monthlyIncome).sort(),
@@ -355,10 +368,132 @@ function aggregate(input: AnalyzerInput) {
     },
     inflow_streams: input.recurring_streams.inflow_streams.map(slimStream),
     outflow_streams: input.recurring_streams.outflow_streams.map(slimStream),
+    detected_recurring_outflows,
     top_income_deposits: topIncomeDeposits,
     top_tax_payments: topTaxPayments,
     lumpy_outflows: lumpyOutflows,
   };
+}
+
+// Detects recurring merchants by grouping transactions by merchant_name,
+// requiring 2+ occurrences within a 90-day window at consistent amounts,
+// and inferring frequency from the modal date spacing. Returns a structured
+// list the LLM can use as a fallback when plaid_recurring_streams is empty.
+function detectRecurringFromTxns(txns: CategorizedTxn[]) {
+  if (!txns.length) return [];
+
+  const norm = (s: string | null | undefined) => (s ?? '').trim().toLowerCase();
+  const groups = new Map<string, CategorizedTxn[]>();
+  for (const t of txns) {
+    const key = norm(t.merchant_name) || norm(t.name);
+    if (!key) continue;
+    const arr = groups.get(key) ?? [];
+    arr.push(t);
+    groups.set(key, arr);
+  }
+
+  const today = new Date();
+  const ninetyDaysAgo = new Date(today.getTime() - 90 * 86400000);
+
+  type Candidate = {
+    detected_merchant: string;
+    category: 'bill' | 'debt_payment';
+    average_amount: number;
+    occurrence_count: number;
+    date_range: { first: string; last: string };
+    frequency_estimate: string;
+    inferred_due_day: number | null;
+    confidence: 'high' | 'medium' | 'low';
+    evidence_transaction_ids: string[];
+  };
+
+  const out: Candidate[] = [];
+
+  for (const [, raw] of groups) {
+    if (raw.length < 2) continue;
+
+    // Look at the recent window for amount consistency. We use 90 days as the
+    // recurrence-detection window; older history is fine to use when computing
+    // the first/last range below.
+    const recent = raw.filter((t) => new Date(t.date) >= ninetyDaysAgo);
+    if (recent.length < 2) continue;
+
+    const amounts = recent.map((t) => Math.abs(t.amount));
+    const avg = amounts.reduce((a, b) => a + b, 0) / amounts.length;
+    if (avg < 0.5) continue;
+
+    // Drop outliers more than ±20% off the mean. Subscription prices change
+    // occasionally but day-to-day amounts are stable.
+    const consistent = recent.filter((t) => {
+      const a = Math.abs(t.amount);
+      return Math.abs(a - avg) / avg <= 0.20;
+    });
+    if (consistent.length < 2) continue;
+
+    const sorted = consistent.slice().sort((a, b) => a.date.localeCompare(b.date));
+    const gaps: number[] = [];
+    for (let i = 1; i < sorted.length; i++) {
+      const ms = new Date(sorted[i].date).getTime() - new Date(sorted[i - 1].date).getTime();
+      gaps.push(Math.round(ms / 86400000));
+    }
+    const medianGap = gaps.length ? gaps.slice().sort((a, b) => a - b)[Math.floor(gaps.length / 2)] : 30;
+
+    let frequency_estimate = 'UNKNOWN';
+    if (medianGap >= 5 && medianGap <= 9) frequency_estimate = 'WEEKLY';
+    else if (medianGap >= 12 && medianGap <= 16) frequency_estimate = 'BIWEEKLY';
+    else if (medianGap >= 27 && medianGap <= 33) frequency_estimate = 'MONTHLY';
+    else if (medianGap >= 350 && medianGap <= 380) frequency_estimate = 'ANNUALLY';
+
+    // Modal day-of-month for due_day_of_month inference (monthly cadence only).
+    let inferred_due_day: number | null = null;
+    if (frequency_estimate === 'MONTHLY') {
+      const dayCounts = new Map<number, number>();
+      for (const t of consistent) {
+        const d = new Date(t.date).getUTCDate();
+        dayCounts.set(d, (dayCounts.get(d) ?? 0) + 1);
+      }
+      let bestDay = 0, bestCount = 0;
+      for (const [d, c] of dayCounts) {
+        if (c > bestCount) { bestDay = d; bestCount = c; }
+      }
+      if (bestDay >= 1 && bestDay <= 31) inferred_due_day = bestDay;
+    }
+
+    // Majority category — most groups will be all-bill or all-debt_payment,
+    // but mixed groups can happen when a merchant changes role.
+    const billCount = consistent.filter((t) => t.classification.category === 'bill').length;
+    const category: 'bill' | 'debt_payment' = billCount >= consistent.length / 2 ? 'bill' : 'debt_payment';
+
+    let confidence: 'high' | 'medium' | 'low' = 'low';
+    if (consistent.length >= 3 && frequency_estimate !== 'UNKNOWN') confidence = 'high';
+    else if (consistent.length >= 2 && frequency_estimate !== 'UNKNOWN') confidence = 'medium';
+
+    const merchantName = consistent[0].merchant_name || consistent[0].name || 'Unknown';
+
+    out.push({
+      detected_merchant: merchantName,
+      category,
+      average_amount: round(avg),
+      occurrence_count: consistent.length,
+      date_range: { first: sorted[0].date, last: sorted[sorted.length - 1].date },
+      frequency_estimate,
+      inferred_due_day,
+      confidence,
+      evidence_transaction_ids: consistent.map((t) => t.transaction_id),
+    });
+  }
+
+  // Largest monthly impact first; cap to keep payload bounded.
+  const monthlyValue = (c: Candidate) => {
+    switch (c.frequency_estimate) {
+      case 'WEEKLY':   return c.average_amount * 52 / 12;
+      case 'BIWEEKLY': return c.average_amount * 26 / 12;
+      case 'MONTHLY':  return c.average_amount;
+      case 'ANNUALLY': return c.average_amount / 12;
+      default:         return c.average_amount;
+    }
+  };
+  return out.sort((a, b) => monthlyValue(b) - monthlyValue(a)).slice(0, 30);
 }
 
 function slimTxn(t: CategorizedTxn) {
@@ -577,13 +712,16 @@ Return ONLY this JSON object. No prose. No markdown fences.
    - Never suggest > 35.
 
 5. **Bills selection**:
-   - Source from outflow_streams with status MATURE or EARLY_DETECTION and is_active=true. Skip TOMBSTONED.
+   - **Primary source**: outflow_streams with status MATURE or EARLY_DETECTION and is_active=true. Skip TOMBSTONED.
+   - **Fallback when outflow_streams is empty or sparse (fewer than 3 active streams)**: use entries from `detected_recurring_outflows` where category='bill' and confidence is 'high' or 'medium'. Plaid's recurring detection sometimes returns PRODUCT_NOT_READY for hours-to-days after a fresh bank connect, leaving outflow_streams empty even though real recurring bills exist in the transactions. The detected_recurring_outflows array is computed directly from already-classified transactions to bridge that gap. NEVER emit aggregate placeholder rows like "Recurring bills (unresolved)" — itemize what you can see.
    - Mortgage payments are bills, not debts.
-   - Frequency mapping: Plaid MONTHLY → "monthly", WEEKLY → "weekly", BIWEEKLY → "biweekly", ANNUALLY → "annual", SEMI_MONTHLY/UNKNOWN → "monthly" (most common case).
-   - due_day_of_month: derive from predicted_next_date or last_date. Null if you can't tell.
+   - Frequency mapping: Plaid MONTHLY → "monthly", WEEKLY → "weekly", BIWEEKLY → "biweekly", ANNUALLY → "annual", SEMI_MONTHLY/UNKNOWN → "monthly" (most common case). For detected entries, use frequency_estimate the same way.
+   - due_day_of_month: derive from predicted_next_date or last_date for streams. For detected entries, use inferred_due_day. Null if you can't tell.
+   - When using detected entries, set `name` to detected_merchant and `amount` to average_amount. Cite the evidence_transaction_ids array if your output schema includes evidence fields.
 
 6. **Debts selection**:
-   - Outflow streams matching credit cards, auto loans, student loans, personal loans (Plaid LOAN_PAYMENTS_*).
+   - **Primary source**: outflow streams matching credit cards, auto loans, student loans, personal loans (Plaid LOAN_PAYMENTS_*).
+   - **Fallback when outflow_streams is empty or sparse**: use entries from `detected_recurring_outflows` where category='debt_payment' and confidence is 'high' or 'medium'. Same reason as bills — placeholder "(unresolved) debt payments" rows are forbidden when itemized data is available.
    - min_payment = average_amount (assume the user has been paying close to minimum unless amounts are wildly variable).
    - rate_estimate: only fill if highly confident (e.g., merchant indicates a known issuer). Otherwise null.
    - balance_estimate: only fill if you can derive from history (e.g., visible payoff trajectory). Otherwise null.
