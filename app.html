@@ -1093,7 +1093,9 @@ body.tour-active #page-home .db-action-card{display:flex!important;}
 .act-cat-badge.transfer{background:#e6e6e6;color:#555;}
 .rc-chip{background:white;border:1.5px solid var(--ds-line);color:var(--ds-t1);font-family:var(--ds-f);font-size:12px;font-weight:800;padding:8px 14px;border-radius:100px;cursor:pointer;letter-spacing:-.01em;transition:all .15s;}
 .rc-chip:hover{border-color:var(--ds-green);color:var(--ds-green);}
-.rc-chip[disabled]{opacity:.5;cursor:wait;}
+.rc-chip.selected{background:var(--ds-green);color:white;border-color:var(--ds-green);}
+.rc-chip.selected:hover{background:#22633c;border-color:#22633c;color:white;}
+.rc-chip[disabled]{opacity:.5;cursor:not-allowed;}
 /* Plaid PFC sub-category — secondary badge next to floor-first category */
 .act-pfc-badge{display:inline-block;font-size:10px;font-weight:700;letter-spacing:.02em;color:var(--ds-t3);background:transparent;border:1px solid var(--ds-line);padding:1px 6px;border-radius:100px;margin-left:4px;}
 .act-tax-flag{display:inline-block;font-size:10px;font-weight:800;letter-spacing:.04em;text-transform:uppercase;padding:1px 6px;border-radius:100px;background:#fff3d6;color:#9a6e0c;margin-left:4px;}
@@ -1354,10 +1356,10 @@ posthog.init('phc_B6PH36QxpExnyBYhfScFFF6LhDvoyxuFr6PypJuxxky3', {
 <!-- Sub-navigation for grouped tabs. Visible when the group is active. -->
 <div class="sub-nav" id="sub-nav-plan" style="display:none;">
   <div class="sub-nav-inner">
+    <button class="sub-tab" data-sub="activity" onclick="goTo('activity')">Activity</button>
     <button class="sub-tab" data-sub="forecast" onclick="goTo('forecast')">Forecast</button>
     <button class="sub-tab" data-sub="bills" onclick="goTo('bills')">Bills</button>
     <button class="sub-tab" data-sub="debt" onclick="goTo('debt')">Debt</button>
-    <button class="sub-tab" data-sub="activity" onclick="goTo('activity')">Activity</button>
     <button class="sub-tab" data-sub="whatif" onclick="goTo('whatif')">What-if</button>
   </div>
 </div>
@@ -1734,6 +1736,10 @@ posthog.init('phc_B6PH36QxpExnyBYhfScFFF6LhDvoyxuFr6PypJuxxky3', {
       <span>Just this transaction — don't teach Able to classify similar ones this way.</span>
     </label>
     <div id="reclassify-error" style="color:var(--ds-c4);font-size:12px;font-weight:600;margin-top:.85rem;display:none;"></div>
+    <div style="display:flex;gap:8px;justify-content:flex-end;margin-top:1.25rem;">
+      <button class="btn btn-sm btn-ghost" onclick="closeReclassifyModal()">Cancel</button>
+      <button class="btn btn-sm btn-primary" id="reclassify-save-btn" onclick="applyReclassify()">Save changes</button>
+    </div>
   </div>
 </div>
 
@@ -8056,6 +8062,7 @@ function _formatPfc(detailed, primary){
 }
 let _activityRows = [];
 let _activeReclassifyTxn = null;
+let _activeReclassifyCat = null;
 
 async function renderActivityPage(){
   const list = document.getElementById('activity-list');
@@ -8159,25 +8166,56 @@ function openReclassifyModal(txnRowId){
     <div style="font-size:11px;font-weight:600;color:var(--ds-t3);margin-top:3px;">${_formatActivityDay(row.date)} · currently <span class="act-cat-badge ${row.able_category || 'unclassified'}">${escapeHtml(_catLabel(row.able_category))}</span>${pfc ? ` <span class="act-pfc-badge">${escapeHtml(pfc)}</span>` : ''} · ${conf}% sure${row.able_label ? ' · "' + escapeHtml(row.able_label) + '"' : ''}</div>`;
 
   const cats = isInflow ? ACTIVITY_INFLOW_CATS : ACTIVITY_OUTFLOW_CATS;
-  chips.innerHTML = cats.map((c) => `<button class="rc-chip" onclick="applyReclassify('${c.value}')">${escapeHtml(c.label)}</button>`).join('');
+  // Pre-select the row's current category if it appears in the chip set
+  // (it always should — both chip sets cover the full DB enum minus 'income'
+  // for outflows and bill/debt/tax for inflows). If not, leave none selected.
+  _activeReclassifyCat = cats.some((c) => c.value === row.able_category)
+    ? row.able_category
+    : null;
+  chips.innerHTML = cats.map((c) => {
+    const sel = c.value === _activeReclassifyCat ? ' selected' : '';
+    return `<button class="rc-chip${sel}" data-cat="${c.value}" onclick="selectReclassifyChip('${c.value}')">${escapeHtml(c.label)}</button>`;
+  }).join('');
   modal.style.display = 'flex';
+}
+
+function selectReclassifyChip(cat){
+  _activeReclassifyCat = cat;
+  document.querySelectorAll('#reclassify-chips .rc-chip').forEach((b) => {
+    b.classList.toggle('selected', b.getAttribute('data-cat') === cat);
+  });
 }
 
 function closeReclassifyModal(){
   const modal = document.getElementById('modal-reclassify');
   if (modal) modal.style.display = 'none';
   _activeReclassifyTxn = null;
+  _activeReclassifyCat = null;
 }
 
-async function applyReclassify(category){
+async function applyReclassify(){
   const row = _activeReclassifyTxn;
   if (!row) return;
-  const chips = document.querySelectorAll('#reclassify-chips .rc-chip');
-  chips.forEach((b) => b.setAttribute('disabled', 'disabled'));
   const errEl = document.getElementById('reclassify-error');
   if (errEl) { errEl.style.display = 'none'; errEl.textContent = ''; }
+  const category = _activeReclassifyCat;
+  if (!category) {
+    if (errEl) {
+      errEl.textContent = 'Pick a category before saving.';
+      errEl.style.display = 'block';
+    }
+    return;
+  }
+  const saveBtn = document.getElementById('reclassify-save-btn');
+  const chips = document.querySelectorAll('#reclassify-chips .rc-chip');
+  chips.forEach((b) => b.setAttribute('disabled', 'disabled'));
+  if (saveBtn) saveBtn.setAttribute('disabled', 'disabled');
   const justOnce = document.getElementById('reclassify-just-once');
   const taxBox = document.getElementById('reclassify-tax-deductible');
+  // create_override only matters when the category actually changed (or when
+  // the user is committing to a learn-this-pattern action). If they only
+  // toggled the tax-deductible flag, we still want the override behavior to
+  // respect the "just this transaction" toggle.
   const createOverride = !(justOnce && justOnce.checked);
   const override = createOverride ? _deriveOverride(row) : null;
   const isInflow = (row.amount ?? 0) < 0;
@@ -8202,6 +8240,7 @@ async function applyReclassify(category){
   } catch (e) {
     console.error('applyReclassify failed:', e);
     chips.forEach((b) => b.removeAttribute('disabled'));
+    if (saveBtn) saveBtn.removeAttribute('disabled');
     if (errEl) {
       errEl.textContent = 'Could not save: ' + (e.message || 'unknown error');
       errEl.style.display = 'block';
@@ -8838,7 +8877,7 @@ const PAGE_TO_GROUP = {
   score:'score',
   learn:'more', refer:'more', settings:'more',
 };
-const GROUP_DEFAULT = { plan:'forecast', more:'learn' };
+const GROUP_DEFAULT = { plan:'activity', more:'learn' };
 
 function goTo(target){
   // Accept either a group name (Plan / More) or a specific page id.
