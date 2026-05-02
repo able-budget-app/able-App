@@ -44,6 +44,9 @@ type Body = {
   override_kind?: string;
   override_value?: string;
   override_direction?: string;
+  // Optional tax-deductible flag — when present, sets is_tax_deductible on
+  // the row (used by the Tax export view). Omitted = leave field as-is.
+  is_tax_deductible?: boolean;
 };
 
 Deno.serve(async (req) => {
@@ -99,14 +102,18 @@ Deno.serve(async (req) => {
       ? body.able_label.trim()
       : (txn.merchant_name ?? txn.name ?? 'Inflow');
 
+    const updatePayload: Record<string, unknown> = {
+      able_category: body.able_category,
+      able_label: label,
+      able_confidence: 1.0,
+      able_classified_at: new Date().toISOString(),
+    };
+    if (typeof body.is_tax_deductible === 'boolean') {
+      updatePayload.is_tax_deductible = body.is_tax_deductible;
+    }
     const { error: updErr } = await admin
       .from('plaid_transactions')
-      .update({
-        able_category: body.able_category,
-        able_label: label,
-        able_confidence: 1.0,
-        able_classified_at: new Date().toISOString(),
-      })
+      .update(updatePayload)
       .eq('id', txn.id);
     if (updErr) {
       console.error('classify-override: update failed', updErr);

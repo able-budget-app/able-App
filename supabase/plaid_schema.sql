@@ -108,9 +108,16 @@ create table if not exists public.plaid_transactions (
   linked_bill_id                           text,
   linked_debt_id                           text,
   linked_income_source_id                  text,
+  -- Per-transaction tax-deductible flag. Optional; set by the user from the
+  -- Activity reclassify modal. Drives the Tax export rollup.
+  is_tax_deductible                        boolean not null default false,
   created_at                               timestamptz not null default now(),
   updated_at                               timestamptz not null default now()
 );
+
+-- Idempotent ALTER for existing tables that pre-date is_tax_deductible.
+alter table public.plaid_transactions
+  add column if not exists is_tax_deductible boolean not null default false;
 
 create index if not exists plaid_transactions_user_date_idx
   on public.plaid_transactions (user_id, date desc);
@@ -118,6 +125,9 @@ create index if not exists plaid_transactions_account_idx
   on public.plaid_transactions (plaid_account_id);
 create index if not exists plaid_transactions_unclassified_idx
   on public.plaid_transactions (user_id) where able_category is null;
+-- Tax export filter: deductible rows for the user, by date desc.
+create index if not exists plaid_transactions_tax_deductible_idx
+  on public.plaid_transactions (user_id, date desc) where is_tax_deductible = true;
 
 
 -- ─── plaid_recurring_streams ─────────────────────────────────────────

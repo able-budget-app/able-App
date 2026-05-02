@@ -1094,6 +1094,9 @@ body.tour-active #page-home .db-action-card{display:flex!important;}
 .rc-chip{background:white;border:1.5px solid var(--ds-line);color:var(--ds-t1);font-family:var(--ds-f);font-size:12px;font-weight:800;padding:8px 14px;border-radius:100px;cursor:pointer;letter-spacing:-.01em;transition:all .15s;}
 .rc-chip:hover{border-color:var(--ds-green);color:var(--ds-green);}
 .rc-chip[disabled]{opacity:.5;cursor:wait;}
+/* Plaid PFC sub-category — secondary badge next to floor-first category */
+.act-pfc-badge{display:inline-block;font-size:10px;font-weight:700;letter-spacing:.02em;color:var(--ds-t3);background:transparent;border:1px solid var(--ds-line);padding:1px 6px;border-radius:100px;margin-left:4px;}
+.act-tax-flag{display:inline-block;font-size:10px;font-weight:800;letter-spacing:.04em;text-transform:uppercase;padding:1px 6px;border-radius:100px;background:#fff3d6;color:#9a6e0c;margin-left:4px;}
 /* Rows inside the past-due review modal */
 .past-due-row{display:flex;align-items:center;gap:12px;padding:11px 14px;background:var(--ds-page);border-radius:var(--ds-r1);margin-bottom:7px;}
 .past-due-row-info{flex:1;min-width:0;}
@@ -1679,17 +1682,38 @@ posthog.init('phc_B6PH36QxpExnyBYhfScFFF6LhDvoyxuFr6PypJuxxky3', {
   <div class="sec" style="display:flex;align-items:center;gap:12px;flex-wrap:wrap;">
     <span>Activity</span>
     <span style="font-size:11px;font-weight:700;color:var(--ds-t3);letter-spacing:.04em;text-transform:uppercase;">Last 90 days</span>
-    <select id="activity-filter" onchange="renderActivityPage()" style="margin-left:auto;font-family:var(--ds-f);font-size:12px;font-weight:700;padding:6px 10px;border:1px solid var(--ds-line);border-radius:var(--ds-r1);background:white;color:var(--ds-t1);">
+    <button class="btn btn-sm btn-ghost" onclick="openTaxExportModal()" style="margin-left:auto;font-size:12px;">Tax export →</button>
+    <select id="activity-filter" onchange="renderActivityPage()" style="font-family:var(--ds-f);font-size:12px;font-weight:700;padding:6px 10px;border:1px solid var(--ds-line);border-radius:var(--ds-r1);background:white;color:var(--ds-t1);">
       <option value="all">All transactions</option>
       <option value="income">Income</option>
       <option value="bill">Bills</option>
-      <option value="discretionary">Discretionary</option>
+      <option value="discretionary">Spending</option>
       <option value="debt_payment">Debt payments</option>
       <option value="tax_payment">Tax payments</option>
       <option value="transfer">Transfers</option>
+      <option value="__deductible__">Tax-deductible only</option>
     </select>
   </div>
   <div id="activity-list"><div class="empty-state">Loading…</div></div>
+</div>
+
+<!-- Tax export modal — opened from Activity page header. Filters every
+     plaid_transactions row marked is_tax_deductible=true for the selected
+     year, groups by Plaid PFC, and offers a CSV download. -->
+<div class="modal-bg" id="modal-tax-export" style="display:none;" onclick="if(event.target===this)closeTaxExportModal()">
+  <div class="modal" style="max-width:520px;">
+    <button class="modal-close" onclick="closeTaxExportModal()" aria-label="Close"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button>
+    <div class="modal-title">Tax export</div>
+    <div style="font-size:12px;color:var(--ds-t2);font-weight:600;margin-bottom:14px;line-height:1.6;">Every transaction you marked tax-deductible, grouped by category. Download as CSV for your accountant or Schedule C.</div>
+    <div style="display:flex;align-items:center;gap:10px;margin-bottom:1rem;">
+      <label style="font-size:12px;font-weight:700;color:var(--ds-t2);">Year:</label>
+      <select id="tax-year" onchange="renderTaxExport()" style="font-family:var(--ds-f);font-size:12px;font-weight:700;padding:6px 10px;border:1px solid var(--ds-line);border-radius:var(--ds-r1);background:white;color:var(--ds-t1);"></select>
+      <button class="btn btn-sm btn-primary" onclick="downloadTaxCsv()" id="tax-download-btn" style="margin-left:auto;" disabled>Download CSV</button>
+    </div>
+    <div id="tax-summary" style="max-height:55vh;overflow-y:auto;">
+      <div class="empty-state">Loading…</div>
+    </div>
+  </div>
 </div>
 
 <!-- Reclassify modal — opened from any Activity row. Same backend as the
@@ -1701,6 +1725,10 @@ posthog.init('phc_B6PH36QxpExnyBYhfScFFF6LhDvoyxuFr6PypJuxxky3', {
     <div id="reclassify-summary" style="background:var(--ds-card2);border-radius:var(--ds-r1);padding:14px 16px;margin-bottom:1rem;"></div>
     <div style="font-size:11px;font-weight:800;letter-spacing:.06em;text-transform:uppercase;color:var(--ds-t3);margin-bottom:.5rem;">New category</div>
     <div id="reclassify-chips" style="display:flex;flex-wrap:wrap;gap:8px;margin-bottom:1rem;"></div>
+    <label style="display:flex;align-items:center;gap:9px;font-size:12px;font-weight:600;color:var(--ds-t2);cursor:pointer;user-select:none;margin-bottom:.65rem;">
+      <input type="checkbox" id="reclassify-tax-deductible" style="margin:0;width:16px;height:16px;">
+      <span>Tax-deductible — include in Tax export at year end.</span>
+    </label>
     <label style="display:flex;align-items:center;gap:9px;font-size:12px;font-weight:600;color:var(--ds-t2);cursor:pointer;user-select:none;">
       <input type="checkbox" id="reclassify-just-once" style="margin:0;width:16px;height:16px;">
       <span>Just this transaction — don't teach Able to classify similar ones this way.</span>
@@ -7876,7 +7904,7 @@ function renderIncomeInboxList(){
         <div class="inbox-row-info">
           <div class="inbox-row-amount">+${f2(amount)}</div>
           <div class="inbox-row-source">${escapeHtml(source)}</div>
-          <div class="inbox-row-meta">${dateLabel} · ${escapeHtml(r.able_category || 'unclassified')} · ${confLabel} ${currentLabel}</div>
+          <div class="inbox-row-meta">${dateLabel} · ${escapeHtml(_catLabel(r.able_category))} · ${confLabel} ${currentLabel}</div>
           <div class="inbox-row-actions">
             <button class="inbox-action" onclick="inboxClassify('${r.id}','income')">Income</button>
             <button class="inbox-action" onclick="inboxClassify('${r.id}','transfer')">Transfer</button>
@@ -7999,11 +8027,33 @@ const ACTIVITY_INFLOW_CATS = [
 ];
 const ACTIVITY_OUTFLOW_CATS = [
   { value: 'bill',           label: 'Bill' },
-  { value: 'discretionary',  label: 'Discretionary' },
+  { value: 'discretionary',  label: 'Spending' },
   { value: 'debt_payment',   label: 'Debt payment' },
   { value: 'tax_payment',    label: 'Tax payment' },
   { value: 'transfer',       label: 'Transfer' },
 ];
+// Friendly-label map for the floor-first category badge. DB value stays
+// 'discretionary'; we display 'Spending' in the UI so users don't have to
+// parse jargon. Keep the bill/debt/tax labels lower-case + spaced.
+const ACTIVITY_CAT_LABELS = {
+  income: 'income',
+  bill: 'bill',
+  discretionary: 'spending',
+  debt_payment: 'debt payment',
+  tax_payment: 'tax payment',
+  transfer: 'transfer',
+  unclassified: 'unclassified',
+};
+function _catLabel(cat){ return ACTIVITY_CAT_LABELS[cat] || (cat || 'unclassified').replace('_',' '); }
+// Plaid PFC strings come back as ALL_CAPS_WITH_UNDERSCORES — render as
+// lowercase, spaces, no _detailed prefix duplication. Strip the primary
+// when it's a prefix of detailed (e.g. FOOD_AND_DRINK_FAST_FOOD → fast food).
+function _formatPfc(detailed, primary){
+  if (!detailed) return primary ? primary.toLowerCase().replace(/_/g, ' ') : '';
+  let v = detailed;
+  if (primary && v.startsWith(primary + '_')) v = v.slice(primary.length + 1);
+  return v.toLowerCase().replace(/_/g, ' ');
+}
 let _activityRows = [];
 let _activeReclassifyTxn = null;
 
@@ -8019,11 +8069,15 @@ async function renderActivityPage(){
   try {
     let q = sbGet()
       .from('plaid_transactions')
-      .select('id, plaid_transaction_id, name, merchant_name, amount, date, able_category, able_label, able_confidence')
+      .select('id, plaid_transaction_id, name, merchant_name, amount, date, able_category, able_label, able_confidence, personal_finance_category_primary, personal_finance_category_detailed, is_tax_deductible')
       .gte('date', sinceIso)
       .order('date', { ascending: false })
       .limit(ACTIVITY_PAGE_LIMIT);
-    if (filter !== 'all') q = q.eq('able_category', filter);
+    if (filter === '__deductible__') {
+      q = q.eq('is_tax_deductible', true);
+    } else if (filter !== 'all') {
+      q = q.eq('able_category', filter);
+    }
     const { data, error } = await q;
     if (error) throw error;
     _activityRows = data || [];
@@ -8061,14 +8115,17 @@ function _renderActivityRow(r){
   const display = Math.abs(r.amount ?? 0).toLocaleString(undefined, { style: 'currency', currency: 'USD' });
   const sign = isInflow ? '+' : '−';
   const cat = r.able_category || 'unclassified';
-  const catLabel = (cat || 'unclassified').replace('_',' ');
+  const catLabel = _catLabel(cat);
   const name = r.merchant_name || r.name || 'Unknown';
+  const pfc = _formatPfc(r.personal_finance_category_detailed, r.personal_finance_category_primary);
   return `
     <div class="act-row" onclick="openReclassifyModal('${r.id}')">
       <div class="act-row-info">
         <div class="act-row-name">${escapeHtml(name)}</div>
         <div class="act-row-meta">
           <span class="act-cat-badge ${cat}">${escapeHtml(catLabel)}</span>
+          ${pfc ? `<span class="act-pfc-badge">${escapeHtml(pfc)}</span>` : ''}
+          ${r.is_tax_deductible ? `<span class="act-tax-flag">deductible</span>` : ''}
           ${r.able_label ? ` · ${escapeHtml(r.able_label)}` : ''}
         </div>
       </div>
@@ -8085,18 +8142,21 @@ function openReclassifyModal(txnRowId){
   const chips = document.getElementById('reclassify-chips');
   const errEl = document.getElementById('reclassify-error');
   const justOnce = document.getElementById('reclassify-just-once');
+  const taxBox = document.getElementById('reclassify-tax-deductible');
   if (errEl) { errEl.style.display = 'none'; errEl.textContent = ''; }
   if (justOnce) justOnce.checked = false;
+  if (taxBox) taxBox.checked = !!row.is_tax_deductible;
 
   const isInflow = (row.amount ?? 0) < 0;
   const display = Math.abs(row.amount ?? 0).toLocaleString(undefined, { style: 'currency', currency: 'USD' });
   const sign = isInflow ? '+' : '−';
   const name = row.merchant_name || row.name || 'Unknown';
   const conf = Math.round((row.able_confidence ?? 0) * 100);
+  const pfc = _formatPfc(row.personal_finance_category_detailed, row.personal_finance_category_primary);
   summary.innerHTML = `
     <div style="font-size:18px;font-weight:900;color:${isInflow ? 'var(--ds-green)' : 'var(--ds-t1)'};letter-spacing:-.01em;margin-bottom:4px;">${sign}${display}</div>
     <div style="font-size:13px;font-weight:800;color:var(--ds-t1);">${escapeHtml(name)}</div>
-    <div style="font-size:11px;font-weight:600;color:var(--ds-t3);margin-top:3px;">${_formatActivityDay(row.date)} · currently <span class="act-cat-badge ${row.able_category || 'unclassified'}">${escapeHtml((row.able_category || 'unclassified').replace('_',' '))}</span> · ${conf}% sure${row.able_label ? ' · "' + escapeHtml(row.able_label) + '"' : ''}</div>`;
+    <div style="font-size:11px;font-weight:600;color:var(--ds-t3);margin-top:3px;">${_formatActivityDay(row.date)} · currently <span class="act-cat-badge ${row.able_category || 'unclassified'}">${escapeHtml(_catLabel(row.able_category))}</span>${pfc ? ` <span class="act-pfc-badge">${escapeHtml(pfc)}</span>` : ''} · ${conf}% sure${row.able_label ? ' · "' + escapeHtml(row.able_label) + '"' : ''}</div>`;
 
   const cats = isInflow ? ACTIVITY_INFLOW_CATS : ACTIVITY_OUTFLOW_CATS;
   chips.innerHTML = cats.map((c) => `<button class="rc-chip" onclick="applyReclassify('${c.value}')">${escapeHtml(c.label)}</button>`).join('');
@@ -8117,6 +8177,7 @@ async function applyReclassify(category){
   const errEl = document.getElementById('reclassify-error');
   if (errEl) { errEl.style.display = 'none'; errEl.textContent = ''; }
   const justOnce = document.getElementById('reclassify-just-once');
+  const taxBox = document.getElementById('reclassify-tax-deductible');
   const createOverride = !(justOnce && justOnce.checked);
   const override = createOverride ? _deriveOverride(row) : null;
   const isInflow = (row.amount ?? 0) < 0;
@@ -8128,12 +8189,13 @@ async function applyReclassify(category){
     override_kind: override?.kind,
     override_value: override?.value,
     override_direction: isInflow ? 'inflow' : 'outflow',
+    is_tax_deductible: !!(taxBox && taxBox.checked),
   };
   try {
     const { data, error } = await sbGet().functions.invoke('plaid-classify-override', { body });
     if (error) throw error;
     if (data && data.error) throw new Error(data.error);
-    Able.track?.('activity_reclassify', { category, just_once: !createOverride, direction: isInflow ? 'inflow' : 'outflow' });
+    Able.track?.('activity_reclassify', { category, just_once: !createOverride, deductible: body.is_tax_deductible, direction: isInflow ? 'inflow' : 'outflow' });
     closeReclassifyModal();
     renderActivityPage();
     renderIncomeInboxBanner();
@@ -8145,6 +8207,126 @@ async function applyReclassify(category){
       errEl.style.display = 'block';
     }
   }
+}
+
+// ═══════════════════════════════════════
+// TAX EXPORT
+// ═══════════════════════════════════════
+// Pulls every plaid_transactions row marked is_tax_deductible=true for the
+// selected year, groups by Plaid PFC for the on-screen summary, and offers
+// CSV download (frontend-generated).
+let _taxExportRows = [];
+
+function openTaxExportModal(){
+  const modal = document.getElementById('modal-tax-export');
+  const yearSel = document.getElementById('tax-year');
+  if (!modal || !yearSel) return;
+  // Populate year dropdown: current year + 2 prior. Most users export for
+  // the year that just ended; keep the current year selectable for in-year
+  // previews.
+  const now = new Date();
+  const thisYear = now.getFullYear();
+  yearSel.innerHTML = '';
+  for (const y of [thisYear, thisYear - 1, thisYear - 2]) {
+    const opt = document.createElement('option');
+    opt.value = String(y);
+    opt.textContent = String(y);
+    yearSel.appendChild(opt);
+  }
+  // Default to last year if we're in Jan–Apr (tax season), otherwise current.
+  yearSel.value = String((now.getMonth() < 4) ? thisYear - 1 : thisYear);
+  modal.style.display = 'flex';
+  renderTaxExport();
+}
+
+function closeTaxExportModal(){
+  const modal = document.getElementById('modal-tax-export');
+  if (modal) modal.style.display = 'none';
+}
+
+async function renderTaxExport(){
+  const yearSel = document.getElementById('tax-year');
+  const summary = document.getElementById('tax-summary');
+  const dlBtn = document.getElementById('tax-download-btn');
+  if (!yearSel || !summary) return;
+  const year = parseInt(yearSel.value, 10);
+  const start = `${year}-01-01`;
+  const end = `${year}-12-31`;
+  summary.innerHTML = `<div class="empty-state">Loading…</div>`;
+  if (dlBtn) dlBtn.disabled = true;
+  try {
+    const { data, error } = await sbGet()
+      .from('plaid_transactions')
+      .select('date, name, merchant_name, amount, able_category, able_label, personal_finance_category_primary, personal_finance_category_detailed')
+      .eq('is_tax_deductible', true)
+      .gte('date', start)
+      .lte('date', end)
+      .order('date', { ascending: true })
+      .limit(5000);
+    if (error) throw error;
+    _taxExportRows = data || [];
+    if (_taxExportRows.length === 0) {
+      summary.innerHTML = `<div class="empty-state">No tax-deductible transactions in ${year}. Tag transactions from the Activity tab to populate this export.</div>`;
+      return;
+    }
+    // Group by PFC primary; fall back to able_category when PFC is missing.
+    const groups = new Map();
+    let total = 0;
+    for (const r of _taxExportRows) {
+      const key = r.personal_finance_category_primary || r.able_category || 'OTHER';
+      const g = groups.get(key) || { count: 0, total: 0 };
+      g.count += 1;
+      g.total += Math.abs(r.amount ?? 0);
+      groups.set(key, g);
+      total += Math.abs(r.amount ?? 0);
+    }
+    const sorted = [...groups.entries()].sort((a,b) => b[1].total - a[1].total);
+    const fmt = (n) => n.toLocaleString(undefined, { style: 'currency', currency: 'USD' });
+    summary.innerHTML = `
+      <div style="font-size:13px;font-weight:800;color:var(--ds-t1);margin-bottom:.85rem;">${_taxExportRows.length} transaction${_taxExportRows.length===1?'':'s'} · ${fmt(total)} total</div>
+      ${sorted.map(([key, g]) => `
+        <div style="display:flex;justify-content:space-between;align-items:center;padding:8px 12px;background:var(--ds-card2);border-radius:var(--ds-r1);margin-bottom:5px;">
+          <div>
+            <div style="font-size:12px;font-weight:800;color:var(--ds-t1);">${escapeHtml(_formatPfc(key, key))}</div>
+            <div style="font-size:11px;font-weight:600;color:var(--ds-t3);">${g.count} txn${g.count===1?'':'s'}</div>
+          </div>
+          <div style="font-size:13px;font-weight:900;color:var(--ds-t1);">${fmt(g.total)}</div>
+        </div>`).join('')}`;
+    if (dlBtn) dlBtn.disabled = false;
+  } catch (e) {
+    console.error('renderTaxExport failed:', e);
+    summary.innerHTML = `<div class="empty-state">Could not load: ${escapeHtml(e.message || 'unknown error')}</div>`;
+  }
+}
+
+function downloadTaxCsv(){
+  if (!_taxExportRows.length) return;
+  const yearSel = document.getElementById('tax-year');
+  const year = yearSel ? yearSel.value : 'export';
+  const headers = ['Date','Merchant','Name','Amount','Category','Plaid Category','Label'];
+  const csvSafe = (v) => {
+    const s = (v ?? '').toString();
+    return /[",\n]/.test(s) ? `"${s.replace(/"/g, '""')}"` : s;
+  };
+  const rows = _taxExportRows.map((r) => [
+    r.date,
+    r.merchant_name || '',
+    r.name || '',
+    Math.abs(r.amount ?? 0).toFixed(2),
+    _catLabel(r.able_category),
+    _formatPfc(r.personal_finance_category_detailed, r.personal_finance_category_primary),
+    r.able_label || '',
+  ].map(csvSafe).join(','));
+  const csv = [headers.join(','), ...rows].join('\n');
+  const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = `able-tax-deductible-${year}.csv`;
+  document.body.appendChild(a);
+  a.click();
+  setTimeout(() => { URL.revokeObjectURL(url); a.remove(); }, 0);
+  Able.track?.('tax_export_csv_download', { year, row_count: _taxExportRows.length });
 }
 
 function renderPastDue(){
