@@ -175,9 +175,15 @@ Output ONLY a JSON array. One object per input transaction, in the SAME ORDER. N
 
 # Decision rules
 
-1. Plaid's plaid_detailed field is the strongest signal. Use it first.
+0. **CHECK THE SIGN FIRST. This is binding and overrides every other rule below.**
+   - amount < 0 = **INFLOW** (money INTO the user's account — they received it)
+   - amount > 0 = **OUTFLOW** (money OUT of the user's account — they spent it)
 
-2. **A bill is a RECURRING SUBSCRIPTION OR UTILITY, not a single purchase.** If you would put the merchant on a budget under "monthly fixed costs," it's a bill. If it's something the user might or might not buy this month, it's discretionary. Default to discretionary when in doubt.
+   For inflows, the merchant_name tells you WHO sent the money, NOT what was purchased. An inflow from Airbnb is a host payout (the user is the host); it is NOT a lodging expense. An inflow from Stripe is a client payment; it is NOT a software charge. **Plaid's plaid_detailed field describes the merchant's category, not the direction of the transaction — it is misleading for inflows.** For any inflow (amount < 0), apply rules 4 / 4b first. Rules 2 and 3 (which talk about purchases, bills, and travel) apply ONLY to outflows.
+
+1. For outflows, Plaid's plaid_detailed field is the strongest signal. Use it first. (For inflows, use rule 0 + rule 4 / 4b.)
+
+2. **A bill is a RECURRING SUBSCRIPTION OR UTILITY, not a single purchase.** If you would put the merchant on a budget under "monthly fixed costs," it's a bill. If it's something the user might or might not buy this month, it's discretionary. Default to discretionary when in doubt. (Outflows only — see rule 0.)
 
    Bill examples:
    - Rent / mortgage payments
@@ -189,7 +195,7 @@ Output ONLY a JSON array. One object per input transaction, in the SAME ORDER. N
    - HOA fees, recurring loan auto-debits
 
    Discretionary (NOT bill) — these all look like single purchases even though the merchant is named:
-   - Airlines, hotels, ride-share, Airbnb (TRAVEL_TRANSPORTATION)
+   - Airlines, hotels, ride-share, Airbnb stays / VRBO bookings (TRAVEL_TRANSPORTATION) — **only when amount > 0 (outflow). Airbnb / VRBO inflows are host payouts; see rule 4b.**
    - Bike shops, hardware stores, electronics retailers (GENERAL_MERCHANDISE_*)
    - Restaurants, takeout, groceries, coffee, bars
    - Gas stations
@@ -208,14 +214,23 @@ Output ONLY a JSON array. One object per input transaction, in the SAME ORDER. N
 4b. **Marketplace / processor payouts on inflows are income, not discretionary or transfer.** When amount is NEGATIVE (inflow / credit) AND merchant_name or name matches a marketplace or payment processor, default to **income** — the user is the host / seller / payee, not the customer:
    - Airbnb, VRBO, Vrbo, Booking.com host payouts → income (host payout). The Airbnb-as-discretionary rule under rule 2 applies ONLY to OUTFLOWS (positive amount = the user paying for a stay).
    - Stripe, Square, Shopify, Toast, Clover payouts → income (client payment / sales).
-   - PayPal, Venmo, Cash App, Zelle inflows from a business / company name (e.g. "PAYPAL TRANSFER ACME LLC", "VENMO ACME CO", "ZELLE FROM ACME LLC") → income. Inflows clearly from a known person (e.g. "VENMO FROM MOM") are transfer if the user is moving their own money, otherwise income/transfer per rule 4.
    - Etsy, eBay, Upwork, Fiverr, Gumroad, Substack, Patreon payouts → income.
    - Amazon Payments, Google Pay, Apple Pay business payouts → income.
+
+   **Venmo / Zelle / Cash App / PayPal inflows are the harder case** because they carry both client payments and personal money. Use these tiers:
+   - **From a clearly-business source** (e.g. "PAYPAL TRANSFER ACME LLC", "VENMO ACME CO", "ZELLE FROM ACME INC") → income (high confidence 0.85+).
+   - **From a description suggesting an internal move** (e.g. "ZELLE FROM SELF", "TRANSFER FROM CHECKING", anything referencing the user's own bank or "OWN ACCOUNT") → transfer (confidence 0.6-0.7).
+   - **Bare "Venmo" / "Cash App" / "Zelle" with no name or detail at all** → **income with low confidence (0.55)**. Able's user base is entrepreneurs and freelancers whose business income often arrives via these processors with stripped descriptions; defaulting to income surfaces it for review in the user's income view rather than burying it under transfers.
+   - **From a named individual that looks personal** (a first + last name with no business suffix like LLC / Inc / Corp / Co, e.g. "ZELLE FROM JANE M SMITH", "VENMO FROM J DOE") → transfer (confidence 0.6). These are typically family transfers, splitting expenses, or gifts. Note: the prompt does NOT receive the current user's name, so this rule is based purely on the shape of the sender field — a personal-looking name pattern is the signal.
+
    Only override to a different category if the description strongly suggests a refund (e.g. "REFUND", "RETURN", "REVERSAL"), in which case choose **discretionary** with confidence ≤ 0.6 and a label like "Refund — <merchant>".
 
 5. **Mortgages are bills.** Even though Plaid puts them in LOAN_PAYMENTS_MORTGAGE, classify as bill so they show up correctly in Able's Bills list.
 
-6. When ambiguous, lower the confidence (≤ 0.6) and pick the safer category (**discretionary over bill**, transfer over income). It is far better to miss a bill (the user will add it manually) than to bury a one-off discretionary purchase in their bills list.
+6. When ambiguous, lower the confidence (≤ 0.6) and pick the safer category. The "safer" defaults are:
+   - **discretionary over bill** — far better to miss a bill (user will add it manually) than to bury a one-off purchase in the bills list.
+   - **income over transfer for inflows from peer-to-peer processors (Venmo, Cash App, Zelle, PayPal) with stripped or generic descriptions** — Able's user base is entrepreneurs whose business deposits often arrive without a clear sender name. Burying these as transfers makes the user's actual income invisible. Surfacing them as income (with low confidence) lets the user re-categorize the rare self-transfer in their income review.
+   - For inflows from a clearly-named individual (especially family / spouse / friend), transfer is still the safer default unless context suggests payment for services.
 
 7. is_recurring_likely is true only when the merchant pattern itself suggests recurrence (Netflix, rent, insurance), not just based on a single transaction.
 
