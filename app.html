@@ -1963,9 +1963,18 @@ posthog.init('phc_B6PH36QxpExnyBYhfScFFF6LhDvoyxuFr6PypJuxxky3', {
       <span>Tax-deductible — include in Tax export at year end.</span>
     </label>
     <label style="display:flex;align-items:center;gap:9px;font-size:12px;font-weight:600;color:var(--ds-t2);cursor:pointer;user-select:none;">
-      <input type="checkbox" id="reclassify-just-once" style="margin:0;width:16px;height:16px;">
+      <input type="checkbox" id="reclassify-just-once" onchange="_refreshReclassifyBulkOffer()" style="margin:0;width:16px;height:16px;">
       <span>Just this transaction — don't teach Able to classify similar ones this way.</span>
     </label>
+    <!-- Bulk apply offer: rendered when async match-search finds similar
+         rows in the last 30 days. Hidden until matches arrive. The label
+         text + count populate from inside renderReclassifyBulkOption. -->
+    <div id="reclassify-bulk-section" style="display:none;margin-top:.65rem;padding:10px 12px;background:var(--ds-green-l);border:1px solid var(--ds-green-m);border-radius:var(--ds-r1);">
+      <label style="display:flex;align-items:center;gap:9px;font-size:12px;font-weight:700;color:var(--ds-green2);cursor:pointer;user-select:none;">
+        <input type="checkbox" id="reclassify-bulk-apply" checked style="margin:0;width:16px;height:16px;">
+        <span id="reclassify-bulk-label">Also apply to similar rows from the last 30 days.</span>
+      </label>
+    </div>
     <div id="reclassify-error" style="color:var(--ds-c4);font-size:12px;font-weight:600;margin-top:.85rem;display:none;"></div>
     <div style="display:flex;gap:8px;justify-content:flex-end;margin-top:1.25rem;">
       <button class="btn btn-sm btn-ghost" onclick="closeReclassifyModal()">Cancel</button>
@@ -9855,6 +9864,54 @@ function selectReclassifyChip(cat){
   document.querySelectorAll('#reclassify-chips .rc-chip').forEach((b) => {
     b.classList.toggle('selected', b.getAttribute('data-cat') === cat);
   });
+  // Each time the user picks a (possibly different) category, refresh the
+  // "apply to similar" offer so the count + label match the current pick.
+  _refreshReclassifyBulkOffer();
+}
+
+// Cached candidates for the bulk-apply pathway. Populated by the async
+// match query that fires after the user picks a category in the modal.
+let _reclassifyBulkCandidates = [];
+async function _refreshReclassifyBulkOffer(){
+  const section = document.getElementById('reclassify-bulk-section');
+  const labelEl = document.getElementById('reclassify-bulk-label');
+  if (!section || !labelEl) return;
+  const row = _activeReclassifyTxn;
+  const cat = _activeReclassifyCat;
+  // Hide while we figure things out; reveal after the query if matches exist.
+  section.style.display = 'none';
+  _reclassifyBulkCandidates = [];
+  if (!row || !cat) return;
+  const justOnce = document.getElementById('reclassify-just-once');
+  // "Just this transaction" disables the bulk pathway entirely — no override
+  // means no pattern to apply; we honor the user's intent.
+  if (justOnce && justOnce.checked) return;
+  const override = (typeof _deriveOverride === 'function') ? _deriveOverride(row) : null;
+  if (!override) return;
+  try {
+    const sb = sbGet();
+    const since = new Date(Date.now() - 30 * 86400000);
+    const sinceStr = `${since.getFullYear()}-${String(since.getMonth()+1).padStart(2,'0')}-${String(since.getDate()).padStart(2,'0')}`;
+    let q = sb.from('plaid_transactions')
+      .select('id, name, merchant_name, able_category')
+      .gte('date', sinceStr)
+      .neq('id', row.id);
+    if (override.kind === 'merchant') q = q.ilike('merchant_name', override.value);
+    else q = q.ilike('name', `%${override.value}%`);
+    const { data, error } = await q.limit(50);
+    if (error) throw error;
+    const candidates = (data || []).filter((r) => r.able_category !== cat);
+    // Confirm selection didn't change while the query was in flight.
+    if (cat !== _activeReclassifyCat) return;
+    if (candidates.length === 0) return;
+    _reclassifyBulkCandidates = candidates;
+    const label = (typeof ACTIVITY_CAT_LABELS !== 'undefined' && ACTIVITY_CAT_LABELS[cat]) || cat;
+    const n = candidates.length;
+    labelEl.textContent = `Also tag ${n} similar ${n === 1 ? 'row' : 'rows'} from the last 30 days as ${label}.`;
+    section.style.display = '';
+  } catch (e) {
+    console.warn('refresh bulk offer failed:', e);
+  }
 }
 
 function closeReclassifyModal(){
@@ -9862,6 +9919,9 @@ function closeReclassifyModal(){
   if (modal) modal.style.display = 'none';
   _activeReclassifyTxn = null;
   _activeReclassifyCat = null;
+  _reclassifyBulkCandidates = [];
+  const section = document.getElementById('reclassify-bulk-section');
+  if (section) section.style.display = 'none';
 }
 
 async function applyReclassify(){
@@ -9907,18 +9967,37 @@ async function applyReclassify(){
     if (error) throw error;
     if (data && data.error) throw new Error(data.error);
     Able.track?.('activity_reclassify', { category, just_once: !createOverride, deductible: body.is_tax_deductible, direction: isInflow ? 'inflow' : 'outflow' });
+
+    // Bulk apply: if the user kept the in-modal checkbox checked AND the
+    // async match query found candidates, apply the same payload to all of
+    // them inline (so the user sees one toast + one Activity refresh, not
+    // a two-step UX).
+    const bulkCheckbox = document.getElementById('reclassify-bulk-apply');
+    const wantsBulk = createOverride && bulkCheckbox && bulkCheckbox.checked && _reclassifyBulkCandidates.length > 0;
+    let bulkApplied = 0, bulkRequested = 0;
+    if (wantsBulk) {
+      bulkRequested = _reclassifyBulkCandidates.length;
+      const sbInner = sbGet();
+      const results = await Promise.allSettled(_reclassifyBulkCandidates.map((m) => sbInner.functions.invoke('plaid-classify-override', {
+        body: {
+          txn_row_id: m.id,
+          able_category: category,
+          able_label: m.merchant_name || m.name || category,
+          create_override: false, // override already created on the original row
+          is_tax_deductible: !!body.is_tax_deductible,
+          business_label: body.business_label || '',
+        },
+      })));
+      bulkApplied = results.filter((r) => r.status === 'fulfilled' && !(r.value && r.value.error)).length;
+      Able.track?.('activity_bulk_reclassify', { category, applied: bulkApplied, requested: bulkRequested, deductible: !!body.is_tax_deductible, business: !!body.business_label });
+    }
+
     closeReclassifyModal();
     renderActivityPage();
     renderIncomeInboxBanner();
-    // Bulk-reclassify suggestion: look for other rows in the last 30 days
-    // that match the same descriptor and aren't already classified the same
-    // way. Skip if the user picked "just this transaction" (no override).
-    // Pass through the tax-deductible flag and business label from the
-    // original payload so the matches inherit those, not just the category.
-    if (override) _suggestBulkReclassify(row, category, override, {
-      is_tax_deductible: !!body.is_tax_deductible,
-      business_label: body.business_label || '',
-    });
+    if (bulkRequested > 0) {
+      showToast(`Updated 1 row + ${bulkApplied} similar ${bulkApplied === 1 ? 'row' : 'rows'}.`);
+    }
   } catch (e) {
     console.error('applyReclassify failed:', e);
     chips.forEach((b) => b.removeAttribute('disabled'));
@@ -9927,74 +10006,6 @@ async function applyReclassify(){
       errEl.textContent = 'Could not save: ' + (e.message || 'unknown error');
       errEl.style.display = 'block';
     }
-  }
-}
-
-// After a successful single-row reclassify, look for other recently-pulled
-// rows in the same 30-day window that match the same descriptor pattern but
-// haven't been retagged. If we find any, offer one-tap bulk apply via toast.
-// This closes the multi-stream pain point flagged by Jordan and Carmen in
-// focus group testing — daily payouts (DoorDash, Etsy) and business expenses
-// (restaurant supplies on a personal card) pile up otherwise.
-async function _suggestBulkReclassify(originalRow, newCategory, override, extras){
-  if (!originalRow || !newCategory || !override) return;
-  extras = extras || {};
-  try {
-    const sb = sbGet();
-    const since = new Date(Date.now() - 30 * 86400000);
-    const sinceStr = `${since.getFullYear()}-${String(since.getMonth()+1).padStart(2,'0')}-${String(since.getDate()).padStart(2,'0')}`;
-    let query = sb.from('plaid_transactions')
-      .select('id, name, merchant_name, able_category')
-      .gte('date', sinceStr)
-      .neq('id', originalRow.id);
-    if (override.kind === 'merchant') {
-      // Match against the lowercased merchant value the override stored.
-      query = query.ilike('merchant_name', override.value);
-    } else {
-      query = query.ilike('name', `%${override.value}%`);
-    }
-    const { data, error } = await query.limit(50);
-    if (error) throw error;
-    const candidates = (data || []).filter((r) => r.able_category !== newCategory);
-    if (candidates.length === 0) return;
-
-    const label = (typeof ACTIVITY_CAT_LABELS !== 'undefined' && ACTIVITY_CAT_LABELS[newCategory]) || newCategory;
-    const n = candidates.length;
-    const noun = n === 1 ? 'transaction' : 'transactions';
-    // Surface deductible + business propagation in the toast so the user
-    // knows the bulk apply isn't just the category.
-    const extraTags = [];
-    if (extras.is_tax_deductible) extraTags.push('deductible');
-    if (extras.business_label) extraTags.push(extras.business_label);
-    const extraSuffix = extraTags.length ? ` · ${extraTags.join(' · ')}` : '';
-    showToast(`Found ${n} similar ${noun} from the last 30 days.${extraSuffix ? ' Bulk apply will also carry: ' + extraTags.join(', ') + '.' : ''}`, {
-      actionLabel: `Tag all as ${label}`,
-      duration: 14000,
-      onAction: async () => {
-        // Apply the same category to each match. create_override:false here
-        // because the override was already created on the original row; we
-        // don't need to re-create it N times. Tax-deductible and business
-        // labels propagate so a "deductible business expense" tag on row 1
-        // applies to all similar rows, not just the category.
-        const sbInner = sbGet();
-        const results = await Promise.allSettled(candidates.map((m) => sbInner.functions.invoke('plaid-classify-override', {
-          body: {
-            txn_row_id: m.id,
-            able_category: newCategory,
-            able_label: m.merchant_name || m.name || newCategory,
-            create_override: false,
-            is_tax_deductible: !!extras.is_tax_deductible,
-            business_label: extras.business_label || '',
-          },
-        })));
-        const okCount = results.filter((r) => r.status === 'fulfilled' && !(r.value && r.value.error)).length;
-        Able.track?.('activity_bulk_reclassify', { category: newCategory, applied: okCount, requested: n, deductible: !!extras.is_tax_deductible, business: !!extras.business_label });
-        showToast(`${okCount} of ${n} updated.`);
-        renderActivityPage();
-      },
-    });
-  } catch (e) {
-    console.warn('bulk reclassify suggestion failed:', e);
   }
 }
 
