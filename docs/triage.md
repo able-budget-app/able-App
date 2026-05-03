@@ -22,7 +22,7 @@ Caveat carried forward: the `refer_*_joined` achievement tiles still need a back
 
 ## Later — this quarter (P2)
 
-Project-sized; sequence after Now/Next clears.
+Project-sized; the small ones (#18, #19) shipped early in the P3 batch. Remaining is genuinely structural work.
 
 | # | Item | Source | Effort |
 |---|------|--------|--------|
@@ -30,8 +30,8 @@ Project-sized; sequence after Now/Next clears.
 | 15 | Demo mode toggle in More (audit Part 4 #8). Required for App Store screenshots; lowers Plaid hesitancy. | Audit | L |
 | 16 | Emotional persona multi-select in intake (audit Part 4 #9). Different from intake-channel chips already shipped. Only worth it if we wire personalization downstream. | Audit | M |
 | 17 | Tighter descriptor matching for daily-payout merchants (DoorDash, etc.) so confidence stays consistent across same-merchant rows | Focus (Jordan) | M |
-| 18 | Coach panel "thinking..." indicator on slow responses (~4s blank state today) | Focus (Jordan) | S |
-| 19 | Promote What-if out of the Plan tab — multiple personas called it the strongest planning tool, buried 3 taps deep | Focus (Carmen, Theo) | S |
+| ~~18~~ | ~~Coach panel "thinking..." indicator~~ — shipped in `cd5c390` | Focus (Jordan) | done |
+| ~~19~~ | ~~Promote What-if out of the Plan tab~~ — shipped in `cd5c390` (now position 2 in sub-nav) | Focus (Carmen, Theo) | done |
 | 20 | Multi-bank support — *committed: free, default, no cap.* Real architecture work. | Paul decision 2026-05-03 + Focus (Carmen) | L |
 | 21 | Recurring auto-retry — webhook handler at `plaid-webhook/index.ts:196` already routes RECURRING_TRANSACTIONS_UPDATE but is no-op'd. Wire it + bounded client poller (8 attempts / 60min cap, exp backoff) + non-intrusive "your plan can be refined" banner. Schema: add 4 columns to plaid_items. | Pending #14 | L |
 | 22 | Timezone column on profiles — fixes day-shift bugs in weekly digest, monthly_wrap, bill_due_tomorrow emails for users not in MST | Pending #16 | M |
@@ -42,17 +42,7 @@ Project-sized; sequence after Now/Next clears.
 
 ## Polish — when it's the highest-value thing left (P3)
 
-Low effort, low urgency.
-
-| # | Item | Source | Effort |
-|---|------|--------|--------|
-| 25 | Rename "Allocate" → "Home" or "Today" in nav | Focus 2/6 | S |
-| 26 | Surface per-deposit allocation flow on the marketing page (it's the actual product) | Focus (Devon) | M |
-| 27 | Achievements distance text — pick one consistent voice ("X to go" works best) | Focus (Jordan) | S |
-| 28 | Coach panel scroll-to-top or message search for revisiting old answers | Focus (Riley) | S |
-| 29 | "Other" income channel write-in needs to surface downstream in Coach (currently accepted but not used) | Focus (Devon) | S |
-| 30 | Floor strip caption math when toggling a bill paid/unpaid — verify no stale state | Redesign caveats | S |
-| 31 | Pace sparkline color flip in dark card (under floor = green) — confirm doesn't read backwards to first-time users | Redesign caveats | S |
+✅ **All P3 items shipped 2026-05-03 in commits `cd5c390` and `965786e`.** See Done section.
 
 ---
 
@@ -89,7 +79,8 @@ These are decisions, not tasks. Each unlocks downstream work once decided.
 - Audit Part 4 items #1, #2, #3, #4, #5, #6, #10 shipped through 2026-05-02
 - All ROADMAP_DECISIONS D1–D7 are locked
 - **P0 batch shipped 2026-05-03 (`23a7991`, `59e6955`, `cabc2a1`, `6708672`):** paywall fine-print transparency, Floor popover dedup, Tax Export promoted (then made seasonal), plan-review gap-acknowledgement, bulk reclassify (now in-modal with Save changes), achievements compact view with closest-to-unlocking sort
-- **P1 batch shipped 2026-05-03 (`50826cc`):** landing-page audience widening, "Within your income" honest label, tour-mode pace placeholder, glossary tooltips on Floor + habit rings, fresh-deposit "Sorting this..." badge, due-today home card, achievement state wired to existing lcCompleted + S.referrals_sent
+- **P1 batch shipped 2026-05-03 (`50826cc`, `ae8e314`):** landing-page audience widening, "Within your income" honest label, tour-mode pace placeholder, glossary tooltips on Floor + habit rings, fresh-deposit "Sorting this..." badge, due-today home card, achievement state wired to existing lcCompleted + S.referrals_sent. Follow-ups: hero north-star copy restored, eyebrow space, bulk reclassify visibility (loose match + optimistic show + token-guarded resolution).
+- **P3 batch shipped 2026-05-03 (`cd5c390`, `965786e`):** "Allocate" nav → "Home" with house icon, Coach three-dot typing animation, What-if promoted to position 2 in Plan sub-nav, achievement distance text standardized to "X to go", Coach panel scroll-to-top affordance, income channels promoted to top-level Coach state, marketing per-deposit framing in How-it-works section. P3 #30 + #31 verified as no-fix-needed.
 
 ---
 
