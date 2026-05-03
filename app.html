@@ -1299,6 +1299,12 @@ body.tour-active #page-home .db-action-card{display:flex!important;}
 .plan-refresh-banner-cta:hover{background:#2c5d96;}
 .plan-refresh-banner-x{flex-shrink:0;width:26px;height:26px;background:transparent;border:0;color:#284b78;font-size:14px;font-weight:800;cursor:pointer;border-radius:6px;display:flex;align-items:center;justify-content:center;opacity:.6;}
 .plan-refresh-banner-x:hover{opacity:1;background:rgba(40,75,120,.1);}
+/* Demo-mode banner — sits above the entire app while demo mode is on,
+   so prospects on App Store screenshots and curious users never confuse
+   the curated fixture for their real numbers. */
+#demo-mode-banner.on{display:flex !important;align-items:center;justify-content:center;gap:10px;background:linear-gradient(90deg,#3570b8,#284b78);color:white;padding:8px 14px;font-family:var(--ds-f);font-size:11px;font-weight:800;letter-spacing:.06em;text-transform:uppercase;position:sticky;top:0;z-index:50;box-shadow:0 2px 6px rgba(40,75,120,.25);}
+#demo-mode-banner.on button{background:rgba(255,255,255,.18);color:white;border:1px solid rgba(255,255,255,.3);font-family:var(--ds-f);font-size:10px;font-weight:800;letter-spacing:.06em;text-transform:uppercase;padding:4px 10px;border-radius:100px;cursor:pointer;transition:background .15s;}
+#demo-mode-banner.on button:hover{background:rgba(255,255,255,.28);}
 .inbox-banner{display:flex;align-items:center;gap:12px;background:var(--ds-green-l);border-left:4px solid var(--ds-green);border-radius:var(--ds-r2);padding:12px 14px;margin-bottom:.85rem;box-shadow:var(--ds-sh1);font-family:var(--ds-f);}
 .inbox-banner-icon{width:32px;height:32px;border-radius:50%;background:var(--ds-green);color:white;display:flex;align-items:center;justify-content:center;flex-shrink:0;}
 .inbox-banner-body{flex:1;min-width:0;}
@@ -1638,6 +1644,11 @@ posthog.init('phc_B6PH36QxpExnyBYhfScFFF6LhDvoyxuFr6PypJuxxky3', {
     <button class="sub-tab" data-sub="settings" onclick="goTo('settings')">Settings</button>
   </div>
 </div>
+
+<!-- Demo-mode banner — visible across all pages while demo mode is on,
+     so the user (or a prospect on App Store screenshots) is never confused
+     about whether numbers are real. Hidden by default. -->
+<div id="demo-mode-banner" style="display:none;"></div>
 
 <!-- Income Inbox banner — surfaces low-confidence inflows for the user to label.
      Each label trains user_classification_overrides so future matching txns
@@ -2207,6 +2218,10 @@ posthog.init('phc_B6PH36QxpExnyBYhfScFFF6LhDvoyxuFr6PypJuxxky3', {
         <button class="btn" onclick="replayTour()" style="text-align:left;padding:14px 16px;">
           <div style="font-weight:800;display:flex;align-items:center;gap:10px;color:var(--ds-t1);"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink:0;color:var(--ds-green);"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="6"/><circle cx="12" cy="12" r="2"/></svg>Replay app tour</div>
           <div style="font-size:11px;color:var(--ds-t3);font-weight:600;margin-top:5px;margin-left:28px;">Walk through the guided tour again.</div>
+        </button>
+        <button class="btn" id="demo-mode-btn" onclick="toggleDemoMode()" style="text-align:left;padding:14px 16px;">
+          <div style="font-weight:800;display:flex;align-items:center;gap:10px;color:var(--ds-t1);"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink:0;color:var(--ds-c5);"><circle cx="12" cy="12" r="10"/><path d="M9 9h.01M15 9h.01"/><path d="M8 14s1.5 2 4 2 4-2 4-2"/></svg><span id="demo-mode-label">Try demo mode</span></div>
+          <div style="font-size:11px;color:var(--ds-t3);font-weight:600;margin-top:5px;margin-left:28px;" id="demo-mode-sub">See Able with curated sample data. Your real data is preserved.</div>
         </button>
         <button class="btn" onclick="contactSupport()" style="text-align:left;padding:14px 16px;">
           <div style="font-weight:800;display:flex;align-items:center;gap:10px;color:var(--ds-t1);"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink:0;color:var(--ds-green);"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>Contact support</div>
@@ -11326,6 +11341,130 @@ function renderBalanceCard(){ renderHeroMoney(); }
 // ═══════════════════════════════════════
 // RESET / CLEAR
 // ═══════════════════════════════════════
+// ═══════════════════════════════════════
+// DEMO MODE (P2 #15)
+// ═══════════════════════════════════════
+// Loads a curated synthetic state into S so prospects can see Able with
+// realistic numbers without connecting Plaid. The user's real S is parked
+// in sessionStorage; toggling off restores it. Demo mode is local-only
+// (we don't write to Supabase while it's on, to avoid clobbering real
+// data on the server). Banner stays visible across every page so demo
+// data is never confused with real data.
+const DEMO_FIXTURE = {
+  // Maya-style Freezer: freelance designer, ~$4k/mo Stripe, anxious about taxes.
+  bills: [
+    { id: 'demo-rent',    name: 'Rent',                amount: 1400, due: '1',  freq: 'monthly', cat: 'housing',   priority: 1, paid: true  },
+    { id: 'demo-health',  name: 'Health insurance',    amount: 315,  due: '1',  freq: 'monthly', cat: 'insurance', priority: 1, paid: true  },
+    { id: 'demo-internet',name: 'Internet',            amount: 80,   due: '10', freq: 'monthly', cat: 'utilities', priority: 2, paid: false },
+    { id: 'demo-adobe',   name: 'Adobe Creative Cloud',amount: 60,   due: '12', freq: 'monthly', cat: 'subs',      priority: 3, paid: false },
+    { id: 'demo-utils',   name: 'Utilities',           amount: 89,   due: '15', freq: 'monthly', cat: 'utilities', priority: 2, paid: false },
+    { id: 'demo-phone',   name: 'Phone',               amount: 40,   due: '5',  freq: 'monthly', cat: 'utilities', priority: 2, paid: true  },
+    { id: 'demo-spotify', name: 'Spotify',             amount: 11,   due: '3',  freq: 'monthly', cat: 'subs',      priority: 3, paid: true  },
+  ],
+  debts: [],
+  buffer: 612,
+  history: [
+    { id: 'demo-d1', date: '5/2/2026',  ts: Date.now()-86400000*1, amount: 2200, source: 'Stripe payout',  jobs: [], billsPaid: 1715, debtExtra: 0, bufContrib: 200, ownerPaid: 220 },
+    { id: 'demo-d2', date: '4/28/2026', ts: Date.now()-86400000*5, amount: 1840, source: 'Stripe payout',  jobs: [], billsPaid: 1280, debtExtra: 0, bufContrib: 280, ownerPaid: 184 },
+    { id: 'demo-d3', date: '4/22/2026', ts: Date.now()-86400000*11,amount: 1400, source: 'Client deposit', jobs: [], billsPaid: 980,  debtExtra: 0, bufContrib: 132, ownerPaid: 140 },
+  ],
+  forecast: [
+    { source: 'Stripe payout',  amount: 1640, date: _demoDateOffset(7),  note: '', status: 'expected' },
+    { source: 'Client deposit', amount: 920,  date: _demoDateOffset(14), note: 'Logo refresh',    status: 'expected' },
+  ],
+  settings: {
+    balance: 4820,
+    ownerPct: 10, debtPct: 0, bufPct: 30, freePct: 60,
+    intake_channels: ['stripe'],
+    intake_channels_other: '',
+    timezone: (Intl.DateTimeFormat?.().resolvedOptions().timeZone) || 'America/Denver',
+  },
+  sources: ['Stripe payouts', 'Client deposits', 'Other'],
+  obligations: [],
+  profile: { name: 'Avery', business_type: 'Freelance designer', goals: 'Build a safety net' },
+  month_history: [
+    { label: 'April 2026',    closedAt: '2026-05-01T00:00:00Z', score: 78, income: 4640,  debtPaid: 0, bufAdded: 412, ownerPaid: 464, billsTotal: 1995, billsPaidAmount: 1995, billsPaidCount: 7, billsCount: 7, totalDebtEnd: 0, bufferEnd: 412, bills: [], debts: [] },
+    { label: 'March 2026',    closedAt: '2026-04-01T00:00:00Z', score: 71, income: 3940,  debtPaid: 0, bufAdded: 220, ownerPaid: 394, billsTotal: 1995, billsPaidAmount: 1995, billsPaidCount: 7, billsCount: 7, totalDebtEnd: 0, bufferEnd: 200, bills: [], debts: [] },
+    { label: 'February 2026', closedAt: '2026-03-01T00:00:00Z', score: 64, income: 3320,  debtPaid: 0, bufAdded: 0,   ownerPaid: 332, billsTotal: 1995, billsPaidAmount: 1995, billsPaidCount: 7, billsCount: 7, totalDebtEnd: 0, bufferEnd: 0,   bills: [], debts: [] },
+  ],
+  email_prefs: { dormancy: true, weekly: true, bill_reminder: true, low_buffer: true, monthly_wrap: true },
+};
+function _demoDateOffset(days){
+  const d = new Date(); d.setDate(d.getDate() + days);
+  return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`;
+}
+let _demoBackupS = null;
+let _demoOriginalSave = null;
+function _isDemoActive(){ return !!_demoBackupS; }
+
+function toggleDemoMode(){
+  if (_isDemoActive()) {
+    exitDemoMode();
+  } else {
+    enterDemoMode();
+  }
+}
+function enterDemoMode(){
+  if (_isDemoActive()) return;
+  _demoBackupS = JSON.parse(JSON.stringify(S));
+  Object.assign(S, JSON.parse(JSON.stringify(DEMO_FIXTURE)));
+  // Stub out save() and saveUserData() so demo edits don't write to the
+  // server. Restored on exit.
+  _demoOriginalSave = { save: window.save, saveUserData: window.saveUserData };
+  window.save = () => {};
+  window.saveUserData = async () => {};
+  _renderDemoBanner(true);
+  _updateDemoButtonLabel(true);
+  refreshHome();
+  showToast('Demo mode on. Real data is parked.');
+  Able.track?.('demo_mode_on');
+}
+function exitDemoMode(){
+  if (!_isDemoActive()) return;
+  Object.assign(S, _demoBackupS);
+  // Wipe any keys that were on the fixture but not on the original.
+  for (const k of Object.keys(S)) {
+    if (!(k in _demoBackupS)) delete S[k];
+  }
+  _demoBackupS = null;
+  if (_demoOriginalSave) {
+    window.save = _demoOriginalSave.save;
+    window.saveUserData = _demoOriginalSave.saveUserData;
+    _demoOriginalSave = null;
+  }
+  _renderDemoBanner(false);
+  _updateDemoButtonLabel(false);
+  refreshHome();
+  showToast('Real data restored.');
+  Able.track?.('demo_mode_off');
+}
+function _renderDemoBanner(on){
+  const el = document.getElementById('demo-mode-banner');
+  if (!el) return;
+  if (on) {
+    el.innerHTML = `
+      <span style="display:inline-flex;align-items:center;gap:6px;">
+        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><circle cx="12" cy="16" r=".6" fill="currentColor"/></svg>
+        Demo mode — these numbers aren't real
+      </span>
+      <button onclick="exitDemoMode()">Exit demo</button>`;
+    el.classList.add('on');
+    el.style.display = 'flex';
+  } else {
+    el.classList.remove('on');
+    el.style.display = 'none';
+    el.innerHTML = '';
+  }
+}
+function _updateDemoButtonLabel(on){
+  const lbl = document.getElementById('demo-mode-label');
+  const sub = document.getElementById('demo-mode-sub');
+  if (lbl) lbl.textContent = on ? 'Exit demo mode' : 'Try demo mode';
+  if (sub) sub.textContent = on
+    ? 'Switch back to your real data. Demo edits won\'t save.'
+    : 'See Able with curated sample data. Your real data is preserved.';
+}
+
 function resetMonth(){
   if(!confirm('Close this month and start a new one?\n\n✓ This month\'s income, bills paid, and debt progress will be saved to history\n✓ Bill checkoffs reset for the new month\n✓ Bills, debts, and buffer carry over\n\nYou can view your full history on the Score tab.'))return;
   const now=new Date();
