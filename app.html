@@ -1299,6 +1299,16 @@ body.tour-active #page-home .db-action-card{display:flex!important;}
 .plan-refresh-banner-cta:hover{background:#2c5d96;}
 .plan-refresh-banner-x{flex-shrink:0;width:26px;height:26px;background:transparent;border:0;color:#284b78;font-size:14px;font-weight:800;cursor:pointer;border-radius:6px;display:flex;align-items:center;justify-content:center;opacity:.6;}
 .plan-refresh-banner-x:hover{opacity:1;background:rgba(40,75,120,.1);}
+/* Quarterly tax projection card on home (Tax C / P2 #24). Calm warm tone
+   so it doesn't compete with the green hero or the amber due-today card.
+   Sits between the action chips and the Next-N card. */
+.qt-card{display:flex;align-items:center;gap:12px;background:linear-gradient(135deg,#fdf6e6,#f7eccc);border:1px solid #e9d599;border-radius:var(--ds-r2);padding:13px 16px;margin-bottom:.85rem;font-family:var(--ds-f);box-shadow:var(--ds-sh1);}
+.qt-card-icon{flex-shrink:0;width:36px;height:36px;border-radius:50%;background:#c97c0a;color:white;display:flex;align-items:center;justify-content:center;}
+.qt-card-body{flex:1;min-width:0;}
+.qt-card-eyebrow{font-size:9px;font-weight:800;letter-spacing:.14em;text-transform:uppercase;color:#7a4a05;margin-bottom:2px;}
+.qt-card-title{font-size:14px;font-weight:900;color:var(--ds-t1);letter-spacing:-.01em;line-height:1.2;}
+.qt-card-sub{font-size:11px;color:var(--ds-t2);font-weight:600;margin-top:3px;line-height:1.4;}
+.qt-card-amt{font-family:var(--ds-f);font-size:18px;font-weight:900;color:#7a4a05;letter-spacing:-.02em;flex-shrink:0;}
 /* Demo-mode banner — sits above the entire app while demo mode is on,
    so prospects on App Store screenshots and curious users never confuse
    the curated fixture for their real numbers. */
@@ -1713,6 +1723,11 @@ posthog.init('phc_B6PH36QxpExnyBYhfScFFF6LhDvoyxuFr6PypJuxxky3', {
       <button class="db-score-card-link" onclick="goTo('score')">See your story →</button>
     </div>
   </div>
+
+  <!-- Quarterly tax card — Tax C workstream (P2 #24). Surfaces the next
+       estimated-tax deadline + projected amount. Hidden when no tax % is
+       set, or when there's no income history to project from. -->
+  <div id="home-quarterly-tax" style="display:none;"></div>
 
   <!-- Inline "Next N days" card — shows the next 1-2 events (bills + expected
        income) with their funded state. Tap opens the full modal for the
@@ -6919,6 +6934,7 @@ function refreshHome(){
   renderPastDueBanner();
   renderDueTodayCard();
   renderPlanRefreshBanner();
+  renderQuarterlyTaxCard();
   renderIncomeInboxBanner();
   // Match Plaid deposits to manual S.history entries so the user sees a
   // "deposited at $X" annotation and we don't double-count income once
@@ -9374,6 +9390,81 @@ async function refreshPlanFromBanner(){
   if (el) el.innerHTML = '';
   // The full re-review flow will be wired in a follow-up; for now we just
   // surface the toast so the user knows something happened.
+}
+
+// ─── Quarterly tax projection (Tax C / P2 #24) ─────────────────────────
+// US estimated-tax due dates are 4/15, 6/15, 9/15, and 1/15. Each covers
+// the prior quarter's 1099 income. Returns the next deadline + projection
+// based on the user's avg monthly income over the last 90 days × tax %.
+const _QT_DUE_MONTHS = [
+  { month: 0,  day: 15 },  // Jan 15 (Q4 of prior year)
+  { month: 3,  day: 15 },  // Apr 15 (Q1)
+  { month: 5,  day: 15 },  // Jun 15 (Q2)
+  { month: 8,  day: 15 },  // Sep 15 (Q3)
+];
+function _nextQuarterlyDueDate(now){
+  const y = now.getFullYear();
+  for (const d of _QT_DUE_MONTHS) {
+    const candidate = new Date(y, d.month, d.day);
+    if (candidate >= now) return candidate;
+  }
+  // Past Sep 15 — next is Jan 15 of next year.
+  return new Date(y + 1, 0, 15);
+}
+function _avgMonthlyIncomeLast90(){
+  const now = Date.now();
+  const since = now - 90 * 86400000;
+  const recent = (S.history || []).filter(h => {
+    const t = h.ts || (h.date ? Date.parse(h.date) : 0);
+    return t && t >= since;
+  });
+  if (recent.length === 0) return 0;
+  const sum = recent.reduce((s, h) => s + (h.amount || 0), 0);
+  // 90 days = 3 months.
+  return sum / 3;
+}
+function _userTaxPct(){
+  // Read from S.obligations first (fixed-allocations shape with type:'tax'),
+  // fall back to settings.taxPct if present, else 0.
+  const obs = Array.isArray(S.obligations) ? S.obligations : [];
+  const taxOb = obs.find(o => o && (o.type === 'tax' || /tax/i.test(o.label || '')));
+  if (taxOb && typeof taxOb.percentage === 'number' && taxOb.percentage > 0) return taxOb.percentage;
+  if (S.settings && typeof S.settings.taxPct === 'number' && S.settings.taxPct > 0) return S.settings.taxPct;
+  return 0;
+}
+function renderQuarterlyTaxCard(){
+  const wrap = document.getElementById('home-quarterly-tax');
+  if (!wrap) return;
+  const taxPct = _userTaxPct();
+  const avgMonthly = _avgMonthlyIncomeLast90();
+  // Hide when we don't have enough signal — no tax obligation set, or no
+  // recent income history. Keeps brand-new users from seeing an irrelevant
+  // card before they've earned the context for it.
+  if (taxPct <= 0 || avgMonthly <= 0) { wrap.innerHTML = ''; wrap.style.display = 'none'; return; }
+  const now = new Date();
+  const due = _nextQuarterlyDueDate(now);
+  const daysUntil = Math.max(0, Math.ceil((due - now) / 86400000));
+  // Quarterly projection = avg monthly income × tax % × 3 months. Rounded
+  // so the number is approachable, not anchored to a false precision.
+  const projected = Math.round((avgMonthly * (taxPct / 100)) * 3);
+  const dueLabel = due.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
+  const sub = daysUntil <= 0
+    ? `Estimated tax was due ${dueLabel}. File ASAP.`
+    : daysUntil <= 14
+      ? `Due ${dueLabel} (${daysUntil} day${daysUntil===1?'':'s'}). Set this aside before then.`
+      : `Due ${dueLabel} (~${daysUntil} days). Based on a ${taxPct}% set-aside on your last 90 days.`;
+  wrap.innerHTML = `
+    <div class="qt-card">
+      <div class="qt-card-icon">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg>
+      </div>
+      <div class="qt-card-body">
+        <div class="qt-card-eyebrow">Next quarterly tax</div>
+        <div class="qt-card-title">${sub}</div>
+      </div>
+      <div class="qt-card-amt">${fr(projected)}</div>
+    </div>`;
+  wrap.style.display = '';
 }
 
 function renderPastDueBanner(){
