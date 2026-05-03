@@ -991,6 +991,57 @@ body.tour-active #page-home .db-action-card{display:flex!important;}
 #score-rows .score-pts{font-family:var(--ds-f);font-size:13px;font-weight:900;color:var(--ds-t1);}
 #score-rows .score-pts small{color:var(--ds-t3);font-weight:700;}
 
+/* Lightweight glossary tooltip: hover/focus on a .glossary-term shows a
+   one-sentence definition pulled from data-tip. Dotted underline signals
+   the term is interactive. Positions below by default; flip helper class
+   .glossary-term--up positions above for elements near the bottom of the
+   viewport (set per-instance). */
+.glossary-term{position:relative;cursor:help;border-bottom:1px dotted currentColor;outline:none;}
+.glossary-term::after{
+  content: attr(data-tip);
+  position:absolute;
+  left:50%;
+  top:calc(100% + 8px);
+  transform:translateX(-50%);
+  background:var(--ds-t1);
+  color:white;
+  padding:8px 10px;
+  border-radius:8px;
+  font-family:var(--ds-f);
+  font-size:11px;
+  font-weight:600;
+  letter-spacing:.005em;
+  line-height:1.45;
+  white-space:normal;
+  width:max-content;
+  max-width:240px;
+  text-align:left;
+  text-transform:none;
+  opacity:0;
+  pointer-events:none;
+  transition:opacity .15s ease;
+  z-index:60;
+  box-shadow:0 8px 20px -6px rgba(0,0,0,.25);
+}
+.glossary-term::before{
+  content:'';
+  position:absolute;
+  left:50%;
+  top:calc(100% + 2px);
+  transform:translateX(-50%) rotate(45deg);
+  width:8px;height:8px;
+  background:var(--ds-t1);
+  opacity:0;
+  pointer-events:none;
+  transition:opacity .15s ease;
+  z-index:60;
+}
+.glossary-term:hover::after,.glossary-term:hover::before,
+.glossary-term:focus::after,.glossary-term:focus::before,
+.glossary-term:focus-visible::after,.glossary-term:focus-visible::before{opacity:1;}
+.glossary-term--up::after{top:auto;bottom:calc(100% + 8px);}
+.glossary-term--up::before{top:auto;bottom:calc(100% + 2px);}
+
 /* First-time popover anchored to the Floor strip. Uses position:fixed so it
    escapes .db-hero's overflow:hidden (which would otherwise clip the bottom).
    Coords computed from the strip's bounding rect at show-time + on scroll. */
@@ -1216,6 +1267,15 @@ body.tour-active #page-home .db-action-card{display:flex!important;}
 .past-due-banner-sub{font-size:11px;color:var(--ds-t2);font-weight:600;margin-top:2px;line-height:1.4;}
 .past-due-banner-cta{background:var(--ds-c4);color:white;border:none;font-family:var(--ds-f);font-size:12px;font-weight:800;padding:8px 13px;border-radius:100px;cursor:pointer;letter-spacing:-.01em;flex-shrink:0;}
 .past-due-banner-cta:hover{background:#a83a52;}
+/* Due-today card — louder than the inline chip, visible only when unpaid
+   monthly bills are due today. Sits above the hero so users see it morning-of. */
+.due-today-card{display:flex;align-items:center;gap:12px;background:linear-gradient(135deg,#fff3d6 0%,#ffe8b3 100%);border-left:4px solid var(--ds-c3);border-radius:var(--ds-r2);padding:14px 16px;margin-bottom:.85rem;box-shadow:var(--ds-sh1);font-family:var(--ds-f);}
+.due-today-icon{flex-shrink:0;width:36px;height:36px;border-radius:50%;background:var(--ds-c3);color:white;display:flex;align-items:center;justify-content:center;}
+.due-today-body{flex:1;min-width:0;}
+.due-today-title{font-size:13px;font-weight:900;color:#7a4a05;letter-spacing:-.01em;}
+.due-today-sub{font-size:11px;color:#7a4a05;font-weight:600;margin-top:2px;line-height:1.4;opacity:.85;}
+.due-today-cta{background:var(--ds-c3);color:white;border:none;font-family:var(--ds-f);font-size:12px;font-weight:800;padding:8px 13px;border-radius:100px;cursor:pointer;letter-spacing:-.01em;flex-shrink:0;}
+.due-today-cta:hover{background:#a86205;}
 .inbox-banner{display:flex;align-items:center;gap:12px;background:var(--ds-green-l);border-left:4px solid var(--ds-green);border-radius:var(--ds-r2);padding:12px 14px;margin-bottom:.85rem;box-shadow:var(--ds-sh1);font-family:var(--ds-f);}
 .inbox-banner-icon{width:32px;height:32px;border-radius:50%;background:var(--ds-green);color:white;display:flex;align-items:center;justify-content:center;flex-shrink:0;}
 .inbox-banner-body{flex:1;min-width:0;}
@@ -1255,6 +1315,12 @@ body.tour-active #page-home .db-action-card{display:flex!important;}
 .act-cat-badge.debt_payment{background:#fde0e0;color:#a83434;}
 .act-cat-badge.tax_payment{background:#e3eaf2;color:#3a4f6b;}
 .act-cat-badge.transfer{background:#e6e6e6;color:#555;}
+/* Fresh-deposit "sorting this..." badge — replaces the raw "unclassified"
+   pill while the Edge Function classifier finishes. Subtle pulse signals
+   activity without alarming. */
+.act-sorting-badge{display:inline-flex;align-items:center;gap:5px;font-size:10px;font-weight:800;letter-spacing:.04em;text-transform:uppercase;padding:2px 8px 2px 7px;border-radius:100px;background:var(--ds-green-l);color:var(--ds-green2);}
+.act-sorting-dot{display:inline-block;width:6px;height:6px;border-radius:50%;background:var(--ds-green);animation:actSortingPulse 1.4s ease-in-out infinite;}
+@keyframes actSortingPulse{0%,100%{transform:scale(1);opacity:.6;}50%{transform:scale(1.25);opacity:1;}}
 .rc-chip{background:white;border:1.5px solid var(--ds-line);color:var(--ds-t1);font-family:var(--ds-f);font-size:12px;font-weight:800;padding:8px 14px;border-radius:100px;cursor:pointer;letter-spacing:-.01em;transition:all .15s;}
 .rc-chip:hover{border-color:var(--ds-green);color:var(--ds-green);}
 .rc-chip.selected{background:var(--ds-green);color:white;border-color:var(--ds-green);}
@@ -1581,6 +1647,10 @@ posthog.init('phc_B6PH36QxpExnyBYhfScFFF6LhDvoyxuFr6PypJuxxky3', {
 
   <!-- Past-due bills banner — visible only when monthly bills missed their due day -->
   <div id="past-due-banner"></div>
+
+  <!-- Due-today card — louder than the chip, only visible morning-of for
+       unpaid bills due today. Filled by renderDueTodayCard. Empty otherwise. -->
+  <div id="due-today-card"></div>
 
   <!-- HERO GRID — money (left/top) + score (right/bottom on mobile). -->
   <div class="db-hero-grid">
@@ -5647,6 +5717,10 @@ async function submitReferral() {
     okEl.textContent=`Invite sent to ${email}.`;
     okEl.style.display='block';
     Able.track('referral_sent');
+    // Bump local counter so the "First Referral Sent" / "Three Referrals
+    // Sent" achievements unlock without waiting on a server round-trip.
+    S.referrals_sent = (S.referrals_sent||0) + 1;
+    try { await saveUserData(); } catch (_) {}
     await loadReferralData();
   } catch(e) {
     errEl.textContent=e.message;
@@ -6738,6 +6812,7 @@ function refreshHome(){
   renderDashboard();
   renderHeroMoney();
   renderPastDueBanner();
+  renderDueTodayCard();
   renderIncomeInboxBanner();
   // Match Plaid deposits to manual S.history entries so the user sees a
   // "deposited at $X" annotation and we don't double-count income once
@@ -6794,11 +6869,11 @@ function renderDashboard(){
   const habitsRow=document.getElementById('db-habits-row');
   if(habitsRow){
     const HABITS=[
-      {key:'bills', name:'Bills',   pts:score.components.bills,  max:30, on:()=>goTo('bills')},
-      {key:'pay',   name:'Pay self',pts:score.components.pay,    max:20, on:()=>goTo('settings')},
-      {key:'debt',  name:'Debt',    pts:score.components.debt,   max:20, on:()=>goTo('debt')},
-      {key:'buffer',name:'Buffer',  pts:score.components.buffer, max:15, on:()=>openBufferModal()},
-      {key:'within',name:'Within',  pts:score.components.budget, max:15, on:()=>goTo('score')},
+      {key:'bills', name:'Bills',   tip:"How much of this month's bill total is paid or set aside.",                                pts:score.components.bills,  max:30, on:()=>goTo('bills')},
+      {key:'pay',   name:'Pay self',tip:"Owner draw this month against your set pay-yourself target.",                              pts:score.components.pay,    max:20, on:()=>goTo('settings')},
+      {key:'debt',  name:'Debt',    tip:"Anything sent to debt above the minimums this month.",                                     pts:score.components.debt,   max:20, on:()=>goTo('debt')},
+      {key:'buffer',name:'Buffer',  tip:"Money set aside for next month's Floor. Slow months get paid by the buffer, not by panic.",pts:score.components.buffer, max:15, on:()=>openBufferModal()},
+      {key:'within',name:'Within',  tip:"Discretionary spending under target. Auto-credited until expense tracking ships.",         pts:score.components.budget, max:15, on:()=>goTo('score')},
     ];
     const checkSvg=`<svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>`;
     habitsRow.innerHTML=HABITS.map(h=>{
@@ -6806,7 +6881,8 @@ function renderDashboard(){
       const cls=ratio>=0.999?'done':(ratio>0.001?'partial':'');
       const ringStyle=cls==='partial'?` style="--p:${Math.round(ratio*100)}%"`:'';
       const ring=cls==='done'?checkSvg:'';
-      return `<div class="db-habit ${cls}" data-habit="${h.key}" role="button" tabindex="0" title="${h.name} · ${h.pts}/${h.max}">
+      const titleAttr = `${h.name}: ${h.pts}/${h.max}\n${h.tip}`;
+      return `<div class="db-habit ${cls}" data-habit="${h.key}" role="button" tabindex="0" title="${escapeHtml(titleAttr)}">
         <div class="db-habit-ring"${ringStyle}>${ring}</div>
         <div class="db-habit-name">${h.name}</div>
         <div class="db-habit-pts">${h.pts}/${h.max}</div>
@@ -8019,31 +8095,39 @@ const ACHIEVEMENTS = [
     },
     distance: () => 'Three in a row at 80+',
   },
-  // LEARN
-  { id:'learn_first_article', cat:'learn', name:'First Article Read', icon:_ACH_ICON.book,
-    unlocked: () => Array.isArray(S.learn_read) && S.learn_read.length >= 1,
+  // LEARN — sources of truth are the Learn-tab's lcCompleted Set (lessons
+  // completed) and S.referrals_sent (bumped by sendReferralInvite). The
+  // Learn tab already persists lesson_progress to Supabase; we just read it.
+  { id:'learn_first_article', cat:'learn', name:'First Lesson Done', icon:_ACH_ICON.book,
+    unlocked: () => (typeof lcCompleted !== 'undefined' && lcCompleted instanceof Set && lcCompleted.size >= 1),
     distance: () => 'Open the Learn tab',
   },
-  { id:'learn_five_rules', cat:'learn', name:'Read Five Rules', icon:_ACH_ICON.book,
-    unlocked: () => Array.isArray(S.learn_read) && S.learn_read.includes('floor-first-method'),
-    distance: () => 'Read Floor-First method',
+  { id:'learn_five_rules', cat:'learn', name:'Five Lessons In', icon:_ACH_ICON.book,
+    unlocked: () => (typeof lcCompleted !== 'undefined' && lcCompleted instanceof Set && lcCompleted.size >= 5),
+    distance: () => { const n = (typeof lcCompleted !== 'undefined' && lcCompleted instanceof Set) ? lcCompleted.size : 0; return `${Math.max(0,5-n)} more`; },
   },
-  { id:'learn_quiz_passed', cat:'learn', name:'First Quiz Passed', icon:_ACH_ICON.check,
-    unlocked: () => Array.isArray(S.learn_quizzes) && S.learn_quizzes.length >= 1,
-    distance: () => 'Take a Learn quiz',
+  { id:'learn_quiz_passed', cat:'learn', name:'Three Lessons Done', icon:_ACH_ICON.check,
+    unlocked: () => (typeof lcCompleted !== 'undefined' && lcCompleted instanceof Set && lcCompleted.size >= 3),
+    distance: () => { const n = (typeof lcCompleted !== 'undefined' && lcCompleted instanceof Set) ? lcCompleted.size : 0; return `${Math.max(0,3-n)} more`; },
   },
-  { id:'learn_all_modules', cat:'learn', name:'All Modules Done', icon:_ACH_ICON.book,
-    unlocked: () => Array.isArray(S.learn_read) && S.learn_read.length >= 8,
-    distance: () => { const n = (S.learn_read||[]).length; return `${Math.max(0,8-n)} to go`; },
+  { id:'learn_all_modules', cat:'learn', name:'Ten Lessons In', icon:_ACH_ICON.book,
+    unlocked: () => (typeof lcCompleted !== 'undefined' && lcCompleted instanceof Set && lcCompleted.size >= 10),
+    distance: () => { const n = (typeof lcCompleted !== 'undefined' && lcCompleted instanceof Set) ? lcCompleted.size : 0; return `${Math.max(0,10-n)} to go`; },
   },
-  // REFER
+  // REFER — referrals_joined tile is locked-by-design until we wire a
+  // backend hook for "an invite turned into a paid signup." For v1, only
+  // the "sent" tile reflects user action; "joined" tiles wait on backend.
   { id:'refer_first_sent', cat:'refer', name:'First Referral Sent', icon:_ACH_ICON.user,
     unlocked: () => (S.referrals_sent||0) >= 1,
     distance: () => 'Open the Refer tab',
   },
+  { id:'refer_three_sent', cat:'refer', name:'Three Referrals Sent', icon:_ACH_ICON.user,
+    unlocked: () => (S.referrals_sent||0) >= 3,
+    distance: () => `${Math.max(0,3-(S.referrals_sent||0))} more`,
+  },
   { id:'refer_one_joined', cat:'refer', name:'1 Friend Joined', icon:_ACH_ICON.group,
     unlocked: () => (S.referrals_joined||0) >= 1,
-    distance: () => 'Send a referral first',
+    distance: () => 'Backend hook pending',
   },
   { id:'refer_five_joined', cat:'refer', name:'5 Friends Joined', icon:_ACH_ICON.group,
     unlocked: () => (S.referrals_joined||0) >= 5,
@@ -8165,7 +8249,12 @@ function _achProgress(id){
     case 'score_80':            return clamp(maxScore/80);
     case 'score_90':            return clamp(maxScore/90);
     case 'score_100':           return clamp(maxScore/100);
-    case 'learn_all_modules':   return clamp(learnRead/8);
+    case 'learn_first_article': return (typeof lcCompleted !== 'undefined' && lcCompleted instanceof Set) ? clamp(lcCompleted.size/1) : 0;
+    case 'learn_quiz_passed':   return (typeof lcCompleted !== 'undefined' && lcCompleted instanceof Set) ? clamp(lcCompleted.size/3) : 0;
+    case 'learn_five_rules':    return (typeof lcCompleted !== 'undefined' && lcCompleted instanceof Set) ? clamp(lcCompleted.size/5) : 0;
+    case 'learn_all_modules':   return (typeof lcCompleted !== 'undefined' && lcCompleted instanceof Set) ? clamp(lcCompleted.size/10) : 0;
+    case 'refer_first_sent':    return clamp((S.referrals_sent||0)/1);
+    case 'refer_three_sent':    return clamp((S.referrals_sent||0)/3);
     case 'refer_five_joined':   return clamp(referralsJoined/5);
     case 'refer_ten_joined':    return clamp(referralsJoined/10);
     default: return 0;
@@ -8283,7 +8372,7 @@ function renderHabitDetailRows({s1,s2,s3,s4,s5}){
     { label:'Paid yourself',         sub:'Owner draw against your monthly target.',             val:s5, max:20 },
     { label:'Extra debt payments',   sub:'Anything sent to debt above the minimums.',           val:s2, max:20 },
     { label:'Buffer fund added',     sub:"Money set aside toward next month's floor.",          val:s3, max:15 },
-    { label:'Within your income',    sub:'Discretionary spending under target.',                 val:s4, max:15 },
+    { label:'Within your income',    sub:'Auto-credited for now. Real tracking ships with the expense module.', val:s4, max:15 },
   ];
   const checkSvg = `<svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>`;
   el.innerHTML = rows.map(r => {
@@ -9027,6 +9116,45 @@ function billPastDue(bill){
 function _pastDueBills(){
   return (S.bills||[]).map((b,i)=>({b,i,info:billPastDue(b)})).filter(x=>x.info);
 }
+// Bills due today (not past-due, not paid). Same filter shape as past-due
+// but matches the current calendar day instead of a strictly-prior day.
+// Weekly/biweekly/custom freqs return false here for now — same caveat as
+// billPastDue, which currently only handles monthly.
+function _dueTodayBills(){
+  const now = new Date(); now.setHours(0,0,0,0);
+  const todayDay = now.getDate();
+  return (S.bills||[]).filter((b) => {
+    if (!b || b.paid) return false;
+    if (b.due === 'ongoing') return false;
+    const freq = b.freq || 'monthly';
+    if (freq !== 'monthly') return false;
+    const dueDay = parseInt(b.due);
+    if (isNaN(dueDay) || dueDay < 1 || dueDay > 31) return false;
+    return dueDay === todayDay;
+  });
+}
+// Louder-than-the-chip same-day reminder. Only renders when 1+ unpaid bills
+// are due TODAY. Hidden otherwise so quiet days stay quiet.
+function renderDueTodayCard(){
+  const el = document.getElementById('due-today-card');
+  if (!el) return;
+  const bills = _dueTodayBills();
+  if (!bills.length) { el.innerHTML = ''; return; }
+  const total = bills.reduce((s,b)=>s+(b.amount||0),0);
+  const n = bills.length;
+  const names = bills.slice(0,2).map(b => b.name).join(', ') + (bills.length > 2 ? `, +${bills.length-2} more` : '');
+  el.innerHTML = `
+    <div class="due-today-card" role="alert">
+      <div class="due-today-icon">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg>
+      </div>
+      <div class="due-today-body">
+        <div class="due-today-title">${n} bill${n>1?'s':''} due today · ${fr(total)}</div>
+        <div class="due-today-sub">${escapeHtml(names)}</div>
+      </div>
+      <button class="due-today-cta" onclick="goTo('bills')">Review</button>
+    </div>`;
+}
 function renderPastDueBanner(){
   const el = document.getElementById('past-due-banner');
   if (!el) return;
@@ -9345,11 +9473,20 @@ async function loadPaceLine(){
   if (!wrap) return;
   const isInScoreCard = wrap.id === 'db-score-pace';
   if (isInScoreCard) wrap.classList.add('db-score-pace--dark');
-  // Tour mode dashboards use demo numbers; pace line on top of fake data
-  // would be misleading. Hide for the duration of the tour.
+  // Tour mode dashboards use demo numbers; a real pace line over fake data
+  // would be misleading. Inside the dark score card, render a static
+  // "Demo data" placeholder so the card visually completes (otherwise the
+  // pace slot is an empty band in the middle of the card). The legacy
+  // home-paceline slot still hides entirely.
   if (document.body.classList.contains('tour-active')) {
-    wrap.style.display = 'none';
-    if (isInScoreCard) wrap.innerHTML = '';
+    if (isInScoreCard) {
+      wrap.style.display = 'block';
+      wrap.innerHTML = `
+        <div class="db-pace-label" style="margin-bottom:4px;">Floor pace</div>
+        <div style="font-size:12px;font-weight:600;color:rgba(255,255,255,.55);line-height:1.45;">Demo data — your real pace lights up after a few weeks of activity.</div>`;
+    } else {
+      wrap.style.display = 'none';
+    }
     return;
   }
   try {
@@ -9785,8 +9922,16 @@ function _renderActivityRow(r){
   const isInflow = (r.amount ?? 0) < 0;
   const display = Math.abs(r.amount ?? 0).toLocaleString(undefined, { style: 'currency', currency: 'USD' });
   const sign = isInflow ? '+' : '−';
-  const cat = r.able_category || 'unclassified';
-  const catLabel = _catLabel(cat);
+  const rawCat = r.able_category || 'unclassified';
+  const isSorting = rawCat === 'unclassified';
+  const cat = rawCat;
+  // Maya's diary: a fresh deposit briefly showing as raw "unclassified"
+  // for ~90s before the classifier runs is anxiety-inducing. Render a
+  // calmer "Sorting this..." pill with a subtle pulse instead, until the
+  // Edge Function lands a real category.
+  const catBadge = isSorting
+    ? `<span class="act-sorting-badge" title="Able is classifying this transaction. Usually takes a minute or two."><span class="act-sorting-dot"></span>Sorting this…</span>`
+    : `<span class="act-cat-badge ${cat}">${escapeHtml(_catLabel(cat))}</span>`;
   const name = r.merchant_name || r.name || 'Unknown';
   const pfc = _formatPfc(r.personal_finance_category_detailed, r.personal_finance_category_primary);
   return `
@@ -9794,7 +9939,7 @@ function _renderActivityRow(r){
       <div class="act-row-info">
         <div class="act-row-name">${escapeHtml(name)}</div>
         <div class="act-row-meta">
-          <span class="act-cat-badge ${cat}">${escapeHtml(catLabel)}</span>
+          ${catBadge}
           ${pfc ? `<span class="act-pfc-badge">${escapeHtml(pfc)}</span>` : ''}
           ${r.business_label ? `<span class="act-business-badge">${escapeHtml(r.business_label)}</span>` : ''}
           ${r.is_tax_deductible ? `<span class="act-tax-flag">deductible</span>` : ''}
@@ -10822,7 +10967,7 @@ function renderHeroMoney(){
   const floorStrip = floorTotal > 0.01 ? `
     <div class="db-floor-strip" id="db-floor-strip">
       <div class="db-floor-row">
-        <div class="db-floor-label">The Floor</div>
+        <div class="db-floor-label"><span class="glossary-term" tabindex="0" data-tip="Bills + tax. The amount you can't miss each month. Floor-First means every deposit covers this before any other dollar gets a job.">The Floor</span></div>
         <div class="db-floor-num">${f2(floorFunded)} <span>/ ${f2(floorTotal)}</span></div>
       </div>
       <div class="db-floor-track"><div class="db-floor-fill" style="width:${floorPct}%;"></div></div>
