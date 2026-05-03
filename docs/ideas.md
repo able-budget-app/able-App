@@ -17,6 +17,8 @@ The friction is the feature. Untriaged ideas living in active queues are how sco
 ## Open ideas
 
 - 2026-05-03 | **Reverse-engineer goals from income events** | What-if currently runs forward (here's $X, here's how it splits). Add a backward path: pick a goal (pay off card, buy boat, etc.) and surface "how many DoorDash runs / Etsy sales / freelance invoices does that take?" Concrete units instead of abstract dollars. | Gig-worker persona, fits inside the What-if surface, idea via Paul's brother
+- 2026-05-03 | **"Reset paid flags for this month" action** | Settings entry that unchecks every `bill.paid` for the current month. Useful for users who toggled bills paid in error (or while testing). Per Paul's bug report 2026-05-03: bills toggled paid persist after income delete because allocation never set them in the first place — only manual checkbox + Mark paid through today + Past-due banner do. | Data-hygiene QoL
+- 2026-05-03 | **Soft warning when paid-flag total exceeds plausible cash** | If `paidBills()` > (balance + reservedNow + plausible recent income), surface a small "your paid-flags look stale, want to review?" inline hint above Bills. Non-blocking, dismissible. Catches the same bug as the reset action but proactively. | Same source
 
 ---
 

@@ -14813,6 +14813,13 @@ function buildCoachState() {
       })) : undefined,
     })) : undefined,
   } : null;
+  // Promote intake_channels (multi-select from onboarding step 3) and the
+  // free-text "Other" write-in to top-level fields so Coach reasons about
+  // them by name. Previously they sat nested inside settings and the Coach
+  // prompt didn't reliably surface them — Devon's diary called out that
+  // his "YouTube ad rev (Adsense)" write-in was never referenced.
+  const intakeChannels = (S.settings && Array.isArray(S.settings.intake_channels)) ? S.settings.intake_channels : [];
+  const intakeOther    = (S.settings && S.settings.intake_channels_other) ? String(S.settings.intake_channels_other) : '';
   return {
     today: new Date().toISOString().slice(0, 10),
     bills: S.bills,
@@ -14820,6 +14827,8 @@ function buildCoachState() {
     buffer: S.buffer,
     settings: S.settings,
     sources: S.sources,
+    income_channels: intakeChannels,
+    income_channels_other: intakeOther,
     obligations: S.obligations,
     profile: S.profile,
     // New, dashboard-aligned numbers — prefer these when answering questions.
