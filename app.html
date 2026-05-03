@@ -10017,45 +10017,67 @@ function selectReclassifyChip(cat){
 // Cached candidates for the bulk-apply pathway. Populated by the async
 // match query that fires after the user picks a category in the modal.
 let _reclassifyBulkCandidates = [];
+let _reclassifyBulkQueryToken = 0;
 async function _refreshReclassifyBulkOffer(){
   const section = document.getElementById('reclassify-bulk-section');
   const labelEl = document.getElementById('reclassify-bulk-label');
+  const checkbox = document.getElementById('reclassify-bulk-apply');
   if (!section || !labelEl) return;
   const row = _activeReclassifyTxn;
   const cat = _activeReclassifyCat;
-  // Hide while we figure things out; reveal after the query if matches exist.
-  section.style.display = 'none';
   _reclassifyBulkCandidates = [];
-  if (!row || !cat) return;
+  if (!row || !cat) { section.style.display = 'none'; return; }
   const justOnce = document.getElementById('reclassify-just-once');
-  // "Just this transaction" disables the bulk pathway entirely — no override
-  // means no pattern to apply; we honor the user's intent.
-  if (justOnce && justOnce.checked) return;
+  // "Just this transaction" disables the bulk pathway — no override = no
+  // pattern. Hide section so the user knows their pick is honored.
+  if (justOnce && justOnce.checked) { section.style.display = 'none'; return; }
   const override = (typeof _deriveOverride === 'function') ? _deriveOverride(row) : null;
-  if (!override) return;
+  if (!override) { section.style.display = 'none'; return; }
+
+  // Show optimistic loading state immediately so the user sees the feature
+  // exists, even if the query is slow or eventually returns zero.
+  section.style.display = '';
+  if (checkbox) checkbox.disabled = true;
+  labelEl.textContent = 'Checking for similar rows in the last 30 days…';
+
+  const myToken = ++_reclassifyBulkQueryToken;
   try {
     const sb = sbGet();
     const since = new Date(Date.now() - 30 * 86400000);
     const sinceStr = `${since.getFullYear()}-${String(since.getMonth()+1).padStart(2,'0')}-${String(since.getDate()).padStart(2,'0')}`;
-    let q = sb.from('plaid_transactions')
+    // Loose substring match against BOTH merchant_name and name so we catch
+    // sibling rows where Plaid put the descriptor in different columns
+    // (e.g. one row has merchant_name=Stripe, another has name="STRIPE PAYOUT").
+    const v = (override.value || '').trim();
+    if (!v) throw new Error('empty override value');
+    const pat = `%${v}%`;
+    const orFilter = `merchant_name.ilike.${pat},name.ilike.${pat}`;
+    const { data, error } = await sb.from('plaid_transactions')
       .select('id, name, merchant_name, able_category')
       .gte('date', sinceStr)
-      .neq('id', row.id);
-    if (override.kind === 'merchant') q = q.ilike('merchant_name', override.value);
-    else q = q.ilike('name', `%${override.value}%`);
-    const { data, error } = await q.limit(50);
+      .neq('id', row.id)
+      .or(orFilter)
+      .limit(50);
     if (error) throw error;
+    // Bail if the user changed their selection while we were querying.
+    if (myToken !== _reclassifyBulkQueryToken || cat !== _activeReclassifyCat) return;
     const candidates = (data || []).filter((r) => r.able_category !== cat);
-    // Confirm selection didn't change while the query was in flight.
-    if (cat !== _activeReclassifyCat) return;
-    if (candidates.length === 0) return;
-    _reclassifyBulkCandidates = candidates;
     const label = (typeof ACTIVITY_CAT_LABELS !== 'undefined' && ACTIVITY_CAT_LABELS[cat]) || cat;
-    const n = candidates.length;
-    labelEl.textContent = `Also tag ${n} similar ${n === 1 ? 'row' : 'rows'} from the last 30 days as ${label}.`;
-    section.style.display = '';
+    if (candidates.length === 0) {
+      _reclassifyBulkCandidates = [];
+      labelEl.textContent = `No similar rows from the last 30 days. This change applies to just this row.`;
+      if (checkbox) { checkbox.checked = false; checkbox.disabled = true; }
+    } else {
+      _reclassifyBulkCandidates = candidates;
+      const n = candidates.length;
+      labelEl.textContent = `Also tag ${n} similar ${n === 1 ? 'row' : 'rows'} from the last 30 days as ${label}.`;
+      if (checkbox) { checkbox.checked = true; checkbox.disabled = false; }
+    }
   } catch (e) {
+    if (myToken !== _reclassifyBulkQueryToken) return;
     console.warn('refresh bulk offer failed:', e);
+    labelEl.textContent = 'Could not check for similar rows. This change applies to just this row.';
+    if (checkbox) { checkbox.checked = false; checkbox.disabled = true; }
   }
 }
 
