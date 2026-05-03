@@ -2159,9 +2159,9 @@ posthog.init('phc_B6PH36QxpExnyBYhfScFFF6LhDvoyxuFr6PypJuxxky3', {
       </div>
       <div class="sec">Connected accounts</div>
       <div class="card">
-        <div style="font-size:13px;color:var(--ds-t2);font-weight:600;margin-bottom:1rem;line-height:1.6;">Banks Able reads transactions from. Disconnecting stops the sync and removes the data from your account.</div>
+        <div style="font-size:13px;color:var(--ds-t2);font-weight:600;margin-bottom:1rem;line-height:1.6;">Banks Able reads transactions from. <strong style="color:var(--ds-t1);">Connect as many as you need</strong> — checking, savings, business, side-account. No cap. Disconnecting stops the sync and removes that bank's data from your account.</div>
         <div id="connected-accounts-list"><div class="empty-state" style="padding:1.25rem;">Loading…</div></div>
-        <button class="btn btn-primary btn-sm" id="connect-another-bank-btn" style="margin-top:.85rem;width:100%;" onclick="settingsConnectBank()">+ Connect a bank</button>
+        <button class="btn btn-primary btn-sm" id="connect-another-bank-btn" style="margin-top:.85rem;width:100%;" onclick="settingsConnectBank()">+ Connect another bank</button>
         <div id="connect-bank-error" style="color:var(--ds-c4);font-size:12px;font-weight:600;margin-top:.5rem;display:none;"></div>
         <div style="font-size:11px;color:var(--ds-t3);font-weight:500;line-height:1.5;margin-top:.85rem;">By connecting, you authorize Plaid to share your account data with Able. Read <a href="https://plaid.com/legal/#end-user-privacy-policy" target="_blank" rel="noopener" style="color:var(--ds-green);text-decoration:underline;">Plaid's privacy policy</a>.</div>
       </div>
@@ -8683,6 +8683,12 @@ async function loadConnectedAccounts() {
       .select('id, institution_name, status, error_message, consent_expiration_at, created_at')
       .order('created_at', { ascending: true });
     if (itemsErr) throw itemsErr;
+
+    // Update the button label to match state: "Connect a bank" before any
+    // are connected; "Connect another bank" once one is in. Communicates
+    // the multi-bank affordance (P2 #20) without a separate UI element.
+    const btn = document.getElementById('connect-another-bank-btn');
+    if (btn) btn.textContent = (items && items.length > 0) ? '+ Connect another bank' : '+ Connect a bank';
 
     if (!items || items.length === 0) {
       listEl.innerHTML = `<div class="empty-state" style="padding:1.25rem;">No banks connected yet. Connect one below so Able can read transactions.</div>`;
