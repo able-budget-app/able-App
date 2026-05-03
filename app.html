@@ -988,15 +988,16 @@ body.tour-active #page-home .db-action-card{display:flex!important;}
 #score-rows .score-pts{font-family:var(--ds-f);font-size:13px;font-weight:900;color:var(--ds-t1);}
 #score-rows .score-pts small{color:var(--ds-t3);font-weight:700;}
 
-/* First-time popover anchored to the Floor strip. Dismissed on tap or via
-   the X. Persists dismissal in localStorage (able_seen_floor_intro). */
-.db-floor-pop{position:absolute;left:50%;top:calc(100% + 10px);transform:translateX(-50%);width:min(320px,calc(100vw - 48px));background:#fff;color:var(--ds-t1);border-radius:var(--ds-r1);padding:14px 32px 13px 14px;box-shadow:0 18px 36px -10px rgba(13,36,25,.45);z-index:30;font-family:var(--ds-f);animation:floorPopIn .35s cubic-bezier(.34,1.2,.64,1) both;}
+/* First-time popover anchored to the Floor strip. Uses position:fixed so it
+   escapes .db-hero's overflow:hidden (which would otherwise clip the bottom).
+   Coords computed from the strip's bounding rect at show-time + on scroll. */
+.db-floor-pop{position:fixed;width:min(320px,calc(100vw - 32px));background:#fff;color:var(--ds-t1);border-radius:var(--ds-r1);padding:14px 32px 13px 14px;box-shadow:0 18px 36px -10px rgba(13,36,25,.45);z-index:1000;font-family:var(--ds-f);animation:floorPopIn .35s cubic-bezier(.34,1.2,.64,1) both;}
 .db-floor-pop::before{content:'';position:absolute;left:50%;top:-7px;transform:translateX(-50%) rotate(45deg);width:14px;height:14px;background:#fff;border-radius:2px;}
 .db-floor-pop-title{font-size:12px;font-weight:900;color:var(--ds-t1);letter-spacing:-.01em;margin-bottom:4px;}
 .db-floor-pop-body{font-size:12px;font-weight:600;color:var(--ds-t2);line-height:1.5;}
 .db-floor-pop-x{position:absolute;top:6px;right:6px;width:24px;height:24px;background:transparent;border:0;color:var(--ds-t3);font-size:14px;font-weight:800;cursor:pointer;border-radius:6px;display:flex;align-items:center;justify-content:center;}
 .db-floor-pop-x:hover{background:var(--ds-page);color:var(--ds-t1);}
-@keyframes floorPopIn{from{opacity:0;transform:translateX(-50%) translateY(-4px);}to{opacity:1;transform:translateX(-50%) translateY(0);}}
+@keyframes floorPopIn{from{opacity:0;transform:translateY(-4px);}to{opacity:1;transform:translateY(0);}}
 .db-chips{position:relative;display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:1.1rem;}
 .db-chip{background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.14);border-radius:var(--ds-r2);padding:.75rem .85rem;cursor:pointer;transition:background .18s,transform .18s;}
 .db-chip:hover{background:rgba(255,255,255,.16);transform:translateY(-1px);}
@@ -10644,14 +10645,34 @@ function renderHeroMoney(){
 function maybeShowFloorIntro(){
   const strip = document.getElementById('db-floor-strip');
   if (!strip) return;
-  if (strip.querySelector('.db-floor-pop')) return;
+  if (document.querySelector('.db-floor-pop')) return;
   const pop = document.createElement('div');
   pop.className = 'db-floor-pop';
   pop.innerHTML = `
     <button class="db-floor-pop-x" aria-label="Dismiss" onclick="dismissFloorIntro(event)">×</button>
     <div class="db-floor-pop-title">This is your Floor</div>
     <div class="db-floor-pop-body">Bills and tax. The amount you can't miss this month. Reserved cash fills it; surplus goes to the rest of your plan.</div>`;
-  strip.appendChild(pop);
+  // Append to body so it escapes the hero's overflow:hidden clipping.
+  document.body.appendChild(pop);
+
+  // Position centered below the strip in viewport coords. Re-runs on scroll/
+  // resize so the popover follows the strip until the user dismisses it.
+  const place = () => {
+    const rect = strip.getBoundingClientRect();
+    const popW = pop.offsetWidth || 320;
+    const left = Math.max(16, Math.min(window.innerWidth - popW - 16, rect.left + rect.width/2 - popW/2));
+    pop.style.left = left + 'px';
+    pop.style.top = (rect.bottom + 10) + 'px';
+  };
+  place();
+  const onMove = () => place();
+  window.addEventListener('scroll', onMove, { passive: true });
+  window.addEventListener('resize', onMove);
+  pop._cleanup = () => {
+    window.removeEventListener('scroll', onMove);
+    window.removeEventListener('resize', onMove);
+  };
+
   // Tap-anywhere-on-popover dismisses too (except the X, which has its own handler).
   pop.addEventListener('click', (e) => {
     if (e.target.classList.contains('db-floor-pop-x')) return;
@@ -10662,7 +10683,10 @@ function dismissFloorIntro(e){
   if (e) { e.stopPropagation(); e.preventDefault(); }
   try { localStorage.setItem('able_seen_floor_intro', '1'); } catch(_) {}
   const pop = document.querySelector('.db-floor-pop');
-  if (pop) pop.remove();
+  if (pop) {
+    if (typeof pop._cleanup === 'function') pop._cleanup();
+    pop.remove();
+  }
 }
 // Backward-compat shim — older callers used renderBalanceCard.
 function renderBalanceCard(){ renderHeroMoney(); }
