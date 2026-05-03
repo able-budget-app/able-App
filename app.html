@@ -5801,6 +5801,18 @@ async function touchLastActive(){
 // Immediate save (for onboarding completion) - no debounce
 async function saveUserData() {
   if(!currentUser) return;
+  // Auto-detect IANA timezone if we haven't captured one yet. This lets
+  // email-cron-daily compute day boundaries (isMonday, tomorrowDay, todayStart)
+  // per-user instead of in UTC, which day-shifts weekly digest, monthly_wrap,
+  // and bill_due_tomorrow emails for users outside MST/UTC. Stored on
+  // settings (JSONB the client owns) so we don't need a profiles RLS change.
+  S.settings = S.settings || {};
+  if (!S.settings.timezone) {
+    try {
+      const detected = Intl.DateTimeFormat().resolvedOptions().timeZone;
+      if (detected) S.settings.timezone = detected;
+    } catch (_) { /* old browsers without Intl: leave unset, cron falls back to UTC */ }
+  }
   setSyncState('syncing');
   const {error}=await sbGet().from('user_data').upsert({
     id:currentUser.id,

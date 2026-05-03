@@ -30,7 +30,7 @@ Deno.serve(async (req) => {
 
     let { data: userDataRows } = await admin
       .from('user_data')
-      .select('id, last_active, email_prefs, unsubscribe_token, bills, buffer, history');
+      .select('id, last_active, email_prefs, unsubscribe_token, bills, buffer, history, settings');
     let userDataMap = new Map((userDataRows ?? []).map((u: any) => [u.id, u]));
 
     // Ensure every auth user has a user_data row so they all have an unsubscribe_token
@@ -38,7 +38,7 @@ Deno.serve(async (req) => {
     if (missingIds.length > 0) {
       await admin.from('user_data').upsert(missingIds, { onConflict: 'id', ignoreDuplicates: true });
       const refresh = await admin.from('user_data')
-        .select('id, last_active, email_prefs, unsubscribe_token, bills, buffer, history');
+        .select('id, last_active, email_prefs, unsubscribe_token, bills, buffer, history, settings');
       if (refresh.data) userDataMap = new Map(refresh.data.map((u: any) => [u.id, u]));
     }
 
@@ -66,12 +66,55 @@ Deno.serve(async (req) => {
     const sevenDaysAgoMs = nowMs - 7 * 24 * 60 * 60 * 1000;
     const fourteenDaysAgoMs = nowMs - 14 * 24 * 60 * 60 * 1000;
     const twentyEightDaysAgoMs = nowMs - 28 * 24 * 60 * 60 * 1000;
-    const todayStart = new Date(); todayStart.setUTCHours(0, 0, 0, 0);
-    const todayStartMs = todayStart.getTime();
-    const isMonday = now.getUTCDay() === 1;
-    const isFirstOfMonth = now.getUTCDate() === 1;
-    const tomorrow = new Date(); tomorrow.setUTCDate(tomorrow.getUTCDate() + 1);
-    const tomorrowDay = tomorrow.getUTCDate();
+
+    // Per-user day-window computation. The cron runs daily but each user's
+    // "today" begins at THEIR local midnight, not UTC. Without this, weekly
+    // digest, monthly_wrap, and bill_due_tomorrow day-shift for users
+    // outside UTC. Tz is pulled from user_data.settings.timezone (auto-
+    // detected by the browser via Intl.DateTimeFormat on saveUserData);
+    // falls back to UTC when missing or invalid.
+    function userTzWindow(tz: string): { isMonday: boolean; isFirstOfMonth: boolean; tomorrowDay: number; todayStartMs: number } {
+      const safeTz = (tz && typeof tz === 'string') ? tz : 'UTC';
+      let parts: Intl.DateTimeFormatPart[];
+      try {
+        parts = new Intl.DateTimeFormat('en-US', {
+          timeZone: safeTz,
+          year: 'numeric', month: '2-digit', day: '2-digit',
+          weekday: 'short', hour: 'numeric', hour12: false,
+        }).formatToParts(now);
+      } catch {
+        // Bad tz string. Re-run with UTC.
+        parts = new Intl.DateTimeFormat('en-US', {
+          timeZone: 'UTC',
+          year: 'numeric', month: '2-digit', day: '2-digit',
+          weekday: 'short', hour: 'numeric', hour12: false,
+        }).formatToParts(now);
+      }
+      const get = (t: string) => parts.find((p) => p.type === t)?.value ?? '';
+      const weekdayMap: Record<string, number> = { Sun:0, Mon:1, Tue:2, Wed:3, Thu:4, Fri:5, Sat:6 };
+      const yyyy = Number(get('year'));
+      const mm   = Number(get('month'));
+      const dd   = Number(get('day'));
+      const wd   = weekdayMap[get('weekday')] ?? 0;
+      // todayStartMs in user's local midnight, expressed as UTC ms. Compute
+      // the offset between the moment's user-local clock and UTC, then back
+      // out the local-midnight wall clock.
+      const localWallAsUtc = Date.UTC(yyyy, mm - 1, dd, Number(get('hour')) || 0);
+      const offsetMs = localWallAsUtc - nowMs;
+      const todayStartMs = Date.UTC(yyyy, mm - 1, dd) - offsetMs;
+      // Tomorrow's day-of-month, computed from local midnight + 24h.
+      const tomorrowMidnightUtc = todayStartMs + 24 * 60 * 60 * 1000;
+      const tomorrowParts = new Intl.DateTimeFormat('en-US', {
+        timeZone: safeTz, day: '2-digit',
+      }).formatToParts(new Date(tomorrowMidnightUtc));
+      const tomorrowDay = Number(tomorrowParts.find((p) => p.type === 'day')?.value ?? dd + 1);
+      return {
+        isMonday: wd === 1,
+        isFirstOfMonth: dd === 1,
+        tomorrowDay,
+        todayStartMs,
+      };
+    }
 
     const paidStatuses = new Set(['active', 'trialing', 'lifetime']);
 
@@ -84,6 +127,10 @@ Deno.serve(async (req) => {
       const profile: any = profilesMap.get(userId);
       const prefs: any = userData?.email_prefs ?? {};
       const hasPaid = profile && paidStatuses.has(profile.subscription_status);
+
+      // Day-window computed in this user's local timezone.
+      const userTz = userData?.settings?.timezone || 'UTC';
+      const { isMonday, isFirstOfMonth, tomorrowDay, todayStartMs } = userTzWindow(userTz);
 
       // Abandoned cart sequence (non-payers only)
       if (!hasPaid && userData?.unsubscribe_token) {
