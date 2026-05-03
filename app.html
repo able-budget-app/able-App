@@ -18,6 +18,14 @@
     document.write('<script src="scripts/demo-seed.js"><\/script>');
   }
 </script>
+<!-- Web Push VAPID public key (P2 #14). Generate once with
+     `npx web-push generate-vapid-keys`, paste the public key here, and
+     set the same public key + matching private key as Edge Function
+     env vars (VAPID_PUBLIC_KEY, VAPID_PRIVATE_KEY) on send-push.
+     Empty string = push UI explains push isn't configured yet. -->
+<script>
+  window.ABLE_VAPID_PUBLIC_KEY = '';
+</script>
 <style>
 :root {
   /* ═══ LEGACY TOKENS — remapped to new design system ═══ */
@@ -2165,6 +2173,15 @@ posthog.init('phc_B6PH36QxpExnyBYhfScFFF6LhDvoyxuFr6PypJuxxky3', {
         <div id="connect-bank-error" style="color:var(--ds-c4);font-size:12px;font-weight:600;margin-top:.5rem;display:none;"></div>
         <div style="font-size:11px;color:var(--ds-t3);font-weight:500;line-height:1.5;margin-top:.85rem;">By connecting, you authorize Plaid to share your account data with Able. Read <a href="https://plaid.com/legal/#end-user-privacy-policy" target="_blank" rel="noopener" style="color:var(--ds-green);text-decoration:underline;">Plaid's privacy policy</a>.</div>
       </div>
+      <div class="sec">Push notifications</div>
+      <div class="card" id="push-card">
+        <div style="font-size:13px;color:var(--ds-t2);font-weight:600;line-height:1.6;margin-bottom:1rem;">A nudge on your phone or laptop the morning a bill is due, or when a deposit lands and needs allocating. Browser notifications, no app install required.</div>
+        <div id="push-status" style="font-size:12px;color:var(--ds-t3);font-weight:600;margin-bottom:.85rem;"></div>
+        <button class="btn btn-primary btn-sm" id="push-enable-btn" onclick="enablePushNotifications()" style="width:100%;">Enable push notifications</button>
+        <button class="btn btn-sm" id="push-disable-btn" onclick="disablePushNotifications()" style="width:100%;display:none;">Turn off push notifications</button>
+        <div id="push-error" style="color:var(--ds-c4);font-size:12px;font-weight:600;margin-top:.5rem;display:none;"></div>
+      </div>
+
       <div class="sec">Email reminders</div>
       <div class="card">
         <div style="font-size:13px;color:var(--ds-t2);font-weight:600;line-height:1.6;margin-bottom:1rem;">We'll send these to the email on file. Unsubscribe anytime.</div>
@@ -9397,6 +9414,142 @@ async function refreshPlanFromBanner(){
   // The full re-review flow will be wired in a follow-up; for now we just
   // surface the toast so the user knows something happened.
 }
+
+// ─── Web Push (P2 #14) ────────────────────────────────────────────────
+// Service worker registration + permission flow + subscribe + persist to
+// push_subscriptions. The send-push Edge Function reads subscriptions and
+// posts VAPID-signed payloads when triggered (e.g., from email-cron-daily
+// for bill_due_tomorrow).
+//
+// VAPID_PUBLIC_KEY is set via window.ABLE_VAPID_PUBLIC_KEY before this
+// script runs (see the meta block below). When unset, the UI explains
+// that push isn't configured yet.
+async function _registerServiceWorker(){
+  if (!('serviceWorker' in navigator)) return null;
+  try {
+    return await navigator.serviceWorker.register('/service-worker.js');
+  } catch (e) {
+    console.warn('service worker registration failed:', e);
+    return null;
+  }
+}
+function _vapidPublicKey(){
+  return (window.ABLE_VAPID_PUBLIC_KEY || '').trim();
+}
+function _b64UrlToUint8(b64){
+  const padded = b64 + '='.repeat((4 - b64.length % 4) % 4);
+  const raw = atob(padded.replace(/-/g, '+').replace(/_/g, '/'));
+  const out = new Uint8Array(raw.length);
+  for (let i = 0; i < raw.length; i++) out[i] = raw.charCodeAt(i);
+  return out;
+}
+async function refreshPushUI(){
+  const status = document.getElementById('push-status');
+  const enableBtn = document.getElementById('push-enable-btn');
+  const disableBtn = document.getElementById('push-disable-btn');
+  const errEl = document.getElementById('push-error');
+  if (!status || !enableBtn || !disableBtn) return;
+  if (errEl) errEl.style.display = 'none';
+  if (!('serviceWorker' in navigator) || !('PushManager' in window)) {
+    status.textContent = "Your browser doesn't support push notifications.";
+    enableBtn.style.display = 'none';
+    disableBtn.style.display = 'none';
+    return;
+  }
+  if (!_vapidPublicKey()) {
+    status.textContent = 'Push isn\'t configured yet on this Able instance. Hang tight.';
+    enableBtn.style.display = 'none';
+    disableBtn.style.display = 'none';
+    return;
+  }
+  const reg = await _registerServiceWorker();
+  if (!reg) { status.textContent = 'Could not register service worker.'; return; }
+  const sub = await reg.pushManager.getSubscription();
+  if (sub) {
+    status.textContent = 'On — this browser will receive Able push notifications.';
+    enableBtn.style.display = 'none';
+    disableBtn.style.display = 'block';
+  } else {
+    const perm = (typeof Notification !== 'undefined') ? Notification.permission : 'default';
+    status.textContent = perm === 'denied'
+      ? 'Push is blocked in your browser settings. Re-enable for becomeable.app to subscribe.'
+      : 'Off — enable to get a nudge when a bill is due or a deposit lands.';
+    enableBtn.style.display = perm === 'denied' ? 'none' : 'block';
+    disableBtn.style.display = 'none';
+  }
+}
+async function enablePushNotifications(){
+  const errEl = document.getElementById('push-error');
+  const enableBtn = document.getElementById('push-enable-btn');
+  if (errEl) errEl.style.display = 'none';
+  if (enableBtn) { enableBtn.disabled = true; enableBtn.textContent = 'Enabling…'; }
+  try {
+    const reg = await _registerServiceWorker();
+    if (!reg) throw new Error('Service worker unavailable');
+    const perm = await Notification.requestPermission();
+    if (perm !== 'granted') throw new Error('Permission ' + perm);
+    const pub = _vapidPublicKey();
+    if (!pub) throw new Error('VAPID public key missing');
+    const sub = await reg.pushManager.subscribe({
+      userVisibleOnly: true,
+      applicationServerKey: _b64UrlToUint8(pub),
+    });
+    // Extract keys from the subscription for the server.
+    const subJson = sub.toJSON ? sub.toJSON() : JSON.parse(JSON.stringify(sub));
+    const endpoint = subJson.endpoint;
+    const p256dh = subJson.keys?.p256dh;
+    const auth   = subJson.keys?.auth;
+    if (!endpoint || !p256dh || !auth) throw new Error('Subscription missing keys');
+    if (!currentUser) throw new Error('Not signed in');
+    const { error } = await sbGet().from('push_subscriptions').upsert({
+      user_id: currentUser.id, endpoint, p256dh, auth,
+      user_agent: (navigator.userAgent || '').slice(0, 200),
+      last_used_at: new Date().toISOString(),
+      failure_count: 0,
+    }, { onConflict: 'user_id,endpoint' });
+    if (error) throw error;
+    Able.track?.('push_enabled');
+    showToast('Push notifications on.');
+  } catch (e) {
+    console.error('enablePushNotifications failed:', e);
+    if (errEl) { errEl.textContent = 'Could not enable: ' + (e.message || 'unknown error'); errEl.style.display = 'block'; }
+  } finally {
+    if (enableBtn) { enableBtn.disabled = false; enableBtn.textContent = 'Enable push notifications'; }
+    refreshPushUI();
+  }
+}
+async function disablePushNotifications(){
+  const errEl = document.getElementById('push-error');
+  if (errEl) errEl.style.display = 'none';
+  try {
+    const reg = await _registerServiceWorker();
+    if (!reg) return;
+    const sub = await reg.pushManager.getSubscription();
+    if (sub) {
+      const endpoint = sub.endpoint;
+      await sub.unsubscribe();
+      if (currentUser && endpoint) {
+        await sbGet().from('push_subscriptions').delete().eq('user_id', currentUser.id).eq('endpoint', endpoint);
+      }
+    }
+    Able.track?.('push_disabled');
+    showToast('Push notifications off.');
+  } catch (e) {
+    console.error('disablePushNotifications failed:', e);
+    if (errEl) { errEl.textContent = 'Could not disable: ' + (e.message || 'unknown error'); errEl.style.display = 'block'; }
+  } finally {
+    refreshPushUI();
+  }
+}
+// Refresh push UI whenever Settings becomes the active page.
+document.addEventListener('DOMContentLoaded', () => {
+  const observer = new MutationObserver(() => {
+    const settingsActive = document.getElementById('page-settings')?.classList.contains('active');
+    if (settingsActive) refreshPushUI();
+  });
+  const app = document.getElementById('app');
+  if (app) observer.observe(app, { attributes: true, subtree: true, attributeFilter: ['class'] });
+});
 
 // ─── Quarterly tax projection (Tax C / P2 #24) ─────────────────────────
 // US estimated-tax due dates are 4/15, 6/15, 9/15, and 1/15. Each covers

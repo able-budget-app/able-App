@@ -200,6 +200,28 @@ Deno.serve(async (req) => {
       if (billsDueTomorrow.length > 0 && prefs.bill_reminder !== false && !sentSince(userId, 'bill_due_tomorrow', todayStartMs)) {
         const ok = await sendBillDue(admin, email, userData, billsDueTomorrow);
         if (ok) results.bill_due++; else results.errors++;
+        // Also fire a web push (P2 #14) when configured. Best-effort —
+        // failure here doesn't roll back the email send. send-push is a
+        // no-op when the user hasn't subscribed.
+        const billNames = billsDueTomorrow.map((b: any) => b.name).slice(0, 2).join(', ') + (billsDueTomorrow.length > 2 ? ` + ${billsDueTomorrow.length - 2} more` : '');
+        const totalDue = billsDueTomorrow.reduce((s: number, b: any) => s + (b.amount || 0), 0);
+        try {
+          await fetch(`${SUPABASE_URL}/functions/v1/send-push`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${SERVICE_ROLE}` },
+            body: JSON.stringify({
+              user_id: userId,
+              payload: {
+                title: `Bill due tomorrow: $${Math.round(totalDue)}`,
+                body: billNames,
+                tag: 'bill-due-tomorrow',
+                url: '/app.html#bills',
+              },
+            }),
+          });
+        } catch (e) {
+          console.warn('send-push (bill_due_tomorrow) failed:', e);
+        }
       }
 
       // Low buffer warning. Compare buffer against UNPAID bills only — including
