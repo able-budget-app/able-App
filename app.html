@@ -1104,6 +1104,17 @@ body.tour-active #page-home .db-action-card{display:flex!important;}
 .db-next-stat--in{color:var(--ds-green);}
 .db-next-empty{padding:8px 0;font-size:13px;color:var(--ds-t3);font-weight:600;text-align:center;}
 
+/* Tax Export card on Activity — promoted from 12px link to its own card
+   so the year-end-CSV feature is actually discoverable. */
+.tax-export-card{display:flex;align-items:center;gap:14px;background:linear-gradient(135deg,#eaf5ee,#d9ecde);border:1px solid var(--ds-green-m);border-radius:var(--ds-r2);padding:14px 16px;margin-bottom:1rem;cursor:pointer;box-shadow:var(--ds-sh1);transition:transform .15s,box-shadow .15s;}
+.tax-export-card:hover{transform:translateY(-1px);box-shadow:var(--ds-sh2);}
+.tax-export-card:active{transform:translateY(0);}
+.tax-export-icon{flex-shrink:0;width:40px;height:40px;border-radius:var(--ds-r2);background:white;color:var(--ds-green2);display:flex;align-items:center;justify-content:center;box-shadow:0 2px 8px rgba(31,96,56,.12);}
+.tax-export-body{flex:1;min-width:0;}
+.tax-export-title{font-family:var(--ds-f);font-size:14px;font-weight:900;color:var(--ds-t1);letter-spacing:-.01em;}
+.tax-export-sub{font-family:var(--ds-f);font-size:12px;font-weight:600;color:var(--ds-t2);line-height:1.4;margin-top:2px;}
+.tax-export-chevron{font-size:22px;color:var(--ds-green2);font-weight:400;line-height:1;flex-shrink:0;}
+
 /* 3-chip action row replacing the prior 4-card grid. */
 .db-action-chips{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:1.1rem;}
 .db-chip-action{appearance:none;background:var(--ds-card);border:1px solid var(--ds-line);border-radius:var(--ds-r2);padding:11px 8px 9px;display:flex;flex-direction:column;align-items:center;gap:6px;font-family:var(--ds-f);cursor:pointer;box-shadow:var(--ds-sh1);transition:transform .15s,box-shadow .15s;}
@@ -1423,7 +1434,15 @@ posthog.init('phc_B6PH36QxpExnyBYhfScFFF6LhDvoyxuFr6PypJuxxky3', {
     <div style="margin-top:1.25rem;">
       <button class="btn btn-primary" onclick="startCheckout()" id="checkout-btn">Start your free 30-day trial →</button>
     </div>
-    <div id="checkout-fine" style="text-align:center;margin-top:.6rem;font-size:11px;color:var(--ds-t3);font-weight:600;letter-spacing:.02em;line-height:1.5;">Card required. You won't be charged until day 31. Cancel anytime in Settings.</div>
+    <div id="checkout-fine" style="margin-top:.85rem;background:var(--ds-green-l);border:1px solid var(--ds-green-m);border-radius:var(--ds-r1);padding:12px 14px;font-size:12px;color:var(--ds-t2);font-weight:600;letter-spacing:.005em;line-height:1.55;">
+      <div style="display:flex;align-items:flex-start;gap:8px;">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="var(--ds-green)" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink:0;margin-top:2px;"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><path d="M9 12l2 2 4-4"/></svg>
+        <div>
+          <div style="font-weight:800;color:var(--ds-t1);margin-bottom:3px;">Card required to start the trial.</div>
+          <div id="checkout-fine-detail">Free until <b id="checkout-fine-charge-date">your trial ends</b>. We'll email you on <b id="checkout-fine-warn-date">day 28</b><span id="checkout-fine-email-suffix"></span> before any charge. Cancel anytime in Settings.</div>
+        </div>
+      </div>
+    </div>
     <div id="paywall-error" style="display:none;margin-top:.75rem;background:#fdeef2;border:1.5px solid rgba(192,64,96,.3);border-radius:var(--ds-r1);padding:12px 14px;font-size:13px;font-weight:600;color:var(--ds-c4);font-family:var(--ds-f);"></div>
     <div style="text-align:center;margin-top:1.25rem;font-size:11px;color:var(--ds-t3);font-weight:600;letter-spacing:.03em;">
       Secured by Stripe · Cancel anytime from Settings
@@ -1858,9 +1877,19 @@ posthog.init('phc_B6PH36QxpExnyBYhfScFFF6LhDvoyxuFr6PypJuxxky3', {
      the new category and (optionally) a user_classification_overrides row so
      future matching txns auto-classify the same way. -->
 <div class="page" id="page-activity">
-  <div class="sec" style="display:flex;align-items:center;gap:12px;flex-wrap:wrap;">
-    <span>Activity</span>
-    <button class="btn btn-sm btn-ghost" onclick="openTaxExportModal()" style="margin-left:auto;font-size:12px;">Tax export →</button>
+  <div class="sec">Activity</div>
+
+  <!-- Tax Export card — promoted out of a 12px text link in the page header
+       (per focus-group P0 #3) so users can find their CSV at year-end. -->
+  <div class="tax-export-card" onclick="openTaxExportModal()" role="button" tabindex="0" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();openTaxExportModal();}">
+    <div class="tax-export-icon">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="9" y1="13" x2="15" y2="13"/><line x1="9" y1="17" x2="13" y2="17"/></svg>
+    </div>
+    <div class="tax-export-body">
+      <div class="tax-export-title">Tax export</div>
+      <div class="tax-export-sub" id="tax-export-sub">Every transaction you marked tax-deductible, grouped by category. CSV for your accountant.</div>
+    </div>
+    <div class="tax-export-chevron">›</div>
   </div>
 
   <!-- Recurring outflows surfaced from plaid_recurring_streams. Hidden by
@@ -3047,6 +3076,7 @@ async function _onAuthStateChangeImpl(user) {
         document.getElementById('auth-screen').style.display='none';
         document.getElementById('paywall-screen').style.display='flex';
         document.getElementById('app').style.display='none';
+        renderPaywallFinePrint();
         Able.track('paywall_viewed');
       }
       return;
@@ -4887,6 +4917,8 @@ function obRenderPlanReviewUI() {
       .plan-floor-callout-num{font-size:30px;font-weight:900;letter-spacing:-.04em;line-height:1.05;margin:6px 0 8px;}
       .plan-floor-callout-num small{font-size:13px;font-weight:700;color:rgba(255,255,255,.7);margin-left:4px;letter-spacing:0;}
       .plan-floor-callout-body{font-size:13px;font-weight:600;color:rgba(255,255,255,.9);line-height:1.5;}
+      .plan-floor-callout-gap{margin-top:10px;padding-top:10px;border-top:1px solid rgba(184,224,200,.35);font-size:13px;font-weight:600;color:rgba(255,255,255,.92);line-height:1.5;}
+      .plan-floor-callout-gap b{color:#fff;font-weight:800;}
     </style>`;
 
   // "Here's your Floor" callout — Floor-First introduced through the user's
@@ -4900,6 +4932,17 @@ function obRenderPlanReviewUI() {
     const monthly = freq === 'weekly' ? amt * 4.33 : freq === 'biweekly' ? amt * 2.17 : freq === 'quarterly' ? amt / 3 : freq === 'annual' || freq === 'yearly' ? amt / 12 : amt;
     return sum + monthly;
   }, 0);
+  // Average monthly income across detected income sources (analyzer puts a
+  // per-source average_amount on each row). Used for the gap-acknowledgement
+  // line when Floor exceeds income — the moment that broke Riley in focus
+  // group testing without a "we'll close the gap" sentence on impact.
+  const incomeItems = (r.sections && r.sections.income_sources && r.sections.income_sources.items) || [];
+  const avgIncome = incomeItems.reduce((sum, s) => sum + (Number(s.average_amount) || 0), 0);
+  let gapLine = '';
+  if (floorTotal > 0 && avgIncome > 0 && floorTotal > avgIncome + 1) {
+    const gap = Math.round(floorTotal - avgIncome);
+    gapLine = `<div class="plan-floor-callout-gap"><b>Heads up:</b> your Floor is about $${gap.toLocaleString()} above your average month. That's normal for Floor-First. We'll close the gap together — deposits fill what's next, and Coach will help on the slow weeks.</div>`;
+  }
   if (floorTotal > 0.5 && billItems.length > 0) {
     html += `
       <div class="plan-floor-callout">
@@ -4907,6 +4950,7 @@ function obRenderPlanReviewUI() {
         <div class="plan-floor-callout-title">Bills + tax. The amount you can't miss each month.</div>
         <div class="plan-floor-callout-num">$${Math.round(floorTotal).toLocaleString()}<small>/ month</small></div>
         <div class="plan-floor-callout-body"><b>Floor-First Budgeting</b> means every deposit covers your Floor before any dollar votes on dinner. Able does this automatically. You'll see your coverage on the home screen as it fills.</div>
+        ${gapLine}
       </div>`;
   }
 
@@ -5210,6 +5254,10 @@ async function obSubmitPlanReview() {
     await saveUserData();
     obClearSession();
 
+    // Plan-review screen already explained the Floor; suppress the home-tab
+    // popover so the user doesn't see the same copy twice.
+    try { localStorage.setItem('able_seen_floor_intro', '1'); } catch (_) {}
+
     // Done. Open the app.
     document.getElementById('onboard-screen').style.display = 'none';
     document.getElementById('app').style.display = 'block';
@@ -5329,6 +5377,10 @@ async function obConfirm() {
   await saveUserData();
   obClearSession();
 
+  // Plan-review screen already explained the Floor; suppress the home-tab
+  // popover so the user doesn't see the same copy twice.
+  try { localStorage.setItem('able_seen_floor_intro', '1'); } catch (_) {}
+
   // Go to app
   document.getElementById('onboard-screen').style.display = 'none';
   document.getElementById('app').style.display = 'block';
@@ -5359,6 +5411,24 @@ function selectPlan(plan) {
   a.classList.toggle('selected',plan==='annual');
   m.setAttribute('aria-checked',plan==='monthly'?'true':'false');
   a.setAttribute('aria-checked',plan==='annual'?'true':'false');
+}
+
+// Concrete trial-end specifics on the paywall: the exact charge date,
+// the day-28 email warning date, and the user's email if we have it.
+// Fires every time the paywall is shown so dates always reflect "today + 30."
+function renderPaywallFinePrint(){
+  const today = new Date();
+  const charge = new Date(today.getTime() + 30 * 86400000);
+  const warn   = new Date(today.getTime() + 27 * 86400000);
+  const fmt = (d) => d.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
+  const chargeEl = document.getElementById('checkout-fine-charge-date');
+  const warnEl   = document.getElementById('checkout-fine-warn-date');
+  const emailSuffEl = document.getElementById('checkout-fine-email-suffix');
+  if (chargeEl) chargeEl.textContent = fmt(charge);
+  if (warnEl)   warnEl.textContent   = fmt(warn);
+  // Show the user's email when we have it (signed in but pre-checkout).
+  const email = (typeof currentUser !== 'undefined' && currentUser && currentUser.email) ? currentUser.email : '';
+  if (emailSuffEl) emailSuffEl.textContent = email ? ` at ${email}` : '';
 }
 
 async function startCheckout() {
