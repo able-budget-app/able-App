@@ -905,11 +905,98 @@ body.tour-active #page-home .db-action-card{display:flex!important;}
 .db-hero-cta-primary:active{transform:translateY(0);}
 .db-hero-cta-secondary{position:relative;width:100%;background:rgba(255,255,255,.13);color:white;border:1.5px solid rgba(255,255,255,.28);border-radius:100px;padding:11px 18px;font-family:var(--ds-f);font-size:13px;font-weight:800;letter-spacing:-.01em;cursor:pointer;transition:background .15s;}
 .db-hero-cta-secondary:hover{background:rgba(255,255,255,.22);}
+/* Quiet text-link CTA used as the secondary action on home (allocate available). */
+.db-hero-cta-link{position:relative;display:block;width:100%;background:transparent;color:rgba(255,255,255,.78);border:0;padding:8px 4px 2px;font-family:var(--ds-f);font-size:12px;font-weight:700;letter-spacing:-.005em;cursor:pointer;text-align:center;transition:color .15s;}
+.db-hero-cta-link:hover{color:white;}
+/* Home greeting line above the hero. */
+.home-greet-hi{font-family:var(--ds-f);font-size:18px;font-weight:800;color:var(--ds-t1);letter-spacing:-.02em;line-height:1.2;}
+.home-greet-date{font-family:var(--ds-f);font-size:13px;font-weight:700;color:var(--ds-t2);letter-spacing:-.005em;}
 .db-hero-empty{padding:.5rem 0 .75rem;color:rgba(255,255,255,.88);font-size:13px;font-weight:600;line-height:1.5;}
 .db-hero-shortfall{background:rgba(255,255,255,.12);border-left:3px solid #ffd0d8;border-radius:var(--ds-r1);padding:9px 12px;margin-top:.5rem;font-size:12px;font-weight:600;color:#ffd0d8;line-height:1.5;}
 .db-hero::before{content:'';position:absolute;inset:0;background:radial-gradient(circle at 85% 10%,rgba(255,255,255,.14),transparent 55%);pointer-events:none;}
-.db-hero-eyebrow{position:relative;font-size:10px;font-weight:800;letter-spacing:.14em;text-transform:uppercase;color:rgba(255,255,255,.7);margin-bottom:.75rem;display:flex;align-items:center;gap:8px;}
-.db-hero-eyebrow::before{content:'';display:inline-block;width:5px;height:5px;border-radius:50%;background:#b8e0c8;}
+.db-hero-eyebrow{position:relative;font-size:10px;font-weight:800;letter-spacing:.14em;text-transform:uppercase;color:rgba(255,255,255,.7);margin-bottom:.75rem;display:flex;align-items:baseline;gap:10px;}
+.db-hero-eyebrow .db-hero-month{font-size:32px;font-weight:900;color:white;letter-spacing:-.04em;text-transform:none;line-height:1;}
+.db-hero-eyebrow .db-hero-month-tag{font-size:10px;font-weight:800;letter-spacing:.14em;color:rgba(255,255,255,.7);text-transform:uppercase;}
+
+/* Floor coverage strip — Floor-First made visible on home */
+.db-floor-strip{position:relative;margin-top:.75rem;background:rgba(0,0,0,.18);border:1px solid rgba(184,224,200,.22);border-radius:var(--ds-r1);padding:10px 12px 11px;}
+.db-floor-row{display:flex;justify-content:space-between;align-items:baseline;margin-bottom:6px;}
+.db-floor-label{font-size:10px;font-weight:800;text-transform:uppercase;letter-spacing:.12em;color:#b8e0c8;}
+.db-floor-num{font-size:11px;font-weight:800;color:white;letter-spacing:-.01em;}
+.db-floor-num span{color:rgba(255,255,255,.55);font-weight:700;}
+.db-floor-track{position:relative;height:7px;background:rgba(255,255,255,.1);border-radius:999px;overflow:hidden;}
+.db-floor-fill{position:absolute;left:0;top:0;bottom:0;background:linear-gradient(90deg,#b8e0c8,#ffffff);border-radius:999px;transition:width .6s cubic-bezier(.34,1.2,.64,1);}
+.db-floor-cap{margin-top:8px;font-size:11px;font-weight:600;color:rgba(255,255,255,.78);line-height:1.4;}
+.db-floor-cap b{color:white;font-weight:800;}
+
+/* Score page heading. */
+.pagehead-score{padding:6px 4px 14px;}
+.pagehead-eyebrow{font-family:var(--ds-f);font-size:10px;font-weight:800;color:var(--ds-t3);letter-spacing:.18em;text-transform:uppercase;margin-bottom:4px;}
+.pagehead-title{font-family:var(--ds-f);font-size:1.85rem;font-weight:900;color:var(--ds-t1);letter-spacing:-.03em;line-height:1.05;}
+.pagehead-ital{font-style:italic;color:var(--ds-green);font-weight:800;}
+.pagehead-sub{font-family:var(--ds-f);font-size:13px;font-weight:600;color:var(--ds-t2);margin-top:6px;line-height:1.45;}
+
+/* Streak card on the Score page — green gradient + run dots. */
+.streak-card{position:relative;background:linear-gradient(135deg,var(--ds-green) 0%,var(--ds-green2) 100%);border-radius:var(--ds-r3);padding:18px 18px 16px;color:white;margin-bottom:1rem;box-shadow:0 14px 28px -10px rgba(31,96,56,.4);overflow:hidden;}
+.streak-card::before{content:'';position:absolute;right:-40px;top:-40px;width:160px;height:160px;background:radial-gradient(circle,rgba(255,255,255,.15),transparent 70%);border-radius:50%;pointer-events:none;}
+.streak-eyebrow{position:relative;font-size:10px;font-weight:800;letter-spacing:.14em;text-transform:uppercase;color:rgba(255,255,255,.7);margin-bottom:6px;}
+.streak-num{position:relative;font-family:var(--ds-f);font-size:38px;font-weight:900;letter-spacing:-.04em;line-height:1;color:white;}
+.streak-num small{font-size:14px;font-weight:700;color:rgba(255,255,255,.7);margin-left:4px;letter-spacing:0;}
+.streak-sub{position:relative;font-size:12px;font-weight:600;color:rgba(255,255,255,.85);line-height:1.4;margin-top:8px;}
+.streak-dots{position:relative;display:flex;flex-wrap:wrap;gap:4px;margin-top:12px;}
+.streak-dot{width:14px;height:14px;border-radius:50%;background:rgba(255,255,255,.18);}
+.streak-dot.full{background:var(--ds-green-m);box-shadow:0 0 0 2px rgba(184,224,200,.3);}
+.streak-dot.partial{background:rgba(184,224,200,.55);}
+
+/* 6-month chart bars on score page. */
+.score-mc-bars{display:grid;grid-template-columns:repeat(6,1fr);gap:6px;align-items:end;height:90px;padding-bottom:18px;position:relative;border-bottom:1px solid var(--ds-line);}
+.score-mc-bar{background:linear-gradient(180deg,var(--ds-green-m),var(--ds-green));border-radius:4px 4px 0 0;position:relative;min-height:4px;transition:height .6s cubic-bezier(.34,1.2,.64,1);}
+.score-mc-bar.curr{background:linear-gradient(180deg,#e3c478,var(--ds-c3));}
+.score-mc-bar::after{content:attr(data-month);position:absolute;bottom:-16px;left:50%;transform:translateX(-50%);font-family:var(--ds-f);font-size:9px;font-weight:700;color:var(--ds-t3);letter-spacing:.04em;text-transform:uppercase;}
+.score-mc-bar::before{content:attr(data-score);position:absolute;top:-16px;left:50%;transform:translateX(-50%);font-family:var(--ds-f);font-size:10px;font-weight:800;color:var(--ds-t1);}
+
+/* Achievements grid. */
+.ach-filters{display:flex;gap:6px;overflow-x:auto;padding:4px 0 12px;scrollbar-width:none;-webkit-overflow-scrolling:touch;}
+.ach-filters::-webkit-scrollbar{display:none;}
+.ach-filter{appearance:none;background:white;color:var(--ds-t2);border:1px solid var(--ds-t4);border-radius:999px;padding:5px 10px;font-family:var(--ds-f);font-size:10px;font-weight:800;letter-spacing:.04em;white-space:nowrap;cursor:pointer;transition:background .15s,color .15s,border-color .15s;}
+.ach-filter:hover{border-color:var(--ds-green);}
+.ach-filter[aria-pressed="true"]{background:var(--ds-green);color:white;border-color:var(--ds-green);}
+.ach-groups{margin-bottom:1.5rem;}
+.ach-group-label{font-family:var(--ds-f);font-size:10px;font-weight:800;letter-spacing:.14em;text-transform:uppercase;color:var(--ds-green2);padding:14px 4px 8px;display:flex;align-items:center;gap:6px;}
+.ach-group-label.records{color:var(--ds-c3);}
+.ach-group-label .label-meta{margin-left:auto;color:var(--ds-t3);font-weight:700;text-transform:none;letter-spacing:0;font-size:10px;}
+.ach-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;}
+.ach{position:relative;background:white;border-radius:14px;padding:12px 8px 10px;text-align:center;box-shadow:var(--ds-sh1);}
+.ach-medal{width:38px;height:38px;border-radius:50%;margin:0 auto 6px;display:flex;align-items:center;justify-content:center;color:white;}
+.ach.unlocked .ach-medal{background:linear-gradient(135deg,var(--ds-green),var(--ds-green2));box-shadow:0 4px 10px -2px rgba(42,122,74,.35);}
+.ach.unlocked.gold .ach-medal{background:linear-gradient(135deg,#d4a743,#b08220);box-shadow:0 4px 10px -2px rgba(176,130,32,.35);}
+.ach.locked .ach-medal{background:var(--ds-line);color:var(--ds-t3);}
+.ach-name{font-family:var(--ds-f);font-size:10px;font-weight:800;color:var(--ds-t1);line-height:1.2;letter-spacing:-.01em;}
+.ach.locked .ach-name{color:var(--ds-t3);}
+.ach-meta{font-family:var(--ds-f);font-size:9px;font-weight:700;color:var(--ds-t3);margin-top:3px;letter-spacing:.04em;text-transform:uppercase;}
+.ach-pulse{position:absolute;top:6px;right:6px;width:8px;height:8px;background:var(--ds-c3);border-radius:50%;box-shadow:0 0 0 3px rgba(201,124,10,.2);animation:achPulse 2s ease infinite;}
+@keyframes achPulse{0%,100%{transform:scale(1);}50%{transform:scale(1.25);}}
+
+/* Habit detail rows on score page. */
+#score-rows .score-row{display:grid;grid-template-columns:24px 1fr auto;gap:12px;align-items:center;padding:10px 0;border-bottom:1px solid var(--ds-line);}
+#score-rows .score-row:last-child{border-bottom:0;}
+#score-rows .score-row .hlr-ring{width:22px;height:22px;border-radius:50%;border:2px solid var(--ds-t4);display:flex;align-items:center;justify-content:center;color:white;}
+#score-rows .score-row .hlr-ring.done{background:var(--ds-green);border-color:var(--ds-green);}
+#score-rows .score-row .hlr-ring.partial{background:conic-gradient(var(--ds-c3) 0 var(--p,50%),transparent var(--p,50%) 100%);border-color:var(--ds-c3);}
+#score-rows .score-label{font-family:var(--ds-f);font-size:13px;font-weight:800;color:var(--ds-t1);letter-spacing:-.01em;}
+#score-rows .score-label small{display:block;font-size:11px;color:var(--ds-t3);font-weight:600;margin-top:1px;}
+#score-rows .score-pts{font-family:var(--ds-f);font-size:13px;font-weight:900;color:var(--ds-t1);}
+#score-rows .score-pts small{color:var(--ds-t3);font-weight:700;}
+
+/* First-time popover anchored to the Floor strip. Dismissed on tap or via
+   the X. Persists dismissal in localStorage (able_seen_floor_intro). */
+.db-floor-pop{position:absolute;left:50%;top:calc(100% + 10px);transform:translateX(-50%);width:min(320px,calc(100vw - 48px));background:#fff;color:var(--ds-t1);border-radius:var(--ds-r1);padding:14px 32px 13px 14px;box-shadow:0 18px 36px -10px rgba(13,36,25,.45);z-index:30;font-family:var(--ds-f);animation:floorPopIn .35s cubic-bezier(.34,1.2,.64,1) both;}
+.db-floor-pop::before{content:'';position:absolute;left:50%;top:-7px;transform:translateX(-50%) rotate(45deg);width:14px;height:14px;background:#fff;border-radius:2px;}
+.db-floor-pop-title{font-size:12px;font-weight:900;color:var(--ds-t1);letter-spacing:-.01em;margin-bottom:4px;}
+.db-floor-pop-body{font-size:12px;font-weight:600;color:var(--ds-t2);line-height:1.5;}
+.db-floor-pop-x{position:absolute;top:6px;right:6px;width:24px;height:24px;background:transparent;border:0;color:var(--ds-t3);font-size:14px;font-weight:800;cursor:pointer;border-radius:6px;display:flex;align-items:center;justify-content:center;}
+.db-floor-pop-x:hover{background:var(--ds-page);color:var(--ds-t1);}
+@keyframes floorPopIn{from{opacity:0;transform:translateX(-50%) translateY(-4px);}to{opacity:1;transform:translateX(-50%) translateY(0);}}
 .db-chips{position:relative;display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:1.1rem;}
 .db-chip{background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.14);border-radius:var(--ds-r2);padding:.75rem .85rem;cursor:pointer;transition:background .18s,transform .18s;}
 .db-chip:hover{background:rgba(255,255,255,.16);transform:translateY(-1px);}
@@ -967,6 +1054,62 @@ body.tour-active #page-home .db-action-card{display:flex!important;}
 .db-score-card-extra-pts .db-score-card-extra-max{color:rgba(255,255,255,.45);font-weight:700;}
 .db-score-card-link{position:relative;display:inline-flex;align-items:center;gap:6px;background:transparent;border:none;color:#b8e0c8;font-family:var(--ds-f);font-size:11px;font-weight:800;letter-spacing:.04em;text-transform:uppercase;cursor:pointer;padding:0;margin-top:.85rem;text-decoration:none;}
 .db-score-card-link:hover{color:white;}
+/* Combined-card head: eyebrow on left, small score number on right. */
+.db-score-card-head{position:relative;display:flex;justify-content:space-between;align-items:baseline;margin-bottom:.85rem;}
+.db-score-card-head .db-score-card-num{font-size:1.35rem;}
+.db-score-card-head .db-score-card-num .db-score-card-max{font-size:11px;}
+/* Pace slot — host for loadPaceLine SVG. Dark theme styling lives there. */
+.db-score-pace{position:relative;background:rgba(255,255,255,.04);border:1px solid rgba(184,224,200,.1);border-radius:var(--ds-r1);padding:10px 12px 11px;margin-bottom:.75rem;min-height:64px;}
+.db-score-pace:empty{display:none;}
+.db-score-pace--dark .db-pace-label{font-size:11px;font-weight:700;color:rgba(255,255,255,.7);letter-spacing:-.005em;}
+.db-score-pace--dark .db-pace-gap{font-size:11px;font-weight:800;letter-spacing:-.005em;}
+.db-score-pace--dark .db-pace-foot{display:flex;justify-content:space-between;margin-top:6px;font-size:9px;font-weight:700;color:rgba(255,255,255,.4);letter-spacing:.1em;text-transform:uppercase;}
+/* 5 equal-weight habit rings replacing the chips/extras split. */
+.db-habits-row{position:relative;display:grid;grid-template-columns:repeat(5,1fr);gap:6px;margin-top:.25rem;}
+.db-habit{display:flex;flex-direction:column;align-items:center;text-align:center;padding:8px 4px 6px;background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.06);border-radius:var(--ds-r1);min-height:72px;cursor:pointer;transition:background .15s,transform .15s;}
+.db-habit:hover{background:rgba(255,255,255,.08);transform:translateY(-1px);}
+.db-habit:active{transform:translateY(0);}
+.db-habit-ring{position:relative;width:22px;height:22px;border-radius:50%;border:1.5px solid rgba(255,255,255,.18);display:flex;align-items:center;justify-content:center;margin-bottom:5px;}
+.db-habit.done .db-habit-ring{background:#2a7a4a;border-color:#2a7a4a;color:white;}
+.db-habit.done .db-habit-ring svg{stroke-width:3;}
+.db-habit.partial .db-habit-ring{border-color:#c97c0a;}
+.db-habit.partial .db-habit-ring::before{content:'';position:absolute;inset:2px;background:conic-gradient(#c97c0a 0 var(--p,50%),transparent var(--p,50%) 100%);border-radius:50%;}
+.db-habit-name{font-size:9px;font-weight:800;letter-spacing:.04em;text-transform:uppercase;color:rgba(255,255,255,.7);line-height:1.15;}
+.db-habit-pts{font-size:9px;font-weight:700;color:rgba(255,255,255,.42);margin-top:2px;}
+.db-habit.done .db-habit-name{color:white;}
+.db-habit.done .db-habit-pts{color:#b8e0c8;}
+
+/* Inline "Next N days" card on home (promoted out of action grid). */
+.db-next-card{position:relative;background:var(--ds-card);border-radius:var(--ds-r2);padding:14px 16px;box-shadow:var(--ds-sh1);margin-bottom:.85rem;cursor:pointer;transition:transform .15s,box-shadow .15s;}
+.db-next-card:hover{transform:translateY(-1px);box-shadow:var(--ds-sh2);}
+.db-next-card:active{transform:translateY(0);}
+.db-next-head{display:flex;justify-content:space-between;align-items:baseline;margin-bottom:10px;}
+.db-next-title{font-family:var(--ds-f);font-size:13px;font-weight:800;color:var(--ds-t1);letter-spacing:-.01em;}
+.db-next-link{font-family:var(--ds-f);font-size:11px;font-weight:700;color:var(--ds-green);}
+.db-next-rows{display:flex;flex-direction:column;}
+.db-next-row{display:grid;grid-template-columns:42px 1fr auto;gap:10px;align-items:center;padding:8px 0;border-top:1px solid var(--ds-line);}
+.db-next-row:first-child{border-top:0;padding-top:4px;}
+.db-next-day{text-align:center;background:var(--ds-green-l);border-radius:8px;padding:5px 0 4px;line-height:1;}
+.db-next-day b{display:block;font-family:var(--ds-f);font-size:14px;font-weight:900;color:var(--ds-green2);letter-spacing:-.02em;}
+.db-next-day small{font-family:var(--ds-f);font-size:8px;font-weight:800;color:var(--ds-green);letter-spacing:.12em;text-transform:uppercase;}
+.db-next-day--bill{background:#fdeef2;}
+.db-next-day--bill b{color:var(--ds-c4);}
+.db-next-day--bill small{color:var(--ds-c4);}
+.db-next-name{font-family:var(--ds-f);font-size:13px;font-weight:700;color:var(--ds-t1);letter-spacing:-.01em;line-height:1.2;}
+.db-next-name small{display:block;font-family:var(--ds-f);font-size:11px;font-weight:600;color:var(--ds-t3);margin-top:2px;}
+.db-next-stat{font-family:var(--ds-f);font-size:11px;font-weight:800;letter-spacing:-.005em;text-align:right;color:var(--ds-green);}
+.db-next-stat--warn{color:var(--ds-c3);}
+.db-next-stat--uncov{color:var(--ds-c4);}
+.db-next-stat--in{color:var(--ds-green);}
+.db-next-empty{padding:8px 0;font-size:13px;color:var(--ds-t3);font-weight:600;text-align:center;}
+
+/* 3-chip action row replacing the prior 4-card grid. */
+.db-action-chips{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:1.1rem;}
+.db-chip-action{appearance:none;background:var(--ds-card);border:1px solid var(--ds-line);border-radius:var(--ds-r2);padding:11px 8px 9px;display:flex;flex-direction:column;align-items:center;gap:6px;font-family:var(--ds-f);cursor:pointer;box-shadow:var(--ds-sh1);transition:transform .15s,box-shadow .15s;}
+.db-chip-action:hover{transform:translateY(-1px);box-shadow:var(--ds-sh2);}
+.db-chip-action:active{transform:translateY(0);}
+.db-chip-action-icon{display:flex;align-items:center;justify-content:center;width:32px;height:32px;border-radius:10px;}
+.db-chip-action-label{font-family:var(--ds-f);font-size:11px;font-weight:800;color:var(--ds-t1);letter-spacing:-.01em;}
 
 .db-balance-card{background:var(--ds-card);border-radius:var(--ds-r2);padding:1rem 1.15rem 1.1rem;margin-bottom:.85rem;box-shadow:var(--ds-sh1);}
 .db-balance-empty{font-size:12px;color:var(--ds-t2);font-weight:600;line-height:1.5;margin-bottom:.85rem;}
@@ -1399,110 +1542,74 @@ posthog.init('phc_B6PH36QxpExnyBYhfScFFF6LhDvoyxuFr6PypJuxxky3', {
     </div>
   </div>
 
-  <!-- Brand wordmark — sets the page tone before the dashboard cards. Only
-       "Able" gets the underline, mirroring how "becomeable.app" reads as
-       "become Able." Same canonical underline used on landing/auth/paywall. -->
-  <div class="brand-wordmark-wrap" style="margin-bottom:1.25rem;"><span style="font-family:var(--ds-f);font-size:2rem;font-weight:900;color:var(--ds-t1);letter-spacing:-.03em;line-height:1;">Become <span class="brand-wordmark" style="font-size:inherit;color:inherit;">Able</span></span></div>
+  <!-- Home greeting line: time-of-day greeting + name (left), date (right).
+       Replaces the prior "Become Able" wordmark — brand identity already
+       lives in the top app bar. Home page goes straight to where you stand. -->
+  <div id="home-greeting-row" class="home-greet" style="display:flex;align-items:baseline;justify-content:space-between;gap:10px;margin-bottom:1.1rem;">
+    <div class="home-greet-hi" id="home-greet-hi"></div>
+    <div class="home-greet-date" id="home-greet-date"></div>
+  </div>
 
   <!-- Past-due bills banner — visible only when monthly bills missed their due day -->
   <div id="past-due-banner"></div>
 
   <!-- HERO GRID — money (left/top) + score (right/bottom on mobile). -->
   <div class="db-hero-grid">
-    <!-- Money hero: same green gradient, money snapshot only. Score moved to its own card. -->
+    <!-- Money hero: same green gradient, money snapshot + Floor coverage. -->
     <div class="db-hero" id="db-hero">
-      <div class="db-hero-eyebrow" id="db-hero-eyebrow" style="margin-bottom:.65rem;">Month in progress</div>
+      <div class="db-hero-eyebrow" id="db-hero-eyebrow" style="margin-bottom:.65rem;"><span class="db-hero-month">Month</span><span class="db-hero-month-tag">in progress</span></div>
       <div id="db-hero-money"></div>
-      <button class="db-hero-cta-secondary" onclick="openAllocateSheet()" style="margin-top:1rem;">Log income →</button>
     </div>
 
-    <!-- Score card: black-green glass, mirrors the social brand 'black' theme. -->
+    <!-- Score card: combined month score + pace sparkline + 5 equal-weight
+         habit rings. The pace sparkline (rendered by loadPaceLine into
+         #db-score-pace) sits between the score number and the habits, so it
+         reads as the bridge between "where you stand" (Floor strip in hero)
+         and "what you've done this month" (the rings below). -->
     <div class="db-score-card">
-      <div class="db-score-card-eyebrow">Monthly score</div>
-      <div class="db-score-card-row">
+      <div class="db-score-card-head">
+        <div class="db-score-card-eyebrow" id="db-score-eyebrow">May habits</div>
         <div class="db-score-card-num"><span id="db-score-big">--</span><span class="db-score-card-max">/100</span></div>
-        <span class="db-score-card-grade" id="db-score-grade">Building</span>
       </div>
-      <div class="db-score-card-bar"><div class="db-score-card-fill" id="db-score-fill" style="width:0%;"></div></div>
-      <div class="db-score-card-intro">Five habits, scored monthly. The closer to all five, the closer to 100.</div>
-      <div class="db-chips">
-        <div class="db-chip" onclick="goTo('bills')" role="button" tabindex="0" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();goTo('bills');}" title="Bills covered: how much of this month's bill total is paid or set aside.">
-          <div class="db-chip-label">Bills</div>
-          <div class="db-chip-pts"><span id="db-chip-bills-val">0</span><span class="db-chip-max">/30</span></div>
-          <div class="db-chip-dots" id="db-chip-bills-dots"></div>
-        </div>
-        <div class="db-chip" onclick="goTo('debt')" role="button" tabindex="0" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();goTo('debt');}" title="Extra debt payments: anything you sent to debt above the minimums this month.">
-          <div class="db-chip-label">Debt</div>
-          <div class="db-chip-pts"><span id="db-chip-debt-val">0</span><span class="db-chip-max">/20</span></div>
-          <div class="db-chip-dots" id="db-chip-debt-dots"></div>
-        </div>
-        <div class="db-chip" onclick="openBufferModal()" role="button" tabindex="0" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();openBufferModal();}" title="Buffer added: money you set aside this month toward your buffer goal.">
-          <div class="db-chip-label">Buffer</div>
-          <div class="db-chip-pts"><span id="db-chip-buffer-val">0</span><span class="db-chip-max">/15</span></div>
-          <div class="db-chip-dots" id="db-chip-buffer-dots"></div>
-        </div>
-      </div>
-      <div class="db-score-card-extras">
-        <div class="db-score-card-extra-row" title="Owner draw against your owner-pay target for this month.">
-          <span class="db-score-card-extra-label">Paid yourself</span>
-          <div class="db-score-card-extra-bar-bg"><div class="db-score-card-extra-bar" id="db-extra-pay-bar" style="width:0%;"></div></div>
-          <span class="db-score-card-extra-pts"><span id="db-extra-pay-val">0</span><span class="db-score-card-extra-max">/20</span></span>
-        </div>
-        <div class="db-score-card-extra-row" title="Living within your income — auto-credited while expense tracking is on the way.">
-          <span class="db-score-card-extra-label">Within your income</span>
-          <div class="db-score-card-extra-bar-bg"><div class="db-score-card-extra-bar" id="db-extra-budget-bar" style="width:0%;"></div></div>
-          <span class="db-score-card-extra-pts"><span id="db-extra-budget-val">0</span><span class="db-score-card-extra-max">/15</span></span>
-        </div>
-      </div>
-      <button class="db-score-card-link" onclick="goTo('score')">See full breakdown →</button>
+      <div class="db-score-pace" id="db-score-pace"></div>
+      <div class="db-habits-row" id="db-habits-row"></div>
+      <button class="db-score-card-link" onclick="goTo('score')">See your story →</button>
     </div>
   </div>
 
-  <!-- ACTIONS ROW 1: Next 14 days · Ask the coach -->
-  <div class="db-actions-grid">
-    <div class="db-action-card" onclick="openNext14Modal()" role="button" tabindex="0" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();openNext14Modal();}">
-      <div class="db-action-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" width="20" height="20"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg></div>
-      <div class="db-action-body">
-        <div class="db-action-title" id="db-runway-title">Next 14 days</div>
-        <div class="db-action-sub" id="db-runway-sub">Loading...</div>
-      </div>
-      <div class="db-action-chevron">›</div>
+  <!-- Inline "Next N days" card — shows the next 1-2 events (bills + expected
+       income) with their funded state. Tap opens the full modal for the
+       complete list. Promoted out of the action grid so home informs
+       instead of dispatching. Hidden when there's nothing in the window. -->
+  <div class="db-next-card" id="db-next-card" onclick="openNext14Modal()" role="button" tabindex="0" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();openNext14Modal();}">
+    <div class="db-next-head">
+      <div class="db-next-title" id="db-next-title">Next 14 days</div>
+      <div class="db-next-link" id="db-next-link">See all →</div>
     </div>
-
-    <div class="db-action-card" onclick="openCoachPanel()" role="button" tabindex="0" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();openCoachPanel();}">
-      <div class="db-action-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" width="20" height="20"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg></div>
-      <div class="db-action-body">
-        <div class="db-action-title">Ask the coach</div>
-        <div class="db-action-sub">Get a read on where you stand this month.</div>
-      </div>
-      <div class="db-action-chevron">›</div>
-    </div>
+    <div class="db-next-rows" id="db-next-rows"></div>
   </div>
 
-  <!-- ACTIONS ROW 2: Add expected income · Add new bill -->
-  <div class="db-actions-grid">
-    <div class="db-action-card" onclick="goTo('forecast')" role="button" tabindex="0" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();goTo('forecast');}">
-      <div class="db-action-icon" style="background:#fef3e0;color:var(--ds-c3);"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" width="20" height="20"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg></div>
-      <div class="db-action-body">
-        <div class="db-action-title">Add expected income</div>
-        <div class="db-action-sub" id="db-forecast-sub">Plan for what's coming.</div>
-      </div>
-      <div class="db-action-chevron">›</div>
-    </div>
-
-    <div class="db-action-card" onclick="openAddBillModal()" role="button" tabindex="0" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();openAddBillModal();}">
-      <div class="db-action-icon" style="background:#fdeef2;color:var(--ds-c4);"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" width="20" height="20"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg></div>
-      <div class="db-action-body">
-        <div class="db-action-title">Add new bill</div>
-        <div class="db-action-sub">Reserve money before it's needed.</div>
-      </div>
-      <div class="db-action-chevron">›</div>
-    </div>
+  <!-- 3 small action chips: Coach · Add income · Add bill. Smaller than the
+       prior 4-card grid because Next-N got promoted to its own card above. -->
+  <div class="db-action-chips">
+    <button class="db-chip-action" onclick="openCoachPanel()" type="button" aria-label="Ask the coach">
+      <span class="db-chip-action-icon" style="background:var(--ds-green-l);color:var(--ds-green);"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" width="16" height="16"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg></span>
+      <span class="db-chip-action-label">Ask Coach</span>
+    </button>
+    <button class="db-chip-action" onclick="goTo('forecast')" type="button" aria-label="Add expected income">
+      <span class="db-chip-action-icon" style="background:#fef3e0;color:var(--ds-c3);"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" width="16" height="16"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg></span>
+      <span class="db-chip-action-label">Add income</span>
+    </button>
+    <button class="db-chip-action" onclick="openAddBillModal()" type="button" aria-label="Add a new bill">
+      <span class="db-chip-action-icon" style="background:#fdeef2;color:var(--ds-c4);"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" width="16" height="16"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg></span>
+      <span class="db-chip-action-label">Add bill</span>
+    </button>
   </div>
 
-  <!-- Floor pace · 7-day strip. Hidden by loadPaceLine when there's no
-       Plaid data yet or no bills/baseline to anchor a floor against. -->
-  <div id="home-paceline" style="display:none;margin-top:1.25rem;"></div>
+  <!-- Legacy paceline slot — pace strip now lives inside the home Score
+       card (#db-score-pace). Kept hidden so older builds that called
+       loadPaceLine targeting this id still work without DOM errors. -->
+  <div id="home-paceline" style="display:none;"></div>
 
   <!-- INCOME THIS MONTH -->
   <div class="sec" style="margin-top:1.5rem;">Income this month</div>
@@ -1601,19 +1708,29 @@ posthog.init('phc_B6PH36QxpExnyBYhfScFFF6LhDvoyxuFr6PypJuxxky3', {
 <div class="page" id="page-bills">
   <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:1rem;gap:10px;flex-wrap:wrap;">
     <div style="font-family:var(--ds-f);font-size:1.5rem;font-weight:800;letter-spacing:-.02em;color:var(--ds-t1);">Monthly bills</div>
-    <div style="display:flex;gap:8px;">
-      <button class="btn btn-sm" onclick="markPaidThroughToday()" title="Check off every bill whose due day is on or before today">Mark paid through today</button>
-      <button class="btn btn-primary btn-sm" onclick="openAddBillModal()">+ Add bill</button>
-    </div>
+    <button class="btn btn-primary btn-sm" onclick="openAddBillModal()">+ Add bill</button>
   </div>
-  <div class="card" style="display:flex;align-items:center;justify-content:space-between;padding:14px 18px;margin-bottom:.85rem;">
-    <div>
-      <div style="font-size:10px;font-weight:800;color:var(--ds-t3);text-transform:uppercase;letter-spacing:.12em;font-family:var(--ds-f);">Monthly total</div>
-      <div style="font-size:1.5rem;font-weight:900;color:var(--ds-t1);letter-spacing:-.02em;font-family:var(--ds-f);" id="bills-total">$0</div>
+  <!-- Summary card: monthly total + tracked count, plus a "Funded this month"
+       bar so the Floor-First question (am I covered?) is answered before
+       the user scrolls the list. -->
+  <div class="card" style="padding:16px 18px 14px;margin-bottom:.85rem;">
+    <div style="display:flex;align-items:flex-start;justify-content:space-between;gap:10px;">
+      <div>
+        <div style="font-size:10px;font-weight:800;color:var(--ds-t3);text-transform:uppercase;letter-spacing:.12em;font-family:var(--ds-f);">Monthly total</div>
+        <div style="font-size:1.5rem;font-weight:900;color:var(--ds-t1);letter-spacing:-.02em;font-family:var(--ds-f);line-height:1;" id="bills-total">$0</div>
+      </div>
+      <div style="text-align:right;">
+        <div style="font-size:10px;font-weight:800;color:var(--ds-t3);text-transform:uppercase;letter-spacing:.12em;font-family:var(--ds-f);">Tracked</div>
+        <div style="font-size:1.05rem;font-weight:800;color:var(--ds-t1);letter-spacing:-.02em;font-family:var(--ds-f);line-height:1;margin-top:6px;" id="bills-count">0</div>
+      </div>
     </div>
-    <div style="text-align:right;">
-      <div style="font-size:10px;font-weight:800;color:var(--ds-t3);text-transform:uppercase;letter-spacing:.12em;font-family:var(--ds-f);">Tracked</div>
-      <div style="font-size:1.05rem;font-weight:800;color:var(--ds-t1);letter-spacing:-.02em;font-family:var(--ds-f);" id="bills-count">0</div>
+    <div id="bills-funded-block" style="margin-top:.85rem;padding-top:.85rem;border-top:1px solid var(--ds-line);">
+      <div style="display:flex;justify-content:space-between;align-items:baseline;margin-bottom:6px;">
+        <div style="font-size:11px;font-weight:800;color:var(--ds-green2);letter-spacing:-.005em;">Funded this month</div>
+        <div style="font-size:12px;font-weight:800;color:var(--ds-t1);letter-spacing:-.005em;font-family:var(--ds-f);" id="bills-funded-num">$0 <span style="color:var(--ds-t3);font-weight:600;">/ $0</span></div>
+      </div>
+      <div style="height:8px;background:rgba(42,122,74,.15);border-radius:999px;overflow:hidden;"><div id="bills-funded-fill" style="height:100%;width:0%;background:linear-gradient(90deg,var(--ds-green),var(--ds-green2));border-radius:999px;transition:width .6s cubic-bezier(.34,1.2,.64,1);"></div></div>
+      <div style="margin-top:8px;font-size:11px;font-weight:600;color:var(--ds-t2);line-height:1.4;" id="bills-funded-cap"></div>
     </div>
   </div>
   <div class="card" style="padding:.25rem 0;">
@@ -1626,34 +1743,74 @@ posthog.init('phc_B6PH36QxpExnyBYhfScFFF6LhDvoyxuFr6PypJuxxky3', {
     </div>
     <div id="bills-body"></div>
   </div>
-  <div style="font-size:12px;color:var(--ds-t3);font-weight:600;padding:0 4px;margin-top:.75rem;">Sorted by due date. Click any amount to edit. Check off bills as you pay them each month.</div>
+  <div style="display:flex;align-items:center;justify-content:space-between;gap:10px;padding:0 4px;margin-top:.75rem;flex-wrap:wrap;">
+    <div style="font-size:12px;color:var(--ds-t3);font-weight:600;">Sorted by due date. Click any amount to edit. Check off bills as you pay them each month.</div>
+    <button class="btn btn-sm btn-ghost" id="bills-catchup-btn" style="display:none;font-size:11px;letter-spacing:-.005em;" onclick="markPaidThroughToday()" title="Check off every bill whose due day is on or before today">Catch up past-due →</button>
+  </div>
 </div>
 
-<!-- SCORE -->
+<!-- SCORE — your story over time. Streak at top, 6-month chart, achievements,
+     and the habit detail. Home shows the now; this page shows the arc. -->
 <div class="page" id="page-score">
-  <div class="two-col">
-    <div>
-      <div class="sec">This month's grade</div>
-      <div class="card" style="text-align:center;padding:2.5rem 1.5rem;background:linear-gradient(135deg,#eaf5ee 0%,#d9ecde 100%);">
-        <div class="score-big" id="score-big" style="color:var(--ds-green);">--</div>
-        <div style="font-size:1rem;font-weight:800;color:var(--ds-t2);margin:.75rem 0 1.75rem;letter-spacing:-.01em;" id="score-grade">Log some income to get scored</div>
-        <div id="score-rows" style="text-align:left;"></div>
-        <div id="score-trend" style="margin-top:1.25rem;font-size:12px;font-weight:700;color:var(--ds-t3);"></div>
+  <div class="pagehead-score">
+    <div class="pagehead-eyebrow">Volume I</div>
+    <div class="pagehead-title">Your <span class="pagehead-ital">story</span></div>
+    <div class="pagehead-sub" id="score-sub">Streak, six-month chart, and the milestones you've earned.</div>
+  </div>
+
+  <!-- Streak card: months above the floor, with progress dots. -->
+  <div class="streak-card" id="streak-card">
+    <div class="streak-eyebrow" id="streak-eyebrow">Above the floor</div>
+    <div class="streak-num"><span id="streak-num-val">0</span><small id="streak-num-unit">months running</small></div>
+    <div class="streak-sub" id="streak-sub">Start a streak by closing your first month above the floor.</div>
+    <div class="streak-dots" id="streak-dots"></div>
+  </div>
+
+  <!-- Score this month, compact. -->
+  <div class="card" id="score-now-card" style="margin-bottom:1rem;padding:14px 16px;">
+    <div style="display:flex;align-items:center;justify-content:space-between;gap:10px;">
+      <div>
+        <div style="font-size:10px;font-weight:800;letter-spacing:.14em;text-transform:uppercase;color:var(--ds-t3);" id="score-now-eyebrow">Month in progress</div>
+        <div style="display:flex;align-items:baseline;gap:8px;margin-top:4px;">
+          <div style="font-family:var(--ds-f);font-size:32px;font-weight:900;letter-spacing:-.04em;color:var(--ds-t1);line-height:1;" id="score-big">--</div>
+          <div style="font-size:11px;font-weight:800;letter-spacing:.04em;text-transform:uppercase;color:var(--ds-t2);" id="score-grade">Building</div>
+        </div>
       </div>
-      <div class="card" style="font-size:13px;color:var(--ds-t2);line-height:1.8;font-weight:600;">
-        <div style="font-weight:800;color:var(--ds-t1);margin-bottom:8px;font-size:13px;letter-spacing:-.01em;">How you earn points</div>
-        Bills covered, 30 pts<br>Paid yourself, 20 pts<br>Extra debt payments, 20 pts<br>Buffer fund added, 15 pts<br>Living within income, 15 pts
-      </div>
-    </div>
-    <div>
-      <div class="sec" style="display:flex;justify-content:space-between;align-items:center;">
-        <span>Past months</span>
-        <div id="rollup-tabs" style="display:flex;gap:4px;"></div>
-      </div>
-      <div id="rollup-summary"></div>
-      <div id="month-history"><div class="empty-state">Complete your first month to see history.</div></div>
+      <div id="score-trend" style="font-size:12px;font-weight:700;color:var(--ds-t3);text-align:right;line-height:1.4;"></div>
     </div>
   </div>
+
+  <!-- 6-month bar chart of past scores. -->
+  <div class="card" id="score-chart-card" style="margin-bottom:1rem;padding:16px 16px 12px;">
+    <div style="display:flex;justify-content:space-between;align-items:baseline;margin-bottom:14px;">
+      <div style="font-size:13px;font-weight:800;color:var(--ds-t1);letter-spacing:-.01em;">Past 6 months</div>
+      <div style="font-size:11px;font-weight:700;color:var(--ds-t3);">scores</div>
+    </div>
+    <div class="score-mc-bars" id="score-mc-bars"></div>
+    <div id="score-mc-trend" style="font-size:12px;color:var(--ds-t2);font-weight:600;margin-top:18px;line-height:1.5;"></div>
+  </div>
+
+  <!-- Achievements grid (categorized). -->
+  <div class="sec" style="display:flex;justify-content:space-between;align-items:baseline;">
+    <span>Milestones</span>
+    <span id="ach-count" style="font-size:10px;color:var(--ds-t3);font-weight:700;letter-spacing:.04em;text-transform:none;">0 unlocked</span>
+  </div>
+  <div id="ach-filters" class="ach-filters"></div>
+  <div id="ach-groups" class="ach-groups"></div>
+
+  <!-- Detailed habit breakdown. -->
+  <div class="sec" id="habit-detail-sec">May habits, in detail</div>
+  <div class="card" id="habit-detail-card" style="padding:14px 16px;">
+    <div id="score-rows"></div>
+  </div>
+
+  <!-- Past months as compact cards (existing behavior). -->
+  <div class="sec" style="display:flex;justify-content:space-between;align-items:center;margin-top:1.5rem;">
+    <span>Past months</span>
+    <div id="rollup-tabs" style="display:flex;gap:4px;"></div>
+  </div>
+  <div id="rollup-summary"></div>
+  <div id="month-history"><div class="empty-state">Complete your first month to see history.</div></div>
 </div>
 
 <!-- WHAT IF -->
@@ -3048,7 +3205,7 @@ const OB_QUESTIONS = [
     key: 'goals',
     type: 'choice',
     msg: "What matters most to you right now?",
-    hint: "I'll tilt your plan toward this. You can change it anytime.",
+    hint: "Whichever you pick, your Floor (bills + tax) gets covered first. That's Floor-First Budgeting. We'll tilt the rest toward this. You can change it anytime.",
     choices: [
       { value: 'crush_debt',   label: 'Crush debt',          sub: 'More of every dollar pays off what you owe.' },
       { value: 'build_safety', label: 'Build a safety net',  sub: 'More set aside for slow months and surprises.' },
@@ -4723,7 +4880,34 @@ function obRenderPlanReviewUI() {
       .plan-error{background:#fdecec;border:1px solid #f3c5c5;border-radius:var(--ds-r1);padding:.75rem;font-size:12px;color:#a04545;font-weight:600;margin-bottom:10px;}
       .plan-degraded{background:#fff7e6;border:1px solid #f0d8a8;border-radius:var(--ds-r1);padding:12px 14px;font-size:13px;color:#6b4a1a;font-weight:600;line-height:1.5;margin-bottom:12px;}
       .plan-footer-bar{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-top:6px;}
+      .plan-floor-callout{background:linear-gradient(135deg,var(--ds-green) 0%,var(--ds-green2) 100%);color:#fff;border-radius:var(--ds-r2);padding:16px 18px 14px;margin-bottom:12px;box-shadow:0 8px 22px -10px rgba(31,96,56,.35);}
+      .plan-floor-callout-eyebrow{font-size:10px;font-weight:800;letter-spacing:.14em;text-transform:uppercase;color:#b8e0c8;margin-bottom:6px;}
+      .plan-floor-callout-title{font-size:18px;font-weight:900;letter-spacing:-.02em;line-height:1.2;margin-bottom:4px;}
+      .plan-floor-callout-num{font-size:30px;font-weight:900;letter-spacing:-.04em;line-height:1.05;margin:6px 0 8px;}
+      .plan-floor-callout-num small{font-size:13px;font-weight:700;color:rgba(255,255,255,.7);margin-left:4px;letter-spacing:0;}
+      .plan-floor-callout-body{font-size:13px;font-weight:600;color:rgba(255,255,255,.9);line-height:1.5;}
     </style>`;
+
+  // "Here's your Floor" callout — Floor-First introduced through the user's
+  // own data, the moment after Plaid drafts the plan. Computes the floor as
+  // the sum of monthly-equivalent bill amounts the analyzer detected.
+  const billItems = (r.sections && r.sections.bills && r.sections.bills.items) || [];
+  const floorTotal = billItems.reduce((sum, b) => {
+    const amt = Number(b.amount || 0);
+    if (!isFinite(amt) || amt <= 0) return sum;
+    const freq = (b.frequency || 'monthly').toLowerCase();
+    const monthly = freq === 'weekly' ? amt * 4.33 : freq === 'biweekly' ? amt * 2.17 : freq === 'quarterly' ? amt / 3 : freq === 'annual' || freq === 'yearly' ? amt / 12 : amt;
+    return sum + monthly;
+  }, 0);
+  if (floorTotal > 0.5 && billItems.length > 0) {
+    html += `
+      <div class="plan-floor-callout">
+        <div class="plan-floor-callout-eyebrow">Here's your floor</div>
+        <div class="plan-floor-callout-title">Bills + tax. The amount you can't miss each month.</div>
+        <div class="plan-floor-callout-num">$${Math.round(floorTotal).toLocaleString()}<small>/ month</small></div>
+        <div class="plan-floor-callout-body"><b>Floor-First Budgeting</b> means every deposit covers your Floor before any dollar votes on dinner. Able does this automatically. You'll see your coverage on the home screen as it fills.</div>
+      </div>`;
+  }
 
   if (r.coach_summary) {
     html += `<div class="plan-coach">${formatCoachSummary(r.coach_summary)}</div>`;
@@ -6471,6 +6655,7 @@ function refreshHome(){
       <div style="text-align:right;"><div class="nav-stat-label">Total debt</div><div class="nav-stat-val" style="color:var(--coral);">${fr(S.debts.reduce((s,d)=>s+d.balance,0))}</div></div>`;
   }
 
+  renderHomeGreeting();
   renderDashboard();
   renderHeroMoney();
   renderPastDueBanner();
@@ -6484,6 +6669,21 @@ function refreshHome(){
   loadPaceLine().catch(() => {});
 }
 
+// Greeting row at the top of the home page. Time-of-day greeting + first
+// name on the left; full date on the right. Falls back gracefully when the
+// user's name isn't on profile yet (e.g. mid-onboarding tour).
+function renderHomeGreeting(){
+  const hiEl = document.getElementById('home-greet-hi');
+  const dateEl = document.getElementById('home-greet-date');
+  if (!hiEl || !dateEl) return;
+  const now = new Date();
+  const h = now.getHours();
+  const tod = (h < 12) ? 'Good morning' : (h < 17) ? 'Good afternoon' : 'Good evening';
+  const name = (S && S.profile && S.profile.name) ? String(S.profile.name).trim() : '';
+  hiEl.textContent = name ? `${tod}, ${name}` : tod + '.';
+  dateEl.textContent = now.toLocaleDateString('en-US', { weekday: 'long', month: 'long', day: 'numeric' });
+}
+
 function renderDashboard(){
   const ti=totalIn();
   // Tour mode shows demo score numbers so a brand-new account sees a
@@ -6493,66 +6693,60 @@ function renderDashboard(){
     ? TOUR_DEMO_SCORE
     : computeMonthlyScore();
 
-  // Eyebrow shows current month so the hero reads as "this month's snapshot".
+  // Eyebrow renders the current month name large with a small "in progress"
+  // tag next to it. Bigger month read = "this is a snapshot of <Month>".
   const eyebrowEl=document.getElementById('db-hero-eyebrow');
   if(eyebrowEl){
     const now=new Date();
-    eyebrowEl.textContent=now.toLocaleDateString('en-US',{month:'long'}).toUpperCase()+' · MONTH IN PROGRESS';
+    const monthName=now.toLocaleDateString('en-US',{month:'long'});
+    eyebrowEl.innerHTML=`<span class="db-hero-month">${monthName}</span><span class="db-hero-month-tag">in progress</span>`;
   }
 
+  // Score card head: small number + "<Month> habits" eyebrow.
+  const scoreEyebrow=document.getElementById('db-score-eyebrow');
+  if(scoreEyebrow){
+    const now=new Date();
+    scoreEyebrow.textContent=now.toLocaleDateString('en-US',{month:'long'})+' habits';
+  }
   const bigEl=document.getElementById('db-score-big');
-  const gradeEl=document.getElementById('db-score-grade');
-  const fillEl=document.getElementById('db-score-fill');
   if(bigEl)bigEl.textContent=score.hasData?score.total:'--';
-  if(gradeEl)gradeEl.textContent=score.gradeLabel;
-  if(fillEl)fillEl.style.width=(score.hasData?score.total:0)+'%';
 
-  function renderChip(prefix,pts,max){
-    const valEl=document.getElementById('db-chip-'+prefix+'-val');
-    const dotsEl=document.getElementById('db-chip-'+prefix+'-dots');
-    if(valEl)valEl.textContent=pts;
-    if(dotsEl){
-      const dotCount=5;
-      const filled=Math.min(dotCount,Math.round((pts/max)*dotCount));
-      dotsEl.innerHTML='';
-      for(let i=0;i<dotCount;i++){
-        const d=document.createElement('div');
-        d.className='db-chip-dot'+(i<filled?' filled':'');
-        dotsEl.appendChild(d);
+  // 5 equal-weight habit rings (was 3 loud chips + 2 whispered extras).
+  const habitsRow=document.getElementById('db-habits-row');
+  if(habitsRow){
+    const HABITS=[
+      {key:'bills', name:'Bills',   pts:score.components.bills,  max:30, on:()=>goTo('bills')},
+      {key:'pay',   name:'Pay self',pts:score.components.pay,    max:20, on:()=>goTo('settings')},
+      {key:'debt',  name:'Debt',    pts:score.components.debt,   max:20, on:()=>goTo('debt')},
+      {key:'buffer',name:'Buffer',  pts:score.components.buffer, max:15, on:()=>openBufferModal()},
+      {key:'within',name:'Within',  pts:score.components.budget, max:15, on:()=>goTo('score')},
+    ];
+    const checkSvg=`<svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>`;
+    habitsRow.innerHTML=HABITS.map(h=>{
+      const ratio=h.max>0?h.pts/h.max:0;
+      const cls=ratio>=0.999?'done':(ratio>0.001?'partial':'');
+      const ringStyle=cls==='partial'?` style="--p:${Math.round(ratio*100)}%"`:'';
+      const ring=cls==='done'?checkSvg:'';
+      return `<div class="db-habit ${cls}" data-habit="${h.key}" role="button" tabindex="0" title="${h.name} · ${h.pts}/${h.max}">
+        <div class="db-habit-ring"${ringStyle}>${ring}</div>
+        <div class="db-habit-name">${h.name}</div>
+        <div class="db-habit-pts">${h.pts}/${h.max}</div>
+      </div>`;
+    }).join('');
+    // Wire clicks
+    habitsRow.querySelectorAll('.db-habit').forEach((el)=>{
+      const key=el.getAttribute('data-habit');
+      const h=HABITS.find(x=>x.key===key);
+      if(h){
+        el.addEventListener('click', h.on);
+        el.addEventListener('keydown', (e)=>{ if(e.key==='Enter'||e.key===' '){e.preventDefault();h.on();} });
       }
-    }
+    });
   }
-  renderChip('bills',score.components.bills,30);
-  renderChip('debt',score.components.debt,20);
-  renderChip('buffer',score.components.buffer,15);
 
-  // Two remaining components shown as compact rows so the card surfaces all
-  // five habits the score measures (instead of just the three primary chips).
-  function renderExtra(prefix,pts,max){
-    const valEl=document.getElementById('db-extra-'+prefix+'-val');
-    const barEl=document.getElementById('db-extra-'+prefix+'-bar');
-    if(valEl)valEl.textContent=pts;
-    if(barEl)barEl.style.width=Math.max(0,Math.min(100,Math.round((pts/max)*100)))+'%';
-  }
-  renderExtra('pay',score.components.pay,20);
-  renderExtra('budget',score.components.budget,15);
-
-  const runwayTitleEl=document.getElementById('db-runway-title');
-  const runwaySubEl=document.getElementById('db-runway-sub');
+  // Inline Next-N card: shows the next 1-2 events with funded state.
   const win=allocWindow();
-  const winBills=billsInWindow(win);
-  const winTotal=winBills.reduce((s,b)=>s+b.amount,0);
-  const windowReserveNeeded=Math.max(0,winTotal-ti);
-  if(runwayTitleEl)runwayTitleEl.textContent=`Next ${win} days`;
-  if(runwaySubEl){
-    if(winTotal<=0.01){
-      runwaySubEl.textContent=`Nothing due in ${win} days. Any income is surplus.`;
-    } else if(windowReserveNeeded<=0.01){
-      runwaySubEl.textContent=`Covered. ${fr(winTotal)} due, already reserved.`;
-    } else {
-      runwaySubEl.textContent=`${fr(windowReserveNeeded)} still needed for upcoming bills.`;
-    }
-  }
+  renderNextNCard(win);
   // Forecast card sub: show a count + total when forecast has entries, otherwise nudge.
   const forecastSubEl = document.getElementById('db-forecast-sub');
   if (forecastSubEl) {
@@ -6855,6 +7049,42 @@ function renderBillsPage(){
   document.getElementById('bills-total').textContent=f2(totalBills());
   const countEl=document.getElementById('bills-count');
   if(countEl) countEl.textContent=String(S.bills.length);
+
+  // "Funded this month" bar: paid + reserved vs. total floor.
+  const tb = totalBills();
+  const pb = (typeof paidBills === 'function') ? paidBills() : 0;
+  const reservedTotal = (typeof _totalReservedNow === 'function') ? _totalReservedNow() : 0;
+  const funded = pb + reservedTotal;
+  const pct = tb > 0 ? Math.max(0, Math.min(100, Math.round((funded / tb) * 100))) : 0;
+  const numEl = document.getElementById('bills-funded-num');
+  const fillEl = document.getElementById('bills-funded-fill');
+  const capEl = document.getElementById('bills-funded-cap');
+  const block = document.getElementById('bills-funded-block');
+  if (block) block.style.display = tb > 0.01 ? '' : 'none';
+  if (numEl) numEl.innerHTML = `${f2(funded)} <span style="color:var(--ds-t3);font-weight:600;">/ ${f2(tb)}</span>`;
+  if (fillEl) fillEl.style.width = pct + '%';
+  if (capEl) {
+    const stillToFund = Math.max(0, tb - funded);
+    const remaining = S.bills.filter(b => !b.paid && (Math.min((reservedTotal>0?_billReserved(b.id):0), b.amount||0) < (b.amount||0) - 0.01));
+    if (stillToFund <= 0.01) {
+      capEl.innerHTML = `<b>Floor covered.</b> Surplus is going to the rest of your plan.`;
+    } else {
+      capEl.innerHTML = `<b>${remaining.length} of ${S.bills.length}</b> still to fund. ${f2(stillToFund)} short of the floor.`;
+    }
+  }
+
+  // Show "Catch up past-due" only when there's something to catch up on.
+  const catchBtn = document.getElementById('bills-catchup-btn');
+  if (catchBtn) {
+    const today = new Date(); today.setHours(0,0,0,0);
+    const overdue = (S.bills||[]).some(b => {
+      if (b.paid) return false;
+      const dueDay = parseInt(b.due, 10);
+      if (isNaN(dueDay) || dueDay < 1 || dueDay > 31) return false;
+      return dueDay <= today.getDate();
+    });
+    catchBtn.style.display = overdue ? '' : 'none';
+  }
 }
 // Returns days late (positive) or early (negative) for a bill marked paid
 // at this moment, relative to its due schedule. Null for ongoing/unknown.
@@ -7375,26 +7605,40 @@ function addToGoogleCalendar(){
 // ═══════════════════════════════════════
 function renderScore(){
   const score=computeMonthlyScore();
-  if(!score.hasData){document.getElementById('score-big').textContent='--';return;}
-  const {total,grade,components}=score;
+  const {total,grade,gradeLabel,components}=score;
   const {bills:s1,debt:s2,buffer:s3,budget:s4,pay:s5}=components;
-  const sc=total>=75?'var(--sage)':total>=50?'var(--amber)':'var(--red)';
-  document.getElementById('score-big').textContent=total;
-  document.getElementById('score-big').style.color=sc;
-  document.getElementById('score-grade').textContent=grade;
-  if(S.month_history.length>0){
-    const prev=S.month_history[0].score;const diff=total-prev;
-    const trendEl=document.getElementById('score-trend');
-    trendEl.textContent=diff>0?`↑ Up ${diff} pts from last month`:diff<0?`↓ Down ${Math.abs(diff)} pts from last month`:'Same as last month';
-    trendEl.style.color=diff>0?'var(--sage)':diff<0?'var(--red)':'var(--text3)';
+  const bigEl=document.getElementById('score-big');
+  const gradeEl=document.getElementById('score-grade');
+  if(bigEl) bigEl.textContent = score.hasData ? total : '--';
+  if(gradeEl) gradeEl.textContent = score.hasData ? gradeLabel : 'Building';
+
+  // Streak + 6-mo chart + achievements run for everyone (history can be empty).
+  renderStreakCard();
+  renderScoreChart();
+  renderAchievements();
+  renderHabitDetailRows({s1,s2,s3,s4,s5});
+
+  // Score-now eyebrow shows the month name.
+  const nowEyebrow = document.getElementById('score-now-eyebrow');
+  if (nowEyebrow) {
+    const m = new Date().toLocaleDateString('en-US',{month:'long'});
+    nowEyebrow.textContent = `${m} in progress`;
   }
-  const rows=[{label:'Bills covered',val:s1,max:30,color:'var(--red)'},{label:'Paid yourself',val:s5,max:20,color:'var(--ds-c2)'},{label:'Extra debt payments',val:s2,max:20,color:'var(--coral)'},{label:'Buffer fund added',val:s3,max:15,color:'var(--sky)'},{label:'Living in budget',val:s4,max:15,color:'var(--sage)'}];
-  const el=document.getElementById('score-rows');el.innerHTML='';
-  rows.forEach(r=>{
-    const pct=Math.round((r.val/r.max)*100);const d=document.createElement('div');d.className='score-row';
-    d.innerHTML=`<div class="score-label">${r.label}</div><div class="score-bar-bg"><div class="score-bar" style="width:${pct}%;background:${r.color};"></div></div><div class="score-pts" style="color:${r.color};">${r.val}</div>`;
-    el.appendChild(d);
-  });
+
+  const trendEl=document.getElementById('score-trend');
+  if (trendEl && score.hasData && S.month_history && S.month_history.length>0){
+    const prev=S.month_history[0].score;const diff=total-prev;
+    trendEl.textContent=diff>0?`↑ Up ${diff} pts from last month`:diff<0?`↓ Down ${Math.abs(diff)} pts from last month`:'Same as last month';
+    trendEl.style.color=diff>0?'var(--ds-green)':diff<0?'var(--ds-c4)':'var(--ds-t3)';
+  } else if (trendEl) {
+    trendEl.textContent = '';
+  }
+  if (!score.hasData) {
+    // No data yet — past-month list still renders below.
+    const mh = document.getElementById('month-history');
+    if (mh) mh.innerHTML = '<div class="empty-state">No completed months yet.<br><span style="font-weight:500;font-size:12px;color:var(--ds-t3);">When you close this month in Settings, it\'ll show up here.</span></div>';
+    return;
+  }
   const mh=document.getElementById('month-history');
   const summary=document.getElementById('rollup-summary');
   const tabsEl=document.getElementById('rollup-tabs');
@@ -7455,6 +7699,456 @@ function renderScore(){
 function setRollup(k){
   renderScore.rollup=k;
   renderScore();
+}
+
+// ═══════════════════════════════════════
+// SCORE PAGE: streak, chart, achievements, habit detail
+// ═══════════════════════════════════════
+
+// Streak = consecutive completed months where bills coverage was ≥ 95%.
+// Returns the current run length (counting from most-recent month back).
+// In-progress month doesn't count yet — we only know once it closes.
+function _floorStreak(){
+  const hist = S.month_history || [];
+  let n = 0;
+  for (const m of hist) {
+    if (!m || !m.billsTotal) break;
+    const cov = (m.billsPaidAmount || 0) / m.billsTotal;
+    if (cov >= 0.95) n++; else break;
+  }
+  return n;
+}
+// Best (longest) historical streak — used by "Longest streak" record.
+function _bestFloorStreak(){
+  const hist = S.month_history || [];
+  let best = 0, cur = 0;
+  for (const m of hist) {
+    const cov = m && m.billsTotal ? (m.billsPaidAmount||0)/m.billsTotal : 0;
+    if (cov >= 0.95) { cur++; if (cur > best) best = cur; }
+    else cur = 0;
+  }
+  return best;
+}
+
+function renderStreakCard(){
+  const eyebrowEl = document.getElementById('streak-eyebrow');
+  const valEl = document.getElementById('streak-num-val');
+  const unitEl = document.getElementById('streak-num-unit');
+  const subEl = document.getElementById('streak-sub');
+  const dotsEl = document.getElementById('streak-dots');
+  if (!valEl || !subEl || !dotsEl) return;
+  const streak = _floorStreak();
+  valEl.textContent = streak;
+  unitEl.textContent = streak === 1 ? 'month running' : 'months running';
+  if (eyebrowEl) eyebrowEl.textContent = streak > 0 ? 'Above the floor' : 'Above the floor';
+  if (streak === 0) {
+    subEl.textContent = 'Start a streak by closing a month with the floor covered.';
+  } else if (streak === 1) {
+    subEl.textContent = 'One month in. Keep going.';
+  } else {
+    const best = Math.max(_bestFloorStreak(), streak);
+    if (streak >= best) {
+      subEl.textContent = `Longest streak yet. One more clean month and you reach Able.`;
+    } else {
+      subEl.textContent = `${best - streak} from your record of ${best} months.`;
+    }
+  }
+  // Render dots: streak filled, then a partial dot for the in-progress month if
+  // current bills coverage is on pace.
+  const dots = [];
+  for (let i = 0; i < streak; i++) dots.push('<span class="streak-dot full"></span>');
+  // In-progress: include a partial dot if current month bills coverage > 0.
+  const curCov = totalBills() > 0 ? (paidBills() + (_totalReservedNow ? _totalReservedNow() : 0)) / totalBills() : 0;
+  if (curCov >= 0.95) dots.push('<span class="streak-dot full"></span>');
+  else if (curCov > 0.05) dots.push('<span class="streak-dot partial"></span>');
+  // Cap the row to a reasonable visible length.
+  const MAX_DOTS = 12;
+  if (dots.length > MAX_DOTS) dots.length = MAX_DOTS;
+  dotsEl.innerHTML = dots.join('');
+}
+
+function renderScoreChart(){
+  const wrap = document.getElementById('score-mc-bars');
+  const trendEl = document.getElementById('score-mc-trend');
+  if (!wrap) return;
+  const hist = (S.month_history || []).slice(0, 6).reverse();
+  const score = computeMonthlyScore();
+  const monthFmt = (label) => {
+    if (!label) return '';
+    const parts = String(label).split(' ');
+    return (parts[0] || '').slice(0, 3);
+  };
+  const allBars = [];
+  hist.forEach(m => {
+    allBars.push({ score: Math.max(0, Math.min(100, m.score || 0)), label: monthFmt(m.label), curr: false });
+  });
+  if (score.hasData) {
+    const m = new Date().toLocaleDateString('en-US',{month:'short'});
+    allBars.push({ score: Math.max(0, Math.min(100, score.total || 0)), label: m, curr: true });
+  }
+  // Pad to 6 bars if needed (with placeholders).
+  while (allBars.length < 6) allBars.unshift({ score: 0, label: '·', curr: false, placeholder: true });
+  // Keep only the most recent 6.
+  const bars = allBars.slice(-6);
+  wrap.innerHTML = bars.map(b => {
+    const h = b.placeholder ? 4 : Math.max(4, b.score);
+    const cls = b.curr ? 'score-mc-bar curr' : 'score-mc-bar';
+    const dataScore = b.placeholder ? '' : ` data-score="${b.score}"`;
+    return `<div class="${cls}"${dataScore} data-month="${b.label}" style="height:${h}%;"></div>`;
+  }).join('');
+  if (trendEl) {
+    const real = bars.filter(b => !b.placeholder);
+    if (real.length >= 2) {
+      const diff = real[real.length - 1].score - real[0].score;
+      const dir = diff > 0 ? `Up <b>+${diff} points</b>` : diff < 0 ? `Down <b>${diff} points</b>` : `Steady`;
+      trendEl.innerHTML = `${dir} over ${real.length} months. ${score.hasData ? "Current month is mid-stream." : ""}`;
+    } else {
+      trendEl.textContent = score.hasData ? 'First month in progress.' : '';
+    }
+  }
+}
+
+// ───── Achievement registry ─────
+// Each tile names a real Floor-First moment. Locked tiles show distance in
+// the user's units. Categories drive the filter chips.
+const ACH_CATEGORIES = [
+  { id: 'all',     name: 'All',         icon: 'All' },
+  { id: 'floor',   name: 'Floor & Able',icon: 'Floor' },
+  { id: 'tax',     name: 'Tax',         icon: 'Tax' },
+  { id: 'debt',    name: 'Debt',        icon: 'Debt' },
+  { id: 'pay',     name: 'Pay self',    icon: 'Pay' },
+  { id: 'streak',  name: 'Streaks',     icon: 'Streaks' },
+  { id: 'score',   name: 'Score',       icon: 'Score' },
+  { id: 'learn',   name: 'Learn',       icon: 'Learn' },
+  { id: 'refer',   name: 'Refer',       icon: 'Refer' },
+  { id: 'records', name: 'Records',     icon: 'Records' },
+];
+// SVGs are tiny inline so the registry stays self-contained.
+const _ACH_ICON = {
+  shield: '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2l8 4v6c0 5-4 9-8 10-4-1-8-5-8-10V6z"/></svg>',
+  star:   '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M12 1l3 7 7 1-5 5 1 7-6-3-6 3 1-7-5-5 7-1z"/></svg>',
+  clock:  '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg>',
+  arrow:  '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg>',
+  snow:   '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M3 6l3 12 6-3 6 3 3-12-6 4-6-7-6 3z"/></svg>',
+  layers: '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2v6M5 8l7 4 7-4M5 8v8l7 4 7-4V8"/></svg>',
+  flag:   '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="9" r="6"/><path d="M9 14l-3 8 6-3 6 3-3-8"/></svg>',
+  book:   '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M2 6a4 4 0 0 1 4-4h6v18H6a4 4 0 0 1-4-4z"/><path d="M22 6a4 4 0 0 0-4-4h-6v18h6a4 4 0 0 0 4-4z"/></svg>',
+  check:  '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M9 12l2 2 4-4"/></svg>',
+  user:   '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="4"/><path d="M4 21a8 8 0 0 1 16 0"/></svg>',
+  group:  '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="8" r="3"/><circle cx="17" cy="10" r="3"/><path d="M2 21a7 7 0 0 1 14 0"/></svg>',
+  bolt:   '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><polyline points="13 2 3 14 12 14 11 22 21 10 12 10"/></svg>',
+  lock:   '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><rect x="5" y="11" width="14" height="10" rx="2"/><path d="M8 11V7a4 4 0 0 1 8 0v4"/></svg>',
+};
+const ACHIEVEMENTS = [
+  // FLOOR & ABLE
+  { id:'first_floor_cleared', cat:'floor', name:'First Floor Cleared', icon:_ACH_ICON.shield,
+    unlocked: () => (S.month_history||[]).some(m => m && m.billsTotal>0 && (m.billsPaidAmount||0)/m.billsTotal >= 0.99),
+    distance: () => `${S.bills?.length||0} bills tracked`,
+  },
+  { id:'three_above', cat:'floor', name:'3 Months Above', icon:_ACH_ICON.star,
+    unlocked: () => _bestFloorStreak() >= 3,
+    distance: () => { const s = _bestFloorStreak(); return `${Math.max(0,3-s)} more`; },
+  },
+  { id:'six_above', cat:'floor', name:'6 Months Above', icon:_ACH_ICON.star,
+    unlocked: () => _bestFloorStreak() >= 6,
+    distance: () => { const s = _bestFloorStreak(); return `${Math.max(0,6-s)} more`; },
+  },
+  { id:'twelve_above', cat:'floor', name:'12 Months Above', icon:_ACH_ICON.star,
+    unlocked: () => _bestFloorStreak() >= 12,
+    distance: () => { const s = _bestFloorStreak(); return `${Math.max(0,12-s)} to go`; },
+  },
+  { id:'first_reserve_layer', cat:'floor', name:'First Reserve Layer', icon:_ACH_ICON.layers,
+    unlocked: () => (S.buffer||0) >= Math.max(0.25*totalBills(), 50),
+    distance: () => { const need = Math.max(0, 0.25*totalBills() - (S.buffer||0)); return need>0 ? `${f2(need)} to go` : 'Done'; },
+  },
+  { id:'halfway_to_able', cat:'floor', name:'Halfway There', icon:_ACH_ICON.flag, gold:true,
+    unlocked: () => (S.buffer||0) >= 0.5*totalBills() && totalBills()>0,
+    distance: () => { const need = Math.max(0, 0.5*totalBills() - (S.buffer||0)); return need>0 ? `${f2(need)} to go` : 'Done'; },
+  },
+  { id:'one_month_ahead', cat:'floor', name:'One Month Ahead', icon:_ACH_ICON.flag, gold:true,
+    unlocked: () => (S.buffer||0) >= totalBills() && totalBills()>0,
+    distance: () => { const need = Math.max(0, totalBills() - (S.buffer||0)); return need>0 ? `${f2(need)} to go` : 'Done'; },
+  },
+  { id:'two_months_ahead', cat:'floor', name:'Two Months Ahead', icon:_ACH_ICON.flag,
+    unlocked: () => (S.buffer||0) >= 2*totalBills() && totalBills()>0,
+    distance: () => { const need = Math.max(0, 2*totalBills() - (S.buffer||0)); return need>0 ? `${f2(need)} to go` : 'Done'; },
+  },
+  // TAX
+  { id:'first_tax_stash', cat:'tax', name:'First Tax Stash', icon:_ACH_ICON.clock,
+    unlocked: () => (S.history||[]).some(h => (h.jobs||[]).some(j => /tax/i.test(j.name||''))),
+    distance: () => 'Set tax % in Settings',
+  },
+  { id:'all_quarters_stashed', cat:'tax', name:'All Quarters Stashed', icon:_ACH_ICON.clock,
+    unlocked: () => false, // Manual flag — needs quarterly tracking; reserved
+    distance: () => 'In progress',
+  },
+  // DEBT
+  { id:'snowball_started', cat:'debt', name:'Snowball Started', icon:_ACH_ICON.snow,
+    unlocked: () => (S.month_history||[]).some(m => (m.debtPaid||0) > 0) || (S.history||[]).some(h => (h.jobs||[]).some(j => /debt/i.test(j.name||'') && j.amount>0)),
+    distance: () => 'Add a debt to start',
+  },
+  { id:'card_paid_off', cat:'debt', name:'Card Paid Off', icon:_ACH_ICON.shield,
+    unlocked: () => (S.debts||[]).some(d => (d.balance||0) <= 0.01) && (S.debts||[]).length > 0,
+    distance: () => { const lo = Math.min(...((S.debts||[]).map(d=>d.balance||0).filter(v=>v>0))); return isFinite(lo) ? `${f2(lo)} on smallest` : 'No debts'; },
+  },
+  { id:'debt_free', cat:'debt', name:'Debt Free Day', icon:_ACH_ICON.flag, gold:true,
+    unlocked: () => (S.debts||[]).length>0 && (S.debts||[]).every(d => (d.balance||0) <= 0.01),
+    distance: () => { const sum = (S.debts||[]).reduce((s,d)=>s+(d.balance||0),0); return sum>0 ? `${f2(sum)} to clear` : 'No debts tracked'; },
+  },
+  // PAY YOURSELF
+  { id:'first_pay_day', cat:'pay', name:'First Pay Day', icon:_ACH_ICON.arrow,
+    unlocked: () => (S.history||[]).some(h => (h.jobs||[]).some(j => /pay yourself|owner/i.test(j.name||'') && j.amount>0)) || (S.month_history||[]).some(m => (m.ownerPaid||0)>0),
+    distance: () => 'Set pay % in Settings',
+  },
+  { id:'three_paydays', cat:'pay', name:'3 Months of Pay', icon:_ACH_ICON.star,
+    unlocked: () => (S.month_history||[]).filter(m => (m.ownerPaid||0)>0).length >= 3,
+    distance: () => { const n = (S.month_history||[]).filter(m => (m.ownerPaid||0)>0).length; return `${Math.max(0,3-n)} more`; },
+  },
+  // STREAKS
+  { id:'streak_3', cat:'streak', name:'3-Month Streak', icon:_ACH_ICON.star,
+    unlocked: () => _floorStreak() >= 3,
+    distance: () => { const s = _floorStreak(); return `${Math.max(0,3-s)} more`; },
+  },
+  { id:'streak_6', cat:'streak', name:'6-Month Streak', icon:_ACH_ICON.star,
+    unlocked: () => _floorStreak() >= 6,
+    distance: () => { const s = _floorStreak(); return `${Math.max(0,6-s)} more`; },
+  },
+  { id:'streak_12', cat:'streak', name:'A Year Above', icon:_ACH_ICON.star, gold:true,
+    unlocked: () => _floorStreak() >= 12,
+    distance: () => { const s = _floorStreak(); return `${Math.max(0,12-s)} to go`; },
+  },
+  // SCORE
+  { id:'score_80', cat:'score', name:'First 80+', icon:_ACH_ICON.star,
+    unlocked: () => (S.month_history||[]).some(m => (m.score||0) >= 80),
+    distance: () => 'Stay close to 80',
+  },
+  { id:'score_90', cat:'score', name:'First 90+', icon:_ACH_ICON.star,
+    unlocked: () => (S.month_history||[]).some(m => (m.score||0) >= 90),
+    distance: () => 'Aim for 90',
+  },
+  { id:'score_100', cat:'score', name:'Perfect Month', icon:_ACH_ICON.star, gold:true,
+    unlocked: () => (S.month_history||[]).some(m => (m.score||0) >= 100),
+    distance: () => 'Aim for 100',
+  },
+  { id:'three_in_a_row_80', cat:'score', name:'Three Solid', icon:_ACH_ICON.star,
+    unlocked: () => {
+      const h = S.month_history || [];
+      for (let i=0;i<=h.length-3;i++) {
+        if (h.slice(i,i+3).every(m => (m.score||0) >= 80)) return true;
+      }
+      return false;
+    },
+    distance: () => 'Three in a row at 80+',
+  },
+  // LEARN
+  { id:'learn_first_article', cat:'learn', name:'First Article Read', icon:_ACH_ICON.book,
+    unlocked: () => Array.isArray(S.learn_read) && S.learn_read.length >= 1,
+    distance: () => 'Open the Learn tab',
+  },
+  { id:'learn_five_rules', cat:'learn', name:'Read Five Rules', icon:_ACH_ICON.book,
+    unlocked: () => Array.isArray(S.learn_read) && S.learn_read.includes('floor-first-method'),
+    distance: () => 'Read Floor-First method',
+  },
+  { id:'learn_quiz_passed', cat:'learn', name:'First Quiz Passed', icon:_ACH_ICON.check,
+    unlocked: () => Array.isArray(S.learn_quizzes) && S.learn_quizzes.length >= 1,
+    distance: () => 'Take a Learn quiz',
+  },
+  { id:'learn_all_modules', cat:'learn', name:'All Modules Done', icon:_ACH_ICON.book,
+    unlocked: () => Array.isArray(S.learn_read) && S.learn_read.length >= 8,
+    distance: () => { const n = (S.learn_read||[]).length; return `${Math.max(0,8-n)} to go`; },
+  },
+  // REFER
+  { id:'refer_first_sent', cat:'refer', name:'First Referral Sent', icon:_ACH_ICON.user,
+    unlocked: () => (S.referrals_sent||0) >= 1,
+    distance: () => 'Open the Refer tab',
+  },
+  { id:'refer_one_joined', cat:'refer', name:'1 Friend Joined', icon:_ACH_ICON.group,
+    unlocked: () => (S.referrals_joined||0) >= 1,
+    distance: () => 'Send a referral first',
+  },
+  { id:'refer_five_joined', cat:'refer', name:'5 Friends Joined', icon:_ACH_ICON.group,
+    unlocked: () => (S.referrals_joined||0) >= 5,
+    distance: () => `${Math.max(0,5-(S.referrals_joined||0))} to go`,
+  },
+  { id:'refer_ten_joined', cat:'refer', name:'10 Friends Joined', icon:_ACH_ICON.group, gold:true,
+    unlocked: () => (S.referrals_joined||0) >= 10,
+    distance: () => `${Math.max(0,10-(S.referrals_joined||0))} to go`,
+  },
+];
+// Personal Records auto-generate from state. Each record returns null when
+// no qualifying data exists yet, so the tile only renders once there's
+// something to celebrate.
+function _personalRecords(){
+  const out = [];
+  // Biggest payout
+  const biggestPayout = (S.history||[]).reduce((max,h) => (h.amount||0) > max.amount ? {amount:h.amount, when:h.date} : max, {amount:0,when:null});
+  if (biggestPayout.amount > 0) out.push({
+    id:'rec_biggest_payout', cat:'records', name:'Biggest Payout', icon:_ACH_ICON.bolt,
+    meta: f2(biggestPayout.amount) + (biggestPayout.when ? ' · ' + biggestPayout.when : ''),
+    unlocked: true, gold: true,
+  });
+  // Longest streak
+  const best = _bestFloorStreak();
+  const live = _floorStreak();
+  if (best > 0 || live > 0) {
+    const cur = Math.max(best, live);
+    out.push({
+      id:'rec_longest_streak', cat:'records', name:'Longest Streak', icon:_ACH_ICON.bolt,
+      meta: `${cur} mo` + (live === cur && cur > 0 ? ' · running' : ''),
+      unlocked: true, gold: true,
+    });
+  }
+  // Highest reserve
+  if ((S.buffer||0) > 0) out.push({
+    id:'rec_highest_reserve', cat:'records', name:'Highest Reserve', icon:_ACH_ICON.bolt,
+    meta: f2(S.buffer||0) + ' · today',
+    unlocked: true, gold: true,
+  });
+  // Most saved in a month
+  const maxBuf = (S.month_history||[]).reduce((max,m) => (m.bufAdded||0) > max ? (m.bufAdded||0) : max, 0);
+  if (maxBuf > 0) out.push({
+    id:'rec_most_saved', cat:'records', name:'Most Saved · Month', icon:_ACH_ICON.bolt,
+    meta: f2(maxBuf), unlocked:true, gold:true,
+  });
+  // Biggest debt payment
+  const maxDebt = (S.month_history||[]).reduce((max,m) => (m.debtPaid||0) > max ? (m.debtPaid||0) : max, 0);
+  if (maxDebt > 0) out.push({
+    id:'rec_biggest_debt', cat:'records', name:'Biggest Debt Hit', icon:_ACH_ICON.bolt,
+    meta: f2(maxDebt), unlocked:true, gold:true,
+  });
+  // Highest single-month income
+  const maxInc = (S.month_history||[]).reduce((max,m) => (m.income||0) > max ? (m.income||0) : max, 0);
+  if (maxInc > 0) out.push({
+    id:'rec_biggest_month', cat:'records', name:'Biggest Income Month', icon:_ACH_ICON.bolt,
+    meta: f2(maxInc), unlocked:true, gold:true,
+  });
+  return out;
+}
+// Persisted unlock dates so we can show "Just now" for fresh ones.
+function _achPersistedDates(){
+  S.settings = S.settings || {};
+  S.settings.ach_dates = S.settings.ach_dates || {};
+  return S.settings.ach_dates;
+}
+function _achStampNew(unlockedIds){
+  const dates = _achPersistedDates();
+  let changed = false;
+  for (const id of unlockedIds) {
+    if (!dates[id]) { dates[id] = new Date().toISOString(); changed = true; }
+  }
+  if (changed) { try { save(); } catch(_) {} }
+}
+function _achFreshSet(){
+  // "Fresh" = unlocked in the last 24h. Drives the gold/pulse treatment.
+  const dates = _achPersistedDates();
+  const cutoff = Date.now() - 24*60*60*1000;
+  const fresh = new Set();
+  for (const id in dates) {
+    const t = Date.parse(dates[id]); if (t >= cutoff) fresh.add(id);
+  }
+  return fresh;
+}
+
+let _achActiveFilter = 'all';
+
+function renderAchievements(){
+  const filtersEl = document.getElementById('ach-filters');
+  const groupsEl = document.getElementById('ach-groups');
+  const countEl = document.getElementById('ach-count');
+  if (!filtersEl || !groupsEl) return;
+
+  // Compute unlock state for static + dynamic records.
+  const computed = ACHIEVEMENTS.map(a => {
+    let isUnlocked = false;
+    try { isUnlocked = !!a.unlocked(); } catch(_) { isUnlocked = false; }
+    return { ...a, unlocked: isUnlocked };
+  });
+  const records = _personalRecords();
+
+  // Persist unlock dates for fresh-state animation.
+  _achStampNew([...computed.filter(a => a.unlocked).map(a => a.id), ...records.filter(r => r.unlocked).map(r => r.id)]);
+  const fresh = _achFreshSet();
+
+  const all = [...computed, ...records];
+  const unlockedCount = all.filter(a => a.unlocked).length;
+  if (countEl) countEl.textContent = `${unlockedCount} of ${all.length} unlocked`;
+
+  // Filter chips — show category + count.
+  const counts = {};
+  ACH_CATEGORIES.forEach(c => counts[c.id] = 0);
+  all.forEach(a => { if (counts[a.cat] != null) counts[a.cat]++; });
+  counts.all = all.length;
+  filtersEl.innerHTML = ACH_CATEGORIES.filter(c => c.id === 'all' || counts[c.id] > 0).map(c => `
+    <button class="ach-filter" data-cat="${c.id}" aria-pressed="${_achActiveFilter===c.id?'true':'false'}">
+      ${c.name} <span style="opacity:.6;margin-left:3px;">${counts[c.id]||0}</span>
+    </button>
+  `).join('');
+  filtersEl.querySelectorAll('.ach-filter').forEach(btn => {
+    btn.addEventListener('click', () => { _achActiveFilter = btn.dataset.cat; renderAchievements(); });
+  });
+
+  // Group by category for display.
+  const groupOrder = ACH_CATEGORIES.filter(c => c.id !== 'all').map(c => c.id);
+  const buckets = {};
+  groupOrder.forEach(id => buckets[id] = []);
+  all.forEach(a => { if (buckets[a.cat]) buckets[a.cat].push(a); });
+
+  let html = '';
+  for (const catId of groupOrder) {
+    const items = buckets[catId];
+    if (!items || items.length === 0) continue;
+    if (_achActiveFilter !== 'all' && _achActiveFilter !== catId) continue;
+    const cat = ACH_CATEGORIES.find(c => c.id === catId);
+    const labelClass = catId === 'records' ? 'ach-group-label records' : 'ach-group-label';
+    const groupExtra = catId === 'records'
+      ? `<span class="label-meta">auto-tracked</span>`
+      : `<span class="label-meta">${items.filter(i=>i.unlocked).length}/${items.length}</span>`;
+    html += `<div class="${labelClass}">${cat.name}${groupExtra}</div>`;
+    html += `<div class="ach-grid">${items.map(a => {
+      const goldCls = a.gold && a.unlocked ? ' gold' : '';
+      const stateCls = a.unlocked ? `unlocked${goldCls}` : 'locked';
+      const isFresh = a.unlocked && fresh.has(a.id);
+      const pulse = isFresh && a.gold ? `<div class="ach-pulse"></div>` : '';
+      const meta = a.unlocked
+        ? (a.meta ? a.meta : (_achPersistedDates()[a.id] ? new Date(_achPersistedDates()[a.id]).toLocaleDateString('en-US',{month:'short', day:'numeric'}) : ''))
+        : (a.distance ? (function(){ try { return a.distance(); } catch(_){ return ''; } })() : '');
+      const icon = a.unlocked ? a.icon : _ACH_ICON.lock;
+      return `<div class="ach ${stateCls}" title="${escapeHtml(a.name)}${a.meta?(' · '+escapeHtml(a.meta)):''}">
+        ${pulse}
+        <div class="ach-medal">${icon}</div>
+        <div class="ach-name">${escapeHtml(a.name)}</div>
+        <div class="ach-meta">${escapeHtml(meta)}</div>
+      </div>`;
+    }).join('')}</div>`;
+  }
+  groupsEl.innerHTML = html || `<div class="empty-state">Nothing yet in this category.</div>`;
+}
+
+// Habit detail rows on the score page (full size, with explanations).
+function renderHabitDetailRows({s1,s2,s3,s4,s5}){
+  const el = document.getElementById('score-rows');
+  if (!el) return;
+  const sec = document.getElementById('habit-detail-sec');
+  if (sec) sec.textContent = new Date().toLocaleDateString('en-US',{month:'long'}) + ' habits, in detail';
+  const rows = [
+    { label:'Bills covered',         sub:'Bills paid or set aside this month.',                 val:s1, max:30 },
+    { label:'Paid yourself',         sub:'Owner draw against your monthly target.',             val:s5, max:20 },
+    { label:'Extra debt payments',   sub:'Anything sent to debt above the minimums.',           val:s2, max:20 },
+    { label:'Buffer fund added',     sub:"Money set aside toward next month's floor.",          val:s3, max:15 },
+    { label:'Within your income',    sub:'Discretionary spending under target.',                 val:s4, max:15 },
+  ];
+  const checkSvg = `<svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>`;
+  el.innerHTML = rows.map(r => {
+    const ratio = r.max > 0 ? r.val / r.max : 0;
+    const cls = ratio >= 0.999 ? 'done' : (ratio > 0.001 ? 'partial' : '');
+    const ringStyle = cls === 'partial' ? ` style="--p:${Math.round(ratio*100)}%"` : '';
+    const icon = cls === 'done' ? checkSvg : '';
+    return `<div class="score-row">
+      <div class="hlr-ring ${cls}"${ringStyle}>${icon}</div>
+      <div class="score-label">${r.label}<small>${r.sub}</small></div>
+      <div class="score-pts">${r.val}<small>/${r.max}</small></div>
+    </div>`;
+  }).join('');
 }
 
 function openMonthDetail(idx){
@@ -8496,11 +9190,20 @@ let _activeReclassifyCat = null;
 // Hidden when there's no Plaid history yet or no bills/baseline to
 // anchor against — the line would be meaningless.
 async function loadPaceLine(){
-  const wrap = document.getElementById('home-paceline');
+  // Pace line now lives inside the home Score card (#db-score-pace).
+  // Falls back to the legacy #home-paceline slot for backwards-compat
+  // (older builds where the card hasn't been migrated yet).
+  const wrap = document.getElementById('db-score-pace') || document.getElementById('home-paceline');
   if (!wrap) return;
+  const isInScoreCard = wrap.id === 'db-score-pace';
+  if (isInScoreCard) wrap.classList.add('db-score-pace--dark');
   // Tour mode dashboards use demo numbers; pace line on top of fake data
   // would be misleading. Hide for the duration of the tour.
-  if (document.body.classList.contains('tour-active')) { wrap.style.display = 'none'; return; }
+  if (document.body.classList.contains('tour-active')) {
+    wrap.style.display = 'none';
+    if (isInScoreCard) wrap.innerHTML = '';
+    return;
+  }
   try {
     const sb = sbGet();
     const today = new Date();
@@ -8535,13 +9238,20 @@ async function loadPaceLine(){
         .select('id', { count: 'exact', head: true });
       if ((itemCount ?? 0) > 0) {
         wrap.style.display = 'block';
-        wrap.innerHTML = `
-          <div style="background:white;border:1px solid var(--ds-line);border-radius:var(--ds-r2);padding:1rem 1.25rem;box-shadow:var(--ds-sh1);">
-            <div style="font-size:11px;font-weight:800;letter-spacing:.1em;text-transform:uppercase;color:var(--ds-t3);margin-bottom:.4rem;">Floor pace</div>
-            <div style="font-size:13px;font-weight:600;color:var(--ds-t3);line-height:1.55;">Able is still mapping your spending pattern. Once a few weeks of activity are in, you'll see your pace against your floor here.</div>
-          </div>`;
+        if (isInScoreCard) {
+          wrap.innerHTML = `
+            <div class="db-pace-label" style="margin-bottom:4px;">Floor pace</div>
+            <div style="font-size:12px;font-weight:600;color:rgba(255,255,255,.6);line-height:1.45;">Able is still mapping your spending pattern. Once a few weeks of activity are in, you'll see your pace against your floor here.</div>`;
+        } else {
+          wrap.innerHTML = `
+            <div style="background:white;border:1px solid var(--ds-line);border-radius:var(--ds-r2);padding:1rem 1.25rem;box-shadow:var(--ds-sh1);">
+              <div style="font-size:11px;font-weight:800;letter-spacing:.1em;text-transform:uppercase;color:var(--ds-t3);margin-bottom:.4rem;">Floor pace</div>
+              <div style="font-size:13px;font-weight:600;color:var(--ds-t3);line-height:1.55;">Able is still mapping your spending pattern. Once a few weeks of activity are in, you'll see your pace against your floor here.</div>
+            </div>`;
+        }
       } else {
         wrap.style.display = 'none';
+        if (isInScoreCard) wrap.innerHTML = '';
       }
       return;
     }
@@ -8585,29 +9295,50 @@ async function loadPaceLine(){
 
     const gap = actualPts[actualPts.length - 1] - floorPts[floorPts.length - 1];
     const overUnder = gap >= 0 ? 'over' : 'under';
-    const gapColor = gap >= 0 ? '#c25656' : '#3d9e78';
+    // In the dark score card, "under floor" is the win state (paint green);
+    // "over floor" is the warning state (paint amber).
+    const gapColorDark = gap >= 0 ? '#e3c478' : '#b8e0c8';
+    const gapColorLight = gap >= 0 ? '#c25656' : '#3d9e78';
+    const gapColor = isInScoreCard ? gapColorDark : gapColorLight;
+    const floorStrokeDark = 'rgba(255,255,255,.35)';
+    const floorStrokeLight = 'var(--ds-t3)';
     const gapStr = Math.abs(gap).toLocaleString(undefined, { style: 'currency', currency: 'USD', maximumFractionDigits: 0 });
 
     wrap.style.display = 'block';
-    wrap.innerHTML = `
-      <div style="background:white;border:1px solid var(--ds-line);border-radius:var(--ds-r2);padding:1rem 1.25rem;box-shadow:var(--ds-sh1);">
-        <div style="display:flex;align-items:center;justify-content:space-between;gap:.75rem;margin-bottom:.5rem;flex-wrap:wrap;">
-          <div style="font-size:11px;font-weight:800;letter-spacing:.1em;text-transform:uppercase;color:var(--ds-t3);">Floor pace · last ${stripDays} ${stripDays === 1 ? 'day' : 'days'}</div>
-          <div style="font-size:13px;font-weight:800;color:${gapColor};letter-spacing:-.005em;">${gapStr} ${overUnder} floor today</div>
+    if (isInScoreCard) {
+      wrap.innerHTML = `
+        <div style="display:flex;align-items:baseline;justify-content:space-between;gap:.5rem;margin-bottom:4px;">
+          <div class="db-pace-label">Floor pace · last ${stripDays}${stripDays === 1 ? ' day' : ' days'}</div>
+          <div class="db-pace-gap" style="color:${gapColor};">${gapStr} ${overUnder} floor</div>
         </div>
         <svg width="100%" height="${H}" viewBox="0 0 ${W} ${H}" preserveAspectRatio="none" style="display:block;">
-          <path d="${floorPath}" fill="none" stroke="var(--ds-t3)" stroke-width="1.5" stroke-dasharray="3,3" opacity=".55"/>
+          <path d="${floorPath}" fill="none" stroke="${floorStrokeDark}" stroke-width="1.5" stroke-dasharray="3,3"/>
           <path d="${actualPath}" fill="none" stroke="${gapColor}" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/>
         </svg>
-        <div style="display:flex;align-items:center;gap:1.25rem;margin-top:.5rem;font-size:11px;font-weight:600;color:var(--ds-t3);">
-          <span style="display:inline-flex;align-items:center;gap:.45rem;"><span style="display:inline-block;width:16px;height:0;border-top:1.5px dashed var(--ds-t3);"></span>Floor</span>
-          <span style="display:inline-flex;align-items:center;gap:.45rem;"><span style="display:inline-block;width:16px;height:2px;background:${gapColor};"></span>You</span>
+        <div class="db-pace-foot"><span>${stripDays}d ago</span><span>today</span></div>
+      `;
+    } else {
+      wrap.innerHTML = `
+        <div style="background:white;border:1px solid var(--ds-line);border-radius:var(--ds-r2);padding:1rem 1.25rem;box-shadow:var(--ds-sh1);">
+          <div style="display:flex;align-items:center;justify-content:space-between;gap:.75rem;margin-bottom:.5rem;flex-wrap:wrap;">
+            <div style="font-size:11px;font-weight:800;letter-spacing:.1em;text-transform:uppercase;color:var(--ds-t3);">Floor pace · last ${stripDays} ${stripDays === 1 ? 'day' : 'days'}</div>
+            <div style="font-size:13px;font-weight:800;color:${gapColor};letter-spacing:-.005em;">${gapStr} ${overUnder} floor today</div>
+          </div>
+          <svg width="100%" height="${H}" viewBox="0 0 ${W} ${H}" preserveAspectRatio="none" style="display:block;">
+            <path d="${floorPath}" fill="none" stroke="${floorStrokeLight}" stroke-width="1.5" stroke-dasharray="3,3" opacity=".55"/>
+            <path d="${actualPath}" fill="none" stroke="${gapColor}" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+          <div style="display:flex;align-items:center;gap:1.25rem;margin-top:.5rem;font-size:11px;font-weight:600;color:var(--ds-t3);">
+            <span style="display:inline-flex;align-items:center;gap:.45rem;"><span style="display:inline-block;width:16px;height:0;border-top:1.5px dashed var(--ds-t3);"></span>Floor</span>
+            <span style="display:inline-flex;align-items:center;gap:.45rem;"><span style="display:inline-block;width:16px;height:2px;background:${gapColor};"></span>You</span>
+          </div>
         </div>
-      </div>
-    `;
+      `;
+    }
   } catch (e) {
     console.warn('paceLine failed:', e);
     wrap.style.display = 'none';
+    if (isInScoreCard) wrap.innerHTML = '';
   }
 }
 
@@ -9474,6 +10205,64 @@ function buildNext14Events(days){
   events.sort((a, b) => a.date - b.date || (a.type === 'income' ? -1 : 1));
   return events;
 }
+// Inline Next-N card on home — shows the next 2 events (mix of bills +
+// expected income) with their funded state. Tap routes to the full modal.
+// Hides itself when there's nothing scheduled in the window.
+function renderNextNCard(days){
+  const card = document.getElementById('db-next-card');
+  const titleEl = document.getElementById('db-next-title');
+  const linkEl = document.getElementById('db-next-link');
+  const rowsEl = document.getElementById('db-next-rows');
+  if (!card || !rowsEl) return;
+  const win = days || allocWindow();
+  if (titleEl) titleEl.textContent = `Next ${win} days`;
+  let events = [];
+  try { events = buildNext14Events(win); } catch (_) { events = []; }
+  if (!events.length) {
+    card.style.display = 'block';
+    rowsEl.innerHTML = `<div class="db-next-empty">Nothing scheduled in the next ${win} days. Any income is surplus.</div>`;
+    if (linkEl) linkEl.style.display = 'none';
+    return;
+  }
+  if (linkEl) {
+    linkEl.style.display = '';
+    linkEl.textContent = events.length > 2 ? `See all ${events.length} →` : 'See full plan →';
+  }
+  card.style.display = 'block';
+  const top = events.slice(0, 2);
+  rowsEl.innerHTML = top.map(ev => {
+    const m = ev.date.toLocaleDateString('en-US',{ month:'short' }).toUpperCase();
+    const d = ev.date.getDate();
+    const dayCls = ev.type === 'bill' ? 'db-next-day db-next-day--bill' : 'db-next-day';
+    let stat = '', statCls = 'db-next-stat';
+    if (ev.type === 'income') {
+      stat = `+${fr(ev.amount)}`;
+      statCls = 'db-next-stat db-next-stat--in';
+    } else {
+      const reservedFor = (typeof _billReserved === 'function' && ev.bill && ev.bill.id)
+        ? Math.min(_billReserved(ev.bill.id), ev.amount || 0) : 0;
+      const pct = ev.amount > 0 ? Math.round((reservedFor / ev.amount) * 100) : 0;
+      if (ev.bill && ev.bill.paid) {
+        stat = 'paid';
+      } else if (pct >= 99) {
+        stat = 'funded';
+      } else if (pct > 0) {
+        stat = `${pct}% funded`;
+        statCls = 'db-next-stat db-next-stat--warn';
+      } else {
+        stat = 'uncovered';
+        statCls = 'db-next-stat db-next-stat--uncov';
+      }
+    }
+    const subTag = ev.type === 'bill' ? 'monthly bill' : 'expected income';
+    return `<div class="db-next-row">
+      <div class="${dayCls}"><b>${d}</b><small>${m}</small></div>
+      <div class="db-next-name">${escapeHtml(ev.name||'')}<small>${subTag}</small></div>
+      <div class="${statCls}">${stat}</div>
+    </div>`;
+  }).join('');
+}
+
 function openNext14Modal(){
   document.getElementById('modal-next-14').style.display = 'flex';
   renderNext14();
@@ -9753,6 +10542,41 @@ function renderHeroMoney(){
       <span class="db-hero-money-label">Reserved for bills${reservedBills.length?' <span class="db-hero-toggle" aria-label="Show breakdown">▾</span>':''}</span>
       <span class="db-hero-money-val">${f2(reserved)}</span>
     </div>`;
+
+  // Floor coverage strip — Floor-First made visible on home.
+  // Floor = total monthly bills. Funded = paid + reserved (paid bills
+  // are still "covered" this month even though the cash already left).
+  const floorTotal = (typeof totalBills === 'function') ? totalBills() : 0;
+  const floorPaid  = (typeof paidBills === 'function')  ? paidBills()  : 0;
+  const floorFunded = floorPaid + reserved;
+  const floorPct = floorTotal > 0 ? Math.max(0, Math.min(100, Math.round((floorFunded / floorTotal) * 100))) : 0;
+  let floorCap = '';
+  if (floorTotal <= 0.01) {
+    floorCap = ''; // nothing to render — handled by hiding strip below
+  } else if (floorFunded >= floorTotal - 0.01) {
+    floorCap = `<b>Floor covered.</b> Surplus is going to the rest of your plan.`;
+  } else {
+    const shortBy = floorTotal - floorFunded;
+    floorCap = `<b>${f2(shortBy)}</b> short of the floor. Your next deposit fills it first.`;
+  }
+  const floorStrip = floorTotal > 0.01 ? `
+    <div class="db-floor-strip" id="db-floor-strip">
+      <div class="db-floor-row">
+        <div class="db-floor-label">The Floor</div>
+        <div class="db-floor-num">${f2(floorFunded)} <span>/ ${f2(floorTotal)}</span></div>
+      </div>
+      <div class="db-floor-track"><div class="db-floor-fill" style="width:${floorPct}%;"></div></div>
+      <div class="db-floor-cap">${floorCap}</div>
+    </div>` : '';
+
+  // CTA hierarchy: primary action is always "Log new income" (Floor-First's
+  // core moment — every deposit gets allocated). When there's unallocated
+  // available, surface "allocate the $X" as a quiet secondary text link.
+  const primaryCta = `<button class="db-hero-cta-primary" onclick="openAllocateSheet()">Log new income →</button>`;
+  const allocateLink = (available > 0.01)
+    ? `<button class="db-hero-cta-link" onclick="allocateAvailable()">or allocate the ${f2(available)} available →</button>`
+    : '';
+
   let body = '';
   if (available > 0.01) {
     body = `
@@ -9768,7 +10592,9 @@ function renderHeroMoney(){
         <span class="db-hero-available-label">Available to spend</span>
         <span class="db-hero-available-val">${f2(available)}</span>
       </div>
-      <button class="db-hero-cta-primary" onclick="allocateAvailable()">Tell me where it goes →</button>
+      ${floorStrip}
+      ${primaryCta}
+      ${allocateLink}
     `;
   } else if (Math.abs(available) <= 0.01) {
     body = `
@@ -9781,6 +10607,8 @@ function renderHeroMoney(){
       ${breakdownHtml}
       <div class="db-hero-money-divider"></div>
       <div style="font-size:13px;font-weight:700;color:white;text-align:center;padding:.5rem 0 .25rem;">Every dollar's accounted for. Nothing left to allocate.</div>
+      ${floorStrip}
+      ${primaryCta}
     `;
   } else {
     const short = Math.abs(available);
@@ -9798,9 +10626,43 @@ function renderHeroMoney(){
         <span class="db-hero-available-val db-hero-available-val--neg">${f2(short)}</span>
       </div>
       <div class="db-hero-shortfall">Reservations exceed your balance. Skip a bill, dip into your buffer, or wait for the next deposit to fill the gap.</div>
+      ${floorStrip}
+      ${primaryCta}
     `;
   }
   el.innerHTML = body;
+  // First-time Floor-strip popover. Fires once when the strip is visible
+  // for the first time and the user isn't in the onboarding tour. Stored
+  // in localStorage so it never re-appears once dismissed.
+  if (floorTotal > 0.01 && !document.body.classList.contains('tour-active')) {
+    try {
+      const seen = localStorage.getItem('able_seen_floor_intro') === '1';
+      if (!seen) maybeShowFloorIntro();
+    } catch (_) {}
+  }
+}
+function maybeShowFloorIntro(){
+  const strip = document.getElementById('db-floor-strip');
+  if (!strip) return;
+  if (strip.querySelector('.db-floor-pop')) return;
+  const pop = document.createElement('div');
+  pop.className = 'db-floor-pop';
+  pop.innerHTML = `
+    <button class="db-floor-pop-x" aria-label="Dismiss" onclick="dismissFloorIntro(event)">×</button>
+    <div class="db-floor-pop-title">This is your Floor</div>
+    <div class="db-floor-pop-body">Bills and tax. The amount you can't miss this month. Reserved cash fills it; surplus goes to the rest of your plan.</div>`;
+  strip.appendChild(pop);
+  // Tap-anywhere-on-popover dismisses too (except the X, which has its own handler).
+  pop.addEventListener('click', (e) => {
+    if (e.target.classList.contains('db-floor-pop-x')) return;
+    dismissFloorIntro(e);
+  });
+}
+function dismissFloorIntro(e){
+  if (e) { e.stopPropagation(); e.preventDefault(); }
+  try { localStorage.setItem('able_seen_floor_intro', '1'); } catch(_) {}
+  const pop = document.querySelector('.db-floor-pop');
+  if (pop) pop.remove();
 }
 // Backward-compat shim — older callers used renderBalanceCard.
 function renderBalanceCard(){ renderHeroMoney(); }
