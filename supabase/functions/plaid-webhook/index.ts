@@ -183,6 +183,7 @@ async function dispatch(
   const updates: Record<string, unknown> = { last_webhook_at: now };
 
   let triggerSync = false;
+  let triggerRecurring = false;
   if (ev.webhook_type === 'TRANSACTIONS') {
     if (ev.webhook_code === 'SYNC_UPDATES_AVAILABLE') {
       if (ev.initial_update_complete) updates.initial_sync_complete = true;
@@ -194,7 +195,18 @@ async function dispatch(
       triggerSync = true;
     }
     if (ev.webhook_code === 'RECURRING_TRANSACTIONS_UPDATE') {
-      // Caller / cron will call plaid-recurring-refresh.
+      // P2 #21: Plaid signals new recurring streams are available. Flag the
+      // item so the client can show a "your plan can be refined" banner,
+      // and fire plaid-recurring-refresh in the background so streams get
+      // pulled without waiting on cron. Status becomes 'fresh' when refresh
+      // completes and finds at least one new stream.
+      updates.recurring_status = 'pending';
+      updates.recurring_last_attempt_at = now;
+      updates.recurring_attempt_count = (updates.recurring_attempt_count as number ?? 0) + 1;
+      // Trigger refresh AFTER the item update writes (the function needs
+      // the row id, not the Plaid item id). The triggerRecurring flag
+      // mirrors the triggerSync pattern below.
+      triggerRecurring = true;
     }
   } else if (ev.webhook_type === 'ITEM') {
     switch (ev.webhook_code) {
@@ -252,6 +264,9 @@ async function dispatch(
   if (triggerSync && updatedItem?.id) {
     scheduleBackgroundSync(updatedItem.id);
   }
+  if (triggerRecurring && updatedItem?.id) {
+    scheduleRecurringRefresh(updatedItem.id);
+  }
 }
 
 // Fire plaid-sync in the background so the webhook handler can return 200
@@ -283,6 +298,36 @@ function scheduleBackgroundSync(plaidItemRowId: string): void {
   }
   // If EdgeRuntime is unavailable (local dev), the in-flight fetch should
   // still complete before the runtime is reaped.
+}
+
+// Fire plaid-recurring-refresh on a RECURRING_TRANSACTIONS_UPDATE webhook
+// so streams are pulled the moment Plaid finishes computing them. Mirrors
+// the scheduleBackgroundSync pattern: hits the function with service-role
+// auth, lets the runtime keep the work alive past the webhook 200.
+function scheduleRecurringRefresh(plaidItemRowId: string): void {
+  const url = `${SUPABASE_URL}/functions/v1/plaid-recurring-refresh`;
+  const work = fetch(url, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      Authorization: `Bearer ${SERVICE_ROLE}`,
+    },
+    body: JSON.stringify({ plaid_item_row_id: plaidItemRowId, source: 'webhook' }),
+  })
+    .then(async (r) => {
+      const text = await r.text().catch(() => '');
+      if (!r.ok) {
+        console.error(`webhook→recurring-refresh failed for item ${plaidItemRowId} (${r.status}): ${text}`);
+      } else {
+        console.log(`webhook→recurring-refresh ok for item ${plaidItemRowId}: ${text}`);
+      }
+    })
+    .catch((e) => console.error(`webhook→recurring-refresh threw for item ${plaidItemRowId}:`, e));
+
+  const er = (globalThis as unknown as { EdgeRuntime?: { waitUntil?: (p: Promise<unknown>) => void } }).EdgeRuntime;
+  if (er?.waitUntil) {
+    er.waitUntil(work);
+  }
 }
 
 // ─── Helpers ──────────────────────────────────────────────────────────

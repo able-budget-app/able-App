@@ -37,13 +37,13 @@ Deno.serve(async (req) => {
   if (req.method !== 'POST') return json({ error: 'POST only' }, 405);
 
   try {
+    // Two callers (mirrors plaid-sync): a logged-in user (JWT in
+    // Authorization) or an internal service-role caller (the webhook on
+    // RECURRING_TRANSACTIONS_UPDATE). Service-role bypasses the user check
+    // since the user is offline when Plaid pings us.
     const authHeader = req.headers.get('Authorization') ?? '';
-    const userClient = createClient(SUPABASE_URL, SERVICE_ROLE, {
-      global: { headers: { Authorization: authHeader } },
-    });
-    const { data: userRes, error: userErr } = await userClient.auth.getUser();
-    if (userErr || !userRes.user) return json({ error: 'Unauthorized' }, 401);
-    const userId = userRes.user.id;
+    const bearerToken = authHeader.replace(/^Bearer\s+/i, '');
+    const isServiceCall = !!bearerToken && bearerToken === SERVICE_ROLE;
 
     const body: Body = await req.json();
     if (!body?.plaid_item_row_id) {
@@ -58,7 +58,16 @@ Deno.serve(async (req) => {
       .eq('id', body.plaid_item_row_id)
       .single();
     if (itemErr || !item) return json({ error: 'Item not found' }, 404);
-    if (item.user_id !== userId) return json({ error: 'Forbidden' }, 403);
+
+    if (!isServiceCall) {
+      const userClient = createClient(SUPABASE_URL, SERVICE_ROLE, {
+        global: { headers: { Authorization: authHeader } },
+      });
+      const { data: userRes, error: userErr } = await userClient.auth.getUser();
+      if (userErr || !userRes.user) return json({ error: 'Unauthorized' }, 401);
+      if (item.user_id !== userRes.user.id) return json({ error: 'Forbidden' }, 403);
+    }
+    const userId = item.user_id;
 
     const resp = await transactionsRecurringGet(item.access_token);
     const refreshedAt = new Date().toISOString();
@@ -92,9 +101,25 @@ Deno.serve(async (req) => {
       if (error) console.error('tombstone missing streams failed:', error);
     }
 
+    // P2 #21: Flag the item so the home banner ("your plan can be refined")
+    // can fire when streams land AFTER a plan was already drafted. 'fresh'
+    // = streams arrived but the analyzer hasn't refined the plan yet;
+    // turns 'applied' once the user accepts the refined plan, or stays
+    // unset when no streams returned (Plaid still computing).
+    const itemUpdate: Record<string, unknown> = {
+      last_recurring_refresh_at: refreshedAt,
+      recurring_last_attempt_at: refreshedAt,
+    };
+    if (allRows.length > 0) {
+      itemUpdate.recurring_status = 'fresh';
+    } else {
+      // Empty refresh — Plaid hasn't computed streams yet (PRODUCT_NOT_READY-ish).
+      // Leave 'pending' so the next webhook attempts another pass.
+      itemUpdate.recurring_status = 'pending';
+    }
     await admin
       .from('plaid_items')
-      .update({ last_recurring_refresh_at: refreshedAt })
+      .update(itemUpdate)
       .eq('id', item.id);
 
     return json({

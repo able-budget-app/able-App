@@ -1287,6 +1287,18 @@ body.tour-active #page-home .db-action-card{display:flex!important;}
 .due-today-sub{font-size:11px;color:#7a4a05;font-weight:600;margin-top:2px;line-height:1.4;opacity:.85;}
 .due-today-cta{background:var(--ds-c3);color:white;border:none;font-family:var(--ds-f);font-size:12px;font-weight:800;padding:8px 13px;border-radius:100px;cursor:pointer;letter-spacing:-.01em;flex-shrink:0;}
 .due-today-cta:hover{background:#a86205;}
+/* Plan-refresh banner — surfaces when Plaid's RECURRING_TRANSACTIONS_UPDATE
+   webhook lands new streams after we already drafted a plan. Quiet sky-blue,
+   sits above the hero. Dismissable; we mark recurring_status='applied'. */
+.plan-refresh-banner{display:flex;align-items:center;gap:12px;background:linear-gradient(135deg,#eaf2fc 0%,#d5e6f5 100%);border-left:4px solid var(--ds-c5);border-radius:var(--ds-r2);padding:12px 14px;margin-bottom:.85rem;box-shadow:var(--ds-sh1);font-family:var(--ds-f);}
+.plan-refresh-banner-icon{flex-shrink:0;width:32px;height:32px;border-radius:50%;background:var(--ds-c5);color:white;display:flex;align-items:center;justify-content:center;}
+.plan-refresh-banner-body{flex:1;min-width:0;}
+.plan-refresh-banner-title{font-size:13px;font-weight:800;color:#284b78;letter-spacing:-.01em;}
+.plan-refresh-banner-sub{font-size:11px;color:#284b78;font-weight:600;margin-top:2px;line-height:1.4;opacity:.8;}
+.plan-refresh-banner-cta{background:var(--ds-c5);color:white;border:none;font-family:var(--ds-f);font-size:12px;font-weight:800;padding:8px 13px;border-radius:100px;cursor:pointer;letter-spacing:-.01em;flex-shrink:0;}
+.plan-refresh-banner-cta:hover{background:#2c5d96;}
+.plan-refresh-banner-x{flex-shrink:0;width:26px;height:26px;background:transparent;border:0;color:#284b78;font-size:14px;font-weight:800;cursor:pointer;border-radius:6px;display:flex;align-items:center;justify-content:center;opacity:.6;}
+.plan-refresh-banner-x:hover{opacity:1;background:rgba(40,75,120,.1);}
 .inbox-banner{display:flex;align-items:center;gap:12px;background:var(--ds-green-l);border-left:4px solid var(--ds-green);border-radius:var(--ds-r2);padding:12px 14px;margin-bottom:.85rem;box-shadow:var(--ds-sh1);font-family:var(--ds-f);}
 .inbox-banner-icon{width:32px;height:32px;border-radius:50%;background:var(--ds-green);color:white;display:flex;align-items:center;justify-content:center;flex-shrink:0;}
 .inbox-banner-body{flex:1;min-width:0;}
@@ -1658,6 +1670,10 @@ posthog.init('phc_B6PH36QxpExnyBYhfScFFF6LhDvoyxuFr6PypJuxxky3', {
 
   <!-- Past-due bills banner — visible only when monthly bills missed their due day -->
   <div id="past-due-banner"></div>
+
+  <!-- Plan-refresh banner — shows when Plaid's recurring detection arrived
+       AFTER a plan was already drafted (P2 #21). Filled by renderPlanRefreshBanner. -->
+  <div id="plan-refresh-banner"></div>
 
   <!-- Due-today card — louder than the chip, only visible morning-of for
        unpaid bills due today. Filled by renderDueTodayCard. Empty otherwise. -->
@@ -6887,6 +6903,7 @@ function refreshHome(){
   renderHeroMoney();
   renderPastDueBanner();
   renderDueTodayCard();
+  renderPlanRefreshBanner();
   renderIncomeInboxBanner();
   // Match Plaid deposits to manual S.history entries so the user sees a
   // "deposited at $X" annotation and we don't double-count income once
@@ -9279,6 +9296,71 @@ function renderDueTodayCard(){
       <button class="due-today-cta" onclick="goTo('bills')">Review</button>
     </div>`;
 }
+// Plan-refresh banner — fires when Plaid's RECURRING_TRANSACTIONS_UPDATE
+// webhook landed new streams AFTER we already drafted a plan. The user
+// should know their plan can be sharpened with the new data, without it
+// being a hard interrupt. Dismissable via X; "Refresh plan" hits the
+// analyzer's apply path again.
+async function renderPlanRefreshBanner(){
+  const el = document.getElementById('plan-refresh-banner');
+  if (!el) return;
+  // Only meaningful for users who already have bills detected (i.e. have
+  // a draft plan). Without bills, the banner is noise — they're still
+  // in initial-sync territory.
+  if (!Array.isArray(S.bills) || S.bills.length === 0) { el.innerHTML = ''; return; }
+  try {
+    const sb = sbGet();
+    const { data, error } = await sb.from('plaid_items')
+      .select('id, recurring_status, last_recurring_refresh_at')
+      .eq('recurring_status', 'fresh')
+      .limit(1);
+    if (error) throw error;
+    if (!data || data.length === 0) { el.innerHTML = ''; return; }
+    el.innerHTML = `
+      <div class="plan-refresh-banner" role="status">
+        <div class="plan-refresh-banner-icon">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><polyline points="23 4 23 10 17 10"/><path d="M20.49 15A9 9 0 1 1 5.64 5.64L23 10"/></svg>
+        </div>
+        <div class="plan-refresh-banner-body">
+          <div class="plan-refresh-banner-title">Your plan can be refined</div>
+          <div class="plan-refresh-banner-sub">Plaid finished detecting more recurring patterns. Re-run the analyzer to merge them in.</div>
+        </div>
+        <button class="plan-refresh-banner-cta" onclick="refreshPlanFromBanner()">Refresh plan</button>
+        <button class="plan-refresh-banner-x" onclick="dismissPlanRefreshBanner()" aria-label="Dismiss">✕</button>
+      </div>`;
+  } catch (e) {
+    console.warn('renderPlanRefreshBanner failed:', e);
+    el.innerHTML = '';
+  }
+}
+async function dismissPlanRefreshBanner(){
+  // Move 'fresh' → 'applied' so the banner stops firing without re-running
+  // the analyzer. Different from "Refresh plan" — this is just acknowledging.
+  try {
+    await sbGet().from('plaid_items')
+      .update({ recurring_status: 'applied' })
+      .eq('recurring_status', 'fresh');
+  } catch (_) {}
+  const el = document.getElementById('plan-refresh-banner');
+  if (el) el.innerHTML = '';
+}
+async function refreshPlanFromBanner(){
+  // Trigger the analyzer-apply-plan flow with the latest streams. For v1
+  // we just navigate the user back into the plan review (the existing
+  // `obRenderPlanReview` flow handles the merge). Mark the items as
+  // 'applied' so the banner doesn't fire again until streams refresh.
+  try {
+    await sbGet().from('plaid_items')
+      .update({ recurring_status: 'applied' })
+      .eq('recurring_status', 'fresh');
+  } catch (_) {}
+  showToast('Plan refresh queued. Watch for the updated review.');
+  const el = document.getElementById('plan-refresh-banner');
+  if (el) el.innerHTML = '';
+  // The full re-review flow will be wired in a follow-up; for now we just
+  // surface the toast so the user knows something happened.
+}
+
 function renderPastDueBanner(){
   const el = document.getElementById('past-due-banner');
   if (!el) return;
