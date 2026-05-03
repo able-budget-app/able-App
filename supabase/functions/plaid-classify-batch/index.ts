@@ -397,18 +397,43 @@ async function fetchOverridesByUser(
 // kind, longer match_value wins. Direction filter respects the txn's sign:
 // inflows (amount < 0) accept 'inflow' or 'both'; outflows accept 'outflow'
 // or 'both'. Empty match_value never matches anything.
+//
+// Matching is loose for both kinds (P2 #17): Plaid sometimes puts a clean
+// merchant_name on a row, sometimes only fills `name` with a raw descriptor
+// like "DD DRIVER PMT" or "STRIPE PAYOUT". To stop classification confidence
+// flickering across days for the same merchant, override matching now:
+//   - substring-checks the merchant value against BOTH merchant_name and name
+//   - normalizes both sides by stripping common corporate suffixes (Inc, LLC,
+//     Co, Corp) before comparing, so "Doordash" and "Doordash Inc" are equal.
+function _normalizeMerchantText(s: string): string {
+  return s
+    .toLowerCase()
+    .replace(/[.,]/g, '')
+    .replace(/\b(inc|llc|ltd|corp|corporation|co)\b/g, '')
+    .replace(/\s+/g, ' ')
+    .trim();
+}
 function pickOverride(row: TxnRow, overrides: Override[]): Override | null {
   if (overrides.length === 0) return null;
-  const merchantKey = (row.merchant_name ?? '').toLowerCase().trim();
+  const merchantKey = _normalizeMerchantText(row.merchant_name ?? '');
   const nameLower = (row.name ?? '').toLowerCase();
+  const nameNormalized = _normalizeMerchantText(row.name ?? '');
   const isInflow = (row.amount ?? 0) < 0;
   const direction = isInflow ? 'inflow' : 'outflow';
 
   const candidates = overrides.filter((o) => {
     if (o.match_value.length === 0) return false;
     if (o.direction !== 'both' && o.direction !== direction) return false;
+    const v = _normalizeMerchantText(o.match_value);
+    if (v.length === 0) return false;
     if (o.match_kind === 'merchant') {
-      return merchantKey.length > 0 && merchantKey === o.match_value;
+      // Loose merchant match: substring in either direction against
+      // merchant_name OR the raw name. Catches Plaid descriptor variants
+      // ("Doordash" / "Doordash, Inc" / "DOORDASH INC TRANSFER") that
+      // refer to the same merchant.
+      if (merchantKey.length > 0 && (merchantKey.includes(v) || v.includes(merchantKey))) return true;
+      if (nameNormalized.length > 0 && nameNormalized.includes(v)) return true;
+      return false;
     }
     return nameLower.includes(o.match_value);
   });

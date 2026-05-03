@@ -3323,6 +3323,22 @@ const OB_QUESTIONS = [
     hint: "I'm going to help you budget your inconsistent income. Let's set things up for how you actually make and spend money. Takes about 3 minutes."
   },
   {
+    key: 'brought_here',
+    type: 'multiselect',
+    msg: "What brought you here?",
+    hint: "Pick what feels true. No judgment. We'll tilt the plan and Coach toward what matters most to you.",
+    choices: [
+      { value: 'freeze',         label: "Stop the freezing-up cycle when money lands" },
+      { value: 'leaks',          label: "Plug subscription leaks I keep paying for" },
+      { value: 'slow_months',    label: "Smooth out slow months without panic" },
+      { value: 'bills_ahead',    label: "Get on top of bills before they hit" },
+      { value: 'cushion',        label: "Build a real cushion, not just $300 in checking" },
+      { value: 'shame_cycle',    label: "Stop avoiding the app every time I open it" },
+      { value: 'debt',           label: "Dig out of debt without losing my mind" },
+    ],
+    optional: true,
+  },
+  {
     key: 'name_business',
     type: 'text',
     msg: "What's your name, and what do you do to make money?",
@@ -5366,6 +5382,12 @@ async function obSubmitPlanReview() {
     const rawName = (obAnswers.name_business || '').trim();
     S.profile.name = _obParseFirstName(rawName) || S.profile.name || '';
     S.profile.goals = GOAL_LABELS[obAnswers.goals] || obAnswers.goals || S.profile.goals || '';
+    // Save the "what brought you here" answer so Coach can mirror it back
+    // and surface persona-aware nudges. Coach state already passes profile
+    // through, so writing it here is enough.
+    if (Array.isArray(obAnswers.brought_here) && obAnswers.brought_here.length > 0) {
+      S.profile.brought_here = obAnswers.brought_here.slice();
+    }
     await saveUserData();
     obClearSession();
 
@@ -5487,6 +5509,11 @@ async function obConfirm() {
   }
   S.obligations = r.obligations || [];
   S.profile = { name: r.name, business_type: r.business_type, goals: r.goals };
+  // Mirror the multi-select "what brought you here" answer into profile
+  // so Coach can reference it via buildCoachState.
+  if (Array.isArray(obAnswers.brought_here) && obAnswers.brought_here.length > 0) {
+    S.profile.brought_here = obAnswers.brought_here.slice();
+  }
 
   // Save to cloud
   await saveUserData();
