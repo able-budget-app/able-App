@@ -30,7 +30,7 @@ Deno.serve(async (req) => {
 
     let { data: userDataRows } = await admin
       .from('user_data')
-      .select('id, last_active, email_prefs, unsubscribe_token, bills, buffer, history, settings');
+      .select('id, last_active, email_prefs, unsubscribe_token, bills, buffer, history, settings, email_status');
     let userDataMap = new Map((userDataRows ?? []).map((u: any) => [u.id, u]));
 
     // Ensure every auth user has a user_data row so they all have an unsubscribe_token
@@ -38,7 +38,7 @@ Deno.serve(async (req) => {
     if (missingIds.length > 0) {
       await admin.from('user_data').upsert(missingIds, { onConflict: 'id', ignoreDuplicates: true });
       const refresh = await admin.from('user_data')
-        .select('id, last_active, email_prefs, unsubscribe_token, bills, buffer, history, settings');
+        .select('id, last_active, email_prefs, unsubscribe_token, bills, buffer, history, settings, email_status');
       if (refresh.data) userDataMap = new Map(refresh.data.map((u: any) => [u.id, u]));
     }
 
@@ -127,6 +127,16 @@ Deno.serve(async (req) => {
       const profile: any = profilesMap.get(userId);
       const prefs: any = userData?.email_prefs ?? {};
       const hasPaid = profile && paidStatuses.has(profile.subscription_status);
+
+      // Skip users whose email Resend has flagged as hard-bounced or
+      // complained. resend-webhook writes these states; we honor them here
+      // so we don't keep pinging dead/angry addresses (sender-reputation
+      // damage). Active and unset users continue normally.
+      const emailStatus = userData?.email_status;
+      if (emailStatus === 'bounced' || emailStatus === 'complained') {
+        results.skipped++;
+        continue;
+      }
 
       // Day-window computed in this user's local timezone.
       const userTz = userData?.settings?.timezone || 'UTC';
