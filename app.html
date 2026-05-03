@@ -976,6 +976,9 @@ body.tour-active #page-home .db-action-card{display:flex!important;}
 .ach-meta{font-family:var(--ds-f);font-size:9px;font-weight:700;color:var(--ds-t3);margin-top:3px;letter-spacing:.04em;text-transform:uppercase;}
 .ach-pulse{position:absolute;top:6px;right:6px;width:8px;height:8px;background:var(--ds-c3);border-radius:50%;box-shadow:0 0 0 3px rgba(201,124,10,.2);animation:achPulse 2s ease infinite;}
 @keyframes achPulse{0%,100%{transform:scale(1);}50%{transform:scale(1.25);}}
+/* Compact/expand toggle below the achievement grid. */
+.ach-toggle{display:block;width:100%;margin-top:14px;background:transparent;border:1px dashed var(--ds-t4);color:var(--ds-t2);font-family:var(--ds-f);font-size:11px;font-weight:800;letter-spacing:.06em;text-transform:uppercase;padding:10px 14px;border-radius:var(--ds-r1);cursor:pointer;transition:background .15s,color .15s,border-color .15s;}
+.ach-toggle:hover{background:var(--ds-green-l);color:var(--ds-green2);border-color:var(--ds-green-m);}
 
 /* Habit detail rows on score page. */
 #score-rows .score-row{display:grid;grid-template-columns:24px 1fr auto;gap:12px;align-items:center;padding:10px 0;border-bottom:1px solid var(--ds-line);}
@@ -8121,6 +8124,54 @@ function _achFreshSet(){
 }
 
 let _achActiveFilter = 'all';
+let _achCompact = (function(){ try { return localStorage.getItem('able_ach_compact') !== '0'; } catch(_) { return true; } })();
+const _ACH_COMPACT_LOCKED_PER_GROUP = 2; // closest-to-unlocking shown per category in compact mode
+
+// Numeric "how close to unlocking" 0..1 for sorting locked tiles. Falls back
+// to 0 for tiles where we don't have a clean signal — those sort last among
+// locked, after the user's actually-close ones.
+function _achProgress(id){
+  const tb = (typeof totalBills === 'function') ? totalBills() : 0;
+  const buf = (S && typeof S.buffer === 'number') ? S.buffer : 0;
+  const streak = (typeof _floorStreak === 'function') ? _floorStreak() : 0;
+  const best = (typeof _bestFloorStreak === 'function') ? _bestFloorStreak() : 0;
+  const debts = (S && Array.isArray(S.debts)) ? S.debts : [];
+  const debtSum = debts.reduce((s,d)=>s+(d.balance||0),0);
+  const monthHist = (S && Array.isArray(S.month_history)) ? S.month_history : [];
+  const maxScore = monthHist.reduce((m,h)=>Math.max(m, h.score||0), 0);
+  const ownerPaidMonths = monthHist.filter(m => (m.ownerPaid||0) > 0).length;
+  const learnRead = (S && Array.isArray(S.learn_read)) ? S.learn_read.length : 0;
+  const referralsJoined = (S && S.referrals_joined) ? S.referrals_joined : 0;
+  const clamp = (v) => Math.max(0, Math.min(1, v));
+  switch (id) {
+    case 'three_above':         return tb > 0 ? clamp(best/3)  : 0;
+    case 'six_above':           return tb > 0 ? clamp(best/6)  : 0;
+    case 'twelve_above':        return tb > 0 ? clamp(best/12) : 0;
+    case 'first_reserve_layer': return tb > 0 ? clamp(buf / Math.max(0.25*tb, 50)) : 0;
+    case 'halfway_to_able':     return tb > 0 ? clamp(buf / (0.5*tb)) : 0;
+    case 'one_month_ahead':     return tb > 0 ? clamp(buf / tb) : 0;
+    case 'two_months_ahead':    return tb > 0 ? clamp(buf / (2*tb)) : 0;
+    case 'streak_3':            return clamp(streak/3);
+    case 'streak_6':            return clamp(streak/6);
+    case 'streak_12':           return clamp(streak/12);
+    case 'three_paydays':       return clamp(ownerPaidMonths/3);
+    case 'card_paid_off':       return debts.length === 0 ? 0 : clamp(debts.filter(d => (d.balance||0) <= 0.01).length / debts.length);
+    case 'debt_free':           return debtSum > 0 ? clamp(1 - (debtSum / Math.max(debtSum, 1))) : 0;
+    case 'score_80':            return clamp(maxScore/80);
+    case 'score_90':            return clamp(maxScore/90);
+    case 'score_100':           return clamp(maxScore/100);
+    case 'learn_all_modules':   return clamp(learnRead/8);
+    case 'refer_five_joined':   return clamp(referralsJoined/5);
+    case 'refer_ten_joined':    return clamp(referralsJoined/10);
+    default: return 0;
+  }
+}
+
+function _achToggleCompact(){
+  _achCompact = !_achCompact;
+  try { localStorage.setItem('able_ach_compact', _achCompact ? '1' : '0'); } catch(_) {}
+  renderAchievements();
+}
 
 function renderAchievements(){
   const filtersEl = document.getElementById('ach-filters');
@@ -8164,6 +8215,21 @@ function renderAchievements(){
   groupOrder.forEach(id => buckets[id] = []);
   all.forEach(a => { if (buckets[a.cat]) buckets[a.cat].push(a); });
 
+  // Sort each group: unlocked first (preserving registry order), then locked
+  // by progress descending (closest-to-unlocking first). In compact mode,
+  // truncate locked to top N per group; expanded mode shows everything.
+  let totalHiddenLocked = 0;
+  for (const catId of groupOrder) {
+    const items = buckets[catId];
+    if (!items) continue;
+    const unlocked = items.filter(i => i.unlocked);
+    const locked = items.filter(i => !i.unlocked).map(i => ({ ...i, _p: _achProgress(i.id) }));
+    locked.sort((a,b) => b._p - a._p);
+    const visibleLocked = _achCompact ? locked.slice(0, _ACH_COMPACT_LOCKED_PER_GROUP) : locked;
+    totalHiddenLocked += locked.length - visibleLocked.length;
+    buckets[catId] = [...unlocked, ...visibleLocked];
+  }
+
   let html = '';
   for (const catId of groupOrder) {
     const items = buckets[catId];
@@ -8173,7 +8239,7 @@ function renderAchievements(){
     const labelClass = catId === 'records' ? 'ach-group-label records' : 'ach-group-label';
     const groupExtra = catId === 'records'
       ? `<span class="label-meta">auto-tracked</span>`
-      : `<span class="label-meta">${items.filter(i=>i.unlocked).length}/${items.length}</span>`;
+      : `<span class="label-meta">${items.filter(i=>i.unlocked).length}/${all.filter(a=>a.cat===catId).length}</span>`;
     html += `<div class="${labelClass}">${cat.name}${groupExtra}</div>`;
     html += `<div class="ach-grid">${items.map(a => {
       const goldCls = a.gold && a.unlocked ? ' gold' : '';
@@ -8191,6 +8257,12 @@ function renderAchievements(){
         <div class="ach-meta">${escapeHtml(meta)}</div>
       </div>`;
     }).join('')}</div>`;
+  }
+  // Toggle: "Show all N more" / "Show less" at the bottom of the grid.
+  if (_achCompact && totalHiddenLocked > 0) {
+    html += `<button class="ach-toggle" onclick="_achToggleCompact()">Show ${totalHiddenLocked} more locked →</button>`;
+  } else if (!_achCompact) {
+    html += `<button class="ach-toggle" onclick="_achToggleCompact()">Show closest only ↑</button>`;
   }
   groupsEl.innerHTML = html || `<div class="empty-state">Nothing yet in this category.</div>`;
 }
@@ -9809,6 +9881,10 @@ async function applyReclassify(){
     closeReclassifyModal();
     renderActivityPage();
     renderIncomeInboxBanner();
+    // Bulk-reclassify suggestion: look for other rows in the last 30 days
+    // that match the same descriptor and aren't already classified the same
+    // way. Skip if the user picked "just this transaction" (no override).
+    if (override) _suggestBulkReclassify(row, category, override);
   } catch (e) {
     console.error('applyReclassify failed:', e);
     chips.forEach((b) => b.removeAttribute('disabled'));
@@ -9817,6 +9893,63 @@ async function applyReclassify(){
       errEl.textContent = 'Could not save: ' + (e.message || 'unknown error');
       errEl.style.display = 'block';
     }
+  }
+}
+
+// After a successful single-row reclassify, look for other recently-pulled
+// rows in the same 30-day window that match the same descriptor pattern but
+// haven't been retagged. If we find any, offer one-tap bulk apply via toast.
+// This closes the multi-stream pain point flagged by Jordan and Carmen in
+// focus group testing — daily payouts (DoorDash, Etsy) and business expenses
+// (restaurant supplies on a personal card) pile up otherwise.
+async function _suggestBulkReclassify(originalRow, newCategory, override){
+  if (!originalRow || !newCategory || !override) return;
+  try {
+    const sb = sbGet();
+    const since = new Date(Date.now() - 30 * 86400000);
+    const sinceStr = `${since.getFullYear()}-${String(since.getMonth()+1).padStart(2,'0')}-${String(since.getDate()).padStart(2,'0')}`;
+    let query = sb.from('plaid_transactions')
+      .select('id, name, merchant_name, able_category')
+      .gte('date', sinceStr)
+      .neq('id', originalRow.id);
+    if (override.kind === 'merchant') {
+      // Match against the lowercased merchant value the override stored.
+      query = query.ilike('merchant_name', override.value);
+    } else {
+      query = query.ilike('name', `%${override.value}%`);
+    }
+    const { data, error } = await query.limit(50);
+    if (error) throw error;
+    const candidates = (data || []).filter((r) => r.able_category !== newCategory);
+    if (candidates.length === 0) return;
+
+    const label = (typeof ACTIVITY_CAT_LABELS !== 'undefined' && ACTIVITY_CAT_LABELS[newCategory]) || newCategory;
+    const n = candidates.length;
+    const noun = n === 1 ? 'transaction' : 'transactions';
+    showToast(`Found ${n} similar ${noun} from the last 30 days.`, {
+      actionLabel: `Tag all as ${label}`,
+      duration: 14000,
+      onAction: async () => {
+        // Apply the same category to each match. create_override:false here
+        // because the override was already created on the original row; we
+        // don't need to re-create it N times.
+        const sbInner = sbGet();
+        const results = await Promise.allSettled(candidates.map((m) => sbInner.functions.invoke('plaid-classify-override', {
+          body: {
+            txn_row_id: m.id,
+            able_category: newCategory,
+            able_label: m.merchant_name || m.name || newCategory,
+            create_override: false,
+          },
+        })));
+        const okCount = results.filter((r) => r.status === 'fulfilled' && !(r.value && r.value.error)).length;
+        Able.track?.('activity_bulk_reclassify', { category: newCategory, applied: okCount, requested: n });
+        showToast(`${okCount} of ${n} updated.`);
+        renderActivityPage();
+      },
+    });
+  } catch (e) {
+    console.warn('bulk reclassify suggestion failed:', e);
   }
 }
 
