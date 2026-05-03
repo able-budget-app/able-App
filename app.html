@@ -1107,9 +1107,15 @@ body.tour-active #page-home .db-action-card{display:flex!important;}
 .db-next-stat--in{color:var(--ds-green);}
 .db-next-empty{padding:8px 0;font-size:13px;color:var(--ds-t3);font-weight:600;text-align:center;}
 
-/* Tax Export card on Activity — promoted from 12px link to its own card
-   so the year-end-CSV feature is actually discoverable. */
-.tax-export-card{display:flex;align-items:center;gap:14px;background:linear-gradient(135deg,#eaf5ee,#d9ecde);border:1px solid var(--ds-green-m);border-radius:var(--ds-r2);padding:14px 16px;margin-bottom:1rem;cursor:pointer;box-shadow:var(--ds-sh1);transition:transform .15s,box-shadow .15s;}
+/* Tax Export — compact pill year-round; expands to a gradient card during
+   tax season (Jan 1 - Apr 15) when it's actually relevant. */
+.tax-export-wrap{margin-bottom:1rem;}
+.tax-export-pill{display:inline-flex;align-items:center;gap:8px;background:white;border:1px solid var(--ds-line);border-radius:999px;padding:7px 12px 7px 10px;cursor:pointer;font-family:var(--ds-f);transition:border-color .15s,background .15s;}
+.tax-export-pill:hover{border-color:var(--ds-green-m);background:var(--ds-green-l);}
+.tax-export-pill svg{color:var(--ds-green2);flex-shrink:0;}
+.tax-export-pill .tax-export-pill-label{font-size:12px;font-weight:800;color:var(--ds-t1);letter-spacing:-.01em;}
+.tax-export-pill .tax-export-pill-arrow{font-size:14px;color:var(--ds-green2);font-weight:400;line-height:1;}
+.tax-export-card{display:flex;align-items:center;gap:14px;background:linear-gradient(135deg,#eaf5ee,#d9ecde);border:1px solid var(--ds-green-m);border-radius:var(--ds-r2);padding:14px 16px;cursor:pointer;box-shadow:var(--ds-sh1);transition:transform .15s,box-shadow .15s;}
 .tax-export-card:hover{transform:translateY(-1px);box-shadow:var(--ds-sh2);}
 .tax-export-card:active{transform:translateY(0);}
 .tax-export-icon{flex-shrink:0;width:40px;height:40px;border-radius:var(--ds-r2);background:white;color:var(--ds-green2);display:flex;align-items:center;justify-content:center;box-shadow:0 2px 8px rgba(31,96,56,.12);}
@@ -1442,7 +1448,7 @@ posthog.init('phc_B6PH36QxpExnyBYhfScFFF6LhDvoyxuFr6PypJuxxky3', {
         <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="var(--ds-green)" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink:0;margin-top:2px;"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><path d="M9 12l2 2 4-4"/></svg>
         <div>
           <div style="font-weight:800;color:var(--ds-t1);margin-bottom:3px;">Card required to start the trial.</div>
-          <div id="checkout-fine-detail">Free until <b id="checkout-fine-charge-date">your trial ends</b>. We'll email you on <b id="checkout-fine-warn-date">day 28</b><span id="checkout-fine-email-suffix"></span> before any charge. Cancel anytime in Settings.</div>
+          <div id="checkout-fine-detail">Free until <b id="checkout-fine-charge-date">your trial ends</b>. We email you about 2 days before any charge<span id="checkout-fine-email-suffix"></span>, and you can cancel anytime in Settings.</div>
         </div>
       </div>
     </div>
@@ -1882,18 +1888,10 @@ posthog.init('phc_B6PH36QxpExnyBYhfScFFF6LhDvoyxuFr6PypJuxxky3', {
 <div class="page" id="page-activity">
   <div class="sec">Activity</div>
 
-  <!-- Tax Export card — promoted out of a 12px text link in the page header
-       (per focus-group P0 #3) so users can find their CSV at year-end. -->
-  <div class="tax-export-card" onclick="openTaxExportModal()" role="button" tabindex="0" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();openTaxExportModal();}">
-    <div class="tax-export-icon">
-      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="9" y1="13" x2="15" y2="13"/><line x1="9" y1="17" x2="13" y2="17"/></svg>
-    </div>
-    <div class="tax-export-body">
-      <div class="tax-export-title">Tax export</div>
-      <div class="tax-export-sub" id="tax-export-sub">Every transaction you marked tax-deductible, grouped by category. CSV for your accountant.</div>
-    </div>
-    <div class="tax-export-chevron">›</div>
-  </div>
+  <!-- Tax Export — a compact pill 9 months of the year, expands to a full
+       gradient card during US tax season (Jan 1 - Apr 15) when it's actually
+       useful. Renderer toggles the .tax-season class on the wrapper. -->
+  <div id="tax-export-wrap" class="tax-export-wrap"></div>
 
   <!-- Recurring outflows surfaced from plaid_recurring_streams. Hidden by
        loadRecurringScan when there's no detected recurring activity. -->
@@ -5416,19 +5414,17 @@ function selectPlan(plan) {
   a.setAttribute('aria-checked',plan==='annual'?'true':'false');
 }
 
-// Concrete trial-end specifics on the paywall: the exact charge date,
-// the day-28 email warning date, and the user's email if we have it.
-// Fires every time the paywall is shown so dates always reflect "today + 30."
+// Concrete trial-end specifics on the paywall: the exact charge date and
+// the user's email if we have it. The cron actually sends two reminders
+// (day 28-29 "ends in 2 days" + day 29-30 "tomorrow"), so the copy says
+// "about 2 days before" instead of citing a specific day-N number.
 function renderPaywallFinePrint(){
   const today = new Date();
   const charge = new Date(today.getTime() + 30 * 86400000);
-  const warn   = new Date(today.getTime() + 27 * 86400000);
   const fmt = (d) => d.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
   const chargeEl = document.getElementById('checkout-fine-charge-date');
-  const warnEl   = document.getElementById('checkout-fine-warn-date');
   const emailSuffEl = document.getElementById('checkout-fine-email-suffix');
   if (chargeEl) chargeEl.textContent = fmt(charge);
-  if (warnEl)   warnEl.textContent   = fmt(warn);
   // Show the user's email when we have it (signed in but pre-checkout).
   const email = (typeof currentUser !== 'undefined' && currentUser && currentUser.email) ? currentUser.email : '';
   if (emailSuffEl) emailSuffEl.textContent = email ? ` at ${email}` : '';
@@ -9614,11 +9610,44 @@ async function toggleLeakFlag(streamId){
   loadRecurringScan().catch(() => {});
 }
 
+// Tax Export — compact pill year-round; full gradient card during US tax
+// season (Jan 1 - Apr 15) when filers actually need it. Lower noise the
+// other 9 months of the year.
+function renderTaxExportSurface(){
+  const wrap = document.getElementById('tax-export-wrap');
+  if (!wrap) return;
+  const now = new Date();
+  const m = now.getMonth(); // 0=Jan
+  const d = now.getDate();
+  const inSeason = (m <= 2) || (m === 3 && d <= 15); // Jan, Feb, Mar, or Apr 1-15
+  if (inSeason) {
+    wrap.innerHTML = `
+      <div class="tax-export-card" onclick="openTaxExportModal()" role="button" tabindex="0" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();openTaxExportModal();}">
+        <div class="tax-export-icon">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="9" y1="13" x2="15" y2="13"/><line x1="9" y1="17" x2="13" y2="17"/></svg>
+        </div>
+        <div class="tax-export-body">
+          <div class="tax-export-title">Tax export</div>
+          <div class="tax-export-sub">Every transaction you marked tax-deductible, grouped by category. CSV for your accountant.</div>
+        </div>
+        <div class="tax-export-chevron">›</div>
+      </div>`;
+  } else {
+    wrap.innerHTML = `
+      <button class="tax-export-pill" onclick="openTaxExportModal()" type="button" aria-label="Open Tax Export">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+        <span class="tax-export-pill-label">Tax export</span>
+        <span class="tax-export-pill-arrow">›</span>
+      </button>`;
+  }
+}
+
 async function renderActivityPage(opts){
   const list = document.getElementById('activity-list');
   if (!list) return;
   // Reset pagination unless caller passed { append: true } from loadMoreActivity.
   if (!opts || !opts.append) _activityCurrentLimit = ACTIVITY_PAGE_LIMIT;
+  renderTaxExportSurface();
   list.innerHTML = `<div class="empty-state">Loading…</div>`;
   const filterEl = document.getElementById('activity-filter');
   const filter = filterEl ? filterEl.value : 'all';
@@ -9884,7 +9913,12 @@ async function applyReclassify(){
     // Bulk-reclassify suggestion: look for other rows in the last 30 days
     // that match the same descriptor and aren't already classified the same
     // way. Skip if the user picked "just this transaction" (no override).
-    if (override) _suggestBulkReclassify(row, category, override);
+    // Pass through the tax-deductible flag and business label from the
+    // original payload so the matches inherit those, not just the category.
+    if (override) _suggestBulkReclassify(row, category, override, {
+      is_tax_deductible: !!body.is_tax_deductible,
+      business_label: body.business_label || '',
+    });
   } catch (e) {
     console.error('applyReclassify failed:', e);
     chips.forEach((b) => b.removeAttribute('disabled'));
@@ -9902,8 +9936,9 @@ async function applyReclassify(){
 // This closes the multi-stream pain point flagged by Jordan and Carmen in
 // focus group testing — daily payouts (DoorDash, Etsy) and business expenses
 // (restaurant supplies on a personal card) pile up otherwise.
-async function _suggestBulkReclassify(originalRow, newCategory, override){
+async function _suggestBulkReclassify(originalRow, newCategory, override, extras){
   if (!originalRow || !newCategory || !override) return;
+  extras = extras || {};
   try {
     const sb = sbGet();
     const since = new Date(Date.now() - 30 * 86400000);
@@ -9926,13 +9961,21 @@ async function _suggestBulkReclassify(originalRow, newCategory, override){
     const label = (typeof ACTIVITY_CAT_LABELS !== 'undefined' && ACTIVITY_CAT_LABELS[newCategory]) || newCategory;
     const n = candidates.length;
     const noun = n === 1 ? 'transaction' : 'transactions';
-    showToast(`Found ${n} similar ${noun} from the last 30 days.`, {
+    // Surface deductible + business propagation in the toast so the user
+    // knows the bulk apply isn't just the category.
+    const extraTags = [];
+    if (extras.is_tax_deductible) extraTags.push('deductible');
+    if (extras.business_label) extraTags.push(extras.business_label);
+    const extraSuffix = extraTags.length ? ` · ${extraTags.join(' · ')}` : '';
+    showToast(`Found ${n} similar ${noun} from the last 30 days.${extraSuffix ? ' Bulk apply will also carry: ' + extraTags.join(', ') + '.' : ''}`, {
       actionLabel: `Tag all as ${label}`,
       duration: 14000,
       onAction: async () => {
         // Apply the same category to each match. create_override:false here
         // because the override was already created on the original row; we
-        // don't need to re-create it N times.
+        // don't need to re-create it N times. Tax-deductible and business
+        // labels propagate so a "deductible business expense" tag on row 1
+        // applies to all similar rows, not just the category.
         const sbInner = sbGet();
         const results = await Promise.allSettled(candidates.map((m) => sbInner.functions.invoke('plaid-classify-override', {
           body: {
@@ -9940,10 +9983,12 @@ async function _suggestBulkReclassify(originalRow, newCategory, override){
             able_category: newCategory,
             able_label: m.merchant_name || m.name || newCategory,
             create_override: false,
+            is_tax_deductible: !!extras.is_tax_deductible,
+            business_label: extras.business_label || '',
           },
         })));
         const okCount = results.filter((r) => r.status === 'fulfilled' && !(r.value && r.value.error)).length;
-        Able.track?.('activity_bulk_reclassify', { category: newCategory, applied: okCount, requested: n });
+        Able.track?.('activity_bulk_reclassify', { category: newCategory, applied: okCount, requested: n, deductible: !!extras.is_tax_deductible, business: !!extras.business_label });
         showToast(`${okCount} of ${n} updated.`);
         renderActivityPage();
       },
