@@ -3,32 +3,37 @@
 // plaid-recategorize in batches. Writes the Able classification back to each
 // transaction row.
 //
-// POST body: {} (no params required — operates on the authed user's data)
+// POST body: { max_batches?: number }   // default 1, max 10
 //
 // Returns: { classified, batches, total_unclassified_before, remaining }
 //
 // Behavior:
-//   - Pulls up to MAX_PER_RUN unclassified rows ordered by date desc.
-//   - Batches them in groups of BATCH_SIZE.
-//   - For each batch, POSTs to plaid-recategorize using SERVICE_ROLE auth.
-//   - Updates each transaction with the classification result.
+//   - Authenticates as the calling user via JWT.
+//   - Pulls up to (BATCH_SIZE * max_batches) unclassified rows ordered by date desc.
+//   - Slices into BATCH_SIZE chunks, processes them in waves of PARALLELISM
+//     concurrent batches (mirrors plaid-classify-batch's perf path while
+//     keeping user-JWT auth). Each batch = one plaid-recategorize call +
+//     parallel DB updates.
 //   - Returns counts. Caller can re-invoke if `remaining > 0`.
 
 import { createClient } from 'npm:@supabase/supabase-js@2';
 
 const SUPABASE_URL = Deno.env.get('SUPABASE_URL')!;
 const SERVICE_ROLE = Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')!;
-// Free-tier Supabase Edge Functions cap each invocation at ~50-60s wall
-// clock. With Anthropic batches of ~37s and DB writes parallelized below
-// (was eating ~30s sequentially), one batch of 50 fits inside the limit.
-// One batch per invocation; the client loops as needed.
-const BATCH_SIZE = 50;
-const MAX_PER_RUN = 50;
+
+const BATCH_SIZE = 50;                  // matches plaid-recategorize MAX_BATCH
+const PARALLELISM = 4;                  // batches in flight concurrently
+const DEFAULT_MAX_BATCHES = 1;          // 50 txns per invocation by default
+const HARD_MAX_BATCHES = 10;            // 500 txns; safely under 150s gateway
 
 const corsHeaders = {
   'Access-Control-Allow-Origin': '*',
   'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type',
   'Access-Control-Allow-Methods': 'POST, OPTIONS',
+};
+
+type Body = {
+  max_batches?: number;
 };
 
 type PendingTxn = {
@@ -63,6 +68,13 @@ Deno.serve(async (req) => {
     if (userErr || !userRes.user) return json({ error: 'Unauthorized' }, 401);
     const userId = userRes.user.id;
 
+    const body = (await req.json().catch(() => ({}))) as Body;
+    const maxBatches = Math.min(
+      Math.max(1, body.max_batches ?? DEFAULT_MAX_BATCHES),
+      HARD_MAX_BATCHES,
+    );
+    const limit = BATCH_SIZE * maxBatches;
+
     const admin = createClient(SUPABASE_URL, SERVICE_ROLE);
 
     const { data: pending, error: pendErr, count: pendCount } = await admin
@@ -74,7 +86,7 @@ Deno.serve(async (req) => {
       .eq('user_id', userId)
       .is('able_category', null)
       .order('date', { ascending: false })
-      .limit(MAX_PER_RUN);
+      .limit(limit);
 
     if (pendErr) return json({ error: pendErr.message }, 500);
     const rows = (pending ?? []) as PendingTxn[];
@@ -87,58 +99,70 @@ Deno.serve(async (req) => {
       });
     }
 
+    const t0 = Date.now();
+    console.log(`plaid-classify-pending: starting, ${rows.length} txns to process (max_batches=${maxBatches})`);
+
+    // Slice into BATCH_SIZE chunks.
+    const chunks: PendingTxn[][] = [];
+    for (let i = 0; i < rows.length; i += BATCH_SIZE) {
+      chunks.push(rows.slice(i, i + BATCH_SIZE));
+    }
+
     let classified = 0;
     let batches = 0;
-    const t0 = Date.now();
-    console.log(`plaid-classify-pending: starting, ${rows.length} txns to process (max ${MAX_PER_RUN}/run)`);
 
-    for (let i = 0; i < rows.length; i += BATCH_SIZE) {
-      const batch = rows.slice(i, i + BATCH_SIZE);
+    const processOne = async (batch: PendingTxn[], batchIdx: number): Promise<void> => {
       const tBatch = Date.now();
-      const classifications = await classifyBatch(batch);
-      console.log(`plaid-classify-pending: batch ${batches + 1} (${batch.length} txns) in ${Date.now() - tBatch}ms`);
-      batches++;
+      try {
+        const classifications = await classifyBatch(batch);
+        console.log(`plaid-classify-pending: batch ${batchIdx} (${batch.length} txns) llm in ${Date.now() - tBatch}ms`);
 
-      // Build a lookup by plaid_transaction_id since the recategorize fn echoes
-      // the transaction_id we sent (which is the Plaid id, not our row id).
-      const byPlaidId = new Map<string, Classification>();
-      for (const c of classifications) byPlaidId.set(c.id, c);
+        const byPlaidId = new Map<string, Classification>();
+        for (const c of classifications) byPlaidId.set(c.id, c);
 
-      // Parallelize the per-row updates. Sequential await per row was eating
-      // ~30s of wall clock on a 50-row batch (free tier: ~50s ceiling). With
-      // Promise.all the whole batch finishes in 1-3s.
-      const now = new Date().toISOString();
-      const tDb = Date.now();
-      const updates = batch
-        .map((row) => {
-          const c = byPlaidId.get(row.plaid_transaction_id);
-          if (!c) return null;
-          return admin
-            .from('plaid_transactions')
-            .update({
-              able_category: c.category,
-              able_label: c.label,
-              able_confidence: c.confidence,
-              able_is_recurring_likely: c.is_recurring_likely,
-              able_classified_at: now,
-            })
-            .eq('id', row.id)
-            .then(({ error }) => {
-              if (error) {
-                console.error(`update classification failed for ${row.id}:`, error);
-                return false;
-              }
-              return true;
-            });
-        })
-        .filter((p): p is NonNullable<typeof p> => p !== null);
-      const results = await Promise.all(updates);
-      const okCount = results.filter(Boolean).length;
-      classified += okCount;
-      console.log(`plaid-classify-pending: db updates (${results.length}) in ${Date.now() - tDb}ms, ${okCount} ok`);
+        const now = new Date().toISOString();
+        const tDb = Date.now();
+        const updates = batch
+          .map((row) => {
+            const c = byPlaidId.get(row.plaid_transaction_id);
+            if (!c) return null;
+            return admin
+              .from('plaid_transactions')
+              .update({
+                able_category: c.category,
+                able_label: c.label,
+                able_confidence: c.confidence,
+                able_is_recurring_likely: c.is_recurring_likely,
+                able_classified_at: now,
+              })
+              .eq('id', row.id)
+              .then(({ error }) => {
+                if (error) {
+                  console.error(`update classification failed for ${row.id}:`, error);
+                  return false;
+                }
+                return true;
+              });
+          })
+          .filter((p): p is NonNullable<typeof p> => p !== null);
+        const results = await Promise.all(updates);
+        const okCount = results.filter(Boolean).length;
+        classified += okCount;
+        batches++;
+        console.log(`plaid-classify-pending: batch ${batchIdx} db (${results.length}) in ${Date.now() - tDb}ms, ${okCount} ok`);
+      } catch (e) {
+        console.error(`plaid-classify-pending: batch ${batchIdx} failed:`, e);
+      }
+    };
+
+    // Drain chunks in waves of PARALLELISM.
+    for (let i = 0; i < chunks.length; i += PARALLELISM) {
+      const wave = chunks.slice(i, i + PARALLELISM);
+      await Promise.all(wave.map((batch, j) => processOne(batch, i + j)));
     }
 
     const remaining = Math.max(0, (pendCount ?? rows.length) - classified);
+    console.log(`plaid-classify-pending: done in ${Date.now() - t0}ms, classified=${classified}, batches=${batches}, remaining=${remaining}`);
 
     return json({
       classified,

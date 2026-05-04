@@ -4713,9 +4713,15 @@ async function obRunPlaidPipeline() {
 
     obAnswers.plaid_pipeline.step = 'classify';
     if (OB_QUESTIONS[obStep]?.type === 'plaid') renderObStep();
+    // Each invocation processes up to 500 txns (max_batches:10, parallelism:4
+    // inside plaid-classify-pending). Old loop did 10×50 sequential = 7min;
+    // new loop does up to 5×500 with internal parallelism = ~3-5min worst
+    // case. For most users a single call covers everything they need for
+    // the analyzer; the loop just catches the tail when Plaid HISTORICAL
+    // arrives mid-pipeline and inflates the unclassified queue.
     let iterations = 0;
-    while (iterations < 10) {
-      const data = await obPipelineStep('classify', () => obInvokeWithTimeout(sb, 'plaid-classify-pending', {}, 120000));
+    while (iterations < 5) {
+      const data = await obPipelineStep('classify', () => obInvokeWithTimeout(sb, 'plaid-classify-pending', { max_batches: 10 }, 150000));
       if (!data || data.remaining === 0 || data.classified === 0) break;
       iterations++;
     }
