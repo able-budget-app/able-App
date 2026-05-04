@@ -921,6 +921,20 @@ body.tour-active #page-home .db-action-card{display:flex!important;}
 .db-hero-bank-line:hover{color:rgba(255,255,255,.92);}
 .db-hero-bank-line .db-hero-toggle{font-size:12px;}
 .db-hero-bank-drift{color:#ffd9c2;font-weight:800;margin-left:6px;}
+.detected-bills-banner{background:linear-gradient(135deg,#1f6038 0%,#3d9e78 100%);border-radius:var(--ds-r2);padding:14px 16px;margin-bottom:.85rem;cursor:pointer;color:white;display:flex;align-items:center;gap:12px;transition:transform .15s,box-shadow .15s;box-shadow:0 4px 14px rgba(31,96,56,.18);}
+.detected-bills-banner:hover{transform:translateY(-1px);box-shadow:0 8px 20px rgba(31,96,56,.24);}
+.detected-bills-banner-icon{flex-shrink:0;width:36px;height:36px;border-radius:50%;background:rgba(255,255,255,.18);display:flex;align-items:center;justify-content:center;color:white;}
+.detected-bills-banner-text{flex:1;min-width:0;}
+.detected-bills-banner-title{font-weight:800;font-size:14px;letter-spacing:-.005em;}
+.detected-bills-banner-sub{font-size:12px;color:rgba(255,255,255,.85);font-weight:600;line-height:1.4;margin-top:2px;}
+.detected-bills-banner-arrow{flex-shrink:0;color:rgba(255,255,255,.7);font-size:20px;font-weight:800;}
+.detected-bill-group-label{font-size:10px;font-weight:800;color:var(--ds-t3);text-transform:uppercase;letter-spacing:.12em;font-family:var(--ds-f);margin-bottom:6px;padding:0 2px;}
+.detected-bill-row{display:flex;align-items:center;gap:12px;padding:10px 8px;border-bottom:1px solid var(--ds-line);cursor:pointer;transition:background .12s;}
+.detected-bill-row:hover{background:var(--ds-page);}
+.detected-bill-row input[type="checkbox"]{flex-shrink:0;width:20px;height:20px;cursor:pointer;accent-color:var(--ds-green);}
+.detected-bill-name{flex:1;min-width:0;font-size:14px;font-weight:800;color:var(--ds-t1);letter-spacing:-.005em;}
+.detected-bill-meta{font-size:11px;font-weight:600;color:var(--ds-t3);margin-top:2px;}
+.detected-bill-amt{flex-shrink:0;font-size:14px;font-weight:800;color:var(--ds-t1);letter-spacing:-.01em;}
 .db-hero-edit{position:relative;font-size:10px;font-weight:700;color:rgba(255,255,255,.7);background:rgba(255,255,255,.12);border:none;cursor:pointer;padding:4px 9px;border-radius:100px;letter-spacing:.04em;text-transform:uppercase;transition:background .15s,color .15s;}
 .db-hero-edit:hover{background:rgba(255,255,255,.22);color:white;}
 .db-hero-cta-primary{position:relative;width:100%;background:white;color:var(--ds-green);border:none;border-radius:100px;padding:13px 18px;margin:.85rem 0 .25rem;font-family:var(--ds-f);font-size:14px;font-weight:800;letter-spacing:-.01em;cursor:pointer;box-shadow:0 4px 14px rgba(0,0,0,.1);transition:transform .15s,box-shadow .15s;}
@@ -1874,6 +1888,19 @@ posthog.init('phc_B6PH36QxpExnyBYhfScFFF6LhDvoyxuFr6PypJuxxky3', {
     <div style="font-family:var(--ds-f);font-size:1.5rem;font-weight:800;letter-spacing:-.02em;color:var(--ds-t1);">Monthly bills</div>
     <button class="btn btn-primary btn-sm" onclick="openAddBillModal()">+ Add bill</button>
   </div>
+  <!-- Detected-bills banner: surfaces Plaid-found recurring charges that
+       aren't already tracked. Self-resolves as the user adds matching
+       bills (fuzzy-match dedupe) or marks streams as "not bills". -->
+  <div id="detected-bills-banner" class="detected-bills-banner" style="display:none;" onclick="openDetectedBillsModal()">
+    <div class="detected-bills-banner-icon">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="7"/><line x1="20" y1="20" x2="16.65" y2="16.65"/></svg>
+    </div>
+    <div class="detected-bills-banner-text">
+      <div class="detected-bills-banner-title">Able found <span id="detected-bills-count">0</span> recurring charges</div>
+      <div class="detected-bills-banner-sub">Review them as bills →</div>
+    </div>
+    <div class="detected-bills-banner-arrow">›</div>
+  </div>
   <!-- Summary card: monthly total + tracked count, plus a "Funded this month"
        bar so the Floor-First question (am I covered?) is answered before
        the user scrolls the list. -->
@@ -2448,6 +2475,19 @@ posthog.init('phc_B6PH36QxpExnyBYhfScFFF6LhDvoyxuFr6PypJuxxky3', {
       <div class="field"><label>Priority</label><select id="nb-pri"><option value="1">Critical, pay first</option><option value="2">Essential, pay second</option><option value="3">Nice to have, pay last</option></select></div>
     </div>
     <div class="modal-actions"><button class="btn" onclick="closeModal('modal-add-bill')">Cancel</button><button class="btn btn-primary" id="bill-save-btn" onclick="addBill()">Add bill</button></div>
+  </div>
+</div>
+<!-- Review detected bills: opened from the Bills-tab banner. Lists Plaid
+     recurring streams that aren't already tracked, pre-checking the
+     high-confidence ones. Save adds checked → S.bills, marks unchecked
+     as not-bills so they stop reappearing. -->
+<div class="modal-bg" id="modal-detected-bills" style="display:none;" onclick="if(event.target===this)closeModal('modal-detected-bills')">
+  <div class="modal" style="max-width:560px;">
+    <button class="modal-close" onclick="closeModal('modal-detected-bills')" aria-label="Close"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button>
+    <div class="modal-title">Review detected bills</div>
+    <div style="margin-bottom:1.25rem;font-size:13px;color:var(--ds-t2);line-height:1.55;font-weight:600;">We found these recurring charges in your transactions. Pre-selected the ones that look like bills — uncheck anything that isn't.</div>
+    <div id="detected-bills-list" style="max-height:50vh;overflow-y:auto;-webkit-overflow-scrolling:touch;"></div>
+    <div class="modal-actions"><button class="btn" onclick="closeModal('modal-detected-bills')">Cancel</button><button class="btn btn-primary" id="detected-bills-save" onclick="saveDetectedBills()">Save 0 bills</button></div>
   </div>
 </div>
 <!-- Add expected income — sibling popup to Add bill, opened from the home
@@ -7303,6 +7343,9 @@ function saveEditIncome(){
 // ═══════════════════════════════════════
 function renderBillsPage(){
   const el=document.getElementById('bills-body');el.innerHTML='';
+  // Async — surfaces the "Able found N recurring charges" banner when there
+  // are Plaid streams not yet matched to bills. No-op when no streams exist.
+  loadDetectedBillsBanner().catch(() => {});
   const catDots={housing:'var(--sage)',debt:'var(--coral)',utilities:'var(--amber)',transport:'var(--sky)',insurance:'var(--lavender)',subs:'var(--text3)'};
   // Per-bill funding status used for the "Funded" badge below.
   const reservationsLive = _isAllocatedToBillsCurrentMonth() ? _reservations() : {};
@@ -10161,6 +10204,192 @@ async function loadPaceLine(){
 // leak" toggle stores stream_ids in S.settings.leak_streams (browser-only,
 // persisted via saveUserData) — Coach picks them up via buildCoachState
 // and can reason about cuts. No backend changes; no cancel-for-me CTA.
+// ─── Detected bills review (Plaid recurring → S.bills) ────────────────
+// Surfaces a banner on the Bills tab listing Plaid-found recurring outflows
+// that aren't already tracked as bills. Tap → review modal with smart
+// defaults (high-confidence pre-checked). Save adds checked into S.bills,
+// marks unchecked as not-bills so they stop reappearing. Self-resolves as
+// the user adds matching bills (fuzzy match against existing bill names).
+
+function _normalizeBillName(s) {
+  return String(s || '').toLowerCase().replace(/[^a-z0-9]/g, '');
+}
+function _streamMatchesAnyBill(stream, bills) {
+  const sn = _normalizeBillName(stream.merchant_name || stream.description);
+  if (!sn) return false;
+  return (bills || []).some((b) => {
+    const bn = _normalizeBillName(b.name);
+    if (!bn || bn.length < 3) return false;
+    return sn.includes(bn) || bn.includes(sn);
+  });
+}
+function _streamIsHighConfidence(stream) {
+  if (stream.status !== 'MATURE') return false;
+  const goodFreq = ['MONTHLY', 'WEEKLY', 'BIWEEKLY', 'SEMI_MONTHLY', 'ANNUALLY'];
+  if (!goodFreq.includes(stream.frequency)) return false;
+  if (!stream.merchant_name) return false;
+  return true;
+}
+function _streamCadenceToBill(stream) {
+  const last = stream.last_date ? new Date(stream.last_date + 'T00:00:00') : null;
+  const f = stream.frequency;
+  if (f === 'WEEKLY') {
+    const dayName = last ? ['sunday','monday','tuesday','wednesday','thursday','friday','saturday'][last.getDay()] : 'monday';
+    return { freq: 'weekly', due: dayName };
+  }
+  if (f === 'BIWEEKLY' || f === 'SEMI_MONTHLY') {
+    return { freq: 'biweekly', due: last ? last.toISOString() : new Date().toISOString() };
+  }
+  if (f === 'ANNUALLY') {
+    return { freq: 'custom', due: last ? last.toISOString() : new Date().toISOString(), freqDays: 365 };
+  }
+  // MONTHLY or UNKNOWN — default to monthly with day-of-month from last_date
+  const dom = last ? String(last.getDate()) : 'ongoing';
+  return { freq: 'monthly', due: dom };
+}
+function _streamCategoryToBill(stream) {
+  const primary = stream.personal_finance_category_primary || '';
+  const detail = stream.personal_finance_category_detailed || '';
+  if (primary === 'LOAN_PAYMENTS') {
+    if (detail.includes('MORTGAGE')) return 'housing';
+    return 'debt';
+  }
+  if (primary === 'RENT_AND_UTILITIES') {
+    if (detail.includes('RENT') || detail.includes('MORTGAGE')) return 'housing';
+    return 'utilities';
+  }
+  if (primary === 'TRANSPORTATION') return 'transport';
+  if (detail.includes('INSURANCE')) return 'insurance';
+  if (primary === 'ENTERTAINMENT') return 'subs';
+  return 'subs';
+}
+function _streamToBill(stream) {
+  const cadence = _streamCadenceToBill(stream);
+  return {
+    id: 'b_' + Date.now().toString(36) + '_' + Math.random().toString(36).slice(2, 7),
+    name: stream.merchant_name || stream.description || 'Recurring charge',
+    amount: Math.abs(stream.last_amount ?? stream.average_amount ?? 0),
+    cat: _streamCategoryToBill(stream),
+    priority: 2,
+    paid: false,
+    fromStreamId: stream.stream_id,
+    ...cadence,
+  };
+}
+function _streamFreqLabel(freq) {
+  switch (freq) {
+    case 'WEEKLY': return 'Weekly';
+    case 'BIWEEKLY': return 'Every 2 weeks';
+    case 'SEMI_MONTHLY': return 'Twice a month';
+    case 'MONTHLY': return 'Monthly';
+    case 'ANNUALLY': return 'Yearly';
+    default: return 'Recurring';
+  }
+}
+async function _fetchDetectedBillsCandidates() {
+  const sb = sbGet();
+  const { data, error } = await sb
+    .from('plaid_recurring_streams')
+    .select('id, stream_id, merchant_name, description, frequency, status, is_active, average_amount, last_amount, last_date, predicted_next_date, personal_finance_category_primary, personal_finance_category_detailed')
+    .eq('direction', 'outflow')
+    .eq('is_active', true)
+    .neq('status', 'TOMBSTONED')
+    .order('last_amount', { ascending: false, nullsFirst: false });
+  if (error) throw error;
+  const ignore = new Set((S.settings && S.settings.not_bills_streams) || []);
+  return (data || []).filter((s) => {
+    if (Math.abs(s.last_amount ?? s.average_amount ?? 0) < 0.5) return false;
+    if (ignore.has(s.stream_id)) return false;
+    if (_streamMatchesAnyBill(s, S.bills || [])) return false;
+    return true;
+  });
+}
+async function loadDetectedBillsBanner() {
+  const banner = document.getElementById('detected-bills-banner');
+  if (!banner) return;
+  if (!currentUser) { banner.style.display = 'none'; return; }
+  try {
+    const candidates = await _fetchDetectedBillsCandidates();
+    if (candidates.length === 0) { banner.style.display = 'none'; S._detectedBillsCache = null; return; }
+    const countEl = document.getElementById('detected-bills-count');
+    if (countEl) countEl.textContent = candidates.length;
+    banner.style.display = 'flex';
+    S._detectedBillsCache = candidates;
+  } catch (e) {
+    console.warn('loadDetectedBillsBanner failed:', e);
+    banner.style.display = 'none';
+  }
+}
+async function openDetectedBillsModal() {
+  let candidates = S._detectedBillsCache;
+  if (!candidates) {
+    try { candidates = await _fetchDetectedBillsCandidates(); } catch { candidates = []; }
+  }
+  const high = candidates.filter(_streamIsHighConfidence);
+  const low = candidates.filter((s) => !_streamIsHighConfidence(s));
+  const renderRow = (s, checked) => {
+    const amt = Math.abs(s.last_amount ?? s.average_amount ?? 0);
+    const amtStr = amt.toLocaleString(undefined, { style: 'currency', currency: 'USD' });
+    const name = s.merchant_name || s.description || 'Unknown';
+    const lastStr = s.last_date ? _formatActivityDay(s.last_date) : 'recently';
+    return `
+      <label class="detected-bill-row">
+        <input type="checkbox" data-stream-id="${escapeHtml(s.stream_id)}" ${checked ? 'checked' : ''} onchange="updateDetectedSaveBtn()">
+        <div style="flex:1;min-width:0;">
+          <div class="detected-bill-name">${escapeHtml(name)}</div>
+          <div class="detected-bill-meta">${_streamFreqLabel(s.frequency)} · last ${escapeHtml(lastStr)}</div>
+        </div>
+        <div class="detected-bill-amt">${amtStr}</div>
+      </label>`;
+  };
+  let html = '';
+  if (high.length) {
+    html += `<div class="detected-bill-group-label">Confident matches (${high.length})</div>${high.map((s) => renderRow(s, true)).join('')}`;
+  }
+  if (low.length) {
+    html += `<div class="detected-bill-group-label" style="margin-top:14px;">Less certain (${low.length}) — check the ones that are bills</div>${low.map((s) => renderRow(s, false)).join('')}`;
+  }
+  if (!html) html = `<div style="padding:1rem 0;color:var(--ds-t3);">Nothing to review.</div>`;
+  document.getElementById('detected-bills-list').innerHTML = html;
+  updateDetectedSaveBtn();
+  openModal('modal-detected-bills');
+}
+function updateDetectedSaveBtn() {
+  const btn = document.getElementById('detected-bills-save');
+  if (!btn) return;
+  const checked = document.querySelectorAll('#detected-bills-list input[type="checkbox"]:checked').length;
+  btn.textContent = checked === 0 ? "These aren't bills — skip all" : `Save ${checked} bill${checked === 1 ? '' : 's'}`;
+}
+async function saveDetectedBills() {
+  const candidates = S._detectedBillsCache || [];
+  const checks = document.querySelectorAll('#detected-bills-list input[type="checkbox"]');
+  const checkedIds = new Set();
+  const uncheckedIds = new Set();
+  checks.forEach((c) => {
+    const id = c.dataset.streamId;
+    if (c.checked) checkedIds.add(id); else uncheckedIds.add(id);
+  });
+  let added = 0;
+  candidates.forEach((s) => {
+    if (checkedIds.has(s.stream_id)) {
+      S.bills.push(_streamToBill(s));
+      added++;
+    }
+  });
+  S.settings = S.settings || {};
+  const notBillsSet = new Set(S.settings.not_bills_streams || []);
+  uncheckedIds.forEach((id) => notBillsSet.add(id));
+  S.settings.not_bills_streams = Array.from(notBillsSet);
+  S._detectedBillsCache = null;
+  save();
+  closeModal('modal-detected-bills');
+  try { Able.track?.('detected_bills_saved', { added, dismissed: uncheckedIds.size }); } catch (_) {}
+  renderBillsPage();
+  renderUpcoming();
+  refreshHome();
+  loadDetectedBillsBanner();
+}
+
 async function loadRecurringScan(){
   const wrap = document.getElementById('recurring-section');
   if (!wrap) return;
