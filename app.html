@@ -400,12 +400,12 @@ input,select,button,textarea{font-family:inherit;}
 .modal-actions{display:flex;gap:10px;justify-content:flex-end;margin-top:1.5rem;}
 .fa-src-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:8px;margin-top:6px;}
 .fa-src-card{display:flex;align-items:center;gap:12px;width:100%;text-align:left;padding:10px 12px;background:#fff;border:1.5px solid var(--ds-line);border-radius:var(--ds-r1);cursor:pointer;font-family:var(--ds-f);transition:border-color .12s,background .12s;}
-.fa-src-card:hover{border-color:#3d9e78;background:#f7fbf8;}
-.fa-src-card:hover .fa-src-radio{border-color:#3d9e78;}
-.fa-src-card.selected{border-color:#3d9e78;background:#ecf5ee;}
-.fa-src-radio{flex-shrink:0;width:20px;height:20px;border-radius:50%;border:2.5px solid #b5beb6;background:#fff;display:inline-flex;align-items:center;justify-content:center;transition:border-color .12s;}
-.fa-src-card.selected .fa-src-radio{border-color:#3d9e78;}
-.fa-src-radio-dot{width:10px;height:10px;border-radius:50%;background:#3d9e78;transform:scale(0);transition:transform .12s;}
+.fa-src-card:hover{border-color:var(--ds-c2);background:var(--ds-card2);}
+.fa-src-card:hover .fa-src-radio{border-color:var(--ds-c2);}
+.fa-src-card.selected{border-color:var(--ds-c2);background:var(--ds-green-l);}
+.fa-src-radio{flex-shrink:0;width:20px;height:20px;border-radius:50%;border:2.5px solid var(--ds-t4);background:#fff;display:inline-flex;align-items:center;justify-content:center;transition:border-color .12s;}
+.fa-src-card.selected .fa-src-radio{border-color:var(--ds-c2);}
+.fa-src-radio-dot{width:10px;height:10px;border-radius:50%;background:var(--ds-c2);transform:scale(0);transition:transform .12s;}
 .fa-src-card.selected .fa-src-radio-dot{transform:scale(1);}
 .fa-src-label{font-size:14px;font-weight:700;color:var(--ds-t1);letter-spacing:-.01em;}
 @media (max-width:600px){
@@ -1364,7 +1364,7 @@ body.tour-active #page-home .db-action-card{display:flex!important;}
 .inbox-banner-title{font-size:13px;font-weight:800;color:var(--ds-green);letter-spacing:-.01em;}
 .inbox-banner-sub{font-size:11px;color:var(--ds-t2);font-weight:600;margin-top:2px;line-height:1.4;}
 .inbox-banner-cta{background:var(--ds-green);color:white;border:none;font-family:var(--ds-f);font-size:12px;font-weight:800;padding:8px 13px;border-radius:100px;cursor:pointer;letter-spacing:-.01em;flex-shrink:0;}
-.inbox-banner-cta:hover{background:#22633c;}
+.inbox-banner-cta:hover{background:var(--ds-green2);}
 .inbox-row{display:flex;align-items:flex-start;gap:10px;padding:12px 0;border-bottom:1px solid var(--ds-line);}
 .inbox-row:last-child{border-bottom:none;}
 .inbox-row-info{flex:1;min-width:0;}
@@ -1406,7 +1406,7 @@ body.tour-active #page-home .db-action-card{display:flex!important;}
 .rc-chip{background:white;border:1.5px solid var(--ds-line);color:var(--ds-t1);font-family:var(--ds-f);font-size:12px;font-weight:800;padding:8px 14px;border-radius:100px;cursor:pointer;letter-spacing:-.01em;transition:all .15s;}
 .rc-chip:hover{border-color:var(--ds-green);color:var(--ds-green);}
 .rc-chip.selected{background:var(--ds-green);color:white;border-color:var(--ds-green);}
-.rc-chip.selected:hover{background:#22633c;border-color:#22633c;color:white;}
+.rc-chip.selected:hover{background:var(--ds-green2);border-color:var(--ds-green2);color:white;}
 .rc-chip[disabled]{opacity:.5;cursor:not-allowed;}
 /* Plaid PFC sub-category — secondary badge next to floor-first category */
 .act-pfc-badge{display:inline-block;font-size:10px;font-weight:700;letter-spacing:.02em;color:var(--ds-t3);background:transparent;border:1px solid var(--ds-line);padding:1px 6px;border-radius:100px;margin-left:4px;}
@@ -3679,13 +3679,13 @@ function renderObStep() {
         analyze: 'Drafting your Floor-First plan',
       })[obAnswers.plaid_pipeline?.step] || 'Reading your account';
       const liveLine = status === 'running'
-        ? `<div style="font-size:12px;font-weight:500;color:#3d7a52;margin-top:6px;display:flex;align-items:center;gap:6px;"><span style="display:inline-block;width:10px;height:10px;border:2px solid #c8e0d0;border-top-color:#3d9e78;border-radius:50%;animation:ob-spin .7s linear infinite;"></span>${stepLabel}…</div>`
+        ? `<div style="font-size:12px;font-weight:500;color:var(--ds-green);margin-top:6px;display:flex;align-items:center;gap:6px;"><span style="display:inline-block;width:10px;height:10px;border:2px solid var(--ds-green-m);border-top-color:var(--ds-c2);border-radius:50%;animation:ob-spin .7s linear infinite;"></span>${stepLabel}…</div>`
         : status === 'success'
-          ? `<div style="font-size:12px;font-weight:600;color:#3d7a52;margin-top:6px;">✓ Plan ready.</div>`
+          ? `<div style="font-size:12px;font-weight:600;color:var(--ds-green);margin-top:6px;">✓ Plan ready.</div>`
           : '';
       inputArea.innerHTML = `
         <style>@keyframes ob-spin{to{transform:rotate(360deg);}}</style>
-        <div style="background:#ecf5ee;border:1px solid #c8e0d0;border-radius:var(--ds-r1);padding:1rem;font-size:14px;color:#2a7a4a;font-weight:600;">
+        <div style="background:var(--ds-green-l);border:1px solid var(--ds-green-m);border-radius:var(--ds-r1);padding:1rem;font-size:14px;color:var(--ds-green);font-weight:600;">
           Bank connected. I'm reading ${obAnswers.plaid_connect.lookback_months} months in the background while you finish setup.
           ${liveLine}
         </div>`;
@@ -3725,12 +3725,12 @@ function renderObStep() {
     inputArea.innerHTML = `
       <style>
         .ob-choice-card{display:flex;align-items:flex-start;gap:14px;width:100%;text-align:left;padding:14px 16px;margin-bottom:10px;background:#fff;border:1.5px solid var(--ds-line);border-radius:var(--ds-r1);cursor:pointer;transition:border-color .12s,background .12s;}
-        .ob-choice-card:hover{border-color:#3d9e78;background:#f7fbf8;}
-        .ob-choice-card:hover .ob-choice-radio{border-color:#3d9e78;}
-        .ob-choice-card.selected{border-color:#3d9e78;background:#ecf5ee;}
-        .ob-choice-radio{flex-shrink:0;width:22px;height:22px;border-radius:50%;border:2.5px solid #b5beb6;background:#fff;display:inline-flex;align-items:center;justify-content:center;margin-top:2px;transition:border-color .12s;}
-        .ob-choice-card.selected .ob-choice-radio{border-color:#3d9e78;}
-        .ob-choice-radio-dot{width:11px;height:11px;border-radius:50%;background:#3d9e78;transform:scale(0);transition:transform .12s;}
+        .ob-choice-card:hover{border-color:var(--ds-c2);background:var(--ds-card2);}
+        .ob-choice-card:hover .ob-choice-radio{border-color:var(--ds-c2);}
+        .ob-choice-card.selected{border-color:var(--ds-c2);background:var(--ds-green-l);}
+        .ob-choice-radio{flex-shrink:0;width:22px;height:22px;border-radius:50%;border:2.5px solid var(--ds-t4);background:#fff;display:inline-flex;align-items:center;justify-content:center;margin-top:2px;transition:border-color .12s;}
+        .ob-choice-card.selected .ob-choice-radio{border-color:var(--ds-c2);}
+        .ob-choice-radio-dot{width:11px;height:11px;border-radius:50%;background:var(--ds-c2);transform:scale(0);transition:transform .12s;}
         .ob-choice-card.selected .ob-choice-radio-dot{transform:scale(1);}
         .ob-choice-text{display:flex;flex-direction:column;}
         .ob-choice-label{font-size:15px;font-weight:800;color:var(--ds-t1);margin-bottom:3px;letter-spacing:-.01em;}
@@ -3754,7 +3754,7 @@ function renderObStep() {
         .ob-multi-chip:hover{border-color:var(--ds-green);color:var(--ds-green);background:var(--ds-green-l);}
         .ob-multi-chip.selected{background:var(--ds-green);color:#fff;border-color:var(--ds-green);}
         .ob-multi-other{width:100%;font-family:var(--ds-f);font-size:14px;font-weight:600;padding:11px 14px;border:1.5px solid var(--ds-line);border-radius:var(--ds-r1);background:#fff;color:var(--ds-t1);outline:none;}
-        .ob-multi-other:focus{border-color:#3d9e78;}
+        .ob-multi-other:focus{border-color:var(--ds-c2);}
       </style>
       <div class="ob-multi-chips">${chips}</div>
       ${q.allowOther ? `<input type="text" class="ob-multi-other" id="ob-multi-other" placeholder="Anything else? (optional)" value="${otherText.replace(/"/g, '&quot;')}" oninput="obSetMultiOther(this.value)">` : ''}`;
@@ -4014,7 +4014,7 @@ async function obWaitForPipelineWithStatus(maxWaitMs) {
     }
     if (i === curIdx) {
       return `<div style="display:flex;align-items:center;gap:.85rem;padding:.5rem 0;">
-        <div style="width:22px;height:22px;border-radius:50%;border:2px solid #c8e0d0;border-top-color:#3d9e78;animation:ob-spin .8s linear infinite;flex-shrink:0;box-sizing:border-box;"></div>
+        <div style="width:22px;height:22px;border-radius:50%;border:2px solid var(--ds-green-m);border-top-color:var(--ds-c2);animation:ob-spin .8s linear infinite;flex-shrink:0;box-sizing:border-box;"></div>
         <div style="font-size:14px;font-weight:800;color:var(--ds-t1);letter-spacing:-.005em;">${s.label}…</div>
       </div>`;
     }
@@ -5317,14 +5317,14 @@ function obRenderPlanReviewUI() {
       .plan-split-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;}
       .plan-split-grid label{display:flex;flex-direction:column;font-size:11px;font-weight:700;color:var(--ds-t3);text-transform:uppercase;letter-spacing:.04em;gap:4px;}
       .plan-split-sum{margin-top:8px;font-size:12px;font-weight:700;color:var(--ds-t2);}
-      .plan-coach{background:#ecf5ee;border:1px solid #c8e0d0;border-radius:var(--ds-r1);padding:18px 20px;margin-bottom:16px;font-size:14px;line-height:1.7;color:#2a4a35;font-weight:500;}
+      .plan-coach{background:var(--ds-green-l);border:1px solid var(--ds-green-m);border-radius:var(--ds-r1);padding:18px 20px;margin-bottom:16px;font-size:14px;line-height:1.7;color:#2a4a35;font-weight:500;}
       .plan-coach p{margin:0 0 12px 0;}
       .plan-coach p:last-child{margin-bottom:0;}
       .plan-coach .num{font-weight:800;color:#1f3a28;background:rgba(255,255,255,.55);padding:1px 5px;border-radius:4px;}
       .plan-coach .closer{font-weight:700;color:#1f3a28;display:block;padding-top:8px;border-top:1px dashed rgba(42,74,53,.25);}
       .plan-error{background:#fdecec;border:1px solid #f3c5c5;border-radius:var(--ds-r1);padding:.75rem;font-size:12px;color:#a04545;font-weight:600;margin-bottom:10px;}
       .plan-degraded{background:#fff7e6;border:1px solid #f0d8a8;border-radius:var(--ds-r1);padding:12px 14px;font-size:13px;color:#6b4a1a;font-weight:600;line-height:1.5;margin-bottom:12px;}
-      .plan-saved-pill{background:#ecf5ee;border:1px solid #c8e0d0;border-radius:var(--ds-r1);padding:10px 14px;font-size:12.5px;color:#2a4a35;font-weight:600;line-height:1.5;margin-bottom:12px;}
+      .plan-saved-pill{background:var(--ds-green-l);border:1px solid var(--ds-green-m);border-radius:var(--ds-r1);padding:10px 14px;font-size:12.5px;color:#2a4a35;font-weight:600;line-height:1.5;margin-bottom:12px;}
       .plan-footer-bar{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-top:6px;}
       .plan-floor-callout{background:linear-gradient(135deg,var(--ds-green) 0%,var(--ds-green2) 100%);color:#fff;border-radius:var(--ds-r2);padding:16px 18px 14px;margin-bottom:12px;box-shadow:0 8px 22px -10px rgba(31,96,56,.35);}
       .plan-floor-callout-eyebrow{font-size:10px;font-weight:800;letter-spacing:.14em;text-transform:uppercase;color:#b8e0c8;margin-bottom:6px;}
