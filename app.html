@@ -11575,7 +11575,7 @@ function renderHeroMoney(){
   if (available > 0.01) {
     body = `
       <div class="db-hero-money-row">
-        <span class="db-hero-money-label">In your accounts</span>
+        <span class="db-hero-money-label">Balance</span>
         <span class="db-hero-money-val">${f2(balance)}</span>
       </div>
       <div class="db-hero-money-edit-row">${editBtn}</div>
@@ -11595,7 +11595,7 @@ function renderHeroMoney(){
   } else if (Math.abs(available) <= 0.01) {
     body = `
       <div class="db-hero-money-row">
-        <span class="db-hero-money-label">In your accounts</span>
+        <span class="db-hero-money-label">Balance</span>
         <span class="db-hero-money-val">${f2(balance)}</span>
       </div>
       <div class="db-hero-money-edit-row">${editBtn}</div>
@@ -11612,7 +11612,7 @@ function renderHeroMoney(){
     const short = Math.abs(available);
     body = `
       <div class="db-hero-money-row">
-        <span class="db-hero-money-label">In your accounts</span>
+        <span class="db-hero-money-label">Balance</span>
         <span class="db-hero-money-val">${f2(balance)}</span>
       </div>
       <div class="db-hero-money-edit-row">${editBtn}</div>
