@@ -9451,7 +9451,14 @@ async function refreshPushUI(){
   if (!status || !enableBtn || !disableBtn) return;
   if (errEl) errEl.style.display = 'none';
   if (!('serviceWorker' in navigator) || !('PushManager' in window)) {
-    status.textContent = "Your browser doesn't support push notifications.";
+    const ua = navigator.userAgent || '';
+    const isIOS = /iPad|iPhone|iPod/.test(ua) || (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
+    const isStandalone = (window.navigator.standalone === true) || window.matchMedia('(display-mode: standalone)').matches;
+    if (isIOS && !isStandalone) {
+      status.innerHTML = 'On iPhone, push works once Able is added to your Home Screen. Tap the <strong>Share</strong> icon in Safari, choose <strong>Add to Home Screen</strong>, then open Able from the new icon and come back here.';
+    } else {
+      status.textContent = "Your browser doesn't support push notifications.";
+    }
     enableBtn.style.display = 'none';
     disableBtn.style.display = 'none';
     return;
