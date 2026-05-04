@@ -1,5 +1,29 @@
 # Able — E2E Test Results (2026-05-03 evening session)
 
+> **Morning handoff (2026-05-04 ~12am):** overnight queue done. **Two local commits, neither pushed:**
+> - `e33a9f0` — P0 #1 review-plan persistence (auto-apply with `pending_review` flags + REVIEW pills + Edge Function changes)
+> - `cbc64c3` — overnight batch: P0 #2, P1 #4 / #6 / #7 / #8, P2 #9 / #10 / #13 / #14 / #15 / #16 / #18 / #19 / #20 / #21, P3 #23, plus a meta-bug fix for **`--ds-line` / `--ds-bd` CSS variables that were referenced 44+ times but never defined** — every border using them was silently invalid CSS. Single fix unblocks borders all over the app.
+>
+> **Steps for you in the morning:**
+> 1. Review `cbc64c3` and `e33a9f0` diffs (`git show e33a9f0`, `git show cbc64c3`).
+> 2. Paste 2 Edge Functions into Supabase dashboard:
+>    - `analyzer-apply-plan` (P0 #1 — accepts new `pending_review:true` flag)
+>    - `plaid-classify-batch` (P1 #4 — adds CC-payment-inflow heuristic; recompile not strictly needed but pasting is safer than relying on cache)
+>    - `plaid-recategorize` (P1 #4 — adds rule 4ab to system prompt)
+> 3. Hard-refresh, do a fresh signup → Plaid → smoke-test the review-plan persistence path (close mid-review, reopen, REVIEW pills should be on Bills + Debt rows).
+> 4. Re-run `/ultrareview` (the previous run crashed before producing findings).
+> 5. Push when satisfied.
+>
+> **Still pending (need your eyes):**
+> - P0 #3 — 90s signup load (investigation-heavy, needs you in browser)
+> - P1 #5 — Chase CC missed in debt detection (needs your real Plaid data)
+> - P2 #11 — plan-summary visual restructure (needs your design call: shorter sections vs one block?)
+> - P2 #12 — vestigial welcome card decision
+> - P2 #17 — connect-bank step visual pass
+> - P3 #22 — shape vocabulary system decision
+
+
+
 Living log of findings from Paul's user-led test session after the 2026-05-03 batch (VAPID push, iOS Safari message, bank-balance dropdown, "Balance" rename, detected-bills review banner, AI matcher).
 
 Cross-reference each finding to `docs/e2e-test-plan.md` section numbers. Findings flow in via screenshots; this doc is the durable record so a context compact can't lose them.
