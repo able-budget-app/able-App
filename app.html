@@ -4692,7 +4692,24 @@ async function obRunPlaidPipeline() {
   try {
     obAnswers.plaid_pipeline.step = 'sync';
     if (OB_QUESTIONS[obStep]?.type === 'plaid') renderObStep();
-    await obPipelineStep('sync', () => obInvokeWithTimeout(sb, 'plaid-sync', { plaid_item_row_id: itemRowId }, 90000));
+    // Poll sync while Plaid is doing its initial pull. /transactions/sync
+    // returns status:'NOT_READY' (with zero transactions) until INITIAL_UPDATE
+    // or HISTORICAL_UPDATE arrives — typically 15-60s on major banks, can be
+    // a few minutes on smaller ones. Without polling, classify+recurring+
+    // analyze all run on empty data and analyze 400s with "No classified
+    // transactions yet". Cap matches obBuildWithAI's 5-min wait budget.
+    const SYNC_POLL_DEADLINE = Date.now() + 5 * 60 * 1000;
+    let syncPolls = 0;
+    while (true) {
+      const syncData = await obPipelineStep('sync', () => obInvokeWithTimeout(sb, 'plaid-sync', { plaid_item_row_id: itemRowId }, 90000));
+      if (!syncData || syncData.status !== 'NOT_READY') break;
+      if (Date.now() > SYNC_POLL_DEADLINE) {
+        throw new Error('sync: Plaid took longer than 5 minutes to return transactions');
+      }
+      syncPolls++;
+      console.log(`[Pipeline] sync waiting for Plaid initial pull (poll ${syncPolls}, status=NOT_READY)`);
+      await new Promise((r) => setTimeout(r, 5000));
+    }
 
     obAnswers.plaid_pipeline.step = 'classify';
     if (OB_QUESTIONS[obStep]?.type === 'plaid') renderObStep();
