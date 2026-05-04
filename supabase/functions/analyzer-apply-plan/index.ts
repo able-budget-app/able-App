@@ -24,7 +24,14 @@
 //       debts?: ...,
 //       tax_allocation?: ...,
 //       surplus_split?: ...
-//     }
+//     },
+//     pending_review?: boolean     // when true, mark created bills + debts
+//                                  // with pending_review:true + a
+//                                  // source_plan_id provenance so the
+//                                  // client can confirm/skip them later
+//                                  // without losing data if the page closes.
+//                                  // Plan status goes to 'auto_applied'
+//                                  // instead of 'fully_applied'.
 //   }
 //
 // Returns: { applied_sections, plan_status }
@@ -76,6 +83,7 @@ type Body = {
   plan_id: string;
   sections?: SectionFlags;
   overrides?: Partial<AnalyzerPlanShape>;
+  pending_review?: boolean;
 };
 
 type AnalyzerPlan = AnalyzerPlanShape;
@@ -117,6 +125,8 @@ Deno.serve(async (req) => {
       return json({ error: 'Plan already fully applied' }, 409);
     }
 
+    const pendingReview = body.pending_review === true;
+
     const plan = planRow.plan_json as AnalyzerPlan;
 
     // Merge user overrides on top of the plan. For any section the user
@@ -141,7 +151,10 @@ Deno.serve(async (req) => {
       return json({ error: udErr.message }, 500);
     }
 
-    const next = mergePlan(ud ?? { id: userId }, effective, flags);
+    const next = mergePlan(ud ?? { id: userId }, effective, flags, {
+      pendingReview,
+      sourcePlanId: planRow.id,
+    });
 
     const { error: writeErr } = await admin
       .from('user_data')
@@ -149,7 +162,9 @@ Deno.serve(async (req) => {
     if (writeErr) return json({ error: writeErr.message }, 500);
 
     const allOn = flags.income_sources && flags.bills && flags.debts && flags.tax_allocation && flags.surplus_split;
-    const newStatus = allOn ? 'fully_applied' : 'partially_applied';
+    const newStatus = pendingReview
+      ? 'auto_applied'
+      : (allOn ? 'fully_applied' : 'partially_applied');
     const now = new Date().toISOString();
     await admin
       .from('analyzer_plans')
@@ -174,8 +189,12 @@ function mergePlan(
   current: Record<string, unknown>,
   plan: AnalyzerPlan,
   flags: Required<SectionFlags>,
+  opts: { pendingReview: boolean; sourcePlanId: string },
 ): Record<string, unknown> {
   const next = { ...current };
+  const reviewTag = opts.pendingReview
+    ? { pending_review: true, source_plan_id: opts.sourcePlanId }
+    : {};
 
   // Sources: array of strings. Append new names without duplicating.
   if (flags.income_sources && plan.income_sources?.length) {
@@ -215,6 +234,7 @@ function mergePlan(
       enabledSources: [],
       active: true,
       note: plan.tax_allocation.evidence_summary ?? null,
+      ...reviewTag,
     };
     if (existingTaxIdx >= 0) {
       obligations[existingTaxIdx] = { ...obligations[existingTaxIdx], ...taxRow };
@@ -245,6 +265,7 @@ function mergePlan(
         dueDay: d.due_day_of_month ?? null,
         color: colors[existingDebts.length % colors.length],
         orig: d.balance_estimate ?? 0,
+        ...reviewTag,
       };
       existingDebts.push(debtRow);
       seenDebt.add(d.name.toLowerCase());
@@ -259,6 +280,7 @@ function mergePlan(
           priority: 1,
           paid: false,
           fromDebtId: debtId,
+          ...reviewTag,
         });
       }
     }
@@ -278,6 +300,7 @@ function mergePlan(
       cat: 'utility',
       priority: 2,
       paid: false,
+      ...reviewTag,
     })) : [];
 
     for (const row of [...planBillRows, ...addedDebtBills]) {

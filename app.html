@@ -4883,6 +4883,7 @@ async function obRenderPlanReview(planId) {
       surplus_split:  { decision: 'accept', editing: false, ...split },
     },
     submitting: false,
+    autoApplying: true,
     error: null,
   };
 
@@ -4894,6 +4895,67 @@ async function obRenderPlanReview(planId) {
   const legacyActions = document.querySelector('#ob-review .ob-actions');
   if (legacyActions) legacyActions.style.display = 'none';
   obRenderPlanReviewUI();
+
+  // Auto-apply with pending_review:true so the data lands in user_data
+  // immediately. If the user closes the tab mid-audit, the bills/debts
+  // are already there with pending_review flags, surfaced via Bills/Debt
+  // tab review banners. The Apply button below just clears those flags.
+  // Skip = soft-delete the section.
+  obAutoApplyPendingReview().catch((e) => {
+    console.error('auto-apply pending review failed:', e);
+    if (obPlanReview) {
+      obPlanReview.autoApplying = false;
+      obPlanReview.error = 'We couldn\'t auto-save your detected bills + debts in the background. Please click Apply when you\'re ready, or Start over to enter manually.';
+      obRenderPlanReviewUI();
+    }
+  });
+}
+
+// Persists the analyzer plan (with all sections accepted, including the
+// user's extra debts as overrides) to user_data with pending_review flags
+// the moment the review screen renders. This is what keeps the page from
+// being a data-loss trap if the tab closes mid-audit.
+async function obAutoApplyPendingReview() {
+  const r = obPlanReview;
+  if (!r || !r.plan_id) return;
+  const sb = sbGet();
+  const overrides = {
+    income_sources: (r.sections.income_sources.items || []).filter((x) => x.name),
+    bills:          (r.sections.bills.items || []).filter((x) => x.name),
+    debts:          (r.sections.debts.items || []).filter((x) => x.name),
+    tax_allocation: { suggested_pct: r.sections.tax_allocation.suggested_pct },
+    surplus_split:  {
+      owner_pct: r.sections.surplus_split.owner_pct,
+      debt_pct: r.sections.surplus_split.debt_pct,
+      reserve_pct: r.sections.surplus_split.reserve_pct,
+      free_pct: r.sections.surplus_split.free_pct,
+    },
+  };
+  const { data, error } = await sb.functions.invoke('analyzer-apply-plan', {
+    body: {
+      plan_id: r.plan_id,
+      sections: { income_sources: true, bills: true, debts: true, tax_allocation: true, surplus_split: true },
+      overrides,
+      pending_review: true,
+    },
+  });
+  if (error) throw new Error(error.message || 'auto-apply failed');
+  if (data && data.error) throw new Error(data.error);
+  // Refresh S so dashboards see the saved (pending_review) rows immediately
+  // even if the user navigates away before clicking Apply.
+  const { data: ud } = await sb.from('user_data').select('*').eq('id', currentUser.id).single();
+  if (ud) {
+    S.bills      = ud.bills || [];
+    S.debts      = (ud.debts || []).map((d) => ({ ...d, orig: d.orig != null ? d.orig : d.balance }));
+    S.sources    = ud.sources || [];
+    S.settings   = ud.settings || S.settings;
+    S.obligations= ud.obligations || [];
+    S.profile    = ud.profile || S.profile || {};
+  }
+  if (obPlanReview) {
+    obPlanReview.autoApplying = false;
+    obRenderPlanReviewUI();
+  }
 }
 
 function clone(v) { return JSON.parse(JSON.stringify(v)); }
@@ -5148,6 +5210,7 @@ function obRenderPlanReviewUI() {
       .plan-coach .closer{font-weight:700;color:#1f3a28;display:block;padding-top:8px;border-top:1px dashed rgba(42,74,53,.25);}
       .plan-error{background:#fdecec;border:1px solid #f3c5c5;border-radius:var(--ds-r1);padding:.75rem;font-size:12px;color:#a04545;font-weight:600;margin-bottom:10px;}
       .plan-degraded{background:#fff7e6;border:1px solid #f0d8a8;border-radius:var(--ds-r1);padding:12px 14px;font-size:13px;color:#6b4a1a;font-weight:600;line-height:1.5;margin-bottom:12px;}
+      .plan-saved-pill{background:#ecf5ee;border:1px solid #c8e0d0;border-radius:var(--ds-r1);padding:10px 14px;font-size:12.5px;color:#2a4a35;font-weight:600;line-height:1.5;margin-bottom:12px;}
       .plan-footer-bar{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-top:6px;}
       .plan-floor-callout{background:linear-gradient(135deg,var(--ds-green) 0%,var(--ds-green2) 100%);color:#fff;border-radius:var(--ds-r2);padding:16px 18px 14px;margin-bottom:12px;box-shadow:0 8px 22px -10px rgba(31,96,56,.35);}
       .plan-floor-callout-eyebrow{font-size:10px;font-weight:800;letter-spacing:.14em;text-transform:uppercase;color:#b8e0c8;margin-bottom:6px;}
@@ -5201,6 +5264,14 @@ function obRenderPlanReviewUI() {
   // Surface this so the user knows why their plan looks thin.
   if (obAnswers.plaid_pipeline?.recurringSkipped) {
     html += `<div class="plan-degraded">Some bills are still grouped together. Plaid is finishing its first pass on your recurring charges. Add specifics below, or come back in a bit.</div>`;
+  }
+  // Reassurance pill: tell the user the data is already saved so audit time
+  // can't trash the work. Auto-apply lands rows with pending_review:true on
+  // page render; this pill surfaces that fact.
+  if (r.autoApplying) {
+    html += `<div class="plan-saved-pill" style="background:#fff7e6;border:1px solid #f0d8a8;color:#6b4a1a;">Auto-saving your detected bills + debts…</div>`;
+  } else {
+    html += `<div class="plan-saved-pill">Saved. You can close this tab and finish later — your detected bills + debts are waiting in the Bills and Debt tabs.</div>`;
   }
   if (r.error) {
     html += `<div class="plan-error">${escapeHtml(r.error)}</div>`;
@@ -5437,6 +5508,14 @@ async function obSubmitPlanReview() {
   // Pull any open editor values into state.
   for (const key of Object.keys(r.sections)) obCommitSectionEdits(key);
 
+  // If auto-apply is still in flight, wait briefly. Worst case we re-render
+  // and the user clicks again.
+  if (r.autoApplying) {
+    r.error = 'Still finishing the auto-save in the background. Try again in a moment.';
+    obRenderPlanReviewUI();
+    return;
+  }
+
   // Validate the surplus split if it's accepted.
   const split = r.sections.surplus_split;
   if (split.decision === 'accept') {
@@ -5451,51 +5530,160 @@ async function obSubmitPlanReview() {
   r.submitting = true;
   obRenderPlanReviewUI();
 
-  const sections = {};
-  const overrides = {};
-  for (const [key, s] of Object.entries(r.sections)) {
-    const accept = s.decision === 'accept';
-    sections[key] = accept;
-    if (!accept) continue;
-    if (key === 'income_sources') overrides.income_sources = (s.items || []).filter((x) => x.name);
-    if (key === 'bills')           overrides.bills          = (s.items || []).filter((x) => x.name);
-    if (key === 'debts')           overrides.debts          = (s.items || []).filter((x) => x.name);
-    if (key === 'tax_allocation')  overrides.tax_allocation = { suggested_pct: s.suggested_pct };
-    if (key === 'surplus_split')   overrides.surplus_split  = { owner_pct: s.owner_pct, debt_pct: s.debt_pct, reserve_pct: s.reserve_pct, free_pct: s.free_pct };
-  }
-
   try {
-    const sb = sbGet();
-    const { data, error } = await sb.functions.invoke('analyzer-apply-plan', {
-      body: { plan_id: r.plan_id, sections, overrides }
-    });
-    if (error) throw new Error(error.message || 'apply failed');
-    if (data && data.error) throw new Error(data.error);
+    // Auto-apply has already landed bills/debts/tax/sources/settings in
+    // user_data with pending_review:true. The Apply button mutates the
+    // already-saved rows in place: accept = clear flag (and apply edits),
+    // skip = soft-delete the rows that came from this plan.
+    const planId = r.plan_id;
 
-    // Refresh S from cloud so the dashboard reflects the merge.
-    const { data: ud, error: udErr } = await sb.from('user_data').select('*').eq('id', currentUser.id).single();
-    if (udErr) throw udErr;
-    if (ud) {
-      S.bills      = ud.bills || [];
-      S.debts      = (ud.debts || []).map((d) => ({ ...d, orig: d.orig != null ? d.orig : d.balance }));
-      S.sources    = ud.sources || [];
-      S.settings   = ud.settings || S.settings;
-      S.obligations= ud.obligations || [];
-      S.profile    = ud.profile || S.profile || {};
+    // Bills section.
+    const billsAccept = r.sections.bills.decision === 'accept';
+    const billsEdited = r.sections.bills.items || [];
+    const editedBillNames = new Set(billsEdited.map((b) => String(b.name || '').toLowerCase()).filter(Boolean));
+    S.bills = (S.bills || []).reduce((out, b) => {
+      const fromThisPlan = b.source_plan_id === planId && b.pending_review === true;
+      if (!fromThisPlan) { out.push(b); return out; }
+      // Bills auto-attached via fromDebtId stay/leave with their parent
+      // debt section, not the bills section.
+      if (b.fromDebtId) { out.push(b); return out; }
+      if (!billsAccept) return out; // skip = drop
+      // Apply edits if the user changed the row.
+      const editedMatch = billsEdited.find((eb) => String(eb.name || '').toLowerCase() === String(b.name || '').toLowerCase());
+      const merged = { ...b, pending_review: false };
+      delete merged.source_plan_id;
+      if (editedMatch) {
+        merged.amount = Number(editedMatch.amount) || merged.amount;
+        if (editedMatch.due_day_of_month != null) merged.due = String(editedMatch.due_day_of_month);
+      }
+      out.push(merged);
+      return out;
+    }, []);
+    // Bills the user added in the editor that didn't exist before stay as new manual rows.
+    if (billsAccept) {
+      const existingNames = new Set((S.bills || []).map((b) => String(b.name || '').toLowerCase()));
+      for (const eb of billsEdited) {
+        const key = String(eb.name || '').toLowerCase();
+        if (!key || existingNames.has(key)) continue;
+        S.bills.push({
+          id: 'b_' + Date.now().toString(36) + '_' + Math.random().toString(36).slice(2, 7),
+          name: eb.name,
+          amount: Number(eb.amount) || 0,
+          due: eb.due_day_of_month != null ? String(eb.due_day_of_month) : '1',
+          cat: 'utility',
+          priority: 2,
+          paid: false,
+        });
+      }
     }
-    // Also save the user's stated goals + name parsing so profile is complete.
+
+    // Debts section. Drop the parent debt + its (minimum) child bill on skip.
+    const debtsAccept = r.sections.debts.decision === 'accept';
+    const debtsEdited = r.sections.debts.items || [];
+    const droppedDebtIds = [];
+    S.debts = (S.debts || []).reduce((out, d) => {
+      const fromThisPlan = d.source_plan_id === planId && d.pending_review === true;
+      if (!fromThisPlan) { out.push(d); return out; }
+      if (!debtsAccept) { droppedDebtIds.push(d.id); return out; }
+      const editedMatch = debtsEdited.find((ed) => String(ed.name || '').toLowerCase() === String(d.name || '').toLowerCase());
+      const merged = { ...d, pending_review: false };
+      delete merged.source_plan_id;
+      if (editedMatch) {
+        if (editedMatch.min_payment != null) merged.min = Number(editedMatch.min_payment) || merged.min;
+        if (editedMatch.balance_estimate != null) merged.balance = Number(editedMatch.balance_estimate) || merged.balance;
+        if (editedMatch.rate_estimate != null) merged.rate = Number(editedMatch.rate_estimate) * 100;
+        if (editedMatch.due_day_of_month != null) merged.dueDay = Number(editedMatch.due_day_of_month);
+      }
+      out.push(merged);
+      return out;
+    }, []);
+    // Drop the auto-attached "(minimum)" bills for any dropped debt.
+    if (droppedDebtIds.length) {
+      S.bills = (S.bills || []).filter((b) => !droppedDebtIds.includes(b.fromDebtId));
+    }
+    // Debts the user added in the editor that didn't exist before stay as new manual rows.
+    if (debtsAccept) {
+      const existingDebtNames = new Set((S.debts || []).map((d) => String(d.name || '').toLowerCase()));
+      const colors = ['#e07a5f', '#c85a5a', '#d4956a', '#6b9fcf', '#9b8ec4', '#7aad8a'];
+      for (const ed of debtsEdited) {
+        const key = String(ed.name || '').toLowerCase();
+        if (!key || existingDebtNames.has(key)) continue;
+        S.debts.push({
+          id: 'd_' + Date.now().toString(36) + '_' + Math.random().toString(36).slice(2, 7),
+          name: ed.name,
+          balance: Number(ed.balance_estimate) || 0,
+          min: Number(ed.min_payment) || 0,
+          rate: ed.rate_estimate != null ? Number(ed.rate_estimate) * 100 : 0,
+          dueDay: ed.due_day_of_month != null ? Number(ed.due_day_of_month) : null,
+          color: colors[(S.debts || []).length % colors.length],
+          orig: Number(ed.balance_estimate) || 0,
+        });
+      }
+    }
+
+    // Tax allocation section.
+    const taxAccept = r.sections.tax_allocation.decision === 'accept';
+    S.obligations = (S.obligations || []).reduce((out, o) => {
+      const fromThisPlan = o.source_plan_id === planId && o.pending_review === true;
+      if (!fromThisPlan) { out.push(o); return out; }
+      if (!taxAccept) return out;
+      const merged = { ...o, pending_review: false };
+      delete merged.source_plan_id;
+      const pct = Number(r.sections.tax_allocation.suggested_pct);
+      if (!isNaN(pct) && pct >= 0 && pct <= 50) merged.percentage = pct;
+      out.push(merged);
+      return out;
+    }, []);
+
+    // Surplus split: it doesn't have pending_review tags (it's a single
+    // settings object). On accept apply edits; on skip leave whatever was
+    // there (we can't really "undo" a settings change without history).
+    if (r.sections.surplus_split.decision === 'accept') {
+      S.settings = S.settings || {};
+      S.settings.ownerPct = r.sections.surplus_split.owner_pct;
+      S.settings.debtPct  = r.sections.surplus_split.debt_pct;
+      S.settings.bufPct   = r.sections.surplus_split.reserve_pct;
+      S.settings.freePct  = r.sections.surplus_split.free_pct;
+    }
+
+    // Income sources are plain strings — no pending_review tag possible.
+    // Honor the editor's list directly when accepted.
+    if (r.sections.income_sources.decision === 'accept') {
+      const wantedNames = (r.sections.income_sources.items || []).map((s) => s.name).filter(Boolean);
+      const existing = Array.isArray(S.sources) ? S.sources : [];
+      const seen = new Set(existing.map((s) => s.toLowerCase()));
+      for (const n of wantedNames) {
+        if (!seen.has(n.toLowerCase())) {
+          existing.push(n);
+          seen.add(n.toLowerCase());
+        }
+      }
+      S.sources = existing;
+    }
+
+    // Profile fields the legacy flow always wrote.
     S.profile = S.profile || {};
     if (obAnswers.name_business) S.profile.business_type = obAnswers.name_business;
     const rawName = (obAnswers.name_business || '').trim();
     S.profile.name = _obParseFirstName(rawName) || S.profile.name || '';
     S.profile.goals = GOAL_LABELS[obAnswers.goals] || obAnswers.goals || S.profile.goals || '';
-    // Save the "what brought you here" answer so Coach can mirror it back
-    // and surface persona-aware nudges. Coach state already passes profile
-    // through, so writing it here is enough.
     if (Array.isArray(obAnswers.brought_here) && obAnswers.brought_here.length > 0) {
       S.profile.brought_here = obAnswers.brought_here.slice();
     }
+
     await saveUserData();
+
+    // Mark the plan fully_applied so it doesn't keep coming back.
+    try {
+      const sb = sbGet();
+      await sb.from('analyzer_plans').update({
+        status: 'fully_applied',
+        applied_at: new Date().toISOString(),
+      }).eq('id', planId);
+    } catch (e) {
+      console.warn('analyzer_plans status update failed (non-fatal):', e);
+    }
+
     obClearSession();
 
     // Plan-review screen already explained the Floor; suppress the home-tab
@@ -5509,9 +5697,9 @@ async function obSubmitPlanReview() {
     populateSources();
     refreshHome();
   } catch (e) {
-    console.error('analyzer-apply-plan failed:', e);
+    console.error('plan-review apply failed:', e);
     r.submitting = false;
-    r.error = 'Could not apply plan: ' + (e.message || 'unknown error') + '. Try again, or click Start over to enter manually.';
+    r.error = 'Could not finalize plan: ' + (e.message || 'unknown error') + '. Try again, or click Start over to enter manually.';
     obRenderPlanReviewUI();
   }
 }
@@ -7368,6 +7556,7 @@ function renderBillsPage(){
     const d=document.createElement('div');d.className='bills-row'+(b.paid?' bill-paid-row':'');
     const linkTag=b.fromDebtId?' <span style="display:inline-flex;align-items:center;gap:3px;font-size:9px;font-weight:800;color:var(--ds-green);background:var(--ds-green-l);padding:2px 6px;border-radius:100px;letter-spacing:.04em;vertical-align:middle;margin-left:4px;" title="Auto-synced from your Debt tab"><svg width="8" height="8" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M21 2l-2 2m-7.61 7.61a5.5 5.5 0 1 1-7.778 7.778 5.5 5.5 0 0 1 7.777-7.777zm0 0L15.5 7.5m0 0l3 3L22 7l-3-3m-3.5 3.5L19 4"/></svg>DEBT</span>':'';
     const freqTag=b.freq&&b.freq!=='monthly'?` <span style="display:inline-flex;align-items:center;font-size:9px;font-weight:800;color:var(--ds-c5);background:#eaf2fc;padding:2px 6px;border-radius:100px;letter-spacing:.04em;vertical-align:middle;margin-left:4px;">${b.freq.toUpperCase()}</span>`:'';
+    const reviewTag=b.pending_review?` <span title="Auto-detected from your transactions. Confirm or edit." style="display:inline-flex;align-items:center;font-size:9px;font-weight:800;color:#6b4a1a;background:#fff7e6;border:1px solid #f0d8a8;padding:2px 6px;border-radius:100px;letter-spacing:.04em;vertical-align:middle;margin-left:4px;">REVIEW</span>`:'';
     // Funded badge: how much of this bill is currently reserved from prior deposits this month.
     // Hidden when paid (the money's gone) or when reservation is zero (no signal needed).
     const reservedAmt = (b.id && !b.paid) ? Math.min(reservationsLive[b.id]||0, b.amount) : 0;
@@ -7385,7 +7574,7 @@ function renderBillsPage(){
       ?`<button class="btn btn-danger-ghost btn-sm" style="opacity:.4;" onclick="delBill(${i})" title="Remove from Debt tab">✕</button>`
       :`<button class="btn btn-sm btn-ghost" onclick="openAddBillModal(${i})" style="padding:4px 8px;font-size:11px;" title="Edit">Edit</button> <button class="btn btn-danger-ghost btn-sm" onclick="delBill(${i})">✕</button>`;
     d.innerHTML=`<button class="checkbtn${b.paid?' checked':''}" onclick="toggleBillPaid(${i})">${b.paid?'✓':''}</button>
-      <div class="bills-name" style="padding-left:8px;">${b.name} <span style="display:inline-block;width:7px;height:7px;border-radius:50%;background:${catDots[b.cat]||'var(--text3)'};margin-left:3px;vertical-align:middle;"></span>${linkTag}${freqTag}${fundedTag}</div>
+      <div class="bills-name" style="padding-left:8px;">${b.name} <span style="display:inline-block;width:7px;height:7px;border-radius:50%;background:${catDots[b.cat]||'var(--text3)'};margin-left:3px;vertical-align:middle;"></span>${linkTag}${freqTag}${reviewTag}${fundedTag}</div>
       <div class="bills-due">${billDueLabel(b)}</div>
       <div class="bills-amt-wrap">${amtInput}</div>
       <div class="bills-actions">${delBtn}</div>`;
@@ -7659,7 +7848,7 @@ function renderDebtPage(){
     div.innerHTML=`<div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:.75rem;">
       <div style="display:flex;gap:10px;align-items:flex-start;">
         <div style="width:22px;height:22px;border-radius:50%;background:var(--coral-light);color:var(--coral);font-size:11px;font-weight:800;display:flex;align-items:center;justify-content:center;">${rank+1}</div>
-        <div style="min-width:0;"><div style="font-size:15px;font-weight:700;word-break:break-word;">${d.name}</div><div style="font-size:11px;color:var(--text3);font-weight:700;margin-top:2px;">${d.rate}% interest</div><div style="font-size:10px;color:${rank===0?'var(--ds-c4)':'var(--ds-green)'};font-weight:800;margin-top:3px;text-transform:uppercase;letter-spacing:.05em;">${rank===0?'Pay this first':'Pay this next'}</div></div>
+        <div style="min-width:0;"><div style="font-size:15px;font-weight:700;word-break:break-word;">${d.name}${d.pending_review?' <span title="Auto-detected from your transactions. Confirm or edit." style="display:inline-flex;align-items:center;font-size:9px;font-weight:800;color:#6b4a1a;background:#fff7e6;border:1px solid #f0d8a8;padding:2px 6px;border-radius:100px;letter-spacing:.04em;vertical-align:middle;margin-left:4px;">REVIEW</span>':''}</div><div style="font-size:11px;color:var(--text3);font-weight:700;margin-top:2px;">${d.rate}% interest</div><div style="font-size:10px;color:${rank===0?'var(--ds-c4)':'var(--ds-green)'};font-weight:800;margin-top:3px;text-transform:uppercase;letter-spacing:.05em;">${rank===0?'Pay this first':'Pay this next'}</div></div>
       </div>
       <div style="text-align:right;"><input class="debt-balance-input" type="number" value="${d.balance.toFixed(2)}" onchange="updateDebt(${d.oi},this.value)"><div style="font-size:10px;font-weight:700;color:var(--text3);margin-top:2px;">click to update</div></div>
     </div>

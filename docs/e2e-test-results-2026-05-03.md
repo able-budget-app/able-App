@@ -258,6 +258,34 @@ Path 1 is more robust but requires new logic. Path 2 is a one-paragraph prompt e
 
 **Plan section:** §3 Plaid analysis wait (recurring scan UX)
 
+#### Pace sparkline shows a number with no data 💡 (P3)
+
+**Screenshot:** Image #25 — pace sparkline component populated even though there's no transaction data yet to back it.
+
+**Paul's note:** "might not really matter."
+
+**Action:** confirm the pace value when no spending history exists — it should either suppress the sparkline or show a caption like "no data yet." Low priority; flagged for later cleanup.
+
+**Plan section:** §8 Score / story (or wherever the pace sparkline lives — Plan?)
+
+#### Mobile — bottom spacing isn't great on Bills tab ⚠️ (P2)
+
+**Screenshot:** Image #26 — **Bills tab on mobile**. Tight/awkward vertical rhythm at the bottom (likely behind the bottom nav, or insufficient safe-area inset).
+
+**Action:** check `padding-bottom` / `safe-area-inset-bottom` on the Bills page scroll container (`#page-bills`). Verify in iPhone width DevTools that the last bill row + funded bar isn't tucked under the bottom nav.
+
+**Plan section:** §6 Bills functionality (mobile)
+
+#### Forecast page — cheap-looking layout, massive circles + date/edit/x ⚠️ (P2)
+
+**Screenshot:** Image #27 — **Forecast / Plan tab page**. Oversized circular icons/elements and a date + edit + x action row that don't read as designed.
+
+**Paul's verbatim:** "this layout isnt clean or nice looking. looks cheap. these circles are masssive looks cheap again. also layout of date, edit and x. could be improved."
+
+**Action:** in `renderForecast` / forecast-card render path: scale the circle icons down (target 22-28px max, not whatever oversized value they're at), tighten the date+edit+x affordances into a single right-aligned action cluster with proper hit targets, apply consistent shape vocabulary (ties into P3 #22 — pill vs square decision still pending).
+
+**Plan section:** §9 Plan tab (forecast surface)
+
 #### Empty Debt tab still shows $349.57 interest banner ⚠️ (P2)
 
 **Screenshot:** 10:33 PM — Plan → Debt sub-tab. Shows the same red *"INTEREST PAID · LAST 30 DAYS / $349.57"* banner as the tour, but the debts list is empty (zero debts due to the timeout-loss bug above).
@@ -301,9 +329,12 @@ Promoted from findings, prioritized.
 17. **"Connect bank" step visual pass** — circle radios feel off vs. earlier pill chips; back/skip hierarchy inconsistent.
 18. **"Bank service fee $15" surfaced as a bill** — probably should be a leak candidate or dismissed entirely.
 19. **12% tax rate provenance** — add source label so user trusts the number.
+20. **Mobile bottom spacing on Bills tab** — `#page-bills` cramped on iPhone width; add safe-area inset / extra padding above the bottom nav.
+21. **Forecast page cheap-looking layout** — massive circle icons + awkward date/edit/x row in forecast cards. Scale circles down (22-28px), tighten action cluster, ties into shape vocabulary (#22).
 
 ### P3 — system-level questions to decide
-20. **Shape vocabulary** (pill vs rectangle vs rounded): Paul wants a consistent shape decision applied across components. Design-system pass needed.
+22. **Shape vocabulary** (pill vs rectangle vs rounded): Paul wants a consistent shape decision applied across components. Design-system pass needed.
+23. **Pace sparkline shows a number with no data** — suppress or caption when no transaction history. Paul: "might not really matter."
 
 ---
 
