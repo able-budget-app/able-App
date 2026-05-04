@@ -83,17 +83,15 @@ Re-logged with screenshot-anchored detail. Round 1 (text-only) is superseded by 
 
 **Plan section:** §2 Onboarding
 
-#### "3 deposits need a label" banner during plan-building ⚠️ (P3)
+#### "3 deposits need a label" banner during plan-building ⚠️ (P3) — AUDITED 2026-05-04
 
 **Screenshot:** 10:16 PM — banner above the May card while "Building your plan · Sorting income & bills" loader shows in bottom right.
 
 **Banner copy:** *"3 deposits need a label / Teach Able which inflows are income, transfers, or refunds. Each label trains future syncs."* with a "Review" CTA.
 
-**Paul's question:** "the spacing on deposits need a label. This was an old addition - not sure if it still applies." Two reads:
-1. The banner spacing/visual treatment needs polish
-2. He's not sure the deposit-labeling banner is still load-bearing now that classification is in place (worth verifying it does something useful, or remove)
+**Audit result (2026-05-04):** **Not vestigial.** `renderIncomeInboxBanner()` (line 10058) queries for Plaid transactions where the AI classifier's confidence fell below threshold (or it tagged something `transfer` with weak confidence). The Review CTA opens `openIncomeInbox()` (line 10089) which lets the user label each one as income/transfer/refund. Those labels are stored on the row and feed future classifications. This is the human-in-the-loop feedback for the AI classifier — load-bearing.
 
-**Action:** confirm what the "Review" CTA does and whether the labeling actually trains anything, or if it's vestigial from a pre-AI-classification era.
+**Conclusion:** keep as-is. Banner spacing was Paul's perception during a busy plan-building screen; the banner itself has reasonable margin. No code change needed.
 
 **Plan section:** §2 Onboarding (post-Plaid analyze step)
 

@@ -65,6 +65,15 @@
   --ds-c4:#c04060;
   --ds-c5:#3570b8;
 
+  /* Lines + borders. These were referenced (37+ uses of --ds-line, 7 of
+     --ds-bd) but never defined — every border using them rendered as
+     invalid CSS, so persona chips, plan cards, dashed dividers, etc. all
+     silently lost their stroke. Aliased to the legacy --border palette
+     so the muted gray-green stays consistent with what was already
+     drawn elsewhere. (Fix landed 2026-05-04.) */
+  --ds-line:#c4d8cc;
+  --ds-bd:#d8e6dd;
+
   /* Typography */
   --ds-f:'Bricolage Grotesque', -apple-system, sans-serif;
 
@@ -200,8 +209,13 @@ input,select,button,textarea{font-family:inherit;}
 }
 
 /* PAGES */
-.page{display:none;max-width:980px;margin:0 auto;padding:1.5rem;}
+.page{display:none;max-width:980px;margin:0 auto;padding:1.5rem 1.5rem calc(1.5rem + env(safe-area-inset-bottom,0px));}
 .page.active{display:block;}
+/* On mobile widths the bottom nav is fixed and ~88px tall + safe-area
+   inset; without extra bottom padding the last row of content tucks
+   under the nav. (P2 #20: Bills tab on iPhone, but this affects every
+   .page surface so the fix is global.) */
+@media(max-width:800px){.page{padding-bottom:calc(112px + env(safe-area-inset-bottom,0px));}}
 .two-col{display:grid;grid-template-columns:1fr 320px;gap:1.25rem;min-width:0;}
 .two-col > *{min-width:0;}
 @media(max-width:800px){.two-col{grid-template-columns:1fr;}}
@@ -330,16 +344,19 @@ input,select,button,textarea{font-family:inherit;}
 /* Forecast row — card-style with three internal rows so mobile lays out
    cleanly without children wrapping awkwardly. Left border color carries the
    status (green = expected, coral = overdue, gray = already received). */
-.forecast-item{background:var(--ds-card);border-radius:var(--ds-r2);padding:12px 14px;margin-bottom:8px;box-shadow:var(--ds-sh1);border-left:3px solid var(--ds-green);display:flex;flex-direction:column;gap:6px;font-family:var(--ds-f);}
+.forecast-item{background:var(--ds-card);border:1px solid var(--ds-line);border-left:3px solid var(--ds-green);border-radius:var(--ds-r2);padding:14px 16px;margin-bottom:10px;box-shadow:var(--ds-sh1);display:flex;flex-direction:column;gap:8px;font-family:var(--ds-f);}
 .forecast-item--overdue{border-left-color:var(--ds-c4);}
 .forecast-item--received{border-left-color:var(--ds-t3);opacity:.72;}
 .fc-row{display:flex;align-items:center;justify-content:space-between;gap:10px;}
 .fc-source{font-size:14px;font-weight:800;color:var(--ds-t1);letter-spacing:-.01em;flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
 .fc-amt{font-size:15px;font-weight:900;color:var(--ds-green);letter-spacing:-.02em;white-space:nowrap;}
 .forecast-item--overdue .fc-amt{color:var(--ds-c4);}
-.fc-meta{font-size:11px;font-weight:600;color:var(--ds-t3);flex:1;min-width:0;letter-spacing:.02em;}
-.fc-actions{display:flex;gap:6px;justify-content:flex-end;margin-top:2px;}
+.fc-meta-cluster{display:flex;align-items:center;gap:8px;flex:1;min-width:0;}
+.fc-meta{font-size:11px;font-weight:600;color:var(--ds-t3);letter-spacing:.02em;white-space:nowrap;}
+.fc-actions{display:flex;gap:6px;align-items:center;flex-shrink:0;}
 .fc-actions .btn-sm{padding:6px 12px;font-size:12px;}
+.fc-x-btn{padding:6px 10px;font-size:14px;line-height:1;color:var(--ds-t3);}
+.fc-x-btn:hover{color:var(--ds-c4);}
 .score-big{font-family:var(--ds-f);font-size:6rem;font-weight:900;line-height:1;letter-spacing:-.05em;}
 .score-row{display:flex;align-items:center;gap:12px;margin-bottom:12px;font-size:13px;font-weight:700;}
 .score-label{flex:1;font-weight:600;color:var(--text2);}
@@ -3322,6 +3339,38 @@ async function _onAuthStateChangeImpl(user) {
       S.settings        = {debtPct:20,bufPct:15,freePct:5,ownerPct:0,allocateWindow:14,...(d.settings||{})};
       S.month_history   = d.month_history||[];
       S.sources         = d.sources||['Salary','Freelance','Side income','Other'];
+      // One-time cleanup: a prior bug (fixed 2026-05-04) wrote brought_here
+      // persona labels and intake_channels processor labels into S.sources.
+      // Strip any known-bad strings so Coach + Allocate sheet stop seeing
+      // "Dig out of debt without losing my mind" / "Direct deposit" /
+      // "Stripe" / "Venmo" as income sources.
+      if (Array.isArray(S.sources) && S.sources.length) {
+        const POLLUTED_LABELS = new Set([
+          // brought_here labels
+          'Stop the freezing-up cycle when money lands',
+          'Plug subscription leaks I keep paying for',
+          'Smooth out slow months without panic',
+          'Get on top of bills before they hit',
+          'Build a real cushion, not just $300 in checking',
+          'Stop avoiding the app every time I open it',
+          'Dig out of debt without losing my mind',
+          // intake_channels labels (these are payment processors, not income sources)
+          'Direct deposit',
+          'Stripe',
+          'PayPal',
+          'Venmo',
+          'Zelle',
+          'Cash App',
+          'Square',
+          'Marketplace (Airbnb, Etsy, etc.)',
+          'Paper check or cash',
+        ]);
+        const cleaned = S.sources.filter((s) => !POLLUTED_LABELS.has(String(s).trim()));
+        if (cleaned.length !== S.sources.length) {
+          S.sources = cleaned.length ? cleaned : ['Salary','Freelance','Side income','Other'];
+          save();
+        }
+      }
       S.allocated_to_bills = parseFloat(d.allocated_to_bills)||0;
       S.obligations     = d.obligations||[];
       S.profile         = d.profile||null;
@@ -3702,8 +3751,8 @@ function renderObStep() {
       <style>
         .ob-multi-chips{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:14px;}
         .ob-multi-chip{background:#fff;border:1.5px solid var(--ds-line);color:var(--ds-t1);font-family:var(--ds-f);font-size:13px;font-weight:800;padding:9px 15px;border-radius:100px;cursor:pointer;letter-spacing:-.01em;transition:all .12s;}
-        .ob-multi-chip:hover{border-color:#3d9e78;color:#3d9e78;}
-        .ob-multi-chip.selected{background:#3d9e78;color:#fff;border-color:#3d9e78;}
+        .ob-multi-chip:hover{border-color:var(--ds-green);color:var(--ds-green);background:var(--ds-green-l);}
+        .ob-multi-chip.selected{background:var(--ds-green);color:#fff;border-color:var(--ds-green);}
         .ob-multi-other{width:100%;font-family:var(--ds-f);font-size:14px;font-weight:600;padding:11px 14px;border:1.5px solid var(--ds-line);border-radius:var(--ds-r1);background:#fff;color:var(--ds-t1);outline:none;}
         .ob-multi-other:focus{border-color:#3d9e78;}
       </style>
@@ -3829,11 +3878,13 @@ function obNext() {
       // Disabled-button guard, but double-check.
       return;
     }
-    // Persist chips to the live state immediately so the source picker
-    // shows them on the very next screen (Allocate sheet) without waiting
-    // for plan apply. intake_channels lives inside settings (JSONB) so
-    // we don't need a user_data column migration to ship.
-    if (Array.isArray(S.sources)) {
+    // Persist intake_channels chips to S.sources so the source picker
+    // shows them on the very next screen (Allocate sheet). This logic is
+    // gated to intake_channels only — running it for every multiselect
+    // (e.g. brought_here personas) corrupts S.sources with goal labels
+    // like "Dig out of debt without losing my mind". brought_here lands
+    // on S.profile.brought_here later in obSubmitPlanReview / obConfirm.
+    if (q.key === 'intake_channels' && Array.isArray(S.sources)) {
       const labelByValue = (q.choices || []).reduce((m, c) => { m[c.value] = c.label; return m; }, {});
       const fromChips = selected.map((v) => labelByValue[v]).filter(Boolean);
       S.sources = [...new Set([...S.sources, ...fromChips])];
@@ -4871,13 +4922,34 @@ async function obRenderPlanReview(planId) {
 
   const seededDebts = clone(plan.debts || []);
   const userExtras = (obAnswers.extra_debts || []).map((d) => ({ ...d, source: 'user_added' }));
+  // Filter analyzer-produced bills that look like bank fees ("Bank service
+  // fee $15", "Monthly maintenance fee", overdraft etc.). They surface as
+  // recurring outflows but aren't bills the user controls — leak surface
+  // is more appropriate. (P2 #18)
+  const _planBillFeeRe = [
+    /\bbank\s*service\s*fee\b/i,
+    /\bservice\s*charge\b/i,
+    /\bmonthly\s*(maintenance|service)\s*fee\b/i,
+    /\bmaintenance\s*fee\b/i,
+    /\boverdraft\s*fee\b/i,
+    /\binsufficient\s*funds\s*fee\b/i,
+    /\bnsf\s*fee\b/i,
+    /\batm\s*fee\b/i,
+    /\bforeign\s*(transaction|exchange)\s*fee\b/i,
+    /\binactivity\s*fee\b/i,
+  ];
+  const cleanedBills = (plan.bills || []).filter((b) => {
+    const name = String(b.name || '').trim();
+    if (!name) return false;
+    return !_planBillFeeRe.some((re) => re.test(name));
+  });
   obPlanReview = {
     plan_id: planId,
     plan_json: plan,
     coach_summary: row.coach_summary || null,
     sections: {
       income_sources: { decision: 'accept', editing: false, items: clone(plan.income_sources || []) },
-      bills:          { decision: 'accept', editing: false, items: clone(plan.bills || []) },
+      bills:          { decision: 'accept', editing: false, items: clone(cleanedBills) },
       debts:          { decision: 'accept', editing: false, items: [...seededDebts, ...userExtras] },
       tax_allocation: { decision: 'accept', editing: false, suggested_pct: plan.tax_allocation?.suggested_pct ?? 0 },
       surplus_split:  { decision: 'accept', editing: false, ...split },
@@ -4994,11 +5066,31 @@ function obAskExtraDebts(planJson) {
       </div>
     `).join('');
 
+    // Show the user what we already found so they can audit before adding
+    // more. Without this list the user has no way to know if "4 debts" is
+    // accurate, which forced them to click Continue blindly (P1 #7).
+    const detectedHtml = found > 0
+      ? `<div style="background:#f7f9f8;border:1px solid var(--ds-bd);border-radius:var(--ds-r1);padding:14px 16px;margin-bottom:1.25rem;">
+          <div style="font-size:11px;font-weight:800;color:var(--ds-t3);letter-spacing:.06em;text-transform:uppercase;margin-bottom:8px;">What I found</div>
+          <div style="display:flex;flex-direction:column;gap:6px;">
+            ${(planJson.debts || []).map((d) => {
+              const name = escapeHtml(d.name || 'Debt');
+              const min = d.min_payment ? `$${Math.round(d.min_payment).toLocaleString()}/mo min` : '';
+              const balance = d.balance_estimate ? `$${Math.round(d.balance_estimate).toLocaleString()}` : '';
+              const rate = d.rate_estimate != null ? `${Math.round(d.rate_estimate * 100)}%` : '';
+              const meta = [balance, rate, min].filter(Boolean).join(' · ');
+              return `<div style="display:flex;justify-content:space-between;align-items:baseline;gap:12px;font-size:13px;font-weight:600;color:var(--ds-t2);"><span>${name}</span><span style="color:var(--ds-t3);font-weight:500;font-size:12px;">${meta}</span></div>`;
+            }).join('')}
+          </div>
+          <div style="font-size:12px;font-weight:500;color:var(--ds-t3);line-height:1.5;margin-top:10px;padding-top:10px;border-top:1px dashed var(--ds-bd);">You can edit any of these on the next screen.</div>
+        </div>`
+      : '';
     const render = () => {
       buildingEl.innerHTML = `
         <div style="padding:2.5rem 1.5rem;max-width:640px;margin:0 auto;">
           <div style="font-size:18px;font-weight:800;color:var(--ds-t1);letter-spacing:-.01em;margin-bottom:.5rem;">${headline}</div>
           <div style="font-size:13px;font-weight:500;color:var(--ds-t3);line-height:1.6;margin-bottom:1.5rem;">${sub}</div>
+          ${detectedHtml}
           <div id="ob-extra-debts-rows">${renderRows()}</div>
           <button type="button" class="btn-ghost btn btn-sm" onclick="window._obExtraDebtsAdd()" style="margin-top:.5rem;">+ Add another</button>
           <div style="display:flex;gap:.5rem;justify-content:flex-end;margin-top:2rem;border-top:1px solid var(--ds-bd);padding-top:1.25rem;">
@@ -5366,7 +5458,14 @@ function obRenderPlanReviewUI() {
   html += renderPlanCard('tax_allocation', 'Off-the-top taxes', r.sections.tax_allocation, () => {
     const pct = r.sections.tax_allocation.suggested_pct;
     if (!pct) return `<div style="font-size:13px;color:var(--ds-t3);">No tax allocation suggested.</div>`;
-    return `<div class="plan-list-row"><span>Reserve from every deposit</span><span class="meta">${pct}%</span></div>`;
+    // Provenance: where the % came from. The analyzer derives it from
+    // self-employment income share + state factors; no provenance string
+    // = user assumed it was hardcoded. (P2 #19)
+    const evidence = r.plan_json?.tax_allocation?.evidence_summary;
+    const sourceLine = evidence
+      ? `<div style="font-size:11px;font-weight:600;color:var(--ds-t3);margin-top:4px;line-height:1.5;">${escapeHtml(evidence)}</div>`
+      : `<div style="font-size:11px;font-weight:600;color:var(--ds-t3);margin-top:4px;letter-spacing:.02em;">Estimated from your income mix and recent deposits.</div>`;
+    return `<div class="plan-list-row"><span>Reserve from every deposit</span><span class="meta">${pct}%</span></div>${sourceLine}`;
   }, () => {
     return `
       <label style="display:flex;flex-direction:column;font-size:11px;font-weight:700;color:var(--ds-t3);text-transform:uppercase;letter-spacing:.04em;gap:4px;">
@@ -8020,19 +8119,25 @@ function renderForecast(){
     const sign = received ? '+' : '';
     const div = document.createElement('div');
     div.className = cls;
+    // Tighter two-row layout: date+pill on the left of row 2, actions on
+    // the right. Was three stacked rows with date orphaned from buttons,
+    // which Paul flagged as "looks cheap. layout of date, edit and x.
+    // could be improved." (P2 #21)
     const actions = received
-      ? `<div class="fc-actions"><button class="btn btn-sm btn-ghost" onclick="delForecast(${realIdx})">✕</button></div>`
-      : `<div class="fc-actions"><button class="btn btn-sm btn-primary" onclick="gotMoney(${realIdx})">Got it →</button><button class="btn btn-sm btn-ghost" onclick="delForecast(${realIdx})">✕</button></div>`;
+      ? `<button class="btn btn-sm btn-ghost fc-x-btn" onclick="delForecast(${realIdx})" title="Remove">✕</button>`
+      : `<button class="btn btn-sm btn-primary" onclick="gotMoney(${realIdx})">Got it →</button><button class="btn btn-sm btn-ghost fc-x-btn" onclick="delForecast(${realIdx})" title="Remove">✕</button>`;
     div.innerHTML = `
       <div class="fc-row">
         <div class="fc-source">${f.source}${f.note ? ' · ' + f.note : ''}</div>
         <div class="fc-amt">${sign}${f2(f.amount)}</div>
       </div>
       <div class="fc-row">
-        <div class="fc-meta">${dateStr} · ${daysStr}</div>
-        <span class="pill" style="background:${pillBg};color:${pillColor};">${pillLabel}</span>
+        <div class="fc-meta-cluster">
+          <span class="fc-meta">${dateStr} · ${daysStr}</span>
+          <span class="pill" style="background:${pillBg};color:${pillColor};">${pillLabel}</span>
+        </div>
+        <div class="fc-actions">${actions}</div>
       </div>
-      ${actions}
     `;
     el.appendChild(div);
   });
@@ -10329,6 +10434,25 @@ async function loadPaceLine(){
       }
     }
 
+    // No actual MTD activity yet — without this guard the chart renders a
+    // flat-zero "actual" line and a "$N under floor" gap that looks like
+    // signal but is just the absence of data. (P3 #23)
+    if (mtdByDate.size === 0 || runningActual < 0.01) {
+      wrap.style.display = 'block';
+      if (isInScoreCard) {
+        wrap.innerHTML = `
+          <div class="db-pace-label" style="margin-bottom:4px;">Floor pace</div>
+          <div style="font-size:12px;font-weight:600;color:rgba(255,255,255,.6);line-height:1.45;">No spending logged this month yet. Your pace appears once transactions land.</div>`;
+      } else {
+        wrap.innerHTML = `
+          <div style="background:white;border:1px solid var(--ds-line);border-radius:var(--ds-r2);padding:1rem 1.25rem;box-shadow:var(--ds-sh1);">
+            <div style="font-size:11px;font-weight:800;letter-spacing:.1em;text-transform:uppercase;color:var(--ds-t3);margin-bottom:.4rem;">Floor pace</div>
+            <div style="font-size:13px;font-weight:600;color:var(--ds-t3);line-height:1.55;">No spending logged this month yet. Your pace appears once transactions land.</div>
+          </div>`;
+      }
+      return;
+    }
+
     const W = 280, H = 60, padX = 6, padY = 8;
     const innerW = W - padX * 2;
     const innerH = H - padY * 2;
@@ -10475,6 +10599,31 @@ function _streamFreqLabel(freq) {
     default: return 'Recurring';
   }
 }
+// Bank-fee streams (service fee, monthly maintenance, overdraft, etc.)
+// shouldn't surface in the detected-bills review — they're institutional
+// charges the user can't really treat as a recurring obligation. (P2 #18)
+// Future iteration: route these to a leak-candidate surface instead.
+const _BANK_FEE_PATTERNS = [
+  /\bbank\s*service\s*fee\b/i,
+  /\bservice\s*charge\b/i,
+  /\bmonthly\s*(maintenance|service)\s*fee\b/i,
+  /\bmaintenance\s*fee\b/i,
+  /\boverdraft\s*fee\b/i,
+  /\binsufficient\s*funds\s*fee\b/i,
+  /\bnsf\s*fee\b/i,
+  /\batm\s*fee\b/i,
+  /\bforeign\s*(transaction|exchange)\s*fee\b/i,
+  /\binactivity\s*fee\b/i,
+];
+function _looksLikeBankFee(stream) {
+  const detailed = stream.personal_finance_category_detailed || '';
+  const primary = stream.personal_finance_category_primary || '';
+  if (primary === 'BANK_FEES' || detailed.startsWith('BANK_FEES_')) return true;
+  const blob = `${stream.merchant_name || ''} ${stream.description || ''}`.trim();
+  if (!blob) return false;
+  return _BANK_FEE_PATTERNS.some((re) => re.test(blob));
+}
+
 async function _fetchDetectedBillsCandidates() {
   const sb = sbGet();
   const { data, error } = await sb
@@ -10486,10 +10635,12 @@ async function _fetchDetectedBillsCandidates() {
     .order('last_amount', { ascending: false, nullsFirst: false });
   if (error) throw error;
   const ignore = new Set((S.settings && S.settings.not_bills_streams) || []);
-  // Pass 1: cheap local filtering — amount, ignore-list, substring fuzzy match.
+  // Pass 1: cheap local filtering — amount, ignore-list, bank fees,
+  // substring fuzzy match against existing bills.
   const afterLocal = (data || []).filter((s) => {
     if (Math.abs(s.last_amount ?? s.average_amount ?? 0) < 0.5) return false;
     if (ignore.has(s.stream_id)) return false;
+    if (_looksLikeBankFee(s)) return false;
     if (_streamMatchesAnyBill(s, S.bills || [])) return false;
     return true;
   });
@@ -10636,7 +10787,18 @@ async function loadRecurringScan(){
       .neq('status', 'TOMBSTONED')
       .order('last_amount', { ascending: false, nullsFirst: false });
     if (error) throw error;
-    const streams = (data || []).filter((s) => Math.abs(s.last_amount ?? s.average_amount ?? 0) > 0.5);
+    const dismissed = new Set((S.settings && S.settings.dismissed_recurring_streams) || []);
+    // Filter:
+    //   - drop tiny / zero amounts
+    //   - drop streams already matched to a tracked bill (no need to ask the
+    //     user to disposition something they've already added)
+    //   - drop streams the user explicitly dismissed (P2 #15: Paul's report
+    //     said the list shouldn't keep showing rows the user already
+    //     marked as a normal bill)
+    const streams = (data || [])
+      .filter((s) => Math.abs(s.last_amount ?? s.average_amount ?? 0) > 0.5)
+      .filter((s) => !_streamMatchesAnyBill(s, S.bills || []))
+      .filter((s) => !dismissed.has(s.stream_id));
     // Cache for Coach context (in-memory only; rebuilt on each tab load).
     S.recurring_outflow_streams = streams;
     if (streams.length === 0) {
@@ -10674,12 +10836,13 @@ async function loadRecurringScan(){
       const name = s.merchant_name || s.description || 'Unknown';
       const isLeak = leakSet.has(s.stream_id);
       return `
-        <div class="recurring-row" style="display:flex;align-items:center;gap:.85rem;padding:.7rem .25rem;border-bottom:1px solid var(--ds-line);">
+        <div class="recurring-row" style="display:flex;align-items:center;gap:.6rem;padding:.7rem .25rem;border-bottom:1px solid var(--ds-line);">
           <div style="flex:1;min-width:0;">
             <div style="font-size:14px;font-weight:800;color:var(--ds-t1);letter-spacing:-.005em;text-overflow:ellipsis;overflow:hidden;white-space:nowrap;">${escapeHtml(name)}</div>
             <div style="font-size:12px;font-weight:600;color:var(--ds-t3);margin-top:2px;">${amtStr} ${freqStr} · last ${escapeHtml(lastStr)}</div>
           </div>
           <button type="button" onclick="toggleLeakFlag('${escapeHtml(s.stream_id)}')" class="recurring-leak-btn" data-leak="${isLeak ? '1' : '0'}" style="${_leakBtnStyle(isLeak)}">${isLeak ? 'Leak ✓' : 'Mark as leak'}</button>
+          <button type="button" onclick="dismissRecurringStream('${escapeHtml(s.stream_id)}')" title="Normal bill — hide from this list" style="background:transparent;border:none;color:var(--ds-t3);font-family:var(--ds-f);font-size:18px;font-weight:600;padding:4px 8px;cursor:pointer;line-height:1;flex-shrink:0;">×</button>
         </div>`;
     }).join('');
 
@@ -10695,6 +10858,7 @@ async function loadRecurringScan(){
           <div style="font-size:14px;font-weight:900;color:var(--ds-t1);letter-spacing:-.01em;">Recurring charges Able spotted</div>
           <div style="font-size:12px;font-weight:700;color:var(--ds-t3);">~${totalStr}/mo across ${streams.length}</div>
         </div>
+        <div style="font-size:11.5px;font-weight:600;color:var(--ds-t3);margin-bottom:.65rem;line-height:1.55;">A <b>leak</b> is a recurring charge you'd cancel if you noticed it. Tap <b>Mark as leak</b> to flag it for Coach. Tap <b>×</b> to dismiss anything that's a normal bill so it stops showing up here.</div>
         <div style="font-size:12px;font-weight:600;color:var(--ds-t3);margin-bottom:.65rem;">${leakLine}</div>
         <div>${rowsHtml}</div>
       </div>
@@ -10743,6 +10907,22 @@ async function toggleLeakFlag(streamId){
   S.settings.leak_streams = list;
   try { await saveUserData(); } catch (e) { console.warn('saveUserData (leak toggle) failed:', e); }
   Able.track?.('recurring_leak_toggled', { marked: idx < 0, total_leaks: list.length });
+  loadRecurringScan().catch(() => {});
+}
+
+// "Normal bill — dismiss" path on the Activity recurring scan. Adds the
+// stream to S.settings.dismissed_recurring_streams so it stops appearing
+// in the list. Distinct from leak_streams (Coach context) and
+// not_bills_streams (used by the detected-bills review banner). (P2 #15)
+async function dismissRecurringStream(streamId){
+  if (!streamId) return;
+  S.settings = S.settings || {};
+  const list = Array.isArray(S.settings.dismissed_recurring_streams) ? S.settings.dismissed_recurring_streams.slice() : [];
+  if (list.includes(streamId)) return;
+  list.push(streamId);
+  S.settings.dismissed_recurring_streams = list;
+  try { await saveUserData(); } catch (e) { console.warn('saveUserData (dismiss recurring) failed:', e); }
+  Able.track?.('recurring_dismissed', { total_dismissed: list.length });
   loadRecurringScan().catch(() => {});
 }
 
@@ -11470,11 +11650,19 @@ async function renderInterestCostCard() {
     if (total < 1) { card.innerHTML = ''; return; }
     const fmt = (n) => n.toLocaleString(undefined, { style: 'currency', currency: 'USD' });
     const annualized = total * 12;
+    // Provenance + bridging caption when S.debts is empty so the user
+    // doesn't see a $349 interest figure floating above an empty list
+    // with no clue where it came from. (P2 #13/#14)
+    const hasDebts = Array.isArray(S.debts) && S.debts.length > 0;
+    const bridgeLine = hasDebts
+      ? `That's <strong>${fmt(annualized)} a year</strong> if nothing changes. Every dollar of interest is money that didn't go to your balance.`
+      : `That's <strong>${fmt(annualized)} a year</strong>. Add the debts driving these charges below to start tracking payoff.`;
     card.innerHTML = `
       <div class="card" style="background:linear-gradient(135deg,#fde0e0 0%,#fad8d8 100%);border-left:4px solid var(--coral);margin-bottom:1.25rem;padding:14px 16px;">
         <div style="font-size:11px;font-weight:800;letter-spacing:.08em;text-transform:uppercase;color:var(--coral);margin-bottom:4px;">Interest paid · last 30 days</div>
         <div style="font-size:1.4rem;font-weight:900;color:var(--ds-t1);letter-spacing:-.02em;">${fmt(total)}</div>
-        <div style="font-size:12px;color:var(--ds-t2);font-weight:700;margin-top:6px;line-height:1.5;">That's <strong>${fmt(annualized)} a year</strong> if nothing changes. Every dollar of interest is money that didn't go to your balance.</div>
+        <div style="font-size:10px;font-weight:700;color:var(--ds-t3);letter-spacing:.04em;text-transform:uppercase;margin-top:6px;">From your transaction history</div>
+        <div style="font-size:12px;color:var(--ds-t2);font-weight:700;margin-top:8px;line-height:1.5;">${bridgeLine}</div>
       </div>`;
   } catch (e) {
     console.warn('renderInterestCostCard failed:', e);
@@ -12535,7 +12723,10 @@ const TOUR_STEPS = [
   // ── Score tab ─────────────────────────────────────────────────
   {
     tab: 'score',
-    spotlight: '#page-score',
+    // Was #page-score (the entire page) — the 3px green box-shadow ring
+    // wrapped the whole viewport and bled into the top nav (P1 #8 fix).
+    // Spotlight a specific element at the top of the score page instead.
+    spotlight: '#streak-card',
     title: "Track your discipline.",
     bullets: [
       "Full breakdown of this month's score",
@@ -12722,20 +12913,46 @@ function positionTourUI(targetEl) {
       arrow.style.left = arrowOffset + 'px';
     }
   } else {
-    // Desktop: prefer below, flip above if no room.
-    let left = rect.left - 20;
-    const maxLeft = window.innerWidth - bRect.width - 16;
-    if (left > maxLeft) left = maxLeft;
-    if (left < 16) left = 16;
-    const wantBelow = window.innerHeight - rect.bottom >= bRect.height + margin;
-    if (wantBelow) {
-      bubble.classList.add('arrow-up');
-      bubble.style.top = (rect.bottom + margin) + 'px';
+    // Desktop: prefer below, flip above if no room there. When the target
+    // fills enough of the viewport that neither above nor below fits
+    // (e.g. .db-score-card on the home tab — tall right-column card),
+    // place the bubble adjacent to the side instead so it doesn't end up
+    // clamped to top:16 overlapping the spotlight (P1 #6 fix).
+    const fitsBelow = window.innerHeight - rect.bottom >= bRect.height + margin;
+    const fitsAbove = rect.top >= bRect.height + margin;
+
+    if (fitsBelow || fitsAbove) {
+      let left = rect.left - 20;
+      const maxLeft = window.innerWidth - bRect.width - 16;
+      if (left > maxLeft) left = maxLeft;
+      if (left < 16) left = 16;
+      if (fitsBelow) {
+        bubble.classList.add('arrow-up');
+        bubble.style.top = (rect.bottom + margin) + 'px';
+      } else {
+        bubble.classList.add('arrow-down');
+        bubble.style.top = (rect.top - bRect.height - margin) + 'px';
+      }
+      bubble.style.left = left + 'px';
     } else {
-      bubble.classList.add('arrow-down');
-      bubble.style.top = Math.max(margin, rect.top - bRect.height - margin) + 'px';
+      // Side placement — pick the side with more room. Vertically center
+      // on the target. No arrow class (CSS only supports up/down arrows;
+      // the arrow stays invisible without one, which is fine here).
+      const roomLeft = rect.left;
+      const roomRight = window.innerWidth - rect.right;
+      const placeLeft = roomLeft >= roomRight && roomLeft >= bRect.width + margin;
+      if (placeLeft) {
+        bubble.style.left = Math.max(margin, rect.left - bRect.width - margin) + 'px';
+      } else if (roomRight >= bRect.width + margin) {
+        bubble.style.left = (rect.right + margin) + 'px';
+      } else {
+        // Last resort: clamp to the right edge of the viewport.
+        bubble.style.left = (window.innerWidth - bRect.width - margin) + 'px';
+      }
+      const idealTop = rect.top + (rect.height - bRect.height) / 2;
+      const clampedTop = Math.max(margin, Math.min(window.innerHeight - bRect.height - margin, idealTop));
+      bubble.style.top = clampedTop + 'px';
     }
-    bubble.style.left = left + 'px';
   }
 }
 

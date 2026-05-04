@@ -522,7 +522,44 @@ const PFC_TAX_DETAIL = new Set([
   'GOVERNMENT_AND_NON_PROFIT_TAX_PAYMENT',
 ]);
 
+// Pattern hits for the inflow side of a credit-card payment. When the user
+// pays $268 from Chase checking to Chase Visa, Plaid tags the OUTFLOW with
+// LOAN_PAYMENTS_CREDIT_CARD_PAYMENT (caught by PFC_DEBT_DETAIL above), but
+// the matching INFLOW on the CC account often arrives with a generic
+// "PAYMENT THANK YOU" / "PAYMENT - WEB" / "AUTOPAY" descriptor and no
+// strong PFC signal. The LLM previously fell through to rule 4b's bare-
+// processor tier and tagged these as low-confidence income, polluting the
+// user's income view. (P1 #4 fix.)
+const CC_PAYMENT_INFLOW_PATTERNS = [
+  /\bpayment\s+thank\s+you\b/i,
+  /\bautopay\b/i,
+  /\bauto[-\s]?pay\b/i,
+  /\bonline\s+pay(ment)?\b/i,
+  /\bweb\s+pay(ment)?\b/i,
+  /\bmobile\s+pay(ment)?\b/i,
+  /\bach\s+pay(ment)?\b/i,
+  /\bpayment\s*-\s*(web|mobile|online)\b/i,
+];
+
+function _looksLikeCcPaymentInflow(row: TxnRow): boolean {
+  if ((row.amount ?? 0) >= 0) return false; // not an inflow
+  const blob = `${row.merchant_name ?? ''} ${row.name ?? ''}`.trim();
+  if (!blob) return false;
+  return CC_PAYMENT_INFLOW_PATTERNS.some((re) => re.test(blob));
+}
+
 function pickPfcHeuristic(row: TxnRow): HeuristicHit | null {
+  // Pattern check runs FIRST, before PFC heuristics, because the inflow
+  // side of CC payments is a description-only signal — Plaid's PFC isn't
+  // reliable here.
+  if (_looksLikeCcPaymentInflow(row)) {
+    return {
+      category: 'transfer',
+      label: row.merchant_name ?? row.name ?? 'Credit card payment',
+      is_recurring_likely: false,
+    };
+  }
+
   const detail = row.personal_finance_category_detailed;
   if (!detail) return null;
   const conf = (row.personal_finance_category_confidence ?? '').toUpperCase();
@@ -538,6 +575,12 @@ function pickPfcHeuristic(row: TxnRow): HeuristicHit | null {
   }
   if (PFC_DEBT_DETAIL.has(detail) && isOutflow) {
     return { category: 'debt_payment', label: baseLabel, is_recurring_likely: true };
+  }
+  // The matching credit-side of LOAN_PAYMENTS_CREDIT_CARD_PAYMENT (when
+  // Plaid tags it on the CC account) is the cardholder paying down their
+  // balance — also a transfer, not income.
+  if (PFC_DEBT_DETAIL.has(detail) && isInflow) {
+    return { category: 'transfer', label: baseLabel, is_recurring_likely: false };
   }
   if (PFC_INCOME_DETAIL.has(detail) && isInflow) {
     return { category: 'income', label: baseLabel, is_recurring_likely: detail === 'INCOME_WAGES' || detail === 'INCOME_RETIREMENT_PENSION' };

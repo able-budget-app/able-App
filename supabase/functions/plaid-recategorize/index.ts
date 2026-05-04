@@ -211,6 +211,17 @@ Output ONLY a JSON array. One object per input transaction, in the SAME ORDER. N
 
 4a. **Venmo / Zelle / Cash App outflows to a named person who is not the user** (e.g. "VENMO TO MOM", "ZELLE TO J SMITH"): classify as **discretionary**, NOT transfer. Personal payments and gifts are spending, not internal transfers. "Transfer" is reserved for movement between the user's own accounts.
 
+4ab. **Credit-card payment inflows are transfers, not income.** Before applying rule 4b, check the description: when amount is NEGATIVE (inflow) AND the merchant_name or name matches a generic credit-card-payment pattern, classify as **transfer** with confidence 0.85. These are the user paying down their own credit card from another account they own — never income.
+
+   Generic CC-payment patterns:
+   - "Payment Thank You" / "Payment Thank You-Mobile" / "Payment Thank You-Web"
+   - "PAYMENT - WEB" / "PAYMENT - MOBILE" / "PAYMENT - ONLINE"
+   - "AUTOPAY" / "AUTO-PAY" / "AUTOMATIC PAYMENT"
+   - "ONLINE PAYMENT" / "WEB PAYMENT" / "MOBILE PAYMENT"
+   - "ACH PAYMENT" / "ACH CREDIT PAYMENT" with no business name attached
+
+   These descriptions are credit-card-issuer boilerplate for the credit side of a payment. Do NOT route to rule 4b's "bare processor" tier — that would tag them as low-confidence income and pollute the user's income inbox.
+
 4b. **Marketplace / processor payouts on inflows are income, not discretionary or transfer.** When amount is NEGATIVE (inflow / credit) AND merchant_name or name matches a marketplace or payment processor, default to **income** — the user is the host / seller / payee, not the customer:
    - Airbnb, VRBO, Vrbo, Booking.com host payouts → income (host payout). The Airbnb-as-discretionary rule under rule 2 applies ONLY to OUTFLOWS (positive amount = the user paying for a stay).
    - Stripe, Square, Shopify, Toast, Clover payouts → income (client payment / sales).
