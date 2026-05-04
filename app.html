@@ -4706,7 +4706,12 @@ async function obRunPlaidPipeline() {
     obAnswers.plaid_pipeline.step = 'recurring';
     if (OB_QUESTIONS[obStep]?.type === 'plaid') renderObStep();
     try {
-      await obPipelineStep('recurring', () => obInvokeWithTimeout(sb, 'plaid-recurring-refresh', { plaid_item_row_id: itemRowId }, 60000));
+      // Swapped 2026-05-04 from plaid-recurring-refresh (Plaid's
+      // /transactions/recurring/get, which returned PRODUCT_NOT_READY for
+      // hours after fresh connects) to plaid-detect-recurring (our own
+      // grouping + cadence inference on already-classified transactions).
+      // Deterministic, fast, no third-party readiness dependency.
+      await obPipelineStep('recurring', () => obInvokeWithTimeout(sb, 'plaid-detect-recurring', { plaid_item_row_id: itemRowId }, 60000));
     } catch (e) {
       // Recurring is nice-to-have; the analyzer falls back to deriving
       // recurrence from raw transactions.
