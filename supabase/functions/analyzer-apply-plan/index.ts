@@ -159,6 +159,7 @@ Deno.serve(async (req) => {
     const next = mergePlan(ud ?? { id: userId }, effective, flags, {
       pendingReview,
       sourcePlanId: planRow.id,
+      replaceSources: body.replace_sources === true,
     });
 
     const { error: writeErr } = await admin
@@ -194,7 +195,7 @@ function mergePlan(
   current: Record<string, unknown>,
   plan: AnalyzerPlan,
   flags: Required<SectionFlags>,
-  opts: { pendingReview: boolean; sourcePlanId: string },
+  opts: { pendingReview: boolean; sourcePlanId: string; replaceSources: boolean },
 ): Record<string, unknown> {
   const next = { ...current };
   const reviewTag = opts.pendingReview
@@ -211,7 +212,7 @@ function mergePlan(
     const planSources = plan.income_sources
       .map((s) => s.name)
       .filter((n): n is string => Boolean(n));
-    if (body.replace_sources) {
+    if (opts.replaceSources) {
       next.sources = planSources;
     } else {
       const existing = Array.isArray(next.sources) ? (next.sources as string[]) : [];
