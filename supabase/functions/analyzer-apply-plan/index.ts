@@ -84,6 +84,11 @@ type Body = {
   sections?: SectionFlags;
   overrides?: Partial<AnalyzerPlanShape>;
   pending_review?: boolean;
+  // Auto-apply during onboarding sets this so Plaid-detected income
+  // sources fully replace whatever defaults / intake_channels chips
+  // landed in user_data.sources earlier. Default = append (preserves
+  // user-added custom sources on subsequent re-applies).
+  replace_sources?: boolean;
 };
 
 type AnalyzerPlan = AnalyzerPlanShape;
@@ -196,14 +201,24 @@ function mergePlan(
     ? { pending_review: true, source_plan_id: opts.sourcePlanId }
     : {};
 
-  // Sources: array of strings. Append new names without duplicating.
+  // Sources: array of strings.
+  //   replace_sources:true (onboarding auto-apply) — overwrite with the
+  //     plan's sources so generic defaults / intake-channel chips don't
+  //     double up next to Plaid-detected ones.
+  //   default — append new names without duplicating, so a user who
+  //     re-applies a refreshed plan keeps any sources they added by hand.
   if (flags.income_sources && plan.income_sources?.length) {
-    const existing = Array.isArray(next.sources) ? (next.sources as string[]) : [];
-    const seen = new Set(existing.map((s) => s.toLowerCase()));
-    const additions = plan.income_sources
+    const planSources = plan.income_sources
       .map((s) => s.name)
-      .filter((n) => n && !seen.has(n.toLowerCase()));
-    next.sources = [...existing, ...additions];
+      .filter((n): n is string => Boolean(n));
+    if (body.replace_sources) {
+      next.sources = planSources;
+    } else {
+      const existing = Array.isArray(next.sources) ? (next.sources as string[]) : [];
+      const seen = new Set(existing.map((s) => s.toLowerCase()));
+      const additions = planSources.filter((n) => !seen.has(n.toLowerCase()));
+      next.sources = [...existing, ...additions];
+    }
   }
 
   // Settings: surplus split percentages. reserve_pct → bufPct.

@@ -5037,6 +5037,10 @@ async function obAutoApplyPendingReview() {
       sections: { income_sources: true, bills: true, debts: true, tax_allocation: true, surplus_split: true },
       overrides,
       pending_review: true,
+      // First-time auto-apply during onboarding: replace placeholder/
+      // intake-channel sources so Plaid-detected sources don't double
+      // up alongside generic ones in the Income Sources panel.
+      replace_sources: true,
     },
   });
   if (error) throw new Error(error.message || 'auto-apply failed');
