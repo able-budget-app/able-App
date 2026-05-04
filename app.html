@@ -917,6 +917,10 @@ body.tour-active #page-home .db-action-card{display:flex!important;}
 .db-hero-breakdown-name{color:white;font-weight:700;}
 .db-hero-breakdown-meta{color:rgba(255,255,255,.6);font-weight:600;font-size:10px;letter-spacing:.03em;margin-top:2px;}
 .db-hero-breakdown-amt{color:white;font-weight:800;letter-spacing:-.01em;}
+.db-hero-bank-line{display:flex;justify-content:space-between;align-items:center;padding:5px 0 6px;font-family:var(--ds-f);font-size:11px;color:rgba(255,255,255,.62);font-weight:700;cursor:pointer;letter-spacing:.005em;}
+.db-hero-bank-line:hover{color:rgba(255,255,255,.92);}
+.db-hero-bank-line .db-hero-toggle{font-size:12px;}
+.db-hero-bank-drift{color:#ffd9c2;font-weight:800;margin-left:6px;}
 .db-hero-edit{position:relative;font-size:10px;font-weight:700;color:rgba(255,255,255,.7);background:rgba(255,255,255,.12);border:none;cursor:pointer;padding:4px 9px;border-radius:100px;letter-spacing:.04em;text-transform:uppercase;transition:background .15s,color .15s;}
 .db-hero-edit:hover{background:rgba(255,255,255,.22);color:white;}
 .db-hero-cta-primary{position:relative;width:100%;background:white;color:var(--ds-green);border:none;border-radius:100px;padding:13px 18px;margin:.85rem 0 .25rem;font-family:var(--ds-f);font-size:14px;font-weight:800;letter-spacing:-.01em;cursor:pointer;box-shadow:0 4px 14px rgba(0,0,0,.1);transition:transform .15s,box-shadow .15s;}
@@ -6960,6 +6964,10 @@ function refreshHome(){
   dedupPlaidWithHistory().then((merged) => { if (merged > 0) renderHistory(); }).catch(() => {});
   renderHistory();
   loadPaceLine().catch(() => {});
+  // Async fetch of cached Plaid balances; repaints the hero when done so
+  // users see "Bank balances: $X across N accounts" without blocking the
+  // initial render. No-op when the user hasn't connected a bank.
+  loadBankBalances().then(() => renderHeroMoney()).catch(() => {});
 }
 
 // Greeting row at the top of the home page. Time-of-day greeting + first
@@ -8752,6 +8760,48 @@ async function loadConnectedAccounts() {
   } catch (e) {
     console.error('loadConnectedAccounts failed:', e);
     listEl.innerHTML = `<div class="empty-state" style="padding:1.25rem;color:var(--ds-c4);">Could not load connected accounts. ${escapeHtml(e.message || '')}</div>`;
+  }
+}
+
+// Loads cached Plaid balances (depository accounts only — checking, savings,
+// money market, CD, cash management). Sums across all linked banks and
+// caches into S._bankBalances for the hero card to render. Safe to call
+// when no banks are connected; just leaves an empty cache. Refreshes
+// happen whenever the home re-renders, so users see fresh numbers after
+// a Plaid sync without us doing on-demand /balance/get calls.
+async function loadBankBalances() {
+  if (!currentUser) return;
+  try {
+    const sb = sbGet();
+    const { data: items, error: itemsErr } = await sb
+      .from('plaid_items')
+      .select('id, institution_name, status');
+    if (itemsErr) throw itemsErr;
+    if (!items || items.length === 0) {
+      S._bankBalances = { sum: 0, accounts: [] };
+      return;
+    }
+    const itemIds = items.map((i) => i.id);
+    const itemsById = {};
+    items.forEach((i) => { itemsById[i.id] = i; });
+    const { data: accounts, error: accErr } = await sb
+      .from('plaid_accounts')
+      .select('plaid_item_id, name, mask, type, subtype, current_balance, available_balance, iso_currency_code')
+      .in('plaid_item_id', itemIds)
+      .eq('type', 'depository');
+    if (accErr) throw accErr;
+    const list = (accounts || []).map((a) => ({
+      institution_name: itemsById[a.plaid_item_id]?.institution_name || 'Bank',
+      name: a.name || a.subtype || 'Account',
+      mask: a.mask,
+      subtype: a.subtype,
+      current_balance: typeof a.current_balance === 'number' ? a.current_balance : null,
+    }));
+    const sum = list.reduce((s, a) => s + (a.current_balance || 0), 0);
+    S._bankBalances = { sum, accounts: list };
+  } catch (e) {
+    console.warn('loadBankBalances failed:', e);
+    S._bankBalances = null;
   }
 }
 
@@ -11386,6 +11436,11 @@ function toggleHeroBreakdown(){
   if (!el) return;
   el.style.display = el.style.display === 'none' ? 'block' : 'none';
 }
+function toggleBankBreakdown(){
+  const el = document.getElementById('db-hero-bank-breakdown');
+  if (!el) return;
+  el.style.display = el.style.display === 'none' ? 'block' : 'none';
+}
 // Tap the available CTA → stage a balance-neutral allocation and open the
 // preview modal directly. Skips the allocate-sheet entry form since the source
 // is fixed ("Unallocated balance") and the amount is the available value.
@@ -11442,6 +11497,40 @@ function renderHeroMoney(){
       </div>`
     : '';
   const editBtn = `<button class="db-hero-edit" onclick="openBalanceModal()" aria-label="Edit balance">Edit</button>`;
+
+  // Bank-balance dropdown — informational layer below the manual In-your-
+  // accounts row. Sum across linked depository accounts, with a per-bank
+  // breakdown on tap. Drift indicator surfaces when Plaid sum and S.balance
+  // disagree by more than $50 (most often: cash/Venmo deposit user logged
+  // before Plaid saw it, or stale manual balance). Never overrides the
+  // working balance — that stays Option B per Paul's decision 2026-05-03.
+  const bankBalances = S._bankBalances;
+  let bankLine = '';
+  let bankBreakdown = '';
+  if (bankBalances && bankBalances.accounts && bankBalances.accounts.length > 0) {
+    const accCount = bankBalances.accounts.length;
+    const drift = bankBalances.sum - balance;
+    const driftStr = Math.abs(drift) > 50
+      ? `<span class="db-hero-bank-drift">${drift > 0 ? '+' : '−'}${f2(Math.abs(drift))} vs. yours</span>`
+      : '';
+    bankLine = `
+      <div class="db-hero-bank-line" onclick="toggleBankBreakdown()">
+        <span>Bank balances: ${f2(bankBalances.sum)} across ${accCount} account${accCount === 1 ? '' : 's'}${driftStr} <span class="db-hero-toggle" aria-label="Show bank breakdown">▾</span></span>
+      </div>`;
+    bankBreakdown = `
+      <div id="db-hero-bank-breakdown" class="db-hero-breakdown" style="display:none;">
+        ${bankBalances.accounts.map((a) => `
+          <div class="db-hero-breakdown-row">
+            <div>
+              <div class="db-hero-breakdown-name">${escapeHtml(a.institution_name)}</div>
+              <div class="db-hero-breakdown-meta">${escapeHtml(a.name)}${a.mask ? ' ····' + escapeHtml(a.mask) : ''}</div>
+            </div>
+            <div class="db-hero-breakdown-amt">${a.current_balance != null ? f2(a.current_balance) : '—'}</div>
+          </div>
+        `).join('')}
+      </div>`;
+  }
+
   const reservedRow = `
     <div class="db-hero-money-row" style="cursor:${reservedBills.length?'pointer':'default'};" ${reservedBills.length?'onclick="toggleHeroBreakdown()"':''}>
       <span class="db-hero-money-label">Reserved for bills${reservedBills.length?' <span class="db-hero-toggle" aria-label="Show breakdown">▾</span>':''}</span>
@@ -11490,6 +11579,8 @@ function renderHeroMoney(){
         <span class="db-hero-money-val">${f2(balance)}</span>
       </div>
       <div class="db-hero-money-edit-row">${editBtn}</div>
+      ${bankLine}
+      ${bankBreakdown}
       ${reservedRow}
       ${breakdownHtml}
       <div class="db-hero-money-divider"></div>
@@ -11508,6 +11599,8 @@ function renderHeroMoney(){
         <span class="db-hero-money-val">${f2(balance)}</span>
       </div>
       <div class="db-hero-money-edit-row">${editBtn}</div>
+      ${bankLine}
+      ${bankBreakdown}
       ${reservedRow}
       ${breakdownHtml}
       <div class="db-hero-money-divider"></div>
@@ -11523,6 +11616,8 @@ function renderHeroMoney(){
         <span class="db-hero-money-val">${f2(balance)}</span>
       </div>
       <div class="db-hero-money-edit-row">${editBtn}</div>
+      ${bankLine}
+      ${bankBreakdown}
       ${reservedRow}
       ${breakdownHtml}
       <div class="db-hero-money-divider"></div>
