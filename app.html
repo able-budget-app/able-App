@@ -10297,12 +10297,56 @@ async function _fetchDetectedBillsCandidates() {
     .order('last_amount', { ascending: false, nullsFirst: false });
   if (error) throw error;
   const ignore = new Set((S.settings && S.settings.not_bills_streams) || []);
-  return (data || []).filter((s) => {
+  // Pass 1: cheap local filtering — amount, ignore-list, substring fuzzy match.
+  const afterLocal = (data || []).filter((s) => {
     if (Math.abs(s.last_amount ?? s.average_amount ?? 0) < 0.5) return false;
     if (ignore.has(s.stream_id)) return false;
     if (_streamMatchesAnyBill(s, S.bills || [])) return false;
     return true;
   });
+  // Pass 2: AI semantic match for whatever local fuzzy missed. Bridges
+  // brand-vs-generic naming gaps like "Northwestern Mutual" ↔ "Life
+  // insurance" or "Google One" ↔ "Google storage". Falls back gracefully
+  // (no extra filtering) if the function isn't deployed or call fails.
+  if (afterLocal.length === 0 || (S.bills || []).length === 0) return afterLocal;
+  try {
+    const aiMatched = await _aiMatchStreamsToBills(afterLocal, S.bills);
+    if (aiMatched && aiMatched.size > 0) {
+      return afterLocal.filter((s) => !aiMatched.has(s.stream_id));
+    }
+  } catch (e) {
+    console.warn('match-detected-bills failed; using local match only:', e);
+  }
+  return afterLocal;
+}
+
+// Calls the match-detected-bills Edge Function for semantic dedupe.
+// Returns a Set of stream_ids that the AI considers already-matched to
+// existing bills. Empty/null on any failure path so the caller can fall
+// back to the local fuzzy result.
+async function _aiMatchStreamsToBills(streams, bills) {
+  const sb = sbGet();
+  const billsPayload = bills.map((b) => ({
+    id: b.id,
+    name: b.name,
+    amount: b.amount || 0,
+    cat: b.cat,
+    freq: b.freq || 'monthly',
+  }));
+  const streamsPayload = streams.map((s) => ({
+    stream_id: s.stream_id,
+    merchant_name: s.merchant_name,
+    description: s.description,
+    amount: Math.abs(s.last_amount ?? s.average_amount ?? 0),
+    frequency: s.frequency,
+    category: s.personal_finance_category_detailed || s.personal_finance_category_primary || null,
+  }));
+  const { data, error } = await sb.functions.invoke('match-detected-bills', {
+    body: { bills: billsPayload, streams: streamsPayload },
+  });
+  if (error) throw error;
+  const matches = (data && Array.isArray(data.matches)) ? data.matches : [];
+  return new Set(matches.map((m) => m.stream_id));
 }
 async function loadDetectedBillsBanner() {
   const banner = document.getElementById('detected-bills-banner');
