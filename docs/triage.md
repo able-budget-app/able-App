@@ -14,7 +14,14 @@ Last consolidated: 2026-05-03 from `pending_work.md`, `competitor-feature-audit.
 
 ## Next — this month (P1)
 
-✅ **All P1 items shipped 2026-05-03 in commit `50826cc`.** See Done section.
+✅ **All P1 items from 2026-05-03 shipped in commit `50826cc`.** See Done section.
+
+**New from 2026-05-04 E2E test:**
+
+- **P1-2026-05-04 #1 — Multi-card collapse in debt detection.** When a user has two credit cards from the same issuer (e.g. two Chase cards), `plaid-detect-recurring` groups outflows by `(item_id | merchant_key | direction)` — both card payments leave checking with merchant "Chase" and collapse into one stream. The `(0714)` mask shown is just one of the two accounts; the second card is invisible to the user. **Root fix:** detect debts from `plaid_accounts` where `subtype = 'credit card'` (each card has its own account_id, mask, balance, APR), not from outflow merchant-grouping on checking. Source-of-truth shift.
+- **P1-2026-05-04 #2 — Interest-charge line items still classified as bills.** "Purchase Interest Charge (credit card) $350 · day 14" appears in the 16-bill list. Round 2 flagged this; classifier prompt rule needs updating so credit-card statement entries with descriptors `INTEREST CHARGE`, `PURCHASE INTEREST CHARGE`, `FINANCE CHARGE` route to debt-cost (or get suppressed entirely) rather than treated as recurring bills.
+- **P1-2026-05-04 #3 — Classify is the slow step in onboarding (~7 min for 1247 transactions).** `obRunPlaidPipeline` calls `plaid-classify-pending` (1 batch of 50) sequentially up to 10×. Should switch to `plaid-classify-batch` (10 internally-parallel batches in 1 invocation, ~45s) and limit the onboarding pass to last 90 days (background-classify the rest). Plan still gets generated even with partial data, but better data → better debt detection.
+- **P1-2026-05-04 #4 — Income sources panel shows 9 entries when Plaid detected 5.** Round 2's P0 #2 fix removed the goal-label / processor-label corruption, but defaults (`Client / Job 1`, `Client / Job 2`, `Side income`, `Other`) are still being merged with the Plaid-derived sources (Remote deposit, Stripe payouts, Airbnb host payouts, Venmo transfers, Eventbrite payout). Looks like analyzer-apply-plan or the `S.sources` write-back is appending instead of replacing. When Plaid returns concrete sources, the generic placeholders should be dropped — they're noise in any context that reads `income_sources` (Coach, plan summary, allocation suggestions).
 
 Caveat carried forward: the `refer_*_joined` achievement tiles still need a backend hook for "invite turned into a paid signup." Tracked as a small follow-up below.
 

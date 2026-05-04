@@ -7930,11 +7930,14 @@ function addBill(){
   const modal=document.getElementById('modal-add-bill');
   const editIdx=modal.dataset.editIdx;
   if(editIdx!==undefined){
-    // Preserve paid status and fromDebtId on edit
+    // Preserve paid status and fromDebtId on edit. Clear pending_review:
+    // editing + saving is the user confirming the auto-detected row, so
+    // the REVIEW pill should disappear afterwards.
     const existing=S.bills[parseInt(editIdx)];
     S.bills[parseInt(editIdx)]={
       ...existing,
       name,amount,freq,due,cat,priority,
+      pending_review: false,
       ...(freqDays?{freqDays}:{freqDays:undefined})
     };
     delete modal.dataset.editIdx;
@@ -7998,6 +8001,11 @@ function editDebt(i){
   d.min=parseFloat(newMin)||0;
   d.dueDay=parseInt(newDue)||null;
   d.rate=parseFloat(newRate)||0;
+  // User editing + saving is the human review of an auto-detected debt.
+  d.pending_review=false;
+  // Mirror the cleared flag onto the linked bill so its REVIEW pill clears too.
+  const linkedBill=S.bills.find(b=>b.fromDebtId===d.id);
+  if(linkedBill) linkedBill.pending_review=false;
   syncLinkedBill(d);
   save();renderDebtPage();renderBillsPage();renderUpcoming();refreshHome();
 }
