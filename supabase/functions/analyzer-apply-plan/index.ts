@@ -172,7 +172,13 @@ Deno.serve(async (req) => {
       ? 'auto_applied'
       : (allOn ? 'fully_applied' : 'partially_applied');
     const now = new Date().toISOString();
-    await admin
+    // Check the status update result instead of swallowing it. Until the
+    // schema added 'auto_applied' to the CHECK constraint, this update was
+    // silently failing on every auto-apply call — function returned 200,
+    // status stayed 'pending', user_data wrote successfully but the plan
+    // lifecycle never advanced. If the update fails now, surface a 500 so
+    // the client can show a real error instead of pretending success.
+    const { error: statusErr } = await admin
       .from('analyzer_plans')
       .update({
         status: newStatus,
@@ -180,6 +186,10 @@ Deno.serve(async (req) => {
         applied_at: now,
       })
       .eq('id', planRow.id);
+    if (statusErr) {
+      console.error('analyzer-apply-plan: plan status update failed:', statusErr);
+      return json({ error: `plan status update failed: ${statusErr.message}` }, 500);
+    }
 
     return json({
       applied_sections: Object.entries(flags).filter(([, v]) => v).map(([k]) => k),

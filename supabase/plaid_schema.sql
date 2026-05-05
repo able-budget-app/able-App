@@ -199,7 +199,7 @@ create table if not exists public.analyzer_plans (
   plan_json           jsonb not null,
   coach_summary       text,
   status              text not null default 'pending'
-                        check (status in ('pending','presenting','accepted','partially_applied','fully_applied','rejected','superseded')),
+                        check (status in ('pending','presenting','accepted','auto_applied','partially_applied','fully_applied','rejected','superseded')),
   presented_at        timestamptz,
   accepted_at         timestamptz,
   applied_at          timestamptz,
