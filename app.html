@@ -320,7 +320,7 @@ input,select,button,textarea{font-family:inherit;}
 .job-pct{font-size:11px;color:var(--ds-t3);font-weight:700;}
 .bill-paid-row{background:var(--ds-green-l)!important;}
 .bill-paid-row .bills-name{text-decoration:line-through;color:var(--ds-t3);}
-.checkbtn{width:44px;height:44px;border-radius:50%;border:2px solid var(--ds-t4);background:transparent;cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:14px;transition:all .2s;flex-shrink:0;}
+.checkbtn{width:28px;height:28px;border-radius:50%;border:2px solid var(--ds-t4);background:transparent;cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:12px;transition:all .2s;flex-shrink:0;}
 .checkbtn.checked{background:var(--ds-green);border-color:var(--ds-green);color:white;}
 .upcoming-item{display:flex;align-items:center;gap:12px;padding:12px 14px;border-radius:var(--ds-r2);margin-bottom:8px;background:var(--ds-card);box-shadow:var(--ds-sh1);}
 .upcoming-item.urgent{background:#fdeef2;}
@@ -885,7 +885,7 @@ body.is-scrolling .btn-primary:hover{transform:none!important;box-shadow:inherit
 .coach-close{background:transparent;border:none;color:var(--ds-t3);font-size:18px;cursor:pointer;width:32px;height:32px;border-radius:50%;transition:all .15s;display:flex;align-items:center;justify-content:center;flex-shrink:0;font-family:var(--ds-f);}
 .coach-close:hover{background:var(--ds-green-l);color:var(--ds-green);}
 .coach-panel .coach-messages{min-height:200px;max-height:55vh;max-height:55dvh;}
-.coach-panel .coach-input-wrap{position:static;padding:.5rem 0 0;}
+.coach-panel .coach-input-wrap{position:static;padding:.5rem 0 0;background:transparent;}
 
 /* ═══════ COACH ═══════ */
 .coach-wrap{max-width:760px;margin:0 auto;display:flex;flex-direction:column;min-height:calc(100vh - 180px);min-height:calc(100dvh - 180px);}
@@ -918,7 +918,7 @@ body.is-scrolling .btn-primary:hover{transform:none!important;box-shadow:inherit
 #coach-input{flex:1;background:var(--ds-card);border:1.5px solid var(--ds-t4);border-radius:var(--ds-r2);padding:12px 14px;font-family:var(--ds-f);font-size:14px;font-weight:500;color:var(--ds-t1);outline:none;resize:none;transition:border-color .18s,box-shadow .18s;min-height:48px;max-height:200px;}
 #coach-input:focus{border-color:var(--ds-green);box-shadow:0 0 0 3px rgba(42,122,74,.1);}
 @media(max-width:800px){#coach-input{font-size:16px;}}
-#coach-send{flex-shrink:0;}
+#coach-send{flex-shrink:0;min-height:48px;padding:0 22px;}
 #coach-send:disabled{opacity:.5;cursor:not-allowed;transform:none;}
 .coach-footer{font-size:11px;color:var(--ds-t3);font-weight:600;text-align:center;padding:.25rem 0 1rem;}
 .coach-error{background:#fdeef2;border:1.5px solid rgba(192,64,96,.3);color:var(--ds-c4);border-radius:var(--ds-r1);padding:10px 12px;font-size:13px;font-weight:600;margin:.5rem 0;}
@@ -1724,14 +1724,6 @@ posthog.init('phc_B6PH36QxpExnyBYhfScFFF6LhDvoyxuFr6PypJuxxky3', {
      about whether numbers are real. Hidden by default. -->
 <div id="demo-mode-banner" style="display:none;"></div>
 
-<!-- Income Inbox banner — surfaces low-confidence inflows for the user to label.
-     Each label trains user_classification_overrides so future matching txns
-     skip the LLM entirely. Empty when there's nothing to review. Lives at
-     the global layout level so it's visible across every tab, not just Allocate. -->
-<div id="income-inbox-banner-wrap" style="max-width:1100px;margin:0 auto;padding:0 1rem;">
-  <div id="income-inbox-banner"></div>
-</div>
-
 <!-- ALLOCATE -->
 <div class="page active" id="page-home">
   <!-- Empty-state welcome for first-time users (no history + no bills) -->
@@ -1752,6 +1744,12 @@ posthog.init('phc_B6PH36QxpExnyBYhfScFFF6LhDvoyxuFr6PypJuxxky3', {
     <div class="home-greet-hi" id="home-greet-hi"></div>
     <div class="home-greet-date" id="home-greet-date"></div>
   </div>
+
+  <!-- Income Inbox banner — surfaces low-confidence inflows for the user to
+       label. Each label trains user_classification_overrides so future
+       matching txns skip the LLM. Stacked above past-due so review tasks
+       cluster together. -->
+  <div id="income-inbox-banner"></div>
 
   <!-- Past-due bills banner — visible only when monthly bills missed their due day -->
   <div id="past-due-banner"></div>
@@ -1830,7 +1828,6 @@ posthog.init('phc_B6PH36QxpExnyBYhfScFFF6LhDvoyxuFr6PypJuxxky3', {
   <!-- INCOME THIS MONTH -->
   <div class="sec" style="margin-top:1.5rem;">Income this month</div>
   <div id="history-list"><div class="empty-state">No income logged yet this month. Tap "Log income" above to start.</div></div>
-  <button class="btn btn-sm btn-ghost" style="margin-top:.5rem;" onclick="resetMonth()">Close this month</button>
 </div>
 
 <!-- FORECAST -->
@@ -2328,10 +2325,6 @@ posthog.init('phc_B6PH36QxpExnyBYhfScFFF6LhDvoyxuFr6PypJuxxky3', {
           <div style="font-weight:800;display:flex;align-items:center;gap:10px;color:var(--ds-t1);"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink:0;color:var(--ds-green);"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>Contact support</div>
           <div style="font-size:11px;color:var(--ds-t3);font-weight:600;margin-top:5px;margin-left:28px;">Opens your email app with a pre-filled message to us.</div>
         </button>
-        <button class="btn" onclick="resetMonth()" style="text-align:left;padding:14px 16px;">
-          <div style="font-weight:800;display:flex;align-items:center;gap:10px;color:var(--ds-t1);"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink:0;color:var(--ds-green);"><polyline points="1 4 1 10 7 10"/><path d="M3.51 15a9 9 0 1 0 2.13-9.36L1 10"/></svg>Close this month</div>
-          <div style="font-size:11px;color:var(--ds-t3);font-weight:600;margin-top:5px;margin-left:28px;">Saves this month to history and resets for the new month. View all history on the Score tab.</div>
-        </button>
         <button class="btn" onclick="clearAllData()" style="text-align:left;padding:14px 16px;border-color:rgba(192,64,96,.25);">
           <div style="font-weight:800;display:flex;align-items:center;gap:10px;color:var(--ds-c4);"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink:0;"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/><path d="M10 11v6M14 11v6"/><path d="M9 6V4a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v2"/></svg>Clear all data</div>
           <div style="font-size:11px;color:var(--ds-t3);font-weight:600;margin-top:5px;margin-left:28px;">Wipes everything. Cannot be undone.</div>
@@ -2535,7 +2528,7 @@ posthog.init('phc_B6PH36QxpExnyBYhfScFFF6LhDvoyxuFr6PypJuxxky3', {
   <div class="modal">
     <button class="modal-close" onclick="closeModal('modal-add-income')" aria-label="Close"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button>
     <div class="modal-title">Add expected income</div>
-    <div style="font-size:12px;color:var(--ds-t2);font-weight:600;margin-bottom:14px;line-height:1.5;">A payment you know is coming. Able will hold a spot for it on the Tide and split it the moment it lands.</div>
+    <div style="font-size:12px;color:var(--ds-t2);font-weight:600;margin-bottom:14px;line-height:1.5;">A payment you know is coming. Able will hold a spot for it on your forecast and split it across your buckets the moment it lands.</div>
     <div class="form-row">
       <div class="field"><label>Source</label><select id="qfc-src"></select></div>
       <div class="field"><label>Amount ($)</label><input type="number" id="qfc-amt" placeholder="0.00" min="0" step="0.01"></div>
@@ -2545,6 +2538,17 @@ posthog.init('phc_B6PH36QxpExnyBYhfScFFF6LhDvoyxuFr6PypJuxxky3', {
       <div class="field"><label>Note (optional)</label><input type="text" id="qfc-note" placeholder="Client name, project..."></div>
     </div>
     <div class="modal-actions"><button class="btn" onclick="closeModal('modal-add-income')">Cancel</button><button class="btn btn-primary" id="qfc-save-btn" onclick="addForecastFromQuickModal()">Add to forecast</button></div>
+  </div>
+</div>
+<!-- Leak summary — opens from the recurring scan when at least one leak is
+     tagged. Shows annual projected waste + per-leak detail with last 6
+     charges + Remove leak button. Built by renderLeakSummaryBody. -->
+<div class="modal-bg" id="modal-leak-summary" style="display:none;" onclick="if(event.target===this)closeLeakSummary()">
+  <div class="modal" style="max-height:85vh;overflow-y:auto;">
+    <button class="modal-close" onclick="closeLeakSummary()" aria-label="Close"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button>
+    <div class="modal-title">Your tagged leaks</div>
+    <div id="leak-summary-head"></div>
+    <div id="leak-summary-body"></div>
   </div>
 </div>
 <div class="modal-bg" id="modal-buffer" style="display:none;">
@@ -6729,35 +6733,76 @@ function applyOccurrenceReleases() {
   S.settings.lastOccurrenceCheck = now.toISOString();
   return dirty;
 }
-// Auto-rollover: when the calendar month changes, clear paid flags so this
-// month's bills aren't permanently flagged as last month's. Reservations are
-// PRESERVED so they roll forward to whichever next-cycle occurrence the bill
-// has — set-aside money doesn't vaporize at midnight on the 1st.
+// Auto-rollover: when the calendar month changes, archive the prior month
+// into month_history (if there was activity), clear the income log + paid
+// flags, and reset the legacy allocated_to_bills scalar.
+//
+// Reservations are PRESERVED so they roll forward to whichever next-cycle
+// occurrence the bill has — set-aside money doesn't vaporize at midnight
+// on the 1st. (This is the deliberate divergence from the old manual
+// resetMonth(): reservations stay, history archives.)
 //
 // Why this matters: bill.paid is a single bool, not per-cycle. If the user
 // marks April's truck loan paid then logs in on May 1, the bill stays flagged
 // paid and disappears from upcoming-bills. Auto-rollover clears that flag.
 //
-// The legacy S.allocated_to_bills scalar is set to 0 — it was a transient
-// migration helper, not a real source of truth, and was never written after
-// Phase 2 of the reservations refactor.
-//
-// Doesn't archive the prior month into month_history — that's still a manual
-// resetMonth() operation for users who want a clean record.
+// Multi-month gaps collapse into one archive labeled with the most recent
+// uncovered month — rare, since email re-engagement should pull users back
+// before that happens.
 function autoRolloverIfNewMonth() {
   if (!S.settings) S.settings = {};
   if (S.settings.allocResetMonth === _currentMonthKey()) return false;
+  const now = new Date();
   const hadPaidBills = (S.bills||[]).some(b => b.paid);
   const hadScalar = (parseFloat(S.allocated_to_bills) || 0) > 0.01;
+  const hadHistory = Array.isArray(S.history) && S.history.length > 0;
+
+  // Archive prior month if there was income activity. Label as the previous
+  // calendar month, not now, since we're closing what just ended.
+  if (hadHistory) {
+    const prior = new Date(now.getFullYear(), now.getMonth() - 1, 1);
+    const label = prior.toLocaleDateString('en-US',{month:'long',year:'numeric'});
+    const ti = totalIn();
+    const de = S.history.reduce((s,h)=>s+(h.debtExtra||0),0);
+    const bc = S.history.reduce((s,h)=>s+(h.bufContrib||0),0);
+    const op = S.history.reduce((s,h)=>s+(h.ownerPaid||0),0);
+    const tb = totalBills();
+    const pb = paidBills();
+    const billsList = S.bills.map(b=>({name:b.name,amount:b.amount,paid:!!b.paid,cat:b.cat}));
+    const debtsSnapshot = S.debts.map(d=>({name:d.name,balance:d.balance,rate:d.rate}));
+    const totalDebt = S.debts.reduce((s,d)=>s+(d.balance||0),0);
+    const computed = computeMonthlyScore();
+    const score = (computed && typeof computed.total==='number') ? computed.total : 0;
+    if (!S.month_history) S.month_history = [];
+    S.month_history.unshift({
+      label,
+      closedAt: now.toISOString(),
+      auto: true,
+      income: ti,
+      debtPaid: de,
+      bufAdded: bc,
+      ownerPaid: op,
+      billsTotal: tb,
+      billsPaidAmount: pb,
+      billsPaidCount: billsList.filter(b=>b.paid).length,
+      billsCount: billsList.length,
+      totalDebtEnd: totalDebt,
+      bufferEnd: S.buffer,
+      score,
+      incomeLog: S.history.slice(0,50),
+      bills: billsList,
+      debts: debtsSnapshot
+    });
+    S.history = [];
+    try { Able.track('month_auto_archived', { label, income: ti, score }); } catch(_) {}
+  }
+
   if (Array.isArray(S.bills)) {
     S.bills.forEach(b => { if (b.paid) b.paid = false; });
   }
   S.settings.allocResetMonth = _currentMonthKey();
   S.allocated_to_bills = 0;
-  // Reservations: intentionally preserved. Paid flags cleared above mean the
-  // bills are now "unpaid for this new cycle"; the reservations attached to
-  // their billIds keep them funded going into the new month.
-  if (hadPaidBills || hadScalar) {
+  if (hadPaidBills || hadScalar || hadHistory) {
     try { Able.track('auto_rollover_new_month'); } catch(_) {}
   }
   return true;
@@ -6792,7 +6837,7 @@ function _currentMonthKey() { return new Date().toISOString().slice(0,7); }
 
 // Is the current S.allocated_to_bills value attributable to the current
 // calendar month? Two signals, in order of trust:
-//   1. S.settings.allocResetMonth (set by applyJobs/resetMonth going forward)
+//   1. S.settings.allocResetMonth (set by applyJobs/autoRolloverIfNewMonth)
 //   2. Top-of-history timestamp (legacy migration path for users who never
 //      had allocResetMonth recorded).
 // If neither says "current month", treat the counter as stale and ignore it
@@ -8397,14 +8442,14 @@ function renderScore(){
   if (!score.hasData) {
     // No data yet — past-month list still renders below.
     const mh = document.getElementById('month-history');
-    if (mh) mh.innerHTML = '<div class="empty-state">No completed months yet.<br><span style="font-weight:500;font-size:12px;color:var(--ds-t3);">When you close this month in Settings, it\'ll show up here.</span></div>';
+    if (mh) mh.innerHTML = '<div class="empty-state">No completed months yet.<br><span style="font-weight:500;font-size:12px;color:var(--ds-t3);">Your first month will show up here once it ends.</span></div>';
     return;
   }
   const mh=document.getElementById('month-history');
   const summary=document.getElementById('rollup-summary');
   const tabsEl=document.getElementById('rollup-tabs');
   if(!S.month_history.length){
-    mh.innerHTML='<div class="empty-state">No completed months yet.<br><span style="font-weight:500;font-size:12px;color:var(--ds-t3);">When you close this month in Settings, it\'ll show up here.</span></div>';
+    mh.innerHTML='<div class="empty-state">No completed months yet.<br><span style="font-weight:500;font-size:12px;color:var(--ds-t3);">Your first month will show up here once it ends.</span></div>';
     summary.innerHTML='';
     tabsEl.innerHTML='';
     return;
@@ -10917,44 +10962,65 @@ async function loadRecurringScan(){
 
     S.settings = S.settings || {};
     const leakSet = new Set(S.settings.leak_streams || []);
-    const leakCount = streams.filter((s) => leakSet.has(s.stream_id)).length;
-    const monthlyTotal = streams.reduce((sum, s) => sum + _recurringMonthly(s), 0);
-    const monthlyLeak = streams.filter((s) => leakSet.has(s.stream_id))
-      .reduce((sum, s) => sum + _recurringMonthly(s), 0);
+    const leakStreams = streams.filter((s) => leakSet.has(s.stream_id));
+    const visibleStreams = streams.filter((s) => !leakSet.has(s.stream_id));
+    const leakCount = leakStreams.length;
+    const monthlyTotal = visibleStreams.reduce((sum, s) => sum + _recurringMonthly(s), 0);
+    const monthlyLeak = leakStreams.reduce((sum, s) => sum + _recurringMonthly(s), 0);
+    const annualLeak = monthlyLeak * 12;
 
-    const rowsHtml = streams.map((s) => {
+    const rowsHtml = visibleStreams.map((s) => {
       const amt = Math.abs(s.last_amount ?? s.average_amount ?? 0);
       const amtStr = amt.toLocaleString(undefined, { style: 'currency', currency: 'USD' });
       const freqStr = _formatRecurringFreq(s.frequency);
       const lastStr = s.last_date ? _formatActivityDay(s.last_date) : 'recently';
       const name = s.merchant_name || s.description || 'Unknown';
-      const isLeak = leakSet.has(s.stream_id);
       return `
         <div class="recurring-row" style="display:flex;align-items:center;gap:.6rem;padding:.7rem .25rem;border-bottom:1px solid var(--ds-line);">
           <div style="flex:1;min-width:0;">
             <div style="font-size:14px;font-weight:800;color:var(--ds-t1);letter-spacing:-.005em;text-overflow:ellipsis;overflow:hidden;white-space:nowrap;">${escapeHtml(name)}</div>
             <div style="font-size:12px;font-weight:600;color:var(--ds-t3);margin-top:2px;">${amtStr} ${freqStr} · last ${escapeHtml(lastStr)}</div>
           </div>
-          <button type="button" onclick="toggleLeakFlag('${escapeHtml(s.stream_id)}')" class="recurring-leak-btn" data-leak="${isLeak ? '1' : '0'}" style="${_leakBtnStyle(isLeak)}">${isLeak ? 'Leak ✓' : 'Mark as leak'}</button>
+          <button type="button" onclick="toggleLeakFlag('${escapeHtml(s.stream_id)}')" class="recurring-leak-btn" style="${_leakBtnStyle(false)}">Mark as leak</button>
           <button type="button" onclick="dismissRecurringStream('${escapeHtml(s.stream_id)}')" title="Normal bill — hide from this list" style="background:transparent;border:none;color:var(--ds-t3);font-family:var(--ds-f);font-size:18px;font-weight:600;padding:4px 8px;cursor:pointer;line-height:1;flex-shrink:0;">×</button>
         </div>`;
     }).join('');
 
     const totalStr = monthlyTotal.toLocaleString(undefined, { style: 'currency', currency: 'USD', maximumFractionDigits: 0 });
-    const leakLine = leakCount > 0
-      ? `<span style="color:#c25656;font-weight:800;">${leakCount} tagged as leak${leakCount === 1 ? '' : 's'} · ${monthlyLeak.toLocaleString(undefined, { style: 'currency', currency: 'USD', maximumFractionDigits: 0 })}/mo</span>`
-      : `Tag the ones that feel like leaks. Coach sees them.`;
+    const annualStr = annualLeak.toLocaleString(undefined, { style: 'currency', currency: 'USD', maximumFractionDigits: 0 });
+    const monthlyLeakStr = monthlyLeak.toLocaleString(undefined, { style: 'currency', currency: 'USD', maximumFractionDigits: 0 });
+
+    // First-time primer — explains what a leak is. Shown once, dismissible.
+    const primerSeen = !!S.settings.leak_primer_seen;
+    const primerHtml = primerSeen ? '' : `
+      <div style="background:#fdf3e3;border:1px solid #f4dca5;border-radius:var(--ds-r1);padding:.75rem .9rem;margin-bottom:.85rem;display:flex;align-items:flex-start;gap:.65rem;">
+        <div style="flex:1;min-width:0;font-size:12.5px;font-weight:600;color:var(--ds-t1);line-height:1.5;">
+          <b style="color:#a8721b;">What's a leak?</b> A recurring charge you'd quit if you saw it sitting there. Tap <b>Mark as leak</b> to track it. Able adds it up so you can see what it's costing.
+        </div>
+        <button type="button" onclick="dismissLeakPrimer()" aria-label="Dismiss" style="background:transparent;border:0;color:#a8721b;font-family:var(--ds-f);font-size:16px;font-weight:700;padding:0 4px;cursor:pointer;line-height:1;flex-shrink:0;">×</button>
+      </div>`;
+
+    // Leak summary line — tappable, opens the leak detail modal. Only shown
+    // when at least one leak is tagged.
+    const summaryHtml = leakCount > 0 ? `
+      <button type="button" onclick="openLeakSummary()" style="width:100%;text-align:left;background:#fdeef2;border:1px solid #f4cdd6;border-radius:var(--ds-r1);padding:.7rem .9rem;margin-bottom:.65rem;cursor:pointer;display:flex;align-items:center;gap:.65rem;font-family:var(--ds-f);">
+        <div style="flex:1;min-width:0;">
+          <div style="font-size:13px;font-weight:800;color:#c25656;letter-spacing:-.005em;">Tracking ${leakCount} leak${leakCount === 1 ? '' : 's'} · ${monthlyLeakStr}/mo</div>
+          <div style="font-size:11.5px;font-weight:600;color:#c25656;margin-top:2px;opacity:.85;">~${annualStr}/year if nothing changes</div>
+        </div>
+        <div style="color:#c25656;font-size:18px;font-weight:700;flex-shrink:0;">›</div>
+      </button>` : '';
 
     wrap.style.display = 'block';
     wrap.innerHTML = `
       <div style="background:white;border:1px solid var(--ds-line);border-radius:var(--ds-r2);padding:1rem 1.25rem;box-shadow:var(--ds-sh1);">
-        <div style="display:flex;align-items:baseline;justify-content:space-between;gap:.75rem;margin-bottom:.25rem;flex-wrap:wrap;">
+        <div style="display:flex;align-items:baseline;justify-content:space-between;gap:.75rem;margin-bottom:.65rem;flex-wrap:wrap;">
           <div style="font-size:14px;font-weight:900;color:var(--ds-t1);letter-spacing:-.01em;">Recurring charges Able spotted</div>
-          <div style="font-size:12px;font-weight:700;color:var(--ds-t3);">~${totalStr}/mo across ${streams.length}</div>
+          <div style="font-size:12px;font-weight:700;color:var(--ds-t3);">~${totalStr}/mo across ${visibleStreams.length}</div>
         </div>
-        <div style="font-size:11.5px;font-weight:600;color:var(--ds-t3);margin-bottom:.65rem;line-height:1.55;">A <b>leak</b> is a recurring charge you'd cancel if you noticed it. Tap <b>Mark as leak</b> to flag it for Coach. Tap <b>×</b> to dismiss anything that's a normal bill so it stops showing up here.</div>
-        <div style="font-size:12px;font-weight:600;color:var(--ds-t3);margin-bottom:.65rem;">${leakLine}</div>
-        <div>${rowsHtml}</div>
+        ${primerHtml}
+        ${summaryHtml}
+        <div>${rowsHtml || '<div class="empty-state" style="padding:.85rem 0;">All clear. Anything new shows up here as Able sees it.</div>'}</div>
       </div>
     `;
   } catch (e) {
@@ -11002,6 +11068,111 @@ async function toggleLeakFlag(streamId){
   try { await saveUserData(); } catch (e) { console.warn('saveUserData (leak toggle) failed:', e); }
   Able.track?.('recurring_leak_toggled', { marked: idx < 0, total_leaks: list.length });
   loadRecurringScan().catch(() => {});
+  // If the leak summary modal is open, refresh its content too.
+  const modal = document.getElementById('modal-leak-summary');
+  if (modal && modal.style.display !== 'none') {
+    renderLeakSummaryBody().catch(() => {});
+  }
+}
+
+async function dismissLeakPrimer(){
+  S.settings = S.settings || {};
+  S.settings.leak_primer_seen = true;
+  try { await saveUserData(); } catch (e) { console.warn('saveUserData (leak primer) failed:', e); }
+  loadRecurringScan().catch(() => {});
+}
+
+// Opens the leak summary modal — full annual projection + per-leak history
+// + Remove leak action. Reads recurring streams from cache; pulls last 6
+// charges for each leak from plaid_transactions.
+async function openLeakSummary(){
+  const modal = document.getElementById('modal-leak-summary');
+  if (!modal) return;
+  modal.style.display = 'flex';
+  Able.track?.('leak_summary_opened');
+  await renderLeakSummaryBody();
+}
+
+function closeLeakSummary(){
+  const modal = document.getElementById('modal-leak-summary');
+  if (modal) modal.style.display = 'none';
+}
+
+async function renderLeakSummaryBody(){
+  const body = document.getElementById('leak-summary-body');
+  const head = document.getElementById('leak-summary-head');
+  if (!body || !head) return;
+  const leakSet = new Set((S.settings && S.settings.leak_streams) || []);
+  const streams = (S.recurring_outflow_streams || []).filter((s) => leakSet.has(s.stream_id));
+  if (streams.length === 0) {
+    head.innerHTML = '';
+    body.innerHTML = `<div class="empty-state" style="padding:1rem 0;">No leaks tagged. Mark a recurring charge as a leak and Able will tally it here.</div>`;
+    return;
+  }
+  const monthlyLeak = streams.reduce((s, st) => s + _recurringMonthly(st), 0);
+  const annualLeak = monthlyLeak * 12;
+  const monthlyStr = monthlyLeak.toLocaleString(undefined, { style: 'currency', currency: 'USD', maximumFractionDigits: 0 });
+  const annualStr = annualLeak.toLocaleString(undefined, { style: 'currency', currency: 'USD', maximumFractionDigits: 0 });
+  head.innerHTML = `
+    <div style="background:#fdeef2;border:1px solid #f4cdd6;border-radius:var(--ds-r1);padding:.85rem 1rem;margin-bottom:.9rem;">
+      <div style="font-size:11px;font-weight:800;color:#c25656;letter-spacing:.06em;text-transform:uppercase;">Annual cost</div>
+      <div style="font-size:1.6rem;font-weight:900;color:#c25656;letter-spacing:-.02em;line-height:1.1;margin-top:2px;">${annualStr}</div>
+      <div style="font-size:12px;font-weight:600;color:#c25656;margin-top:4px;opacity:.85;">${monthlyStr}/mo across ${streams.length} leak${streams.length === 1 ? '' : 's'} if nothing changes.</div>
+    </div>`;
+  body.innerHTML = `<div class="empty-state" style="padding:.5rem 0;">Loading recent charges…</div>`;
+
+  // Pull recent transactions matching each leak's merchant. One query, then
+  // group client-side. Last 90 days is enough — same window as the detector.
+  const merchants = streams.map((s) => s.merchant_name).filter(Boolean);
+  let txByMerchant = {};
+  try {
+    if (merchants.length > 0) {
+      const since = new Date(Date.now() - 90 * 86400000).toISOString().slice(0, 10);
+      const { data, error } = await sbGet()
+        .from('plaid_transactions')
+        .select('merchant_name, amount, date')
+        .in('merchant_name', merchants)
+        .gte('date', since)
+        .order('date', { ascending: false })
+        .limit(500);
+      if (!error && Array.isArray(data)) {
+        for (const t of data) {
+          const k = t.merchant_name || '';
+          if (!txByMerchant[k]) txByMerchant[k] = [];
+          if (txByMerchant[k].length < 6) txByMerchant[k].push(t);
+        }
+      }
+    }
+  } catch (e) {
+    console.warn('leak summary tx fetch failed:', e);
+  }
+
+  body.innerHTML = streams.map((s) => {
+    const name = s.merchant_name || s.description || 'Unknown';
+    const monthly = _recurringMonthly(s);
+    const annual = monthly * 12;
+    const monthlyS = monthly.toLocaleString(undefined, { style: 'currency', currency: 'USD', maximumFractionDigits: 0 });
+    const annualS = annual.toLocaleString(undefined, { style: 'currency', currency: 'USD', maximumFractionDigits: 0 });
+    const freqStr = _formatRecurringFreq(s.frequency);
+    const txs = txByMerchant[s.merchant_name] || [];
+    const txHtml = txs.length > 0
+      ? txs.map((t) => {
+          const amt = Math.abs(t.amount || 0).toLocaleString(undefined, { style: 'currency', currency: 'USD' });
+          const day = _formatActivityDay(t.date);
+          return `<div style="display:flex;justify-content:space-between;font-size:12px;font-weight:600;color:var(--ds-t2);padding:3px 0;"><span>${escapeHtml(day)}</span><span>${amt}</span></div>`;
+        }).join('')
+      : `<div style="font-size:12px;font-weight:600;color:var(--ds-t3);font-style:italic;">No recent charges in the last 90 days.</div>`;
+    return `
+      <div style="border:1px solid var(--ds-line);border-radius:var(--ds-r1);padding:.85rem 1rem;margin-bottom:.65rem;background:white;">
+        <div style="display:flex;align-items:baseline;justify-content:space-between;gap:.6rem;margin-bottom:.35rem;flex-wrap:wrap;">
+          <div style="font-size:14px;font-weight:900;color:var(--ds-t1);letter-spacing:-.005em;text-overflow:ellipsis;overflow:hidden;">${escapeHtml(name)}</div>
+          <div style="font-size:12px;font-weight:800;color:#c25656;">${annualS}/yr</div>
+        </div>
+        <div style="font-size:12px;font-weight:600;color:var(--ds-t3);margin-bottom:.55rem;">${monthlyS}/mo · ${freqStr}</div>
+        <div style="border-top:1px solid var(--ds-line);padding-top:.5rem;margin-bottom:.65rem;">${txHtml}</div>
+        <button type="button" onclick="toggleLeakFlag('${escapeHtml(s.stream_id)}')" style="background:white;border:1px solid var(--ds-line);color:var(--ds-t2);font-family:var(--ds-f);font-size:12px;font-weight:700;padding:7px 14px;border-radius:100px;cursor:pointer;">Remove leak</button>
+      </div>`;
+  }).join('');
 }
 
 // "Normal bill — dismiss" path on the Activity recurring scan. Adds the
@@ -12561,53 +12732,6 @@ function _updateDemoButtonLabel(on){
     : 'See Able with curated sample data. Your real data is preserved.';
 }
 
-function resetMonth(){
-  if(!confirm('Close this month and start a new one?\n\n✓ This month\'s income, bills paid, and debt progress will be saved to history\n✓ Bill checkoffs reset for the new month\n✓ Bills, debts, and buffer carry over\n\nYou can view your full history on the Score tab.'))return;
-  const now=new Date();
-  const label=now.toLocaleDateString('en-US',{month:'long',year:'numeric'});
-  const ti=totalIn();
-  const de=S.history.reduce((s,h)=>s+(h.debtExtra||0),0);
-  const bc=S.history.reduce((s,h)=>s+(h.bufContrib||0),0);
-  const op=S.history.reduce((s,h)=>s+(h.ownerPaid||0),0);
-  const tb=totalBills();
-  const pb=paidBills();
-  const billsList=S.bills.map(b=>({name:b.name,amount:b.amount,paid:!!b.paid,cat:b.cat}));
-  const debtsSnapshot=S.debts.map(d=>({name:d.name,balance:d.balance,rate:d.rate}));
-  const totalDebt=S.debts.reduce((s,d)=>s+(d.balance||0),0);
-  // Use the same scoring formula the live Score tab uses, so the archived month
-  // matches what the user saw before close.
-  const computed=computeMonthlyScore();
-  const score=(computed && typeof computed.total==='number')?computed.total:0;
-  if(!S.month_history)S.month_history=[];
-  S.month_history.unshift({
-    label,
-    closedAt: now.toISOString(),
-    income: ti,
-    debtPaid: de,
-    bufAdded: bc,
-    ownerPaid: op,
-    billsTotal: tb,
-    billsPaidAmount: pb,
-    billsPaidCount: billsList.filter(b=>b.paid).length,
-    billsCount: billsList.length,
-    totalDebtEnd: totalDebt,
-    bufferEnd: S.buffer,
-    score,
-    incomeLog: S.history.slice(0,50),
-    bills: billsList,
-    debts: debtsSnapshot
-  });
-  S.history=[];
-  S.settings=S.settings||{};
-  S.settings.allocResetMonth=_currentMonthKey();
-  S.settings.reservations={};
-  S.bills=S.bills.map(b=>({...b,paid:false}));
-  save();
-  document.getElementById('alloc-result').style.display='none';
-  refreshHome();
-  // If user is on the Score page, re-render to show the new archived month
-  if(document.getElementById('page-score').classList.contains('active'))renderScore();
-}
 async function clearAllData(){
   if(!confirm('This will delete ALL your data. Are you sure?'))return;
   if(!confirm('Last chance. This cannot be undone.'))return;
