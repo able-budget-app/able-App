@@ -5138,6 +5138,12 @@ async function obRenderPlanReview(planId) {
   if (legacyActions) legacyActions.style.display = 'none';
   obRenderPlanReviewUI();
 
+  // High-debt empathy reach-out (plan-review surface). Debt items here come
+  // from the analyzer. See _maybeFireHighDebtRevealNudge.
+  const _totalDebt = (obPlanReview.sections?.debts?.items || [])
+    .reduce((s, d) => s + (Number(d.balance) || 0), 0);
+  _maybeFireHighDebtRevealNudge(_totalDebt, 'plan_review', 5000);
+
   // Auto-apply with pending_review:true so the data lands in user_data
   // immediately. If the user closes the tab mid-audit, the bills/debts
   // are already there with pending_review flags, surfaced via Bills/Debt
@@ -8224,6 +8230,13 @@ function renderDebtPage(){
   let dirty=false;
   S.debts.forEach(d=>{if(!d.id){d.id='d_'+Date.now()+'_'+Math.random().toString(36).slice(2,7);dirty=true;}});
   if(dirty)save();
+  // High-debt empathy reach-out (Debt-tab surface). Catches users whose
+  // analyzer underdetected and who rebuilt their debts manually past $10K.
+  _maybeFireHighDebtRevealNudge(
+    S.debts.reduce((s, d) => s + (Number(d.balance) || 0), 0),
+    'debt_page',
+    2000
+  );
   const sorted=_sortDebtsByStrategy(S.debts.map((d,i)=>({...d,oi:i})));
   const maxBal=Math.max(...S.debts.map(d=>d.balance),1);
   sorted.forEach((d,rank)=>{
@@ -16906,6 +16919,40 @@ async function coachSend() {
 // ═══════════════════════════════════════
 // COACH PROACTIVE NUDGES
 // ═══════════════════════════════════════
+
+// High-debt empathy reach-out: when total revolving debt first clears $10K,
+// fire a Coach pill acknowledging the weight before the user has to keep
+// going alone. Closes the round-2 focus-group gap (Daniel: $42K reveal with
+// no app acknowledgment). Two surfaces share state via S.settings.high_debt_revealed:
+// (1) plan-review screen — analyzer-detected total
+// (2) Debt tab render — manual entry, catches users where the analyzer underdetected
+// Sticky until dismissed by design — auto-fade would feel like the app rescinded
+// the offer. Permanent once-per-user suppression (not 24h cooldown) since the
+// emotional beat only happens once.
+function _maybeFireHighDebtRevealNudge(totalDebt, surface, delayMs) {
+  if (!(totalDebt >= 10000)) return;
+  if (S.settings?.high_debt_revealed) return;
+  const variants = {
+    plan_review: {
+      msg: "That's a real number. Want to talk about it before we set up your plan?",
+      prompt: "I'm looking at my plan-review screen. Talk through my total debt with me before I commit to this plan.",
+    },
+    debt_page: {
+      msg: "That's a real number. Want to talk through it?",
+      prompt: "I just added up my debts. Talk me through this picture.",
+    },
+  };
+  const v = variants[surface] || variants.debt_page;
+  setTimeout(() => {
+    // Re-check after delay in case another path set the flag first.
+    if (S.settings?.high_debt_revealed) return;
+    showCoachNudge({ id: 'high_debt_reveal', ...v });
+    S.settings = S.settings || {};
+    S.settings.high_debt_revealed = true;
+    save();
+  }, delayMs);
+}
+
 // Evaluate the user's state for things worth surfacing. Shows at most
 // one nudge at a time, the first unmissed one. Once dismissed a nudge
 // stays suppressed for 12 hours.
