@@ -3254,6 +3254,11 @@ async function _onAuthStateChangeImpl(user) {
   };
   const showAuthFailure = (errMsg) => {
     if(!authBox) return;
+    // Tear down the post-checkout overlay if it's still up — without this the
+    // user would see the spinner indefinitely (until the 30s safety net) while
+    // the failure card sat invisible behind it.
+    const coLoader = document.getElementById('checkout-return-loading');
+    if (coLoader) coLoader.remove();
     // Make sure the auth screen is the visible layer so this card is actually seen.
     document.getElementById('auth-screen').style.display='flex';
     document.getElementById('paywall-screen').style.display='none';
@@ -3302,12 +3307,20 @@ async function _onAuthStateChangeImpl(user) {
   if(isFromCheckout){
     try { sessionStorage.removeItem('able_post_checkout'); } catch (_) { /* noop */ }
     Able.trackOnce('trial_started');
-    console.debug('[Able] From checkout, waiting 2.5s for webhook...');
-    await new Promise(r=>setTimeout(r,2500));
+    // No artificial pre-poll wait. The first checkSubscription call lands
+    // ~200-500ms after auth fires; if the webhook already arrived, we skip
+    // polling entirely. Punishing fast webhooks with a 2.5s sleep hurt
+    // the common case to give the slow case a head start.
   }
 
   try {
-    showLoading(isFromCheckout ? 'Confirming your subscription. Usually takes a few seconds.' : 'Loading your account');
+    // Post-checkout flow keeps the full-screen `checkout-return-loading`
+    // overlay visible the entire time (created at page load, line ~13369),
+    // so we skip the auth-box "Loading your account" state — rendering both
+    // back-to-back was the "two confirming pages, different designs" UX.
+    if (!isFromCheckout) {
+      showLoading('Loading your account');
+    }
 
     // Check subscription (fast if already active)
     const t0 = performance.now();
@@ -3316,10 +3329,10 @@ async function _onAuthStateChangeImpl(user) {
 
     // If coming from checkout and not yet active, poll with progressive backoff.
     // Stripe webhooks usually land in <3s but can take 20-30s in test mode or
-    // under load. Total budget here is ~28s — beats the prior 7.5s window that
-    // would bounce paying users back to the paywall after the timer expired.
+    // under load. Tightened backoff: starts faster (500ms first poll), total
+    // budget ~19s. Fast webhooks now resolve in <1s instead of 3s+.
     if(!hasAccess && isFromCheckout) {
-      const delays = [1000,1000,1500,1500,2000,2000,2500,2500,3000,3000,3000,3000];
+      const delays = [500,500,750,1000,1500,2000,2500,3000,3000,3000,3000];
       for (let i = 0; i < delays.length && !hasAccess; i++) {
         await new Promise(r=>setTimeout(r, delays[i]));
         sessionStorage.removeItem('able_access_'+user.id);
@@ -13414,10 +13427,9 @@ window.addEventListener('load', async () => {
       } catch (e) { console.log('[Able v2] localStorage peek threw:', e); }
       if (lsUser && typeof onAuthStateChange === 'function') {
         console.log('[Able v2] localStorage has session; manually driving auth flow for', lsUser.email);
-        // Don't remove the loader — onAuthStateChange will swap to its own
-        // "Loading your account" loading state inside .auth-box and then
-        // into the app. Removing this overlay now would expose the auth
-        // screen behind it for a frame.
+        // Don't remove the loader — onAuthStateChange owns the post-checkout
+        // flow now. The overlay stays visible until the explicit transition
+        // to paywall / app / onboarding / pending screen tears it down.
         try { await onAuthStateChange(lsUser); }
         catch (e) { console.error('[Able v2] manual auth flow failed:', e); }
         return;
@@ -13427,16 +13439,19 @@ window.addEventListener('load', async () => {
       stuck.remove();
       document.getElementById('auth-screen').style.display = 'flex';
     }, 3000);
-    // Nuclear: 6s in, if checkout-return-loading is still visible, kill it.
+    // Safety net: 30s in, if loader is still visible, the polling flow
+    // failed silently. Worst-case poll budget ~19s + user_data 5s = 24s,
+    // so 30s gives a 6s buffer. Was 6s before, which fired mid-flow and
+    // exposed the auth-box loader behind it.
     setTimeout(() => {
       const nukeStuck = document.getElementById('checkout-return-loading');
       if (nukeStuck) {
-        console.log('[Able v2] nuclear loader removal at 6s');
+        console.log('[Able] safety-net loader removal at 30s');
         nukeStuck.remove();
         const auth = document.getElementById('auth-screen');
         if (auth && auth.style.display === 'none') auth.style.display = 'flex';
       }
-    }, 6000);
+    }, 30000);
   } else {
     document.getElementById('auth-screen').style.display = 'flex';
     document.getElementById('paywall-screen').style.display = 'none';
