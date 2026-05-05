@@ -3307,13 +3307,11 @@ async function _onAuthStateChangeImpl(user) {
   // signal lives in sessionStorage. Clear the flag once we read it so a
   // future reload doesn't re-trigger the post-checkout polling path.
   const isFromCheckout = sessionStorage.getItem('able_post_checkout') === '1';
+  const checkoutSessionId = sessionStorage.getItem('able_checkout_session_id');
   if(isFromCheckout){
     try { sessionStorage.removeItem('able_post_checkout'); } catch (_) { /* noop */ }
+    try { sessionStorage.removeItem('able_checkout_session_id'); } catch (_) { /* noop */ }
     Able.trackOnce('trial_started');
-    // No artificial pre-poll wait. The first checkSubscription call lands
-    // ~200-500ms after auth fires; if the webhook already arrived, we skip
-    // polling entirely. Punishing fast webhooks with a 2.5s sleep hurt
-    // the common case to give the slow case a head start.
   }
 
   try {
@@ -3325,15 +3323,41 @@ async function _onAuthStateChangeImpl(user) {
       showLoading('Loading your account');
     }
 
-    // Check subscription (fast if already active)
-    const t0 = performance.now();
-    let hasAccess = await checkSubscription(user.id);
-    console.debug(`[Able] First checkSubscription: ${Math.round(performance.now()-t0)}ms, hasAccess=${hasAccess}`);
+    // Fast path: if Stripe handed us a session_id on the redirect, verify it
+    // directly with Stripe's API and skip the webhook-delivery polling loop
+    // entirely. verify-checkout-session calls Stripe, validates the session
+    // belongs to this user, and updates profiles.subscription_status — same
+    // write the webhook would have made, but without waiting for delivery.
+    let hasAccess = false;
+    if (isFromCheckout && checkoutSessionId) {
+      const tVerify = performance.now();
+      try {
+        const { data: vData, error: vErr } = await sbGet().functions.invoke('verify-checkout-session', {
+          body: { session_id: checkoutSessionId },
+        });
+        console.debug(`[Able] verify-checkout-session: ${Math.round(performance.now()-tVerify)}ms`, vData, vErr);
+        if (!vErr && vData?.status === 'active') {
+          sessionStorage.setItem('able_access_'+user.id, 'true');
+          hasAccess = true;
+          Able.track('checkout_verified_via_session_id');
+        }
+      } catch (e) {
+        console.warn('[Able] verify-checkout-session threw, falling back to polling:', e);
+      }
+    }
 
-    // If coming from checkout and not yet active, poll with progressive backoff.
-    // Stripe webhooks usually land in <3s but can take 20-30s in test mode or
-    // under load. Tightened backoff: starts faster (500ms first poll), total
-    // budget ~19s. Fast webhooks now resolve in <1s instead of 3s+.
+    // Fallback: no session_id, or verify failed. Use the existing polling
+    // loop against profiles.subscription_status (driven by the webhook).
+    if (!hasAccess) {
+      const t0 = performance.now();
+      hasAccess = await checkSubscription(user.id);
+      console.debug(`[Able] First checkSubscription: ${Math.round(performance.now()-t0)}ms, hasAccess=${hasAccess}`);
+    }
+
+    // If coming from checkout and STILL not active (no session_id and webhook
+    // hasn't landed), poll with progressive backoff. Stripe webhooks usually
+    // land in <3s but can take 20-30s under load. Tightened backoff: starts
+    // fast (500ms first poll), total budget ~19s.
     if(!hasAccess && isFromCheckout) {
       const delays = [500,500,750,1000,1500,2000,2500,3000,3000,3000,3000];
       for (let i = 0; i < delays.length && !hasAccess; i++) {
@@ -13355,6 +13379,13 @@ window.addEventListener('load', async () => {
   // still knows what happened. Flag is cleared after auth flow completes.
   if (window.location.search.includes('checkout=success')) {
     try { sessionStorage.setItem('able_post_checkout', '1'); } catch (_) { /* noop */ }
+    // Capture the Stripe checkout session_id (templated by Stripe via
+    // {CHECKOUT_SESSION_ID} in success_url). The post-auth flow uses it to
+    // call verify-checkout-session, bypassing the webhook delivery race.
+    try {
+      const sid = new URLSearchParams(window.location.search).get('session_id');
+      if (sid && sid.startsWith('cs_')) sessionStorage.setItem('able_checkout_session_id', sid);
+    } catch (_) { /* noop */ }
     try { history.replaceState({}, '', window.location.pathname); } catch (_) { /* noop */ }
   }
 

@@ -55,13 +55,20 @@ Deno.serve(async (req) => {
     if (price.error) return json({ error: price.error.message }, 400)
     const mode = price.type === 'recurring' ? 'subscription' : 'payment'
 
-    // 4. Build the Checkout session
+    // 4. Build the Checkout session.
+    //
+    // Inject Stripe's {CHECKOUT_SESSION_ID} template into success_url so the
+    // browser comes back with the real session_id and can call
+    // verify-checkout-session — bypasses the webhook delivery race for the
+    // immediate post-checkout transition. Append `&session_id={CHECKOUT_SESSION_ID}`
+    // (or `?` if returnUrl has no query yet).
+    const successUrlWithSession = returnUrl + (returnUrl.includes('?') ? '&' : '?') + 'session_id={CHECKOUT_SESSION_ID}'
     const params = new URLSearchParams({
       customer_email: email,
       mode,
       'line_items[0][price]': priceId,
       'line_items[0][quantity]': '1',
-      success_url: returnUrl,
+      success_url: successUrlWithSession,
       cancel_url: cancelUrl,
       'metadata[supabase_uid]': userId,
       allow_promotion_codes: 'true',
