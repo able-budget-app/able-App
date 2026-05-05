@@ -807,13 +807,15 @@ input,select,button,textarea{font-family:inherit;}
 @keyframes fadeIn{from{opacity:0}to{opacity:1}}
 /* Spotlight is a green ring + outer glow — no dim. The bright ring +
    bubble draw the eye; the rest of the screen stays fully readable.
-   position:absolute (not fixed) anchors the ring to the target's
-   document position, so it scrolls naturally with the page instead of
-   chasing the target around as the user scrolls — that chase reads as
-   jittery / cheap. Bubble is also absolute so it scrolls in lockstep
-   with the spotlight; user can scroll past the tour step at any time. */
-.tour-spotlight{position:absolute;z-index:9999;border-radius:10px;box-shadow:0 0 0 3px rgba(61,158,120,.95),0 0 0 6px rgba(61,158,120,.25),0 0 32px rgba(42,122,74,.55);pointer-events:none;}
-.tour-bubble{position:absolute;z-index:10000;background:var(--ds-t1);color:white;border-radius:18px;padding:18px 20px;max-width:340px;box-shadow:0 16px 48px rgba(0,0,0,.3);font-family:var(--ds-f);animation:bubbleIn .3s ease;}
+   - Spotlight: position:absolute, anchored to target document coords so
+     it scrolls naturally with the page (no chasing the target).
+     z-index:40 keeps it BELOW the sticky top nav (z-index:50), so when
+     the user scrolls past, the nav covers the ring instead of overlapping.
+   - Bubble: position:fixed so the Skip / Next buttons stay reachable in
+     the viewport even when the user scrolls past the spotlight target.
+     z-index:10000 keeps it above everything. */
+.tour-spotlight{position:absolute;z-index:40;border-radius:10px;box-shadow:0 0 0 3px rgba(61,158,120,.95),0 0 0 6px rgba(61,158,120,.25),0 0 32px rgba(42,122,74,.55);pointer-events:none;}
+.tour-bubble{position:fixed;z-index:10000;background:var(--ds-t1);color:white;border-radius:18px;padding:18px 20px;max-width:340px;box-shadow:0 16px 48px rgba(0,0,0,.3);font-family:var(--ds-f);animation:bubbleIn .3s ease;}
 @keyframes bubbleIn{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
 .tour-bubble-arrow{position:absolute;width:0;height:0;border:9px solid transparent;}
 .tour-bubble.arrow-up .tour-bubble-arrow{top:-18px;left:28px;border-bottom-color:var(--ds-t1);}
@@ -13056,9 +13058,11 @@ function positionTourUI(targetEl) {
     }
   }
 
-  // Translate viewport coords → document coords for absolute positioning.
-  bubble.style.top = (vTop + sy) + 'px';
-  bubble.style.left = (vLeft + sx) + 'px';
+  // Bubble is position:fixed so coords stay viewport-relative. Spotlight
+  // (position:absolute, applied above) already added sy/sx to its coords
+  // so it anchors to the target's document position.
+  bubble.style.top = vTop + 'px';
+  bubble.style.left = vLeft + 'px';
 }
 
 function nextTourStep() {
