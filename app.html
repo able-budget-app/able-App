@@ -10892,19 +10892,18 @@ function _streamCadenceToBill(stream) {
   return { freq: 'monthly', due: dom };
 }
 function _streamCategoryToBill(stream) {
-  const primary = stream.personal_finance_category_primary || '';
   const detail = stream.personal_finance_category_detailed || '';
-  if (primary === 'LOAN_PAYMENTS') {
+  if (detail.startsWith('LOAN_PAYMENTS_')) {
     if (detail.includes('MORTGAGE')) return 'housing';
     return 'debt';
   }
-  if (primary === 'RENT_AND_UTILITIES') {
+  if (detail.startsWith('RENT_AND_UTILITIES_')) {
     if (detail.includes('RENT') || detail.includes('MORTGAGE')) return 'housing';
     return 'utilities';
   }
-  if (primary === 'TRANSPORTATION') return 'transport';
+  if (detail.startsWith('TRANSPORTATION_')) return 'transport';
   if (detail.includes('INSURANCE')) return 'insurance';
-  if (primary === 'ENTERTAINMENT') return 'subs';
+  if (detail.startsWith('ENTERTAINMENT_')) return 'subs';
   return 'subs';
 }
 function _streamToBill(stream) {
@@ -10948,8 +10947,7 @@ const _BANK_FEE_PATTERNS = [
 ];
 function _looksLikeBankFee(stream) {
   const detailed = stream.personal_finance_category_detailed || '';
-  const primary = stream.personal_finance_category_primary || '';
-  if (primary === 'BANK_FEES' || detailed.startsWith('BANK_FEES_')) return true;
+  if (detailed.startsWith('BANK_FEES_')) return true;
   const blob = `${stream.merchant_name || ''} ${stream.description || ''}`.trim();
   if (!blob) return false;
   return _BANK_FEE_PATTERNS.some((re) => re.test(blob));
@@ -10959,7 +10957,7 @@ async function _fetchDetectedBillsCandidates() {
   const sb = sbGet();
   const { data, error } = await sb
     .from('plaid_recurring_streams')
-    .select('id, stream_id, merchant_name, description, frequency, status, is_active, average_amount, last_amount, last_date, predicted_next_date, personal_finance_category_primary, personal_finance_category_detailed')
+    .select('id, stream_id, merchant_name, description, frequency, status, is_active, average_amount, last_amount, last_date, predicted_next_date, personal_finance_category_detailed')
     .eq('direction', 'outflow')
     .eq('is_active', true)
     .neq('status', 'TOMBSTONED')
@@ -11010,7 +11008,7 @@ async function _aiMatchStreamsToBills(streams, bills) {
     description: s.description,
     amount: Math.abs(s.last_amount ?? s.average_amount ?? 0),
     frequency: s.frequency,
-    category: s.personal_finance_category_detailed || s.personal_finance_category_primary || null,
+    category: s.personal_finance_category_detailed || null,
   }));
   const { data, error } = await sb.functions.invoke('match-detected-bills', {
     body: { bills: billsPayload, streams: streamsPayload },
