@@ -3306,7 +3306,12 @@ async function _onAuthStateChangeImpl(user) {
   // before Supabase client init (avoids a wedge). The "came from checkout"
   // signal lives in sessionStorage. Clear the flag once we read it so a
   // future reload doesn't re-trigger the post-checkout polling path.
-  const isFromCheckout = sessionStorage.getItem('able_post_checkout') === '1';
+  // Mutable copy of isFromCheckout: verify-checkout-session may flip this
+  // off if it rejects the session_id (stale URL, forged flag, ownership
+  // mismatch). Downstream "polling failed → safety net" branch then reads
+  // false and falls back to the paywall instead — correct for "user didn't
+  // actually pay in this flow."
+  let isFromCheckout = sessionStorage.getItem('able_post_checkout') === '1';
   const checkoutSessionId = sessionStorage.getItem('able_checkout_session_id');
   if(isFromCheckout){
     try { sessionStorage.removeItem('able_post_checkout'); } catch (_) { /* noop */ }
@@ -3340,7 +3345,19 @@ async function _onAuthStateChangeImpl(user) {
           sessionStorage.setItem('able_access_'+user.id, 'true');
           hasAccess = true;
           Able.track('checkout_verified_via_session_id');
+        } else if (vErr || (vData && vData.status !== 'pending' && vData.status !== 'active')) {
+          // Verify rejected the session_id (404 not found, 403 ownership
+          // mismatch, error from Stripe, etc.). Most likely this is a stale
+          // flag from an earlier visit to a ?checkout=success URL — not an
+          // actual checkout in progress. Clear the checkout flag so
+          // downstream polling-failure lands on the paywall instead of the
+          // "Still confirming your payment" safety net.
+          console.warn('[Able] verify rejected session_id, dropping checkout flag', vData, vErr);
+          isFromCheckout = false;
+          Able.track('checkout_verify_rejected', { reason: vData?.error || vErr?.message || 'unknown' });
         }
+        // status === 'pending' falls through to polling with isFromCheckout still true
+        // (legit "webhook running, just slow" — keep the safety net path).
       } catch (e) {
         console.warn('[Able] verify-checkout-session threw, falling back to polling:', e);
       }
@@ -13388,6 +13405,28 @@ window.addEventListener('load', async () => {
     } catch (_) { /* noop */ }
     try { history.replaceState({}, '', window.location.pathname); } catch (_) { /* noop */ }
   }
+
+  // Pre-auth flash guard: if there's a Supabase session token in localStorage,
+  // pre-fill auth-box with the same "Loading your account" pill that
+  // _onAuthStateChangeImpl renders via showLoading(). Without this, every
+  // reload-with-session shows the sign-in form for ~200ms before SIGNED_IN
+  // fires and replaces it. Visually identical content from page-load → auth
+  // flow → onboarding transition.
+  try {
+    let hasLsSession = false;
+    for (const k of Object.keys(localStorage)) {
+      if (k.startsWith('sb-') && k.endsWith('-auth-token')) {
+        const raw = localStorage.getItem(k);
+        if (raw && raw.includes('access_token')) { hasLsSession = true; break; }
+      }
+    }
+    if (hasLsSession) {
+      const authBoxEl = document.querySelector('.auth-box');
+      if (authBoxEl) {
+        authBoxEl.innerHTML = `<div style="text-align:center;padding:1rem 0;font-family:var(--ds-f);"><div class="brand-wordmark-wrap" style="margin-bottom:.4rem;"><div class="brand-wordmark">Able</div></div><div style="display:inline-flex;align-items:center;gap:10px;margin-top:1.25rem;padding:10px 18px;background:var(--ds-green-l);border-radius:100px;"><div style="width:10px;height:10px;border-radius:50%;background:var(--ds-green);animation:dsPulse 1.2s ease-in-out infinite;"></div><div style="font-size:13px;color:var(--ds-green);font-weight:700;letter-spacing:.02em;">Loading your account</div></div></div><style>@keyframes dsPulse{0%,100%{opacity:.4;transform:scale(.9)}50%{opacity:1;transform:scale(1.1)}}</style>`;
+      }
+    }
+  } catch (_) { /* localStorage might be blocked; sign-in form is a safe default */ }
 
   window._sb = supabase.createClient(SUPABASE_URL, SUPABASE_KEY, {
     auth: {
