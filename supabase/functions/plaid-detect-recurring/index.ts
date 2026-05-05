@@ -391,7 +391,7 @@ function detectStream(group: Group, itemId: string): { stream: DetectedStream | 
   // a sufficient fraction of intervals are near the median, so we don't
   // accept truly variable patterns.
   const sortedIntervals = intervals.slice().sort((a, b) => a - b);
-  const median = sortedIntervals[Math.floor(sortedIntervals.length / 2)];
+  const median = medianOf(sortedIntervals);
   const bestBand = CADENCE_BANDS.find((b) => median >= b.min && median <= b.max) ?? null;
 
   if (!bestBand) {
@@ -408,7 +408,7 @@ function detectStream(group: Group, itemId: string): { stream: DetectedStream | 
   // labelled BIWEEKLY recurring without sacrificing real bill detection.
   const occurrenceAmounts = occurrences.map((o) => o.amount);
   const sortedOccAmounts = occurrenceAmounts.slice().sort((a, b) => a - b);
-  const provisionalMedianAmount = sortedOccAmounts[Math.floor(sortedOccAmounts.length / 2)] ?? 0;
+  const provisionalMedianAmount = medianOf(sortedOccAmounts);
   const isSmallStream = provisionalMedianAmount < AMOUNT_TRUST_FLOOR;
   if (isSmallStream) {
     const minForBand = MIN_OCCURRENCES_BY_BAND[bestBand.name];
@@ -438,7 +438,7 @@ function detectStream(group: Group, itemId: string): { stream: DetectedStream | 
   // amount subscriptions with occasional usage spikes.
   const amounts = occurrences.map((o) => o.amount);
   const sortedAmounts = amounts.slice().sort((a, b) => a - b);
-  const medianAmount = sortedAmounts[Math.floor(sortedAmounts.length / 2)];
+  const medianAmount = medianOf(sortedAmounts);
   const amountInRange = amounts.filter((a) =>
     Math.abs(a - medianAmount) / Math.max(medianAmount, 0.01) <= 0.5,
   ).length;
@@ -509,6 +509,20 @@ function predictNextDate(lastDate: string, freq: DetectedStream['frequency']): s
 
 function round2(n: number): number {
   return Math.round(n * 100) / 100;
+}
+
+// True median: averages the two middle values when length is even.
+// Indexing the upper-middle alone (`sorted[Math.floor(n/2)]`) drifts the
+// surfaced amount toward the larger of two values when N=2 — e.g. USAA
+// payments of $164.84 and $179.84 displayed as $179.84 instead of
+// the truer ~$172.34. Caller is expected to pass an already-sorted
+// ascending array.
+function medianOf(sortedAsc: number[]): number {
+  const n = sortedAsc.length;
+  if (n === 0) return 0;
+  const mid = Math.floor(n / 2);
+  if (n % 2 === 1) return sortedAsc[mid];
+  return (sortedAsc[mid - 1] + sortedAsc[mid]) / 2;
 }
 
 // Deterministic stream_id from (plaid_item_id, merchant_key, direction).
