@@ -355,8 +355,8 @@ input,select,button,textarea{font-family:inherit;}
 .fc-meta{font-size:11px;font-weight:600;color:var(--ds-t3);letter-spacing:.02em;white-space:nowrap;}
 .fc-actions{display:flex;gap:6px;align-items:center;flex-shrink:0;}
 .fc-actions .btn-sm{padding:6px 12px;font-size:12px;}
-.fc-x-btn{padding:6px 10px;font-size:14px;line-height:1;color:var(--ds-t3);}
-.fc-x-btn:hover{color:var(--ds-c4);}
+.fc-x-corner{align-self:flex-end;background:transparent;border:0;color:var(--ds-t3);font-family:var(--ds-f);font-size:14px;font-weight:700;line-height:1;padding:0 0 0 8px;margin:-4px -4px -2px 0;cursor:pointer;transition:color .15s;}
+.fc-x-corner:hover{color:var(--ds-c4);}
 .score-big{font-family:var(--ds-f);font-size:6rem;font-weight:900;line-height:1;letter-spacing:-.05em;}
 .score-row{display:flex;align-items:center;gap:12px;margin-bottom:12px;font-size:13px;font-weight:700;}
 .score-label{flex:1;font-weight:600;color:var(--text2);}
@@ -1877,6 +1877,10 @@ posthog.init('phc_B6PH36QxpExnyBYhfScFFF6LhDvoyxuFr6PypJuxxky3', {
 
 <!-- DEBT -->
 <div class="page" id="page-debt">
+  <!-- Strategy toggle — Avalanche (rate desc) vs Snowball (balance asc).
+       Sort and "Pay this first" labels respect the choice. First-time tip
+       appears below until dismissed. -->
+  <div id="debt-strategy-toggle"></div>
   <!-- Payoff-date card — leading callout. Uses last-90-day Plaid debt-payment
        pace (floored at sum of minimums) to project a single "debt-free by"
        date. Renders only when there are debts with a balance. -->
@@ -1887,7 +1891,7 @@ posthog.init('phc_B6PH36QxpExnyBYhfScFFF6LhDvoyxuFr6PypJuxxky3', {
   <div id="debt-interest-card"></div>
   <div class="two-col">
     <div>
-      <div class="sec">Your debts, highest interest first</div>
+      <div class="sec" id="debt-list-header">Your debts, highest interest first</div>
       <div id="debt-list-el"></div>
       <div class="sec">Add a debt</div>
       <div class="card">
@@ -8048,16 +8052,73 @@ function addBill(){
 // ═══════════════════════════════════════
 // DEBT
 // ═══════════════════════════════════════
+// Payoff strategy: avalanche (highest interest first, math-optimal) or
+// snowball (smallest balance first, psychological wins). Default avalanche.
+// All three render paths (debt list, payoff timeline, "at this pace" card)
+// share this sort so the user sees a single coherent ordering.
+function _payoffStrategy(){
+  return (S.settings && S.settings.payoff_strategy === 'snowball') ? 'snowball' : 'avalanche';
+}
+function _sortDebtsByStrategy(arr){
+  return _payoffStrategy() === 'snowball'
+    ? [...arr].sort((a,b) => (a.balance||0) - (b.balance||0))
+    : [...arr].sort((a,b) => (b.rate||0) - (a.rate||0));
+}
+function renderPayoffStrategyToggle(){
+  const wrap = document.getElementById('debt-strategy-toggle');
+  if (!wrap) return;
+  if (!Array.isArray(S.debts) || S.debts.length === 0) { wrap.innerHTML = ''; return; }
+  const cur = _payoffStrategy();
+  const seen = !!(S.settings && S.settings.payoff_strategy_tip_seen);
+  const tabBtn = (key, label) => `<button onclick="setPayoffStrategy('${key}')" style="padding:7px 14px;border:none;border-radius:100px;background:${cur===key?'var(--ds-card)':'transparent'};color:${cur===key?'var(--ds-green)':'var(--ds-t2)'};font-family:var(--ds-f);font-size:12px;font-weight:700;cursor:pointer;letter-spacing:-.01em;${cur===key?'box-shadow:0 2px 6px rgba(42,122,74,.12);':''}">${label}</button>`;
+  wrap.innerHTML = `
+    <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin-bottom:1rem;">
+      <div style="font-size:11px;font-weight:800;letter-spacing:.06em;text-transform:uppercase;color:var(--ds-t3);">Payoff strategy</div>
+      <div style="display:flex;gap:4px;background:var(--ds-green-l);border-radius:100px;padding:4px;">
+        ${tabBtn('avalanche','Avalanche')}${tabBtn('snowball','Snowball')}
+      </div>
+    </div>
+    ${!seen ? `
+    <div style="background:#eaf2fc;border:1px solid #c5d8ec;border-radius:var(--ds-r1);padding:.85rem 1rem;margin-bottom:1rem;display:flex;align-items:flex-start;gap:.65rem;">
+      <div style="flex:1;min-width:0;font-size:12.5px;font-weight:600;color:var(--ds-t1);line-height:1.55;">
+        <b style="color:var(--ds-c5);">Two ways to attack debt.</b><br>
+        <b>Avalanche</b> targets the highest-interest debt first. Saves the most money long-term.<br>
+        <b>Snowball</b> targets the smallest balance first. Each payoff is a quick win that keeps you going.
+      </div>
+      <button type="button" onclick="dismissStrategyTip()" aria-label="Got it" style="background:transparent;border:0;color:var(--ds-c5);font-family:var(--ds-f);font-size:16px;font-weight:700;padding:0 4px;cursor:pointer;line-height:1;flex-shrink:0;">×</button>
+    </div>` : ''}
+  `;
+}
+async function setPayoffStrategy(strat){
+  S.settings = S.settings || {};
+  if (S.settings.payoff_strategy === strat) return;
+  S.settings.payoff_strategy = strat;
+  try { await saveUserData(); } catch(e) { console.warn('saveUserData (strategy) failed:', e); }
+  Able.track?.('payoff_strategy_changed', { strategy: strat });
+  renderDebtPage();
+}
+async function dismissStrategyTip(){
+  S.settings = S.settings || {};
+  S.settings.payoff_strategy_tip_seen = true;
+  try { await saveUserData(); } catch(e) { console.warn('saveUserData (strategy tip) failed:', e); }
+  renderPayoffStrategyToggle();
+}
+
 function renderDebtPage(){
   // Async — fires-and-forgets, populates each card when its query returns.
+  renderPayoffStrategyToggle();
   renderPayoffEstimateCard();
   renderInterestCostCard();
+  const headerEl = document.getElementById('debt-list-header');
+  if (headerEl) headerEl.textContent = _payoffStrategy() === 'snowball'
+    ? 'Your debts, smallest balance first'
+    : 'Your debts, highest interest first';
   const el=document.getElementById('debt-list-el');el.innerHTML='';
   // Migrate: ensure every debt has an id
   let dirty=false;
   S.debts.forEach(d=>{if(!d.id){d.id='d_'+Date.now()+'_'+Math.random().toString(36).slice(2,7);dirty=true;}});
   if(dirty)save();
-  const sorted=[...S.debts].map((d,i)=>({...d,oi:i})).sort((a,b)=>b.rate-a.rate);
+  const sorted=_sortDebtsByStrategy(S.debts.map((d,i)=>({...d,oi:i})));
   const maxBal=Math.max(...S.debts.map(d=>d.balance),1);
   sorted.forEach((d,rank)=>{
     const pct=Math.round((d.balance/maxBal)*100);
@@ -8179,7 +8240,7 @@ function syncLinkedBill(debt){
 }
 function renderTimeline(){
   const extra=parseFloat(document.getElementById('extra-pay').value)||0;
-  const sorted=[...S.debts].map((d,i)=>({...d,oi:i})).sort((a,b)=>b.rate-a.rate);
+  const sorted=_sortDebtsByStrategy(S.debts.map((d,i)=>({...d,oi:i})));
   // No debts → Math.max(...[]) is -Infinity, which fed setMonth and produced
   // "Debt-free by Invalid Date. -Infinity months." in the summary. Short-circuit.
   if (sorted.length === 0) {
@@ -8213,8 +8274,33 @@ function renderTimeline(){
   });
   const last=Math.max(...debts.map(d=>d.paidMonth||MAX));
   const sumEl=document.getElementById('tl-summary');
-  if(last<MAX){const dt=new Date();dt.setMonth(dt.getMonth()+last);sumEl.innerHTML=`<div style="background:var(--sage-light);border:1.5px solid var(--sage-mid);border-radius:var(--r-sm);padding:12px 14px;font-size:12px;font-weight:700;color:#4a8a5e;margin-top:.5rem;">Debt-free by <strong>${dt.toLocaleDateString('en-US',{month:'long',year:'numeric'})}</strong>. ${last} months.${extra>0?' Every extra dollar makes a difference.':' Add extra payment above to see how much faster.'}</div>`;}
-  else{sumEl.innerHTML=`<div style="background:var(--red-light);border:1.5px solid #f0c0c0;border-radius:var(--r-sm);padding:12px 14px;font-size:12px;font-weight:700;color:var(--red);margin-top:.5rem;">Minimum payments alone won't clear everything within 10 years. Try adding extra payment above.</div>`;}
+  // Baseline: same simulation with extra=0, so we can express the timeline's
+  // value as "months sooner than minimums alone" rather than restating the
+  // payoff date (which the leading "At this pace" card already owns).
+  let baseDebts=sorted.map(d=>({...d,bal:d.balance,paidMonth:null}));
+  let baseFreed=0;
+  for(let mo=1;mo<=MAX;mo++){
+    let avail=baseFreed;
+    for(const d of baseDebts){if(d.bal<=0.01)continue;d.bal=Math.max(0,d.bal+d.bal*(d.rate/100/12)-d.min);}
+    for(const d of baseDebts){if(d.bal<=0.01||avail<=0.01)continue;const pay=Math.min(d.bal,avail);d.bal-=pay;avail-=pay;}
+    baseDebts.forEach(d=>{if(d.bal<=0.01&&!d.paidMonth){d.paidMonth=mo;baseFreed+=d.min;}});
+    if(baseDebts.every(d=>d.bal<=0.01))break;
+  }
+  const baseLast=Math.max(...baseDebts.map(d=>d.paidMonth||MAX));
+  const sage=`background:var(--sage-light);border:1.5px solid var(--sage-mid);border-radius:var(--r-sm);padding:12px 14px;font-size:12px;font-weight:700;color:#4a8a5e;margin-top:.5rem;`;
+  const red=`background:var(--red-light);border:1.5px solid #f0c0c0;border-radius:var(--r-sm);padding:12px 14px;font-size:12px;font-weight:700;color:var(--red);margin-top:.5rem;`;
+  if(last>=MAX){
+    sumEl.innerHTML=`<div style="${red}">Even with this plan, balances don't clear within 10 years. Try a higher extra payment above.</div>`;
+  }else if(extra>0&&baseLast<MAX){
+    const saved=baseLast-last;
+    sumEl.innerHTML=saved>0
+      ? `<div style="${sage}">This plan finishes <strong>${saved} ${saved===1?'month':'months'} sooner</strong> than minimums alone.</div>`
+      : `<div style="${sage}">Minimums alone already clear within ${baseLast} months. Extra payments don't shift the headline finish, but they save interest.</div>`;
+  }else if(extra>0&&baseLast>=MAX){
+    sumEl.innerHTML=`<div style="${sage}">Minimums alone wouldn't clear in 10 years — but this plan finishes in <strong>${last} ${last===1?'month':'months'}</strong>.</div>`;
+  }else{
+    sumEl.innerHTML=`<div style="${sage}">Minimums-only timeline. Add extra payment above to see how much faster.</div>`;
+  }
 }
 
 // ═══════════════════════════════════════
@@ -8243,14 +8329,14 @@ function renderForecast(){
     const sign = received ? '+' : '';
     const div = document.createElement('div');
     div.className = cls;
-    // Tighter two-row layout: date+pill on the left of row 2, actions on
-    // the right. Was three stacked rows with date orphaned from buttons,
-    // which Paul flagged as "looks cheap. layout of date, edit and x.
-    // could be improved." (P2 #21)
-    const actions = received
-      ? `<button class="btn btn-sm btn-ghost fc-x-btn" onclick="delForecast(${realIdx})" title="Remove">✕</button>`
-      : `<button class="btn btn-sm btn-primary" onclick="gotMoney(${realIdx})">Got it →</button><button class="btn btn-sm btn-ghost fc-x-btn" onclick="delForecast(${realIdx})" title="Remove">✕</button>`;
+    // Layout: corner ✕ at top-right (subtle remove), then source/amount on
+    // row 1, then date/pill cluster + Got it (aligned vertically under amount)
+    // on row 2. Received state hides Got it.
+    const gotItBtn = received
+      ? ''
+      : `<button class="btn btn-sm btn-primary" onclick="gotMoney(${realIdx})">Got it →</button>`;
     div.innerHTML = `
+      <button class="fc-x-corner" onclick="delForecast(${realIdx})" title="Remove" aria-label="Remove">✕</button>
       <div class="fc-row">
         <div class="fc-source">${f.source}${f.note ? ' · ' + f.note : ''}</div>
         <div class="fc-amt">${sign}${f2(f.amount)}</div>
@@ -8260,7 +8346,7 @@ function renderForecast(){
           <span class="fc-meta">${dateStr} · ${daysStr}</span>
           <span class="pill" style="background:${pillBg};color:${pillColor};">${pillLabel}</span>
         </div>
-        <div class="fc-actions">${actions}</div>
+        <div class="fc-actions">${gotItBtn}</div>
       </div>
     `;
     el.appendChild(div);
@@ -11840,10 +11926,10 @@ async function renderPayoffEstimateCard(){
 
   const extra = Math.max(0, monthlyPace - sumMins);
 
-  // Same snowball math as renderTimeline (line ~7023): apply interest,
-  // pay minimums, then route extra + freed-up minimums to the highest-rate
-  // remaining debt. MAX caps the simulation at 10 years.
-  const sorted = [...S.debts].sort((a, b) => (b.rate || 0) - (a.rate || 0));
+  // Same snowball math as renderTimeline: apply interest, pay minimums,
+  // then route extra + freed-up minimums to the next debt in strategy order
+  // (avalanche = highest rate, snowball = smallest balance). MAX caps at 10y.
+  const sorted = _sortDebtsByStrategy(S.debts);
   const debts = sorted.map((d) => ({ ...d, bal: d.balance, paidMonth: null }));
   let freed = 0;
   const MAX = 120;
