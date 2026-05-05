@@ -837,6 +837,20 @@ body.tour-active #home-welcome{display:none!important;}
 body.tour-active #page-home .db-hero{display:block!important;}
 body.tour-active #page-home .db-action-card{display:flex!important;}
 
+/* Scroll-hover suppression. Without this, scrolling on desktop with the
+   mouse held still triggers :hover on every card the cursor passes over,
+   firing the translateY pop on each one — visually reads as "boxes lighting
+   up" as you scroll. body.is-scrolling is toggled by a debounced scroll
+   listener (init in DOMContentLoaded). 150ms idle timeout matches typical
+   inertial-scroll tail. */
+body.is-scrolling .plan-card:hover,
+body.is-scrolling .db-action-card:hover,
+body.is-scrolling .lc-course:hover,
+body.is-scrolling .lc-game-card:hover,
+body.is-scrolling .fa-src-card:hover,
+body.is-scrolling .ob-choice-card:hover,
+body.is-scrolling .btn-primary:hover{transform:none!important;box-shadow:inherit;}
+
 /* ═══════ SUB-NAV (Plan / More) ═══════ */
 .sub-nav{max-width:980px;margin:0 auto;padding:1rem 1.5rem 0;}
 .sub-nav-inner{display:flex;gap:4px;background:var(--ds-green-l);border-radius:100px;padding:4px;width:fit-content;flex-wrap:wrap;}
@@ -3444,7 +3458,16 @@ async function _onAuthStateChangeImpl(user) {
     // into the guided tour so they see the dashboard structure + the day-1
     // refer step. Tour writes tour_done=true on Skip or Got it, so it won't
     // fire again. Returning users skip straight to coach nudges.
-    if(!S.settings.tour_done) {
+    //
+    // Skip the auto-fire when an onboarding pipeline is currently running
+    // (Path A: user clicked "Take the tour →" mid-pipeline — that path fires
+    // its own startTour) or when the user is mid-plan-review (Path B: tour
+    // fires after Apply in obSubmitPlanReview). Without these guards, the
+    // tour spotlights random already-loaded UI on a later page reload while
+    // the user is mid-use.
+    const pipelineRunning = obAnswers?.plaid_pipeline?.status === 'running';
+    const planReviewOpen = !!obPlanReview;
+    if (!S.settings.tour_done && !pipelineRunning && !planReviewOpen) {
       setTimeout(() => startTour(), 600);
     } else {
       evalCoachNudges();
@@ -5827,6 +5850,15 @@ async function obSubmitPlanReview() {
     document.getElementById('nav-user').textContent = currentUser.email;
     populateSources();
     refreshHome();
+
+    // Tour fires here for Path B users (waited for the plan, reviewed, hit
+    // Apply). Path A users (clicked "Take the tour →" mid-pipeline) already
+    // saw the tour and have tour_done=true; this skips them. 600ms gives
+    // refreshHome time to paint so the tour spotlights land on rendered
+    // elements, not skeletons.
+    if (!S.settings?.tour_done) {
+      setTimeout(() => { try { startTour(); } catch (e) { console.warn('post-apply startTour failed:', e); } }, 600);
+    }
   } catch (e) {
     console.error('plan-review apply failed:', e);
     r.submitting = false;
@@ -9983,6 +10015,21 @@ document.addEventListener('DOMContentLoaded', () => {
   });
   const app = document.getElementById('app');
   if (app) observer.observe(app, { attributes: true, subtree: true, attributeFilter: ['class'] });
+
+  // body.is-scrolling toggle: suppresses card hover transforms while the
+  // user is scrolling so the cursor doesn't pop every card it passes over.
+  // CSS rule lives next to the .tour-active block at the top of <style>.
+  let _scrollIdleTimer = null;
+  window.addEventListener('scroll', () => {
+    if (!document.body.classList.contains('is-scrolling')) {
+      document.body.classList.add('is-scrolling');
+    }
+    if (_scrollIdleTimer) clearTimeout(_scrollIdleTimer);
+    _scrollIdleTimer = setTimeout(() => {
+      document.body.classList.remove('is-scrolling');
+      _scrollIdleTimer = null;
+    }, 150);
+  }, { passive: true, capture: true });
 });
 
 // ─── Quarterly tax projection (Tax C / P2 #24) ─────────────────────────
