@@ -41,9 +41,22 @@ const corsHeaders = {
 
 // Detection knobs — kept as constants so they're easy to find + tune.
 const LOOKBACK_DAYS = 90;
-const MIN_OCCURRENCES = 2;
 const MIN_DOMINANT_INTERVAL_RATIO = 0.6;
 const AMOUNT_VARIANCE_TOLERANCE = 0.3; // ±30%
+// Per-cadence minimum occurrences. Two visits to the same merchant 14
+// days apart used to qualify as BIWEEKLY (e.g. "127 Saloon $7 BIWEEKLY"
+// for a person who happened to grab a beer there twice in a month). Real
+// recurring patterns prove themselves over more cycles. Annual subs by
+// definition only fire once a year so we keep that bar at 2.
+const MIN_OCCURRENCES_BY_BAND: Record<'WEEKLY' | 'BIWEEKLY' | 'MONTHLY' | 'ANNUALLY', number> = {
+  WEEKLY: 6,    // ~6 weeks of consistent activity
+  BIWEEKLY: 4,  // ~8 weeks
+  MONTHLY: 3,   // 3 months
+  ANNUALLY: 2,  // a true annual sub seen twice = legit
+};
+// Pre-band gate: every stream needs ≥2 occurrences to compute intervals
+// at all. Cadence-specific minimums apply after the median lands a band.
+const MIN_OCCURRENCES = 2;
 // Cadence bands tuned for real bank-feed noise: widened MONTHLY to 26-34
 // days (mortgage statements drift across month-length boundaries, esp.
 // Feb→Mar; mid-month → end-of-month → mid-month produces 30-33d gaps).
@@ -369,6 +382,14 @@ function detectStream(group: Group, itemId: string): { stream: DetectedStream | 
 
   if (!bestBand) {
     return { stream: null, reason: `median interval ${median}d outside all cadence bands` };
+  }
+
+  // Per-cadence occurrence floor. WEEKLY needs ~6 cycles, BIWEEKLY 4,
+  // MONTHLY 3, ANNUALLY 2. Catches noise like "two restaurant visits
+  // 14 days apart" being labelled BIWEEKLY recurring.
+  const minForBand = MIN_OCCURRENCES_BY_BAND[bestBand.name];
+  if (occurrences.length < minForBand) {
+    return { stream: null, reason: `${bestBand.name} needs ≥${minForBand} occurrences, got ${occurrences.length}` };
   }
 
   // Sanity: at least MIN_DOMINANT_INTERVAL_RATIO of intervals must fall
