@@ -48,14 +48,28 @@ const AMOUNT_VARIANCE_TOLERANCE = 0.3; // ±30%
 // for a person who happened to grab a beer there twice in a month). Real
 // recurring patterns prove themselves over more cycles. Annual subs by
 // definition only fire once a year so we keep that bar at 2.
+//
+// These floors apply to SMALL streams only (amount < AMOUNT_TRUST_FLOOR).
+// Larger streams get the relaxed minimum because real bills are usually
+// big-ticket (mortgage, utilities, insurance) and we don't want to lose
+// them to partial-data conditions during onboarding (e.g. only 30 days
+// of classified transactions visible when HISTORICAL hasn't fully
+// classified yet — a monthly mortgage has 1 visible occurrence and would
+// fail a 3-min floor even though it's clearly recurring).
 const MIN_OCCURRENCES_BY_BAND: Record<'WEEKLY' | 'BIWEEKLY' | 'MONTHLY' | 'ANNUALLY', number> = {
   WEEKLY: 6,    // ~6 weeks of consistent activity
   BIWEEKLY: 4,  // ~8 weeks
   MONTHLY: 3,   // 3 months
   ANNUALLY: 2,  // a true annual sub seen twice = legit
 };
+// Streams whose median amount is at or above this threshold get the base
+// MIN_OCCURRENCES bar (2). Below this, the per-cadence floor applies.
+// $50 covers most utility / phone / insurance / loan payments while
+// staying above coffee-and-fast-food noise.
+const AMOUNT_TRUST_FLOOR = 50;
 // Pre-band gate: every stream needs ≥2 occurrences to compute intervals
-// at all. Cadence-specific minimums apply after the median lands a band.
+// at all. Cadence-specific minimums apply after the median lands a band
+// AND amount falls under AMOUNT_TRUST_FLOOR.
 const MIN_OCCURRENCES = 2;
 // Cadence bands tuned for real bank-feed noise: widened MONTHLY to 26-34
 // days (mortgage statements drift across month-length boundaries, esp.
@@ -384,12 +398,23 @@ function detectStream(group: Group, itemId: string): { stream: DetectedStream | 
     return { stream: null, reason: `median interval ${median}d outside all cadence bands` };
   }
 
-  // Per-cadence occurrence floor. WEEKLY needs ~6 cycles, BIWEEKLY 4,
-  // MONTHLY 3, ANNUALLY 2. Catches noise like "two restaurant visits
-  // 14 days apart" being labelled BIWEEKLY recurring.
-  const minForBand = MIN_OCCURRENCES_BY_BAND[bestBand.name];
-  if (occurrences.length < minForBand) {
-    return { stream: null, reason: `${bestBand.name} needs ≥${minForBand} occurrences, got ${occurrences.length}` };
+  // Per-cadence occurrence floor — applied only to small streams so we
+  // don't lose legit big-ticket monthly bills (mortgage, utilities) when
+  // the classified-transactions pool is partial (typical during onboarding
+  // before HISTORICAL classify catches up). Streams >= AMOUNT_TRUST_FLOOR
+  // get the relaxed MIN_OCCURRENCES bar (2). Below the floor, the per-
+  // cadence floor kicks in: WEEKLY 6, BIWEEKLY 4, MONTHLY 3, ANNUALLY 2.
+  // Catches noise like "two restaurant visits 14 days apart" being
+  // labelled BIWEEKLY recurring without sacrificing real bill detection.
+  const occurrenceAmounts = occurrences.map((o) => o.amount);
+  const sortedOccAmounts = occurrenceAmounts.slice().sort((a, b) => a - b);
+  const provisionalMedianAmount = sortedOccAmounts[Math.floor(sortedOccAmounts.length / 2)] ?? 0;
+  const isSmallStream = provisionalMedianAmount < AMOUNT_TRUST_FLOOR;
+  if (isSmallStream) {
+    const minForBand = MIN_OCCURRENCES_BY_BAND[bestBand.name];
+    if (occurrences.length < minForBand) {
+      return { stream: null, reason: `${bestBand.name} small-amount stream ($${provisionalMedianAmount.toFixed(2)}) needs ≥${minForBand} occurrences, got ${occurrences.length}` };
+    }
   }
 
   // Sanity: at least MIN_DOMINANT_INTERVAL_RATIO of intervals must fall
