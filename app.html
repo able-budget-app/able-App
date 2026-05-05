@@ -806,9 +806,14 @@ input,select,button,textarea{font-family:inherit;}
 .tour-overlay{position:fixed;inset:0;background:transparent;z-index:9998;animation:fadeIn .25s ease;}
 @keyframes fadeIn{from{opacity:0}to{opacity:1}}
 /* Spotlight is a green ring + outer glow — no dim. The bright ring +
-   bubble draw the eye; the rest of the screen stays fully readable. */
-.tour-spotlight{position:fixed;z-index:9999;border-radius:10px;box-shadow:0 0 0 3px rgba(61,158,120,.95),0 0 0 6px rgba(61,158,120,.25),0 0 32px rgba(42,122,74,.55);pointer-events:none;transition:all .35s cubic-bezier(.4,0,.2,1);}
-.tour-bubble{position:fixed;z-index:10000;background:var(--ds-t1);color:white;border-radius:18px;padding:18px 20px;max-width:340px;box-shadow:0 16px 48px rgba(0,0,0,.3);font-family:var(--ds-f);animation:bubbleIn .3s ease;}
+   bubble draw the eye; the rest of the screen stays fully readable.
+   position:absolute (not fixed) anchors the ring to the target's
+   document position, so it scrolls naturally with the page instead of
+   chasing the target around as the user scrolls — that chase reads as
+   jittery / cheap. Bubble is also absolute so it scrolls in lockstep
+   with the spotlight; user can scroll past the tour step at any time. */
+.tour-spotlight{position:absolute;z-index:9999;border-radius:10px;box-shadow:0 0 0 3px rgba(61,158,120,.95),0 0 0 6px rgba(61,158,120,.25),0 0 32px rgba(42,122,74,.55);pointer-events:none;}
+.tour-bubble{position:absolute;z-index:10000;background:var(--ds-t1);color:white;border-radius:18px;padding:18px 20px;max-width:340px;box-shadow:0 16px 48px rgba(0,0,0,.3);font-family:var(--ds-f);animation:bubbleIn .3s ease;}
 @keyframes bubbleIn{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
 .tour-bubble-arrow{position:absolute;width:0;height:0;border:9px solid transparent;}
 .tour-bubble.arrow-up .tour-bubble-arrow{top:-18px;left:28px;border-bottom-color:var(--ds-t1);}
@@ -12948,12 +12953,12 @@ function renderTourStep() {
 
     positionTourUI(targetEl);
 
-    // Keep the spotlight + bubble glued to the target while the user
-    // scrolls or resizes. Capture phase + passive so scroll inside any
-    // nested container also fires it. Listener handles live in
-    // _tourListeners so clearTourUI can detach them.
+    // Spotlight + bubble are position:absolute now (anchored to document
+    // coords via rect + scrollY in positionTourUI), so they scroll
+    // naturally with the page — no per-scroll recompute needed. Just
+    // re-measure on resize since viewport-width changes can reflow the
+    // target's position.
     const reposition = () => positionTourUI(targetEl);
-    window.addEventListener('scroll', reposition, { passive: true, capture: true });
     window.addEventListener('resize', reposition);
     _tourListeners = { reposition };
   }, 120);
@@ -12962,12 +12967,20 @@ function renderTourStep() {
 let _tourListeners = null;
 
 function positionTourUI(targetEl) {
+  // Spotlight + bubble are position:absolute, so coordinates must be
+  // document-relative. Add window.scrollY/X to viewport-relative rect.top/
+  // left before applying. Placement decisions (above/below/side) still use
+  // viewport coords because we're choosing based on what the user can SEE
+  // at tour-step start; scrollIntoView already centered the target in the
+  // viewport before we got here.
   const rect = targetEl.getBoundingClientRect();
+  const sx = window.scrollX || window.pageXOffset || 0;
+  const sy = window.scrollY || window.pageYOffset || 0;
   const pad = 6;
   const spot = document.getElementById('tour-spotlight');
   if (spot) {
-    spot.style.top = (rect.top - pad) + 'px';
-    spot.style.left = (rect.left - pad) + 'px';
+    spot.style.top = (rect.top + sy - pad) + 'px';
+    spot.style.left = (rect.left + sx - pad) + 'px';
     spot.style.width = (rect.width + pad*2) + 'px';
     spot.style.height = (rect.height + pad*2) + 'px';
   }
@@ -12978,25 +12991,29 @@ function positionTourUI(targetEl) {
   const isMobile = window.innerWidth <= 800;
   bubble.classList.remove('arrow-up', 'arrow-down');
 
+  // Compute placement in viewport coords first (`vTop`, `vLeft`), then
+  // translate to document coords with sx/sy when assigning to style.
+  let vTop = 0;
+  let vLeft = 0;
+
   if (isMobile) {
     // Mobile: center horizontally, prefer above the spotlight so the
     // bubble doesn't slide under the bottom nav. Flip below if there
     // isn't room above.
-    let left = (window.innerWidth - bRect.width) / 2;
-    if (left < 12) left = 12;
+    vLeft = (window.innerWidth - bRect.width) / 2;
+    if (vLeft < 12) vLeft = 12;
     const wantAbove = rect.top >= bRect.height + margin;
     if (wantAbove) {
       bubble.classList.add('arrow-down');
-      bubble.style.top = (rect.top - bRect.height - margin) + 'px';
+      vTop = rect.top - bRect.height - margin;
     } else {
       bubble.classList.add('arrow-up');
-      bubble.style.top = (rect.bottom + margin) + 'px';
+      vTop = rect.bottom + margin;
     }
-    bubble.style.left = left + 'px';
     const arrow = bubble.querySelector('.tour-bubble-arrow');
     if (arrow) {
       const tabCenterX = rect.left + rect.width/2;
-      const arrowOffset = Math.max(16, Math.min(bRect.width - 32, tabCenterX - left - 8));
+      const arrowOffset = Math.max(16, Math.min(bRect.width - 32, tabCenterX - vLeft - 8));
       arrow.style.left = arrowOffset + 'px';
     }
   } else {
@@ -13009,18 +13026,17 @@ function positionTourUI(targetEl) {
     const fitsAbove = rect.top >= bRect.height + margin;
 
     if (fitsBelow || fitsAbove) {
-      let left = rect.left - 20;
+      vLeft = rect.left - 20;
       const maxLeft = window.innerWidth - bRect.width - 16;
-      if (left > maxLeft) left = maxLeft;
-      if (left < 16) left = 16;
+      if (vLeft > maxLeft) vLeft = maxLeft;
+      if (vLeft < 16) vLeft = 16;
       if (fitsBelow) {
         bubble.classList.add('arrow-up');
-        bubble.style.top = (rect.bottom + margin) + 'px';
+        vTop = rect.bottom + margin;
       } else {
         bubble.classList.add('arrow-down');
-        bubble.style.top = (rect.top - bRect.height - margin) + 'px';
+        vTop = rect.top - bRect.height - margin;
       }
-      bubble.style.left = left + 'px';
     } else {
       // Side placement — pick the side with more room. Vertically center
       // on the target. No arrow class (CSS only supports up/down arrows;
@@ -13029,18 +13045,20 @@ function positionTourUI(targetEl) {
       const roomRight = window.innerWidth - rect.right;
       const placeLeft = roomLeft >= roomRight && roomLeft >= bRect.width + margin;
       if (placeLeft) {
-        bubble.style.left = Math.max(margin, rect.left - bRect.width - margin) + 'px';
+        vLeft = Math.max(margin, rect.left - bRect.width - margin);
       } else if (roomRight >= bRect.width + margin) {
-        bubble.style.left = (rect.right + margin) + 'px';
+        vLeft = rect.right + margin;
       } else {
-        // Last resort: clamp to the right edge of the viewport.
-        bubble.style.left = (window.innerWidth - bRect.width - margin) + 'px';
+        vLeft = window.innerWidth - bRect.width - margin;
       }
       const idealTop = rect.top + (rect.height - bRect.height) / 2;
-      const clampedTop = Math.max(margin, Math.min(window.innerHeight - bRect.height - margin, idealTop));
-      bubble.style.top = clampedTop + 'px';
+      vTop = Math.max(margin, Math.min(window.innerHeight - bRect.height - margin, idealTop));
     }
   }
+
+  // Translate viewport coords → document coords for absolute positioning.
+  bubble.style.top = (vTop + sy) + 'px';
+  bubble.style.left = (vLeft + sx) + 'px';
 }
 
 function nextTourStep() {
@@ -13050,7 +13068,6 @@ function nextTourStep() {
 
 function clearTourUI() {
   if (_tourListeners) {
-    window.removeEventListener('scroll', _tourListeners.reposition, { capture: true });
     window.removeEventListener('resize', _tourListeners.reposition);
     _tourListeners = null;
   }
