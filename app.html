@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
 <meta name="robots" content="noindex,nofollow">
 <title>Able. Built for inconsistent income.</title>
 <link rel="icon" type="image/svg+xml" href="/favicon.svg">
@@ -918,6 +918,8 @@ body.is-scrolling .btn-primary:hover{transform:none!important;box-shadow:inherit
 #coach-input{flex:1;background:var(--ds-card);border:1.5px solid var(--ds-t4);border-radius:var(--ds-r2);padding:12px 14px;font-family:var(--ds-f);font-size:14px;font-weight:500;color:var(--ds-t1);outline:none;resize:none;transition:border-color .18s,box-shadow .18s;min-height:48px;max-height:200px;}
 #coach-input:focus{border-color:var(--ds-green);box-shadow:0 0 0 3px rgba(42,122,74,.1);}
 @media(max-width:800px){#coach-input{font-size:16px;}}
+#activity-search{font-size:13px;}
+@media(max-width:800px){#activity-search{font-size:16px;}}
 #coach-send{flex-shrink:0;min-height:48px;padding:0 22px;}
 #coach-send:disabled{opacity:.5;cursor:not-allowed;transform:none;}
 .coach-footer{font-size:11px;color:var(--ds-t3);font-weight:600;text-align:center;padding:.25rem 0 1rem;}
@@ -2143,7 +2145,7 @@ posthog.init('phc_B6PH36QxpExnyBYhfScFFF6LhDvoyxuFr6PypJuxxky3', {
        loadRecurringScan when there's no detected recurring activity. -->
   <div id="recurring-section" style="display:none;margin-bottom:1.25rem;"></div>
   <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin-bottom:.85rem;">
-    <input type="text" id="activity-search" placeholder="Search merchant, name, or label…" oninput="onActivitySearchInput()" style="flex:1;min-width:200px;font-family:var(--ds-f);font-size:13px;font-weight:600;padding:8px 12px;border:1.5px solid var(--ds-line);border-radius:var(--ds-r1);background:white;color:var(--ds-t1);outline:none;">
+    <input type="text" id="activity-search" placeholder="Search merchant, name, or label…" oninput="onActivitySearchInput()" style="flex:1;min-width:200px;font-family:var(--ds-f);font-weight:600;padding:8px 12px;border:1.5px solid var(--ds-line);border-radius:var(--ds-r1);background:white;color:var(--ds-t1);outline:none;">
     <select id="activity-range" onchange="renderActivityPage()" style="font-family:var(--ds-f);font-size:12px;font-weight:700;padding:6px 10px;border:1px solid var(--ds-line);border-radius:var(--ds-r1);background:white;color:var(--ds-t1);">
       <option value="30">Last 30 days</option>
       <option value="90" selected>Last 90 days</option>
@@ -4649,7 +4651,7 @@ async function findExistingPlaidItemForInstitution(institutionId) {
 }
 
 async function obHandlePlaidSuccess(public_token, metadata, lookback) {
-  console.log('[Plaid] onSuccess fired, public_token:', public_token?.slice(0, 20) + '…', 'lookback:', lookback);
+  console.log('[Plaid] onSuccess fired, lookback:', lookback);
   const btn = document.getElementById('ob-plaid-connect');
   const errEl = document.getElementById('ob-plaid-error');
   if (btn) { btn.disabled = true; btn.textContent = 'Linking…'; }
@@ -4662,7 +4664,7 @@ async function obHandlePlaidSuccess(public_token, metadata, lookback) {
   if (institutionId) {
     const existing = await findExistingPlaidItemForInstitution(institutionId);
     if (existing) {
-      console.warn('[Plaid] institution already linked, skipping exchange:', existing);
+      console.warn('[Plaid] institution already linked, skipping exchange:', existing?.institution_name || institutionName);
       Able.track?.('plaid_duplicate_link_blocked', { context: 'onboarding', institution_name: existing.institution_name || institutionName });
       obAnswers.plaid_connect = {
         plaid_item_row_id: existing.id,
@@ -6374,6 +6376,7 @@ async function _writeUserData() {
     bills:S.bills, debts:S.debts, history:S.history,
     forecast:S.forecast, buffer:S.buffer, settings:S.settings,
     month_history:S.month_history, sources:S.sources,
+    allocated_to_bills:S.allocated_to_bills||0,
     obligations:S.obligations||[], profile:S.profile||null,
     email_prefs:S.email_prefs||{dormancy:true,weekly:true,bill_reminder:true,low_buffer:true,monthly_wrap:true},
     updated_at:new Date().toISOString()
@@ -6440,6 +6443,7 @@ async function saveUserData() {
     bills:S.bills, debts:S.debts, history:S.history,
     forecast:S.forecast, buffer:S.buffer, settings:S.settings,
     month_history:S.month_history, sources:S.sources,
+    allocated_to_bills:S.allocated_to_bills||0,
     obligations:S.obligations||[], profile:S.profile||null,
     email_prefs:S.email_prefs||{dormancy:true,weekly:true,bill_reminder:true,low_buffer:true,monthly_wrap:true},
     updated_at:new Date().toISOString()
@@ -7139,7 +7143,7 @@ function renderJobList(jobs,amount,container,historyId){
       const w=document.createElement('div');
       w.style.cssText='background:#fdeef2;border:1.5px solid rgba(192,64,96,.3);border-radius:var(--ds-r2);padding:12px 14px;margin-bottom:9px;color:var(--ds-c4);font-family:var(--ds-f);animation:popIn .35s cubic-bezier(.34,1.56,.64,1) forwards;opacity:0;transform:scale(.96) translateY(6px);';
       w.style.animationDelay=(i*0.07)+'s';
-      w.innerHTML=`<div style="font-weight:800;font-size:13px;margin-bottom:3px;letter-spacing:-.01em;">${job.name}</div><div style="font-size:11px;font-weight:600;line-height:1.5;color:var(--ds-t2);">${job.why||''}</div>`;
+      w.innerHTML=`<div style="font-weight:800;font-size:13px;margin-bottom:3px;letter-spacing:-.01em;">${escapeHtml(job.name)}</div><div style="font-size:11px;font-weight:600;line-height:1.5;color:var(--ds-t2);">${escapeHtml(job.why||'')}</div>`;
       container.appendChild(w);
       return;
     }
@@ -7177,7 +7181,7 @@ function renderJobList(jobs,amount,container,historyId){
           return `
             <div style="display:flex;justify-content:space-between;align-items:center;padding:5px 0 5px 10px;font-size:12px;">
               <div style="flex:1;min-width:0;">
-                <div style="font-weight:700;color:var(--ds-t1);">${it.name}${occ>1?` <span style="font-size:10px;color:var(--ds-t3);font-weight:700;">×${occ}</span>`:''}${_billItemBadge(it.status)}</div>
+                <div style="font-weight:700;color:var(--ds-t1);">${escapeHtml(it.name)}${occ>1?` <span style="font-size:10px;color:var(--ds-t3);font-weight:700;">×${occ}</span>`:''}${_billItemBadge(it.status)}</div>
                 <div style="font-size:10px;color:var(--ds-t3);font-weight:700;letter-spacing:.03em;">${dueText}${amtText}${fromPrior}${fromThis}${remaining}</div>
               </div>
             </div>
@@ -7190,7 +7194,7 @@ function renderJobList(jobs,amount,container,historyId){
       ? `<div class="job-right"><div class="job-amt" style="color:var(--ds-green);font-size:14px;">All covered</div></div>`
       : `<div class="job-right"><div class="job-amt" style="color:${job.color};">${f2(job.amount)}</div><div class="job-pct">${pct}%</div></div>`;
     d.innerHTML=`<div class="${numClass}" style="${numStyle}"${numOnclick}>${numbered}</div>
-      <div class="job-info"><div class="job-name">${job.name}${badge}</div><div class="job-why">${job.why}</div>
+      <div class="job-info"><div class="job-name">${escapeHtml(job.name)}${badge}</div><div class="job-why">${escapeHtml(job.why||'')}</div>
       ${!isBills?`<div class="prog-wrap" style="margin-top:6px;"><div class="prog-bar" style="width:${pct}%;background:${job.color};"></div></div>`:''}
       ${itemsHtml}</div>
       ${rightRail}`;
@@ -13530,7 +13534,7 @@ window.addEventListener('load', async () => {
         }
       } catch (e) { console.log('[Able v2] localStorage peek threw:', e); }
       if (lsUser && typeof onAuthStateChange === 'function') {
-        console.log('[Able v2] localStorage has session; manually driving auth flow for', lsUser.email);
+        console.log('[Able v2] localStorage has session; manually driving auth flow');
         // Don't remove the loader — onAuthStateChange owns the post-checkout
         // flow now. The overlay stays visible until the explicit transition
         // to paywall / app / onboarding / pending screen tears it down.
