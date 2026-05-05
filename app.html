@@ -1578,6 +1578,51 @@ posthog.init('phc_B6PH36QxpExnyBYhfScFFF6LhDvoyxuFr6PypJuxxky3', {
     </div>
   </div>
 </div>
+<!-- Synchronous initial-paint guard: runs as the parser walks past auth-screen,
+     BEFORE the browser's first paint. Decides what auth-screen should show on
+     the very first frame so we don't flash sign-in → loading → destination on
+     reload-with-session, or sign-in → overlay on a checkout return.
+     The window.load handler later does the same checks, but by then the
+     sign-in form has already been painted.
+     Inline + parser-blocking on purpose. Don't add async/defer. -->
+<script>
+(function() {
+  try {
+    var sc = document.getElementById('auth-screen');
+    var box = sc ? sc.querySelector('.auth-box') : null;
+    if (window.location.search.indexOf('checkout=success') !== -1) {
+      // Checkout return — hide auth-screen and create the overlay
+      // synchronously so the user goes straight from blank → "Confirming"
+      // pill, with no sign-in flash and no blank gap before window.load
+      // runs. The load handler is idempotent and skips re-creation.
+      if (sc) sc.style.display = 'none';
+      if (document.body && !document.getElementById('checkout-return-loading')) {
+        var ld = document.createElement('div');
+        ld.id = 'checkout-return-loading';
+        ld.style.cssText = 'position:fixed;inset:0;display:flex;align-items:center;justify-content:center;background:var(--ds-page);z-index:9999;font-family:var(--ds-f);';
+        ld.innerHTML = '<div style="text-align:center;padding:2rem;"><div class="brand-wordmark-wrap" style="margin-bottom:.75rem;"><div class="brand-wordmark brand-wordmark--xl brand-wordmark--green">Able</div></div><div style="display:inline-flex;align-items:center;gap:10px;margin-top:1.25rem;padding:10px 18px;background:var(--ds-card);border-radius:var(--ds-r1);box-shadow:var(--ds-sh1);"><div style="width:10px;height:10px;border-radius:50%;background:var(--ds-green);animation:dsPulse 1.2s ease-in-out infinite;"></div><div style="font-size:13px;color:var(--ds-t2);font-weight:700;letter-spacing:.02em;">Confirming your subscription. Usually takes a few seconds.</div></div></div><style>@keyframes dsPulse{0%,100%{opacity:.4;transform:scale(.9)}50%{opacity:1;transform:scale(1.1)}}</style>';
+        document.body.appendChild(ld);
+      }
+      return;
+    }
+    var hasLsSession = false;
+    for (var i = 0; i < localStorage.length; i++) {
+      var k = localStorage.key(i);
+      if (k && k.indexOf('sb-') === 0 && k.lastIndexOf('-auth-token') === k.length - 11) {
+        var raw = localStorage.getItem(k);
+        if (raw && raw.indexOf('access_token') !== -1) { hasLsSession = true; break; }
+      }
+    }
+    if (hasLsSession && box) {
+      // Returning user — pre-fill auth-box with the same "Loading your account"
+      // pill _onAuthStateChangeImpl writes via showLoading(). First paint
+      // matches the post-SIGNED_IN state, no sign-in flash.
+      box.innerHTML = '<div style="text-align:center;padding:1rem 0;font-family:var(--ds-f);"><div class="brand-wordmark-wrap" style="margin-bottom:.4rem;"><div class="brand-wordmark">Able</div></div><div style="display:inline-flex;align-items:center;gap:10px;margin-top:1.25rem;padding:10px 18px;background:var(--ds-green-l);border-radius:100px;"><div style="width:10px;height:10px;border-radius:50%;background:var(--ds-green);animation:dsPulse 1.2s ease-in-out infinite;"></div><div style="font-size:13px;color:var(--ds-green);font-weight:700;letter-spacing:.02em;">Loading your account</div></div></div><style>@keyframes dsPulse{0%,100%{opacity:.4;transform:scale(.9)}50%{opacity:1;transform:scale(1.1)}}</style>';
+    }
+    // No session, no checkout — default sign-in form is the correct first paint.
+  } catch (_) { /* localStorage blocked or env issue; sign-in form is safe default */ }
+})();
+</script>
 
 <!-- ═══════ PAYWALL SCREEN ═══════ -->
 <div id="paywall-screen">
@@ -13406,27 +13451,10 @@ window.addEventListener('load', async () => {
     try { history.replaceState({}, '', window.location.pathname); } catch (_) { /* noop */ }
   }
 
-  // Pre-auth flash guard: if there's a Supabase session token in localStorage,
-  // pre-fill auth-box with the same "Loading your account" pill that
-  // _onAuthStateChangeImpl renders via showLoading(). Without this, every
-  // reload-with-session shows the sign-in form for ~200ms before SIGNED_IN
-  // fires and replaces it. Visually identical content from page-load → auth
-  // flow → onboarding transition.
-  try {
-    let hasLsSession = false;
-    for (const k of Object.keys(localStorage)) {
-      if (k.startsWith('sb-') && k.endsWith('-auth-token')) {
-        const raw = localStorage.getItem(k);
-        if (raw && raw.includes('access_token')) { hasLsSession = true; break; }
-      }
-    }
-    if (hasLsSession) {
-      const authBoxEl = document.querySelector('.auth-box');
-      if (authBoxEl) {
-        authBoxEl.innerHTML = `<div style="text-align:center;padding:1rem 0;font-family:var(--ds-f);"><div class="brand-wordmark-wrap" style="margin-bottom:.4rem;"><div class="brand-wordmark">Able</div></div><div style="display:inline-flex;align-items:center;gap:10px;margin-top:1.25rem;padding:10px 18px;background:var(--ds-green-l);border-radius:100px;"><div style="width:10px;height:10px;border-radius:50%;background:var(--ds-green);animation:dsPulse 1.2s ease-in-out infinite;"></div><div style="font-size:13px;color:var(--ds-green);font-weight:700;letter-spacing:.02em;">Loading your account</div></div></div><style>@keyframes dsPulse{0%,100%{opacity:.4;transform:scale(.9)}50%{opacity:1;transform:scale(1.1)}}</style>`;
-      }
-    }
-  } catch (_) { /* localStorage might be blocked; sign-in form is a safe default */ }
+  // (Pre-auth flash guard moved to a parser-blocking inline <script> directly
+  // after the #auth-screen markup, so it runs before the first paint. The old
+  // version here ran inside window.load, after the sign-in form had already
+  // painted.)
 
   window._sb = supabase.createClient(SUPABASE_URL, SUPABASE_KEY, {
     auth: {
@@ -13444,18 +13472,21 @@ window.addEventListener('load', async () => {
     }
   });
 
-  // On checkout return, hide everything and show clean loading instead of auth screen flash
+  // On checkout return, hide everything and show clean loading instead of auth screen flash.
+  // Note: the overlay may already have been created by the synchronous inline script
+  // after the auth-screen markup (line ~1580-ish). Skip re-creation if present.
   const isCheckoutReturn = sessionStorage.getItem('able_post_checkout') === '1';
   if(isCheckoutReturn) {
     document.getElementById('auth-screen').style.display = 'none';
     document.getElementById('paywall-screen').style.display = 'none';
     document.getElementById('app').style.display = 'none';
-    // Show clean loading card
-    const loadingDiv = document.createElement('div');
-    loadingDiv.id = 'checkout-return-loading';
-    loadingDiv.style.cssText = 'position:fixed;inset:0;display:flex;align-items:center;justify-content:center;background:var(--ds-page);z-index:9999;font-family:var(--ds-f);';
-    loadingDiv.innerHTML = `<div style="text-align:center;padding:2rem;"><div class="brand-wordmark-wrap" style="margin-bottom:.75rem;"><div class="brand-wordmark brand-wordmark--xl brand-wordmark--green">Able</div></div><div style="display:inline-flex;align-items:center;gap:10px;margin-top:1.25rem;padding:10px 18px;background:var(--ds-card);border-radius:var(--ds-r1);box-shadow:var(--ds-sh1);"><div style="width:10px;height:10px;border-radius:50%;background:var(--ds-green);animation:dsPulse 1.2s ease-in-out infinite;"></div><div style="font-size:13px;color:var(--ds-t2);font-weight:700;letter-spacing:.02em;">Confirming your subscription. Usually takes a few seconds.</div></div></div><style>@keyframes dsPulse{0%,100%{opacity:.4;transform:scale(.9)}50%{opacity:1;transform:scale(1.1)}}</style>`;
-    document.body.appendChild(loadingDiv);
+    if (!document.getElementById('checkout-return-loading')) {
+      const loadingDiv = document.createElement('div');
+      loadingDiv.id = 'checkout-return-loading';
+      loadingDiv.style.cssText = 'position:fixed;inset:0;display:flex;align-items:center;justify-content:center;background:var(--ds-page);z-index:9999;font-family:var(--ds-f);';
+      loadingDiv.innerHTML = `<div style="text-align:center;padding:2rem;"><div class="brand-wordmark-wrap" style="margin-bottom:.75rem;"><div class="brand-wordmark brand-wordmark--xl brand-wordmark--green">Able</div></div><div style="display:inline-flex;align-items:center;gap:10px;margin-top:1.25rem;padding:10px 18px;background:var(--ds-card);border-radius:var(--ds-r1);box-shadow:var(--ds-sh1);"><div style="width:10px;height:10px;border-radius:50%;background:var(--ds-green);animation:dsPulse 1.2s ease-in-out infinite;"></div><div style="font-size:13px;color:var(--ds-t2);font-weight:700;letter-spacing:.02em;">Confirming your subscription. Usually takes a few seconds.</div></div></div><style>@keyframes dsPulse{0%,100%{opacity:.4;transform:scale(.9)}50%{opacity:1;transform:scale(1.1)}}</style>`;
+      document.body.appendChild(loadingDiv);
+    }
     // Escape hatch: if no auth session lands within 3s, the post-auth flow that
     // dismisses this loader will never run. Fall back to the auth screen so the
     // user isn't stuck on an indefinite loading state.
