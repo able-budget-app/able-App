@@ -3138,7 +3138,10 @@ async function checkSubscription(userId) {
   }
 
   try {
-    const timeout = new Promise((_, reject) => setTimeout(() => reject(new Error('timeout')), 5000));
+    // 2s per-call timeout (was 5s). Supabase typically responds in <500ms;
+    // a 5s wait on a stalled call burned a third of the polling budget on
+    // one attempt. Tighter timeout = faster retry, faster perceived flow.
+    const timeout = new Promise((_, reject) => setTimeout(() => reject(new Error('timeout')), 2000));
     const query = sbGet().from('profiles').select('subscription_status').eq('id', userId).single();
     const result = await Promise.race([query, timeout]);
     const data = result?.data;
@@ -13439,19 +13442,32 @@ window.addEventListener('load', async () => {
       stuck.remove();
       document.getElementById('auth-screen').style.display = 'flex';
     }, 3000);
-    // Safety net: 30s in, if loader is still visible, the polling flow
-    // failed silently. Worst-case poll budget ~19s + user_data 5s = 24s,
-    // so 30s gives a 6s buffer. Was 6s before, which fired mid-flow and
-    // exposed the auth-box loader behind it.
+    // Safety net: 45s in, if loader is still visible, the polling flow
+    // hasn't resolved (typically because one or more checkSubscription calls
+    // hit their 5s timeout, pushing total polling past the budget). Render
+    // the same "Still confirming your payment" card that polling-exit would
+    // have shown — never bump a paying user back to the sign-in form.
     setTimeout(() => {
       const nukeStuck = document.getElementById('checkout-return-loading');
-      if (nukeStuck) {
-        console.log('[Able] safety-net loader removal at 30s');
-        nukeStuck.remove();
-        const auth = document.getElementById('auth-screen');
-        if (auth && auth.style.display === 'none') auth.style.display = 'flex';
+      if (!nukeStuck) return;
+      console.log('[Able] safety-net checkout-pending render at 45s');
+      nukeStuck.remove();
+      const authBox = document.querySelector('.auth-box');
+      if (authBox) {
+        authBox.innerHTML = `
+          <div style="text-align:center;padding:1rem 0;font-family:var(--ds-f);">
+            <div class="brand-wordmark-wrap" style="margin-bottom:.4rem;"><div class="brand-wordmark">Able</div></div>
+            <div style="display:inline-flex;align-items:center;gap:10px;margin-top:1.25rem;padding:10px 18px;background:var(--ds-green-l);border-radius:100px;"><div style="width:10px;height:10px;border-radius:50%;background:var(--ds-green);animation:dsPulse 1.2s ease-in-out infinite;"></div><div style="font-size:13px;color:var(--ds-green);font-weight:700;letter-spacing:.02em;">Still confirming your payment</div></div>
+            <div style="font-size:14px;color:var(--ds-t1);font-weight:800;margin:1.5rem 0 .5rem;letter-spacing:-.01em;">Your payment went through.</div>
+            <div style="font-size:13px;color:var(--ds-t2);font-weight:600;line-height:1.5;margin:0 auto 1.25rem;max-width:320px;">Stripe usually confirms in seconds, sometimes it takes a minute. Refresh in a moment and you'll be in.</div>
+            <button class="btn btn-primary" style="margin-bottom:.5rem;width:100%;" onclick="location.reload()">Check again</button>
+            <div style="font-size:11px;color:var(--ds-t3);font-weight:600;margin-top:.85rem;line-height:1.5;">Still stuck after a couple tries? Email <a href="mailto:hello@becomeable.app" style="color:var(--ds-green);font-weight:700;text-decoration:none;">hello@becomeable.app</a> with your account email and we'll fix it manually within the hour.</div>
+          </div>`;
       }
-    }, 30000);
+      const auth = document.getElementById('auth-screen');
+      if (auth) auth.style.display = 'flex';
+      try { Able.track('checkout_safety_net_render'); } catch(_) {}
+    }, 45000);
   } else {
     document.getElementById('auth-screen').style.display = 'flex';
     document.getElementById('paywall-screen').style.display = 'none';
