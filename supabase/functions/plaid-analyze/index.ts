@@ -64,12 +64,25 @@ type RecurringStream = {
   transaction_ids?: string[];
 };
 
+type CreditAccount = {
+  name: string | null;
+  official_name: string | null;
+  mask: string | null;
+  subtype: string | null;
+  current_balance: number | null;
+};
+
 type AnalyzerInput = {
   categorized_transactions: CategorizedTxn[];
   recurring_streams: {
     inflow_streams: RecurringStream[];
     outflow_streams: RecurringStream[];
   };
+  // Credit/line-of-credit accounts on the connected item. The truthful
+  // source for credit-card debts: each card has its own row with mask
+  // and current_balance. Outflow streams from checking collapse multi-
+  // card payments to the same issuer into one stream.
+  credit_accounts: CreditAccount[];
   profile: {
     name?: string;
     business?: string;
@@ -113,16 +126,27 @@ Deno.serve(async (req) => {
 
     const lookback = item.lookback_months as 6 | 12 | 24;
 
-    // Accounts inside this item — used to scope transactions.
+    // Accounts inside this item — used to scope transactions, and the
+    // credit/line-of-credit ones get passed to the LLM as the truth
+    // source for credit-card debts.
     const { data: accounts, error: acctErr } = await admin
       .from('plaid_accounts')
-      .select('id')
+      .select('id, name, official_name, mask, type, subtype, current_balance')
       .eq('plaid_item_id', item.id);
     if (acctErr) return json({ error: 'Failed to load accounts: ' + acctErr.message }, 500);
     const accountIds = (accounts ?? []).map((a) => a.id);
     if (accountIds.length === 0) {
       return json({ error: 'No accounts found for this item' }, 400);
     }
+    const credit_accounts: CreditAccount[] = (accounts ?? [])
+      .filter((a) => a.subtype === 'credit card' || a.subtype === 'line of credit')
+      .map((a) => ({
+        name: a.name ?? null,
+        official_name: a.official_name ?? null,
+        mask: a.mask ?? null,
+        subtype: a.subtype ?? null,
+        current_balance: a.current_balance != null ? Number(a.current_balance) : null,
+      }));
 
     // Classified transactions for those accounts.
     const { data: txnRows, error: txnErr } = await admin
@@ -188,6 +212,7 @@ Deno.serve(async (req) => {
     const input: AnalyzerInput = {
       categorized_transactions,
       recurring_streams: { inflow_streams, outflow_streams },
+      credit_accounts,
       profile: body.profile_hint ?? {},
       lookback_months: lookback,
     };
@@ -369,6 +394,7 @@ function aggregate(input: AnalyzerInput) {
     inflow_streams: input.recurring_streams.inflow_streams.map(slimStream),
     outflow_streams: input.recurring_streams.outflow_streams.map(slimStream),
     detected_recurring_outflows,
+    credit_accounts: input.credit_accounts,
     top_income_deposits: topIncomeDeposits,
     top_tax_payments: topTaxPayments,
     lumpy_outflows: lumpyOutflows,
@@ -720,11 +746,17 @@ Return ONLY this JSON object. No prose. No markdown fences.
    - When using detected entries, set name to detected_merchant and amount to average_amount. Cite the evidence_transaction_ids array if your output schema includes evidence fields.
 
 6. **Debts selection**:
-   - **Primary source**: outflow streams matching credit cards, auto loans, student loans, personal loans (Plaid LOAN_PAYMENTS_*).
-   - **Fallback when outflow_streams is empty or sparse**: use entries from detected_recurring_outflows where category is 'debt_payment' and confidence is 'high' or 'medium'. Same reason as bills — placeholder "(unresolved) debt payments" rows are forbidden when itemized data is available.
-   - min_payment = average_amount (assume the user has been paying close to minimum unless amounts are wildly variable).
-   - rate_estimate: only fill if highly confident (e.g., merchant indicates a known issuer). Otherwise null.
-   - balance_estimate: only fill if you can derive from history (e.g., visible payoff trajectory). Otherwise null.
+   - **Credit cards & lines of credit — use credit_accounts as the source of truth.** When credit_accounts is non-empty, emit ONE debt entry per account in that array. Each card has its own row with name, mask, current_balance — these are direct from the bank, never collapsed. Do NOT detect credit-card debts from outflow_streams: a single checking-account "Chase $530/mo" stream can hide TWO different Chase cards being paid, and you'll miss one. credit_accounts is the only honest source.
+     - name: prefer official_name if present, then name. Append " ending {mask}" so the user can tell two cards from the same issuer apart. Example: "Chase Sapphire ending 4766".
+     - balance_estimate: use current_balance directly (already the live Plaid balance — pass through).
+     - min_payment: try to match an outflow_stream by mask suffix in description/merchant_name (e.g., "...4766" or "AUTOPAY 4766"). If no clear match, estimate min_payment as 2.5% of current_balance, rounded to the nearest dollar (typical credit-card minimum). NEVER attribute the same outflow stream to two different cards.
+     - rate_estimate: leave null unless you have strong evidence (recent INTEREST CHARGE total ÷ avg balance × 12). Coach can ask the user later.
+     - due_day_of_month: derive from a matched outflow stream's predicted_next_date if you confidently matched one; otherwise null.
+   - **Other debts (auto loans, student loans, personal loans):** detect from outflow streams matching Plaid LOAN_PAYMENTS_*, OR from detected_recurring_outflows entries with category='debt_payment'.
+     - min_payment = average_amount (assume the user has been paying close to minimum unless amounts are wildly variable).
+     - rate_estimate: only fill if highly confident (e.g., merchant indicates a known issuer). Otherwise null.
+     - balance_estimate: only fill if you can derive from history (e.g., visible payoff trajectory). Otherwise null.
+   - **NEVER classify "INTEREST CHARGE", "PURCHASE INTEREST CHARGE", or "FINANCE CHARGE" as a standalone debt.** Those are interest accruals on an existing card debt — emit them as APR evidence (informs rate_estimate) but never as their own debt row. Prior versions of this prompt let those slip through; do not.
 
 7. **Income sources**:
    - Inflow streams that are active. Group by merchant when obviously the same source (multiple Stripe payouts → one "Stripe payouts" income source).
