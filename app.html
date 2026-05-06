@@ -924,6 +924,14 @@ body.is-scrolling .btn-primary:hover{transform:none!important;box-shadow:inherit
 @media(max-width:800px){#coach-input{font-size:16px;}}
 #activity-search{font-size:13px;}
 @media(max-width:800px){#activity-search{font-size:16px;}}
+/* Generic .field input is 14px which triggers iOS focus-zoom (login, signup,
+   onboarding text fields, modal forms). Bump to 16px on mobile to suppress.
+   Auth screen inputs need a parallel rule because they're matched by the
+   higher-specificity #auth-screen selector (line 135). */
+@media(max-width:800px){
+  .field input,.field select{font-size:16px;}
+  #auth-screen input[type="email"],#auth-screen input[type="password"],#auth-screen input[type="text"]{font-size:16px;}
+}
 #coach-send{flex-shrink:0;min-height:48px;padding:0 22px;}
 #coach-send:disabled{opacity:.5;cursor:not-allowed;transform:none;}
 .coach-footer{font-size:11px;color:var(--ds-t3);font-weight:600;text-align:center;padding:.25rem 0 1rem;}
