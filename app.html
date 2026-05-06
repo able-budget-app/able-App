@@ -277,7 +277,7 @@ input,select,button,textarea{font-family:inherit;}
 .btn-primary{background:linear-gradient(135deg,#2a7a4a,#3d9e78);color:white;border:none;font-weight:800;padding:13px 24px;box-shadow:0 4px 14px rgba(42,122,74,.3);}
 .btn-primary:hover{background:linear-gradient(135deg,#1f6038,#2a7a4a);color:white;transform:translateY(-1px);box-shadow:0 6px 20px rgba(42,122,74,.4);}
 @media(max-width:540px){
-  .btn,.btn-primary,.btn-sm,.btn-ghost,.btn-danger-ghost{min-height:44px;}
+  .btn,.btn-primary,.btn-sm,.btn-ghost,.btn-danger-ghost{min-height:44px;min-width:44px;}
 }
 .btn-sm{padding:7px 14px;font-size:12px;}
 .btn-ghost{background:transparent;border-color:transparent;color:var(--ds-t3);padding:7px 12px;}
@@ -398,7 +398,7 @@ input,select,button,textarea{font-family:inherit;}
 .modal{background:var(--ds-card);border-radius:var(--ds-r3);padding:1.75rem;width:100%;max-width:480px;box-shadow:var(--ds-sh3);max-height:90vh;max-height:90dvh;overflow-y:auto;overscroll-behavior:contain;-webkit-overflow-scrolling:touch;animation:modalSlideUp .25s cubic-bezier(.34,1.56,.64,1);position:relative;}
 @keyframes modalSlideUp{from{opacity:0;transform:translateY(20px) scale(.96);}to{opacity:1;transform:translateY(0) scale(1);}}
 .modal-title{font-family:var(--ds-f);font-size:1.35rem;font-weight:800;margin-bottom:1.35rem;color:var(--ds-t1);letter-spacing:-.02em;padding-right:36px;}
-.modal-close{position:absolute;top:10px;right:10px;width:44px;height:44px;border-radius:50%;background:var(--ds-card2);border:none;cursor:pointer;display:flex;align-items:center;justify-content:center;color:var(--ds-t2);transition:all .15s;z-index:2;}
+.modal-close{position:absolute;top:max(10px, env(safe-area-inset-top, 0px));right:10px;width:44px;height:44px;border-radius:50%;background:var(--ds-card2);border:none;cursor:pointer;display:flex;align-items:center;justify-content:center;color:var(--ds-t2);transition:all .15s;z-index:2;}
 .modal-close:hover{background:var(--ds-t4);color:var(--ds-t1);}
 .modal-close:focus{outline:none;box-shadow:0 0 0 3px rgba(42,122,74,.2);}
 .modal-actions{display:flex;gap:10px;justify-content:flex-end;margin-top:1.5rem;}
@@ -418,7 +418,7 @@ input,select,button,textarea{font-family:inherit;}
   @keyframes sheetSlideUp{from{transform:translateY(100%);}to{transform:translateY(0);}}
   .modal::before{content:'';display:block;width:40px;height:4px;background:var(--ds-t4);border-radius:4px;margin:-.25rem auto 1rem;}
   .modal-title{margin-bottom:1rem;}
-  .modal-close{top:18px;right:14px;}
+  .modal-close{top:max(18px, env(safe-area-inset-top, 0px));right:14px;}
   .modal-actions{position:sticky;bottom:0;background:var(--ds-card);margin:1rem -1.25rem 0;padding:12px 1.25rem calc(1rem + env(safe-area-inset-bottom,0px));border-top:1px solid var(--ds-t4);flex-direction:column-reverse;gap:8px;}
   .modal-actions .btn{width:100%;}
 }
@@ -1569,7 +1569,7 @@ posthog.init('phc_B6PH36QxpExnyBYhfScFFF6LhDvoyxuFr6PypJuxxky3', {
     <div id="auth-form-login">
       <div class="field" style="margin-bottom:10px;"><label>Email</label><input type="email" id="login-email" placeholder="you@example.com"></div>
       <div class="field" style="margin-bottom:1rem;"><label>Password</label><div class="pw-wrap"><input type="password" id="login-pass" placeholder="••••••••" onkeydown="if(event.key==='Enter')doLogin()"><button type="button" class="pw-eye" aria-label="Show password" onclick="togglePw('login-pass')"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7z"/><circle cx="12" cy="12" r="3"/></svg></button></div></div>
-      <div style="display:flex;align-items:center;gap:8px;margin-bottom:1rem;"><input type="checkbox" id="stay-signed-in" checked style="width:16px;height:16px;cursor:pointer;margin:0;"><label for="stay-signed-in" style="font-size:12px;font-weight:600;color:var(--ds-t2);cursor:pointer;margin:0;user-select:none;">Stay signed in</label></div>
+      <div style="display:flex;align-items:center;gap:8px;margin-bottom:1rem;"><input type="checkbox" id="stay-signed-in" checked style="width:16px;height:16px;cursor:pointer;margin:0;accent-color:var(--ds-green);"><label for="stay-signed-in" style="font-size:12px;font-weight:600;color:var(--ds-t2);cursor:pointer;margin:0;user-select:none;">Stay signed in</label></div>
       <button class="btn btn-primary" style="width:100%;" onclick="doLogin()" id="login-btn">Sign in</button>
       <div style="text-align:center;margin-top:1rem;font-size:12px;color:var(--text3);font-weight:600;">
         <a href="#" onclick="showForgotPassword()" style="color:var(--sky);text-decoration:none;">Forgot password?</a>
@@ -5047,11 +5047,14 @@ async function obSynthesizeResultFromPlan(planId) {
   const obligations = taxPct > 0 ? [{ type: 'tax', label: 'Taxes', pct: taxPct }] : [];
 
   const split = p.surplus_split || {};
+  // Number(x) || fallback would swallow a legitimate 0 (user set "Pay yourself 0%")
+  // and replace it with the default. Use a NaN-aware coerce so 0 round-trips.
+  const _numOr = (v, fb) => { const n = Number(v); return Number.isFinite(n) ? n : fb; };
   let settings = {
-    ownerPct: Number(split.owner_pct) || 10,
-    debtPct:  Number(split.debt_pct)  || (debts.length ? 20 : 5),
-    bufPct:   Number(split.reserve_pct) || 15,
-    freePct:  Number(split.free_pct)  || 0,
+    ownerPct: _numOr(split.owner_pct, 10),
+    debtPct:  _numOr(split.debt_pct, debts.length ? 20 : 5),
+    bufPct:   _numOr(split.reserve_pct, 15),
+    freePct:  _numOr(split.free_pct, 0),
   };
 
   settings = applyGoalPreset(settings, obAnswers.goals);
@@ -13490,6 +13493,50 @@ function replayTour() {
 // ═══════════════════════════════════════
 function closeModal(id){document.getElementById(id).style.display='none';}
 document.querySelectorAll('.modal-bg').forEach(m=>m.addEventListener('click',e=>{if(e.target===m)m.style.display='none';}));
+
+// Keyboard occlusion fix: when an input/textarea inside a modal or the Coach
+// panel is focused on iOS, scroll it into view above the keyboard. Tall modals
+// on iPhone 14+ frequently leave the focused field hidden under the keyboard.
+// 300ms delay matches iOS keyboard animation. Skipped on desktop (no virtual
+// keyboard) via the touch-coarse media query.
+if (window.matchMedia && window.matchMedia('(max-width:800px)').matches) {
+  document.addEventListener('focusin', (e) => {
+    const el = e.target;
+    if (!el || (el.tagName !== 'INPUT' && el.tagName !== 'TEXTAREA')) return;
+    const overlay = el.closest('.modal-bg, .coach-panel-bg');
+    if (!overlay) return;
+    if (overlay.style.display === 'none' || !overlay.style.display) return;
+    setTimeout(() => {
+      try { el.scrollIntoView({ block: 'center', behavior: 'smooth' }); } catch (_) {}
+    }, 300);
+  });
+}
+
+// Numeric input polish: iOS decimal keyboard via inputmode="decimal" and
+// min="0" to reject negatives. Day-of-month fields (id matches /due/ or
+// placeholder mentions "1-31") are skipped — they need min="1". MutationObserver
+// catches dynamically-rendered inputs (Bills table, Debt table, plan review).
+function _polishNumericInput(el) {
+  if (!el.hasAttribute('inputmode')) el.setAttribute('inputmode', 'decimal');
+  if (!el.hasAttribute('min')) {
+    const isDueDay = (el.id && /due/i.test(el.id)) ||
+                     (el.placeholder && /1-31/.test(el.placeholder));
+    if (!isDueDay) el.setAttribute('min', '0');
+  }
+}
+function _polishAllNumericInputs(root) {
+  (root || document).querySelectorAll('input[type="number"]').forEach(_polishNumericInput);
+}
+_polishAllNumericInputs();
+new MutationObserver((muts) => {
+  for (const m of muts) {
+    for (const n of m.addedNodes) {
+      if (n.nodeType !== 1) continue;
+      if (n.tagName === 'INPUT' && n.type === 'number') _polishNumericInput(n);
+      else if (n.querySelectorAll) _polishAllNumericInputs(n);
+    }
+  }
+}).observe(document.body, { childList: true, subtree: true });
 // Escape key closes the topmost open surface. Coach panel takes precedence
 // (z-index 250 > modal 200); falls through to the topmost open .modal-bg.
 // Auth/paywall/onboarding screens are deliberately not caught — those are
