@@ -109,7 +109,12 @@ Deno.serve(async (req) => {
     const reqBody: Record<string, unknown> = {
       user: { client_user_id: userId },
       client_name: 'Able',
-      products: mode === 'update' ? [] : ['transactions'],
+      // 'transactions' is the core feed. 'liabilities' enables true APR +
+      // minimum_payment + statement_balance on credit cards via
+      // /liabilities/get (consumed by plaid-detect-credit-debts). Items
+      // linked before liabilities was added here will not have it; those
+      // users need to re-link or hit an /item/update flow to gain it.
+      products: mode === 'update' ? [] : ['transactions', 'liabilities'],
       country_codes: ['US'],
       language: 'en',
     };
