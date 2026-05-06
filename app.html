@@ -9201,6 +9201,15 @@ function _achToggleCompact(){
   renderAchievements();
 }
 
+// Roadmap cap: until the user unlocks 8 achievements, the grid shows only
+// their closest 8 (mix of already-unlocked + closest-to-unlocking-locked).
+// No category headers, no filters, no "X more locked" affordance — the
+// roadmap is the goal. At unlock #8 we surface a Coach nudge celebrating
+// the moment and flip ach_roadmap_passed=true (one-way), after which the
+// full categorized grid takes over. 4 of 6 round-2 personas independently
+// flagged the 30-tile grid as "a wall" — this trims it.
+const _ACH_ROADMAP_CAP = 8;
+
 function renderAchievements(){
   const filtersEl = document.getElementById('ach-filters');
   const groupsEl = document.getElementById('ach-groups');
@@ -9221,6 +9230,51 @@ function renderAchievements(){
 
   const all = [...computed, ...records];
   const unlockedCount = all.filter(a => a.unlocked).length;
+
+  // Roadmap-passed transition: fire the milestone nudge exactly once when the
+  // user first reaches the cap. Flag persists in S.settings (Supabase-synced).
+  S.settings = S.settings || {};
+  if (unlockedCount >= _ACH_ROADMAP_CAP && !S.settings.ach_roadmap_passed) {
+    S.settings.ach_roadmap_passed = true;
+    save();
+    setTimeout(() => {
+      showCoachNudge({
+        id: 'ach_roadmap_passed',
+        msg: "Eight unlocked. More achievements just opened up.",
+        prompt: "I just hit 8 achievements. What's worth working on next?",
+      });
+    }, 1500);
+  }
+  const inRoadmap = !S.settings.ach_roadmap_passed;
+
+  // ROADMAP MODE: flat grid of the user's closest 8. No filters, no headers.
+  if (inRoadmap) {
+    filtersEl.innerHTML = '';
+    if (countEl) countEl.textContent = `${unlockedCount} of ${_ACH_ROADMAP_CAP}`;
+    const unlocked = all.filter(a => a.unlocked);
+    const locked = all.filter(a => !a.unlocked).map(a => ({ ...a, _p: _achProgress(a.id) }));
+    locked.sort((a,b) => b._p - a._p);
+    const visible = [...unlocked, ...locked].slice(0, _ACH_ROADMAP_CAP);
+    groupsEl.innerHTML = `<div class="ach-grid">${visible.map(a => {
+      const goldCls = a.gold && a.unlocked ? ' gold' : '';
+      const stateCls = a.unlocked ? `unlocked${goldCls}` : 'locked';
+      const isFresh = a.unlocked && fresh.has(a.id);
+      const pulse = isFresh && a.gold ? `<div class="ach-pulse"></div>` : '';
+      const meta = a.unlocked
+        ? (a.meta ? a.meta : (_achPersistedDates()[a.id] ? new Date(_achPersistedDates()[a.id]).toLocaleDateString('en-US',{month:'short', day:'numeric'}) : ''))
+        : (a.distance ? (function(){ try { return a.distance(); } catch(_){ return ''; } })() : '');
+      const icon = a.unlocked ? a.icon : _ACH_ICON.lock;
+      return `<div class="ach ${stateCls}" title="${escapeHtml(a.name)}${a.meta?(' · '+escapeHtml(a.meta)):''}">
+        ${pulse}
+        <div class="ach-medal">${icon}</div>
+        <div class="ach-name">${escapeHtml(a.name)}</div>
+        <div class="ach-meta">${escapeHtml(meta)}</div>
+      </div>`;
+    }).join('')}</div>`;
+    return;
+  }
+
+  // FULL MODE (post-roadmap): categorized rendering with the existing toggle.
   if (countEl) countEl.textContent = `${unlockedCount} of ${all.length} unlocked`;
 
   // Filter chips — show category + count.
