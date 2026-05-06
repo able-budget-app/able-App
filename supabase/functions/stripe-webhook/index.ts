@@ -15,6 +15,69 @@ const POSTHOG_API_KEY = Deno.env.get("POSTHOG_API_KEY") ??
   "phc_B6PH36QxpExnyBYhfScFFF6LhDvoyxuFr6PypJuxxky3";
 const POSTHOG_HOST = Deno.env.get("POSTHOG_HOST") ?? "https://us.i.posthog.com";
 
+// Meta Conversions API — server-side conversion firing for ad attribution
+// after iOS ATT / ITP / ad-blocker losses on the browser pixel. The pixel
+// and CAPI both fire; Meta dedupes when event_id matches across the two.
+// Stays a no-op until META_PIXEL_ID + META_CAPI_ACCESS_TOKEN env vars land
+// (System User token from Business Manager → System Users with
+// ads_management + business_management scope).
+const META_PIXEL_ID = Deno.env.get("META_PIXEL_ID") ?? "";
+const META_CAPI_ACCESS_TOKEN = Deno.env.get("META_CAPI_ACCESS_TOKEN") ?? "";
+const META_CAPI_TEST_EVENT_CODE = Deno.env.get("META_CAPI_TEST_EVENT_CODE") ?? "";
+
+async function sha256Hex(input: string): Promise<string> {
+  const buf = await crypto.subtle.digest(
+    "SHA-256",
+    new TextEncoder().encode(input.trim().toLowerCase()),
+  );
+  return Array.from(new Uint8Array(buf))
+    .map((b) => b.toString(16).padStart(2, "0")).join("");
+}
+
+async function captureMetaCAPI(
+  eventName: string,
+  eventId: string,
+  email: string | null,
+  externalId: string | null,
+) {
+  if (!META_PIXEL_ID || !META_CAPI_ACCESS_TOKEN) return;
+  try {
+    const userData: Record<string, unknown> = {};
+    if (email) userData.em = [await sha256Hex(email)];
+    if (externalId) userData.external_id = [await sha256Hex(externalId)];
+    const payload: Record<string, unknown> = {
+      data: [{
+        event_name: eventName,
+        event_time: Math.floor(Date.now() / 1000),
+        event_id: eventId,
+        action_source: "website",
+        event_source_url: "https://becomeable.app/",
+        user_data: userData,
+      }],
+    };
+    if (META_CAPI_TEST_EVENT_CODE) {
+      payload.test_event_code = META_CAPI_TEST_EVENT_CODE;
+    }
+    const res = await fetch(
+      `https://graph.facebook.com/v18.0/${META_PIXEL_ID}/events?access_token=${encodeURIComponent(META_CAPI_ACCESS_TOKEN)}`,
+      {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(payload),
+      },
+    );
+    if (!res.ok) {
+      console.error(
+        `Meta CAPI ${eventName} failed`,
+        res.status,
+        await res.text(),
+      );
+    }
+  } catch (err) {
+    console.error(`Meta CAPI ${eventName} error`, err);
+  }
+}
+
 // Fire-and-forget PostHog capture from the server. Wrapped so PostHog
 // outages never break the webhook response back to Stripe. If PostHog is
 // down, Stripe still gets 200 OK and the DB update still runs — only the
@@ -164,6 +227,14 @@ Deno.serve(async (req) => {
         body: JSON.stringify(fields),
       });
       (log.steps as unknown[]).push({ step: "patch_profile", status: res.status, fields: Object.keys(fields) });
+    }
+
+    async function getEmailByCustomer(customerId: string): Promise<string | null> {
+      const url = `${SUPABASE_URL}/rest/v1/profiles?stripe_customer_id=eq.${customerId}&select=email`;
+      const res = await fetch(url, { headers: sbHeaders });
+      if (!res.ok) return null;
+      const rows = await res.json();
+      return rows?.[0]?.email ?? null;
     }
 
     async function getUserIdByCustomer(customerId: string): Promise<string | null> {
@@ -340,6 +411,22 @@ Deno.serve(async (req) => {
         log.mappedStatus = mapped;
         await patchProfileByCustomer(sub.customer, fields);
 
+        // CAPI StartTrial — fires once when the subscription first appears in
+        // trialing state. Deterministic event_id (capi_<customer>_StartTrial)
+        // makes Stripe webhook retries idempotent on Meta's side and lets the
+        // browser eventually compute the same id for pixel/CAPI dedup.
+        if (event.type === "customer.subscription.created" && sub.status === "trialing") {
+          const userId = await getUserIdByCustomer(sub.customer);
+          const email = await getEmailByCustomer(sub.customer);
+          (log.steps as unknown[]).push({ step: "capi_start_trial", userId });
+          await captureMetaCAPI(
+            "StartTrial",
+            `capi_${sub.customer}_StartTrial`,
+            email,
+            userId,
+          );
+        }
+
         if (mapped === "active") {
           const referredUserId = await getUserIdByCustomer(sub.customer);
           if (referredUserId) {
@@ -366,6 +453,13 @@ Deno.serve(async (req) => {
             const unitAmount = priceItem?.unit_amount;
             const mrr = typeof unitAmount === "number" ? unitAmount / 100 : null;
             (log.steps as unknown[]).push({ step: "paid_conversion", userId });
+            const email = await getEmailByCustomer(sub.customer);
+            await captureMetaCAPI(
+              "Subscribe",
+              `capi_${sub.customer}_Subscribe`,
+              email,
+              userId,
+            );
             await capturePostHog("paid_conversion", userId, {
               stripe_customer_id: sub.customer,
               stripe_subscription_id: sub.id,

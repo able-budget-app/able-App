@@ -3,11 +3,10 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-<!-- Content-Security-Policy in REPORT-ONLY mode. Browsers log violations to
-     the console without blocking, so we can refine the policy against real
-     usage before flipping to enforcement. Switch to "Content-Security-Policy"
-     (no -Report-Only) after a week of clean logs. -->
-<meta http-equiv="Content-Security-Policy-Report-Only" content="default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval' https://js.stripe.com https://cdn.plaid.com https://cdn.jsdelivr.net https://us-assets.i.posthog.com https://us.i.posthog.com https://connect.facebook.net https://www.googletagmanager.com https://www.google-analytics.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' data: https://fonts.gstatic.com; img-src 'self' data: blob: https:; connect-src 'self' https://*.supabase.co wss://*.supabase.co https://api.stripe.com https://m.stripe.com https://m.stripe.network https://*.plaid.com https://us.i.posthog.com https://us-assets.i.posthog.com https://www.facebook.com https://www.google-analytics.com https://stats.g.doubleclick.net https://googleads.g.doubleclick.net https://www.google.com; frame-src 'self' https://js.stripe.com https://hooks.stripe.com https://*.plaid.com; worker-src 'self'; object-src 'none'; base-uri 'self'; form-action 'self'">
+<!-- CSP is delivered via the /_headers file at site root (HTTP response
+     header), not a meta tag. Report-Only specifically cannot be delivered
+     via <meta>; the browser ignores it. Edit the policy in _headers. -->
+
 <title>Able. Built for inconsistent income.</title>
 <meta name="description" content="From holding your breath with bills to finally able to breathe. A budgeting app for anyone with mixed or unpredictable income — freelance, side hustle, tips, commission, W2 with extras.">
 <link rel="canonical" href="https://becomeable.app/">
@@ -2754,12 +2753,44 @@ posthog.init('phc_B6PH36QxpExnyBYhfScFFF6LhDvoyxuFr6PypJuxxky3', {
 // Swap the body of Able.track to forward to PostHog/Plausible/etc.
 // ═══════════════════════════════════════
 window.Able = window.Able || {};
+
+// Internal-event → Meta standard-event map. Adding an entry here both fires
+// fbq('track', ...) and threads an eventID through for browser/CAPI dedupe.
+// Mirror this in app.html if you add an event that fires in both surfaces.
+const FBQ_MAP = {
+  landing_cta_clicked: 'Lead',
+};
+
+// Google Ads conversion labels. Create a conversion action in Google Ads →
+// Tools → Conversions → New conversion action; the tag setup screen shows
+// a label like 'AbCdEfGhIjKlMnOpQrS'. Paste it below to fire conversions
+// for that event. Empty string skips the gtag conversion call but still
+// lets gtag('config') page-view tracking work for retargeting.
+const GTAG_CONVERSIONS = {
+  landing_cta_clicked: '',
+};
+
+function _newEventId() {
+  return 'evt_' + Date.now() + '_' + Math.random().toString(36).slice(2, 10);
+}
+
 window.Able.track = function(event, props) {
-  if (window.posthog) posthog.capture(event, props || {});
-  if (window.fbq && event === 'landing_cta_clicked') {
-    window.fbq('track', 'Lead');
+  const enriched = { ...(props || {}) };
+  if (FBQ_MAP[event] || GTAG_CONVERSIONS[event]) {
+    enriched.eventID = enriched.eventID || _newEventId();
   }
-  if (window._ableTrackDebug) console.log('[track]', event, props);
+  if (window.posthog) posthog.capture(event, enriched);
+  if (window.fbq && FBQ_MAP[event]) {
+    window.fbq('track', FBQ_MAP[event], {}, { eventID: enriched.eventID });
+  }
+  const gtagLabel = GTAG_CONVERSIONS[event];
+  if (window.gtag && gtagLabel) {
+    window.gtag('event', 'conversion', {
+      send_to: GOOGLE_ADS_ID + '/' + gtagLabel,
+      transaction_id: enriched.eventID,
+    });
+  }
+  if (window._ableTrackDebug) console.log('[track]', event, enriched);
 };
 
 // Capture referral token (?ref=TOKEN) and stash for checkout.
