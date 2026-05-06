@@ -7,9 +7,19 @@
 // working unchanged.
 //
 // POST body:
-//   { plaid_item_row_id: string }
+//   { plaid_item_row_id: string,
+//     debug?: boolean,
+//     merchant_filter?: string }
 //
 // Returns: { inflow_count, outflow_count, last_refreshed_at, debug? }
+//
+// Debug usage: pass debug:true to get per-group internals — raw txn
+// count, occurrence list (post-cluster-collapse), intervals, median,
+// cadence band, variance ratios, final decision/reason. Combine with
+// merchant_filter (case-insensitive substring) to scope output, e.g.
+// { plaid_item_row_id: '...', debug: true, merchant_filter: 'apple' }
+// returns only Apple-related groups. The persisted streams are not
+// affected by these flags — debug is purely an inspection mode.
 //
 // Algorithm:
 //   1. Pull last 90 days of classified transactions for this item where
@@ -83,7 +93,39 @@ const CADENCE_BANDS: Array<{ name: 'WEEKLY' | 'BIWEEKLY' | 'MONTHLY' | 'ANNUALLY
   { name: 'ANNUALLY',     min: 350, max: 380 },
 ];
 
-type Body = { plaid_item_row_id: string; debug?: boolean };
+type Body = {
+  plaid_item_row_id: string;
+  // When true, response includes per-group internals (merchant_key,
+  // raw txn count, occurrence list with dates/amounts, intervals,
+  // median, cadence band, variance ratios, final decision). Use to
+  // diagnose "why didn't this stream detect?" — pair with
+  // merchant_filter to scope the noise.
+  debug?: boolean;
+  // Case-insensitive substring filter applied against each group's
+  // display_name, merchant_key, and raw merchant_name/name on its
+  // transactions. Only matching groups appear in the debug payload.
+  // Has no effect when debug=false. Production behavior (which
+  // streams get persisted) is never affected by this field.
+  merchant_filter?: string;
+};
+
+type DetectStreamDebug = {
+  merchant_key: string;
+  display_name: string;
+  direction: 'inflow' | 'outflow';
+  raw_txn_count: number;
+  raw_amounts: number[];
+  raw_dates: string[];
+  occurrences: Array<{ date: string; amount: number; cluster_size: number }>;
+  intervals_days: number[];
+  median_interval_days: number | null;
+  cadence_band: string | null;
+  median_amount: number | null;
+  amount_in_range_ratio: number | null;
+  interval_in_range_ratio: number | null;
+  detected: boolean;
+  reason: string;
+};
 
 type TxnRow = {
   id: string;
@@ -186,12 +228,24 @@ Deno.serve(async (req) => {
 
     const groups = groupTransactions(rows);
     const detected: DetectedStream[] = [];
-    const debugRejected: { merchant: string; reason: string }[] = [];
+    const debugTraces: DetectStreamDebug[] = [];
+
+    const filter = body.merchant_filter?.toLowerCase() ?? null;
+    const matchesFilter = (g: Group) => {
+      if (!filter) return true;
+      if (g.display_name.toLowerCase().includes(filter)) return true;
+      if (g.merchant_key.toLowerCase().includes(filter)) return true;
+      return g.txns.some((t) =>
+        (t.merchant_name ?? '').toLowerCase().includes(filter) ||
+        (t.name ?? '').toLowerCase().includes(filter),
+      );
+    };
 
     for (const g of groups) {
-      const result = detectStream(g, itemId);
+      const wantTrace = !!body.debug && matchesFilter(g);
+      const result = detectStream(g, itemId, wantTrace);
       if (result.stream) detected.push(result.stream);
-      else if (body.debug) debugRejected.push({ merchant: g.display_name, reason: result.reason });
+      if (wantTrace && result.debug) debugTraces.push(result.debug);
     }
 
     const detectedIds = new Set(detected.map((s) => s.stream_id));
@@ -252,7 +306,14 @@ Deno.serve(async (req) => {
       inflow_count,
       outflow_count,
       last_refreshed_at: new Date().toISOString(),
-      ...(body.debug ? { debug: { groups: groups.length, detected: detected.length, rejected: debugRejected } } : {}),
+      ...(body.debug ? {
+        debug: {
+          groups: groups.length,
+          detected: detected.length,
+          filter: body.merchant_filter ?? null,
+          traces: debugTraces,
+        },
+      } : {}),
     });
   } catch (e) {
     console.error('plaid-detect-recurring error:', e);
@@ -347,7 +408,35 @@ function groupTransactions(rows: TxnRow[]): Group[] {
   return Array.from(map.values());
 }
 
-function detectStream(group: Group, itemId: string): { stream: DetectedStream | null; reason: string } {
+function detectStream(
+  group: Group,
+  itemId: string,
+  collectDebug = false,
+): { stream: DetectedStream | null; reason: string; debug: DetectStreamDebug | null } {
+  // Build a partial debug record we extend as we make decisions. Final
+  // values for `detected` + `reason` get filled in at every return site.
+  const dbg: DetectStreamDebug | null = collectDebug ? {
+    merchant_key: group.merchant_key,
+    display_name: group.display_name,
+    direction: group.direction,
+    raw_txn_count: group.txns.length,
+    raw_amounts: group.txns.map((t) => Math.abs(t.amount ?? 0)),
+    raw_dates: group.txns.map((t) => t.date),
+    occurrences: [],
+    intervals_days: [],
+    median_interval_days: null,
+    cadence_band: null,
+    median_amount: null,
+    amount_in_range_ratio: null,
+    interval_in_range_ratio: null,
+    detected: false,
+    reason: '',
+  } : null;
+  const finish = (stream: DetectedStream | null, reason: string) => {
+    if (dbg) { dbg.detected = !!stream; dbg.reason = reason; }
+    return { stream, reason, debug: dbg };
+  };
+
   // Collapse near-duplicate transactions into a single occurrence. Plaid
   // often splits a multi-line statement into N transactions across 1-3
   // consecutive days (utility bill with separate line items posting a
@@ -374,9 +463,16 @@ function detectStream(group: Group, itemId: string): { stream: DetectedStream | 
       });
     }
   }
+  if (dbg) {
+    dbg.occurrences = occurrences.map((o) => ({
+      date: o.date,
+      amount: round2(o.amount),
+      cluster_size: o.ids.length,
+    }));
+  }
 
   if (occurrences.length < MIN_OCCURRENCES) {
-    return { stream: null, reason: `only ${occurrences.length} unique-date occurrence(s)` };
+    return finish(null, `only ${occurrences.length} unique-date occurrence(s)`);
   }
 
   // Compute intervals (days between consecutive unique dates).
@@ -384,6 +480,7 @@ function detectStream(group: Group, itemId: string): { stream: DetectedStream | 
   for (let i = 1; i < occurrences.length; i++) {
     intervals.push(daysBetween(occurrences[i - 1].date, occurrences[i].date));
   }
+  if (dbg) dbg.intervals_days = intervals.slice();
 
   // Pick the cadence band that contains the MEDIAN interval. Median is
   // outlier-resistant — one weird gap (statement closing late, holiday
@@ -393,9 +490,13 @@ function detectStream(group: Group, itemId: string): { stream: DetectedStream | 
   const sortedIntervals = intervals.slice().sort((a, b) => a - b);
   const median = medianOf(sortedIntervals);
   const bestBand = CADENCE_BANDS.find((b) => median >= b.min && median <= b.max) ?? null;
+  if (dbg) {
+    dbg.median_interval_days = median;
+    dbg.cadence_band = bestBand?.name ?? null;
+  }
 
   if (!bestBand) {
-    return { stream: null, reason: `median interval ${median}d outside all cadence bands` };
+    return finish(null, `median interval ${median}d outside all cadence bands`);
   }
 
   // Per-cadence occurrence floor — applied only to small streams so we
@@ -413,7 +514,7 @@ function detectStream(group: Group, itemId: string): { stream: DetectedStream | 
   if (isSmallStream) {
     const minForBand = MIN_OCCURRENCES_BY_BAND[bestBand.name];
     if (occurrences.length < minForBand) {
-      return { stream: null, reason: `${bestBand.name} small-amount stream ($${provisionalMedianAmount.toFixed(2)}) needs ≥${minForBand} occurrences, got ${occurrences.length}` };
+      return finish(null, `${bestBand.name} small-amount stream ($${provisionalMedianAmount.toFixed(2)}) needs ≥${minForBand} occurrences, got ${occurrences.length}`);
     }
   }
 
@@ -424,8 +525,9 @@ function detectStream(group: Group, itemId: string): { stream: DetectedStream | 
   // but really range from 3 to 30 days).
   const inRange = intervals.filter((d) => Math.abs(d - median) / Math.max(median, 1) <= 0.5).length;
   const ratio = inRange / intervals.length;
+  if (dbg) dbg.interval_in_range_ratio = Math.round(ratio * 100) / 100;
   if (ratio < MIN_DOMINANT_INTERVAL_RATIO) {
-    return { stream: null, reason: `intervals too variable around median ${median}d (in-range ratio=${ratio.toFixed(2)})` };
+    return finish(null, `intervals too variable around median ${median}d (in-range ratio=${ratio.toFixed(2)})`);
   }
 
   // Amount sanity check using median + in-range share. The previous
@@ -443,8 +545,12 @@ function detectStream(group: Group, itemId: string): { stream: DetectedStream | 
     Math.abs(a - medianAmount) / Math.max(medianAmount, 0.01) <= 0.5,
   ).length;
   const amountInRangeRatio = amountInRange / amounts.length;
+  if (dbg) {
+    dbg.median_amount = round2(medianAmount);
+    dbg.amount_in_range_ratio = Math.round(amountInRangeRatio * 100) / 100;
+  }
   if (amountInRangeRatio < 0.6) {
-    return { stream: null, reason: `amounts too variable around median ${medianAmount.toFixed(2)} (in-range ratio=${amountInRangeRatio.toFixed(2)})` };
+    return finish(null, `amounts too variable around median ${medianAmount.toFixed(2)} (in-range ratio=${amountInRangeRatio.toFixed(2)})`);
   }
 
   const lastOcc = occurrences[occurrences.length - 1];
@@ -483,7 +589,7 @@ function detectStream(group: Group, itemId: string): { stream: DetectedStream | 
     transaction_ids: occurrences.flatMap((o) => o.ids),
   };
 
-  return { stream, reason: 'detected' };
+  return finish(stream, 'detected');
 }
 
 function daysBetween(a: string, b: string): number {
