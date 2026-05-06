@@ -5997,18 +5997,28 @@ async function obSubmitPlanReview() {
     }
 
     // Income sources are plain strings — no pending_review tag possible.
-    // Honor the editor's list directly when accepted.
+    // Honor the editor's list directly when accepted. When the analyzer has
+    // detected concrete sources, drop the placeholder defaults
+    // (Salary/Freelance/Side income/Other) that loaded on first signup —
+    // they're noise once real data lands. Round 2 surfaced this as
+    // P1-2026-05-04 #4: panel showed 9 entries when Plaid detected 5.
+    // Anything else in S.sources (user-added chip labels, prior-session
+    // entries) is preserved.
     if (r.sections.income_sources.decision === 'accept') {
+      const PLACEHOLDER_DEFAULTS = new Set(['salary', 'freelance', 'side income', 'other']);
       const wantedNames = (r.sections.income_sources.items || []).map((s) => s.name).filter(Boolean);
       const existing = Array.isArray(S.sources) ? S.sources : [];
-      const seen = new Set(existing.map((s) => s.toLowerCase()));
+      const filtered = wantedNames.length > 0
+        ? existing.filter((s) => !PLACEHOLDER_DEFAULTS.has(String(s).toLowerCase()))
+        : existing.slice();
+      const seen = new Set(filtered.map((s) => s.toLowerCase()));
       for (const n of wantedNames) {
         if (!seen.has(n.toLowerCase())) {
-          existing.push(n);
+          filtered.push(n);
           seen.add(n.toLowerCase());
         }
       }
-      S.sources = existing;
+      S.sources = filtered;
     }
 
     // Profile fields the legacy flow always wrote.
