@@ -3,6 +3,11 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<!-- Content-Security-Policy in REPORT-ONLY mode. Browsers log violations to
+     the console without blocking, so we can refine the policy against real
+     usage before flipping to enforcement. Switch to "Content-Security-Policy"
+     (no -Report-Only) after a week of clean logs. -->
+<meta http-equiv="Content-Security-Policy-Report-Only" content="default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval' https://js.stripe.com https://cdn.plaid.com https://cdn.jsdelivr.net https://us-assets.i.posthog.com https://us.i.posthog.com https://connect.facebook.net; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' data: https://fonts.gstatic.com; img-src 'self' data: blob: https:; connect-src 'self' https://*.supabase.co wss://*.supabase.co https://api.stripe.com https://m.stripe.com https://m.stripe.network https://*.plaid.com https://us.i.posthog.com https://us-assets.i.posthog.com https://www.facebook.com; frame-src 'self' https://js.stripe.com https://hooks.stripe.com https://*.plaid.com; worker-src 'self'; object-src 'none'; base-uri 'self'; form-action 'self'">
 <title>Able. Built for inconsistent income.</title>
 <meta name="description" content="From holding your breath with bills to finally able to breathe. A budgeting app for anyone with mixed or unpredictable income — freelance, side hustle, tips, commission, W2 with extras.">
 <link rel="canonical" href="https://becomeable.app/">
