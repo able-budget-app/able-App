@@ -31,6 +31,23 @@ Last consolidated: 2026-05-03 from `pending_work.md`, `competitor-feature-audit.
 
 - **P1-2026-05-05 #2 — Schema drift between client and `plaid_recurring_streams` (silent 400).** ✅ Shipped 2026-05-05 in PR #2 (`3d514af`). Dropped `personal_finance_category_primary` from the client SELECT + AI match payload + `_streamCategoryToBill` and `_looksLikeBankFee` (refactored to derive primary from detailed via Plaid PFC convention). Edge Function only writes `_detailed`; primary was dead code in the client.
 
+- **P1-2026-05-06 #1 — Plaid liabilities integration for true APR + min_payment.** Current credit-card APR estimator inside `buildCreditDebts` (90-day INTEREST CHARGE sum annualized) systematically undershoots when the balance is growing across the window — Paul's two Chase cards came back at 19.82% / 15.58% (actual 26.24% / 22.74%, off by ~7% on both). The math is wrong by design (uses `current_balance` as denominator instead of average daily balance, which we don't have). Plaid's `liabilities` product returns true APRs (purchase, balance transfer, cash advance), minimum payment, last statement balance, last payment date — that's the canonical source. Currently `products=['transactions']` only per `plaid_v1_decisions.md`. Lift: enable `liabilities` on Plaid items, add `/liabilities/get` call to a new Edge Function, persist APR + min_payment per card. **Scheduled: tomorrow's session (2026-05-07).** When this ships: rip out the APR estimator block in `buildCreditDebts` and source from liabilities instead. Min_payment also becomes deterministic (no more 2.5% fallback).
+
+- **P1-2026-05-06 #2 — Add-bank-from-settings only syncs, doesn't classify or analyze.** `settingsHandlePostLink` (app.html:9777) calls `plaid-exchange-public-token` and `plaid-sync` only. No `plaid-classify-pending`, no `plaid-detect-recurring`, no `plaid-analyze`, no `analyzer-apply-plan`. Result: when a user adds a second bank, transactions land in `plaid_transactions` with `able_category: null`, no recurring streams detected, no debts/bills/sources surfaced. Reproduced 2026-05-06: Paul added a second account with a credit card; transactions imported but the card never appeared in the Debt tab.
+
+  **Why this is bigger than just credit cards.** Multi-bank scenarios are varied: forgot a credit card, added a second checking, connected a 1099 deposit account that should change the tax %, added a business account with its own bills, started tracking a spouse's accounts. The detection layer is the easy part; the design question is *what to do with what you find* without blowing away tuning the user has already done since onboarding.
+
+  **Locked design — Option C (deterministic-first delta with opt-in recalibration):**
+  1. Detect new credit cards deterministically by calling `buildCreditDebts` against the new item's `plaid_accounts` (no LLM needed for cards).
+  2. Run `plaid-classify-pending` + `plaid-detect-recurring` against the new item's transactions.
+  3. Run a scoped analyzer pass on the new item only — produces proposed new bills + income sources, but does NOT touch tax_pct or surplus_split.
+  4. Show a unified "We found this in [bank name]" review modal: proposed new debts (from step 1), bills, and income sources. User picks what to add. Existing rows untouched.
+  5. Add a separate "Recalibrate tax % and surplus split with new data" button — opt-in. If pressed, runs full multi-item analyze (analyzer needs to be made multi-item-aware, deferred until users actually want this).
+
+  **Connection to P1-2026-05-06 #1:** when liabilities ships tomorrow, this is also a natural moment to extract `buildCreditDebts` from inside `plaid-analyze` into its own Edge Function (`plaid-detect-credit-debts`) writing to a `plaid_credit_debts` table. That's the C → A refactor we deferred 2026-05-06; it pays off here because both the analyzer path (existing) and the add-bank-delta path (new) need credit-card detection. Avoids duplicating the logic in two places.
+
+  **Effort: M-L.** New Edge Function for credit-card detection, refactor `settingsHandlePostLink` to chain classifier + detect-recurring + scoped-analyzer + review modal, new modal UI in app.html, plumbing for the opt-in recalibration button. **Scheduled: tomorrow's session alongside P1-2026-05-06 #1.**
+
 Caveat carried forward: the `refer_*_joined` achievement tiles still need a backend hook for "invite turned into a paid signup." Tracked as a small follow-up below.
 
 ---
