@@ -35,6 +35,7 @@ type Category = 'income' | 'bill' | 'debt_payment' | 'tax_payment' | 'transfer' 
 
 type CategorizedTxn = {
   transaction_id: string;
+  plaid_account_id: string;
   name?: string;
   merchant_name?: string | null;
   amount: number;
@@ -65,11 +66,27 @@ type RecurringStream = {
 };
 
 type CreditAccount = {
+  id: string;
   name: string | null;
   official_name: string | null;
   mask: string | null;
   subtype: string | null;
   current_balance: number | null;
+};
+
+// Deterministically pre-built credit-card debts. Built from plaid_accounts
+// (one row per card from the bank) + outflow streams (mask-matched for
+// min_payment) + interest-charge history (rate_estimate). Passed to the
+// LLM as the source of truth for debts[] so the model never has to guess
+// or collapse two same-issuer cards into one.
+type PreBuiltCreditDebt = {
+  name: string;
+  mask: string | null;
+  balance_estimate: number;
+  min_payment: number;
+  rate_estimate: number | null;
+  due_day_of_month: number | null;
+  evidence_stream_id: string | null;
 };
 
 type AnalyzerInput = {
@@ -141,6 +158,7 @@ Deno.serve(async (req) => {
     const credit_accounts: CreditAccount[] = (accounts ?? [])
       .filter((a) => a.subtype === 'credit card' || a.subtype === 'line of credit')
       .map((a) => ({
+        id: a.id as string,
         name: a.name ?? null,
         official_name: a.official_name ?? null,
         mask: a.mask ?? null,
@@ -152,7 +170,7 @@ Deno.serve(async (req) => {
     const { data: txnRows, error: txnErr } = await admin
       .from('plaid_transactions')
       .select(
-        'plaid_transaction_id, name, merchant_name, amount, date, able_category, able_label, able_confidence, able_is_recurring_likely',
+        'plaid_transaction_id, plaid_account_id, name, merchant_name, amount, date, able_category, able_label, able_confidence, able_is_recurring_likely',
       )
       .eq('user_id', userId)
       .in('plaid_account_id', accountIds)
@@ -162,6 +180,7 @@ Deno.serve(async (req) => {
 
     const categorized_transactions: CategorizedTxn[] = (txnRows ?? []).map((r) => ({
       transaction_id: r.plaid_transaction_id,
+      plaid_account_id: r.plaid_account_id,
       name: r.name ?? undefined,
       merchant_name: r.merchant_name,
       amount: Number(r.amount),
@@ -298,7 +317,34 @@ function json(body: unknown, status = 200) {
 // Aggregate raw transactions into a compact payload for the LLM.
 // Goal: keep the prompt under ~15k input tokens regardless of lookback.
 function aggregate(input: AnalyzerInput) {
-  const txns = input.categorized_transactions;
+  const allTxns = input.categorized_transactions;
+
+  // Deterministic credit-card debt detection happens before anything else.
+  // Each credit card on the item gets its own debt entry built from
+  // plaid_accounts.current_balance (truthful, never collapsed across cards),
+  // with min_payment matched to an outflow stream by mask suffix and
+  // rate_estimate derived from interest-charge history. The LLM consumes
+  // this as the source of truth for credit-card debts; it never has to
+  // detect them from outflow streams.
+  const { debts: pre_built_credit_debts, claimed_stream_ids: claimedStreamIds } =
+    buildCreditDebts(input.credit_accounts, input.recurring_streams.outflow_streams, allTxns);
+
+  // Strip interest-charge transactions from everything the LLM sees as a
+  // bill or recurring outflow. They drove rate_estimate above; surfacing
+  // them again as bills (the P1-2026-05-04 #2 issue) would double-count.
+  const txns = stripInterestCharges(allTxns);
+
+  // Strip credit-card payment streams so the LLM doesn't try to treat
+  // them as "non-credit debts." Two same-issuer cards might collapse
+  // into one stream (the bug the credit_accounts shift fixes), so we
+  // also drop any unmatched streams whose descriptor contains a card
+  // mask — defensive against the second-card-not-matched case.
+  const masks = input.credit_accounts.map((a) => a.mask).filter((m): m is string => !!m && m.length >= 3);
+  const filteredOutflowStreams = stripCreditPaymentsFromOutflows(
+    input.recurring_streams.outflow_streams,
+    claimedStreamIds,
+    masks,
+  );
 
   const byCategory: Record<Category, CategorizedTxn[]> = {
     income: [],
@@ -392,13 +438,155 @@ function aggregate(input: AnalyzerInput) {
       ratio_max_over_min: incomeVariability.ratio,
     },
     inflow_streams: input.recurring_streams.inflow_streams.map(slimStream),
-    outflow_streams: input.recurring_streams.outflow_streams.map(slimStream),
+    outflow_streams: filteredOutflowStreams.map(slimStream),
     detected_recurring_outflows,
-    credit_accounts: input.credit_accounts,
+    pre_built_credit_debts,
     top_income_deposits: topIncomeDeposits,
     top_tax_payments: topTaxPayments,
     lumpy_outflows: lumpyOutflows,
   };
+}
+
+// Builds one debt entry per credit card / line of credit on this item.
+// Source of truth is plaid_accounts.current_balance (live from the bank),
+// not outflow streams (which collapse two same-issuer cards). Each card
+// gets its own entry no matter what the payment side looks like.
+//
+// min_payment matching: walk outflow_streams looking for the card's mask
+// in the description/merchant_name. First match wins, claimed so a second
+// card can't double-count it. If nothing matches, fall back to 2.5% of
+// balance with a $25 floor (typical CC minimum).
+//
+// rate_estimate: sum interest charges on this card's own transactions
+// (filtered by plaid_account_id) over the last 90 days, annualize, divide
+// by current_balance. Clamped to [5%, 40%]. Null if we have no signal.
+//
+// Cards with current_balance <= 0 are skipped — paid-off or statement
+// credits aren't debts.
+function buildCreditDebts(
+  credit_accounts: CreditAccount[],
+  outflow_streams: RecurringStream[],
+  txns: CategorizedTxn[],
+): { debts: PreBuiltCreditDebt[]; claimed_stream_ids: Set<string> } {
+  const debts: PreBuiltCreditDebt[] = [];
+  const claimed_stream_ids = new Set<string>();
+  if (credit_accounts.length === 0) return { debts, claimed_stream_ids };
+
+  const todayMs = Date.now();
+  const ninetyDaysAgoMs = todayMs - 90 * 86400000;
+  const interestRegex = /interest charge|finance charge|purchase interest/i;
+
+  for (const card of credit_accounts) {
+    const balance = card.current_balance ?? 0;
+    if (balance <= 0) continue;
+
+    const baseName = card.official_name ?? card.name ?? 'Credit card';
+    const name = card.mask ? `${baseName} ending ${card.mask}` : baseName;
+
+    // Match an outflow payment stream by mask suffix.
+    let matchedStream: RecurringStream | null = null;
+    if (card.mask && card.mask.length >= 3) {
+      const maskRegex = new RegExp(`(?:^|\\D)${escapeRegex(card.mask)}(?:\\D|$)`);
+      for (const s of outflow_streams) {
+        if (claimed_stream_ids.has(s.stream_id)) continue;
+        const haystack = `${s.description ?? ''} ${s.merchant_name ?? ''}`;
+        if (maskRegex.test(haystack)) {
+          matchedStream = s;
+          claimed_stream_ids.add(s.stream_id);
+          break;
+        }
+      }
+    }
+
+    let min_payment: number;
+    if (matchedStream) {
+      const matched = matchedStream.last_amount?.amount ?? matchedStream.average_amount?.amount ?? 0;
+      min_payment = Math.max(1, Math.round(matched));
+    } else {
+      min_payment = Math.max(25, Math.round(balance * 0.025));
+    }
+
+    let rate_estimate: number | null = null;
+    if (balance >= 100) {
+      let interest_90d = 0;
+      for (const t of txns) {
+        if (t.plaid_account_id !== card.id) continue;
+        const txnMs = new Date(t.date + 'T00:00:00Z').getTime();
+        if (txnMs < ninetyDaysAgoMs) continue;
+        const haystack = `${t.name ?? ''} ${t.merchant_name ?? ''}`;
+        if (interestRegex.test(haystack)) {
+          interest_90d += Math.abs(t.amount);
+        }
+      }
+      if (interest_90d > 0) {
+        const annualized = (interest_90d / 90) * 365;
+        const rate = annualized / balance;
+        const clamped = Math.max(0.05, Math.min(0.40, rate));
+        rate_estimate = Math.round(clamped * 10000) / 10000;
+      }
+    }
+
+    let due_day_of_month: number | null = null;
+    if (matchedStream?.predicted_next_date) {
+      const day = new Date(matchedStream.predicted_next_date + 'T00:00:00Z').getUTCDate();
+      if (day >= 1 && day <= 31) due_day_of_month = day;
+    }
+
+    debts.push({
+      name,
+      mask: card.mask,
+      balance_estimate: round(balance),
+      min_payment,
+      rate_estimate,
+      due_day_of_month,
+      evidence_stream_id: matchedStream?.stream_id ?? null,
+    });
+  }
+
+  return { debts, claimed_stream_ids };
+}
+
+// Removes credit-card payment streams from the outflow pool the LLM sees
+// for "other debts" detection. Drops any stream that was claimed by
+// buildCreditDebts (mask matched) plus any stream whose descriptor still
+// contains a credit-card mask (defensive: handles the case where two cards
+// share an issuer and the unmatched second-card stream would still leak
+// in as a "personal loan" candidate otherwise).
+function stripCreditPaymentsFromOutflows(
+  outflow_streams: RecurringStream[],
+  claimed_stream_ids: Set<string>,
+  masks: string[],
+): RecurringStream[] {
+  const escaped = masks.map(escapeRegex);
+  const maskRegex = escaped.length
+    ? new RegExp(`(?:^|\\D)(${escaped.join('|')})(?:\\D|$)`)
+    : null;
+  return outflow_streams.filter((s) => {
+    if (claimed_stream_ids.has(s.stream_id)) return false;
+    if (maskRegex) {
+      const haystack = `${s.description ?? ''} ${s.merchant_name ?? ''}`;
+      if (maskRegex.test(haystack)) return false;
+    }
+    return true;
+  });
+}
+
+// Strips INTEREST CHARGE / FINANCE CHARGE / PURCHASE INTEREST CHARGE
+// transactions before the LLM sees them as bills or recurring outflows.
+// They drove rate_estimate inside buildCreditDebts; surfacing them again
+// as standalone bills was the P1-2026-05-04 #2 leak ("$349 Purchase
+// Interest Charge in Bills"). Defensive against classifier mistakes
+// upstream — the prompt also tells the LLM not to emit these as debts.
+function stripInterestCharges(txns: CategorizedTxn[]): CategorizedTxn[] {
+  const interestRegex = /interest charge|finance charge|purchase interest/i;
+  return txns.filter((t) => {
+    const haystack = `${t.name ?? ''} ${t.merchant_name ?? ''}`;
+    return !interestRegex.test(haystack);
+  });
+}
+
+function escapeRegex(s: string): string {
+  return s.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
 }
 
 // Detects recurring merchants by grouping transactions by merchant_name,
@@ -747,12 +935,8 @@ Return ONLY this JSON object. No prose. No markdown fences.
    - When using detected entries, set name to detected_merchant and amount to average_amount. Cite the evidence_transaction_ids array if your output schema includes evidence fields.
 
 6. **Debts selection**:
-   - **Credit cards & lines of credit — use credit_accounts as the source of truth.** When credit_accounts is non-empty, emit ONE debt entry per account in that array. Each card has its own row with name, mask, current_balance — these are direct from the bank, never collapsed. Do NOT detect credit-card debts from outflow_streams: a single checking-account "Chase $530/mo" stream can hide TWO different Chase cards being paid, and you'll miss one. credit_accounts is the only honest source.
-     - name: prefer official_name if present, then name. Append " ending {mask}" so the user can tell two cards from the same issuer apart. Example: "Chase Sapphire ending 4766".
-     - balance_estimate: use current_balance directly (already the live Plaid balance — pass through).
-     - min_payment: try to match an outflow_stream by mask suffix in description/merchant_name (e.g., "...4766" or "AUTOPAY 4766"). If no clear match, estimate min_payment as 2.5% of current_balance, rounded to the nearest dollar (typical credit-card minimum). NEVER attribute the same outflow stream to two different cards.
-     - rate_estimate: leave null unless you have strong evidence (recent INTEREST CHARGE total ÷ avg balance × 12). Coach can ask the user later.
-     - due_day_of_month: derive from a matched outflow stream's predicted_next_date if you confidently matched one; otherwise null.
+   - **Credit cards & lines of credit — use \`pre_built_credit_debts\` as the source of truth.** When the array is non-empty, emit each entry verbatim into \`debts[]\`. Do NOT modify \`name\`, \`min_payment\`, \`rate_estimate\`, \`balance_estimate\`, or \`due_day_of_month\` — they are computed deterministically from the bank's account balances, the user's autopay streams, and interest-charge history. Set \`evidence_stream_id\` from the entry's value (may be null when no autopay was matched).
+   - Do NOT detect credit-card debts from outflow_streams. The outflow_streams array has already been pre-filtered to remove credit-card payment streams; what remains is non-credit-card debt territory only.
    - **Other debts (auto loans, student loans, personal loans):** detect from outflow streams matching Plaid LOAN_PAYMENTS_*, OR from detected_recurring_outflows entries with category='debt_payment'.
      - min_payment = average_amount (assume the user has been paying close to minimum unless amounts are wildly variable).
      - rate_estimate: only fill if highly confident (e.g., merchant indicates a known issuer). Otherwise null.
