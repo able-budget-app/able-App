@@ -4,6 +4,11 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
 <meta name="robots" content="noindex,nofollow">
+<!-- Content-Security-Policy in REPORT-ONLY mode. Browsers log violations to
+     the console without blocking, so we can refine the policy against real
+     usage before flipping to enforcement. Switch to "Content-Security-Policy"
+     (no -Report-Only) after a week of clean logs. -->
+<meta http-equiv="Content-Security-Policy-Report-Only" content="default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval' https://js.stripe.com https://cdn.plaid.com https://cdn.jsdelivr.net https://us-assets.i.posthog.com https://us.i.posthog.com https://connect.facebook.net https://www.googletagmanager.com https://www.google-analytics.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' data: https://fonts.gstatic.com; img-src 'self' data: blob: https:; connect-src 'self' https://*.supabase.co wss://*.supabase.co https://api.stripe.com https://m.stripe.com https://m.stripe.network https://*.plaid.com https://us.i.posthog.com https://us-assets.i.posthog.com https://www.facebook.com https://www.google-analytics.com https://stats.g.doubleclick.net https://googleads.g.doubleclick.net https://www.google.com; frame-src 'self' https://js.stripe.com https://hooks.stripe.com https://*.plaid.com; worker-src 'self'; object-src 'none'; base-uri 'self'; form-action 'self'">
 <title>Able. Built for inconsistent income.</title>
 <link rel="icon" type="image/svg+xml" href="/favicon.svg">
 <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32.png">
@@ -1501,7 +1506,11 @@ body.is-scrolling .btn-primary:hover{transform:none!important;box-shadow:inherit
 .alloc-locked-in{animation:lockedInPulse 1.6s ease;}
 @keyframes lockedInPulse{0%,100%{box-shadow:0 0 0 0 rgba(42,122,74,0);}40%{box-shadow:0 0 0 5px rgba(42,122,74,.18);}}
 </style>
-<!-- Meta Pixel (replace META_PIXEL_ID with your pixel id) -->
+<!-- Meta Pixel — page view tracking. To activate: create a pixel in Meta
+     Events Manager, copy the numeric ID (15-16 digits), paste it as the
+     META_PIXEL_ID value in BOTH index.html and app.html (also update the
+     noscript fallback image URL below). Gate uses a numeric regex check
+     so accidental global find/replace can't silently break the snippet. -->
 <script>
 !function(f,b,e,v,n,t,s)
 {if(f.fbq)return;n=f.fbq=function(){n.callMethod?
@@ -1511,18 +1520,20 @@ n.queue=[];t=b.createElement(e);t.async=!0;
 t.src=v;s=b.getElementsByTagName(e)[0];
 s.parentNode.insertBefore(t,s)}(window, document,'script',
 'https://connect.facebook.net/en_US/fbevents.js');
-var META_PIXEL_ID = 'META_PIXEL_ID';
-if (META_PIXEL_ID !== 'META_PIXEL_ID') {
+var META_PIXEL_ID = '940091778831653';
+if (/^\d{10,20}$/.test(META_PIXEL_ID)) {
   fbq('init', META_PIXEL_ID);
   fbq('track', 'PageView');
 }
 </script>
-<noscript><img height="1" width="1" style="display:none" src="https://www.facebook.com/tr?id=META_PIXEL_ID&ev=PageView&noscript=1"/></noscript>
+<noscript><img height="1" width="1" style="display:none" src="https://www.facebook.com/tr?id=940091778831653&ev=PageView&noscript=1"/></noscript>
 
-<!-- Google Ads / gtag (replace GOOGLE_ADS_ID with AW-XXXXXXXXX) -->
+<!-- Google Ads gtag — page view tracking. Customer ID 648-445-0407 →
+     gtag value AW-6484450407 (strip dashes, prepend AW-). Gate uses a
+     prefix+digit regex so accidental find/replace can't silently break. -->
 <script>
-var GOOGLE_ADS_ID = 'GOOGLE_ADS_ID';
-if (GOOGLE_ADS_ID !== 'GOOGLE_ADS_ID') {
+var GOOGLE_ADS_ID = 'AW-6484450407';
+if (/^AW-\d{8,12}$/.test(GOOGLE_ADS_ID)) {
   var gtagScript = document.createElement('script');
   gtagScript.async = true;
   gtagScript.src = 'https://www.googletagmanager.com/gtag/js?id=' + GOOGLE_ADS_ID;
@@ -12686,6 +12697,15 @@ function saveBalance(){
   closeModal('modal-balance');
   renderBalanceCard();
 }
+function useBankBalanceAsStart(){
+  const sum = S._bankBalances && typeof S._bankBalances.sum === 'number' ? S._bankBalances.sum : null;
+  if (sum == null) return;
+  S.settings = S.settings || {};
+  S.settings.balance = Math.round(sum * 100) / 100;
+  save();
+  Able.track?.('balance_set_from_bank', { sum });
+  refreshHome();
+}
 function toggleReservedBreakdown(){ toggleHeroBreakdown(); }
 function toggleHeroBreakdown(){
   const el = document.getElementById('db-hero-breakdown');
@@ -12721,6 +12741,40 @@ function renderHeroMoney(){
   const el = document.getElementById('db-hero-money');
   if (!el) return;
   if (!_hasBalance()) {
+    // Connected-Plaid path: show live bank balance immediately so a fresh
+    // user doesn't see a blank "$0 to allocate" card. Surfaces the same
+    // breakdown the populated branch shows (per-account list on tap),
+    // plus a one-tap CTA to seed S.settings.balance from the bank sum.
+    // Manual entry stays available as a secondary option.
+    const bb = S._bankBalances;
+    if (bb && bb.accounts && bb.accounts.length > 0) {
+      const accCount = bb.accounts.length;
+      const breakdown = `<div id="db-hero-bank-breakdown" class="db-hero-breakdown" style="display:none;">
+        ${bb.accounts.map((a) => `
+          <div class="db-hero-breakdown-row">
+            <div>
+              <div class="db-hero-breakdown-name">${escapeHtml(a.institution_name)}</div>
+              <div class="db-hero-breakdown-meta">${escapeHtml(a.name)}${a.mask ? ' ····' + escapeHtml(a.mask) : ''}</div>
+            </div>
+            <div class="db-hero-breakdown-amt">${a.current_balance != null ? f2(a.current_balance) : '—'}</div>
+          </div>
+        `).join('')}
+      </div>`;
+      el.innerHTML = `
+        <div class="db-hero-money-row">
+          <span class="db-hero-money-label">Bank balance</span>
+          <span class="db-hero-money-val">${f2(bb.sum)}</span>
+        </div>
+        <div class="db-hero-bank-line" onclick="toggleBankBreakdown()">
+          <span>Across ${accCount} account${accCount === 1 ? '' : 's'} <span class="db-hero-toggle" aria-label="Show bank breakdown">▾</span></span>
+        </div>
+        ${breakdown}
+        <div class="db-hero-empty" style="margin-top:10px;">Set this as your starting balance so Able can track what's safe to spend after upcoming bills.</div>
+        <button class="db-hero-cta-primary" onclick="useBankBalanceAsStart()">Use ${f2(bb.sum)} as my balance</button>
+        <button class="db-hero-cta-secondary" onclick="openBalanceModal()" style="margin-top:6px;">Enter a different amount</button>
+      `;
+      return;
+    }
     el.innerHTML = `
       <div class="db-hero-empty">Add what's in your spending accounts so Able can show what's safe to spend after upcoming bills.</div>
       <button class="db-hero-cta-primary" onclick="openBalanceModal()">Add balance</button>
