@@ -734,7 +734,8 @@ Return ONLY this JSON object. No prose. No markdown fences.
 4. **Tax allocation**:
    - If tax_payments are visible: derive suggested_pct from totals.tax_paid / totals.gross_income, rounded to nearest whole %. Confidence "high" if ≥ 4 quarters of evidence, "medium" if 2-3 quarters, "low" if 0-1.
    - If no tax_payments visible AND profile suggests business income: suggest 22% with confidence "low" and explain in evidence_summary that no historical payments were found.
-   - If profile suggests W-2 only: suggest 0 with confidence "high" and note "Employer withholds at source."
+   - **W-2 detection requires BOTH (a) consistent amounts (coefficient of variation < 0.15) AND (b) consistent cadence (regular biweekly/semi-monthly/monthly).** A merchant name containing "PAYROLL", "WAGES", or similar terminology is NOT sufficient on its own. Healthcare staffing agencies (Aya Healthcare, Locumstory, Cross Country, NurseFly, etc.), nursing locum platforms, and other 1099 contractor agencies routinely deposit payments labeled like "AYA HC PAYROLL" — but issue 1099-NECs at year end. If wages-tagged deposits have CV > 0.15 OR irregular cadence, treat as 1099/business income and suggest 22% with confidence "medium" (note in evidence_summary: "wages-style memos but variable amounts — treating as 1099").
+   - If profile suggests W-2 only AND deposits meet both consistency criteria above: suggest 0 with confidence "high" and note "Employer withholds at source."
    - Never suggest > 35.
 
 5. **Bills selection**:
