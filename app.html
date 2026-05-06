@@ -12686,6 +12686,15 @@ function saveBalance(){
   closeModal('modal-balance');
   renderBalanceCard();
 }
+function useBankBalanceAsStart(){
+  const sum = S._bankBalances && typeof S._bankBalances.sum === 'number' ? S._bankBalances.sum : null;
+  if (sum == null) return;
+  S.settings = S.settings || {};
+  S.settings.balance = Math.round(sum * 100) / 100;
+  save();
+  Able.track?.('balance_set_from_bank', { sum });
+  refreshHome();
+}
 function toggleReservedBreakdown(){ toggleHeroBreakdown(); }
 function toggleHeroBreakdown(){
   const el = document.getElementById('db-hero-breakdown');
@@ -12721,6 +12730,40 @@ function renderHeroMoney(){
   const el = document.getElementById('db-hero-money');
   if (!el) return;
   if (!_hasBalance()) {
+    // Connected-Plaid path: show live bank balance immediately so a fresh
+    // user doesn't see a blank "$0 to allocate" card. Surfaces the same
+    // breakdown the populated branch shows (per-account list on tap),
+    // plus a one-tap CTA to seed S.settings.balance from the bank sum.
+    // Manual entry stays available as a secondary option.
+    const bb = S._bankBalances;
+    if (bb && bb.accounts && bb.accounts.length > 0) {
+      const accCount = bb.accounts.length;
+      const breakdown = `<div id="db-hero-bank-breakdown" class="db-hero-breakdown" style="display:none;">
+        ${bb.accounts.map((a) => `
+          <div class="db-hero-breakdown-row">
+            <div>
+              <div class="db-hero-breakdown-name">${escapeHtml(a.institution_name)}</div>
+              <div class="db-hero-breakdown-meta">${escapeHtml(a.name)}${a.mask ? ' ····' + escapeHtml(a.mask) : ''}</div>
+            </div>
+            <div class="db-hero-breakdown-amt">${a.current_balance != null ? f2(a.current_balance) : '—'}</div>
+          </div>
+        `).join('')}
+      </div>`;
+      el.innerHTML = `
+        <div class="db-hero-money-row">
+          <span class="db-hero-money-label">Bank balance</span>
+          <span class="db-hero-money-val">${f2(bb.sum)}</span>
+        </div>
+        <div class="db-hero-bank-line" onclick="toggleBankBreakdown()">
+          <span>Across ${accCount} account${accCount === 1 ? '' : 's'} <span class="db-hero-toggle" aria-label="Show bank breakdown">▾</span></span>
+        </div>
+        ${breakdown}
+        <div class="db-hero-empty" style="margin-top:10px;">Set this as your starting balance so Able can track what's safe to spend after upcoming bills.</div>
+        <button class="db-hero-cta-primary" onclick="useBankBalanceAsStart()">Use ${f2(bb.sum)} as my balance</button>
+        <button class="db-hero-cta-secondary" onclick="openBalanceModal()" style="margin-top:6px;">Enter a different amount</button>
+      `;
+      return;
+    }
     el.innerHTML = `
       <div class="db-hero-empty">Add what's in your spending accounts so Able can show what's safe to spend after upcoming bills.</div>
       <button class="db-hero-cta-primary" onclick="openBalanceModal()">Add balance</button>
