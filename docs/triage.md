@@ -55,12 +55,35 @@ Last consolidated: 2026-05-03 from `pending_work.md`, `competitor-feature-audit.
   - **Detected with errors (4):** Intermountain Gas off ~$10, Idaho Power off ~$17, City of Nampa frequency wrong (bimonthly $102 → detected monthly $178), Cloudflare frequency wrong (annual → detected monthly because two domain renewals fell ~30 days apart).
   - **Missing (11 legit + 2 too-new):** Villa Spor $19, Life Insurance $48.50, Car Insurance $170, Chase Monthly Fee $15, Northwestern Life ~$48, Claude $100, Apple Storage $9.99, Netflix $7.99, Google Storage $1.99, Disney+ $12.99, SMART CREDIT $30. (Acceptable misses: Netlify $24.99, Supabase $25 — too new this month to prove cadence.)
 
-  **Diagnostic SQL pending** (`SELECT * FROM plaid_recurring_streams WHERE user_id = ... AND direction = 'outflow'`) — outcome determines fix path:
-  - If missing bills appear in streams as MATURE/active → LLM is dropping them when constructing `bills[]`. Prompt fix in plaid-analyze rule 5.
-  - If missing → `plaid-detect-recurring` isn't catching them. Likely the per-cadence MIN_OCCURRENCES floor for small-amount streams (<$50) is too aggressive on subscription-priced items; or merchant-name normalization is splitting them across months.
-  - If TOMBSTONED → aged out, surface as inactive but keep in history.
+  **Diagnosis complete 2026-05-06 evening — three problems stacking:**
 
-  **Scheduled: tomorrow's session alongside the analyzer pass.** Bundle with liabilities, add-bank-delta, and income-source naming changes (P1-2026-05-06 #5 below) since they all touch `plaid-analyze`.
+  1. **Classification incomplete.** Many transactions in Paul's 12-month lookback still have `able_category: null`. Apple/Google/Netflix entries before ~2026-02-18 are all unclassified; Northwestern Mutual / USAA before ~2026-03 same. The onboarding pipeline classifies up to 5×500=2500 txns in 5 iterations, then stops. Anything beyond that sits unclassified forever (no background re-trigger after onboarding completes). Means `plaid-detect-recurring` runs against a partial picture of the user's data.
+
+  2. **`plaid-detect-recurring` 90-day window + per-cadence floor too tight.** Detector filters to last 90 days. Sub-$50 monthly streams need 3 occurrences in window. Netflix (2 occurrences in 90d, the 3rd at 01-23 falls outside) and Disney+ (1 occurrence) both fail this floor. Confirmed root cause for those two.
+
+  3. **Detector never re-runs after classify catches up.** No webhook, no cron, no background re-trigger. Whatever was detected at first signup is the permanent state.
+
+  **The mystery cases (most concerning).** 7 streams have ≥3 classified occurrences in window with consistent amounts and clean monthly cadence — SHOULD detect but don't appear in `plaid_recurring_streams`:
+  - Apple Storage $9.99 (3 monthly, identical amount)
+  - Google One $1.99 (3 monthly, identical)
+  - Villa Sport $19.07 (3 monthly, identical)
+  - Northwestern Mutual $48.50 (3 monthly, identical, just under $50 floor)
+  - USAA Insurance $164.84 (3 monthly, well above floor)
+  - Anthropic Claude (3 transactions, post-cluster-collapse 2 occurrences with amounts $100 / $101.21)
+
+  Some other blocker filters them. Candidates to investigate:
+  - Amount-variance check at `plaid-detect-recurring/index.ts:442-447` (`amountInRangeRatio < 0.6`)
+  - Merchant-name normalization producing different keys across months
+  - Silent upsert failures (no error surfaced)
+
+  **Tomorrow's fix path (now multi-pronged):**
+  1. Add a re-trigger for `plaid-detect-recurring` after classify completes (cron-based or webhook-based). Detection picks up new streams as more historical data classifies.
+  2. Investigate why the 7 mystery streams aren't being persisted. Add debug logging or a `?debug=true` mode that surfaces rejection reasons for every group.
+  3. Extend lookback window from 90 days → 180 days (or drop the per-cadence floor for sub-$50 if amount-variance check is sufficient on its own — needs design call).
+  4. Background-classify the full 12-month window (not just the first 2500 txns).
+  5. Defensive: filter `INTEREST CHARGE` / `FINANCE CHARGE` / `PURCHASE INTEREST CHARGE` at the detector level so they don't pollute the streams table (currently only filtered downstream in `stripInterestCharges` at the analyzer level).
+
+  **Bundled into tomorrow's session.** The analyzer overhaul session is now: liabilities + add-bank-delta + bills detector overhaul + income-source naming. Real lift; may take more than one session.
 
 - **P1-2026-05-06 #5 — Income source names use rail, not work.** Current names ("Stripe payouts," "Venmo deposits," "Airbnb host payouts") describe the payment rail, not what the user actually does. Paul's case: marketing consulting + Airbnb rental should produce "Marketing payments" and "Airbnb rental income," not the rail-derived names. Fix: pass `profile.business` into the analyzer prompt explicitly and update rule 7 to: "Use `profile.business` to name income sources by the work, not the rail. When in doubt, profession beats rail name." Plus a plan-review "What client is this?" rename nudge for any rail-sounding source. **Scheduled: tomorrow's session, bundled with the rest of the analyzer overhaul.**
 
