@@ -1506,7 +1506,11 @@ body.is-scrolling .btn-primary:hover{transform:none!important;box-shadow:inherit
 .alloc-locked-in{animation:lockedInPulse 1.6s ease;}
 @keyframes lockedInPulse{0%,100%{box-shadow:0 0 0 0 rgba(42,122,74,0);}40%{box-shadow:0 0 0 5px rgba(42,122,74,.18);}}
 </style>
-<!-- Meta Pixel (replace META_PIXEL_ID with your pixel id) -->
+<!-- Meta Pixel — page view tracking. To activate: create a pixel in Meta
+     Events Manager, copy the numeric ID (15-16 digits), paste it as the
+     META_PIXEL_ID value in BOTH index.html and app.html (also update the
+     noscript fallback image URL below). Gate uses a numeric regex check
+     so accidental global find/replace can't silently break the snippet. -->
 <script>
 !function(f,b,e,v,n,t,s)
 {if(f.fbq)return;n=f.fbq=function(){n.callMethod?
@@ -1516,8 +1520,8 @@ n.queue=[];t=b.createElement(e);t.async=!0;
 t.src=v;s=b.getElementsByTagName(e)[0];
 s.parentNode.insertBefore(t,s)}(window, document,'script',
 'https://connect.facebook.net/en_US/fbevents.js');
-var META_PIXEL_ID = 'META_PIXEL_ID';
-if (META_PIXEL_ID !== 'META_PIXEL_ID') {
+var META_PIXEL_ID = 'PASTE_NUMERIC_ID_HERE';
+if (/^\d{10,20}$/.test(META_PIXEL_ID)) {
   fbq('init', META_PIXEL_ID);
   fbq('track', 'PageView');
 }
