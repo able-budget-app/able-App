@@ -8980,11 +8980,14 @@ const ACHIEVEMENTS = [
     distance: () => 'Add a debt to start',
   },
   { id:'card_paid_off', cat:'debt', name:'Card Paid Off', icon:_ACH_ICON.shield,
-    unlocked: () => (S.debts||[]).some(d => (d.balance||0) <= 0.01) && (S.debts||[]).length > 0,
+    unlocked: () => (S.debts||[]).some(d => (d.orig||0) > 0.01 && (d.balance||0) <= 0.01),
     distance: () => { const lo = Math.min(...((S.debts||[]).map(d=>d.balance||0).filter(v=>v>0))); return isFinite(lo) ? `${f2(lo)} on smallest` : 'No debts'; },
   },
   { id:'debt_free', cat:'debt', name:'Debt Free Day', icon:_ACH_ICON.flag, gold:true,
-    unlocked: () => (S.debts||[]).length>0 && (S.debts||[]).every(d => (d.balance||0) <= 0.01),
+    unlocked: () => {
+      const real = (S.debts||[]).filter(d => (d.orig||0) > 0.01);
+      return real.length > 0 && real.every(d => (d.balance||0) <= 0.01);
+    },
     distance: () => { const sum = (S.debts||[]).reduce((s,d)=>s+(d.balance||0),0); return sum>0 ? `${f2(sum)} to clear` : 'No debts tracked'; },
   },
   // PAY YOURSELF
@@ -9188,7 +9191,7 @@ function _achProgress(id){
     case 'streak_6':            return clamp(streak/6);
     case 'streak_12':           return clamp(streak/12);
     case 'three_paydays':       return clamp(ownerPaidMonths/3);
-    case 'card_paid_off':       return debts.length === 0 ? 0 : clamp(debts.filter(d => (d.balance||0) <= 0.01).length / debts.length);
+    case 'card_paid_off':       { const real = debts.filter(d => (d.orig||0) > 0.01); return real.length === 0 ? 0 : clamp(real.filter(d => (d.balance||0) <= 0.01).length / real.length); }
     case 'debt_free':           return debtSum > 0 ? clamp(1 - (debtSum / Math.max(debtSum, 1))) : 0;
     case 'score_80':            return clamp(maxScore/80);
     case 'score_90':            return clamp(maxScore/90);
