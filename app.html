@@ -4640,6 +4640,19 @@ async function tryResumePlaidOauth() {
         // Update mode resolves the existing Item; no exchange needed.
         Able.track?.('plaid_item_update_completed');
         if (typeof loadConnectedAccounts === 'function') await loadConnectedAccounts();
+      } else if (state.context === 'settings_add_product') {
+        // add_product mode adds liabilities (or other) to the existing
+        // Item in place. Re-run detect-credit-debts so rows flip from
+        // estimate → liabilities with real APRs.
+        Able.track?.('plaid_add_product_completed', { products: state.products_to_add });
+        try {
+          await sbGet().functions.invoke('plaid-detect-credit-debts', {
+            body: { plaid_item_row_id: state.plaid_item_row_id },
+          });
+        } catch (e) {
+          console.warn('OAuth-resume detect-credit-debts failed:', e);
+        }
+        if (typeof loadConnectedAccounts === 'function') await loadConnectedAccounts();
       }
     },
     onExit: (err) => {
@@ -9587,6 +9600,22 @@ async function loadConnectedAccounts() {
       (accountsByItem[a.plaid_item_id] = accountsByItem[a.plaid_item_id] || []).push(a);
     });
 
+    // Items with estimate-source credit debts haven't been linked with the
+    // 'liabilities' Plaid product yet (linked before PR #13 or institution
+    // didn't return data). They're still functional but rate_estimate is
+    // null instead of carrying a real APR. Surface a one-click "enable
+    // APR tracking" affordance — runs the add_product reconfirmation
+    // flow without making the user fully re-link.
+    const { data: estimateRows } = await sb
+      .from('plaid_credit_debts')
+      .select('plaid_item_id')
+      .in('plaid_item_id', itemIds)
+      .eq('source', 'estimate');
+    const estimateCountByItem = {};
+    (estimateRows || []).forEach((r) => {
+      estimateCountByItem[r.plaid_item_id] = (estimateCountByItem[r.plaid_item_id] || 0) + 1;
+    });
+
     listEl.innerHTML = items.map((item) => {
       const accs = accountsByItem[item.id] || [];
       const accLabel = accs.length
@@ -9600,6 +9629,12 @@ async function loadConnectedAccounts() {
       const wantsAccountSelect = status === 'pending_disconnect';
       const reconnectBtn = (status === 'error' || status === 'pending_expiration' || status === 'pending_disconnect') ? `
         <button class="btn btn-sm btn-primary" onclick="settingsRunUpdateMode('${item.id}', ${wantsAccountSelect})" style="font-size:12px;">Reconnect</button>` : '';
+      // Only show enable-APR button when the item is otherwise healthy —
+      // a Reconnect on a broken item should win attention; once cleared,
+      // the APR enable-row will reappear on the next render.
+      const estimateCount = estimateCountByItem[item.id] || 0;
+      const enableAprBtn = (estimateCount > 0 && status === 'active') ? `
+        <button class="btn btn-sm" onclick="settingsRunAddProduct('${item.id}', ['liabilities'])" style="font-size:12px;background:#eaf6ef;color:var(--ds-green);border:1px solid rgba(42,122,74,.2);">Enable APR tracking</button>` : '';
       return `
         <div style="display:flex;align-items:flex-start;justify-content:space-between;gap:12px;padding:14px 0;border-bottom:1px solid var(--ds-t4);">
           <div style="flex:1;min-width:0;">
@@ -9607,8 +9642,9 @@ async function loadConnectedAccounts() {
             <div style="font-size:11px;color:var(--ds-t3);font-weight:600;margin-top:3px;line-height:1.5;word-break:break-word;">${escapeHtml(accLabel)}</div>
             ${item.error_message ? `<div style="font-size:11px;color:var(--ds-c4);font-weight:600;margin-top:5px;line-height:1.5;">${escapeHtml(item.error_message)}</div>` : ''}
           </div>
-          <div style="display:flex;gap:6px;flex-shrink:0;">
+          <div style="display:flex;gap:6px;flex-shrink:0;flex-wrap:wrap;justify-content:flex-end;">
             ${reconnectBtn}
+            ${enableAprBtn}
             <button class="btn btn-sm" onclick="settingsDisconnectBank('${item.id}', ${JSON.stringify(item.institution_name || 'this bank').replace(/"/g, '&quot;')})" style="font-size:12px;color:var(--ds-c4);">Disconnect</button>
           </div>
         </div>`;
@@ -9890,6 +9926,72 @@ async function settingsHandlePostLink(public_token, metadata) {
     institution_name: metadata?.institution?.name,
   });
   if (typeof loadConnectedAccounts === 'function') await loadConnectedAccounts();
+}
+
+// Add the 'liabilities' product to an existing Plaid item via Plaid
+// Link's add-product reconfirmation flow. Used post-PR-#13 to upgrade
+// items that were linked before liabilities was in our products array
+// (or institutions that didn't return liabilities on initial link).
+// User goes through a brief reconfirmation; on success we re-run
+// plaid-detect-credit-debts so the rows flip from source='estimate'
+// to source='liabilities' with real APRs, then refresh the list.
+async function settingsRunAddProduct(plaidItemRowId, productsToAdd) {
+  const errEl = document.getElementById('connect-bank-error');
+  if (errEl) { errEl.style.display = 'none'; errEl.textContent = ''; }
+  try {
+    await ensurePlaidLinkScript();
+    const { data, error } = await sbGet().functions.invoke('plaid-link-token', {
+      body: {
+        mode: 'add_product',
+        plaid_item_row_id: plaidItemRowId,
+        products_to_add: productsToAdd,
+        redirect_uri: plaidRedirectUri(),
+      }
+    });
+    if (error) throw error;
+    if (data && data.error) throw new Error(data.error);
+    if (!data?.link_token) throw new Error('No link_token returned');
+
+    persistOauthLink({
+      token: data.link_token,
+      context: 'settings_add_product',
+      plaid_item_row_id: plaidItemRowId,
+      products_to_add: productsToAdd,
+    });
+
+    const handler = window.Plaid.create({
+      token: data.link_token,
+      onSuccess: async () => {
+        // add_product mode doesn't return a new public_token — Plaid
+        // updates the existing Item's product list in place. Re-run
+        // detect-credit-debts so rows flip from estimate to liabilities.
+        clearOauthLink();
+        Able.track?.('plaid_add_product_completed', { products: productsToAdd });
+        showToast('Updating debt tracking…', { duration: 3000 });
+        try {
+          await sbGet().functions.invoke('plaid-detect-credit-debts', {
+            body: { plaid_item_row_id: plaidItemRowId },
+          });
+          showToast('APR tracking enabled', { duration: 2500 });
+        } catch (e) {
+          console.warn('post-add-product detect-credit-debts failed:', e);
+          // Soft-fail — the next pipeline run picks it up.
+        }
+        await loadConnectedAccounts();
+      },
+      onExit: (err) => {
+        clearOauthLink();
+        if (err && errEl) {
+          errEl.textContent = err.display_message || err.error_message || 'Reconnect canceled';
+          errEl.style.display = 'block';
+        }
+      },
+    });
+    handler.open();
+  } catch (e) {
+    console.error('settingsRunAddProduct failed:', e);
+    if (errEl) { errEl.textContent = 'Could not start update: ' + (e.message || 'unknown error'); errEl.style.display = 'block'; }
+  }
 }
 
 // Re-link the same item in update mode. Used when an item is in error /
