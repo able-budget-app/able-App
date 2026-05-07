@@ -305,7 +305,7 @@ async function processItem(
       last_statement_balance = liability.last_statement_balance;
       next_payment_due_date = liability.next_payment_due_date;
       // Prefer Plaid's reported min_payment_amount; fall back to autopay
-      // mask match, then 2.5%-of-balance rule. Treat 0 as missing —
+      // mask match, then the 1%+interest formula. Treat 0 as missing —
       // Chase (and others) return 0 instead of null when the statement
       // hasn't posted yet or the card is on autopay, which would
       // otherwise produce a $1 minimum on a $8k balance.
@@ -316,19 +316,19 @@ async function processItem(
         const matched = matchedStream.last_amount ?? matchedStream.average_amount ?? 0;
         min_payment = Math.max(25, Math.round(matched));
       } else {
-        min_payment = Math.max(25, Math.round((card.current_balance ?? 0) * 0.025));
+        min_payment = estimateMinPayment(card.current_balance, last_statement_balance, purchase_apr);
       }
     } else {
       source = 'estimate';
       // No liabilities data. Don't fabricate an APR — leave null. The
       // old current_balance-denominator estimator was wrong by ~7% on
       // revolving users (P1-2026-05-06 #1) so we deliberately stop
-      // emitting it. Min_payment via autopay match or 2.5% rule.
+      // emitting it. Min_payment via autopay match or formula.
       if (matchedStream) {
         const matched = matchedStream.last_amount ?? matchedStream.average_amount ?? 0;
         min_payment = Math.max(1, Math.round(matched));
       } else {
-        min_payment = Math.max(25, Math.round((card.current_balance ?? 0) * 0.025));
+        min_payment = estimateMinPayment(card.current_balance, null, null);
       }
     }
 
@@ -396,6 +396,28 @@ function matchStreamByMask(
 
 function escapeRegex(s: string): string {
   return s.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+}
+
+// Estimate a card's minimum payment when Plaid hasn't reported one and we
+// can't mask-match an autopay stream. Real card formula (Chase, Amex, et al.)
+// is roughly: 1% of statement balance + interest charged + fees, with a $25-40
+// floor. We use last_statement_balance over current_balance because new
+// mid-cycle purchases aren't billed against yet (Chase computes the minimum
+// from the prior statement); falls back to current_balance when the
+// statement balance is missing. APR defaults to 22% (typical revolving rate)
+// when Plaid didn't return liabilities — better than 2.5%-of-balance which
+// has no semantic meaning.
+function estimateMinPayment(
+  current_balance: number | null,
+  last_statement_balance: number | null,
+  purchase_apr: number | null,
+): number {
+  const principal = last_statement_balance ?? current_balance ?? 0;
+  if (principal <= 0) return 25;
+  const apr = (purchase_apr != null && purchase_apr > 0) ? purchase_apr : 0.22;
+  const interest = (principal * apr) / 12;
+  const onePercent = principal * 0.01;
+  return Math.max(25, Math.round(onePercent + interest));
 }
 
 function json(payload: unknown, status = 200): Response {
