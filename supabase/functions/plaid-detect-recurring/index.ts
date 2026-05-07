@@ -514,7 +514,29 @@ function detectStream(
   if (isSmallStream) {
     const minForBand = MIN_OCCURRENCES_BY_BAND[bestBand.name];
     if (occurrences.length < minForBand) {
-      return finish(null, `${bestBand.name} small-amount stream ($${provisionalMedianAmount.toFixed(2)}) needs ≥${minForBand} occurrences, got ${occurrences.length}`);
+      // High-confidence escape. The per-cadence floor exists to prevent
+      // noise like "two coffee runs 30 days apart" from getting tagged
+      // as MONTHLY recurring. But it also blocks legit small subs that
+      // a user just signed up for (Netflix at $7.99 with 2 charges in
+      // the 90-day window). Coffee runs almost never have identical
+      // amounts; subs always do. So if the amounts are near-identical
+      // (within 5%) AND the interval median sits exactly in the band
+      // center (within ±2 days), allow detection at MIN_OCCURRENCES (2).
+      // The status will be EARLY_DETECTION (set lower in this function)
+      // so consumers know it's not yet MATURE.
+      const amountSpread = sortedOccAmounts[sortedOccAmounts.length - 1] - sortedOccAmounts[0];
+      const amountIdentical =
+        provisionalMedianAmount > 0 &&
+        amountSpread / provisionalMedianAmount <= 0.05;
+      const bandCenter = (bestBand.min + bestBand.max) / 2;
+      const intervalCenterDrift = Math.abs(median - bandCenter);
+      const passesEscape =
+        occurrences.length >= MIN_OCCURRENCES &&
+        amountIdentical &&
+        intervalCenterDrift <= 2;
+      if (!passesEscape) {
+        return finish(null, `${bestBand.name} small-amount stream ($${provisionalMedianAmount.toFixed(2)}) needs ≥${minForBand} occurrences (or identical amounts + on-band interval at ${MIN_OCCURRENCES}+), got ${occurrences.length}`);
+      }
     }
   }
 
