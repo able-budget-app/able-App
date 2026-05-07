@@ -112,18 +112,28 @@ Deno.serve(async (req) => {
       return json({ error: 'Only monthly subscriptions can switch to annual' }, 400)
     }
 
-    // Perform the switch. always_invoice generates a proration invoice
-    // immediately and attempts to charge the default payment method.
-    // billing_cycle_anchor=now resets the cycle to today, so the user gets a
-    // fresh full year from the switch instead of riding out the monthly
-    // anchor (which would charge the full annual price 25-ish days from
-    // now and then again 12 months later — confusing).
+    // Perform the switch. Behavior depends on whether the sub is in trial:
+    //
+    // - Active (post-trial): prorate against the saved card and reset
+    //   billing_cycle_anchor to now, so the user gets a fresh full year
+    //   from today instead of riding out the monthly anchor (which would
+    //   charge the full annual price within days and then again 12 months
+    //   later — confusing).
+    // - Trialing: just swap the price. Stripe rejects billing_cycle_anchor
+    //   and always_invoice during a trial (no charges happen yet, so there
+    //   is nothing to prorate or invoice). The new annual price kicks in
+    //   when the trial converts.
+    const isTrialing = sub.status === 'trialing'
     const updateParams = new URLSearchParams({
       'items[0][id]': item.id,
       'items[0][price]': PRICE_ANNUAL,
-      proration_behavior: 'always_invoice',
-      billing_cycle_anchor: 'now',
     })
+    if (isTrialing) {
+      updateParams.set('proration_behavior', 'none')
+    } else {
+      updateParams.set('proration_behavior', 'always_invoice')
+      updateParams.set('billing_cycle_anchor', 'now')
+    }
     const updateRes = await fetch(`https://api.stripe.com/v1/subscriptions/${subId}`, {
       method: 'POST',
       headers: {
