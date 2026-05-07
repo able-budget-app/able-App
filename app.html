@@ -14023,6 +14023,26 @@ window.addEventListener('load', async () => {
       if (sid && sid.startsWith('cs_')) sessionStorage.setItem('able_checkout_session_id', sid);
     } catch (_) { /* noop */ }
     try { history.replaceState({}, '', window.location.pathname); } catch (_) { /* noop */ }
+    // Pull the access_token from localStorage NOW, before createClient/auth
+    // listener can fire. The Supabase client wedges on this URL — getSession()
+    // and functions.invoke() both hang. The auth listener's SIGNED_IN event
+    // beats our 3s escape-hatch, so by the time the escape-hatch runs the
+    // hung onAuthStateChange call has already started and the manual retry
+    // is rejected as a duplicate. Stashing the JWT at page load means
+    // verifyCheckoutSession() can use the direct-fetch path on the first
+    // (auth-listener-driven) call too.
+    try {
+      for (const k of Object.keys(localStorage)) {
+        if (k.startsWith('sb-') && k.endsWith('-auth-token')) {
+          const raw = localStorage.getItem(k);
+          if (raw) {
+            const parsed = JSON.parse(raw);
+            if (parsed?.access_token) window._wedgedJwt = parsed.access_token;
+          }
+          break;
+        }
+      }
+    } catch (_) { /* noop */ }
   }
 
   // (Pre-auth flash guard moved to a parser-blocking inline <script> directly
