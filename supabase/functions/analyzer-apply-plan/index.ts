@@ -326,6 +326,11 @@ function mergePlan(
       cat: 'utility',
       priority: 2,
       paid: false,
+      // Preserve the source recurring stream id so the post-onboarding
+      // deep-dive (and future re-analyzes) can match this bill back to a
+      // Plaid stream — used for stale detection ("looks canceled — keep,
+      // edit, or remove?") and for skip-on-rewrite dedup.
+      evidence_stream_id: b.evidence_stream_id ?? null,
       ...reviewTag,
     })) : [];
 

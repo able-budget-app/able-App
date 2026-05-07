@@ -5396,6 +5396,24 @@ async function obAutoApplyPendingReview() {
     obPlanReview.autoApplying = false;
     obRenderPlanReviewUI();
   }
+
+  // Fire-and-forget the post-onboarding deep-dive. Runs server-side; the
+  // user can close the tab the moment the initial plan lands and the
+  // deep-dive will still complete. It only ever appends new pending_review
+  // rows or flags existing rows as dormant — never overwrites the user's
+  // accepted plan. Safe to skip silently on any error; the deep-dive is
+  // an enhancement, not a requirement.
+  try {
+    const itemRowId = obAnswers.plaid_connect?.plaid_item_row_id;
+    if (itemRowId) {
+      sb.functions.invoke('plaid-deep-dive', { body: { plaid_item_row_id: itemRowId } })
+        .then(({ data, error }) => {
+          if (error) console.warn('[deep-dive] kickoff failed:', error.message || error);
+          else console.debug('[deep-dive] kicked off:', data);
+        })
+        .catch((e) => console.warn('[deep-dive] invoke threw:', e?.message || e));
+    }
+  } catch (_) { /* never block onboarding on the deep-dive */ }
 }
 
 function clone(v) { return JSON.parse(JSON.stringify(v)); }
@@ -13341,7 +13359,7 @@ const PAGE_TO_GROUP = {
   score:'score',
   learn:'more', refer:'more', settings:'more',
 };
-const GROUP_DEFAULT = { plan:'activity', more:'learn' };
+const GROUP_DEFAULT = { plan:'bills', more:'learn' };
 
 function goTo(target){
   // Accept either a group name (Plan / More) or a specific page id.
