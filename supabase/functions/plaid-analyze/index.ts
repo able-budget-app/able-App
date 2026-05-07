@@ -271,6 +271,13 @@ Deno.serve(async (req) => {
     const response = await anthropic.messages.create({
       model: 'claude-sonnet-4-6',
       max_tokens: 4000,
+      // temperature: 0 = greedy decoding, the closest Sonnet gets to
+      // deterministic. Identical inputs produce identical plans (within
+      // sampling-noise tolerance). Without this, two signups on the same
+      // Plaid data could disagree on "Toyota → debt vs. bill", drop or
+      // re-add Spotify, or re-shuffle the surplus split — confidence-
+      // killing for users comparing notes (and an analytics nightmare).
+      temperature: 0,
       system: [
         { type: 'text', text: SYSTEM_PROMPT, cache_control: { type: 'ephemeral' } },
       ],
@@ -861,6 +868,7 @@ Return ONLY this JSON object. No prose. No markdown fences.
 5. **Bills selection**:
    - **Primary source**: outflow_streams with status MATURE or EARLY_DETECTION and is_active=true. Skip TOMBSTONED.
    - **Fallback when outflow_streams is empty or sparse (fewer than 3 active streams)**: use entries from detected_recurring_outflows where category is 'bill' and confidence is 'high' or 'medium'. Plaid's recurring detection sometimes returns PRODUCT_NOT_READY for hours-to-days after a fresh bank connect, leaving outflow_streams empty even though real recurring bills exist in the transactions. The detected_recurring_outflows array is computed directly from already-classified transactions to bridge that gap. NEVER emit aggregate placeholder rows like "Recurring bills (unresolved)" — itemize what you can see.
+   - **Always-bill list (deterministic override).** These merchants are well-known consumer subscriptions; if a recurring outflow's merchant name matches any of them by case-insensitive substring, emit it as a bill regardless of stream confidence or whether you would have classified it on its own. Two signups on the same Plaid data must produce the same answer for these. Match list: Netflix, Hulu, Disney Plus, Disney+, HBO Max, "Max " (the streaming service), Paramount+, Peacock, YouTube TV, Sling TV, Apple TV+, ESPN+, Spotify, Apple Music, YouTube Music, Pandora, Tidal, Amazon Music, iCloud, Google One, Dropbox, OneDrive, ChatGPT, OpenAI, Anthropic, Claude, Notion, Microsoft 365, Office 365, Adobe, Canva, Figma, Slack, Zoom, GitHub, Linear, Asana, Amazon Prime, Audible, Patreon, Substack, Peloton, Equinox, Planet Fitness, ClassPass.
    - Mortgage payments are bills, not debts.
    - Frequency mapping: Plaid MONTHLY → "monthly", WEEKLY → "weekly", BIWEEKLY → "biweekly", ANNUALLY → "annual", SEMI_MONTHLY/UNKNOWN → "monthly" (most common case). For detected entries, use frequency_estimate the same way.
    - due_day_of_month: derive from predicted_next_date or last_date for streams. For detected entries, use inferred_due_day. Null if you can't tell.
@@ -873,6 +881,7 @@ Return ONLY this JSON object. No prose. No markdown fences.
      - min_payment = average_amount (assume the user has been paying close to minimum unless amounts are wildly variable).
      - rate_estimate: only fill if highly confident (e.g., merchant indicates a known issuer). Otherwise null.
      - balance_estimate: only fill if you can derive from history (e.g., visible payoff trajectory). Otherwise null.
+   - **Always-debt list (deterministic override).** Outflows to these issuers are loan payments — emit as debts even if Plaid didn't tag them LOAN_PAYMENTS_*. Match by case-insensitive substring on merchant name. Two signups on the same Plaid data must produce the same answer here. **Auto:** Toyota Financial, Honda Financial, Ford Credit, Ford Motor Credit, Chase Auto, Wells Fargo Auto, Ally Auto, Capital One Auto, GM Financial, Nissan Motor Acceptance, BMW Financial, Mercedes-Benz Financial, Lexus Financial, Acura Financial, Hyundai Capital, Kia Motors Finance, Subaru Motors Finance, Volkswagen Credit, Audi Financial, Tesla Finance. **Student:** Nelnet, Navient, MOHELA, Sallie Mae, FedLoan, AES, Great Lakes, Edfinancial, Aidvantage. (Do NOT add SoFi or Marcus to this list — both can be deposit accounts; only the LLM-judgment path classifies those.)
    - **NEVER classify "INTEREST CHARGE", "PURCHASE INTEREST CHARGE", or "FINANCE CHARGE" as a standalone debt.** Those are interest accruals on an existing card debt — emit them as APR evidence (informs rate_estimate) but never as their own debt row. Prior versions of this prompt let those slip through; do not.
 
 7. **Income sources**:
