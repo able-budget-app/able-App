@@ -4323,6 +4323,10 @@ function obNext() {
     // Filter out empty rows
     obAnswers[q.key] = (obAnswers[q.key] || []).filter(row => Object.values(row).some(v => v));
     // Allow empty tables (user might have no debt)
+  } else if (q.type === 'select') {
+    // obSelectDropdown already wrote to obAnswers[q.key] on change. Required
+    // selects are gated by the disabled button; optional ones can pass empty.
+    if (!obAnswers[q.key] && !q.optional) return;
   } else {
     // text type
     const val = document.getElementById('ob-text-input').value.trim();
