@@ -53,6 +53,24 @@ Deno.serve(async (req) => {
       return json({ error: 'You cannot refer yourself.' }, 400)
     }
 
+    // Daily cap on outbound invites per user. Prevents a paid account from
+    // spamming the Resend API (each send costs us money + risks domain
+    // reputation if recipients flag as spam). 20/day is generous for legit
+    // referral activity.
+    const DAILY_INVITE_CAP = 20
+    const midnight = new Date()
+    midnight.setHours(0, 0, 0, 0)
+    const { count: invitesToday } = await admin
+      .from('referrals')
+      .select('*', { count: 'exact', head: true })
+      .eq('referrer_id', userId)
+      .gte('created_at', midnight.toISOString())
+    if ((invitesToday ?? 0) >= DAILY_INVITE_CAP) {
+      return json({
+        error: `Daily invite cap reached (${DAILY_INVITE_CAP}). Resets at midnight.`,
+      }, 429)
+    }
+
     const { data: ref, error: insertErr } = await admin
       .from('referrals')
       .insert({ referrer_id: userId, referred_name: name, referred_email: email })
@@ -104,5 +122,5 @@ function json(body: unknown, status = 200) {
 
 function buildInviteEmail({ name, inviteUrl }: { name: string; inviteUrl: string }) {
   const safeName = String(name).replace(/</g, '&lt;').replace(/>/g, '&gt;')
-  return `<!doctype html><html><body style="margin:0;padding:0;background:#f0f7f2;font-family:Helvetica,Arial,sans-serif;color:#111c16;"><div style="max-width:520px;margin:0 auto;padding:32px 24px;"><div style="font-weight:900;font-size:20px;letter-spacing:-.02em;color:#2a7a4a;margin-bottom:24px;">Able</div><div style="background:#ffffff;border-radius:18px;padding:28px 24px;box-shadow:0 2px 8px rgba(0,0,0,.05);"><div style="font-size:22px;font-weight:800;letter-spacing:-.01em;margin-bottom:10px;">${safeName}, a friend invited you.</div><div style="font-size:15px;line-height:1.6;color:#4a5c52;font-weight:500;margin-bottom:12px;">Someone you know uses Able and thought it might help you too.</div><div style="font-size:15px;line-height:1.6;color:#4a5c52;font-weight:500;margin-bottom:12px;">Able is a budgeting app built for inconsistent income. Freelancers, creators, business owners. When money comes in, Able tells you exactly where it should go before it leaks.</div><div style="font-size:15px;line-height:1.6;color:#4a5c52;font-weight:500;margin-bottom:18px;">7 days free. Card required so the trial can start cleanly. Cancel anytime before day 8 and you pay nothing.</div><a href="${inviteUrl}" style="display:inline-block;background:#2a7a4a;color:#ffffff;padding:14px 28px;border-radius:12px;font-weight:800;text-decoration:none;font-size:14px;">Try Able free for 7 days</a></div><div style="text-align:center;margin-top:20px;font-size:12px;color:#8ca898;line-height:1.6;">If you did not expect this, you can ignore it. No follow-up.</div></div></body></html>`
+  return `<!doctype html><html><body style="margin:0;padding:0;background:#f0f7f2;font-family:Helvetica,Arial,sans-serif;color:#111c16;"><div style="max-width:520px;margin:0 auto;padding:32px 24px;"><div style="font-weight:900;font-size:20px;letter-spacing:-.02em;color:#2a7a4a;margin-bottom:24px;">Able</div><div style="background:#ffffff;border-radius:18px;padding:28px 24px;box-shadow:0 2px 8px rgba(0,0,0,.05);"><div style="font-size:22px;font-weight:800;letter-spacing:-.01em;margin-bottom:10px;">${safeName}, a friend invited you.</div><div style="font-size:15px;line-height:1.6;color:#4a5c52;font-weight:500;margin-bottom:12px;">Someone you know uses Able and thought it might help you too.</div><div style="font-size:15px;line-height:1.6;color:#4a5c52;font-weight:500;margin-bottom:12px;">Able is a budgeting app built for inconsistent income. Freelancers, creators, business owners. When money comes in, Able tells you exactly where it should go before it leaks.</div><div style="font-size:15px;line-height:1.6;color:#4a5c52;font-weight:500;margin-bottom:18px;">30 days free. Card required so the trial can start cleanly. Cancel anytime before day 31 and you pay nothing.</div><a href="${inviteUrl}" style="display:inline-block;background:#2a7a4a;color:#ffffff;padding:14px 28px;border-radius:12px;font-weight:800;text-decoration:none;font-size:14px;">Try Able free for 30 days</a></div><div style="text-align:center;margin-top:20px;font-size:12px;color:#8ca898;line-height:1.6;">If you did not expect this, you can ignore it. No follow-up.</div></div></body></html>`
 }

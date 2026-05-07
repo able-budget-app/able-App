@@ -144,6 +144,23 @@ Deno.serve(async (req) => {
 
     const admin = createClient(SUPABASE_URL, SERVICE_ROLE);
 
+    // Daily cap: each invocation calls Sonnet (expensive). 5 plans/day
+    // covers fresh signup + a couple of re-runs. Beyond that is either a
+    // bug loop or someone testing the cost-bomb surface.
+    const DAILY_PLAN_CAP = 5;
+    const midnight = new Date();
+    midnight.setHours(0, 0, 0, 0);
+    const { count: plansToday } = await admin
+      .from('analyzer_plans')
+      .select('*', { count: 'exact', head: true })
+      .eq('user_id', userId)
+      .gte('created_at', midnight.toISOString());
+    if ((plansToday ?? 0) >= DAILY_PLAN_CAP) {
+      return json({
+        error: `Daily plan cap reached (${DAILY_PLAN_CAP}). Resets at midnight.`,
+      }, 429);
+    }
+
     const { data: item, error: itemErr } = await admin
       .from('plaid_items')
       .select('id, user_id, lookback_months')

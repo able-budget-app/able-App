@@ -4187,7 +4187,7 @@ function renderObStep() {
       const stepAttr = q.inputStep != null ? ` step="${q.inputStep}"` : '';
       inputArea.innerHTML = `<input class="ob-input" id="ob-text-input" type="number"${minAttr}${maxAttr}${stepAttr} inputmode="decimal" placeholder="${q.placeholder || ''}" value="${obAnswers[q.key] != null ? String(obAnswers[q.key]).replace(/"/g, '&quot;') : ''}">`;
     } else {
-      inputArea.innerHTML = `<textarea class="ob-input" id="ob-text-input" rows="3" placeholder="${q.placeholder || ''}">${obAnswers[q.key] || ''}</textarea>`;
+      inputArea.innerHTML = `<textarea class="ob-input" id="ob-text-input" rows="3" placeholder="${escapeAttr(q.placeholder || '')}">${escapeHtml(obAnswers[q.key] || '')}</textarea>`;
     }
     document.getElementById('ob-back-btn').style.display = obStep > 0 ? 'inline-block' : 'none';
     document.getElementById('ob-next-btn').textContent = obStep === OB_QUESTIONS.length - 1 ? 'Build my budget →' : 'Continue →';
@@ -6364,7 +6364,7 @@ function renderObReview() {
     html += `<div class="ob-summary-section">
       <div class="ob-summary-title">${r.bills.length} monthly bills · $${Math.round(totalBills).toLocaleString()}/mo</div>`;
     r.bills.forEach(b => {
-      html += `<div class="ob-summary-row"><span>${b.name}</span><span class="ob-summary-row-right">$${b.amount}</span></div>`;
+      html += `<div class="ob-summary-row"><span>${escapeHtml(b.name)}</span><span class="ob-summary-row-right">$${b.amount}</span></div>`;
     });
     html += `</div>`;
   }
@@ -6381,7 +6381,7 @@ function renderObReview() {
       const right = d.balance > 0
         ? `$${Math.round(d.balance).toLocaleString()}`
         : (d.min > 0 ? `$${Math.round(d.min)}/mo min` : '');
-      html += `<div class="ob-summary-row"><span>${d.name}${ratePart}</span><span class="ob-summary-row-right">${right}</span></div>`;
+      html += `<div class="ob-summary-row"><span>${escapeHtml(d.name)}${ratePart}</span><span class="ob-summary-row-right">${right}</span></div>`;
     });
     html += `</div>`;
   }
@@ -8061,7 +8061,7 @@ function renderUpcoming(){
       :`<div style="font-size:.95rem;font-weight:800;color:${b.paid?'var(--text3)':'inherit'};text-decoration:${b.paid?'line-through':'none'};">${f2(b.amount)}</div>`;
     const d=document.createElement('div');d.className='upcoming-item '+cls;
     d.innerHTML=`<div class="upcoming-bubble" style="background:${bbg};color:${bc};">${lbl}</div>
-      <div style="flex:1;"><div style="font-size:13px;font-weight:700;">${b.name}${b.paid?' ✓':''}</div><div style="font-size:11px;color:var(--text3);font-weight:600;">${billDueLabel(b)}</div></div>
+      <div style="flex:1;"><div style="font-size:13px;font-weight:700;">${escapeHtml(b.name)}${b.paid?' ✓':''}</div><div style="font-size:11px;color:var(--text3);font-weight:600;">${billDueLabel(b)}</div></div>
       ${amtHtml}`;
     el.appendChild(d);
   });
@@ -8088,7 +8088,7 @@ function renderHistory(){
         <div style="display:flex;align-items:center;gap:10px;min-width:0;">
           ${hasJobs?`<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="color:var(--ds-t3);transform:rotate(${expanded?'90':'0'}deg);transition:transform .2s;flex-shrink:0;"><polyline points="9 18 15 12 9 6"/></svg>`:'<span style="width:14px;"></span>'}
           <div style="min-width:0;">
-            <div style="font-size:13px;font-weight:800;color:var(--ds-t1);letter-spacing:-.01em;display:flex;align-items:center;flex-wrap:wrap;">${h.source}${badge}</div>
+            <div style="font-size:13px;font-weight:800;color:var(--ds-t1);letter-spacing:-.01em;display:flex;align-items:center;flex-wrap:wrap;">${escapeHtml(h.source)}${badge}</div>
             <div style="font-size:11px;color:var(--ds-t3);font-weight:600;">${h.date}${hasJobs?' · tap to see breakdown':''}${h.mergedWithPlaidTxnId?` · matched deposit${h.gross_amount && h.gross_amount > h.amount + 0.01 ? ` · originally ${f2(h.gross_amount)}` : ''}`:''}</div>
           </div>
         </div>
@@ -8112,8 +8112,8 @@ function renderHistory(){
                 <div style="flex:1;min-width:0;display:flex;align-items:center;">
                   ${check}
                   <div style="flex:1;min-width:0;">
-                    <div style="font-weight:800;color:var(--ds-t1);${done?'text-decoration:line-through;':''}">${j.name}</div>
-                    ${!hasItems?`<div style="font-size:11px;color:var(--ds-t3);font-weight:600;">${j.why||''}</div>`:''}
+                    <div style="font-weight:800;color:var(--ds-t1);${done?'text-decoration:line-through;':''}">${escapeHtml(j.name)}</div>
+                    ${!hasItems?`<div style="font-size:11px;color:var(--ds-t3);font-weight:600;">${escapeHtml(j.why||'')}</div>`:''}
                   </div>
                 </div>
                 <div style="font-weight:900;color:${j.color||'var(--ds-t1)'};letter-spacing:-.01em;margin-left:10px;font-family:var(--ds-f);">${f2(j.amount)}</div>
@@ -8138,7 +8138,7 @@ function renderHistory(){
                     return `
                     <div style="display:flex;justify-content:space-between;align-items:center;padding:5px 0 5px 10px;font-size:12px;">
                       <div style="flex:1;min-width:0;">
-                        <div style="font-weight:700;color:var(--ds-t1);">${it.name}${occ>1?` <span style="font-size:10px;color:var(--ds-t3);font-weight:700;">×${occ}</span>`:''}${typeof _billItemBadge==='function'?_billItemBadge(it.status):''}</div>
+                        <div style="font-weight:700;color:var(--ds-t1);">${escapeHtml(it.name)}${occ>1?` <span style="font-size:10px;color:var(--ds-t3);font-weight:700;">×${occ}</span>`:''}${typeof _billItemBadge==='function'?_billItemBadge(it.status):''}</div>
                         <div style="font-size:10px;color:var(--ds-t3);font-weight:700;letter-spacing:.03em;">${dueText}${amtNote}</div>
                       </div>
                       ${rightAmt}
@@ -8224,7 +8224,7 @@ function editIncome(id){
   const modal=document.getElementById('modal-edit-income');
   const srcSel=document.getElementById('ei-source');
   const srcs=S.sources||['Salary','Freelance','Side income','Other'];
-  srcSel.innerHTML=srcs.map(s=>`<option value="${s}"${s===entry.source?' selected':''}>${s}</option>`).join('');
+  srcSel.innerHTML=srcs.map(s=>`<option value="${escapeAttr(s)}"${s===entry.source?' selected':''}>${escapeHtml(s)}</option>`).join('');
   if(!srcs.includes(entry.source)){
     const opt=document.createElement('option');
     opt.value=entry.source;opt.textContent=entry.source;opt.selected=true;
@@ -8322,7 +8322,7 @@ function renderBillsPage(){
       ?`<button class="btn btn-danger-ghost btn-sm" style="opacity:.4;" onclick="delBill(${i})" title="Remove from Debt tab">✕</button>`
       :`<button class="btn btn-sm btn-ghost" onclick="openAddBillModal(${i})" style="padding:4px 8px;font-size:11px;" title="Edit">Edit</button> <button class="btn btn-danger-ghost btn-sm" onclick="delBill(${i})">✕</button>`;
     d.innerHTML=`<button class="checkbtn${b.paid?' checked':''}" onclick="toggleBillPaid(${i})">${b.paid?'✓':''}</button>
-      <div class="bills-name" style="padding-left:8px;">${b.name} <span style="display:inline-block;width:7px;height:7px;border-radius:50%;background:${catDots[b.cat]||'var(--text3)'};margin-left:3px;vertical-align:middle;"></span>${linkTag}${freqTag}${reviewTag}${fundedTag}</div>
+      <div class="bills-name" style="padding-left:8px;">${escapeHtml(b.name)} <span style="display:inline-block;width:7px;height:7px;border-radius:50%;background:${catDots[b.cat]||'var(--text3)'};margin-left:3px;vertical-align:middle;"></span>${linkTag}${freqTag}${reviewTag}${fundedTag}</div>
       <div class="bills-due">${billDueLabel(b)}</div>
       <div class="bills-amt-wrap">${amtInput}</div>
       <div class="bills-actions">${delBtn}</div>`;
@@ -8663,7 +8663,7 @@ function renderDebtPage(){
     div.innerHTML=`<div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:.75rem;">
       <div style="display:flex;gap:10px;align-items:flex-start;">
         <div style="width:22px;height:22px;border-radius:50%;background:var(--coral-light);color:var(--coral);font-size:11px;font-weight:800;display:flex;align-items:center;justify-content:center;">${rank+1}</div>
-        <div style="min-width:0;"><div style="font-size:15px;font-weight:700;word-break:break-word;">${d.name}${d.pending_review?' <span title="Auto-detected from your transactions. Confirm or edit." style="display:inline-flex;align-items:center;font-size:9px;font-weight:800;color:#6b4a1a;background:#fff7e6;border:1px solid #f0d8a8;padding:2px 6px;border-radius:100px;letter-spacing:.04em;vertical-align:middle;margin-left:4px;">REVIEW</span>':''}</div><div style="font-size:11px;color:var(--text3);font-weight:700;margin-top:2px;">${d.rate}% interest</div><div style="font-size:10px;color:${rank===0?'var(--ds-c4)':'var(--ds-green)'};font-weight:800;margin-top:3px;text-transform:uppercase;letter-spacing:.05em;">${rank===0?'Pay this first':'Pay this next'}</div></div>
+        <div style="min-width:0;"><div style="font-size:15px;font-weight:700;word-break:break-word;">${escapeHtml(d.name)}${d.pending_review?' <span title="Auto-detected from your transactions. Confirm or edit." style="display:inline-flex;align-items:center;font-size:9px;font-weight:800;color:#6b4a1a;background:#fff7e6;border:1px solid #f0d8a8;padding:2px 6px;border-radius:100px;letter-spacing:.04em;vertical-align:middle;margin-left:4px;">REVIEW</span>':''}</div><div style="font-size:11px;color:var(--text3);font-weight:700;margin-top:2px;">${d.rate}% interest</div><div style="font-size:10px;color:${rank===0?'var(--ds-c4)':'var(--ds-green)'};font-weight:800;margin-top:3px;text-transform:uppercase;letter-spacing:.05em;">${rank===0?'Pay this first':'Pay this next'}</div></div>
       </div>
       <div style="text-align:right;"><input class="debt-balance-input" type="number" value="${d.balance.toFixed(2)}" onchange="updateDebt(${d.oi},this.value)"><div style="font-size:10px;font-weight:700;color:var(--text3);margin-top:2px;">click to update</div></div>
     </div>
@@ -8803,7 +8803,7 @@ function renderTimeline(){
     const dt=new Date();dt.setMonth(dt.getMonth()+mo);
     const dateStr=mo>=MAX?'5+ years':dt.toLocaleDateString('en-US',{month:'short',year:'numeric'});
     const row=document.createElement('div');row.className='tl-item';
-    row.innerHTML=`<div class="tl-name">${d.name}</div><div class="tl-months">${mo>=MAX?'120+ mo':mo+' mo'}</div>
+    row.innerHTML=`<div class="tl-name">${escapeHtml(d.name)}</div><div class="tl-months">${mo>=MAX?'120+ mo':mo+' mo'}</div>
       <div class="tl-bar-bg"><div class="tl-bar" style="width:${pct}%;background:${d.color||'var(--coral)'};"></div></div>
       <div class="tl-date" style="color:${mo>=MAX?'var(--red)':'var(--sage)'};">${dateStr}</div>`;
     el.appendChild(row);
@@ -8874,7 +8874,7 @@ function renderForecast(){
     div.innerHTML = `
       <button class="fc-x-corner" onclick="delForecast(${realIdx})" title="Remove" aria-label="Remove">✕</button>
       <div class="fc-row">
-        <div class="fc-source">${f.source}${f.note ? ' · ' + f.note : ''}</div>
+        <div class="fc-source">${escapeHtml(f.source)}${f.note ? ' · ' + escapeHtml(f.note) : ''}</div>
         <div class="fc-amt">${sign}${f2(f.amount)}</div>
       </div>
       <div class="fc-row">
@@ -8938,7 +8938,7 @@ function openAddIncomeModal(){
   const srcSel = document.getElementById('qfc-src');
   if (srcSel) {
     const srcs = (S.sources && S.sources.length) ? S.sources : ['Salary','Freelance','Side income','Other'];
-    srcSel.innerHTML = srcs.map(s => `<option value="${s}">${s}</option>`).join('');
+    srcSel.innerHTML = srcs.map(s => `<option value="${escapeAttr(s)}">${escapeHtml(s)}</option>`).join('');
   }
   // Reset fields and prefill date to today (most common case for "Add income"
   // is logging a recently-known upcoming payment, often today or tomorrow).
@@ -8985,6 +8985,12 @@ function getBillsForCalendar(){
 }
 function addToAppleCalendar(){
   const bills=getBillsForCalendar();const now=new Date();now.setHours(0,0,0,0);
+  // RFC 5545 text escape: backslash, comma, semicolon must be \-escaped;
+  // newlines become \n. Without this a bill name containing a comma or
+  // newline corrupts the .ics file format.
+  const icsEscape=(s)=>String(s??'').replace(/\\/g,'\\\\').replace(/,/g,'\\,').replace(/;/g,'\\;').replace(/[\r\n]+/g,'\\n');
+  // UID stays alphanumeric-safe — strip everything but [a-z0-9-]
+  const icsUid=(s)=>String(s??'').toLowerCase().replace(/[^a-z0-9]+/g,'-').replace(/^-+|-+$/g,'').slice(0,40)||'bill';
   let ics='BEGIN:VCALENDAR\nVERSION:2.0\nPRODID:-//Able//EN\nCALSCALE:GREGORIAN\n';
   bills.forEach(b=>{
     const rawDay=parseInt(b.due);
@@ -8994,12 +9000,13 @@ function addToAppleCalendar(){
     const yr=anchor.getFullYear();
     const mo=String(anchor.getMonth()+1).padStart(2,'0');
     const day=String(anchor.getDate()).padStart(2,'0');
-    ics+=`BEGIN:VEVENT\nUID:able-${b.name.replace(/\s/g,'-')}-${Date.now()}@able\n`;
+    const safeName=icsEscape(b.name);
+    ics+=`BEGIN:VEVENT\nUID:able-${icsUid(b.name)}-${Date.now()}@able\n`;
     ics+=`DTSTART;VALUE=DATE:${yr}${mo}${day}\n`;
     ics+=`RRULE:FREQ=MONTHLY;BYMONTHDAY=${rawDay}\n`;
-    ics+=`SUMMARY:${b.name}: ${f2(b.amount)} due\n`;
-    ics+=`DESCRIPTION:${b.name} payment of ${f2(b.amount)} is due today.\n`;
-    ics+=`BEGIN:VALARM\nTRIGGER:-P2D\nACTION:DISPLAY\nDESCRIPTION:${b.name} due in 2 days\nEND:VALARM\n`;
+    ics+=`SUMMARY:${safeName}: ${f2(b.amount)} due\n`;
+    ics+=`DESCRIPTION:${safeName} payment of ${f2(b.amount)} is due today.\n`;
+    ics+=`BEGIN:VALARM\nTRIGGER:-P2D\nACTION:DISPLAY\nDESCRIPTION:${safeName} due in 2 days\nEND:VALARM\n`;
     ics+=`END:VEVENT\n`;
   });
   ics+='END:VCALENDAR';
@@ -9751,13 +9758,13 @@ function openMonthDetail(idx){
       ${m.billsCount?`
         <div class="sec" style="margin-top:0;">Bills that month (${billsPaid.length}/${m.billsCount} paid)</div>
         <div style="max-height:160px;overflow-y:auto;background:var(--ds-page);border-radius:var(--ds-r1);padding:10px 12px;margin-bottom:.85rem;">
-          ${(m.bills||[]).map(b=>`<div style="display:flex;justify-content:space-between;font-size:12px;padding:3px 0;color:${b.paid?'var(--ds-t3)':'var(--ds-t1)'};text-decoration:${b.paid?'line-through':'none'};font-weight:600;"><span>${b.name}</span><span>${f2(b.amount)}</span></div>`).join('')}
+          ${(m.bills||[]).map(b=>`<div style="display:flex;justify-content:space-between;font-size:12px;padding:3px 0;color:${b.paid?'var(--ds-t3)':'var(--ds-t1)'};text-decoration:${b.paid?'line-through':'none'};font-weight:600;"><span>${escapeHtml(b.name)}</span><span>${f2(b.amount)}</span></div>`).join('')}
         </div>
       `:''}
       ${incomeRows.length?`
         <div class="sec">Income log (${m.incomeLog.length} entries)</div>
         <div style="max-height:160px;overflow-y:auto;background:var(--ds-page);border-radius:var(--ds-r1);padding:10px 12px;margin-bottom:.85rem;">
-          ${incomeRows.map(h=>`<div style="display:flex;justify-content:space-between;font-size:12px;padding:3px 0;font-weight:600;color:var(--ds-t1);"><span>${h.source} <span style="color:var(--ds-t3);font-weight:500;">· ${h.date||''}</span></span><span style="color:var(--ds-green);">+${f2(h.amount)}</span></div>`).join('')}
+          ${incomeRows.map(h=>`<div style="display:flex;justify-content:space-between;font-size:12px;padding:3px 0;font-weight:600;color:var(--ds-t1);"><span>${escapeHtml(h.source)} <span style="color:var(--ds-t3);font-weight:500;">· ${escapeHtml(h.date||'')}</span></span><span style="color:var(--ds-green);">+${f2(h.amount)}</span></div>`).join('')}
         </div>
       `:''}
       ${m.totalDebtEnd!=null?`<div style="font-size:12px;color:var(--ds-t2);font-weight:600;margin-bottom:.5rem;">Debt at month close: <strong>${fr(m.totalDebtEnd)}</strong> · Buffer: <strong>${fr(m.bufferEnd||0)}</strong></div>`:''}
@@ -9783,7 +9790,7 @@ function runWhatIf(){
   if(debtJob&&S.debts.length){
     const top=[...S.debts].sort((a,b)=>b.rate-a.rate)[0];
     const newBal=Math.max(0,top.balance-debtJob.amount);
-    document.getElementById('wi-debt-impact').innerHTML=`<div style="background:var(--coral-light);border:1.5px solid #f0c0a8;border-radius:var(--r-sm);padding:12px 14px;font-size:13px;font-weight:700;color:var(--coral);">${top.name}: ${f2(top.balance)} → ${f2(newBal)}<div style="font-size:11px;font-weight:600;margin-top:3px;color:var(--text2);">${f2(debtJob.amount)} knocked off your highest-interest debt. Not saved until you log it for real.</div></div>`;
+    document.getElementById('wi-debt-impact').innerHTML=`<div style="background:var(--coral-light);border:1.5px solid #f0c0a8;border-radius:var(--r-sm);padding:12px 14px;font-size:13px;font-weight:700;color:var(--coral);">${escapeHtml(top.name)}: ${f2(top.balance)} → ${f2(newBal)}<div style="font-size:11px;font-weight:600;margin-top:3px;color:var(--text2);">${f2(debtJob.amount)} knocked off your highest-interest debt. Not saved until you log it for real.</div></div>`;
   }else{document.getElementById('wi-debt-impact').innerHTML='';}
   document.getElementById('wi-save-btn').style.display='block';
 }
@@ -9801,9 +9808,9 @@ function renderWiScenarios(){
   el.innerHTML='';
   wiScenarios.forEach((sc,i)=>{
     const d=document.createElement('div');d.className='card';d.style.padding='.875rem 1rem';
-    d.innerHTML=`<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:.5rem;"><div style="font-weight:700;font-size:13px;">${sc.label}</div><button class="btn-danger-ghost btn btn-sm" onclick="wiScenarios.splice(${i},1);renderWiScenarios()">✕</button></div>
+    d.innerHTML=`<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:.5rem;"><div style="font-weight:700;font-size:13px;">${escapeHtml(sc.label)}</div><button class="btn-danger-ghost btn btn-sm" onclick="wiScenarios.splice(${i},1);renderWiScenarios()">✕</button></div>
       <div style="font-size:1.1rem;font-weight:800;color:var(--sage);margin-bottom:.5rem;">${f2(sc.amount)}</div>
-      ${sc.jobs.slice(0,3).map(j=>`<div style="display:flex;justify-content:space-between;font-size:11px;font-weight:600;color:var(--text3);padding:2px 0;">${j.name}<span style="color:var(--text);font-weight:700;">${f2(j.amount)}</span></div>`).join('')}`;
+      ${sc.jobs.slice(0,3).map(j=>`<div style="display:flex;justify-content:space-between;font-size:11px;font-weight:600;color:var(--text3);padding:2px 0;">${escapeHtml(j.name)}<span style="color:var(--text);font-weight:700;">${f2(j.amount)}</span></div>`).join('')}`;
     el.appendChild(d);
   });
 }
@@ -10403,7 +10410,7 @@ function populateSources(){
   const srcs=S.sources||['Salary','Freelance','Side income','Other'];
   ['inc-source','fc-src'].forEach(id=>{
     const el=document.getElementById(id);if(!el)return;
-    el.innerHTML=srcs.map(s=>`<option>${s}</option>`).join('');
+    el.innerHTML=srcs.map(s=>`<option>${escapeHtml(s)}</option>`).join('');
   });
 }
 function renderSourcesList(){
@@ -10412,7 +10419,7 @@ function renderSourcesList(){
   srcs.forEach((s,i)=>{
     const d=document.createElement('div');
     d.style.cssText='display:flex;align-items:center;justify-content:space-between;padding:7px 10px;background:var(--bg);border-radius:var(--r-xs);margin-bottom:5px;font-size:13px;font-weight:700;';
-    d.innerHTML=`<span>${s}</span><button class="btn-danger-ghost btn btn-sm" onclick="removeSource(${i})">✕</button>`;
+    d.innerHTML=`<span>${escapeHtml(s)}</span><button class="btn-danger-ghost btn btn-sm" onclick="removeSource(${i})">✕</button>`;
     el.appendChild(d);
   });
 }
@@ -12737,7 +12744,12 @@ function downloadTaxCsv(){
   const year = yearSel ? yearSel.value : 'export';
   const headers = ['Date','Business','Merchant','Name','Amount','Category','Plaid Category','Label'];
   const csvSafe = (v) => {
-    const s = (v ?? '').toString();
+    let s = (v ?? '').toString();
+    // Formula-injection guard: prefix cells starting with =, +, -, @, tab,
+    // CR with a single quote so Excel/Sheets treats them as text. The user
+    // may share this CSV with their accountant, so the recipient is the
+    // attack target.
+    if (/^[=+\-@\t\r]/.test(s)) s = "'" + s;
     return /[",\n]/.test(s) ? `"${s.replace(/"/g, '""')}"` : s;
   };
   const rows = _taxExportRows.map((r) => [
@@ -12773,7 +12785,7 @@ function renderPastDue(){
   list.innerHTML = items.map(({b,i,info}) => `
     <div class="past-due-row">
       <div class="past-due-row-info">
-        <div class="past-due-row-name">${b.name}</div>
+        <div class="past-due-row-name">${escapeHtml(b.name)}</div>
         <div class="past-due-row-meta">Was due ${info.daysPast===1?'yesterday':info.daysPast+' days ago'} · ${f2(b.amount)}</div>
       </div>
       <button class="btn btn-sm btn-primary" onclick="markPastDuePaid(${i})">Mark paid</button>
@@ -16077,7 +16089,7 @@ function lcBeatRenderOutput(allResults, primary, maxMonths, strategy, extra, deb
         const isCapped = mo >= 180;
         return `
           <div class="lc-beat-bar-row">
-            <div class="lc-beat-debt-name">${d.name}</div>
+            <div class="lc-beat-debt-name">${escapeHtml(d.name)}</div>
             <div class="lc-beat-bar-track"><div class="lc-beat-bar-fill" style="width:${pct}%;background:${color};"></div></div>
             <div class="lc-beat-bar-label" style="color:${isCapped ? 'var(--ds-c4)' : 'var(--ds-t2)'};">${fmtMonths(mo)}</div>
           </div>

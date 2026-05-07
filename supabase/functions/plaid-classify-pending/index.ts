@@ -77,6 +77,26 @@ Deno.serve(async (req) => {
 
     const admin = createClient(SUPABASE_URL, SERVICE_ROLE);
 
+    // Daily classify cap. Each batch is up to 16k Haiku tokens; 10 batches
+    // per call. Normal user hits 1500-3000 transactions during onboarding +
+    // maybe a few hundred deep-dive. 8000/day is generous for legit use,
+    // bounds an attacker who removes+re-adds the bank to spam classification.
+    const DAILY_CLASSIFY_CAP = 8000;
+    const midnight = new Date();
+    midnight.setHours(0, 0, 0, 0);
+    const { count: classifiedToday } = await admin
+      .from('plaid_transactions')
+      .select('*', { count: 'exact', head: true })
+      .eq('user_id', userId)
+      .gte('able_classified_at', midnight.toISOString());
+    if ((classifiedToday ?? 0) >= DAILY_CLASSIFY_CAP) {
+      return json({
+        error: `Daily classify cap reached (${DAILY_CLASSIFY_CAP}). Resets at midnight.`,
+        classified: 0,
+        remaining: 0,
+      }, 429);
+    }
+
     const { data: pending, error: pendErr, count: pendCount } = await admin
       .from('plaid_transactions')
       .select(

@@ -9,12 +9,16 @@
 // Returns just the matches; the client uses them to filter the review list
 // (and could later use them to attach stream_ids to bills for Light matching).
 //
-// Gateway: "Verify JWT" must be OFF — auth is handled by the user's
-// Supabase session cookie passed through the SDK on the caller side.
+// Gateway: "Verify JWT" must be OFF — we verify the JWT in code via
+// auth.getUser(). Without this check, the endpoint is open to the public
+// internet and anyone can drain Anthropic credits by spamming POSTs.
 
 import Anthropic from 'npm:@anthropic-ai/sdk@^0.40.0';
+import { createClient } from 'npm:@supabase/supabase-js@2';
 
 const ANTHROPIC_API_KEY = Deno.env.get('ANTHROPIC_API_KEY')!;
+const SUPABASE_URL = Deno.env.get('SUPABASE_URL')!;
+const SERVICE_ROLE = Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')!;
 const MAX_BILLS = 60;
 const MAX_STREAMS = 60;
 
@@ -46,6 +50,15 @@ Deno.serve(async (req) => {
   if (req.method !== 'POST') return json({ error: 'POST only' }, 405);
 
   try {
+    // Verify caller. Function calls Anthropic on every invocation, so an
+    // unauthenticated endpoint is a credit-drain vector.
+    const authHeader = req.headers.get('Authorization') ?? '';
+    const userClient = createClient(SUPABASE_URL, SERVICE_ROLE, {
+      global: { headers: { Authorization: authHeader } },
+    });
+    const { data: userRes, error: userErr } = await userClient.auth.getUser();
+    if (userErr || !userRes.user) return json({ error: 'Unauthorized' }, 401);
+
     const body = await req.json();
     const bills: BillInput[] = Array.isArray(body?.bills) ? body.bills : [];
     const streams: StreamInput[] = Array.isArray(body?.streams) ? body.streams : [];

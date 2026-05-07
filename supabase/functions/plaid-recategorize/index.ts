@@ -1,6 +1,11 @@
+// plaid-recategorize — service-role only. Called by plaid-classify-batch
+// and plaid-classify-pending; never called directly by the browser.
+// Without the service-role gate this is an open credit-drain endpoint.
+
 import Anthropic from 'npm:@anthropic-ai/sdk@^0.40.0';
 
 const ANTHROPIC_API_KEY = Deno.env.get('ANTHROPIC_API_KEY')!;
+const SERVICE_ROLE = Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')!;
 const MAX_BATCH = 50;
 
 const corsHeaders = {
@@ -35,6 +40,16 @@ Deno.serve(async (req) => {
   if (req.method !== 'POST') return json({ error: 'POST only' }, 405);
 
   try {
+    // Service-role-only gate. This function is invoked by other Edge
+    // Functions (plaid-classify-batch, plaid-classify-pending), never by
+    // the browser directly. Reject any caller not presenting the
+    // service-role key.
+    const authHeader = req.headers.get('Authorization') ?? '';
+    const expected = `Bearer ${SERVICE_ROLE}`;
+    if (authHeader !== expected) {
+      return json({ error: 'Forbidden' }, 403);
+    }
+
     const body = await req.json();
     const transactions: PlaidTxnInput[] = body?.transactions;
 

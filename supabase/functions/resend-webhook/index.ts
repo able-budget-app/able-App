@@ -33,14 +33,18 @@ Deno.serve(async (req) => {
   // payload before parsing.
   const rawBody = await req.text();
 
-  // Resend webhooks use svix signatures. Verify when a secret is set; skip
-  // when not (useful for local dev). Production should ALWAYS have one set.
-  if (WEBHOOK_SECRET) {
-    const ok = await verifySvixSignature(req.headers, rawBody, WEBHOOK_SECRET);
-    if (!ok) {
-      console.warn('resend-webhook: signature verification failed');
-      return new Response('invalid signature', { status: 401 });
-    }
+  // Resend webhooks use svix signatures. Fail closed if the secret env var
+  // is missing — production should always have one, and accepting unsigned
+  // events would let anyone POST forged bounce/complaint flags into our
+  // email_status column.
+  if (!WEBHOOK_SECRET) {
+    console.error('resend-webhook: RESEND_WEBHOOK_SECRET not configured');
+    return new Response('not configured', { status: 503 });
+  }
+  const ok = await verifySvixSignature(req.headers, rawBody, WEBHOOK_SECRET);
+  if (!ok) {
+    console.warn('resend-webhook: signature verification failed');
+    return new Response('invalid signature', { status: 401 });
   }
 
   let event: any;

@@ -188,6 +188,20 @@ Deno.serve(async (req) => {
     const userId = item.user_id as string;
     const itemId = item.id as string;
 
+    // Auth gate: allow either service-role bearer (internal pipeline calls
+    // from plaid-sync, plaid-deep-dive, plaid-recurring-refresh) OR an
+    // authenticated user whose JWT resolves to the item's owner.
+    const authHeader = req.headers.get('Authorization') ?? '';
+    const isServiceRole = authHeader === `Bearer ${SERVICE_ROLE}`;
+    if (!isServiceRole) {
+      const userClient = createClient(SUPABASE_URL, SERVICE_ROLE, {
+        global: { headers: { Authorization: authHeader } },
+      });
+      const { data: userRes, error: userErr } = await userClient.auth.getUser();
+      if (userErr || !userRes.user) return json({ error: 'Unauthorized' }, 401);
+      if (userRes.user.id !== userId) return json({ error: 'Forbidden' }, 403);
+    }
+
     const { data: accounts, error: accErr } = await admin
       .from('plaid_accounts')
       .select('id')
