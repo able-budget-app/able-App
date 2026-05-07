@@ -157,12 +157,30 @@ input,select,button,textarea{font-family:inherit;}
 .ob-input:focus{border-color:var(--ds-green);box-shadow:0 0 0 3px rgba(42,122,74,.1);}
 .ob-input::placeholder{color:var(--ds-t3);font-weight:500;}
 #ob-input-area{margin-bottom:1.25rem;}
-.ob-table-row{display:flex;gap:6px;margin-bottom:7px;align-items:center;}
-.ob-table-input{flex:1;min-width:0;background:var(--ds-page);border:1.5px solid var(--ds-t4);border-radius:var(--ds-r1);color:var(--ds-t1);font-family:var(--ds-f);font-size:16px;font-weight:700;padding:12px 14px;outline:none;transition:all .2s;}
+/* Debt-review extra-debts rows. On mobile, four inputs in a flex row
+   shrunk each below 70px wide and clipped placeholder text — felt
+   visually inconsistent with the wider single-input forms elsewhere
+   in onboarding. Switch to a 2-col grid on mobile (Name+Balance row,
+   Min+Rate row, X button on its own line), keep 4-in-a-row on desktop. */
+.ob-table-row{display:grid;grid-template-columns:1fr 1fr auto;gap:8px;margin-bottom:14px;align-items:center;background:#fafbfa;border:1px solid var(--ds-line);border-radius:var(--ds-r1);padding:12px;}
+.ob-table-row .ob-table-input:nth-of-type(1){grid-column:1/3;}
+.ob-table-row .ob-table-input:nth-of-type(2){grid-column:1;}
+.ob-table-row .ob-table-input:nth-of-type(3){grid-column:2;}
+.ob-table-row .ob-table-input:nth-of-type(4){grid-column:1/3;}
+.ob-table-row .ob-table-x{grid-column:3;grid-row:1/5;}
+.ob-table-input{min-width:0;background:#fff;border:1.5px solid var(--ds-t4);border-radius:var(--ds-r1);color:var(--ds-t1);font-family:var(--ds-f);font-size:16px;font-weight:600;padding:12px 14px;outline:none;transition:all .2s;}
 .ob-table-input:focus{border-color:var(--ds-green);box-shadow:0 0 0 3px rgba(42,122,74,.1);}
 .ob-table-input::placeholder{color:var(--ds-t3);font-weight:500;}
-.ob-table-x{width:44px;height:44px;flex-shrink:0;background:transparent;border:none;color:var(--ds-t3);font-size:20px;cursor:pointer;border-radius:50%;transition:all .15s;}
+.ob-table-x{width:36px;height:36px;flex-shrink:0;align-self:start;background:transparent;border:none;color:var(--ds-t3);font-size:20px;cursor:pointer;border-radius:50%;transition:all .15s;}
 .ob-table-x:hover{background:#fdeef2;color:var(--ds-c4);}
+@media (min-width: 720px) {
+  .ob-table-row{grid-template-columns:1.4fr 1fr 1fr 1fr auto;padding:0;background:transparent;border:0;}
+  .ob-table-row .ob-table-input:nth-of-type(1),
+  .ob-table-row .ob-table-input:nth-of-type(2),
+  .ob-table-row .ob-table-input:nth-of-type(3),
+  .ob-table-row .ob-table-input:nth-of-type(4){grid-column:auto;}
+  .ob-table-row .ob-table-x{grid-row:auto;}
+}
 .ob-actions{display:flex;justify-content:space-between;align-items:center;gap:.75rem;margin-top:1rem;}
 #onboard-screen .btn-primary{display:inline-flex;align-items:center;justify-content:center;gap:6px;padding:14px 26px;background:linear-gradient(135deg,#2a7a4a,#3d9e78);color:white;border:none;border-radius:var(--ds-r1);font-family:var(--ds-f);font-size:14px;font-weight:800;cursor:pointer;transition:all .2s;box-shadow:0 4px 14px rgba(42,122,74,.3);letter-spacing:-.01em;flex:1;}
 #onboard-screen .btn-primary:hover{transform:translateY(-1px);box-shadow:0 6px 20px rgba(42,122,74,.4);}
@@ -1796,17 +1814,6 @@ posthog.init('phc_B6PH36QxpExnyBYhfScFFF6LhDvoyxuFr6PypJuxxky3', {
 
 <!-- ALLOCATE -->
 <div class="page active" id="page-home">
-  <!-- Empty-state welcome for first-time users (no history + no bills) -->
-  <div id="home-welcome" style="display:none;background:linear-gradient(135deg,#eaf5ee,#d9ecde);border-radius:var(--ds-r2);padding:1.5rem 1.75rem;margin-bottom:1.25rem;box-shadow:var(--ds-sh1);">
-    <div style="font-size:11px;font-weight:800;letter-spacing:.12em;text-transform:uppercase;color:var(--ds-green);margin-bottom:.5rem;">Welcome to Able</div>
-    <div style="font-size:1.35rem;font-weight:900;color:var(--ds-t1);letter-spacing:-.02em;line-height:1.2;margin-bottom:.4rem;">Start with one small step.</div>
-    <div style="font-size:14px;color:var(--ds-t2);font-weight:500;line-height:1.5;margin-bottom:1rem;">Log any real income below, or add your bills so Able knows what to cover. Thirty seconds either way.</div>
-    <div style="display:flex;gap:8px;flex-wrap:wrap;">
-      <button class="btn btn-primary btn-sm" onclick="openAllocateSheet()">Log first income</button>
-      <button class="btn btn-sm" onclick="goTo('bills')">Add first bill</button>
-    </div>
-  </div>
-
   <!-- Home greeting line: time-of-day greeting + name (left), date (right).
        Replaces the prior "Become Able" wordmark — brand identity already
        lives in the top app bar. Home page goes straight to where you stand. -->
@@ -1873,8 +1880,9 @@ posthog.init('phc_B6PH36QxpExnyBYhfScFFF6LhDvoyxuFr6PypJuxxky3', {
     <div class="db-next-rows" id="db-next-rows"></div>
   </div>
 
-  <!-- 3 small action chips: Coach · Add income · Add bill. Smaller than the
-       prior 4-card grid because Next-N got promoted to its own card above. -->
+  <!-- 3 small action chips: Coach · Add expected income · Add bill.
+       "Add expected income" opens the forecast modal — separate from the
+       green hero's "Log new income" (received money). -->
   <div class="db-action-chips">
     <button class="db-chip-action" onclick="openCoachPanel()" type="button" aria-label="Ask the coach">
       <span class="db-chip-action-icon" style="background:var(--ds-green-l);color:var(--ds-green);"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" width="16" height="16"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg></span>
@@ -1882,7 +1890,7 @@ posthog.init('phc_B6PH36QxpExnyBYhfScFFF6LhDvoyxuFr6PypJuxxky3', {
     </button>
     <button class="db-chip-action" onclick="openAddIncomeModal()" type="button" aria-label="Add expected income">
       <span class="db-chip-action-icon" style="background:#fef3e0;color:var(--ds-c3);"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" width="16" height="16"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg></span>
-      <span class="db-chip-action-label">Add income</span>
+      <span class="db-chip-action-label">Add expected income</span>
     </button>
     <button class="db-chip-action" onclick="openAddBillModal()" type="button" aria-label="Add a new bill">
       <span class="db-chip-action-icon" style="background:#fdeef2;color:var(--ds-c4);"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" width="16" height="16"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg></span>
@@ -3523,11 +3531,39 @@ async function _onAuthStateChangeImpl(user) {
       console.debug(`[Able] First checkSubscription: ${Math.round(performance.now()-t0)}ms, hasAccess=${hasAccess}`);
     }
 
-    // If coming from checkout and STILL not active (no session_id and webhook
-    // hasn't landed), poll with progressive backoff. Stripe webhooks usually
-    // land in <3s but can take 20-30s under load. Tightened backoff: starts
-    // fast (500ms first poll), total budget ~19s.
-    if(!hasAccess && isFromCheckout) {
+    // If we have a session_id and the first verify returned 'pending'
+    // (Stripe hasn't marked session complete yet), retry verify-checkout-
+    // session with backoff. Asks Stripe directly — does NOT depend on
+    // webhook delivery. Typical case resolves in 2-4s; budget ~11s.
+    // Replaces the prior `checkSubscription` profile polling, which
+    // waited on the webhook and routinely pushed users to the 45s safety
+    // net when the webhook took >19s under load.
+    if(!hasAccess && isFromCheckout && checkoutSessionId) {
+      const delays = [500, 1000, 1500, 2000, 3000, 3000];
+      for (let i = 0; i < delays.length && !hasAccess; i++) {
+        await new Promise(r=>setTimeout(r, delays[i]));
+        const tRetry = performance.now();
+        try {
+          const { data: vData } = await sbGet().functions.invoke('verify-checkout-session', {
+            body: { session_id: checkoutSessionId },
+          });
+          console.debug(`[Able] Verify retry ${i+1}: ${Math.round(performance.now()-tRetry)}ms, status=${vData?.status}`);
+          if (vData?.status === 'active') {
+            sessionStorage.setItem('able_access_'+user.id, 'true');
+            hasAccess = true;
+            Able.track('checkout_verified_via_retry', { attempts: i+1 });
+          }
+        } catch (e) {
+          console.debug(`[Able] Verify retry ${i+1} threw:`, e?.message);
+        }
+      }
+    }
+
+    // Legacy fallback for the rare post-checkout return without a session_id
+    // (Stripe templates {CHECKOUT_SESSION_ID} into success_url, but this
+    // covers manual refresh that drops the param, etc.). Polls profiles
+    // waiting for the webhook — the slow path the verify-retry above replaced.
+    if(!hasAccess && isFromCheckout && !checkoutSessionId) {
       const delays = [500,500,750,1000,1500,2000,2500,3000,3000,3000,3000];
       for (let i = 0; i < delays.length && !hasAccess; i++) {
         await new Promise(r=>setTimeout(r, delays[i]));
@@ -3943,19 +3979,25 @@ function renderObStep() {
       document.getElementById('ob-next-btn').style.display = 'inline-flex';
       document.getElementById('ob-next-btn').textContent = 'Continue →';
     } else {
-      const lookback = obAnswers.plaid_connect?.lookback_months || 6;
-      const opt = (m) => `
-        <label style="display:flex;align-items:center;gap:8px;padding:10px 12px;border:1px solid var(--ds-line);border-radius:8px;cursor:pointer;font-size:13px;font-weight:600;${m === lookback ? 'background:#ecf5ee;border-color:#3d9e78;' : ''}">
-          <input type="radio" name="ob-plaid-lookback" value="${m}" ${m === lookback ? 'checked' : ''} style="margin:0;">
-          ${m} months
-        </label>`;
+      // Lookback is fixed at 12 months — picker removed 2026-05-06. Reasoning:
+      // (a) the 6/12/24 choice was friction with no real upside (lookback
+      // doesn't change time-to-first-plan, that's bounded by Plaid's
+      // INITIAL_UPDATE), and (b) we're moving to a two-pass model where the
+      // initial pipeline still uses the 2500-txn classify cap for fast time-
+      // to-plan, then a background deep-dive runs after the user leaves the
+      // app and re-detects against the full window. The user just sees "12
+      // months" as a confidence signal that we did real work.
       inputArea.innerHTML = `
-        <div style="font-size:13px;font-weight:700;color:var(--ds-t2);margin-bottom:.5rem;">How far back should I look?</div>
-        <div style="display:flex;gap:8px;margin-bottom:1.25rem;">${opt(6)}${opt(12)}${opt(24)}</div>
+        <div style="font-size:13px;font-weight:600;color:var(--ds-t2);line-height:1.55;margin-bottom:1.25rem;background:var(--ds-green-l);border:1px solid var(--ds-green-m);border-radius:var(--ds-r1);padding:12px 14px;">
+          <div style="font-size:11px;font-weight:800;letter-spacing:.06em;text-transform:uppercase;color:var(--ds-green);margin-bottom:4px;">What I'll read</div>
+          <div style="color:var(--ds-t1);font-weight:700;">12 months of your transactions.</div>
+          <div style="color:var(--ds-t2);font-weight:500;font-size:12.5px;margin-top:3px;">Enough history to spot recurring bills, average your income, and read your tax pattern.</div>
+        </div>
         <button type="button" id="ob-plaid-connect" class="btn-primary" onclick="obStartPlaidLink()" style="width:100%;margin-bottom:.5rem;">Connect bank</button>
         <button type="button" class="btn-ghost btn-sm" onclick="obSkipPlaidConnect()" style="width:100%;">Skip and enter manually →</button>
         <div id="ob-plaid-error" style="display:none;color:#c85a5a;font-size:12px;font-weight:600;margin-top:.5rem;"></div>
-        <div style="font-size:11px;color:var(--ds-t3);font-weight:500;line-height:1.5;margin-top:1rem;text-align:center;">By connecting, you authorize Plaid to share your account data with Able. Read <a href="https://plaid.com/legal/#end-user-privacy-policy" target="_blank" rel="noopener" style="color:var(--ds-green);text-decoration:underline;">Plaid's privacy policy</a>.</div>`;
+        <div style="font-size:12px;color:var(--ds-t3);font-weight:500;line-height:1.6;margin-top:1.5rem;text-align:center;">By connecting, you authorize Plaid to share your account data with Able.</div>
+        <div style="font-size:12px;color:var(--ds-t3);font-weight:500;line-height:1.6;margin-top:.35rem;text-align:center;"><a href="https://plaid.com/legal/#end-user-privacy-policy" target="_blank" rel="noopener" style="color:var(--ds-green);text-decoration:none;font-weight:700;">Read Plaid's privacy policy →</a></div>`;
       document.getElementById('ob-back-btn').style.display = obStep > 0 ? 'inline-block' : 'none';
       document.getElementById('ob-next-btn').style.display = 'none';
     }
@@ -4633,12 +4675,25 @@ async function tryResumePlaidOauth() {
       clearOauthLink();
       stripOauthQueryParams();
       if (state.context === 'onboarding') {
-        await obHandlePlaidSuccess(public_token, metadata, state.lookback || 6);
+        await obHandlePlaidSuccess(public_token, metadata, state.lookback || 12);
       } else if (state.context === 'settings_new') {
         await settingsHandlePostLink(public_token, metadata);
       } else if (state.context === 'settings_update') {
         // Update mode resolves the existing Item; no exchange needed.
         Able.track?.('plaid_item_update_completed');
+        if (typeof loadConnectedAccounts === 'function') await loadConnectedAccounts();
+      } else if (state.context === 'settings_add_product') {
+        // add_product mode adds liabilities (or other) to the existing
+        // Item in place. Re-run detect-credit-debts so rows flip from
+        // estimate → liabilities with real APRs.
+        Able.track?.('plaid_add_product_completed', { products: state.products_to_add });
+        try {
+          await sbGet().functions.invoke('plaid-detect-credit-debts', {
+            body: { plaid_item_row_id: state.plaid_item_row_id },
+          });
+        } catch (e) {
+          console.warn('OAuth-resume detect-credit-debts failed:', e);
+        }
         if (typeof loadConnectedAccounts === 'function') await loadConnectedAccounts();
       }
     },
@@ -4676,8 +4731,11 @@ function ensurePlaidLinkScript() {
 async function obStartPlaidLink() {
   const btn = document.getElementById('ob-plaid-connect');
   const errEl = document.getElementById('ob-plaid-error');
-  const lookbackInput = document.querySelector('input[name="ob-plaid-lookback"]:checked');
-  const lookback = lookbackInput ? parseInt(lookbackInput.value, 10) : 6;
+  // Lookback hardcoded to 12 months — picker removed 2026-05-06. The deep-
+  // dive pass that runs after onboarding completes processes the full
+  // 12-month classified pool; the initial pipeline still uses the 2500-txn
+  // classify cap for fast time-to-plan.
+  const lookback = 12;
 
   if (errEl) { errEl.style.display = 'none'; errEl.textContent = ''; }
   if (btn) { btn.disabled = true; btn.textContent = 'Loading…'; }
@@ -4931,8 +4989,15 @@ async function obRunPlaidPipeline() {
     income_hint = labels.join(', ');
     if (obAnswers.intake_channels_other) income_hint += `. Also: ${obAnswers.intake_channels_other}`;
   }
+  // The intake question "What's your name, and what do you do to make money?"
+  // captures both in one free-text field. Splitting them here so the
+  // analyzer sees `business` as just the work (e.g. "marketing consultant
+  // and Airbnb host") rather than "Paul Johnson, marketing consultant",
+  // which lets it name income sources by the work instead of the rail
+  // ("Marketing payments" vs. "Stripe payouts").
+  const _firstName = _obParseFirstName(obAnswers.name_business);
   const profile_hint = {
-    name: obAnswers.name_business || undefined,
+    name: _firstName || obAnswers.name_business || undefined,
     business: obAnswers.name_business || undefined,
     income_payment_structure: income_hint,
   };
@@ -5331,6 +5396,24 @@ async function obAutoApplyPendingReview() {
     obPlanReview.autoApplying = false;
     obRenderPlanReviewUI();
   }
+
+  // Fire-and-forget the post-onboarding deep-dive. Runs server-side; the
+  // user can close the tab the moment the initial plan lands and the
+  // deep-dive will still complete. It only ever appends new pending_review
+  // rows or flags existing rows as dormant — never overwrites the user's
+  // accepted plan. Safe to skip silently on any error; the deep-dive is
+  // an enhancement, not a requirement.
+  try {
+    const itemRowId = obAnswers.plaid_connect?.plaid_item_row_id;
+    if (itemRowId) {
+      sb.functions.invoke('plaid-deep-dive', { body: { plaid_item_row_id: itemRowId } })
+        .then(({ data, error }) => {
+          if (error) console.warn('[deep-dive] kickoff failed:', error.message || error);
+          else console.debug('[deep-dive] kicked off:', data);
+        })
+        .catch((e) => console.warn('[deep-dive] invoke threw:', e?.message || e));
+    }
+  } catch (_) { /* never block onboarding on the deep-dive */ }
 }
 
 function clone(v) { return JSON.parse(JSON.stringify(v)); }
@@ -9587,6 +9670,22 @@ async function loadConnectedAccounts() {
       (accountsByItem[a.plaid_item_id] = accountsByItem[a.plaid_item_id] || []).push(a);
     });
 
+    // Items with estimate-source credit debts haven't been linked with the
+    // 'liabilities' Plaid product yet (linked before PR #13 or institution
+    // didn't return data). They're still functional but rate_estimate is
+    // null instead of carrying a real APR. Surface a one-click "enable
+    // APR tracking" affordance — runs the add_product reconfirmation
+    // flow without making the user fully re-link.
+    const { data: estimateRows } = await sb
+      .from('plaid_credit_debts')
+      .select('plaid_item_id')
+      .in('plaid_item_id', itemIds)
+      .eq('source', 'estimate');
+    const estimateCountByItem = {};
+    (estimateRows || []).forEach((r) => {
+      estimateCountByItem[r.plaid_item_id] = (estimateCountByItem[r.plaid_item_id] || 0) + 1;
+    });
+
     listEl.innerHTML = items.map((item) => {
       const accs = accountsByItem[item.id] || [];
       const accLabel = accs.length
@@ -9600,6 +9699,12 @@ async function loadConnectedAccounts() {
       const wantsAccountSelect = status === 'pending_disconnect';
       const reconnectBtn = (status === 'error' || status === 'pending_expiration' || status === 'pending_disconnect') ? `
         <button class="btn btn-sm btn-primary" onclick="settingsRunUpdateMode('${item.id}', ${wantsAccountSelect})" style="font-size:12px;">Reconnect</button>` : '';
+      // Only show enable-APR button when the item is otherwise healthy —
+      // a Reconnect on a broken item should win attention; once cleared,
+      // the APR enable-row will reappear on the next render.
+      const estimateCount = estimateCountByItem[item.id] || 0;
+      const enableAprBtn = (estimateCount > 0 && status === 'active') ? `
+        <button class="btn btn-sm" onclick="settingsRunAddProduct('${item.id}', ['liabilities'])" style="font-size:12px;background:#eaf6ef;color:var(--ds-green);border:1px solid rgba(42,122,74,.2);">Enable APR tracking</button>` : '';
       return `
         <div style="display:flex;align-items:flex-start;justify-content:space-between;gap:12px;padding:14px 0;border-bottom:1px solid var(--ds-t4);">
           <div style="flex:1;min-width:0;">
@@ -9607,8 +9712,9 @@ async function loadConnectedAccounts() {
             <div style="font-size:11px;color:var(--ds-t3);font-weight:600;margin-top:3px;line-height:1.5;word-break:break-word;">${escapeHtml(accLabel)}</div>
             ${item.error_message ? `<div style="font-size:11px;color:var(--ds-c4);font-weight:600;margin-top:5px;line-height:1.5;">${escapeHtml(item.error_message)}</div>` : ''}
           </div>
-          <div style="display:flex;gap:6px;flex-shrink:0;">
+          <div style="display:flex;gap:6px;flex-shrink:0;flex-wrap:wrap;justify-content:flex-end;">
             ${reconnectBtn}
+            ${enableAprBtn}
             <button class="btn btn-sm" onclick="settingsDisconnectBank('${item.id}', ${JSON.stringify(item.institution_name || 'this bank').replace(/"/g, '&quot;')})" style="font-size:12px;color:var(--ds-c4);">Disconnect</button>
           </div>
         </div>`;
@@ -9705,7 +9811,7 @@ async function settingsConnectBank() {
   try {
     await ensurePlaidLinkScript();
     const { data, error } = await sbGet().functions.invoke('plaid-link-token', {
-      body: { mode: 'new', lookback_months: 6, redirect_uri: plaidRedirectUri() }
+      body: { mode: 'new', lookback_months: 12, redirect_uri: plaidRedirectUri() }
     });
     if (error) throw error;
     if (data && data.error) throw new Error(data.error);
@@ -9714,7 +9820,7 @@ async function settingsConnectBank() {
     persistOauthLink({
       token: data.link_token,
       context: 'settings_new',
-      lookback: 6,
+      lookback: 12,
     });
 
     const handler = window.Plaid.create({
@@ -9785,13 +9891,13 @@ async function bankPromptConnect() {
   try {
     await ensurePlaidLinkScript();
     const { data, error } = await sbGet().functions.invoke('plaid-link-token', {
-      body: { mode: 'new', lookback_months: 6, redirect_uri: plaidRedirectUri() }
+      body: { mode: 'new', lookback_months: 12, redirect_uri: plaidRedirectUri() }
     });
     if (error) throw error;
     if (data && data.error) throw new Error(data.error);
     if (!data?.link_token) throw new Error('No link_token returned');
 
-    persistOauthLink({ token: data.link_token, context: 'settings_new', lookback: 6 });
+    persistOauthLink({ token: data.link_token, context: 'settings_new', lookback: 12 });
 
     const handler = window.Plaid.create({
       token: data.link_token,
@@ -9856,7 +9962,7 @@ async function settingsHandlePostLink(public_token, metadata) {
       institution: metadata?.institution
         ? { id: metadata.institution.institution_id, name: metadata.institution.name }
         : null,
-      lookback_months: 6,
+      lookback_months: 12,
     }
   });
   if (exErr) throw exErr;
@@ -9890,6 +9996,72 @@ async function settingsHandlePostLink(public_token, metadata) {
     institution_name: metadata?.institution?.name,
   });
   if (typeof loadConnectedAccounts === 'function') await loadConnectedAccounts();
+}
+
+// Add the 'liabilities' product to an existing Plaid item via Plaid
+// Link's add-product reconfirmation flow. Used post-PR-#13 to upgrade
+// items that were linked before liabilities was in our products array
+// (or institutions that didn't return liabilities on initial link).
+// User goes through a brief reconfirmation; on success we re-run
+// plaid-detect-credit-debts so the rows flip from source='estimate'
+// to source='liabilities' with real APRs, then refresh the list.
+async function settingsRunAddProduct(plaidItemRowId, productsToAdd) {
+  const errEl = document.getElementById('connect-bank-error');
+  if (errEl) { errEl.style.display = 'none'; errEl.textContent = ''; }
+  try {
+    await ensurePlaidLinkScript();
+    const { data, error } = await sbGet().functions.invoke('plaid-link-token', {
+      body: {
+        mode: 'add_product',
+        plaid_item_row_id: plaidItemRowId,
+        products_to_add: productsToAdd,
+        redirect_uri: plaidRedirectUri(),
+      }
+    });
+    if (error) throw error;
+    if (data && data.error) throw new Error(data.error);
+    if (!data?.link_token) throw new Error('No link_token returned');
+
+    persistOauthLink({
+      token: data.link_token,
+      context: 'settings_add_product',
+      plaid_item_row_id: plaidItemRowId,
+      products_to_add: productsToAdd,
+    });
+
+    const handler = window.Plaid.create({
+      token: data.link_token,
+      onSuccess: async () => {
+        // add_product mode doesn't return a new public_token — Plaid
+        // updates the existing Item's product list in place. Re-run
+        // detect-credit-debts so rows flip from estimate to liabilities.
+        clearOauthLink();
+        Able.track?.('plaid_add_product_completed', { products: productsToAdd });
+        showToast('Updating debt tracking…', { duration: 3000 });
+        try {
+          await sbGet().functions.invoke('plaid-detect-credit-debts', {
+            body: { plaid_item_row_id: plaidItemRowId },
+          });
+          showToast('APR tracking enabled', { duration: 2500 });
+        } catch (e) {
+          console.warn('post-add-product detect-credit-debts failed:', e);
+          // Soft-fail — the next pipeline run picks it up.
+        }
+        await loadConnectedAccounts();
+      },
+      onExit: (err) => {
+        clearOauthLink();
+        if (err && errEl) {
+          errEl.textContent = err.display_message || err.error_message || 'Reconnect canceled';
+          errEl.style.display = 'block';
+        }
+      },
+    });
+    handler.open();
+  } catch (e) {
+    console.error('settingsRunAddProduct failed:', e);
+    if (errEl) { errEl.textContent = 'Could not start update: ' + (e.message || 'unknown error'); errEl.style.display = 'block'; }
+  }
 }
 
 // Re-link the same item in update mode. Used when an item is in error /
@@ -13187,7 +13359,7 @@ const PAGE_TO_GROUP = {
   score:'score',
   learn:'more', refer:'more', settings:'more',
 };
-const GROUP_DEFAULT = { plan:'activity', more:'learn' };
+const GROUP_DEFAULT = { plan:'bills', more:'learn' };
 
 function goTo(target){
   // Accept either a group name (Plan / More) or a specific page id.
@@ -13545,6 +13717,15 @@ function positionTourUI(targetEl) {
     spot.style.left = (rect.left + sx - pad) + 'px';
     spot.style.width = (rect.width + pad*2) + 'px';
     spot.style.height = (rect.height + pad*2) + 'px';
+    // Match the target's border-radius so the green ring follows the
+    // actual card silhouette. Without this, a hero with --ds-r3 (26px)
+    // got wrapped by a 10px-radius spotlight whose corners cut into
+    // the card. Add `pad` so the outer ring sits ~6px outside the card.
+    try {
+      const cs = getComputedStyle(targetEl);
+      const r = parseFloat(cs.borderTopLeftRadius) || 10;
+      spot.style.borderRadius = (r + pad) + 'px';
+    } catch (_) { /* fall back to CSS default */ }
   }
   const bubble = document.getElementById('tour-bubble');
   if (!bubble) return;

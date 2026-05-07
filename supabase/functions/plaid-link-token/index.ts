@@ -3,10 +3,11 @@
 //
 // POST body:
 //   {
-//     mode?: 'new' | 'update',                  // default 'new'
+//     mode?: 'new' | 'update' | 'add_product',  // default 'new'
 //     lookback_months?: 6 | 12 | 24,            // default 6 (D1.4 lock)
-//     plaid_item_row_id?: string                // required if mode='update'
+//     plaid_item_row_id?: string                // required if mode='update' or 'add_product'
 //     account_selection_enabled?: boolean       // update mode + NEW_ACCOUNTS_AVAILABLE
+//     products_to_add?: string[]                // required if mode='add_product' (e.g. ['liabilities'])
 //   }
 //
 // Returns: { link_token, expiration, mode }
@@ -57,10 +58,14 @@ const corsHeaders = {
 };
 
 type Body = {
-  mode?: 'new' | 'update';
+  mode?: 'new' | 'update' | 'add_product';
   lookback_months?: 6 | 12 | 24;
   plaid_item_row_id?: string;
   account_selection_enabled?: boolean;
+  // Products to add when mode='add_product'. Plaid will reconfirm with
+  // the user and update the item's product list server-side. Default
+  // ['liabilities'] for the post-PR-#13 enable-real-APR flow.
+  products_to_add?: string[];
   // OAuth redirect URI. Required by Plaid for OAuth-based institutions
   // (Chase, Capital One, USAA, etc.). Must be registered in the Plaid
   // dashboard as an allowed URI. Front-end passes
@@ -82,16 +87,16 @@ Deno.serve(async (req) => {
     const userId = userRes.user.id;
 
     const body: Body = await req.json().catch(() => ({}));
-    const mode: 'new' | 'update' = body.mode ?? 'new';
+    const mode: 'new' | 'update' | 'add_product' = body.mode ?? 'new';
     const lookback: 6 | 12 | 24 = ([6, 12, 24] as const).includes(body.lookback_months as 6 | 12 | 24)
       ? (body.lookback_months as 6 | 12 | 24)
       : 6;
 
-    // Update mode requires the user's existing access_token.
+    // Update + add_product modes require the user's existing access_token.
     let accessToken: string | undefined;
-    if (mode === 'update') {
+    if (mode === 'update' || mode === 'add_product') {
       if (!body.plaid_item_row_id) {
-        return json({ error: 'plaid_item_row_id required for update mode' }, 400);
+        return json({ error: `plaid_item_row_id required for ${mode} mode` }, 400);
       }
       const admin = createClient(SUPABASE_URL, SERVICE_ROLE);
       const { data: item, error } = await admin
@@ -104,17 +109,37 @@ Deno.serve(async (req) => {
       accessToken = item.access_token;
     }
 
+    // add_product needs at least one product to add. Default to liabilities
+    // (the v1 use case post-PR-#13). Whitelist defends against arbitrary
+    // products being requested from the client.
+    let productsToAdd: string[] = [];
+    if (mode === 'add_product') {
+      const allowed = new Set(['liabilities']);
+      const requested = (body.products_to_add ?? ['liabilities']).filter((p) => allowed.has(p));
+      if (requested.length === 0) {
+        return json({ error: 'products_to_add must contain at least one allowed product' }, 400);
+      }
+      productsToAdd = requested;
+    }
+
     const dayMap: Record<6 | 12 | 24, number> = { 6: 180, 12: 365, 24: 730 };
+
+    // products array semantics by mode:
+    //   'new'         — initial link, request the full v1 product set.
+    //   'update'      — empty (Plaid resolves the item's existing products).
+    //   'add_product' — the products to ADD to an existing item. Plaid
+    //                   reconfirms with the user and merges these into
+    //                   the item's product list.
+    const products = mode === 'update'
+      ? []
+      : mode === 'add_product'
+        ? productsToAdd
+        : ['transactions', 'liabilities'];
 
     const reqBody: Record<string, unknown> = {
       user: { client_user_id: userId },
       client_name: 'Able',
-      // 'transactions' is the core feed. 'liabilities' enables true APR +
-      // minimum_payment + statement_balance on credit cards via
-      // /liabilities/get (consumed by plaid-detect-credit-debts). Items
-      // linked before liabilities was added here will not have it; those
-      // users need to re-link or hit an /item/update flow to gain it.
-      products: mode === 'update' ? [] : ['transactions', 'liabilities'],
+      products,
       country_codes: ['US'],
       language: 'en',
     };

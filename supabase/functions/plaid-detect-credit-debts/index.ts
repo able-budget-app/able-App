@@ -305,13 +305,16 @@ async function processItem(
       last_statement_balance = liability.last_statement_balance;
       next_payment_due_date = liability.next_payment_due_date;
       // Prefer Plaid's reported min_payment_amount; fall back to autopay
-      // mask match if Plaid returned null (rare but happens for some
-      // first-statement cards).
-      if (liability.minimum_payment_amount != null) {
-        min_payment = Math.max(1, Math.round(liability.minimum_payment_amount));
+      // mask match, then 2.5%-of-balance rule. Treat 0 as missing —
+      // Chase (and others) return 0 instead of null when the statement
+      // hasn't posted yet or the card is on autopay, which would
+      // otherwise produce a $1 minimum on a $8k balance.
+      const reportedMin = liability.minimum_payment_amount;
+      if (reportedMin != null && reportedMin > 0) {
+        min_payment = Math.max(1, Math.round(reportedMin));
       } else if (matchedStream) {
         const matched = matchedStream.last_amount ?? matchedStream.average_amount ?? 0;
-        min_payment = Math.max(1, Math.round(matched));
+        min_payment = Math.max(25, Math.round(matched));
       } else {
         min_payment = Math.max(25, Math.round((card.current_balance ?? 0) * 0.025));
       }
