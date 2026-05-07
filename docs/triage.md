@@ -31,61 +31,15 @@ Last consolidated: 2026-05-03 from `pending_work.md`, `competitor-feature-audit.
 
 - **P1-2026-05-05 #2 — Schema drift between client and `plaid_recurring_streams` (silent 400).** ✅ Shipped 2026-05-05 in PR #2 (`3d514af`). Dropped `personal_finance_category_primary` from the client SELECT + AI match payload + `_streamCategoryToBill` and `_looksLikeBankFee` (refactored to derive primary from detailed via Plaid PFC convention). Edge Function only writes `_detailed`; primary was dead code in the client.
 
-- **P1-2026-05-06 #1 — Plaid liabilities integration for true APR + min_payment.** Current credit-card APR estimator inside `buildCreditDebts` (90-day INTEREST CHARGE sum annualized) systematically undershoots when the balance is growing across the window — Paul's two Chase cards came back at 19.82% / 15.58% (actual 26.24% / 22.74%, off by ~7% on both). The math is wrong by design (uses `current_balance` as denominator instead of average daily balance, which we don't have). Plaid's `liabilities` product returns true APRs (purchase, balance transfer, cash advance), minimum payment, last statement balance, last payment date — that's the canonical source. Currently `products=['transactions']` only per `plaid_v1_decisions.md`. Lift: enable `liabilities` on Plaid items, add `/liabilities/get` call to a new Edge Function, persist APR + min_payment per card. **Scheduled: tomorrow's session (2026-05-07).** When this ships: rip out the APR estimator block in `buildCreditDebts` and source from liabilities instead. Min_payment also becomes deterministic (no more 2.5% fallback).
+- **P1-2026-05-06 #1 — Plaid liabilities integration for true APR + min_payment.** ✅ Shipped 2026-05-06 across PR #13 (`plaid-detect-credit-debts` Edge Function + `plaid_credit_debts` table + C→A refactor extracting `buildCreditDebts` out of `plaid-analyze`) and PR #20 (treat Chase's `minimum_payment_amount = 0` as missing, fall through to 2.5% rule). Verified on Paul's two Chase cards: APRs now 0.23 / 0.26 from `/liabilities/get` (vs. 19.82% / 15.58% from the old INTEREST-CHARGE estimator). Min_payment falls through to 2.5%-of-balance ($220 / $170) when Plaid returns 0/null — conservative; refinement tracked as B7.
 
-- **P1-2026-05-06 #2 — Add-bank-from-settings only syncs, doesn't classify or analyze.** `settingsHandlePostLink` (app.html:9777) calls `plaid-exchange-public-token` and `plaid-sync` only. No `plaid-classify-pending`, no `plaid-detect-recurring`, no `plaid-analyze`, no `analyzer-apply-plan`. Result: when a user adds a second bank, transactions land in `plaid_transactions` with `able_category: null`, no recurring streams detected, no debts/bills/sources surfaced. Reproduced 2026-05-06: Paul added a second account with a credit card; transactions imported but the card never appeared in the Debt tab.
-
-  **Why this is bigger than just credit cards.** Multi-bank scenarios are varied: forgot a credit card, added a second checking, connected a 1099 deposit account that should change the tax %, added a business account with its own bills, started tracking a spouse's accounts. The detection layer is the easy part; the design question is *what to do with what you find* without blowing away tuning the user has already done since onboarding.
-
-  **Locked design — Option C (deterministic-first delta with opt-in recalibration):**
-  1. Detect new credit cards deterministically by calling `buildCreditDebts` against the new item's `plaid_accounts` (no LLM needed for cards).
-  2. Run `plaid-classify-pending` + `plaid-detect-recurring` against the new item's transactions.
-  3. Run a scoped analyzer pass on the new item only — produces proposed new bills + income sources, but does NOT touch tax_pct or surplus_split.
-  4. Show a unified "We found this in [bank name]" review modal: proposed new debts (from step 1), bills, and income sources. User picks what to add. Existing rows untouched.
-  5. Add a separate "Recalibrate tax % and surplus split with new data" button — opt-in. If pressed, runs full multi-item analyze (analyzer needs to be made multi-item-aware, deferred until users actually want this).
-
-  **Connection to P1-2026-05-06 #1:** when liabilities ships tomorrow, this is also a natural moment to extract `buildCreditDebts` from inside `plaid-analyze` into its own Edge Function (`plaid-detect-credit-debts`) writing to a `plaid_credit_debts` table. That's the C → A refactor we deferred 2026-05-06; it pays off here because both the analyzer path (existing) and the add-bank-delta path (new) need credit-card detection. Avoids duplicating the logic in two places.
-
-  **Effort: M-L.** New Edge Function for credit-card detection, refactor `settingsHandlePostLink` to chain classifier + detect-recurring + scoped-analyzer + review modal, new modal UI in app.html, plumbing for the opt-in recalibration button. **Scheduled: tomorrow's session alongside P1-2026-05-06 #1.**
+- **P1-2026-05-06 #2 — Add-bank-from-settings only syncs, doesn't classify or analyze.** ✅ Partially shipped 2026-05-06 via PR #19 (add_product flow + Enable APR tracking button so existing items can gain liabilities without full re-link). The credit-card detection portion now runs through the same `plaid-detect-credit-debts` function as the onboarding path. **Still open:** the bigger Option-C delta UI (scoped analyzer pass + "We found this in [bank name]" review modal + opt-in recalibration button). Promote back to active when we want to handle multi-bank deltas for bills + income sources, not just cards.
 
 - **P1-2026-05-06 #3 — Home hero card empty until user manually adds a balance.** Fresh-signup users with Plaid connected saw a blank "Add what's in your spending accounts" CTA on home, even though `loadBankBalances` populates `S._bankBalances` async. The bank-balance line was only rendered in the populated branch of `renderHeroMoney` (when `_hasBalance()` was true), so a user who hadn't yet entered a manual balance never saw their connected accounts. Shipped 2026-05-06 in PR #12: empty-state branch now renders bank balances + per-account breakdown + "Use $X as my balance" one-tap CTA, with manual entry preserved as a secondary option. **Bigger redesign deferred** — Paul flagged interest in making live bank balance the working balance (instead of manual S.balance) per the per-deposit "every dollar gets a job" model, but that reverses the 2026-05-03 Option B decision and has the manual-double-counting wrinkle when income hits Plaid post-log. Tracked as bench item B6.
 
-- **P1-2026-05-06 #4 — Analyzer bills accuracy: ~30% miss rate on legitimate bills.** Audit 2026-05-06 against Paul's actual bills list:
-  - **Detected correctly (5):** Sparklight, Toyota (debt path), Verizon, Mortgage (off $84), Spotify.
-  - **Detected with errors (4):** Intermountain Gas off ~$10, Idaho Power off ~$17, City of Nampa frequency wrong (bimonthly $102 → detected monthly $178), Cloudflare frequency wrong (annual → detected monthly because two domain renewals fell ~30 days apart).
-  - **Missing (11 legit + 2 too-new):** Villa Spor $19, Life Insurance $48.50, Car Insurance $170, Chase Monthly Fee $15, Northwestern Life ~$48, Claude $100, Apple Storage $9.99, Netflix $7.99, Google Storage $1.99, Disney+ $12.99, SMART CREDIT $30. (Acceptable misses: Netlify $24.99, Supabase $25 — too new this month to prove cadence.)
+- **P1-2026-05-06 #4 — Analyzer bills accuracy: ~30% miss rate on legitimate bills.** ✅ Shipped 2026-05-06 across PR #16 (rich debug mode in `plaid-detect-recurring` with `merchant_filter` param), PR #17 (triage close-out), and PR #18 (Netflix high-confidence 2-occurrence escape). Investigation revealed the original "30% miss rate" was a **false alarm** — 8 of the 11 listed missing bills were actually detecting. Double-counted entries + naming mismatches (e.g. SQL pattern `chase.*fee` missed "MONTHLY SERVICE FEE", `smart credit` missed "Smartcredit" with no space). True miss after debug pass was Netflix (2 occurrences in 90d window, just under the 3-occurrence floor) — fixed by the high-confidence escape: identical amounts + interval-center drift ≤ 2 days unlocks 2-occurrence detection.
 
-  **Diagnosis complete 2026-05-06 evening — three problems stacking:**
-
-  1. **Classification incomplete.** Many transactions in Paul's 12-month lookback still have `able_category: null`. Apple/Google/Netflix entries before ~2026-02-18 are all unclassified; Northwestern Mutual / USAA before ~2026-03 same. The onboarding pipeline classifies up to 5×500=2500 txns in 5 iterations, then stops. Anything beyond that sits unclassified forever (no background re-trigger after onboarding completes). Means `plaid-detect-recurring` runs against a partial picture of the user's data.
-
-  2. **`plaid-detect-recurring` 90-day window + per-cadence floor too tight.** Detector filters to last 90 days. Sub-$50 monthly streams need 3 occurrences in window. Netflix (2 occurrences in 90d, the 3rd at 01-23 falls outside) and Disney+ (1 occurrence) both fail this floor. Confirmed root cause for those two.
-
-  3. **Detector never re-runs after classify catches up.** No webhook, no cron, no background re-trigger. Whatever was detected at first signup is the permanent state.
-
-  **The mystery cases (most concerning).** 7 streams have ≥3 classified occurrences in window with consistent amounts and clean monthly cadence — SHOULD detect but don't appear in `plaid_recurring_streams`:
-  - Apple Storage $9.99 (3 monthly, identical amount)
-  - Google One $1.99 (3 monthly, identical)
-  - Villa Sport $19.07 (3 monthly, identical)
-  - Northwestern Mutual $48.50 (3 monthly, identical, just under $50 floor)
-  - USAA Insurance $164.84 (3 monthly, well above floor)
-  - Anthropic Claude (3 transactions, post-cluster-collapse 2 occurrences with amounts $100 / $101.21)
-
-  Some other blocker filters them. Candidates to investigate:
-  - Amount-variance check at `plaid-detect-recurring/index.ts:442-447` (`amountInRangeRatio < 0.6`)
-  - Merchant-name normalization producing different keys across months
-  - Silent upsert failures (no error surfaced)
-
-  **Tomorrow's fix path (now multi-pronged):**
-  1. Add a re-trigger for `plaid-detect-recurring` after classify completes (cron-based or webhook-based). Detection picks up new streams as more historical data classifies.
-  2. Investigate why the 7 mystery streams aren't being persisted. Add debug logging or a `?debug=true` mode that surfaces rejection reasons for every group.
-  3. Extend lookback window from 90 days → 180 days (or drop the per-cadence floor for sub-$50 if amount-variance check is sufficient on its own — needs design call).
-  4. Background-classify the full 12-month window (not just the first 2500 txns).
-  5. Defensive: filter `INTEREST CHARGE` / `FINANCE CHARGE` / `PURCHASE INTEREST CHARGE` at the detector level so they don't pollute the streams table (currently only filtered downstream in `stripInterestCharges` at the analyzer level).
-
-  **Bundled into tomorrow's session.** The analyzer overhaul session is now: liabilities + add-bank-delta + bills detector overhaul + income-source naming. Real lift; may take more than one session.
-
-- **P1-2026-05-06 #5 — Income source names use rail, not work.** Current names ("Stripe payouts," "Venmo deposits," "Airbnb host payouts") describe the payment rail, not what the user actually does. Paul's case: marketing consulting + Airbnb rental should produce "Marketing payments" and "Airbnb rental income," not the rail-derived names. Fix: pass `profile.business` into the analyzer prompt explicitly and update rule 7 to: "Use `profile.business` to name income sources by the work, not the rail. When in doubt, profession beats rail name." Plus a plan-review "What client is this?" rename nudge for any rail-sounding source. **Scheduled: tomorrow's session, bundled with the rest of the analyzer overhaul.**
+- **P1-2026-05-06 #5 — Income source names use rail, not work.** Current names ("Stripe payouts," "Venmo deposits," "Airbnb host payouts") describe the payment rail, not what the user actually does. Paul's case: marketing consulting + Airbnb rental should produce "Marketing payments" and "Airbnb rental income," not the rail-derived names. Fix: pass `profile.business` into the analyzer prompt explicitly and update rule 7 to: "Use `profile.business` to name income sources by the work, not the rail. When in doubt, profession beats rail name." Plus a plan-review "What client is this?" rename nudge for any rail-sounding source.
 
 Caveat carried forward: the `refer_*_joined` achievement tiles still need a backend hook for "invite turned into a paid signup." Tracked as a small follow-up below.
 
@@ -114,7 +68,7 @@ Strategic, structural, or genuinely far-out. Move to Now/Next/Later only after a
 | B3 | Household / partner shared workspace | ROADMAP D4.1 | Decided: defer to Q3. |
 | B4 | Auto-mark-paid on Plaid bill detection | ROADMAP D1.6 | Decided: defer Q3 (detection-error risk). |
 | B5 | Live `/balance/get` calls | ROADMAP D1.8 | Decided: cached only until Business plan. |
-| B6 | Live bank balance becomes the working balance (replaces manual S.settings.balance) | Paul direction 2026-05-06 | Reverses 2026-05-03 Option B decision (working balance stays manual). Solves the "$X to allocate" framing per the per-deposit mental model, but creates a manual-double-counting wrinkle when user logs income before Plaid sync sees it. Needs a clean answer to "what does Log income mean now" before building. |
+| B6 | **Plaid-driven money in/out** (live bank balance becomes the working balance + `totalIn()` flips to Plaid txn totals) | Paul direction 2026-05-06 | Two surfaces of the same call (was split as B6 + C1, merged 2026-05-06): the **balance** number switches from manual `S.settings.balance` to the live bank balance; the **monthly income total** switches from summing manual `S.history` to summing Plaid deposits. Together they make Plaid the source of truth for money in/out. Reverses 2026-05-03 Option B (working balance stays manual). Solves the "$X to allocate" framing per the per-deposit model. Wrinkle: manual `Log income` would now race Plaid sync — needs a clean answer to "what does Log income mean now" before building. |
 | B7 | Refine credit-card min_payment fallback when Plaid returns 0/null | PR #20 follow-up 2026-05-06 | Current 2.5%-of-balance rule is conservative — produces $220 on Paul's $8,785 Chase balance vs. real Chase minimum closer to $40-150 (1% of balance + interest + fees, with $25-40 floor). Errs safe (better than the $1 we were producing pre-PR #20) but worth tightening: try 1% + estimated monthly interest (`balance × purchase_apr/12`) with a $25 floor before falling to 2.5%. Verify against real-card statements. |
 
 ---
@@ -125,7 +79,7 @@ These are decisions, not tasks. Each unlocks downstream work once decided.
 
 | # | Decision | Context |
 |---|---------|---------|
-| C1 | `totalIn()` flips to Plaid-driven income totals (currently sums manual `S.history` only) | Once dedup is trusted. Affects dashboard "this month" number. |
+| C1 | (merged into B6 on 2026-05-06 — "Plaid-driven money in/out" is one decision) | — |
 | C2 | Coach proactive nudge when leak count grows | Subscription-scan UX shipped; leak-tagging in; Coach prompt knows about it. Open: should Coach ping unprompted? |
 | C3 | "Within your income" habit row treatment (item 13 above) | Visible-but-auto-credited vs. hidden until tracking ships |
 
@@ -149,6 +103,10 @@ These are decisions, not tasks. Each unlocks downstream work once decided.
 - **P2 #24 (`f22d7ad`):** Quarterly tax projection card on home.
 - **P2 #20 (`57461af`):** Multi-bank — copy + button-label updates to surface the support that already existed.
 - **P2 #14 (`15131c4`):** Web push foundation — service worker, push_subscriptions table, send-push Edge Function with VAPID + RFC 8291 encryption, Settings opt-in card, bill_due_tomorrow trigger from cron.
+- **P1-2026-05-06 #1 (PRs #13 + #20, 2026-05-06):** Plaid liabilities integration. New `plaid-detect-credit-debts` Edge Function + `plaid_credit_debts` table; C→A refactor extracting `buildCreditDebts` from `plaid-analyze`. PR #20 added the `minimum_payment_amount = 0` → fall-through fix (Chase returns 0 in autopay/pre-statement cases). True APRs now sourced from Plaid; min_payment falls through to 2.5% rule when Plaid returns 0/null (refinement tracked as B7).
+- **P1-2026-05-06 #2 partial (PR #19, 2026-05-06):** add_product flow — existing items can gain liabilities + APR tracking without full re-link. Open: bigger Option-C delta UI (scoped analyzer + "We found this in [bank name]" review modal).
+- **P1-2026-05-06 #4 (PRs #16 + #17 + #18, 2026-05-06):** Bills detector debug pass + Netflix high-confidence escape. Investigation revealed the original "30% miss rate" was a false alarm (naming mismatches in the SQL audit); true miss was Netflix (2 occurrences in 90d window). Escape: identical amounts + interval-center drift ≤ 2 days unlocks 2-occurrence detection.
+- **PR #20 second wave (2026-05-06 evening end-to-end testing):** post-checkout speed fix (verify-retry vs. webhook-poll, ~22-44s → ~11s budget); home page card cleanup (welcome card removed, "Add income" chip → "Add expected income"); three UX polish items (Plaid lookback fine print breathing room, tour spotlight border-radius now matches target's --ds-r3 hero, debt-review extra-debts row 2x2 grid on mobile).
 
 ---
 
