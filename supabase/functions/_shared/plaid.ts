@@ -218,6 +218,46 @@ export type ItemGetRes = {
 export const itemGet = (access_token: string) =>
   plaidApi<{ access_token: string }, ItemGetRes>('/item/get', { access_token });
 
+// /liabilities/get — true APR + min_payment + statement balances for
+// credit cards. Requires the item to have 'liabilities' in its products.
+// Items missing the product surface as PlaidApiError code INVALID_PRODUCT;
+// callers should catch and fall back to estimate-mode.
+export type CreditLiability = {
+  account_id: string;
+  aprs: Array<{
+    apr_percentage: number;
+    apr_type: 'purchase_apr' | 'balance_transfer_apr' | 'cash_apr' | 'special';
+    balance_subject_to_apr: number | null;
+    interest_charge_amount: number | null;
+  }>;
+  is_overdue: boolean | null;
+  last_payment_amount: number | null;
+  last_payment_date: string | null;
+  last_statement_balance: number | null;
+  last_statement_issue_date: string | null;
+  minimum_payment_amount: number | null;
+  next_payment_due_date: string | null;
+};
+
+export type LiabilitiesGetRes = {
+  accounts: PlaidAccount[];
+  item: { item_id: string; institution_id: string | null };
+  liabilities: {
+    credit: CreditLiability[] | null;
+    mortgage: unknown[] | null;
+    student: unknown[] | null;
+  };
+  request_id: string;
+};
+
+export const liabilitiesGet = (access_token: string, account_ids?: string[]) =>
+  plaidApi<{ access_token: string; options?: { account_ids: string[] } }, LiabilitiesGetRes>(
+    '/liabilities/get',
+    account_ids?.length
+      ? { access_token, options: { account_ids } }
+      : { access_token },
+  );
+
 export const itemRemove = (access_token: string) =>
   plaidApi<{ access_token: string }, { request_id: string }>('/item/remove', { access_token });
 

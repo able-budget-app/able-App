@@ -4992,6 +4992,18 @@ async function obRunPlaidPipeline() {
       obAnswers.plaid_pipeline.recurringSkipped = true;
     }
 
+    // Credit-debt detection: writes plaid_credit_debts (true APR +
+    // min_payment from /liabilities/get when supported, balance-only
+    // estimate fallback otherwise). Soft-fails — analyzer reads from
+    // the table, so an empty result just means "no credit-card debts
+    // surfaced," same as a user without cards.
+    try {
+      await obPipelineStep('credit_debts', () => obInvokeWithTimeout(sb, 'plaid-detect-credit-debts', { plaid_item_row_id: itemRowId }, 30000));
+    } catch (e) {
+      console.warn('[Pipeline] credit-debts soft-failed:', e);
+      obAnswers.plaid_pipeline.creditDebtsSkipped = true;
+    }
+
     obAnswers.plaid_pipeline.step = 'analyze';
     if (OB_QUESTIONS[obStep]?.type === 'plaid') renderObStep();
     const data = await obPipelineStep('analyze', () => obInvokeWithTimeout(sb, 'plaid-analyze', { plaid_item_row_id: itemRowId, profile_hint }, 120000));
