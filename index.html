@@ -128,10 +128,6 @@ a { text-decoration: none; color: inherit; }
   from { opacity: 0; }
   to   { opacity: 1; }
 }
-@keyframes floatPhone {
-  0%, 100% { transform: translateY(0) rotate(2deg); }
-  50%       { transform: translateY(-12px) rotate(2deg); }
-}
 @keyframes shimmer {
   0%   { transform: translateX(-100%); }
   60%, 100% { transform: translateX(200%); }
@@ -218,7 +214,7 @@ a { text-decoration: none; color: inherit; }
   color: white;
   border: none;
   padding: 9px 20px;
-  border-radius: var(--ds-r2);
+  border-radius: 12px;
   font-size: 13px;
   font-weight: 800;
   letter-spacing: -.01em;
@@ -321,7 +317,7 @@ a { text-decoration: none; color: inherit; }
   letter-spacing: .18em;
   text-transform: uppercase;
   color: var(--ds-green);
-  margin-bottom: 1rem;
+  margin: -2.25rem 0 1.5rem -1.5rem;
   display: block;
 }
 .br-mobile { display: none; }
@@ -447,7 +443,7 @@ a { text-decoration: none; color: inherit; }
   animation: fadeUp .8s .2s ease both;
 }
 .phone-wrap {
-  animation: floatPhone 6s ease-in-out infinite;
+  transform: rotate(2deg);
   filter: drop-shadow(0 24px 48px rgba(17,28,22,.18));
 }
 .phone-frame {
@@ -718,6 +714,239 @@ a { text-decoration: none; color: inherit; }
   letter-spacing: -.01em;
   margin-top: 8px;
 }
+/* Floor strip — matches the app's Floor-First indicator */
+.app-hero-floor {
+  position: relative;
+  margin: 9px 0 11px;
+}
+.app-hero-floor-bar {
+  height: 6px;
+  background: rgba(255,255,255,.18);
+  border-radius: 100px;
+  overflow: hidden;
+  position: relative;
+}
+.app-hero-floor-fill {
+  height: 100%;
+  width: 100%;
+  background: linear-gradient(90deg, #b8e0c8, #ffffff);
+  border-radius: 100px;
+}
+.app-hero-floor-marker {
+  position: absolute;
+  top: -2px;
+  bottom: -2px;
+  width: 2px;
+  background: rgba(255,255,255,.55);
+  border-radius: 2px;
+}
+.app-hero-floor-labels {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  margin-top: 5px;
+  font-size: 8px;
+  font-weight: 800;
+  letter-spacing: .04em;
+}
+.app-hero-floor-status {
+  color: white;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+.app-hero-floor-status::before {
+  content: '';
+  width: 5px; height: 5px;
+  border-radius: 50%;
+  background: #b8e0c8;
+}
+.app-hero-floor-buffer {
+  color: rgba(255,255,255,.7);
+}
+/* Greeting row — sits above the hero card, mirrors actual app */
+.app-greeting {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  padding: 6px 2px 10px;
+  font-family: var(--ds-f);
+}
+.app-greeting-name {
+  font-size: 13px;
+  font-weight: 900;
+  color: #111c16;
+  letter-spacing: -.025em;
+}
+.app-greeting-date {
+  font-size: 9px;
+  font-weight: 800;
+  color: #4a5c52;
+  letter-spacing: -.01em;
+}
+/* Month banner — replaces the small eyebrow inside the hero card */
+.app-hero-monthbar {
+  position: relative;
+  display: flex;
+  align-items: baseline;
+  gap: 7px;
+  margin-bottom: 9px;
+}
+.app-hero-month {
+  font-size: 22px;
+  font-weight: 900;
+  color: white;
+  letter-spacing: -.04em;
+  line-height: 1;
+}
+.app-hero-month-status {
+  font-size: 7.5px;
+  font-weight: 800;
+  letter-spacing: .14em;
+  color: rgba(255,255,255,.65);
+  text-transform: uppercase;
+}
+/* Score card — dark forest green, sits below hero card */
+.app-score-card {
+  background: linear-gradient(145deg, #142a1c 0%, #1c3a27 100%);
+  border-radius: 18px;
+  padding: 12px;
+  color: white;
+  margin-top: 10px;
+  box-shadow: 0 4px 14px rgba(17,28,22,.18);
+}
+.app-score-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  margin-bottom: 10px;
+}
+.app-score-eyebrow {
+  font-size: 8px;
+  font-weight: 800;
+  letter-spacing: .14em;
+  text-transform: uppercase;
+  color: rgba(255,255,255,.7);
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+.app-score-eyebrow::before {
+  content: '';
+  width: 5px; height: 5px;
+  border-radius: 50%;
+  background: #b8e0c8;
+}
+.app-score-points {
+  font-size: 17px;
+  font-weight: 900;
+  color: white;
+  letter-spacing: -.03em;
+  line-height: 1;
+}
+.app-score-points-max {
+  font-size: 9px;
+  font-weight: 700;
+  color: rgba(255,255,255,.42);
+  margin-left: 1px;
+}
+/* Floor pace chart inside score card */
+.app-score-chart {
+  background: rgba(255,255,255,.04);
+  border: 1px solid rgba(255,255,255,.08);
+  border-radius: 12px;
+  padding: 8px 9px 7px;
+  margin-bottom: 9px;
+}
+.app-score-chart-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  margin-bottom: 4px;
+}
+.app-score-chart-title {
+  font-size: 8px;
+  font-weight: 800;
+  color: rgba(255,255,255,.85);
+  letter-spacing: -.01em;
+}
+.app-score-chart-stat {
+  font-size: 7.5px;
+  font-weight: 800;
+  color: #b8e0c8;
+  letter-spacing: -.01em;
+}
+.app-score-chart-svg {
+  display: block;
+  width: 100%;
+  height: 32px;
+}
+.app-score-chart-foot {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 2px;
+  font-size: 6.5px;
+  font-weight: 800;
+  letter-spacing: .12em;
+  text-transform: uppercase;
+  color: rgba(255,255,255,.4);
+}
+/* 5-chip strip below chart */
+.app-score-chips {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 3px;
+}
+.app-score-chip {
+  background: rgba(255,255,255,.05);
+  border: 1px solid rgba(255,255,255,.1);
+  border-radius: 9px;
+  padding: 6px 2px 5px;
+  text-align: center;
+}
+.app-score-chip-ring {
+  position: relative;
+  width: 14px;
+  height: 14px;
+  margin: 0 auto 3px;
+  border-radius: 50%;
+  background: conic-gradient(#f4b84a var(--pct, 0%), rgba(255,255,255,.14) 0);
+}
+.app-score-chip-ring::after {
+  content: '';
+  position: absolute;
+  inset: 2px;
+  background: #142a1c;
+  border-radius: 50%;
+}
+.app-score-chip-check {
+  width: 14px;
+  height: 14px;
+  margin: 0 auto 3px;
+  border-radius: 50%;
+  background: #2a7a4a;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+}
+.app-score-chip-check svg { width: 9px; height: 9px; }
+.app-score-chip-label {
+  font-size: 6.5px;
+  font-weight: 800;
+  letter-spacing: .08em;
+  text-transform: uppercase;
+  color: rgba(255,255,255,.7);
+  margin-bottom: 1px;
+  white-space: nowrap;
+}
+.app-score-chip-val {
+  font-size: 8px;
+  font-weight: 800;
+  color: white;
+  letter-spacing: -.01em;
+}
+.app-score-chip--complete { background: rgba(184,224,200,.1); border-color: rgba(184,224,200,.3); }
 .app-hero-score-mini {
   display: flex;
   align-items: center;
@@ -796,16 +1025,18 @@ a { text-decoration: none; color: inherit; }
 .hero-bullets--below {
   grid-column: 1 / -1;
   margin: 2.5rem auto 0;
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: center;
-  gap: 1rem 2rem;
-  max-width: 820px;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  align-items: stretch;
+  gap: 1rem;
+  max-width: 1100px;
   padding: 0;
+  width: 100%;
 }
 .hero-bullets--below li {
   list-style: none;
   margin: 0;
+  justify-content: flex-start;
 }
 @media (max-width: 900px) {
   .hero-inner {
@@ -817,7 +1048,8 @@ a { text-decoration: none; color: inherit; }
   .hero-headline .hl-payoff { white-space: normal; }
   .hero-sub { max-width: 100%; }
   .hero-bullets { align-items: center; }
-  .hero-bullets--below { flex-direction: column; gap: .75rem; margin-top: 1.5rem; }
+  .hero-bullets--below { display: flex; flex-direction: column; gap: .75rem; margin-top: 1.5rem; grid-template-columns: none; }
+  .hero-eyebrow { margin: 0 0 1rem 0; }
   .hero-ctas { justify-content: center; }
   .hero-fine { text-align: center; }
   .phone-frame { width: 240px; }
@@ -1597,6 +1829,326 @@ a { text-decoration: none; color: inherit; }
   to   { opacity: 1; }
 }
 
+/* ═══ Step 1 — Home + sliding modal animation ═══ */
+.hiw-step1-content { padding: 30px 0 0; gap: 0; overflow: hidden; }
+.hiw-step1-home {
+  padding: 0 10px;
+  font-family: var(--ds-f);
+}
+.hiw-step1-greet {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  padding: 0 2px 7px;
+  font-size: 9px;
+  font-weight: 900;
+  color: #111c16;
+}
+.hiw-step1-greet .date { font-size: 7px; font-weight: 800; color: #4a5c52; }
+.hiw-step1-card {
+  background: linear-gradient(145deg, #1f6038 0%, #2a7a4a 60%, #3d9e78 100%);
+  border-radius: 14px;
+  padding: 10px 11px 9px;
+  color: white;
+  box-shadow: 0 4px 12px rgba(31,96,56,.22);
+}
+.hiw-step1-card .month {
+  font-size: 16px;
+  font-weight: 900;
+  letter-spacing: -.04em;
+  line-height: 1;
+  margin-bottom: 2px;
+}
+.hiw-step1-card .month span {
+  font-size: 6.5px;
+  font-weight: 800;
+  letter-spacing: .12em;
+  text-transform: uppercase;
+  color: rgba(255,255,255,.65);
+  margin-left: 4px;
+}
+.hiw-step1-card .row {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  padding: 2px 0;
+}
+.hiw-step1-card .row .lbl {
+  font-size: 6px;
+  font-weight: 800;
+  letter-spacing: .1em;
+  text-transform: uppercase;
+  color: rgba(255,255,255,.72);
+}
+.hiw-step1-card .row .val {
+  font-size: 9px;
+  font-weight: 800;
+  color: white;
+}
+.hiw-step1-card .row.big .val { font-size: 13px; font-weight: 900; letter-spacing: -.025em; }
+.hiw-step1-card .divider {
+  height: 1px;
+  background: rgba(255,255,255,.18);
+  margin: 3px 0;
+}
+.hiw-step1-card .cta {
+  display: block;
+  width: 100%;
+  background: white;
+  color: #2a7a4a;
+  border-radius: 100px;
+  padding: 6px 0;
+  text-align: center;
+  font-size: 9px;
+  font-weight: 800;
+  margin-top: 7px;
+  border: none;
+}
+/* Sliding modal — fixed top so it always covers score card chart + chips
+   and goes flush to the screen's bottom corners (no gap). */
+.hiw-step1-modal {
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 215px;
+  bottom: 0;
+  background: white;
+  border-radius: 18px 18px 0 0;
+  padding: 12px 14px 14px;
+  box-shadow: 0 -10px 30px rgba(0,0,0,.18);
+  transform: translateY(100%);
+  animation: step1ModalUp .6s 1s ease both;
+}
+@keyframes step1ModalUp {
+  from { transform: translateY(100%); }
+  to   { transform: translateY(0); }
+}
+.hiw-step1-modal .head {
+  font-size: 11px;
+  font-weight: 900;
+  color: #111c16;
+  letter-spacing: -.02em;
+  margin-bottom: 8px;
+}
+.hiw-step1-modal .field { margin-bottom: 7px; }
+.hiw-step1-modal .field-lbl {
+  font-size: 6.5px;
+  font-weight: 800;
+  letter-spacing: .1em;
+  text-transform: uppercase;
+  color: #8ca898;
+  margin-bottom: 2px;
+}
+.hiw-step1-modal .field-val {
+  background: #eaf5ee;
+  border-radius: 7px;
+  padding: 5px 8px;
+  font-size: 11px;
+  font-weight: 900;
+  color: #111c16;
+  min-height: 18px;
+}
+.hiw-step1-modal .field-val.sub { font-size: 9.5px; font-weight: 800; }
+.hiw-step1-modal .modal-cta {
+  display: block;
+  width: 100%;
+  margin-top: 4px;
+  background: var(--ds-green);
+  color: white;
+  border-radius: 100px;
+  padding: 7px 0;
+  text-align: center;
+  font-size: 10px;
+  font-weight: 800;
+  border: none;
+  opacity: 0;
+  animation: step1FadeIn .4s 3.5s ease both;
+}
+@keyframes step1FadeIn { to { opacity: 1; } }
+/* Step 1 typing — overrides existing */
+#step1-phone .hiw-step1-typing {
+  overflow: hidden;
+  display: inline-block;
+  white-space: nowrap;
+  width: 0;
+  animation: step1Type 1.2s steps(7) 1.8s forwards;
+}
+@keyframes step1Type {
+  from { width: 0; }
+  to   { width: 6.5ch; }
+}
+#step1-phone .hiw-step1-cursor {
+  display: inline-block;
+  width: 1.5px;
+  height: 12px;
+  background: #2a7a4a;
+  vertical-align: middle;
+  animation: pulse 1s ease-in-out infinite;
+  opacity: 0;
+  animation-delay: 1.7s;
+}
+#step1-phone .hiw-step1-cursor.show { opacity: 1; }
+
+/* ═══ Step 2 — Allocation plan ═══ */
+.hiw-step2-content { padding: 30px 10px 8px; gap: 6px; }
+.hiw-step2-title {
+  font-size: 13px;
+  font-weight: 900;
+  color: #111c16;
+  letter-spacing: -.02em;
+  line-height: 1.15;
+}
+.hiw-step2-meta {
+  font-size: 7px;
+  font-weight: 800;
+  letter-spacing: .12em;
+  text-transform: uppercase;
+  color: #8ca898;
+  margin-bottom: 4px;
+}
+.hiw-alloc-card {
+  background: white;
+  border-radius: 12px;
+  padding: 8px 9px 8px 7px;
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  box-shadow: 0 1px 4px rgba(0,0,0,.05);
+  border-left: 2px solid #c4d8cc;
+}
+.hiw-alloc-card.tax { border-left-color: #f4b84a; }
+.hiw-alloc-card.funded { border-left-color: var(--ds-green); }
+.hiw-alloc-card.partial { border-left-color: #c97c0a; }
+.hiw-alloc-num {
+  width: 18px; height: 18px;
+  border-radius: 50%;
+  background: #f0f7f2;
+  color: #4a5c52;
+  font-size: 10px;
+  font-weight: 900;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+.hiw-alloc-card.tax .hiw-alloc-num { background: #fef3e0; color: #c97c0a; }
+.hiw-alloc-card.funded .hiw-alloc-num { background: #eaf5ee; color: var(--ds-green); }
+.hiw-alloc-card.partial .hiw-alloc-num { background: #fef3e0; color: #c97c0a; }
+.hiw-alloc-body { flex: 1; min-width: 0; }
+.hiw-alloc-name {
+  font-size: 10px;
+  font-weight: 900;
+  color: #111c16;
+  letter-spacing: -.01em;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+.hiw-alloc-badge {
+  display: inline-block;
+  font-size: 6px;
+  font-weight: 800;
+  letter-spacing: .08em;
+  text-transform: uppercase;
+  padding: 2px 5px;
+  border-radius: 100px;
+  background: #f0f7f2;
+  color: #4a5c52;
+}
+.hiw-alloc-badge.off { background: #fef3e0; color: #c97c0a; }
+.hiw-alloc-badge.funded { background: #eaf5ee; color: var(--ds-green); }
+.hiw-alloc-badge.partial { background: #fef3e0; color: #c97c0a; }
+.hiw-alloc-sub {
+  font-size: 7.5px;
+  font-weight: 700;
+  color: #8ca898;
+  margin-top: 1px;
+  letter-spacing: -.01em;
+}
+.hiw-alloc-amt {
+  font-size: 12px;
+  font-weight: 900;
+  color: #111c16;
+  letter-spacing: -.02em;
+  flex-shrink: 0;
+}
+.hiw-alloc-card.tax .hiw-alloc-amt { color: #c97c0a; }
+.hiw-step2-cta {
+  display: block;
+  width: 100%;
+  margin-top: 4px;
+  background: var(--ds-green);
+  color: white;
+  border-radius: 100px;
+  padding: 7px 0;
+  text-align: center;
+  font-size: 10px;
+  font-weight: 800;
+  border: none;
+}
+#step2-phone .hiw-alloc-card { animation: countUp .5s ease both; }
+#step2-phone .hiw-alloc-card:nth-of-type(1) { animation-delay: .15s; }
+#step2-phone .hiw-alloc-card:nth-of-type(2) { animation-delay: .35s; }
+#step2-phone .hiw-alloc-card:nth-of-type(3) { animation-delay: .55s; }
+
+/* ═══ Step 3 — Bills covered, debt down, savings up ═══ */
+.hiw-step3-content { padding: 30px 12px 8px; gap: 7px; }
+.hiw-step3-eyebrow {
+  font-size: 8px;
+  font-weight: 800;
+  letter-spacing: .12em;
+  text-transform: uppercase;
+  color: #8ca898;
+  margin-bottom: 0;
+}
+.hiw-step3-headline {
+  font-size: 14px;
+  font-weight: 900;
+  color: #111c16;
+  letter-spacing: -.02em;
+  line-height: 1.1;
+  margin-bottom: 4px;
+}
+.hiw-step3-bills {
+  background: white;
+  border-radius: 12px;
+  padding: 9px 11px;
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  box-shadow: 0 1px 4px rgba(0,0,0,.05);
+}
+.hiw-step3-bills-check {
+  width: 24px; height: 24px;
+  border-radius: 50%;
+  background: var(--ds-green);
+  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+.hiw-step3-bills-check svg { width: 13px; height: 13px; }
+.hiw-step3-bills-text { flex: 1; min-width: 0; }
+.hiw-step3-bills-title {
+  font-size: 10px;
+  font-weight: 800;
+  color: #111c16;
+  letter-spacing: -.01em;
+}
+.hiw-step3-bills-sub {
+  font-size: 8px;
+  font-weight: 600;
+  color: #8ca898;
+  margin-top: 1px;
+}
+.hiw-step3-bills-val {
+  font-size: 13px;
+  font-weight: 900;
+  color: var(--ds-green);
+  letter-spacing: -.02em;
+}
+
 @media (max-width: 860px) {
   .hiw-steps { grid-template-columns: 1fr; max-width: 400px; }
 }
@@ -2188,11 +2740,18 @@ posthog.init('phc_B6PH36QxpExnyBYhfScFFF6LhDvoyxuFr6PypJuxxky3', {
               </span>
             </div>
             <div class="phone-content">
+              <div class="app-greeting">
+                <span class="app-greeting-name">Good morning, Sam</span>
+                <span class="app-greeting-date">Thursday, May 7</span>
+              </div>
               <div class="app-hero-card">
-                <div class="app-hero-eyebrow">April · Month in progress</div>
+                <div class="app-hero-monthbar">
+                  <span class="app-hero-month">May</span>
+                  <span class="app-hero-month-status">In progress</span>
+                </div>
                 <div class="app-hero-money-row">
-                  <span class="app-hero-money-label">In your accounts</span>
-                  <span class="app-hero-money-val">$4,000</span>
+                  <span class="app-hero-money-label">Bank balance</span>
+                  <span class="app-hero-money-val">$4,200</span>
                 </div>
                 <div class="app-hero-money-row">
                   <span class="app-hero-money-label">Reserved for bills</span>
@@ -2201,50 +2760,68 @@ posthog.init('phc_B6PH36QxpExnyBYhfScFFF6LhDvoyxuFr6PypJuxxky3', {
                 <div class="app-hero-money-divider"></div>
                 <div class="app-hero-available-row">
                   <span class="app-hero-available-label">Available to spend</span>
-                  <span class="app-hero-available-val">$2,848</span>
+                  <span class="app-hero-available-val">$3,048</span>
                 </div>
-                <div class="app-hero-cta">Tell me where it goes →</div>
-                <div class="app-hero-section-divider"></div>
-                <div class="app-hero-score-mini">
-                  <span class="app-hero-score-mini-label">This month's score</span>
-                  <span class="app-hero-score-mini-num">72<span class="app-hero-score-max">/100</span></span>
-                  <span class="app-hero-grade">On track</span>
-                </div>
-                <div class="app-hero-bar"><div class="app-hero-bar-fill"></div></div>
-                <div class="app-hero-chips" style="margin-top:8px;">
-                  <div class="app-hero-chip">
-                    <div class="app-hero-chip-label">Bills</div>
-                    <div class="app-hero-chip-pts">24<span class="app-hero-chip-pts-max">/30 pts</span></div>
-                    <div class="app-hero-chip-dots">
-                      <div class="app-hero-chip-dot filled"></div><div class="app-hero-chip-dot filled"></div><div class="app-hero-chip-dot filled"></div><div class="app-hero-chip-dot filled"></div><div class="app-hero-chip-dot"></div>
-                    </div>
+                <div class="app-hero-floor">
+                  <div class="app-hero-floor-bar">
+                    <div class="app-hero-floor-fill"></div>
+                    <div class="app-hero-floor-marker" style="left:62%;"></div>
                   </div>
-                  <div class="app-hero-chip">
-                    <div class="app-hero-chip-label">Debt</div>
-                    <div class="app-hero-chip-pts">14<span class="app-hero-chip-pts-max">/20 pts</span></div>
-                    <div class="app-hero-chip-dots">
-                      <div class="app-hero-chip-dot filled"></div><div class="app-hero-chip-dot filled"></div><div class="app-hero-chip-dot filled"></div><div class="app-hero-chip-dot filled"></div><div class="app-hero-chip-dot"></div>
-                    </div>
-                  </div>
-                  <div class="app-hero-chip">
-                    <div class="app-hero-chip-label">Buffer</div>
-                    <div class="app-hero-chip-pts">9<span class="app-hero-chip-pts-max">/15 pts</span></div>
-                    <div class="app-hero-chip-dots">
-                      <div class="app-hero-chip-dot filled"></div><div class="app-hero-chip-dot filled"></div><div class="app-hero-chip-dot filled"></div><div class="app-hero-chip-dot"></div><div class="app-hero-chip-dot"></div>
-                    </div>
+                  <div class="app-hero-floor-labels">
+                    <span class="app-hero-floor-status">Above the floor</span>
+                    <span class="app-hero-floor-buffer">1.2 mo buffered</span>
                   </div>
                 </div>
-                <div class="app-hero-cta-secondary">Log income →</div>
+                <div class="app-hero-cta">Log new income →</div>
               </div>
-              <div class="app-qa-card">
-                <div class="app-qa-icon">
-                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+              <div class="app-score-card">
+                <div class="app-score-head">
+                  <span class="app-score-eyebrow">May habits</span>
+                  <span class="app-score-points">72<span class="app-score-points-max">/100</span></span>
                 </div>
-                <div class="app-qa-body">
-                  <div class="app-qa-title">Next 14 days</div>
-                  <div class="app-qa-sub">Covered. $2,180 due, reserved.</div>
+                <div class="app-score-chart">
+                  <div class="app-score-chart-head">
+                    <span class="app-score-chart-title">Floor pace · last 7 days</span>
+                    <span class="app-score-chart-stat">$240 above pace</span>
+                  </div>
+                  <svg class="app-score-chart-svg" viewBox="0 0 200 32" preserveAspectRatio="none" aria-hidden="true">
+                    <path d="M 0 26 L 200 8" stroke="rgba(255,255,255,.32)" stroke-width="1" stroke-dasharray="2 2" fill="none"/>
+                    <path d="M 0 28 L 50 24 L 100 18 L 140 10 L 200 4" stroke="#b8e0c8" stroke-width="1.5" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+                  </svg>
+                  <div class="app-score-chart-foot">
+                    <span>7d ago</span>
+                    <span>Today</span>
+                  </div>
                 </div>
-                <div class="app-qa-chev">›</div>
+                <div class="app-score-chips">
+                  <div class="app-score-chip">
+                    <div class="app-score-chip-ring" style="--pct:80%;"></div>
+                    <div class="app-score-chip-label">Bills</div>
+                    <div class="app-score-chip-val">24/30</div>
+                  </div>
+                  <div class="app-score-chip">
+                    <div class="app-score-chip-ring" style="--pct:50%;"></div>
+                    <div class="app-score-chip-label">Pay self</div>
+                    <div class="app-score-chip-val">10/20</div>
+                  </div>
+                  <div class="app-score-chip">
+                    <div class="app-score-chip-ring" style="--pct:70%;"></div>
+                    <div class="app-score-chip-label">Debt</div>
+                    <div class="app-score-chip-val">14/20</div>
+                  </div>
+                  <div class="app-score-chip">
+                    <div class="app-score-chip-ring" style="--pct:60%;"></div>
+                    <div class="app-score-chip-label">Buffer</div>
+                    <div class="app-score-chip-val">9/15</div>
+                  </div>
+                  <div class="app-score-chip app-score-chip--complete">
+                    <div class="app-score-chip-check">
+                      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+                    </div>
+                    <div class="app-score-chip-label">Within</div>
+                    <div class="app-score-chip-val">15/15</div>
+                  </div>
+                </div>
               </div>
             </div>
             <div class="phone-nav">
@@ -2270,9 +2847,9 @@ posthog.init('phc_B6PH36QxpExnyBYhfScFFF6LhDvoyxuFr6PypJuxxky3', {
       </div>
     </div>
     <ul class="hero-bullets hero-bullets--below">
-      <li><svg class="bullet-check" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="20 6 9 17 4 12"/></svg><span>Finally pay down your debt</span></li>
-      <li><svg class="bullet-check" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="20 6 9 17 4 12"/></svg><span>Actually build your savings</span></li>
-      <li><svg class="bullet-check" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="20 6 9 17 4 12"/></svg><span>Stop living unpredictable check to unpredictable check</span></li>
+      <li><svg class="bullet-check" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="20 6 9 17 4 12"/></svg><span>Pay debt down without flinching.</span></li>
+      <li><svg class="bullet-check" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="20 6 9 17 4 12"/></svg><span>Build savings that actually grow.</span></li>
+      <li><svg class="bullet-check" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="20 6 9 17 4 12"/></svg><span>Know you can cover any month.</span></li>
     </ul>
   </div>
 </section>
@@ -2280,11 +2857,11 @@ posthog.init('phc_B6PH36QxpExnyBYhfScFFF6LhDvoyxuFr6PypJuxxky3', {
 <!-- ═══════ PROBLEM ═══════ -->
 <section class="problem-section">
   <div class="problem-inner">
-    <span class="problem-eyebrow">Sound familiar?</span>
-    <h2 class="problem-headline"><span class="ph-line ph-line-1">You're not overspending.</span><span class="ph-line">You're freezing, and the money leaks anyway.</span></h2>
+    <span class="problem-eyebrow">The real reason it's hard</span>
+    <h2 class="problem-headline"><span class="ph-line ph-line-1">Budgeting was built for a paycheck.</span><span class="ph-line">Yours doesn't work like that.</span></h2>
     <div class="problem-intro reveal">
-      <p>It starts with the unknown. You don't know when the next check is coming, so you freeze.</p>
-      <p>You don't allow yourself to touch the money. You tell yourself: <em>if I just hold it, I won't lose it.</em></p>
+      <p>It was built around a paycheck on the same day, in the same amount, every month. That's not how most people get paid anymore.</p>
+      <p>So you freeze. You don't touch the money. You tell yourself: <em>if I don't touch it, I won't lose it.</em></p>
       <p>But then it starts to leak. $14 here. A forgotten subscription. Lunch. Gas.</p>
       <p>By the 30th, $500 to $1,000 is gone. Money that should have killed debt, built savings, or gotten you ahead of next month's bills.</p>
     </div>
@@ -2317,11 +2894,6 @@ posthog.init('phc_B6PH36QxpExnyBYhfScFFF6LhDvoyxuFr6PypJuxxky3', {
         <span class="problem-day">Day 31</span>
         <p class="problem-beat-text">Shame. Guilt. Avoidance. You promise yourself next month will be different. But we know it won't.</p>
       </div>
-    </div>
-    <p class="problem-closer reveal">Nothing changes if nothing changes.</p>
-    <div class="problem-transition reveal">
-      <div class="problem-transition-title">This isn't your fault.</div>
-      <div class="problem-transition-body">No one taught you how to budget income like yours. Most budgeting advice assumes a steady paycheck. Able doesn't.</div>
     </div>
     <div class="section-cta reveal">
       <a href="/app.html" class="btn-primary">Start your free 30-day trial</a>
@@ -2403,20 +2975,20 @@ posthog.init('phc_B6PH36QxpExnyBYhfScFFF6LhDvoyxuFr6PypJuxxky3', {
             </div>
             <div class="shift-phone-nav">
               <div class="shift-phone-nav-item">
-                <svg class="shift-phone-nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
-                Allocate
+                <svg class="shift-phone-nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+                Home
+              </div>
+              <div class="shift-phone-nav-item">
+                <svg class="shift-phone-nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 11H3v10h6V11z"/><path d="M15 3h6v18h-6V3z"/><path d="M9 3H3v4h6V3z"/></svg>
+                Plan
               </div>
               <div class="shift-phone-nav-item active">
-                <svg class="shift-phone-nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 3v18h18"/><polyline points="7 14 11 10 14 13 20 7"/></svg>
-                Progress
+                <svg class="shift-phone-nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+                Score
               </div>
               <div class="shift-phone-nav-item">
-                <svg class="shift-phone-nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="23 6 13.5 15.5 8.5 10.5 1 18"/><polyline points="17 6 23 6 23 12"/></svg>
-                Debt
-              </div>
-              <div class="shift-phone-nav-item">
-                <svg class="shift-phone-nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
-                Bills
+                <svg class="shift-phone-nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="5" r="1.5"/><circle cx="12" cy="12" r="1.5"/><circle cx="12" cy="19" r="1.5"/></svg>
+                More
               </div>
             </div>
           </div>
@@ -2429,9 +3001,9 @@ posthog.init('phc_B6PH36QxpExnyBYhfScFFF6LhDvoyxuFr6PypJuxxky3', {
 <!-- ═══════ HOW IT WORKS ═══════ -->
 <section class="hiw-section" id="how-it-works">
   <div class="hiw-header reveal">
-    <span class="hiw-eyebrow">Per-deposit budgeting. No spreadsheet.</span>
-    <h2 class="hiw-headline">Every dollar gets a job<br class="br-mobile">the moment it lands.</h2>
-    <p class="hiw-subheadline" style="font-family:'Bricolage Grotesque',-apple-system,sans-serif;font-size:1rem;color:var(--ds-t2,#4a5c52);font-weight:500;line-height:1.5;max-width:540px;margin:.85rem auto 0;text-align:center;">Most apps want you to plan a month of money you don't have yet. Able runs the split per deposit, the moment it hits your account. Bills get covered first, surplus splits next, free spending is what's left. No guessing. No catching up.</p>
+    <span class="hiw-eyebrow">How it works</span>
+    <h2 class="hiw-headline">Bills covered first.<br>Then everything else.</h2>
+    <p class="hiw-subheadline" style="font-family:'Bricolage Grotesque',-apple-system,sans-serif;font-size:1rem;color:var(--ds-t2,#4a5c52);font-weight:500;line-height:1.5;max-width:540px;margin:.85rem auto 0;text-align:center;">When a deposit lands, Able runs the split: bills, debt, savings, free spending. In that order. The plan updates with every check.</p>
   </div>
   <div class="hiw-steps">
 
@@ -2440,22 +3012,58 @@ posthog.init('phc_B6PH36QxpExnyBYhfScFFF6LhDvoyxuFr6PypJuxxky3', {
       <div class="hiw-phone-wrap">
         <div class="hiw-phone" id="step1-phone">
           <div class="hiw-screen">
-            <div class="hiw-screen-content">
-              <div style="font-size:9px;font-weight:800;letter-spacing:.1em;text-transform:uppercase;color:#8ca898;margin-bottom:2px;">Money just came in</div>
-              <div class="anim-input-row">
-                <div class="anim-input">
-                  <div class="anim-input-lbl">Amount ($)</div>
-                  <div class="anim-input-val">
-                    <span class="anim-typing-text">$1,824</span><span class="anim-cursor"></span>
+            <div class="hiw-screen-content hiw-step1-content">
+              <div class="hiw-step1-home">
+                <div class="hiw-step1-greet"><span>Good morning, Sam</span><span class="date">Thursday</span></div>
+                <div class="hiw-step1-card">
+                  <div class="month">May<span>· In progress</span></div>
+                  <div class="row"><span class="lbl">Balance</span><span class="val">$2,562</span></div>
+                  <div class="row"><span class="lbl">Reserved</span><span class="val">$2,245</span></div>
+                  <div class="divider"></div>
+                  <div class="row big"><span class="lbl">Available</span><span class="val">$317</span></div>
+                  <button class="cta">Log new income →</button>
+                </div>
+                <div class="app-score-card" style="margin-top:8px;">
+                  <div class="app-score-head">
+                    <span class="app-score-eyebrow">May habits</span>
+                    <span class="app-score-points">72<span class="app-score-points-max">/100</span></span>
+                  </div>
+                  <div class="app-score-chart">
+                    <div class="app-score-chart-head">
+                      <span class="app-score-chart-title">Floor pace · last 7 days</span>
+                      <span class="app-score-chart-stat">$240 above pace</span>
+                    </div>
+                    <svg class="app-score-chart-svg" viewBox="0 0 200 32" preserveAspectRatio="none" aria-hidden="true">
+                      <path d="M 0 26 L 200 8" stroke="rgba(255,255,255,.32)" stroke-width="1" stroke-dasharray="2 2" fill="none"/>
+                      <path d="M 0 28 L 50 24 L 100 18 L 140 10 L 200 4" stroke="#b8e0c8" stroke-width="1.5" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+                    </svg>
+                    <div class="app-score-chart-foot"><span>7d ago</span><span>Today</span></div>
+                  </div>
+                  <div class="app-score-chips">
+                    <div class="app-score-chip"><div class="app-score-chip-ring" style="--pct:80%;"></div><div class="app-score-chip-label">Bills</div><div class="app-score-chip-val">24/30</div></div>
+                    <div class="app-score-chip"><div class="app-score-chip-ring" style="--pct:50%;"></div><div class="app-score-chip-label">Pay self</div><div class="app-score-chip-val">10/20</div></div>
+                    <div class="app-score-chip"><div class="app-score-chip-ring" style="--pct:70%;"></div><div class="app-score-chip-label">Debt</div><div class="app-score-chip-val">14/20</div></div>
+                    <div class="app-score-chip"><div class="app-score-chip-ring" style="--pct:60%;"></div><div class="app-score-chip-label">Buffer</div><div class="app-score-chip-val">9/15</div></div>
+                    <div class="app-score-chip app-score-chip--complete">
+                      <div class="app-score-chip-check"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></div>
+                      <div class="app-score-chip-label">Within</div>
+                      <div class="app-score-chip-val">15/15</div>
+                    </div>
                   </div>
                 </div>
-                <div class="anim-input">
-                  <div class="anim-input-lbl">Where from</div>
-                  <div class="anim-input-val" style="font-size:11px;margin-top:2px;">Client invoice</div>
-                </div>
               </div>
-              <div class="anim-btn">Tell me where it goes →</div>
-              <div style="margin-top:10px;padding:8px;background:rgba(42,122,74,.08);border-radius:10px;font-size:9px;color:#2a7a4a;font-weight:700;text-align:center;">Takes 10 seconds. Any amount. Any source.</div>
+              <div class="hiw-step1-modal">
+                <div class="head">Money just came in</div>
+                <div class="field">
+                  <div class="field-lbl">Amount ($)</div>
+                  <div class="field-val"><span class="hiw-step1-typing">$1,200</span><span class="hiw-step1-cursor show"></span></div>
+                </div>
+                <div class="field">
+                  <div class="field-lbl">Where from</div>
+                  <div class="field-val sub">Rideshare deposit</div>
+                </div>
+                <button class="modal-cta">Tell me where it goes →</button>
+              </div>
             </div>
           </div>
         </div>
@@ -2472,58 +3080,34 @@ posthog.init('phc_B6PH36QxpExnyBYhfScFFF6LhDvoyxuFr6PypJuxxky3', {
       <div class="hiw-phone-wrap">
         <div class="hiw-phone" id="step2-phone">
           <div class="hiw-screen">
-            <div class="hiw-screen-content">
-              <div style="font-size:8px;font-weight:800;letter-spacing:.12em;text-transform:uppercase;color:#2a7a4a;margin-bottom:2px;">Nice. Here's the plan.</div>
-              <div style="font-family:'Bricolage Grotesque',serif;font-size:22px;font-weight:900;color:#2a7a4a;letter-spacing:-.03em;line-height:1;">$1,824</div>
-              <div style="font-size:8px;font-weight:700;color:#8ca898;letter-spacing:.06em;text-transform:uppercase;margin-bottom:8px;">from client invoice</div>
-              <div class="anim-result-card" style="border-left-color:#c04060;">
-                <div class="anim-result-circle" style="background:#fdeef2;color:#c04060;">1</div>
-                <div class="anim-result-body">
-                  <div class="anim-result-row">
-                    <div>
-                      <div class="anim-result-name">Bills reserved</div>
-                      <div class="anim-result-sub">Rent, utilities</div>
-                    </div>
-                    <span class="anim-result-amt" style="color:#c04060;">$486</span>
-                  </div>
+            <div class="hiw-screen-content hiw-step2-content">
+              <div class="hiw-step2-title">Money received.<br>Here's where it goes.</div>
+              <div class="hiw-step2-meta">$1,200 from rideshare</div>
+              <div class="hiw-alloc-card tax">
+                <div class="hiw-alloc-num">1</div>
+                <div class="hiw-alloc-body">
+                  <div class="hiw-alloc-name">Tax<span class="hiw-alloc-badge off">Off the top</span></div>
+                  <div class="hiw-alloc-sub">22% set aside</div>
                 </div>
+                <div class="hiw-alloc-amt">$264</div>
               </div>
-              <div class="anim-result-card card-done" style="border-left-color:#c97c0a;">
-                <div class="anim-result-circle done" style="background:#fef3e0;color:#c97c0a;">2</div>
-                <div class="anim-result-body">
-                  <div class="anim-result-row">
-                    <div>
-                      <div class="anim-result-name">Extra to debt</div>
-                      <div class="anim-result-sub">Move to card</div>
-                    </div>
-                    <span class="anim-result-amt" style="color:#c97c0a;">$951</span>
-                  </div>
+              <div class="hiw-alloc-card funded">
+                <div class="hiw-alloc-num">2</div>
+                <div class="hiw-alloc-body">
+                  <div class="hiw-alloc-name">Rent<span class="hiw-alloc-badge funded">Funded</span></div>
+                  <div class="hiw-alloc-sub">due in 3d · fully covered</div>
                 </div>
+                <div class="hiw-alloc-amt">$700</div>
               </div>
-              <div class="anim-result-card" style="border-left-color:#3570b8;">
-                <div class="anim-result-circle" style="background:#eaf2fc;color:#3570b8;">3</div>
-                <div class="anim-result-body">
-                  <div class="anim-result-row">
-                    <div>
-                      <div class="anim-result-name">Move to savings</div>
-                      <div class="anim-result-sub">Tap once done</div>
-                    </div>
-                    <span class="anim-result-amt" style="color:#3570b8;">$274</span>
-                  </div>
+              <div class="hiw-alloc-card partial">
+                <div class="hiw-alloc-num">3</div>
+                <div class="hiw-alloc-body">
+                  <div class="hiw-alloc-name">Utilities<span class="hiw-alloc-badge partial">Partial</span></div>
+                  <div class="hiw-alloc-sub">Electric, phone, streaming</div>
                 </div>
+                <div class="hiw-alloc-amt">$236</div>
               </div>
-              <div class="anim-result-card" style="border-left-color:#2a7a4a;">
-                <div class="anim-result-circle" style="background:#eaf5ee;color:#2a7a4a;">4</div>
-                <div class="anim-result-body">
-                  <div class="anim-result-row">
-                    <div>
-                      <div class="anim-result-name">Yours to spend</div>
-                      <div class="anim-result-sub">Guilt-free</div>
-                    </div>
-                    <span class="anim-result-amt" style="color:#2a7a4a;">$113</span>
-                  </div>
-                </div>
-              </div>
+              <button class="hiw-step2-cta">Confirm &amp; log it</button>
             </div>
           </div>
         </div>
@@ -2540,35 +3124,32 @@ posthog.init('phc_B6PH36QxpExnyBYhfScFFF6LhDvoyxuFr6PypJuxxky3', {
       <div class="hiw-phone-wrap">
         <div class="hiw-phone" id="step3-phone">
           <div class="hiw-screen">
-            <div class="hiw-screen-content">
-              <div style="font-size:8px;font-weight:800;letter-spacing:.12em;text-transform:uppercase;color:#8ca898;margin-bottom:6px;">Your progress</div>
+            <div class="hiw-screen-content hiw-step3-content">
+              <div class="hiw-step3-eyebrow">May · Recap</div>
+              <div class="hiw-step3-headline">Nothing leaked.</div>
+              <div class="hiw-step3-bills">
+                <div class="hiw-step3-bills-check"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></div>
+                <div class="hiw-step3-bills-text">
+                  <div class="hiw-step3-bills-title">Bills paid</div>
+                  <div class="hiw-step3-bills-sub">Every bill on time</div>
+                </div>
+                <div class="hiw-step3-bills-val">14 / 14</div>
+              </div>
               <div class="anim-debt-card">
                 <div class="anim-debt-row">
-                  <span class="anim-debt-name">Credit card</span>
-                  <span class="anim-debt-bal falling">$3,847</span>
+                  <span class="anim-debt-name">Debt down</span>
+                  <span class="anim-debt-bal falling">$3,347</span>
                 </div>
                 <div class="anim-debt-progress">
                   <div class="anim-debt-fill shrinking"></div>
                 </div>
               </div>
-              <div class="anim-debt-card">
-                <div class="anim-debt-row">
-                  <span class="anim-debt-name">Car loan</span>
-                  <span class="anim-debt-bal" style="font-size:13px;font-weight:900;">$12,200</span>
-                </div>
-                <div class="anim-debt-progress">
-                  <div class="anim-debt-fill" style="width:82%;background:linear-gradient(90deg,#c04060,#c97c0a);"></div>
-                </div>
-              </div>
               <div class="anim-savings-card">
                 <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:3px;">
-                  <div class="anim-savings-label">Buffer savings</div>
-                  <div style="display:inline-flex;align-items:center;gap:3px;font-size:7px;font-weight:800;letter-spacing:.08em;text-transform:uppercase;background:#2a7a4a;color:white;padding:2px 6px;border-radius:100px;white-space:nowrap;">✓ Locked in</div>
+                  <div class="anim-savings-label">Savings up</div>
+                  <div style="display:inline-flex;align-items:center;gap:3px;font-size:7px;font-weight:800;letter-spacing:.08em;text-transform:uppercase;background:#2a7a4a;color:white;padding:2px 6px;border-radius:100px;white-space:nowrap;">+$500</div>
                 </div>
                 <div class="anim-savings-val growing">$1,247</div>
-              </div>
-              <div style="display:flex;align-items:center;gap:6px;margin-top:6px;padding:8px 10px;background:rgba(42,122,74,.08);border-radius:10px;font-size:9px;color:#2a7a4a;font-weight:800;letter-spacing:-.01em;">
-                <span>↑</span><span>Up 12 pts from last month</span>
               </div>
             </div>
           </div>
@@ -2598,10 +3179,10 @@ posthog.init('phc_B6PH36QxpExnyBYhfScFFF6LhDvoyxuFr6PypJuxxky3', {
   <div class="features-grid">
     <div class="feature-card reveal">
       <div class="feature-icon">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="3" y1="20" x2="21" y2="20"/><line x1="7" y1="20" x2="7" y2="14"/><line x1="12" y1="20" x2="12" y2="9"/><line x1="17" y1="20" x2="17" y2="4"/></svg>
       </div>
-      <div class="feature-title">Smart Allocation</div>
-      <p class="feature-body">A check lands and you freeze. You don't know what to put it toward. Able splits it across bills, debt, and savings the moment it hits. No math. No guessing.</p>
+      <div class="feature-title">The Floor</div>
+      <p class="feature-body">A check lands and you freeze. You don't know what's safe to spend. Able knows your floor (bills, debt, savings) and covers it before anything else. What's above the floor is yours, free to spend.</p>
     </div>
     <div class="feature-card reveal">
       <div class="feature-icon">
@@ -2619,10 +3200,10 @@ posthog.init('phc_B6PH36QxpExnyBYhfScFFF6LhDvoyxuFr6PypJuxxky3', {
     </div>
     <div class="feature-card reveal">
       <div class="feature-icon">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="19" y1="5" x2="5" y2="19"/><circle cx="6.5" cy="6.5" r="2.5"/><circle cx="17.5" cy="17.5" r="2.5"/></svg>
       </div>
-      <div class="feature-title">Forecast</div>
-      <p class="feature-body">Money's coming in two weeks. But the decision needs to happen now. Log expected income before it lands. When it hits, one tap and the plan runs itself.</p>
+      <div class="feature-title">Tax Bucket</div>
+      <p class="feature-body">April hits and you owe more than you have. Able pulls your tax percentage off the top of every deposit. The money's there when the IRS asks. The export's ready for your accountant.</p>
     </div>
     <div class="feature-card ai-card reveal">
       <div class="feature-icon">
@@ -2693,7 +3274,7 @@ posthog.init('phc_B6PH36QxpExnyBYhfScFFF6LhDvoyxuFr6PypJuxxky3', {
   <div class="pricing-inner">
     <div class="section-center reveal">
       <span class="eyebrow">Monthly or yearly. Same access.</span>
-      <h2 class="section-headline">Start free.<br class="br-mobile">Stay because it works.</h2>
+      <h2 class="section-headline">Start free. <br class="br-mobile">Stay because it works.</h2>
     </div>
     <div class="pricing-cards">
       <div class="pricing-card reveal">
@@ -2719,7 +3300,7 @@ posthog.init('phc_B6PH36QxpExnyBYhfScFFF6LhDvoyxuFr6PypJuxxky3', {
 <section class="final-cta">
   <div class="final-inner">
     <h2 class="final-headline reveal">From Unable<br><span class="hero-arrow">→</span> Able.</h2>
-    <p class="final-sub reveal">That's the whole point.<br class="br-mobile">Thirty days free to see it.</p>
+    <p class="final-sub reveal">That's the whole point. <br class="br-mobile">Thirty days free to see it.</p>
     <a href="/app.html" class="btn-primary reveal">Start your free 30-day trial</a>
     <p class="final-fine reveal">30-day free trial. Card required. Takes less than two minutes to set up.</p>
   </div>
@@ -2954,6 +3535,18 @@ document.querySelectorAll('a[href^="#"]').forEach(a => {
     }
   });
 });
+
+// Phone-mockup greeting + date — render against the visitor's local clock so
+// the static screenshot feels alive. Name stays as the marketing default.
+(function(){
+  const HERO_NAME = 'Sam';
+  const h = new Date().getHours();
+  const greeting = h < 12 ? 'Good morning' : h < 17 ? 'Good afternoon' : 'Good evening';
+  const nameEl = document.querySelector('.app-greeting-name');
+  const dateEl = document.querySelector('.app-greeting-date');
+  if (nameEl) nameEl.textContent = greeting + ', ' + HERO_NAME;
+  if (dateEl) dateEl.textContent = new Date().toLocaleDateString('en-US', { weekday: 'long', month: 'long', day: 'numeric' });
+})();
 </script>
 </body>
 </html>
