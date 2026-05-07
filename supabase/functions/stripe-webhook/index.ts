@@ -39,21 +39,29 @@ async function captureMetaCAPI(
   eventId: string,
   email: string | null,
   externalId: string | null,
+  customData?: { value: number; currency: string },
 ) {
   if (!META_PIXEL_ID || !META_CAPI_ACCESS_TOKEN) return;
   try {
     const userData: Record<string, unknown> = {};
     if (email) userData.em = [await sha256Hex(email)];
     if (externalId) userData.external_id = [await sha256Hex(externalId)];
+    const eventData: Record<string, unknown> = {
+      event_name: eventName,
+      event_time: Math.floor(Date.now() / 1000),
+      event_id: eventId,
+      action_source: "website",
+      event_source_url: "https://becomeable.app/",
+      user_data: userData,
+    };
+    if (customData) {
+      eventData.custom_data = {
+        value: customData.value,
+        currency: customData.currency,
+      };
+    }
     const payload: Record<string, unknown> = {
-      data: [{
-        event_name: eventName,
-        event_time: Math.floor(Date.now() / 1000),
-        event_id: eventId,
-        action_source: "website",
-        event_source_url: "https://becomeable.app/",
-        user_data: userData,
-      }],
+      data: [eventData],
     };
     if (META_CAPI_TEST_EVENT_CODE) {
       payload.test_event_code = META_CAPI_TEST_EVENT_CODE;
@@ -396,6 +404,28 @@ Deno.serve(async (req) => {
             await grantRewardsIfEarned(referrerId);
           }
         }
+
+        // CAPI Purchase — fires on lifetime checkout (mode=payment + paid).
+        // Subscription Subscribe events fire from the trialing→active path
+        // above, so this only runs for one-time lifetime purchases.
+        if (
+          session.mode === "payment" &&
+          session.payment_status === "paid" &&
+          userId
+        ) {
+          const value = typeof session.amount_total === "number"
+            ? session.amount_total / 100
+            : 0;
+          const currency = (session.currency || "usd").toLowerCase();
+          (log.steps as unknown[]).push({ step: "capi_purchase", userId, value });
+          await captureMetaCAPI(
+            "Purchase",
+            `capi_${userId}_Purchase`,
+            email || null,
+            userId,
+            { value, currency },
+          );
+        }
         break;
       }
       case "customer.subscription.created":
@@ -412,19 +442,22 @@ Deno.serve(async (req) => {
         await patchProfileByCustomer(sub.customer, fields);
 
         // CAPI StartTrial — fires once when the subscription first appears in
-        // trialing state. Deterministic event_id (capi_<customer>_StartTrial)
-        // makes Stripe webhook retries idempotent on Meta's side and lets the
-        // browser eventually compute the same id for pixel/CAPI dedup.
+        // trialing state. Deterministic event_id (capi_<userId>_StartTrial)
+        // makes Stripe webhook retries idempotent on Meta's side AND lets the
+        // browser compute the same id for pixel/CAPI dedup (browser knows
+        // user.id at fire time but not Stripe customer id).
         if (event.type === "customer.subscription.created" && sub.status === "trialing") {
           const userId = await getUserIdByCustomer(sub.customer);
           const email = await getEmailByCustomer(sub.customer);
           (log.steps as unknown[]).push({ step: "capi_start_trial", userId });
-          await captureMetaCAPI(
-            "StartTrial",
-            `capi_${sub.customer}_StartTrial`,
-            email,
-            userId,
-          );
+          if (userId) {
+            await captureMetaCAPI(
+              "StartTrial",
+              `capi_${userId}_StartTrial`,
+              email,
+              userId,
+            );
+          }
         }
 
         if (mapped === "active") {
@@ -456,7 +489,7 @@ Deno.serve(async (req) => {
             const email = await getEmailByCustomer(sub.customer);
             await captureMetaCAPI(
               "Subscribe",
-              `capi_${sub.customer}_Subscribe`,
+              `capi_${userId}_Subscribe`,
               email,
               userId,
             );

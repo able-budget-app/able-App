@@ -2777,6 +2777,7 @@ const FBQ_MAP = {
   checkout_started: 'InitiateCheckout',
   trial_started: 'StartTrial',
   subscription_activated: 'Subscribe',
+  lifetime_purchased: 'Purchase',
 };
 
 // Google Ads conversion labels. Create a conversion action in Google Ads →
@@ -2788,6 +2789,7 @@ const GTAG_CONVERSIONS = {
   paywall_viewed: 'BlSFCK2dkqkcEKqnk8tD',
   trial_started: '2mjgCMCXkqkcEKqnk8tD',
   subscription_activated: 'fhxUCOvRkakcEKqnk8tD',
+  lifetime_purchased: '', // create a Purchase conversion action in Google Ads, paste label here
 };
 
 function _newEventId() {
@@ -3290,7 +3292,14 @@ async function checkSubscription(userId) {
     const status = data.subscription_status;
     renderSubscriptionPlan(status);
     // Fire once-per-user events for subscription lifecycle moments.
-    if (status === 'active') Able.trackOnce('subscription_activated');
+    // Deterministic eventID matches stripe-webhook's capi_<userId>_<event>
+    // so Meta dedupes browser pixel + server CAPI into one conversion.
+    if (status === 'active') {
+      Able.trackOnce('subscription_activated', { eventID: `capi_${userId}_Subscribe` });
+    }
+    if (status === 'lifetime') {
+      Able.trackOnce('lifetime_purchased', { eventID: `capi_${userId}_Purchase` });
+    }
     if (status === 'inactive') Able.trackOnce('subscription_canceled');
     const hasAccess = ['active', 'trialing', 'lifetime'].includes(status);
     if(hasAccess) sessionStorage.setItem('able_access_'+userId, 'true');
@@ -3467,7 +3476,10 @@ async function _onAuthStateChangeImpl(user) {
   if(isFromCheckout){
     try { sessionStorage.removeItem('able_post_checkout'); } catch (_) { /* noop */ }
     try { sessionStorage.removeItem('able_checkout_session_id'); } catch (_) { /* noop */ }
-    Able.trackOnce('trial_started');
+    // Deterministic eventID matches stripe-webhook's capi_<userId>_StartTrial
+    // so Meta dedupes browser pixel + server CAPI into one conversion.
+    const trialEventID = user?.id ? `capi_${user.id}_StartTrial` : undefined;
+    Able.trackOnce('trial_started', trialEventID ? { eventID: trialEventID } : undefined);
   }
 
   try {
