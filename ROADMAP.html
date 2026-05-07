@@ -836,6 +836,13 @@
       <p>The discipline: <strong>product → brand → capabilities skill → content</strong>. In that order. Anything that violates that order creates rework.</p>
     </section>
 
+    <section class="tldr" id="status-2026-05-07" style="background: var(--green-soft); border-left: 4px solid var(--green); margin-top: 14px;">
+      <h2>Status as of 2026-05-07</h2>
+      <p><strong>Phases 0–3 substantially shipped.</strong> Plaid live (multi-bank, liabilities/APR, recurring detection, deep-dive). Analyzer live (Sonnet 4.6 at temp 0, named always-bill / always-debt lists). Tax elevation live (quarterly projection card, tax export, state-aware calibration as of today). Floor-First methodology locked. Brand spec locked. App-capabilities skill rewritten today (was claiming Plaid not shipped — fixed).</p>
+      <p><strong>Phase 4 (content rewrite) is in flight.</strong> Landing page overhaul shipped 2026-05-07. Mass email redesign shipped 2026-05-07 (`01d79c7` — 14 templates rebuilt + deep_dive_summary + achievement_unlocked). PYF blog cluster still paused at 2/11 — may resume now that capabilities are locked.</p>
+      <p><strong>What's next:</strong> launch hardening (security audit + post-launch monitoring), then App Store submission via Capacitor (B2, plan exists at <code>docs/app-store-launch.md</code>). B6 (Plaid-driven money in/out) parked until live customer feedback informs the Log-income semantics call.</p>
+    </section>
+
     <h2 id="status"><span class="num">01</span>Status check</h2>
     <p>Where we are today, before the plan starts.</p>
 
@@ -844,24 +851,27 @@
         <h4>Product (becomeable.app)</h4>
         <ul>
           <li><span class="pill pill-done">Live</span> Allocator, buckets, reservations, smart window, Coach, Stripe, email cron, day-1 referral, tour, brand-aligned auth/dashboard</li>
-          <li><span class="pill pill-progress">Open</span> Plaid integration, Analyzer, Tour empty-account gate, Coach SSE</li>
+          <li><span class="pill pill-done">Live</span> Plaid (multi-bank, liabilities/APR, recurring detection, deep-dive), Analyzer (Sonnet 4.6, temp 0), MFA, web push, in-app monthly→annual upgrade, state-aware tax calibration, deep-dive home banner</li>
+          <li><span class="pill pill-progress">Open</span> Coach SSE</li>
         </ul>
       </div>
       <div class="stat-card">
         <h4>Marketing</h4>
         <ul>
-          <li><span class="pill pill-done">Live</span> Landing site, brand system, email infra, 175-piece social library on Drive, Make scenario built, Remotion reel, 10 footage MP4s</li>
-          <li><span class="pill pill-progress">Paused</span> PYF blog (2/11), business cluster (2/?), product shots library</li>
-          <li><span class="pill pill-pending">Not started</span> SEO engine, social engine cadence</li>
+          <li><span class="pill pill-done">Live</span> Landing site (overhauled 2026-05-07), brand system, email infra (14 templates redesigned 2026-05-07), 175-piece social library on Drive, Make scenario built, Remotion reel, 10 footage MP4s</li>
+          <li><span class="pill pill-progress">Paused</span> PYF blog (2/11) — capabilities now locked; can resume</li>
+          <li><span class="pill pill-pending">Not started</span> SEO engine, social engine cadence at scale</li>
         </ul>
       </div>
       <div class="stat-card">
-        <h4>Just changed</h4>
+        <h4>Recently changed (2026-05-07)</h4>
         <ul>
-          <li>Plaid → pay-as-you-go this week</li>
-          <li>Kelty audit: confirms wedge, flags bank sync + tax + methodology + price gaps</li>
-          <li>Analyzer feature defined (allocate slice of every deposit toward big upcoming bills)</li>
-          <li>Brand lock identified as cross-cutting requirement</li>
+          <li>App-capabilities skill rewritten (was wrong — said Plaid not shipped)</li>
+          <li>State-aware tax calibration shipped (Marcus / Lena focus-group asks)</li>
+          <li>Mass email redesign shipped — 14 templates + 2 new (deep_dive_summary, achievement_unlocked)</li>
+          <li>Analyzer determinism — temp 0 + named always-bill / always-debt lists</li>
+          <li>Post-checkout 45s wedge fixed; in-app monthly→annual upgrade live</li>
+          <li><strong>Next focus:</strong> launch hardening (security audit + monitoring) → App Store via Capacitor</li>
         </ul>
       </div>
     </div>
@@ -909,7 +919,7 @@
     <h4 style="margin-top: 28px;">Bonus deferred decisions (not blocking)</h4>
     <table>
       <tr><th style="width: 30%;">Item</th><th>Verdict</th></tr>
-      <tr><td>Native mobile (iOS/Android)</td><td><span class="pill pill-defer">Defer Q4</span> PWA holds for Q2</td></tr>
+      <tr><td>Native mobile (iOS/Android)</td><td><span class="pill pill-progress">Active</span> Capacitor wrap planned (<code>docs/app-store-launch.md</code>) — raised back to active 2026-05-07; spike pending</td></tr>
       <tr><td>Community (Discord/Circle)</td><td><span class="pill pill-defer">Defer Q3</span> Light Discord post-launch</td></tr>
       <tr><td>Net worth / investment tracking</td><td><span class="pill pill-reject">Permanent defer</span> Not the wedge</td></tr>
       <tr><td>Subscription detection</td><td><span class="pill pill-accept">Free w/ Plaid</span> Falls out of B.2</td></tr>
@@ -920,7 +930,7 @@
     <div class="phase phase-0" id="phase-0">
       <div class="phase-header">
         <div>
-          <div class="phase-num">Phase 0</div>
+          <div class="phase-num">Phase 0 <span class="pill pill-done" style="margin-left: 6px;">✅ DONE</span></div>
           <h3>Decision lock</h3>
         </div>
         <span class="duration">~2 days · this week</span>
@@ -939,10 +949,10 @@
     <div class="phase phase-1" id="phase-1">
       <div class="phase-header">
         <div>
-          <div class="phase-num">Phase 1</div>
+          <div class="phase-num">Phase 1 <span class="pill pill-done" style="margin-left: 6px;">✅ DONE</span></div>
           <h3>Capability + brand lock</h3>
         </div>
-        <span class="duration">3-6 weeks</span>
+        <span class="duration">3-6 weeks · shipped through 2026-05-07</span>
       </div>
       <div class="goal">Goal: ship every capability we'll be marketing in Q2, and freeze the brand. Nothing else gets to start until this exits.</div>
 
@@ -1025,10 +1035,10 @@
     <div class="phase phase-2" id="phase-2">
       <div class="phase-header">
         <div>
-          <div class="phase-num">Phase 2</div>
+          <div class="phase-num">Phase 2 <span class="pill pill-done" style="margin-left: 6px;">✅ DONE</span></div>
           <h3>Design + UX polish</h3>
         </div>
-        <span class="duration">1-2 weeks · can overlap end of Phase 1</span>
+        <span class="duration">1-2 weeks · shipped across 2026-05-03 → 2026-05-07</span>
       </div>
       <div class="goal">Goal: app feels premium enough to justify the price. Audit point: "execution underdelivers on the depth that justifies $14.99."</div>
       <ul>
@@ -1046,10 +1056,10 @@
     <div class="phase phase-3" id="phase-3">
       <div class="phase-header">
         <div>
-          <div class="phase-num">Phase 3</div>
+          <div class="phase-num">Phase 3 <span class="pill pill-progress" style="margin-left: 6px;">🟡 PARTIAL</span></div>
           <h3>Asset capture + skill update</h3>
         </div>
-        <span class="duration">3-5 days</span>
+        <span class="duration">3-5 days · capabilities skill done 2026-05-07; product shots library still TODO</span>
       </div>
       <div class="goal">Goal: single source of truth refreshed, then frozen long enough to do content rewrites against.</div>
       <ul>
@@ -1072,10 +1082,10 @@
     <div class="phase phase-4" id="phase-4">
       <div class="phase-header">
         <div>
-          <div class="phase-num">Phase 4</div>
+          <div class="phase-num">Phase 4 <span class="pill pill-progress" style="margin-left: 6px;">🟡 IN FLIGHT</span></div>
           <h3>Content rewrite (coordinated sprint)</h3>
         </div>
-        <span class="duration">2-3 weeks</span>
+        <span class="duration">2-3 weeks · landing + email shipped 2026-05-07; blog cluster + social sweep next</span>
       </div>
       <div class="goal">Goal: every piece of marketing now references the real, current product. Done as a single sprint, NOT incrementally, so messaging is coordinated.</div>
 
@@ -1097,10 +1107,10 @@
     <div class="phase phase-5" id="phase-5">
       <div class="phase-header">
         <div>
-          <div class="phase-num">Phase 5</div>
+          <div class="phase-num">Phase 5 <span class="pill pill-pending" style="margin-left: 6px;">🔴 NOT STARTED</span></div>
           <h3>Distribution engines (ongoing)</h3>
         </div>
-        <span class="duration">Kicks off after Phase 4</span>
+        <span class="duration">Kicks off after Phase 4 · social pipeline already partially built (Make scenario 4869011)</span>
       </div>
       <div class="goal">Goal: sustainable cadence, not one-time bursts.</div>
       <ul>
@@ -1110,6 +1120,45 @@
         <li><strong>Video cadence</strong> — short-form (Reels/TikTok/Shorts) + long-form (YouTube)</li>
         <li><strong>Repurposing flow</strong> — blog → NotebookLM → YouTube (per existing <code>social_roadmap</code> plan)</li>
       </ul>
+    </div>
+
+    <div class="phase phase-1" id="phase-launch-hardening" style="border-color: var(--amber); background: linear-gradient(180deg, var(--amber-soft) 0%, transparent 30%);">
+      <div class="phase-header">
+        <div>
+          <div class="phase-num" style="color: var(--amber);">Phase 4.5 <span class="pill pill-progress" style="margin-left: 6px;">🟡 NEXT</span></div>
+          <h3>Launch hardening — added 2026-05-07</h3>
+        </div>
+        <span class="duration">~1 week · before paid acquisition or app store</span>
+      </div>
+      <div class="goal">Goal: be ready when 20-50 paying users start hitting edges. Don't ship to scale without the safety net to see what's breaking.</div>
+      <ul>
+        <li><strong>Security audit</strong> — XSS surface, CSP enforcement (currently report-only), Edge Function authorization (28 functions, "Verify JWT OFF" pattern means each must check ownership in code), rate limiting on Anthropic-callers (cost bomb risk), webhook signature verification, RLS confidence check</li>
+        <li><strong>Error tracking</strong> — Sentry or equivalent; script tag in <code>app.html</code>, wrappers around Edge Functions, email alerts on new error classes</li>
+        <li><strong>Daily watchdog email</strong> — small Edge Function on cron emailing Paul: signups today, trials, conversions, errors hit, Plaid items in error state, abnormal cron failures</li>
+        <li><strong>PostHog funnels</strong> — events exist; build the dashboards (landing → signup, signup → Plaid connect, Plaid → plan accept, plan accept → first deposit, trial → paid)</li>
+        <li><strong>In-app feedback button</strong> — "report a bug / suggest a feature" link emailing <code>hello@becomeable.app</code></li>
+        <li><strong>Status indicator</strong> — when Plaid/Stripe/Supabase are degraded, show "we're seeing X" instead of letting users think Able is broken</li>
+      </ul>
+      <div class="exit"><strong>Exit criteria</strong>Errors visible to Paul within minutes. Daily pulse arriving every morning. Funnels visible. App Store submission and paid ads can proceed knowing the safety net is up.</div>
+    </div>
+
+    <div class="phase phase-1" id="phase-app-store" style="border-color: var(--blue); background: linear-gradient(180deg, var(--blue-soft) 0%, transparent 30%);">
+      <div class="phase-header">
+        <div>
+          <div class="phase-num" style="color: var(--blue);">Phase 5.5 <span class="pill pill-pending" style="margin-left: 6px;">🔴 PLANNED</span></div>
+          <h3>App Store launch — raised back from defer 2026-05-07</h3>
+        </div>
+        <span class="duration">2-3 weeks · plan at <code>docs/app-store-launch.md</code></span>
+      </div>
+      <div class="goal">Goal: Apple App Store + Google Play Store presence without rebuilding the app. Capacitor wrap → one HTML/JS codebase, two native shells.</div>
+      <ul>
+        <li><strong>Spike (30-60 min)</strong> — spin up <code>~/Desktop/able-mobile/</code> as a Capacitor project. Drop existing <code>app.html</code> + <code>index.html</code> in. Get it running in iOS Simulator + Android emulator. Verify Plaid Link iframe + Stripe redirect work in WebView.</li>
+        <li><strong>Privacy + entitlements</strong> — App Tracking Transparency disclosures, privacy manifest, push notification entitlement, Sign in with Apple if shipping iOS auth</li>
+        <li><strong>Store listings</strong> — screenshots at every required size (iPhone 6.7", 6.5", 5.5"; iPad; Android phone + tablet), descriptions, keywords, age rating</li>
+        <li><strong>Billing</strong> — Stripe via external link in system browser (<code>SFSafariViewController</code> / Chrome Custom Tab); deep-link back to app on success. <strong>No IAP SKUs</strong> — Able qualifies as Multiplatform Service under Apple Guideline 3.1.3(b). Hedge: wire IAP feature flag but leave it off.</li>
+        <li><strong>Submission + review ping-pong</strong> — expect 1-3 rejection rounds; budget time for fixes</li>
+      </ul>
+      <div class="exit"><strong>Exit criteria</strong>App live on both stores. Web canonical at <code>~/Desktop/Able/</code> stays untouched. Sibling <code>~/Desktop/able-mobile/</code> wraps it. No fork.</div>
     </div>
 
     <h2 id="anti"><span class="num">05</span>Anti-patterns — what NOT to do</h2>
