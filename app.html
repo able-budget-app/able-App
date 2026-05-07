@@ -3263,6 +3263,37 @@ async function ensureMfaForPlaid() {
   }
 }
 
+// Verify the post-checkout session against Stripe via the Edge Function.
+// Uses direct fetch instead of supabase.functions.invoke when window._wedgedJwt
+// is set, because functions.invoke calls auth.getSession() internally and that
+// hangs forever on the post-Stripe wedged-client path (the same wedge the
+// escape-hatch in window.load handles for getSession itself).
+async function verifyCheckoutSession(sessionId) {
+  const url = `${SUPABASE_URL}/functions/v1/verify-checkout-session`;
+  const jwt = window._wedgedJwt;
+  if (jwt) {
+    try {
+      const r = await fetch(url, {
+        method: 'POST',
+        headers: {
+          'Authorization': `Bearer ${jwt}`,
+          'apikey': SUPABASE_KEY,
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ session_id: sessionId }),
+      });
+      const data = await r.json().catch(() => ({}));
+      if (!r.ok) return { data: null, error: { message: data?.error || `http_${r.status}` } };
+      return { data, error: null };
+    } catch (e) {
+      return { data: null, error: { message: e?.message || 'fetch_failed' } };
+    }
+  }
+  return await sbGet().functions.invoke('verify-checkout-session', {
+    body: { session_id: sessionId },
+  });
+}
+
 // ═══════════════════════════════════════
 // SUBSCRIPTION CHECK
 // ═══════════════════════════════════════
@@ -3501,9 +3532,7 @@ async function _onAuthStateChangeImpl(user) {
     if (isFromCheckout && checkoutSessionId) {
       const tVerify = performance.now();
       try {
-        const { data: vData, error: vErr } = await sbGet().functions.invoke('verify-checkout-session', {
-          body: { session_id: checkoutSessionId },
-        });
+        const { data: vData, error: vErr } = await verifyCheckoutSession(checkoutSessionId);
         console.debug(`[Able] verify-checkout-session: ${Math.round(performance.now()-tVerify)}ms`, vData, vErr);
         if (!vErr && vData?.status === 'active') {
           sessionStorage.setItem('able_access_'+user.id, 'true');
@@ -3548,9 +3577,7 @@ async function _onAuthStateChangeImpl(user) {
         await new Promise(r=>setTimeout(r, delays[i]));
         const tRetry = performance.now();
         try {
-          const { data: vData } = await sbGet().functions.invoke('verify-checkout-session', {
-            body: { session_id: checkoutSessionId },
-          });
+          const { data: vData } = await verifyCheckoutSession(checkoutSessionId);
           console.debug(`[Able] Verify retry ${i+1}: ${Math.round(performance.now()-tRetry)}ms, status=${vData?.status}`);
           if (vData?.status === 'active') {
             sessionStorage.setItem('able_access_'+user.id, 'true');
@@ -14079,7 +14106,13 @@ window.addEventListener('load', async () => {
             const raw = localStorage.getItem(k);
             if (raw) {
               const parsed = JSON.parse(raw);
-              if (parsed?.access_token && parsed?.user?.id) lsUser = parsed.user;
+              if (parsed?.access_token && parsed?.user?.id) {
+                lsUser = parsed.user;
+                // Stash JWT for downstream Edge Function calls. functions.invoke()
+                // re-enters auth.getSession() internally, which is wedged here —
+                // direct fetch with this token bypasses the wedge.
+                window._wedgedJwt = parsed.access_token;
+              }
             }
             break;
           }
