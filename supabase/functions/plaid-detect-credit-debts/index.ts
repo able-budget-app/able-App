@@ -19,10 +19,101 @@
 // Authorization) or service-role internal (the onboarding pipeline).
 
 import { createClient, type SupabaseClient } from 'npm:@supabase/supabase-js@2';
-import { liabilitiesGet, PlaidApiError, type CreditLiability } from '../_shared/plaid.ts';
 
 const SUPABASE_URL = Deno.env.get('SUPABASE_URL')!;
 const SERVICE_ROLE = Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')!;
+
+// ─── Plaid HTTP client (inlined from _shared/plaid.ts so this file
+// deploys self-contained from the Supabase dashboard — relative imports
+// fail in dashboard-paste mode). Mirrors plaid-link-token's pattern. ───
+
+const PLAID_ENV = Deno.env.get('PLAID_ENV') ?? 'sandbox';
+const PLAID_HOSTS: Record<string, string> = {
+  sandbox: 'https://sandbox.plaid.com',
+  development: 'https://development.plaid.com',
+  production: 'https://production.plaid.com',
+};
+const PLAID_HOST = PLAID_HOSTS[PLAID_ENV] ?? PLAID_HOSTS.sandbox;
+
+type PlaidError = {
+  error_type: string;
+  error_code: string;
+  error_message: string;
+  display_message?: string | null;
+  request_id?: string;
+};
+
+class PlaidApiError extends Error {
+  status: number;
+  plaid: PlaidError;
+  constructor(status: number, plaid: PlaidError) {
+    super(`Plaid ${plaid.error_code}: ${plaid.error_message}`);
+    this.status = status;
+    this.plaid = plaid;
+  }
+}
+
+async function plaidApi<TReq extends Record<string, unknown>, TRes>(
+  path: string,
+  body: TReq,
+): Promise<TRes> {
+  const clientId = Deno.env.get('PLAID_CLIENT_ID');
+  const secret = Deno.env.get('PLAID_SECRET');
+  if (!clientId || !secret) {
+    throw new Error('PLAID_CLIENT_ID and PLAID_SECRET must be set');
+  }
+  const res = await fetch(`${PLAID_HOST}${path}`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ client_id: clientId, secret, ...body }),
+  });
+  const text = await res.text();
+  let json: unknown = null;
+  try { json = text ? JSON.parse(text) : null; } catch { /* non-JSON */ }
+  if (!res.ok) {
+    const err = (json ?? {
+      error_type: 'API_ERROR',
+      error_code: 'UNKNOWN',
+      error_message: text || `HTTP ${res.status}`,
+    }) as PlaidError;
+    throw new PlaidApiError(res.status, err);
+  }
+  return json as TRes;
+}
+
+type CreditLiability = {
+  account_id: string;
+  aprs: Array<{
+    apr_percentage: number;
+    apr_type: 'purchase_apr' | 'balance_transfer_apr' | 'cash_apr' | 'special';
+    balance_subject_to_apr: number | null;
+    interest_charge_amount: number | null;
+  }>;
+  is_overdue: boolean | null;
+  last_payment_amount: number | null;
+  last_payment_date: string | null;
+  last_statement_balance: number | null;
+  last_statement_issue_date: string | null;
+  minimum_payment_amount: number | null;
+  next_payment_due_date: string | null;
+};
+
+type LiabilitiesGetRes = {
+  liabilities: {
+    credit: CreditLiability[] | null;
+    mortgage: unknown[] | null;
+    student: unknown[] | null;
+  };
+  request_id: string;
+};
+
+const liabilitiesGet = (access_token: string) =>
+  plaidApi<{ access_token: string }, LiabilitiesGetRes>(
+    '/liabilities/get',
+    { access_token },
+  );
+
+// ─── End inlined Plaid client ─────────────────────────────────────────
 
 const corsHeaders = {
   'Access-Control-Allow-Origin': '*',
