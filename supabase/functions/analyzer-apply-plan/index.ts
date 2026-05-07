@@ -62,6 +62,7 @@ type AnalyzerPlanShape = {
     amount: number;
     due_day_of_month?: number | null;
     frequency?: string;
+    evidence_stream_id?: string | null;
   }[];
   debts?: {
     name: string;
