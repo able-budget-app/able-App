@@ -8,7 +8,8 @@ Last consolidated: 2026-05-03 from `pending_work.md`, `competitor-feature-audit.
 
 ## Now — this week (P0)
 
-✅ **All P0 items shipped 2026-05-03 across two commits (`23a7991`, `59e6955`).** See Done section.
+- **P0-2026-05-07 #1 — Stripe price IDs may be one-time instead of recurring** | Test signups land as Customers in Stripe but with no associated Subscription. `create-checkout/index.ts:56` derives `mode = price.type === 'recurring' ? 'subscription' : 'payment'`, so a one-time price ID at `PRICE_MONTHLY` or `PRICE_ANNUAL` would silently produce lifetime-style payment flows. Verify each of the three price IDs in Stripe (`price_1TPyQ6DBmPAhrdxkrsz0gtfq`, `price_1TPyPZDBmPAhrdxkAwiyRC6U`, `price_1TO3i3DBmPAhrdxkVq1hAzj9`); if monthly/annual aren't recurring, create new recurring prices and update `app.html:2758-2760`. **Source:** Paul observation 2026-05-07 morning during paid-ads tracking verification.
+- **P0-2026-05-07 #2 — Stape CAPI Gateway disconnect** | Meta Events Manager diagnostic flagged "PageView Event from the Server are not Deduplicated" on 2026-05-07. Our code sends NO server-side PageView — Stape's partial gateway config on Meta's side is auto-injecting them without event_ids. Disconnect from Events Manager → Pixel → Settings/Integrations → Conversions API Gateway. No code change needed. **Source:** Paul direction 2026-05-07.
 
 ---
 

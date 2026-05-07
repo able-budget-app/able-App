@@ -2755,9 +2755,8 @@ posthog.init('phc_B6PH36QxpExnyBYhfScFFF6LhDvoyxuFr6PypJuxxky3', {
 const SUPABASE_URL = 'https://vfnozfvqgevjflwdjlyz.supabase.co';
 const SUPABASE_KEY = 'sb_publishable_zFa0iR6Wzf9BtDuvnB_cRg_7l7JA9PH';
 const STRIPE_KEY   = 'pk_live_3bc5VtR5BgZY9hpaYnXuE2zW';
-const PRICE_MONTHLY  = 'price_1TPyQ6DBmPAhrdxkrsz0gtfq';
+const PRICE_MONTHLY  = 'price_1TUT0rDBmPAhrdxktHAb3SzX';
 const PRICE_ANNUAL   = 'price_1TPyPZDBmPAhrdxkAwiyRC6U';
-const PRICE_LIFETIME = 'price_1TO3i3DBmPAhrdxkVq1hAzj9';
 const SUPPORT_EMAIL  = 'hello@becomeable.app';
 
 // sb and stripe initialized in window.load below
@@ -2777,7 +2776,6 @@ const FBQ_MAP = {
   checkout_started: 'InitiateCheckout',
   trial_started: 'StartTrial',
   subscription_activated: 'Subscribe',
-  lifetime_purchased: 'Purchase',
 };
 
 // Google Ads conversion labels. Create a conversion action in Google Ads →
@@ -2789,7 +2787,6 @@ const GTAG_CONVERSIONS = {
   paywall_viewed: 'BlSFCK2dkqkcEKqnk8tD',
   trial_started: '2mjgCMCXkqkcEKqnk8tD',
   subscription_activated: 'fhxUCOvRkakcEKqnk8tD',
-  lifetime_purchased: '', // create a Purchase conversion action in Google Ads, paste label here
 };
 
 function _newEventId() {
@@ -3296,9 +3293,6 @@ async function checkSubscription(userId) {
     // so Meta dedupes browser pixel + server CAPI into one conversion.
     if (status === 'active') {
       Able.trackOnce('subscription_activated', { eventID: `capi_${userId}_Subscribe` });
-    }
-    if (status === 'lifetime') {
-      Able.trackOnce('lifetime_purchased', { eventID: `capi_${userId}_Purchase` });
     }
     if (status === 'inactive') Able.trackOnce('subscription_canceled');
     const hasAccess = ['active', 'trialing', 'lifetime'].includes(status);

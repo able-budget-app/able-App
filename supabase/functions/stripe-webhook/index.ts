@@ -392,6 +392,9 @@ Deno.serve(async (req) => {
         const email = session.customer_email || session.customer_details?.email || "";
         const customerId = session.customer;
         log.userId = userId; log.email = email; log.customerId = customerId;
+        // Lifetime purchases retired 2026-05-07. Branch retained so any
+        // grandfathered mode=payment legacy webhook replays still produce
+        // a working profile row instead of erroring.
         const initialStatus = session.mode === "payment" ? "lifetime" : "trialing";
         if (userId && email) await upsertProfile(userId, email, initialStatus, customerId);
         else if (customerId) await patchProfileByCustomer(customerId, { subscription_status: initialStatus });
@@ -403,28 +406,6 @@ Deno.serve(async (req) => {
             log.referrerId = referrerId;
             await grantRewardsIfEarned(referrerId);
           }
-        }
-
-        // CAPI Purchase — fires on lifetime checkout (mode=payment + paid).
-        // Subscription Subscribe events fire from the trialing→active path
-        // above, so this only runs for one-time lifetime purchases.
-        if (
-          session.mode === "payment" &&
-          session.payment_status === "paid" &&
-          userId
-        ) {
-          const value = typeof session.amount_total === "number"
-            ? session.amount_total / 100
-            : 0;
-          const currency = (session.currency || "usd").toLowerCase();
-          (log.steps as unknown[]).push({ step: "capi_purchase", userId, value });
-          await captureMetaCAPI(
-            "Purchase",
-            `capi_${userId}_Purchase`,
-            email || null,
-            userId,
-            { value, currency },
-          );
         }
         break;
       }
