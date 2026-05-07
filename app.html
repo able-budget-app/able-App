@@ -3874,6 +3874,68 @@ const OB_QUESTIONS = [
     placeholder: "10"
   },
   {
+    key: 'tax_state',
+    type: 'select',
+    msg: "What state do you file taxes in?",
+    hint: "Helps me calibrate your tax % to your state's effective rate. No state income tax (FL, TX, NV, etc.) gets a lower number; CA/NY/NJ run higher. Optional — skip if you'd rather not say.",
+    optional: true,
+    placeholder: "Select your state…",
+    choices: [
+      { value: 'AL', label: 'Alabama' },
+      { value: 'AK', label: 'Alaska' },
+      { value: 'AZ', label: 'Arizona' },
+      { value: 'AR', label: 'Arkansas' },
+      { value: 'CA', label: 'California' },
+      { value: 'CO', label: 'Colorado' },
+      { value: 'CT', label: 'Connecticut' },
+      { value: 'DE', label: 'Delaware' },
+      { value: 'DC', label: 'District of Columbia' },
+      { value: 'FL', label: 'Florida' },
+      { value: 'GA', label: 'Georgia' },
+      { value: 'HI', label: 'Hawaii' },
+      { value: 'ID', label: 'Idaho' },
+      { value: 'IL', label: 'Illinois' },
+      { value: 'IN', label: 'Indiana' },
+      { value: 'IA', label: 'Iowa' },
+      { value: 'KS', label: 'Kansas' },
+      { value: 'KY', label: 'Kentucky' },
+      { value: 'LA', label: 'Louisiana' },
+      { value: 'ME', label: 'Maine' },
+      { value: 'MD', label: 'Maryland' },
+      { value: 'MA', label: 'Massachusetts' },
+      { value: 'MI', label: 'Michigan' },
+      { value: 'MN', label: 'Minnesota' },
+      { value: 'MS', label: 'Mississippi' },
+      { value: 'MO', label: 'Missouri' },
+      { value: 'MT', label: 'Montana' },
+      { value: 'NE', label: 'Nebraska' },
+      { value: 'NV', label: 'Nevada' },
+      { value: 'NH', label: 'New Hampshire' },
+      { value: 'NJ', label: 'New Jersey' },
+      { value: 'NM', label: 'New Mexico' },
+      { value: 'NY', label: 'New York' },
+      { value: 'NC', label: 'North Carolina' },
+      { value: 'ND', label: 'North Dakota' },
+      { value: 'OH', label: 'Ohio' },
+      { value: 'OK', label: 'Oklahoma' },
+      { value: 'OR', label: 'Oregon' },
+      { value: 'PA', label: 'Pennsylvania' },
+      { value: 'RI', label: 'Rhode Island' },
+      { value: 'SC', label: 'South Carolina' },
+      { value: 'SD', label: 'South Dakota' },
+      { value: 'TN', label: 'Tennessee' },
+      { value: 'TX', label: 'Texas' },
+      { value: 'UT', label: 'Utah' },
+      { value: 'VT', label: 'Vermont' },
+      { value: 'VA', label: 'Virginia' },
+      { value: 'WA', label: 'Washington' },
+      { value: 'WV', label: 'West Virginia' },
+      { value: 'WI', label: 'Wisconsin' },
+      { value: 'WY', label: 'Wyoming' },
+      { value: 'OTHER', label: 'Outside US / other' },
+    ],
+  },
+  {
     key: 'plaid_connect',
     type: 'plaid',
     msg: "Last step. Connect your bank.",
@@ -4076,6 +4138,24 @@ function renderObStep() {
     document.getElementById('ob-back-btn').style.display = obStep > 0 ? 'inline-block' : 'none';
     document.getElementById('ob-next-btn').textContent = obStep === OB_QUESTIONS.length - 1 ? 'Build my budget →' : 'Continue →';
     document.getElementById('ob-next-btn').disabled = !selected;
+  } else if (q.type === 'select') {
+    const selected = obAnswers[q.key] || '';
+    const opts = q.choices.map((c) =>
+      `<option value="${c.value}"${c.value === selected ? ' selected' : ''}>${c.label}</option>`
+    ).join('');
+    inputArea.innerHTML = `
+      <style>
+        .ob-select{width:100%;font-family:var(--ds-f);font-size:15px;font-weight:700;padding:13px 16px;border:1.5px solid var(--ds-line);border-radius:var(--ds-r1);background:#fff;color:var(--ds-t1);outline:none;-webkit-appearance:none;appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath fill='none' stroke='%23666' stroke-width='2' stroke-linecap='round' stroke-linejoin='round' d='M1 1l5 5 5-5'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 16px center;padding-right:42px;cursor:pointer;}
+        .ob-select:focus{border-color:var(--ds-c2);}
+      </style>
+      <select class="ob-select" id="ob-select-input" onchange="obSelectDropdown(this.value)">
+        <option value="">${q.placeholder || 'Select…'}</option>
+        ${opts}
+      </select>`;
+    document.getElementById('ob-back-btn').style.display = obStep > 0 ? 'inline-block' : 'none';
+    document.getElementById('ob-next-btn').textContent = obStep === OB_QUESTIONS.length - 1 ? 'Build my budget →' : 'Continue →';
+    // Optional select can advance with no selection; required cannot.
+    document.getElementById('ob-next-btn').disabled = !q.optional && !selected;
   } else if (q.type === 'multiselect') {
     const selected = new Set(obAnswers[q.key] || []);
     const otherText = obAnswers[q.key + '_other'] || '';
@@ -4143,6 +4223,15 @@ function obSelectChoice(value) {
   if (!q || q.type !== 'choice') return;
   obAnswers[q.key] = value;
   // Re-render so the card highlights and the Continue button enables.
+  renderObStep();
+}
+
+function obSelectDropdown(value) {
+  const q = OB_QUESTIONS[obStep];
+  if (!q || q.type !== 'select') return;
+  obAnswers[q.key] = value;
+  // Re-render so the Continue button enables (required dropdowns) or
+  // stays available (optional ones).
   renderObStep();
 }
 
@@ -4480,6 +4569,7 @@ async function obStartTourWhilePipelineRuns() {
     S.profile.name = _obParseFirstName(rawName) || S.profile.name || '';
   }
   S.profile.goals = GOAL_LABELS[obAnswers.goals] || obAnswers.goals || S.profile.goals || '';
+  if (obAnswers.tax_state) S.profile.state = obAnswers.tax_state;
   S.profile.onboarding_via_tour = true;
   try { await saveUserData(); } catch (e) { console.warn('saveUserData (tour handoff) failed:', e); }
 
@@ -5044,6 +5134,11 @@ async function obRunPlaidPipeline() {
     name: _firstName || obAnswers.name_business || undefined,
     business: obAnswers.name_business || undefined,
     income_payment_structure: income_hint,
+    // Two-letter US state code (e.g. 'CA') or 'OTHER' / undefined when
+    // the user skipped or selected outside-US. Analyzer Rule 4 factors
+    // state SE / income tax into the suggested_pct on top of the
+    // federal/SE baseline.
+    state: obAnswers.tax_state || undefined,
   };
 
   const sb = sbGet();
@@ -6206,6 +6301,7 @@ async function obSubmitPlanReview() {
     const rawName = (obAnswers.name_business || '').trim();
     S.profile.name = _obParseFirstName(rawName) || S.profile.name || '';
     S.profile.goals = GOAL_LABELS[obAnswers.goals] || obAnswers.goals || S.profile.goals || '';
+    if (obAnswers.tax_state) S.profile.state = obAnswers.tax_state;
     if (Array.isArray(obAnswers.brought_here) && obAnswers.brought_here.length > 0) {
       S.profile.brought_here = obAnswers.brought_here.slice();
     }
@@ -6351,7 +6447,14 @@ async function obConfirm() {
     S.settings.freePct = Math.round((S.settings.freePct||0) * scale);
   }
   S.obligations = r.obligations || [];
-  S.profile = { name: r.name, business_type: r.business_type, goals: r.goals };
+  S.profile = {
+    name: r.name,
+    business_type: r.business_type,
+    goals: r.goals,
+    // Preserve state from onboarding answers or prior profile so the
+    // analyzer can re-use it on later runs (deep-dive, add-bank).
+    state: obAnswers.tax_state || S.profile?.state || undefined,
+  };
   // Mirror the multi-select "what brought you here" answer into profile
   // so Coach can reference it via buildCoachState.
   if (Array.isArray(obAnswers.brought_here) && obAnswers.brought_here.length > 0) {

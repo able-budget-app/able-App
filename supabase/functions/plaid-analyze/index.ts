@@ -3,7 +3,7 @@
 //
 // POST body:
 //   { plaid_item_row_id: string,
-//     profile_hint?: { name?: string, business?: string, income_payment_structure?: string } }
+//     profile_hint?: { name?: string, business?: string, income_payment_structure?: string, state?: string } }
 //
 // Returns:
 //   { plan_id, plan, input_summary, usage }
@@ -111,6 +111,10 @@ type AnalyzerInput = {
     name?: string;
     business?: string;
     income_payment_structure?: string;
+    // Two-letter US state code (e.g. 'CA', 'TX') or 'OTHER' / undefined.
+    // Used by Rule 4 to add state-specific income/SE tax to the suggested
+    // tax_pct on top of the federal/SE baseline. Optional onboarding answer.
+    state?: string;
   };
   lookback_months: 6 | 12 | 24;
 };
@@ -860,9 +864,16 @@ Return ONLY this JSON object. No prose. No markdown fences.
 
 4. **Tax allocation**:
    - If tax_payments are visible: derive suggested_pct from totals.tax_paid / totals.gross_income, rounded to nearest whole %. Confidence "high" if ≥ 4 quarters of evidence, "medium" if 2-3 quarters, "low" if 0-1.
-   - If no tax_payments visible AND profile suggests business income: suggest 22% with confidence "low" and explain in evidence_summary that no historical payments were found.
-   - **W-2 detection requires BOTH (a) consistent amounts (coefficient of variation < 0.15) AND (b) consistent cadence (regular biweekly/semi-monthly/monthly).** A merchant name containing "PAYROLL", "WAGES", or similar terminology is NOT sufficient on its own. Healthcare staffing agencies (Aya Healthcare, Locumstory, Cross Country, NurseFly, etc.), nursing locum platforms, and other 1099 contractor agencies routinely deposit payments labeled like "AYA HC PAYROLL" — but issue 1099-NECs at year end. If wages-tagged deposits have CV > 0.15 OR irregular cadence, treat as 1099/business income and suggest 22% with confidence "medium" (note in evidence_summary: "wages-style memos but variable amounts — treating as 1099").
+   - If no tax_payments visible AND profile suggests business income: suggest 22% as the federal/SE baseline with confidence "low" and explain in evidence_summary that no historical payments were found.
+   - **W-2 detection requires BOTH (a) consistent amounts (coefficient of variation < 0.15) AND (b) consistent cadence (regular biweekly/semi-monthly/monthly).** A merchant name containing "PAYROLL", "WAGES", or similar terminology is NOT sufficient on its own. Healthcare staffing agencies (Aya Healthcare, Locumstory, Cross Country, NurseFly, etc.), nursing locum platforms, and other 1099 contractor agencies routinely deposit payments labeled like "AYA HC PAYROLL" — but issue 1099-NECs at year end. If wages-tagged deposits have CV > 0.15 OR irregular cadence, treat as 1099/business income and suggest the federal-SE baseline (see state adjustment below) with confidence "medium" (note in evidence_summary: "wages-style memos but variable amounts — treating as 1099").
    - If profile suggests W-2 only AND deposits meet both consistency criteria above: suggest 0 with confidence "high" and note "Employer withholds at source."
+   - **State adjustment.** When \`profile.state\` is set to a two-letter US code, add that state's typical effective income/SE tax on top of the federal baseline. Note the state by name in evidence_summary so the user sees why the number is what it is. Reference bands (use round numbers, not exact effective rates):
+     - **No state income tax — add 0:** FL, TX, NV, SD, TN, WA, WY, AK, NH (NH taxes interest/dividends only — for self-employment income, treat as no-tax). 22% baseline holds.
+     - **Low — add 2-3:** CO, IN, MI, NC, ND, PA, UT, KY, OH, AL, AZ, MS, MO. Suggest 24-25%.
+     - **Medium — add 3-5:** AR, GA, IA, KS, LA, ME, MD, MA, MN, MT, NE, NM, OK, RI, SC, VT, VA, WV, WI, DC, IL, ID, DE, CT. Suggest 25-27%.
+     - **High — add 5-7:** CA, NY, NJ, OR, HI. Suggest 27-29%.
+     - **OTHER or undefined:** no adjustment, use 22% baseline. Note in evidence_summary that no state was provided.
+   - Tax payments visible (first bullet) takes precedence over state adjustment — derive from history, but mention the state band in evidence_summary as a sanity check.
    - Never suggest > 35.
 
 5. **Bills selection**:
