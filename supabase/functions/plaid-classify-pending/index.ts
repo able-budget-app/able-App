@@ -20,6 +20,7 @@ import { createClient } from 'npm:@supabase/supabase-js@2';
 
 const SUPABASE_URL = Deno.env.get('SUPABASE_URL')!;
 const SERVICE_ROLE = Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')!;
+const INTERNAL_SECRET = Deno.env.get('INTERNAL_FUNCTION_SECRET') ?? '';
 
 const BATCH_SIZE = 50;                  // matches plaid-recategorize MAX_BATCH
 const PARALLELISM = 4;                  // batches in flight concurrently
@@ -214,6 +215,7 @@ async function classifyBatch(batch: PendingTxn[]): Promise<Classification[]> {
     headers: {
       'Content-Type': 'application/json',
       'Authorization': `Bearer ${SERVICE_ROLE}`,
+      'x-internal-auth': INTERNAL_SECRET,
     },
     body: JSON.stringify({ transactions }),
   });

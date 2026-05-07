@@ -5,7 +5,7 @@
 import Anthropic from 'npm:@anthropic-ai/sdk@^0.40.0';
 
 const ANTHROPIC_API_KEY = Deno.env.get('ANTHROPIC_API_KEY')!;
-const SERVICE_ROLE = Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')!;
+const INTERNAL_SECRET = Deno.env.get('INTERNAL_FUNCTION_SECRET') ?? '';
 const MAX_BATCH = 50;
 
 const corsHeaders = {
@@ -40,13 +40,17 @@ Deno.serve(async (req) => {
   if (req.method !== 'POST') return json({ error: 'POST only' }, 405);
 
   try {
-    // Service-role-only gate. This function is invoked by other Edge
-    // Functions (plaid-classify-batch, plaid-classify-pending), never by
-    // the browser directly. Reject any caller not presenting the
-    // service-role key.
-    const authHeader = req.headers.get('Authorization') ?? '';
-    const expected = `Bearer ${SERVICE_ROLE}`;
-    if (authHeader !== expected) {
+    // Internal-only gate. Invoked by plaid-classify-batch and
+    // plaid-classify-pending; never by the browser. Uses a custom shared
+    // secret rather than SUPABASE_SERVICE_ROLE_KEY because Supabase's
+    // runtime mutates the Authorization header on inter-function calls,
+    // which made the service-role bearer compare unreliable.
+    if (!INTERNAL_SECRET) {
+      console.error('plaid-recategorize: INTERNAL_FUNCTION_SECRET unset');
+      return json({ error: 'not configured' }, 503);
+    }
+    const got = req.headers.get('x-internal-auth') ?? '';
+    if (got !== INTERNAL_SECRET) {
       return json({ error: 'Forbidden' }, 403);
     }
 
