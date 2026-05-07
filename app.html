@@ -3979,15 +3979,20 @@ function renderObStep() {
       document.getElementById('ob-next-btn').style.display = 'inline-flex';
       document.getElementById('ob-next-btn').textContent = 'Continue →';
     } else {
-      const lookback = obAnswers.plaid_connect?.lookback_months || 6;
-      const opt = (m) => `
-        <label style="display:flex;align-items:center;gap:8px;padding:10px 12px;border:1px solid var(--ds-line);border-radius:8px;cursor:pointer;font-size:13px;font-weight:600;${m === lookback ? 'background:#ecf5ee;border-color:#3d9e78;' : ''}">
-          <input type="radio" name="ob-plaid-lookback" value="${m}" ${m === lookback ? 'checked' : ''} style="margin:0;">
-          ${m} months
-        </label>`;
+      // Lookback is fixed at 12 months — picker removed 2026-05-06. Reasoning:
+      // (a) the 6/12/24 choice was friction with no real upside (lookback
+      // doesn't change time-to-first-plan, that's bounded by Plaid's
+      // INITIAL_UPDATE), and (b) we're moving to a two-pass model where the
+      // initial pipeline still uses the 2500-txn classify cap for fast time-
+      // to-plan, then a background deep-dive runs after the user leaves the
+      // app and re-detects against the full window. The user just sees "12
+      // months" as a confidence signal that we did real work.
       inputArea.innerHTML = `
-        <div style="font-size:13px;font-weight:700;color:var(--ds-t2);margin-bottom:.5rem;">How far back should I look?</div>
-        <div style="display:flex;gap:8px;margin-bottom:1.25rem;">${opt(6)}${opt(12)}${opt(24)}</div>
+        <div style="font-size:13px;font-weight:600;color:var(--ds-t2);line-height:1.55;margin-bottom:1.25rem;background:var(--ds-green-l);border:1px solid var(--ds-green-m);border-radius:var(--ds-r1);padding:12px 14px;">
+          <div style="font-size:11px;font-weight:800;letter-spacing:.06em;text-transform:uppercase;color:var(--ds-green);margin-bottom:4px;">What I'll read</div>
+          <div style="color:var(--ds-t1);font-weight:700;">12 months of your transactions.</div>
+          <div style="color:var(--ds-t2);font-weight:500;font-size:12.5px;margin-top:3px;">Enough history to spot recurring bills, average your income, and read your tax pattern.</div>
+        </div>
         <button type="button" id="ob-plaid-connect" class="btn-primary" onclick="obStartPlaidLink()" style="width:100%;margin-bottom:.5rem;">Connect bank</button>
         <button type="button" class="btn-ghost btn-sm" onclick="obSkipPlaidConnect()" style="width:100%;">Skip and enter manually →</button>
         <div id="ob-plaid-error" style="display:none;color:#c85a5a;font-size:12px;font-weight:600;margin-top:.5rem;"></div>
@@ -4670,7 +4675,7 @@ async function tryResumePlaidOauth() {
       clearOauthLink();
       stripOauthQueryParams();
       if (state.context === 'onboarding') {
-        await obHandlePlaidSuccess(public_token, metadata, state.lookback || 6);
+        await obHandlePlaidSuccess(public_token, metadata, state.lookback || 12);
       } else if (state.context === 'settings_new') {
         await settingsHandlePostLink(public_token, metadata);
       } else if (state.context === 'settings_update') {
@@ -4726,8 +4731,11 @@ function ensurePlaidLinkScript() {
 async function obStartPlaidLink() {
   const btn = document.getElementById('ob-plaid-connect');
   const errEl = document.getElementById('ob-plaid-error');
-  const lookbackInput = document.querySelector('input[name="ob-plaid-lookback"]:checked');
-  const lookback = lookbackInput ? parseInt(lookbackInput.value, 10) : 6;
+  // Lookback hardcoded to 12 months — picker removed 2026-05-06. The deep-
+  // dive pass that runs after onboarding completes processes the full
+  // 12-month classified pool; the initial pipeline still uses the 2500-txn
+  // classify cap for fast time-to-plan.
+  const lookback = 12;
 
   if (errEl) { errEl.style.display = 'none'; errEl.textContent = ''; }
   if (btn) { btn.disabled = true; btn.textContent = 'Loading…'; }
@@ -9785,7 +9793,7 @@ async function settingsConnectBank() {
   try {
     await ensurePlaidLinkScript();
     const { data, error } = await sbGet().functions.invoke('plaid-link-token', {
-      body: { mode: 'new', lookback_months: 6, redirect_uri: plaidRedirectUri() }
+      body: { mode: 'new', lookback_months: 12, redirect_uri: plaidRedirectUri() }
     });
     if (error) throw error;
     if (data && data.error) throw new Error(data.error);
@@ -9794,7 +9802,7 @@ async function settingsConnectBank() {
     persistOauthLink({
       token: data.link_token,
       context: 'settings_new',
-      lookback: 6,
+      lookback: 12,
     });
 
     const handler = window.Plaid.create({
@@ -9865,13 +9873,13 @@ async function bankPromptConnect() {
   try {
     await ensurePlaidLinkScript();
     const { data, error } = await sbGet().functions.invoke('plaid-link-token', {
-      body: { mode: 'new', lookback_months: 6, redirect_uri: plaidRedirectUri() }
+      body: { mode: 'new', lookback_months: 12, redirect_uri: plaidRedirectUri() }
     });
     if (error) throw error;
     if (data && data.error) throw new Error(data.error);
     if (!data?.link_token) throw new Error('No link_token returned');
 
-    persistOauthLink({ token: data.link_token, context: 'settings_new', lookback: 6 });
+    persistOauthLink({ token: data.link_token, context: 'settings_new', lookback: 12 });
 
     const handler = window.Plaid.create({
       token: data.link_token,
@@ -9936,7 +9944,7 @@ async function settingsHandlePostLink(public_token, metadata) {
       institution: metadata?.institution
         ? { id: metadata.institution.institution_id, name: metadata.institution.name }
         : null,
-      lookback_months: 6,
+      lookback_months: 12,
     }
   });
   if (exErr) throw exErr;
