@@ -7,7 +7,9 @@ const CRON_SECRET = Deno.env.get('CRON_SECRET')!;
 const FROM_EMAIL = Deno.env.get('FROM_EMAIL') || 'Able <onboarding@resend.dev>';
 const APP_URL = (Deno.env.get('APP_URL') || 'https://becomeable.app').trim().replace(/\/$/, '');
 
-Deno.serve(async (req) => {
+const IS_PREVIEW = Deno.args.includes('--preview');
+
+if (!IS_PREVIEW) Deno.serve(async (req) => {
   const auth = req.headers.get('Authorization') ?? '';
   if (auth !== `Bearer ${CRON_SECRET}`) {
     return new Response(JSON.stringify({ error: 'Unauthorized' }), { status: 401 });
@@ -18,6 +20,7 @@ Deno.serve(async (req) => {
     dormancy: 0, weekly: 0, bill_due: 0, low_buffer: 0, monthly_wrap: 0,
     cart_24h: 0, cart_3d: 0, cart_7d: 0,
     trial_day_5: 0, trial_day_7: 0, trial_ended_no_convert: 0,
+    achievement: 0, deep_dive: 0,
     skipped: 0, errors: 0,
   };
 
@@ -66,6 +69,23 @@ Deno.serve(async (req) => {
     const sevenDaysAgoMs = nowMs - 7 * 24 * 60 * 60 * 1000;
     const fourteenDaysAgoMs = nowMs - 14 * 24 * 60 * 60 * 1000;
     const twentyEightDaysAgoMs = nowMs - 28 * 24 * 60 * 60 * 1000;
+
+    // Plaid items with a recent deep-dive completion. Fetched once globally
+    // and grouped by user. Per-item dedup means a multi-bank user gets one
+    // email per item as each item's own deep-dive fires.
+    const { data: deepDiveItems } = await admin
+      .from('plaid_items')
+      .select('id, user_id, deep_dive_completed_at, deep_dive_summary')
+      .gte('deep_dive_completed_at', new Date(sevenDaysAgoMs).toISOString());
+    const deepDiveByUser = new Map<string, any[]>();
+    for (const item of (deepDiveItems ?? [])) {
+      const sum = item.deep_dive_summary as any;
+      if (!sum) continue;
+      const total = (sum.new_bills || 0) + (sum.new_debts || 0) + (sum.new_sources || 0) + (sum.dormant_bills || 0);
+      if (total === 0) continue; // skip items where the deep-dive found nothing new
+      if (!deepDiveByUser.has(item.user_id)) deepDiveByUser.set(item.user_id, []);
+      deepDiveByUser.get(item.user_id)!.push(item);
+    }
 
     // Per-user day-window computation. The cron runs daily but each user's
     // "today" begins at THEIR local midnight, not UTC. Without this, weekly
@@ -239,6 +259,41 @@ Deno.serve(async (req) => {
         const ok = await sendMonthlyWrap(admin, email, userData);
         if (ok) results.monthly_wrap++; else results.errors++;
       }
+
+      // Gold-tier achievement unlocks. Source of truth is
+      // user_data.settings.ach_dates (written by app.html _achStampNew).
+      // Type=`achievement_${id}` so each gold achievement fires once per user
+      // per achievement, ever. Multiple unlocks since last cron = multiple
+      // emails this run, ordered by unlock time.
+      if (prefs.achievement !== false) {
+        const achDates: Record<string, string> = (userData?.settings?.ach_dates) || {};
+        const fresh: Array<{ id: string; t: number }> = [];
+        for (const [id, dateStr] of Object.entries(achDates)) {
+          if (!(id in GOLD_ACHIEVEMENTS)) continue;
+          const t = new Date(dateStr).getTime();
+          if (!Number.isFinite(t)) continue;
+          if (t < nowMs - 48 * 3_600_000) continue; // only unlocks from the last 48h
+          if (sentEver(userId, `achievement_${id}`)) continue;
+          fresh.push({ id, t });
+        }
+        fresh.sort((a, b) => a.t - b.t);
+        for (const ach of fresh) {
+          const ok = await sendAchievement(admin, email, userData, ach.id);
+          if (ok) results.achievement++; else results.errors++;
+        }
+      }
+
+      // Deep-dive summary, one email per plaid_item. The dedup type carries
+      // the item id so a user with multiple banks gets one email per bank as
+      // each bank's deep-dive completes.
+      if (prefs.deep_dive !== false) {
+        const userDdItems = deepDiveByUser.get(userId) || [];
+        for (const item of userDdItems) {
+          if (sentEver(userId, `deep_dive_summary_${item.id}`)) continue;
+          const ok = await sendDeepDiveSummary(admin, email, userData, item);
+          if (ok) results.deep_dive++; else results.errors++;
+        }
+      }
     }
 
     return json(results);
@@ -299,99 +354,255 @@ async function sendViaResend(admin: any, to: string, subject: string, html: stri
 
 const unsubUrl = (token: string) => `${SUPABASE_URL}/functions/v1/unsubscribe?token=${encodeURIComponent(token)}`;
 
-// Hand-drawn underline SVG matching the marketing site's nav-logo treatment. Encoded as
-// a data URI so it inlines into an <img>; degrades cleanly in clients that strip data URIs.
+// ============================================================
+// Design tokens
+// ============================================================
+
+const T = {
+  bg: '#f0f7f2',
+  card: '#ffffff',
+  rule: '#eaf5ee',
+  ink: '#111c16',
+  inkSoft: '#4a5c52',
+  inkMuted: '#8ca898',
+  inkLight: '#a8baad',
+  green: '#2a7a4a',
+  greenSoft: '#3d9e78',
+  greenTint: '#e8f4ec',
+  amber: '#b87a2a',
+  amberTint: '#fdf3e3',
+  terra: '#9e4f3a',
+  terraTint: '#faeae3',
+};
+
+type Tone = 'green' | 'amber' | 'terra';
+
+function toneStyle(tone: Tone): { line: string; tint: string; cta: string; eyebrow: string } {
+  if (tone === 'amber') return { line: T.amber, tint: T.amberTint, cta: T.amber, eyebrow: T.amber };
+  if (tone === 'terra') return { line: T.terra, tint: T.terraTint, cta: T.terra, eyebrow: T.terra };
+  return { line: T.green, tint: T.greenTint, cta: T.green, eyebrow: T.green };
+}
+
+// Hand-drawn underline SVG matching the marketing-site nav-logo treatment.
 const LOGO_UNDERLINE = `data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 120 4.2' preserveAspectRatio='none'><path d='M3 2.6 Q2 2.4 3 2.15 Q58 1.75 115 0.15 Q119 1 119 2 Q119 3 115 3.9 Q58 3.55 3 2.65 Q2 2.45 3 2.6 Z' fill='%232a7a4a'/></svg>`;
 
-function layout(inner: string, unsub: string): string {
-  return `<!doctype html><html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"></head>
-<body style="margin:0;padding:0;background:#f0f7f2;font-family:Helvetica,Arial,sans-serif;color:#111c16;-webkit-font-smoothing:antialiased;">
-<table role="presentation" cellpadding="0" cellspacing="0" border="0" width="100%" style="background:#f0f7f2;"><tr><td align="center" style="padding:36px 16px 32px;">
-<table role="presentation" cellpadding="0" cellspacing="0" border="0" width="100%" style="max-width:520px;">
-  <tr><td align="center" style="padding-bottom:22px;">
+// ============================================================
+// Component primitives
+// ============================================================
+
+function header(): string {
+  return `<tr><td align="center" style="padding-bottom:22px;">
     <div style="display:inline-block;text-align:center;">
-      <div style="font-weight:900;font-size:30px;letter-spacing:-.03em;color:#111c16;line-height:1;">Able</div>
+      <div style="font-weight:900;font-size:30px;letter-spacing:-.03em;color:${T.ink};line-height:1;">Able</div>
       <img src="${LOGO_UNDERLINE}" alt="" width="80" height="6" style="display:block;margin:4px auto 0;width:80px;height:6px;border:0;">
     </div>
-    <div style="margin-top:12px;font-size:11px;color:#2a7a4a;font-weight:800;letter-spacing:.18em;text-transform:uppercase;">Built for inconsistent income</div>
-  </td></tr>
-  <tr><td style="background:#ffffff;border-radius:18px;overflow:hidden;box-shadow:0 2px 12px rgba(42,122,74,.08);">
-    <div style="height:4px;background:#2a7a4a;background-image:linear-gradient(90deg,#2a7a4a,#3d9e78);"></div>
-    <div style="padding:28px 24px;">${inner}</div>
-  </td></tr>
-  <tr><td align="center" style="padding-top:20px;font-size:12px;color:#8ca898;line-height:1.6;">
-    <a href="${APP_URL}/app.html" style="color:#2a7a4a;font-weight:700;text-decoration:none;">Open Able</a>
+  </td></tr>`;
+}
+
+function hero(opts: { eyebrow?: string; tone?: Tone; title: string; lede?: string }): string {
+  const tone = opts.tone || 'green';
+  const c = toneStyle(tone);
+  const eb = opts.eyebrow
+    ? `<div style="font-size:11px;font-weight:800;letter-spacing:.18em;text-transform:uppercase;color:${c.eyebrow};margin-bottom:14px;">${opts.eyebrow}</div>`
+    : '';
+  const ld = opts.lede
+    ? `<div style="font-size:15px;line-height:1.6;color:${T.inkSoft};font-weight:500;margin-top:14px;">${opts.lede}</div>`
+    : '';
+  return `${eb}<div style="font-size:26px;font-weight:900;letter-spacing:-.03em;line-height:1.15;color:${T.ink};">${opts.title}</div>${ld}`;
+}
+
+function heroNumber(opts: { label: string; value: string; sub?: string }): string {
+  const sb = opts.sub ? `<div style="font-size:13px;color:${T.inkMuted};font-weight:600;margin-top:6px;">${opts.sub}</div>` : '';
+  return `<div style="text-align:center;padding:24px 0 18px;">
+    <div style="font-size:11px;font-weight:800;letter-spacing:.18em;text-transform:uppercase;color:${T.inkMuted};">${opts.label}</div>
+    <div style="font-size:46px;font-weight:900;letter-spacing:-.04em;line-height:1;color:${T.ink};margin-top:8px;">${opts.value}</div>
+    ${sb}
+  </div>`;
+}
+
+function stats(rows: Array<{ label: string; value: string; emphasis?: boolean }>): string {
+  return rows.map((r, i) => {
+    const isLast = i === rows.length - 1;
+    const border = isLast ? '' : `border-bottom:1px solid ${T.rule};`;
+    const labelWeight = r.emphasis ? '800' : '600';
+    const labelColor = r.emphasis ? T.ink : T.inkSoft;
+    return `<table role="presentation" cellpadding="0" cellspacing="0" border="0" width="100%"><tr>
+      <td style="padding:13px 0;${border}font-size:14px;color:${labelColor};font-weight:${labelWeight};">${r.label}</td>
+      <td align="right" style="padding:13px 0;${border}font-size:14px;color:${T.ink};font-weight:800;">${r.value}</td>
+    </tr></table>`;
+  }).join('');
+}
+
+// Table-based bar chart. Works in every email client including Outlook desktop
+// (which falls back to Word's renderer and butchers SVG / inline-block bars).
+function bars(items: Array<{ label: string; value: number }>, fmt: (n: number) => string = money): string {
+  if (items.length === 0) return '';
+  const max = Math.max(...items.map((i) => i.value), 1);
+  const rows = items.map((i) => {
+    const pct = Math.max(2, Math.round((i.value / max) * 100));
+    const empty = 100 - pct;
+    return `<table role="presentation" cellpadding="0" cellspacing="0" border="0" width="100%" style="margin-bottom:9px;"><tr>
+      <td width="48" style="font-size:12px;color:${T.inkSoft};font-weight:700;padding-right:10px;white-space:nowrap;">${i.label}</td>
+      <td>
+        <table role="presentation" cellpadding="0" cellspacing="0" border="0" width="100%"><tr>
+          <td width="${pct}%" style="background:${T.green};height:10px;border-radius:5px 0 0 5px;font-size:1px;line-height:1px;">&nbsp;</td>
+          <td width="${empty}%" style="background:${T.rule};height:10px;border-radius:0 5px 5px 0;font-size:1px;line-height:1px;">&nbsp;</td>
+        </tr></table>
+      </td>
+      <td width="80" align="right" style="font-size:12px;color:${T.ink};font-weight:800;padding-left:10px;white-space:nowrap;">${i.value > 0 ? fmt(i.value) : '—'}</td>
+    </tr></table>`;
+  }).join('');
+  return `<div style="margin-top:18px;">${rows}</div>`;
+}
+
+function callout(opts: { tone: Tone; body: string }): string {
+  const c = toneStyle(opts.tone);
+  return `<div style="background:${c.tint};border-radius:12px;padding:14px 16px;margin-top:16px;font-size:14px;line-height:1.55;color:${T.inkSoft};font-weight:500;">${opts.body}</div>`;
+}
+
+function paragraph(body: string, opts: { topMargin?: number } = {}): string {
+  const m = opts.topMargin ?? 14;
+  return `<div style="font-size:15px;line-height:1.6;color:${T.inkSoft};font-weight:500;margin-top:${m}px;">${body}</div>`;
+}
+
+function cta(opts: { label: string; href: string; tone?: Tone }): string {
+  const c = toneStyle(opts.tone || 'green');
+  return `<div style="text-align:center;margin-top:24px;"><a href="${opts.href}" style="display:inline-block;background:${c.cta};color:#ffffff;padding:14px 28px;border-radius:14px;font-weight:800;text-decoration:none;font-size:15px;letter-spacing:-.01em;box-shadow:0 4px 16px rgba(42,122,74,.3);">${opts.label}</a></div>`;
+}
+
+function footer(unsub: string): string {
+  return `<tr><td align="center" style="padding-top:20px;font-size:12px;color:${T.inkMuted};line-height:1.6;">
+    <a href="${APP_URL}/app.html" style="color:${T.green};font-weight:700;text-decoration:none;">Open Able</a>
     &middot;
-    <a href="${unsub}" style="color:#8ca898;text-decoration:underline;">Unsubscribe</a>
-    <div style="margin-top:8px;font-size:11px;color:#a8baad;">becomeable.app</div>
+    <a href="${unsub}" style="color:${T.inkMuted};text-decoration:underline;">Unsubscribe</a>
+    <div style="margin-top:8px;font-size:11px;color:${T.inkLight};">becomeable.app</div>
+  </td></tr>`;
+}
+
+function layout(opts: { tone: Tone; inner: string; unsub: string }): string {
+  const c = toneStyle(opts.tone);
+  return `<!doctype html><html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"></head>
+<body style="margin:0;padding:0;background:${T.bg};font-family:Helvetica,Arial,sans-serif;color:${T.ink};-webkit-font-smoothing:antialiased;">
+<table role="presentation" cellpadding="0" cellspacing="0" border="0" width="100%" style="background:${T.bg};"><tr><td align="center" style="padding:36px 16px 32px;">
+<table role="presentation" cellpadding="0" cellspacing="0" border="0" width="100%" style="max-width:520px;">
+  ${header()}
+  <tr><td style="background:${T.card};border-radius:18px;overflow:hidden;box-shadow:0 2px 12px rgba(42,122,74,.08);">
+    <div style="height:4px;background:${c.line};background-image:linear-gradient(90deg,${c.line},${T.greenSoft});"></div>
+    <div style="padding:28px 24px;">${opts.inner}</div>
   </td></tr>
+  ${footer(opts.unsub)}
 </table>
 </td></tr></table>
 </body></html>`;
 }
 
-const cta = `<a href="${APP_URL}/app.html" style="display:inline-block;background:#2a7a4a;color:#ffffff;padding:14px 28px;border-radius:14px;font-weight:800;text-decoration:none;font-size:15px;margin-top:18px;letter-spacing:-.01em;box-shadow:0 4px 16px rgba(42,122,74,.3);">Open Able</a>`;
+// ============================================================
+// Helpers
+// ============================================================
 
-function row(label: string, val: string): string {
-  return `<div style="display:flex;justify-content:space-between;padding:12px 0;border-bottom:1px solid #eaf5ee;"><span style="color:#4a5c52;font-weight:600;font-size:14px;">${label}</span><span style="color:#111c16;font-weight:800;font-size:14px;">${val}</span></div>`;
+function money(n: number): string {
+  return '$' + Math.round(n).toLocaleString();
 }
 
-async function sendDormancy(admin: any, email: string, user: any) {
+function escapeHtml(s: string): string {
+  return String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+}
+
+const openAble = (tone: Tone = 'green') => cta({ label: 'Open Able', href: `${APP_URL}/app.html`, tone });
+
+// ============================================================
+// Pure builders. Return { subject, html }. Called by sender wrappers
+// in production and by renderPreview() locally.
+// ============================================================
+
+function buildDormancy(user: any, unsub: string): { subject: string; html: string } {
   const bills = Array.isArray(user.bills) ? user.bills : [];
   const unpaidCount = bills.filter((b: any) => !b.paid).length;
   const buffer = parseFloat(user.buffer) || 0;
-  const inner = `<div style="font-size:24px;font-weight:900;letter-spacing:-.03em;line-height:1.15;color:#111c16;margin-bottom:12px;">A quick check-in.</div>
-    <div style="font-size:15px;line-height:1.6;color:#4a5c52;font-weight:500;margin-bottom:8px;">
-      Money is energy. When we stop looking at it, it starts looking somewhere else.
-      ${unpaidCount > 0 ? `You have <strong style="color:#111c16;">${unpaidCount} bill${unpaidCount === 1 ? '' : 's'}</strong> to handle soon.` : `You're current on bills. Good work.`}
-      ${buffer > 0 ? ` Your buffer sits at <strong style="color:#111c16;">$${Math.round(buffer).toLocaleString()}</strong>.` : ``}
-    </div>${cta}`;
-  return sendViaResend(admin, email, `A quick check-in on your money`, layout(inner, unsubUrl(user.unsubscribe_token)), 'dormancy', user.id);
+  const lede = unpaidCount > 0
+    ? `${unpaidCount} bill${unpaidCount === 1 ? '' : 's'} to handle soon. ${buffer > 0 ? `Buffer at <strong style="color:${T.ink};">${money(buffer)}</strong>.` : ''}`.trim()
+    : `You're current on bills. ${buffer > 0 ? `Buffer sits at <strong style="color:${T.ink};">${money(buffer)}</strong>.` : 'Quick check-in to keep the rhythm going.'}`;
+  const inner = hero({ title: 'A quick check-in.', lede })
+    + openAble('green');
+  return {
+    subject: 'A quick check-in',
+    html: layout({ tone: 'green', inner, unsub }),
+  };
 }
 
-async function sendWeekly(admin: any, email: string, user: any) {
+function buildWeekly(user: any, unsub: string): { subject: string; html: string } {
   const history = Array.isArray(user.history) ? user.history : [];
-  const cutoff = Date.now() - 7 * 24 * 60 * 60 * 1000;
-  const recent = history.filter((h: any) => new Date(h.date).getTime() >= cutoff);
+  const cutoffMs = Date.now() - 7 * 24 * 60 * 60 * 1000;
+  const recent = history.filter((h: any) => new Date(h.date).getTime() >= cutoffMs);
   const totalIn = recent.reduce((s: number, h: any) => s + (h.amount || 0), 0);
   const debtPaid = recent.reduce((s: number, h: any) => s + (h.debtExtra || 0), 0);
   const bufAdded = recent.reduce((s: number, h: any) => s + (h.bufContrib || 0), 0);
   const buffer = parseFloat(user.buffer) || 0;
-  const rows = [
-    row('Income logged', '$' + Math.round(totalIn).toLocaleString()),
-    ...(debtPaid > 0 ? [row('Extra to debt', '$' + Math.round(debtPaid).toLocaleString())] : []),
-    ...(bufAdded > 0 ? [row('Added to buffer', '$' + Math.round(bufAdded).toLocaleString())] : []),
-    row('Buffer now', '$' + Math.round(buffer).toLocaleString()),
-  ].join('');
-  const inner = `<div style="font-size:24px;font-weight:900;letter-spacing:-.03em;line-height:1.15;color:#111c16;margin-bottom:12px;">Your week in Able.</div>
-    <div style="font-size:14px;color:#4a5c52;font-weight:500;margin-bottom:20px;">Last 7 days at a glance.</div>
-    ${rows}${cta}`;
-  return sendViaResend(admin, email, `Your week in Able`, layout(inner, unsubUrl(user.unsubscribe_token)), 'weekly', user.id);
+
+  // Per-day buckets ending today, in user-local time when known.
+  const dayBuckets: Array<{ label: string; value: number }> = [];
+  const now = new Date();
+  for (let i = 6; i >= 0; i--) {
+    const d = new Date(now.getTime() - i * 24 * 60 * 60 * 1000);
+    const label = d.toLocaleDateString('en-US', { weekday: 'short' });
+    const dayStart = new Date(d.getFullYear(), d.getMonth(), d.getDate()).getTime();
+    const dayEnd = dayStart + 24 * 60 * 60 * 1000;
+    const v = recent
+      .filter((h: any) => { const t = new Date(h.date).getTime(); return t >= dayStart && t < dayEnd; })
+      .reduce((s: number, h: any) => s + (h.amount || 0), 0);
+    dayBuckets.push({ label, value: v });
+  }
+
+  const statRows: Array<{ label: string; value: string }> = [];
+  if (debtPaid > 0) statRows.push({ label: 'Extra to debt', value: money(debtPaid) });
+  if (bufAdded > 0) statRows.push({ label: 'Added to buffer', value: money(bufAdded) });
+  statRows.push({ label: 'Buffer now', value: money(buffer) });
+
+  const inner = hero({ eyebrow: 'Last 7 days', title: 'Your week in Able.' })
+    + heroNumber({ label: 'Income logged', value: money(totalIn), sub: `${recent.length} deposit${recent.length === 1 ? '' : 's'}` })
+    + bars(dayBuckets)
+    + `<div style="margin-top:18px;">${stats(statRows)}</div>`
+    + openAble('green');
+  return {
+    subject: 'Your week in Able',
+    html: layout({ tone: 'green', inner, unsub }),
+  };
 }
 
-async function sendBillDue(admin: any, email: string, user: any, bills: any[]) {
+function buildBillDue(user: any, bills: any[], unsub: string): { subject: string; html: string } {
   const total = bills.reduce((s: number, b: any) => s + (b.amount || 0), 0);
-  const list = bills.map((b: any) => `<div style="display:flex;justify-content:space-between;padding:10px 0;border-bottom:1px solid #eaf5ee;"><span style="color:#111c16;font-weight:700;font-size:14px;">${escapeHtml(b.name)}</span><span style="color:#111c16;font-weight:800;font-size:14px;">$${Math.round(b.amount).toLocaleString()}</span></div>`).join('');
-  const inner = `<div style="font-size:24px;font-weight:900;letter-spacing:-.03em;line-height:1.15;color:#111c16;margin-bottom:12px;">Heads up, not a panic.</div>
-    <div style="font-size:15px;line-height:1.6;color:#4a5c52;font-weight:500;margin-bottom:14px;">You have ${bills.length} bill${bills.length === 1 ? '' : 's'} due tomorrow. If you've already allocated, no action needed.</div>
-    ${list}
-    <div style="display:flex;justify-content:space-between;padding:14px 0 4px;font-size:14px;font-weight:800;color:#111c16;"><span>Total</span><span>$${Math.round(total).toLocaleString()}</span></div>${cta}`;
-  return sendViaResend(admin, email, `${bills.length} bill${bills.length === 1 ? '' : 's'} due tomorrow`, layout(inner, unsubUrl(user.unsubscribe_token)), 'bill_due_tomorrow', user.id);
+  const billRows = bills.map((b: any) => ({ label: escapeHtml(b.name), value: money(b.amount) }));
+  const totalRow = stats([{ label: 'Total', value: money(total), emphasis: true }]);
+  const inner = hero({
+    eyebrow: 'Heads up',
+    tone: 'amber',
+    title: `${bills.length} bill${bills.length === 1 ? '' : 's'} due tomorrow.`,
+    lede: `If you've already allocated, no action needed.`,
+  })
+    + `<div style="margin-top:18px;">${stats(billRows)}</div>`
+    + totalRow
+    + cta({ label: 'View bills', href: `${APP_URL}/app.html#bills`, tone: 'amber' });
+  return {
+    subject: `${bills.length} bill${bills.length === 1 ? '' : 's'} due tomorrow`,
+    html: layout({ tone: 'amber', inner, unsub }),
+  };
 }
 
-async function sendLowBuffer(admin: any, email: string, user: any, buffer: number, monthlyBills: number) {
+function buildLowBuffer(user: any, buffer: number, monthlyBills: number, unsub: string): { subject: string; html: string } {
   const pct = Math.round((buffer / monthlyBills) * 100);
-  const inner = `<div style="font-size:24px;font-weight:900;letter-spacing:-.03em;line-height:1.15;color:#111c16;margin-bottom:12px;">A gentle nudge.</div>
-    <div style="font-size:15px;line-height:1.6;color:#4a5c52;font-weight:500;margin-bottom:8px;">
-      Your buffer sits at <strong style="color:#111c16;">$${Math.round(buffer).toLocaleString()}</strong>, about <strong style="color:#111c16;">${pct}%</strong> of one month of bills.
-    </div>
-    <div style="font-size:15px;line-height:1.6;color:#4a5c52;font-weight:500;margin-bottom:8px;">
-      This isn't a crisis. Money flows in waves, and slow periods are part of the cycle. It just means: be intentional with the next few decisions. Slow expenses where you can. More is on its way.
-    </div>${cta}`;
-  return sendViaResend(admin, email, `Your buffer is running low`, layout(inner, unsubUrl(user.unsubscribe_token)), 'low_buffer', user.id);
+  // Coach-stress moment. The "money flows in waves" line is the only place
+  // in the email set where the energy/waves framing is allowed.
+  const inner = hero({ eyebrow: 'Coach', tone: 'terra', title: 'A gentle nudge.' })
+    + heroNumber({ label: 'Your buffer', value: money(buffer), sub: `About ${pct}% of one month of bills` })
+    + callout({ tone: 'terra', body: `Money flows in waves, and slow stretches are part of the cycle. This is the moment to be intentional with the next few decisions. Slow expenses where you can. More is on its way.` })
+    + cta({ label: 'See your plan', href: `${APP_URL}/app.html`, tone: 'terra' });
+  return {
+    subject: 'Your buffer is running low',
+    html: layout({ tone: 'terra', inner, unsub }),
+  };
 }
 
-async function sendMonthlyWrap(admin: any, email: string, user: any) {
+function buildMonthlyWrap(user: any, unsub: string): { subject: string; html: string } {
   const lastMonth = new Date(); lastMonth.setUTCMonth(lastMonth.getUTCMonth() - 1);
   const monthName = lastMonth.toLocaleString('en-US', { month: 'long', timeZone: 'UTC' });
   const monthStartMs = new Date(Date.UTC(lastMonth.getUTCFullYear(), lastMonth.getUTCMonth(), 1)).getTime();
@@ -405,57 +616,331 @@ async function sendMonthlyWrap(admin: any, email: string, user: any) {
   const debtPaid = inMonth.reduce((s: number, h: any) => s + (h.debtExtra || 0), 0);
   const bufAdded = inMonth.reduce((s: number, h: any) => s + (h.bufContrib || 0), 0);
   const buffer = parseFloat(user.buffer) || 0;
-  const rows = [
-    row('Income logged', '$' + Math.round(totalIn).toLocaleString()),
-    ...(debtPaid > 0 ? [row('Extra to debt', '$' + Math.round(debtPaid).toLocaleString())] : []),
-    ...(bufAdded > 0 ? [row('Added to buffer', '$' + Math.round(bufAdded).toLocaleString())] : []),
-    row('Buffer now', '$' + Math.round(buffer).toLocaleString()),
-  ].join('');
-  const inner = `<div style="font-size:24px;font-weight:900;letter-spacing:-.03em;line-height:1.15;color:#111c16;margin-bottom:12px;">${monthName} in Able.</div>
-    <div style="font-size:14px;color:#4a5c52;font-weight:500;margin-bottom:20px;">Last month at a glance. Each month is a data point, not a verdict.</div>
-    ${rows}${cta}`;
-  return sendViaResend(admin, email, `${monthName} in Able`, layout(inner, unsubUrl(user.unsubscribe_token)), 'monthly_wrap', user.id);
+
+  // Per-week buckets across the month (ISO weeks anchored to month start).
+  const weekBuckets: Array<{ label: string; value: number }> = [];
+  const monthDays = (monthEndMs - monthStartMs) / (24 * 60 * 60 * 1000);
+  const weeks = Math.ceil(monthDays / 7);
+  for (let w = 0; w < weeks; w++) {
+    const wStart = monthStartMs + w * 7 * 24 * 60 * 60 * 1000;
+    const wEnd = Math.min(wStart + 7 * 24 * 60 * 60 * 1000, monthEndMs);
+    const v = inMonth
+      .filter((h: any) => { const t = new Date(h.date).getTime(); return t >= wStart && t < wEnd; })
+      .reduce((s: number, h: any) => s + (h.amount || 0), 0);
+    weekBuckets.push({ label: `Wk ${w + 1}`, value: v });
+  }
+
+  const statRows: Array<{ label: string; value: string }> = [];
+  if (debtPaid > 0) statRows.push({ label: 'Extra to debt', value: money(debtPaid) });
+  if (bufAdded > 0) statRows.push({ label: 'Added to buffer', value: money(bufAdded) });
+  statRows.push({ label: 'Buffer now', value: money(buffer) });
+
+  const inner = hero({ eyebrow: monthName, title: `${monthName} in Able.`, lede: 'Each month is a data point, not a verdict.' })
+    + heroNumber({ label: 'Income this month', value: money(totalIn), sub: `${inMonth.length} deposit${inMonth.length === 1 ? '' : 's'}` })
+    + bars(weekBuckets)
+    + `<div style="margin-top:18px;">${stats(statRows)}</div>`
+    + openAble('green');
+  return {
+    subject: `${monthName} in Able`,
+    html: layout({ tone: 'green', inner, unsub }),
+  };
 }
 
-async function sendCart(admin: any, email: string, user: any, stage: '24h' | '3d' | '7d') {
-  const copy: Record<string, { subject: string; title: string; body: string }> = {
+function buildCart(user: any, stage: '24h' | '3d' | '7d', unsub: string): { subject: string; html: string } {
+  const copy: Record<string, { subject: string; eyebrow?: string; title: string; lede: string; tail?: string; ctaLabel: string }> = {
     '24h': {
       subject: 'Picking up where you left off',
+      eyebrow: 'Day 1',
       title: 'Picking up where you left off.',
-      body: `You started setting up Able yesterday but didn't finish. No rush, your 7-day free trial is still here, and your account remembers everything you entered. Finishing takes about 2 minutes. We'll be here when you're ready.`,
+      lede: `You started setting up Able yesterday. Your account remembers everything you entered. Two minutes finishes it.`,
+      tail: '30-day free trial. Card required, no charge until day 31.',
+      ctaLabel: 'Finish setup',
     },
     '3d': {
       subject: 'Your free trial is still waiting',
+      eyebrow: 'Day 3',
       title: 'Your free trial is still waiting.',
-      body: `It's been a few days since you signed up. We get it, money is energy, and sometimes we look away from it because there's something hard to look at. That's exactly what Able is built for: making the looking-at-it part feel less like a fight. Your 7-day trial hasn't started yet. It only begins when you finish setting up.`,
+      lede: `It's been a few days since signup. Your 30-day trial only starts when setup is finished.`,
+      tail: 'Card required, no charge until day 31.',
+      ctaLabel: 'Finish setup',
     },
     '7d': {
-      subject: 'Last note from Able',
+      subject: 'Last note from us',
+      eyebrow: 'Day 7',
       title: 'Last note from us.',
-      body: `We won't keep nudging. If now's not the right moment, that's OK, your account stays here whenever you want to come back. This is the last email in this sequence. No more reminders unless you start using Able.`,
+      lede: `We won't keep nudging. If now isn't the right moment, that's OK. Your account stays here whenever you want to come back. This is the last email in this sequence.`,
+      ctaLabel: 'Open Able',
     },
   };
   const c = copy[stage];
-  const inner = `<div style="font-size:24px;font-weight:900;letter-spacing:-.03em;line-height:1.15;color:#111c16;margin-bottom:12px;">${c.title}</div>
-    <div style="font-size:15px;line-height:1.6;color:#4a5c52;font-weight:500;margin-bottom:8px;">${c.body}</div>${cta}`;
-  return sendViaResend(admin, email, c.subject, layout(inner, unsubUrl(user.unsubscribe_token)), `cart_${stage}`, user.id);
+  const inner = hero({ eyebrow: c.eyebrow, title: c.title, lede: c.lede })
+    + (c.tail ? callout({ tone: 'green', body: c.tail }) : '')
+    + cta({ label: c.ctaLabel, href: `${APP_URL}/app.html`, tone: 'green' });
+  return {
+    subject: c.subject,
+    html: layout({ tone: 'green', inner, unsub }),
+  };
 }
 
-function escapeHtml(s: string): string {
-  return String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+function buildTrialDay5(user: any, unsub: string): { subject: string; html: string } {
+  const inner = hero({ eyebrow: 'Heads up', title: 'Your trial ends in 2 days.' })
+    + heroNumber({ label: 'Days left', value: '2', sub: 'Card on file gets charged on day 31' })
+    + paragraph(`If Able has clicked, no action needed. Subscription starts automatically.`, { topMargin: 18 })
+    + paragraph(`If it hasn't clicked yet, this is the window. Log a real deposit and watch where it goes. That moment is the whole app. If it doesn't land, cancel from Settings before day 31.`, { topMargin: 10 })
+    + openAble('green');
+  return {
+    subject: 'Your trial ends in 2 days',
+    html: layout({ tone: 'green', inner, unsub }),
+  };
+}
+
+function buildTrialDay7(user: any, unsub: string): { subject: string; html: string } {
+  const inner = hero({ eyebrow: 'Last call', tone: 'amber', title: 'Your trial ends tomorrow.' })
+    + paragraph(`To continue, do nothing. Subscription starts automatically.`, { topMargin: 18 })
+    + paragraph(`To cancel, do it now in Settings. Two taps.`, { topMargin: 10 })
+    + openAble('amber');
+  return {
+    subject: 'Your trial ends tomorrow',
+    html: layout({ tone: 'amber', inner, unsub }),
+  };
+}
+
+function buildTrialEndedNoConvert(user: any, unsub: string): { subject: string; html: string } {
+  const inner = hero({ title: 'Your trial ended. Tell me why.', lede: `Your Able trial ended and the subscription didn't continue. No charge, no hard feelings.` })
+    + callout({ tone: 'green', body: `One honest answer would help: <strong style="color:${T.ink};">what was missing?</strong> Expensive. Confusing. Wrong shape. Forgot. Whatever's true.` })
+    + paragraph(`Hit reply. I read everything. No follow-up drip, just this one.`, { topMargin: 14 })
+    + openAble('green');
+  return {
+    subject: 'Your trial ended. Tell me why.',
+    html: layout({ tone: 'green', inner, unsub }),
+  };
+}
+
+// Gold-tier achievements that warrant an email. Mirrors the `gold:true` set
+// in app.html ACHIEVEMENTS. Names + blurbs live here so email-cron-daily
+// doesn't depend on app.html parsing. Keep names in sync if app.html renames.
+const GOLD_ACHIEVEMENTS: Record<string, { name: string; blurb: string }> = {
+  halfway_to_able: {
+    name: 'Halfway There',
+    blurb: 'Your buffer covers half a month of bills. Slow stretches just got easier to ride out.',
+  },
+  one_month_ahead: {
+    name: 'One Month Ahead',
+    blurb: 'Your buffer covers a full month of bills. You built a real cushion.',
+  },
+  debt_free: {
+    name: 'Debt Free Day',
+    blurb: 'Every tracked debt is at zero. This is a different season.',
+  },
+  streak_12: {
+    name: 'A Year Above',
+    blurb: 'Twelve straight months of clearing the floor. The rhythm is yours.',
+  },
+  score_100: {
+    name: 'Perfect Month',
+    blurb: 'A full 100 on your monthly score. Every habit lined up.',
+  },
+  refer_ten_joined: {
+    name: '10 Friends Joined',
+    blurb: 'Ten people you brought to Able stuck around. Thank you.',
+  },
+};
+
+function buildAchievement(user: any, achievementId: string, unsub: string): { subject: string; html: string } {
+  const ach = GOLD_ACHIEVEMENTS[achievementId];
+  if (!ach) {
+    // Defensive: caller should never pass an unknown id, but render a generic
+    // shell rather than crash the cron.
+    const fallback = hero({ title: 'Achievement unlocked.', lede: 'Open Able to see what just landed.' }) + openAble('green');
+    return { subject: 'Achievement unlocked', html: layout({ tone: 'green', inner: fallback, unsub }) };
+  }
+  const inner = hero({ eyebrow: 'Achievement unlocked', title: ach.name, lede: ach.blurb })
+    + cta({ label: 'See your progress', href: `${APP_URL}/app.html#score`, tone: 'green' });
+  return {
+    subject: `Achievement unlocked: ${ach.name}`,
+    html: layout({ tone: 'green', inner, unsub }),
+  };
+}
+
+function buildDeepDiveSummary(user: any, summary: { new_bills: number; new_debts: number; new_sources: number; dormant_bills: number }, unsub: string): { subject: string; html: string } {
+  const rows: Array<{ label: string; value: string }> = [];
+  if (summary.new_bills > 0) rows.push({ label: 'New bills detected', value: String(summary.new_bills) });
+  if (summary.new_sources > 0) rows.push({ label: 'New income sources', value: String(summary.new_sources) });
+  if (summary.new_debts > 0) rows.push({ label: 'New debts detected', value: String(summary.new_debts) });
+  if (summary.dormant_bills > 0) rows.push({ label: 'Bills flagged dormant', value: String(summary.dormant_bills) });
+
+  const inner = hero({
+    eyebrow: 'Deeper look',
+    title: 'We took a deeper look at your account.',
+    lede: 'Going back six months of bank history surfaced a few things to review. Nothing was added without your sign-off, just flagged for you to keep, edit, or remove.',
+  })
+    + `<div style="margin-top:18px;">${stats(rows)}</div>`
+    + cta({ label: 'Review in app', href: `${APP_URL}/app.html`, tone: 'green' });
+  return {
+    subject: 'We took a deeper look at your account',
+    html: layout({ tone: 'green', inner, unsub }),
+  };
+}
+
+// ============================================================
+// Sender wrappers. Build, then send.
+// ============================================================
+
+async function sendDormancy(admin: any, email: string, user: any) {
+  const { subject, html } = buildDormancy(user, unsubUrl(user.unsubscribe_token));
+  return sendViaResend(admin, email, subject, html, 'dormancy', user.id);
+}
+
+async function sendWeekly(admin: any, email: string, user: any) {
+  const { subject, html } = buildWeekly(user, unsubUrl(user.unsubscribe_token));
+  return sendViaResend(admin, email, subject, html, 'weekly', user.id);
+}
+
+async function sendBillDue(admin: any, email: string, user: any, bills: any[]) {
+  const { subject, html } = buildBillDue(user, bills, unsubUrl(user.unsubscribe_token));
+  return sendViaResend(admin, email, subject, html, 'bill_due_tomorrow', user.id);
+}
+
+async function sendLowBuffer(admin: any, email: string, user: any, buffer: number, monthlyBills: number) {
+  const { subject, html } = buildLowBuffer(user, buffer, monthlyBills, unsubUrl(user.unsubscribe_token));
+  return sendViaResend(admin, email, subject, html, 'low_buffer', user.id);
+}
+
+async function sendMonthlyWrap(admin: any, email: string, user: any) {
+  const { subject, html } = buildMonthlyWrap(user, unsubUrl(user.unsubscribe_token));
+  return sendViaResend(admin, email, subject, html, 'monthly_wrap', user.id);
+}
+
+async function sendCart(admin: any, email: string, user: any, stage: '24h' | '3d' | '7d') {
+  const { subject, html } = buildCart(user, stage, unsubUrl(user.unsubscribe_token));
+  return sendViaResend(admin, email, subject, html, `cart_${stage}`, user.id);
 }
 
 async function sendTrialDay5(admin: any, email: string, user: any) {
-  const inner = `<div style="font-size:24px;font-weight:900;letter-spacing:-.03em;line-height:1.15;color:#111c16;margin-bottom:12px;">Your Able trial ends in 2 days.</div><div style="font-size:15px;line-height:1.6;color:#4a5c52;font-weight:500;margin-bottom:12px;">Quick heads up. In two days, your card gets charged for the plan you selected.</div><div style="font-size:15px;line-height:1.6;color:#4a5c52;font-weight:500;margin-bottom:12px;">If Able has clicked for you, no action needed. Subscription just starts on day 8.</div><div style="font-size:15px;line-height:1.6;color:#4a5c52;font-weight:500;margin-bottom:12px;">If it has not clicked yet, now is the window. Log any real income and see where it goes. That moment is the whole app. If it does not land, cancel from Settings before day 8.</div>${cta}`;
-  return sendViaResend(admin, email, 'Your Able trial ends in 2 days', layout(inner, unsubUrl(user.unsubscribe_token)), 'trial_day_5_nudge', user.id);
+  const { subject, html } = buildTrialDay5(user, unsubUrl(user.unsubscribe_token));
+  // DB type string preserved for the (user_id, type, sent_day) unique index.
+  return sendViaResend(admin, email, subject, html, 'trial_day_5_nudge', user.id);
 }
 
 async function sendTrialDay7(admin: any, email: string, user: any) {
-  const inner = `<div style="font-size:24px;font-weight:900;letter-spacing:-.03em;line-height:1.15;color:#111c16;margin-bottom:12px;">Tomorrow: your Able subscription starts.</div><div style="font-size:15px;line-height:1.6;color:#4a5c52;font-weight:500;margin-bottom:12px;">Your 7-day trial ends tomorrow. Your card will be charged for the plan you selected.</div><div style="font-size:15px;line-height:1.6;color:#4a5c52;font-weight:500;margin-bottom:12px;">To continue, do nothing. The subscription starts automatically.</div><div style="font-size:15px;line-height:1.6;color:#4a5c52;font-weight:500;margin-bottom:12px;">To cancel, do it now in Settings. Two taps.</div>${cta}`;
-  return sendViaResend(admin, email, 'Tomorrow: your Able subscription starts', layout(inner, unsubUrl(user.unsubscribe_token)), 'trial_day_7_last_call', user.id);
+  const { subject, html } = buildTrialDay7(user, unsubUrl(user.unsubscribe_token));
+  return sendViaResend(admin, email, subject, html, 'trial_day_7_last_call', user.id);
 }
 
 async function sendTrialEndedNoConvert(admin: any, email: string, user: any) {
-  const inner = `<div style="font-size:24px;font-weight:900;letter-spacing:-.03em;line-height:1.15;color:#111c16;margin-bottom:12px;">Your trial ended. Tell me why.</div><div style="font-size:15px;line-height:1.6;color:#4a5c52;font-weight:500;margin-bottom:12px;">Your Able trial ended and your subscription did not continue. No charge, no hard feelings.</div><div style="font-size:15px;line-height:1.6;color:#4a5c52;font-weight:500;margin-bottom:12px;">One honest answer would genuinely help me: <strong style="color:#111c16;">what was missing for you?</strong> Expensive. Confusing. Not the right shape. Forgot. Whatever is true.</div><div style="font-size:15px;line-height:1.6;color:#4a5c52;font-weight:500;margin-bottom:12px;">Hit reply. I read everything. No follow-up drip, just this one.</div>${cta}`;
-  return sendViaResend(admin, email, 'Your trial ended. Tell me why.', layout(inner, unsubUrl(user.unsubscribe_token)), 'trial_ended_no_convert', user.id);
+  const { subject, html } = buildTrialEndedNoConvert(user, unsubUrl(user.unsubscribe_token));
+  return sendViaResend(admin, email, subject, html, 'trial_ended_no_convert', user.id);
+}
+
+async function sendAchievement(admin: any, email: string, user: any, achievementId: string) {
+  const { subject, html } = buildAchievement(user, achievementId, unsubUrl(user.unsubscribe_token));
+  // Per-achievement type so the (user_id, type) unique constraint fires the
+  // email exactly once per user per achievement, ever.
+  return sendViaResend(admin, email, subject, html, `achievement_${achievementId}`, user.id);
+}
+
+async function sendDeepDiveSummary(admin: any, email: string, user: any, item: any) {
+  const summary = item.deep_dive_summary || {};
+  const { subject, html } = buildDeepDiveSummary(user, summary, unsubUrl(user.unsubscribe_token));
+  // Per-item type so each plaid_item's deep-dive fires one email max. A user
+  // who links a 2nd bank later gets a second deep-dive email when that item's
+  // own deep-dive completes.
+  return sendViaResend(admin, email, subject, html, `deep_dive_summary_${item.id}`, user.id);
+}
+
+// ============================================================
+// Local preview. Run via:
+//   deno run --allow-read --allow-write --allow-env \
+//     supabase/functions/email-cron-daily/index.ts --preview
+// Writes scripts/email-preview.html with all 11 templates rendered against
+// sample data. No DB or Resend calls. Useful before pushing the function.
+// ============================================================
+
+async function renderPreview(): Promise<void> {
+  const fakeUnsub = 'https://example.com/unsubscribe?token=preview';
+  const dayMs = 86_400_000;
+  const today = Date.now();
+
+  // Last-7-day deposits, varied to make the bars look natural.
+  const recentHistory = [
+    { date: new Date(today - 6 * dayMs).toISOString(), amount: 850, debtExtra: 80, bufContrib: 60 },
+    { date: new Date(today - 4 * dayMs).toISOString(), amount: 1240, debtExtra: 120, bufContrib: 90 },
+    { date: new Date(today - 2 * dayMs).toISOString(), amount: 600, debtExtra: 50, bufContrib: 40 },
+    { date: new Date(today - 0 * dayMs).toISOString(), amount: 380, debtExtra: 30, bufContrib: 25 },
+  ];
+
+  // Last-month history for monthly_wrap.
+  const lastMonth = new Date(); lastMonth.setMonth(lastMonth.getMonth() - 1);
+  const monthHistory: any[] = [];
+  for (let i = 0; i < 9; i++) {
+    const d = new Date(lastMonth.getFullYear(), lastMonth.getMonth(), 2 + i * 3);
+    monthHistory.push({ date: d.toISOString(), amount: Math.round(400 + Math.random() * 1500), debtExtra: 80, bufContrib: 60 });
+  }
+
+  const userBase = {
+    bills: [
+      { name: 'Rent', amount: 1200, paid: false, due: '15', freq: 'monthly' },
+      { name: 'Internet', amount: 89, paid: false, due: '5', freq: 'monthly' },
+      { name: 'Phone', amount: 45, paid: false, due: '12', freq: 'monthly' },
+    ],
+    buffer: 1850,
+  };
+  const userWeek = { ...userBase, history: recentHistory };
+  const userMonth = { ...userBase, history: monthHistory };
+  const userLowBuf = { ...userBase, buffer: 480 };
+  const billsTomorrow = [{ name: 'Rent', amount: 1200 }, { name: 'Internet', amount: 89 }];
+
+  const sampleDeepDive = {
+    deep_dive_summary: { new_bills: 4, new_debts: 1, new_sources: 2, dormant_bills: 1 },
+    id: 'preview-item-id',
+  };
+
+  const templates = [
+    { id: 'dormancy', built: buildDormancy(userBase, fakeUnsub) },
+    { id: 'weekly', built: buildWeekly(userWeek, fakeUnsub) },
+    { id: 'bill_due_tomorrow', built: buildBillDue(userBase, billsTomorrow, fakeUnsub) },
+    { id: 'low_buffer', built: buildLowBuffer(userLowBuf, 480, 1334, fakeUnsub) },
+    { id: 'monthly_wrap', built: buildMonthlyWrap(userMonth, fakeUnsub) },
+    { id: 'cart_24h', built: buildCart(userBase, '24h', fakeUnsub) },
+    { id: 'cart_3d', built: buildCart(userBase, '3d', fakeUnsub) },
+    { id: 'cart_7d', built: buildCart(userBase, '7d', fakeUnsub) },
+    { id: 'trial_2_days_left', built: buildTrialDay5(userBase, fakeUnsub) },
+    { id: 'trial_last_day', built: buildTrialDay7(userBase, fakeUnsub) },
+    { id: 'trial_ended_no_convert', built: buildTrialEndedNoConvert(userBase, fakeUnsub) },
+    { id: 'achievement_one_month_ahead', built: buildAchievement(userBase, 'one_month_ahead', fakeUnsub) },
+    { id: 'achievement_debt_free', built: buildAchievement(userBase, 'debt_free', fakeUnsub) },
+    { id: 'deep_dive_summary', built: buildDeepDiveSummary(userBase, sampleDeepDive.deep_dive_summary, fakeUnsub) },
+  ];
+
+  const sections = templates.map((t) => {
+    const safeHtml = t.built.html.replace(/&/g, '&amp;').replace(/"/g, '&quot;');
+    return `<section style="margin:48px 0;">
+      <header style="max-width:600px;margin:0 auto 12px;color:#111;">
+        <div style="font-size:11px;letter-spacing:.18em;text-transform:uppercase;color:#7a8b80;font-weight:800;">${t.id}</div>
+        <div style="font-size:18px;font-weight:700;margin-top:4px;">Subject: ${t.built.subject}</div>
+      </header>
+      <div style="max-width:600px;margin:0 auto;border:1px solid #dfe7e2;border-radius:14px;overflow:hidden;background:#fff;">
+        <iframe srcdoc="${safeHtml}" style="width:100%;height:780px;border:0;display:block;"></iframe>
+      </div>
+    </section>`;
+  }).join('');
+
+  const page = `<!doctype html><html lang="en"><head><meta charset="utf-8"><title>Able email preview</title>
+<style>body{margin:0;background:#f3f6f4;font-family:-apple-system,BlinkMacSystemFont,Helvetica,Arial,sans-serif;}</style>
+</head><body>
+<div style="max-width:600px;margin:0 auto;padding:48px 16px 8px;text-align:center;">
+  <h1 style="font-size:26px;color:#111;margin:0;letter-spacing:-.02em;">Able email preview</h1>
+  <div style="font-size:13px;color:#7a8b80;margin-top:6px;">${templates.length} templates &middot; rendered ${new Date().toISOString().split('T')[0]}</div>
+</div>
+${sections}
+</body></html>`;
+
+  const outPath = new URL('../../../scripts/email-preview.html', import.meta.url).pathname;
+  await Deno.writeTextFile(outPath, page);
+  console.log('Wrote ' + outPath);
+}
+
+if (IS_PREVIEW) {
+  await renderPreview();
+  Deno.exit(0);
 }
