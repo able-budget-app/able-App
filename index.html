@@ -2108,11 +2108,12 @@ if (/^\d{10,20}$/.test(META_PIXEL_ID)) {
 </script>
 <noscript><img height="1" width="1" style="display:none" src="https://www.facebook.com/tr?id=940091778831653&ev=PageView&noscript=1"/></noscript>
 
-<!-- Google Ads gtag — page view tracking. Customer ID 648-445-0407 →
-     gtag value AW-6484450407 (strip dashes, prepend AW-). Gate uses a
-     prefix+digit regex so accidental find/replace can't silently break. -->
+<!-- Google Ads gtag — page view tracking. The Google tag ID is issued
+     by Google Ads (Goals → Conversions → Google tag) and is NOT the
+     customer ID with dashes stripped. Gate uses a prefix+digit regex
+     so accidental find/replace can't silently break. -->
 <script>
-var GOOGLE_ADS_ID = 'AW-6484450407';
+var GOOGLE_ADS_ID = 'AW-18142778282';
 if (/^AW-\d{8,12}$/.test(GOOGLE_ADS_ID)) {
   var gtagScript = document.createElement('script');
   gtagScript.async = true;

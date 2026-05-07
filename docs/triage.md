@@ -47,7 +47,8 @@ Caveat carried forward: the `refer_*_joined` achievement tiles still need a back
 
 ## Later — this quarter (P2)
 
-✅ **All P2 items shipped 2026-05-03.** See Done section.
+- **Bump GitHub Actions runner deps before Node 20 sunset** | `.github/workflows/edge-functions-check.yml` uses `actions/checkout@v4` + `denoland/setup-deno@v1`, both Node-20-based. GitHub forces Node 24 on **2026-06-02** and removes Node 20 from runners on **2026-09-16**. Bump to `actions/checkout@v5` (Node 24) and check for a newer `setup-deno` major; verify CI stays green. Trivial change but has a hard external deadline. | Source: deprecation annotation on run `25498393122` (2026-05-07).
+- **Landing page updates pass** | Walk through `index.html` together; specifics TBD. Placeholder so it doesn't fall through. | Source: Paul direction 2026-05-07.
 
 ---
 
