@@ -1796,17 +1796,6 @@ posthog.init('phc_B6PH36QxpExnyBYhfScFFF6LhDvoyxuFr6PypJuxxky3', {
 
 <!-- ALLOCATE -->
 <div class="page active" id="page-home">
-  <!-- Empty-state welcome for first-time users (no history + no bills) -->
-  <div id="home-welcome" style="display:none;background:linear-gradient(135deg,#eaf5ee,#d9ecde);border-radius:var(--ds-r2);padding:1.5rem 1.75rem;margin-bottom:1.25rem;box-shadow:var(--ds-sh1);">
-    <div style="font-size:11px;font-weight:800;letter-spacing:.12em;text-transform:uppercase;color:var(--ds-green);margin-bottom:.5rem;">Welcome to Able</div>
-    <div style="font-size:1.35rem;font-weight:900;color:var(--ds-t1);letter-spacing:-.02em;line-height:1.2;margin-bottom:.4rem;">Start with one small step.</div>
-    <div style="font-size:14px;color:var(--ds-t2);font-weight:500;line-height:1.5;margin-bottom:1rem;">Log any real income below, or add your bills so Able knows what to cover. Thirty seconds either way.</div>
-    <div style="display:flex;gap:8px;flex-wrap:wrap;">
-      <button class="btn btn-primary btn-sm" onclick="openAllocateSheet()">Log first income</button>
-      <button class="btn btn-sm" onclick="goTo('bills')">Add first bill</button>
-    </div>
-  </div>
-
   <!-- Home greeting line: time-of-day greeting + name (left), date (right).
        Replaces the prior "Become Able" wordmark — brand identity already
        lives in the top app bar. Home page goes straight to where you stand. -->
@@ -1873,8 +1862,9 @@ posthog.init('phc_B6PH36QxpExnyBYhfScFFF6LhDvoyxuFr6PypJuxxky3', {
     <div class="db-next-rows" id="db-next-rows"></div>
   </div>
 
-  <!-- 3 small action chips: Coach · Add income · Add bill. Smaller than the
-       prior 4-card grid because Next-N got promoted to its own card above. -->
+  <!-- 3 small action chips: Coach · Add expected income · Add bill.
+       "Add expected income" opens the forecast modal — separate from the
+       green hero's "Log new income" (received money). -->
   <div class="db-action-chips">
     <button class="db-chip-action" onclick="openCoachPanel()" type="button" aria-label="Ask the coach">
       <span class="db-chip-action-icon" style="background:var(--ds-green-l);color:var(--ds-green);"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" width="16" height="16"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg></span>
@@ -1882,7 +1872,7 @@ posthog.init('phc_B6PH36QxpExnyBYhfScFFF6LhDvoyxuFr6PypJuxxky3', {
     </button>
     <button class="db-chip-action" onclick="openAddIncomeModal()" type="button" aria-label="Add expected income">
       <span class="db-chip-action-icon" style="background:#fef3e0;color:var(--ds-c3);"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" width="16" height="16"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg></span>
-      <span class="db-chip-action-label">Add income</span>
+      <span class="db-chip-action-label">Add expected income</span>
     </button>
     <button class="db-chip-action" onclick="openAddBillModal()" type="button" aria-label="Add a new bill">
       <span class="db-chip-action-icon" style="background:#fdeef2;color:var(--ds-c4);"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" width="16" height="16"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg></span>
@@ -3523,11 +3513,39 @@ async function _onAuthStateChangeImpl(user) {
       console.debug(`[Able] First checkSubscription: ${Math.round(performance.now()-t0)}ms, hasAccess=${hasAccess}`);
     }
 
-    // If coming from checkout and STILL not active (no session_id and webhook
-    // hasn't landed), poll with progressive backoff. Stripe webhooks usually
-    // land in <3s but can take 20-30s under load. Tightened backoff: starts
-    // fast (500ms first poll), total budget ~19s.
-    if(!hasAccess && isFromCheckout) {
+    // If we have a session_id and the first verify returned 'pending'
+    // (Stripe hasn't marked session complete yet), retry verify-checkout-
+    // session with backoff. Asks Stripe directly — does NOT depend on
+    // webhook delivery. Typical case resolves in 2-4s; budget ~11s.
+    // Replaces the prior `checkSubscription` profile polling, which
+    // waited on the webhook and routinely pushed users to the 45s safety
+    // net when the webhook took >19s under load.
+    if(!hasAccess && isFromCheckout && checkoutSessionId) {
+      const delays = [500, 1000, 1500, 2000, 3000, 3000];
+      for (let i = 0; i < delays.length && !hasAccess; i++) {
+        await new Promise(r=>setTimeout(r, delays[i]));
+        const tRetry = performance.now();
+        try {
+          const { data: vData } = await sbGet().functions.invoke('verify-checkout-session', {
+            body: { session_id: checkoutSessionId },
+          });
+          console.debug(`[Able] Verify retry ${i+1}: ${Math.round(performance.now()-tRetry)}ms, status=${vData?.status}`);
+          if (vData?.status === 'active') {
+            sessionStorage.setItem('able_access_'+user.id, 'true');
+            hasAccess = true;
+            Able.track('checkout_verified_via_retry', { attempts: i+1 });
+          }
+        } catch (e) {
+          console.debug(`[Able] Verify retry ${i+1} threw:`, e?.message);
+        }
+      }
+    }
+
+    // Legacy fallback for the rare post-checkout return without a session_id
+    // (Stripe templates {CHECKOUT_SESSION_ID} into success_url, but this
+    // covers manual refresh that drops the param, etc.). Polls profiles
+    // waiting for the webhook — the slow path the verify-retry above replaced.
+    if(!hasAccess && isFromCheckout && !checkoutSessionId) {
       const delays = [500,500,750,1000,1500,2000,2500,3000,3000,3000,3000];
       for (let i = 0; i < delays.length && !hasAccess; i++) {
         await new Promise(r=>setTimeout(r, delays[i]));

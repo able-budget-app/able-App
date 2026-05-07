@@ -115,6 +115,7 @@ Strategic, structural, or genuinely far-out. Move to Now/Next/Later only after a
 | B4 | Auto-mark-paid on Plaid bill detection | ROADMAP D1.6 | Decided: defer Q3 (detection-error risk). |
 | B5 | Live `/balance/get` calls | ROADMAP D1.8 | Decided: cached only until Business plan. |
 | B6 | Live bank balance becomes the working balance (replaces manual S.settings.balance) | Paul direction 2026-05-06 | Reverses 2026-05-03 Option B decision (working balance stays manual). Solves the "$X to allocate" framing per the per-deposit mental model, but creates a manual-double-counting wrinkle when user logs income before Plaid sync sees it. Needs a clean answer to "what does Log income mean now" before building. |
+| B7 | Refine credit-card min_payment fallback when Plaid returns 0/null | PR #20 follow-up 2026-05-06 | Current 2.5%-of-balance rule is conservative — produces $220 on Paul's $8,785 Chase balance vs. real Chase minimum closer to $40-150 (1% of balance + interest + fees, with $25-40 floor). Errs safe (better than the $1 we were producing pre-PR #20) but worth tightening: try 1% + estimated monthly interest (`balance × purchase_apr/12`) with a $25 floor before falling to 2.5%. Verify against real-card statements. |
 
 ---
 
