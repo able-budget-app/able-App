@@ -4981,8 +4981,15 @@ async function obRunPlaidPipeline() {
     income_hint = labels.join(', ');
     if (obAnswers.intake_channels_other) income_hint += `. Also: ${obAnswers.intake_channels_other}`;
   }
+  // The intake question "What's your name, and what do you do to make money?"
+  // captures both in one free-text field. Splitting them here so the
+  // analyzer sees `business` as just the work (e.g. "marketing consultant
+  // and Airbnb host") rather than "Paul Johnson, marketing consultant",
+  // which lets it name income sources by the work instead of the rail
+  // ("Marketing payments" vs. "Stripe payouts").
+  const _firstName = _obParseFirstName(obAnswers.name_business);
   const profile_hint = {
-    name: obAnswers.name_business || undefined,
+    name: _firstName || obAnswers.name_business || undefined,
     business: obAnswers.name_business || undefined,
     income_payment_structure: income_hint,
   };

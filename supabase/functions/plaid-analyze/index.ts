@@ -876,8 +876,10 @@ Return ONLY this JSON object. No prose. No markdown fences.
    - **NEVER classify "INTEREST CHARGE", "PURCHASE INTEREST CHARGE", or "FINANCE CHARGE" as a standalone debt.** Those are interest accruals on an existing card debt — emit them as APR evidence (informs rate_estimate) but never as their own debt row. Prior versions of this prompt let those slip through; do not.
 
 7. **Income sources**:
-   - Inflow streams that are active. Group by merchant when obviously the same source (multiple Stripe payouts → one "Stripe payouts" income source).
-   - For irregular income (no inflow stream but lots of one-off deposits), create a single "Variable client work" entry with frequency IRREGULAR and average_amount = totals.gross_income / months_observed.
+   - Inflow streams that are active. Group by merchant when obviously the same source.
+   - **Name sources by the work, not the rail.** When \`profile.business\` is present, use it to translate rail-derived merchants into work-derived names. Examples: Stripe payouts for a marketing consultant → "Marketing payments"; Airbnb host payouts → "Airbnb rental income"; Venmo deposits for a tutor → "Tutoring payments"; Etsy deposits for a maker → "Etsy sales". Profession beats rail. Only fall back to the rail-derived name (e.g. "Stripe payouts") when profile.business is empty or you genuinely can't infer the work behind the deposits.
+   - When the user has multiple distinct revenue streams in profile.business (e.g. "marketing consulting and Airbnb rental"), split them into separate sources by the work — don't lump them under one rail. The user reading the income panel should see the work they do, not the payment processor.
+   - For irregular income (no inflow stream but lots of one-off deposits), create a single entry named after the user's primary work from profile.business (e.g. "Marketing consulting" rather than the generic "Variable client work"). Use frequency IRREGULAR and average_amount = totals.gross_income / months_observed. If profile.business is empty, fall back to "Variable client work".
 
 8. **summary_for_coach voice**:
    - 3 to 5 sentences.
