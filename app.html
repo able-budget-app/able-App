@@ -173,14 +173,9 @@ input,select,button,textarea{font-family:inherit;}
 .ob-table-input::placeholder{color:var(--ds-t3);font-weight:500;}
 .ob-table-x{width:36px;height:36px;flex-shrink:0;align-self:start;background:transparent;border:none;color:var(--ds-t3);font-size:20px;cursor:pointer;border-radius:50%;transition:all .15s;}
 .ob-table-x:hover{background:#fdeef2;color:var(--ds-c4);}
-@media (min-width: 720px) {
-  .ob-table-row{grid-template-columns:1.4fr 1fr 1fr 1fr auto;padding:0;background:transparent;border:0;}
-  .ob-table-row .ob-table-input:nth-of-type(1),
-  .ob-table-row .ob-table-input:nth-of-type(2),
-  .ob-table-row .ob-table-input:nth-of-type(3),
-  .ob-table-row .ob-table-input:nth-of-type(4){grid-column:auto;}
-  .ob-table-row .ob-table-x{grid-row:auto;}
-}
+/* Desktop ≥980px: keep 2x2 grid (the "wide" 4-in-a-row felt cropped
+   inside the 640px modal — placeholders like "Min payment" got
+   clipped). The 2x2 reads cleaner everywhere. */
 .ob-actions{display:flex;justify-content:space-between;align-items:center;gap:.75rem;margin-top:1rem;}
 #onboard-screen .btn-primary{display:inline-flex;align-items:center;justify-content:center;gap:6px;padding:14px 26px;background:linear-gradient(135deg,#2a7a4a,#3d9e78);color:white;border:none;border-radius:var(--ds-r1);font-family:var(--ds-f);font-size:14px;font-weight:800;cursor:pointer;transition:all .2s;box-shadow:0 4px 14px rgba(42,122,74,.3);letter-spacing:-.01em;flex:1;}
 #onboard-screen .btn-primary:hover{transform:translateY(-1px);box-shadow:0 6px 20px rgba(42,122,74,.4);}
@@ -1732,10 +1727,8 @@ posthog.init('phc_B6PH36QxpExnyBYhfScFFF6LhDvoyxuFr6PypJuxxky3', {
         <div id="ob-input-area"></div>
         <div class="ob-actions">
           <button class="btn-ghost btn btn-sm" id="ob-back-btn" onclick="obBack()" style="display:none;">Back</button>
+          <button class="btn-ghost btn btn-sm" onclick="skipOnboarding()" style="font-size:12px;color:var(--ds-t3);margin-left:auto;">Skip for now and explore</button>
           <button class="btn btn-primary" id="ob-next-btn" onclick="obNext()">Continue →</button>
-        </div>
-        <div style="text-align:center;margin-top:1.25rem;">
-          <button class="btn-ghost btn btn-sm" onclick="skipOnboarding()" style="font-size:12px;color:var(--ds-t3);">Skip for now and explore</button>
         </div>
       </div>
 
@@ -7707,14 +7700,12 @@ function exportAllocation(){
 // REFRESH HOME
 // ═══════════════════════════════════════
 function refreshHome(){
-  // Empty-state welcome for fresh accounts (no income logged, no bills yet).
-  const welcome=document.getElementById('home-welcome');
-  const dashboard=document.querySelector('#page-home .db-hero');
-  const quickActions=document.querySelectorAll('#page-home .db-action-card');
-  const isEmpty=(!S.history||!S.history.length)&&(!S.bills||!S.bills.length);
-  if(welcome)welcome.style.display=isEmpty?'block':'none';
-  if(dashboard)dashboard.style.display=isEmpty?'none':'';
-  quickActions.forEach(el=>{el.style.display=isEmpty?'none':'';});
+  // Hero is always visible. Its renderHeroMoney empty-state branch handles
+  // the "no income, no bills yet" case (shows bank balances + Log income
+  // CTA). Earlier this hid the hero on isEmpty in favor of a separate
+  // "Welcome to Able" card; that card was removed so hiding the hero now
+  // would leave the page blank during the brief window between onboarding
+  // completing and bills landing.
 
   const ti=totalIn();
   const ns=document.getElementById('nav-stats');
