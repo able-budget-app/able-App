@@ -1394,6 +1394,13 @@ body.is-scrolling .btn-primary:hover{transform:none!important;box-shadow:inherit
 .plan-refresh-banner-cta:hover{background:#2c5d96;}
 .plan-refresh-banner-x{flex-shrink:0;width:26px;height:26px;background:transparent;border:0;color:#284b78;font-size:14px;font-weight:800;cursor:pointer;border-radius:6px;display:flex;align-items:center;justify-content:center;opacity:.6;}
 .plan-refresh-banner-x:hover{opacity:1;background:rgba(40,75,120,.1);}
+.deep-dive-banner{display:flex;align-items:center;gap:12px;background:linear-gradient(135deg,#e8f5ee 0%,#d0e8d8 100%);border-left:4px solid var(--ds-green);border-radius:var(--ds-r2);padding:12px 14px;margin-bottom:.85rem;box-shadow:var(--ds-sh1);font-family:var(--ds-f);}
+.deep-dive-banner-icon{flex-shrink:0;width:32px;height:32px;border-radius:50%;background:var(--ds-green);color:white;display:flex;align-items:center;justify-content:center;}
+.deep-dive-banner-body{flex:1;min-width:0;}
+.deep-dive-banner-title{font-size:13px;font-weight:800;color:var(--ds-green);letter-spacing:-.01em;}
+.deep-dive-banner-sub{font-size:11px;color:var(--ds-t2);font-weight:600;margin-top:2px;line-height:1.4;}
+.deep-dive-banner-cta{background:var(--ds-green);color:white;border:none;font-family:var(--ds-f);font-size:12px;font-weight:800;padding:8px 13px;border-radius:100px;cursor:pointer;letter-spacing:-.01em;flex-shrink:0;}
+.deep-dive-banner-cta:hover{background:#3a6b48;}
 /* Quarterly tax projection card on home (Tax C / P2 #24). Calm warm tone
    so it doesn't compete with the green hero or the amber due-today card.
    Sits between the action chips and the Next-N card. */
@@ -1828,6 +1835,12 @@ posthog.init('phc_B6PH36QxpExnyBYhfScFFF6LhDvoyxuFr6PypJuxxky3', {
   <!-- Plan-refresh banner — shows when Plaid's recurring detection arrived
        AFTER a plan was already drafted (P2 #21). Filled by renderPlanRefreshBanner. -->
   <div id="plan-refresh-banner"></div>
+
+  <!-- Deep-dive banner — surfaces bills/debts the post-onboarding deep-dive
+       found by analyzing 12 months of history. Tagged review_reason 'new'
+       (newly detected) or 'dormant' (existed but looks inactive). Auto-hides
+       once all flagged items lose pending_review. Filled by renderDeepDiveBanner. -->
+  <div id="deep-dive-banner"></div>
 
   <!-- Due-today card — louder than the chip, only visible morning-of for
        unpaid bills due today. Filled by renderDueTodayCard. Empty otherwise. -->
@@ -7816,6 +7829,7 @@ function refreshHome(){
   renderPlanRefreshBanner();
   renderQuarterlyTaxCard();
   renderIncomeInboxBanner();
+  renderDeepDiveBanner();
   // Match Plaid deposits to manual S.history entries so the user sees a
   // "deposited at $X" annotation and we don't double-count income once
   // Plaid drives totals. Fires async; renderHistory below paints with
@@ -10865,6 +10879,35 @@ function _inboxFiltered(builder) {
       `able_confidence.lt.${INBOX_CONFIDENCE_THRESHOLD},` +
       `and(able_category.eq.transfer,able_confidence.lt.${INBOX_TRANSFER_REVIEW_THRESHOLD})`,
     );
+}
+
+function renderDeepDiveBanner(){
+  const el = document.getElementById('deep-dive-banner');
+  if (!el) return;
+  const isReview = (x) => x?.pending_review === true && (x.review_reason === 'new' || x.review_reason === 'dormant');
+  const newBills = (S.bills || []).filter(b => isReview(b) && b.review_reason === 'new').length;
+  const dormantBills = (S.bills || []).filter(b => isReview(b) && b.review_reason === 'dormant').length;
+  const newDebts = (S.debts || []).filter(d => isReview(d) && d.review_reason === 'new').length;
+  const total = newBills + dormantBills + newDebts;
+  if (total === 0) { el.innerHTML = ''; return; }
+  const parts = [];
+  if (newBills > 0) parts.push(`${newBills} new bill${newBills>1?'s':''}`);
+  if (newDebts > 0) parts.push(`${newDebts} new debt${newDebts>1?'s':''}`);
+  if (dormantBills > 0) parts.push(`${dormantBills} dormant bill${dormantBills>1?'s':''}`);
+  // Route to debt page if the only items are debts; otherwise bills (the
+  // common case, and where bill REVIEW chips live).
+  const target = (newDebts > 0 && newBills === 0 && dormantBills === 0) ? 'debt' : 'bills';
+  el.innerHTML = `
+    <div class="deep-dive-banner" role="status">
+      <div class="deep-dive-banner-icon">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
+      </div>
+      <div class="deep-dive-banner-body">
+        <div class="deep-dive-banner-title">We found ${total} more item${total>1?'s':''} in your last 12 months</div>
+        <div class="deep-dive-banner-sub">${parts.join(' · ')}. Confirm or edit to fold them into your plan.</div>
+      </div>
+      <button class="deep-dive-banner-cta" onclick="goTo('${target}')">Review</button>
+    </div>`;
 }
 
 async function renderIncomeInboxBanner(){
