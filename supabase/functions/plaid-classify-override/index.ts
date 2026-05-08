@@ -19,7 +19,7 @@
 // verify ownership, then uses service_role to write — RLS on plaid_transactions
 // is SELECT-only for users).
 
-import { createClient } from 'npm:@supabase/supabase-js@2';
+import { createClient, type SupabaseClient } from 'npm:@supabase/supabase-js@2';
 
 const SUPABASE_URL = Deno.env.get('SUPABASE_URL')!;
 const SERVICE_ROLE = Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')!;
@@ -165,6 +165,27 @@ Deno.serve(async (req) => {
         });
       }
       overrideId = ov?.id ?? null;
+
+      // Sync user_data.bills when the user marks a recurring pattern as
+      // a bill. Without this, plaid_transactions.able_category gets updated
+      // and the override pattern is saved, but the Bills page (which reads
+      // user_data.bills) doesn't see the new bill — so the user marks
+      // Villa Sport as a bill from Activity, the categorization works, but
+      // Bills page doesn't update. P0 bug filed 2026-05-08.
+      //
+      // Only fires for category='bill' with override=true (a "just this
+      // transaction" reclassify is a per-row decision, not a "this is a
+      // recurring bill" assertion). De-classify away from bill is NOT
+      // mirrored as a bill removal — too risky for false positives on
+      // manually-added bills with similar names; the user can delete from
+      // the Bills page if needed.
+      if (body.able_category === 'bill') {
+        try {
+          await addBillFromOverride(admin, userId, txn, matchValue, label);
+        } catch (e) {
+          console.error('classify-override: addBillFromOverride threw', e);
+        }
+      }
     }
 
     return json({
@@ -184,4 +205,91 @@ function json(body: unknown, status = 200) {
     status,
     headers: { ...corsHeaders, 'Content-Type': 'application/json' },
   });
+}
+
+// When a user reclassifies a recurring pattern → 'bill', mirror the
+// decision into user_data.bills so the Bills page picks it up. The amount
+// + frequency come from plaid_recurring_streams when we have a matching
+// stream; otherwise we fall back to the txn's own amount and assume monthly.
+async function addBillFromOverride(
+  admin: SupabaseClient,
+  userId: string,
+  txn: { merchant_name: string | null; name: string | null; amount: number; date: string },
+  matchValue: string,
+  label: string,
+): Promise<void> {
+  const matchValueLower = matchValue.toLowerCase().trim();
+  if (!matchValueLower) return;
+
+  const { data: ud, error: udErr } = await admin
+    .from('user_data')
+    .select('bills')
+    .eq('id', userId)
+    .single();
+  if (udErr) {
+    console.error('addBillFromOverride: user_data read failed', udErr);
+    return;
+  }
+  const bills: Record<string, unknown>[] = Array.isArray(ud?.bills)
+    ? [...(ud.bills as Record<string, unknown>[])]
+    : [];
+
+  // De-dup: if any existing bill name overlaps the override pattern (in
+  // either direction, case-insensitive), assume it's already represented.
+  // Two-way containment catches both "Villa Sport" matching "villa sport"
+  // and short patterns like "spotify" matching a longer "Spotify Premium".
+  const dup = bills.some((b) => {
+    const nm = String(b?.name || '').toLowerCase();
+    return nm && (nm.includes(matchValueLower) || matchValueLower.includes(nm));
+  });
+  if (dup) return;
+
+  // Find a matching plaid_recurring_streams row for amount + cadence.
+  // Match against the override pattern in either direction so we still
+  // handle name_substring overrides where the pattern is shorter than
+  // Plaid's full merchant_name.
+  const { data: streams } = await admin
+    .from('plaid_recurring_streams')
+    .select('stream_id, merchant_name, average_amount')
+    .eq('user_id', userId)
+    .eq('direction', 'outflow');
+  const matchedStream = (streams ?? []).find((s) => {
+    const m = String((s as { merchant_name?: string | null }).merchant_name || '').toLowerCase();
+    return m && (m.includes(matchValueLower) || matchValueLower.includes(m));
+  }) as { stream_id?: string; average_amount?: number } | undefined;
+
+  const amount = matchedStream
+    ? Math.abs(Number(matchedStream.average_amount) || 0)
+    : Math.abs(Number(txn.amount) || 0);
+  if (amount <= 0) return;
+
+  // Default due_day from the originating txn's date when we don't have a
+  // stream to derive it from. Bills page accepts string '1'..'31'.
+  let due = '1';
+  if (txn.date) {
+    const day = new Date(`${txn.date}T12:00:00Z`).getUTCDate();
+    if (Number.isFinite(day) && day >= 1 && day <= 31) due = String(day);
+  }
+
+  bills.push({
+    id: `b_${Date.now().toString(36)}_${Math.random().toString(36).slice(2, 7)}`,
+    name: label,
+    amount,
+    due,
+    cat: 'utility',
+    priority: 2,
+    paid: false,
+    evidence_stream_id: matchedStream?.stream_id ?? null,
+    source: 'reclassify_override',
+  });
+
+  const { error: upErr } = await admin
+    .from('user_data')
+    .update({ bills })
+    .eq('id', userId);
+  if (upErr) {
+    console.error('addBillFromOverride: bills update failed', upErr);
+    return;
+  }
+  console.log(`classify-override: added bill "${label}" $${amount} (stream=${matchedStream?.stream_id ?? 'none'}) for user ${userId.slice(0, 8)}`);
 }

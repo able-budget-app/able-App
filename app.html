@@ -12401,6 +12401,26 @@ async function applyReclassify(){
       Able.track?.('activity_bulk_reclassify', { category, applied: bulkApplied, requested: bulkRequested, deductible: !!body.is_tax_deductible, business: !!body.business_label });
     }
 
+    // When the user reclassifies a recurring pattern → 'bill', the server-
+    // side plaid-classify-override now adds a row to user_data.bills (P0
+    // fix 2026-05-08). Refresh S.bills so the Bills page sees it without
+    // a full page reload.
+    if (createOverride && category === 'bill') {
+      try {
+        const { data: ud } = await sbGet()
+          .from('user_data')
+          .select('bills')
+          .eq('id', currentUser.id)
+          .single();
+        if (ud && Array.isArray(ud.bills)) {
+          S.bills = ud.bills.map((b) => ({ ...b, priority: b.priority || 2 }));
+          if (typeof renderBillsPage === 'function') renderBillsPage();
+        }
+      } catch (e) {
+        console.warn('reclassify→bill refresh failed:', e);
+      }
+    }
+
     closeReclassifyModal();
     renderActivityPage();
     renderIncomeInboxBanner();
