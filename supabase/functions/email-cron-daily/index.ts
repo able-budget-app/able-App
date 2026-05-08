@@ -2,6 +2,7 @@ import { createClient } from 'npm:@supabase/supabase-js@2';
 
 const SUPABASE_URL = Deno.env.get('SUPABASE_URL')!;
 const SERVICE_ROLE = Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')!;
+const INTERNAL_SECRET = Deno.env.get('INTERNAL_FUNCTION_SECRET') ?? '';
 const RESEND_API_KEY = Deno.env.get('RESEND_API_KEY')!;
 const CRON_SECRET = Deno.env.get('CRON_SECRET')!;
 const FROM_EMAIL = Deno.env.get('FROM_EMAIL') || 'Able <onboarding@resend.dev>';
@@ -281,7 +282,7 @@ if (!IS_PREVIEW) Deno.serve(async (req) => {
         try {
           await fetch(`${SUPABASE_URL}/functions/v1/send-push`, {
             method: 'POST',
-            headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${SERVICE_ROLE}` },
+            headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${SERVICE_ROLE}`, 'x-internal-auth': INTERNAL_SECRET },
             body: JSON.stringify({
               user_id: userId,
               payload: {

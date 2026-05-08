@@ -35,6 +35,7 @@ import { createClient } from 'npm:@supabase/supabase-js@2';
 
 const SUPABASE_URL = Deno.env.get('SUPABASE_URL')!;
 const SERVICE_ROLE = Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')!;
+const INTERNAL_SECRET = Deno.env.get('INTERNAL_FUNCTION_SECRET') ?? '';
 const VAPID_PUBLIC_KEY = Deno.env.get('VAPID_PUBLIC_KEY') || '';
 const VAPID_PRIVATE_KEY = Deno.env.get('VAPID_PRIVATE_KEY') || '';
 const VAPID_SUBJECT = Deno.env.get('VAPID_SUBJECT') || 'mailto:hello@becomeable.app';
@@ -61,10 +62,17 @@ Deno.serve(async (req) => {
     return json({ error: 'VAPID keys not configured. Run npx web-push generate-vapid-keys and set VAPID_PUBLIC_KEY + VAPID_PRIVATE_KEY env vars.' }, 500);
   }
 
-  // Service-role only — only internal callers (cron, webhooks).
-  const auth = req.headers.get('Authorization') ?? '';
-  const token = auth.replace(/^Bearer\s+/i, '');
-  if (token !== SERVICE_ROLE) return json({ error: 'Unauthorized' }, 401);
+  // Internal-only gate. Invoked by email-cron-daily (bills-due-tomorrow
+  // push fires) and any future internal caller. Uses x-internal-auth
+  // because Supabase mutates the Authorization header on cross-region
+  // inter-function calls — see commit ac94d34 / e102ebc for the full
+  // backstory.
+  if (!INTERNAL_SECRET) {
+    console.error('send-push: INTERNAL_FUNCTION_SECRET unset');
+    return json({ error: 'not configured' }, 503);
+  }
+  const got = req.headers.get('x-internal-auth') ?? '';
+  if (got !== INTERNAL_SECRET) return json({ error: 'Unauthorized' }, 401);
 
   let body: { user_id?: string; payload?: PushPayload };
   try {
