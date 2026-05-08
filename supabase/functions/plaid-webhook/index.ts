@@ -187,8 +187,15 @@ async function dispatch(
   let triggerRecurring = false;
   if (ev.webhook_type === 'TRANSACTIONS') {
     if (ev.webhook_code === 'SYNC_UPDATES_AVAILABLE') {
-      if (ev.initial_update_complete) updates.initial_sync_complete = true;
-      if (ev.historical_update_complete) updates.historical_sync_complete = true;
+      // Don't eagerly write initial_sync_complete / historical_sync_complete
+      // here based on the webhook's claim — let plaid-sync set those flags
+      // based on the actual /transactions/sync response status. The webhook
+      // only signals "data is ready to fetch"; the flags must mean "we
+      // actually have the data". Otherwise a sync failure (network blip,
+      // 401, anything) would leave the row claiming history complete with
+      // no transactions to back it up — exactly the silent-data-loss bug
+      // we hit on 2026-05-08 before commit e102ebc.
+      //
       // Pull immediately. Without this the user has to open the app for
       // their data to land, which was the dominant cause of "missing
       // deposits". Sync runs in the background via EdgeRuntime.waitUntil
