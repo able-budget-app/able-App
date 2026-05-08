@@ -30,8 +30,12 @@ marketing-footage/social-export/reels/
 # via scripts/record-clips.py / render-* scripts. Keep manifest.json.
 marketing-footage/_raw/
 marketing-footage/lifestyle-base/
-marketing-footage/product-shots/
 marketing-footage/*.mp4
+# product-shots is mostly heavy regenerable PNGs, but the HTML composer
+# templates (_frame.html, _lifestyle.html, _bank-connect.html) are source
+# code for the renderers and must stay on origin.
+marketing-footage/product-shots/*
+!marketing-footage/product-shots/_*.html
 
 # Cinematic Remotion sub-project (~660MB, separate workflow)
 able-reel/

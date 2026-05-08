@@ -1,0 +1,504 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Able lifestyle shot composer</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400;12..96,500;12..96,600;12..96,700;12..96,800;12..96,900&display=swap" rel="stylesheet">
+<style>
+  /*
+   * Lifestyle composer. Same phone DNA as _frame.html, but the canvas
+   * background is a stock photo (desk flat-lay, workspace, etc.) and the
+   * phone sits as a hovering overlay on the surface.
+   *
+   * URL params:
+   *   ?scene=desk-coffee | workspace | notebook
+   *   &shot=01-dashboard.png   (relative to ./_raw/)
+   *   &w=1080&h=1920
+   *   &theme=light | dark      (drives copy color)
+   *   &line1=...&sub=...&tag=...
+   *   &copy=hide               (skip copy block — bare variant)
+   */
+  :root {
+    --frame:       #564A66;
+    --frame-edge:  #6E627E;
+    --frame-deep:  #2E2638;
+    --bezel:       #0A0A0A;
+    --island:      #050505;
+  }
+  * { box-sizing: border-box; }
+  html, body { margin: 0; padding: 0; }
+  body {
+    font-family: "Bricolage Grotesque", -apple-system, BlinkMacSystemFont, sans-serif;
+    -webkit-font-smoothing: antialiased;
+    font-feature-settings: "ss01" on, "ss02" on;
+  }
+
+  .canvas {
+    position: relative;
+    overflow: hidden;
+    background-size: cover;
+    background-repeat: no-repeat;
+  }
+
+  /* ── Scene-specific bg + crop positions per aspect ──────────────────── */
+  .canvas[data-scene="desk-coffee"] { background-image: url("../lifestyle-base/desk-laptop-coffee.jpeg"); }
+  .canvas[data-scene="desk-coffee"][data-aspect="9x16"] { background-position: center 55%; }
+  .canvas[data-scene="desk-coffee"][data-aspect="4x5"]  { background-position: center 60%; }
+  .canvas[data-scene="desk-coffee"][data-aspect="1x1"]  { background-position: center 65%; }
+  .canvas[data-scene="desk-coffee"][data-aspect="16x9"] { background-position: center 75%; }
+
+  /* workspace photo has a real iPhone at ~78% of image height. To prevent it
+     from peeking around our overlay, push background-position UP (toward 0%)
+     on wide aspects so the existing phone falls below the visible frame. */
+  .canvas[data-scene="workspace"] { background-image: url("../lifestyle-base/minimalist-workspace.jpeg"); }
+  .canvas[data-scene="workspace"][data-aspect="9x16"] { background-position: center 55%; }
+  .canvas[data-scene="workspace"][data-aspect="4x5"]  { background-position: center 38%; }
+  .canvas[data-scene="workspace"][data-aspect="1x1"]  { background-position: center 28%; }
+  .canvas[data-scene="workspace"][data-aspect="16x9"] { background-position: center 30%; }
+
+  .canvas[data-scene="notebook"] { background-image: url("../lifestyle-base/desk-notebook.jpeg"); }
+  .canvas[data-scene="notebook"][data-aspect="9x16"] { background-position: center 35%; }
+  .canvas[data-scene="notebook"][data-aspect="4x5"]  { background-position: center 40%; }
+  .canvas[data-scene="notebook"][data-aspect="1x1"]  { background-position: center 45%; }
+  .canvas[data-scene="notebook"][data-aspect="16x9"] { background-position: center 50%; }
+
+  /* Photo wash — pulls the photo back so phone + copy pop. Per-theme. */
+  .canvas::before {
+    content: "";
+    position: absolute; inset: 0;
+    pointer-events: none;
+    z-index: 1;
+  }
+  .canvas[data-scene="desk-coffee"]::before {
+    background:
+      linear-gradient(180deg, rgba(20,28,22,0.32) 0%, rgba(20,28,22,0.05) 35%, rgba(20,28,22,0) 60%, rgba(20,28,22,0.18) 100%);
+  }
+  .canvas[data-scene="workspace"]::before {
+    background:
+      linear-gradient(180deg, rgba(255,255,255,0.45) 0%, rgba(255,255,255,0.10) 30%, rgba(255,255,255,0) 60%);
+  }
+  .canvas[data-scene="notebook"]::before {
+    background:
+      linear-gradient(180deg, rgba(255,255,255,0.35) 0%, rgba(255,255,255,0.10) 30%, rgba(255,255,255,0) 65%);
+  }
+
+  /* ── Phone (same DNA as _frame.html) ────────────────────────────────── */
+  .phone-wrap {
+    position: absolute;
+    transform-origin: center center;
+    z-index: 3;
+  }
+  .phone {
+    position: relative;
+    width: 422px;
+    height: 876px;
+    background:
+      linear-gradient(135deg, var(--frame-edge) 0%, var(--frame) 22%, var(--frame) 78%, var(--frame-deep) 100%);
+    border-radius: 62px;
+    padding: 16px;
+    box-shadow:
+      0 1px 0 1.5px rgba(255,255,255,0.18) inset,
+      0 -1px 0 1.5px rgba(0,0,0,0.3) inset,
+      0 0 0 1px rgba(0,0,0,0.18),
+      0 60px 90px rgba(0,0,0,0.42),
+      0 22px 38px rgba(0,0,0,0.32);
+  }
+  .phone::before {
+    content: "";
+    position: absolute;
+    inset: 6px;
+    border-radius: 56px;
+    background: var(--bezel);
+    z-index: 1;
+  }
+  .phone-side-btn {
+    position: absolute;
+    background: linear-gradient(to right, var(--frame-deep) 0%, var(--frame-edge) 50%, var(--frame-deep) 100%);
+    z-index: 0;
+  }
+  .phone-side-btn.silencer { left: -3px;  top: 110px; width: 4px; height: 26px; border-radius: 2px 0 0 2px; }
+  .phone-side-btn.volup    { left: -3px;  top: 170px; width: 4px; height: 60px; border-radius: 2px 0 0 2px; }
+  .phone-side-btn.voldn    { left: -3px;  top: 248px; width: 4px; height: 60px; border-radius: 2px 0 0 2px; }
+  .phone-side-btn.power    { right: -3px; top: 200px; width: 4px; height: 88px; border-radius: 0 2px 2px 0; }
+
+  .screen {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    border-radius: 50px;
+    overflow: hidden;
+    z-index: 2;
+    background: #EFF3EE;
+  }
+  .screen img {
+    width: 100%;
+    height: 100%;
+    display: block;
+    object-fit: cover;
+    object-position: top center;
+  }
+
+  .statusbar {
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 56px;
+    color: #0A0A0A;
+    font-family: -apple-system, "SF Pro Text", "Helvetica Neue", sans-serif;
+    font-weight: 600;
+    font-size: 16px;
+    z-index: 4;
+    pointer-events: none;
+  }
+  .statusbar .time {
+    position: absolute;
+    left: 28px; top: 50%;
+    transform: translateY(-50%);
+    font-feature-settings: "tnum";
+    letter-spacing: -0.01em;
+  }
+  .statusbar .indicators {
+    position: absolute;
+    right: 28px; top: 50%;
+    transform: translateY(-50%);
+    display: flex; align-items: center; gap: 6px;
+  }
+  .statusbar svg { display: block; }
+  .island {
+    position: absolute;
+    top: 11px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 124px;
+    height: 35px;
+    background: var(--island);
+    border-radius: 22px;
+    z-index: 5;
+    box-shadow: 0 0 0 0.5px rgba(255,255,255,0.06) inset;
+  }
+
+  /* ── Phone position per scene + aspect ──────────────────────────────── */
+  /* desk-coffee — phone sits on desk surface, slight counter-clockwise tilt.
+     Vertical aspects need top: 60%+ so the phone bottom doesn't touch the
+     wordmark and the dynamic island doesn't get clipped above. */
+  .canvas[data-scene="desk-coffee"] .phone-wrap {
+    left: 50%; top: 60%;
+    transform: translate(-50%, -50%) rotate(-4deg) scale(var(--phone-scale, 1));
+  }
+  .canvas[data-scene="desk-coffee"][data-aspect="9x16"] .phone-wrap { top: 60%; }
+  .canvas[data-scene="desk-coffee"][data-aspect="4x5"]  .phone-wrap { top: 62%; }
+  .canvas[data-scene="desk-coffee"][data-aspect="1x1"]  .phone-wrap { top: 60%; }
+  .canvas[data-scene="desk-coffee"][data-aspect="16x9"] .phone-wrap { top: 60%; left: 60%; }
+
+  /* workspace — on 9x16 the existing phone is visible; Able phone covers it
+     with -15° tilt matching the underlying angle. On 1x1/4x5/16x9 the bg is
+     cropped to hide the existing phone, so we use a more natural -8° tilt
+     and let Able phone hover in the laptop-desk area. */
+  .canvas[data-scene="workspace"] .phone-wrap {
+    left: 50%; top: 62%;
+    transform: translate(-50%, -50%) rotate(-8deg) scale(var(--phone-scale, 1));
+  }
+  .canvas[data-scene="workspace"][data-aspect="9x16"] .phone-wrap {
+    top: 64%; left: 50%;
+    transform: translate(-50%, -50%) rotate(-15deg) scale(var(--phone-scale, 1));
+  }
+  .canvas[data-scene="workspace"][data-aspect="4x5"]  .phone-wrap { top: 65%; left: 50%; }
+  .canvas[data-scene="workspace"][data-aspect="1x1"]  .phone-wrap { top: 62%; left: 58%; }
+  .canvas[data-scene="workspace"][data-aspect="16x9"] .phone-wrap { top: 60%; left: 60%; }
+
+  /* notebook — phone in the left empty white area. */
+  .canvas[data-scene="notebook"] .phone-wrap {
+    left: 32%; top: 60%;
+    transform: translate(-50%, -50%) rotate(-3deg) scale(var(--phone-scale, 1));
+  }
+  .canvas[data-scene="notebook"][data-aspect="9x16"] .phone-wrap { left: 50%; top: 62%; }
+  .canvas[data-scene="notebook"][data-aspect="4x5"]  .phone-wrap { left: 36%; top: 60%; }
+  .canvas[data-scene="notebook"][data-aspect="1x1"]  .phone-wrap { left: 36%; top: 60%; }
+  .canvas[data-scene="notebook"][data-aspect="16x9"] .phone-wrap { left: 28%; top: 58%; }
+
+  /* ── Copy block + theme ─────────────────────────────────────────────── */
+  .copy-block {
+    position: absolute;
+    z-index: 4;
+    pointer-events: none;
+  }
+  .canvas[data-theme="dark"] .copy-block {
+    color: #FFFFFF;
+    text-shadow: 0 2px 24px rgba(0,0,0,0.45), 0 1px 4px rgba(0,0,0,0.35);
+  }
+  /* Light-theme: subtle white halo so dark copy stays legible when it crosses
+     busy parts of the photo (laptop edges, coffee cup, fern). The radius is
+     wide so the effect reads as soft glow, not a hard outline. */
+  .canvas[data-theme="light"] .copy-block {
+    color: #111c16;
+    text-shadow: 0 2px 22px rgba(255,255,255,0.75), 0 1px 6px rgba(255,255,255,0.55);
+  }
+
+  .copy-tag {
+    font-size: 18px; font-weight: 800;
+    letter-spacing: 0.2em; text-transform: uppercase;
+    margin-bottom: 14px;
+    opacity: 0.85;
+  }
+  .canvas[data-theme="dark"] .copy-tag { color: #B8E0C8; }
+  .canvas[data-theme="light"] .copy-tag { color: #2A7A4A; }
+
+  .copy-headline {
+    font-family: "Bricolage Grotesque", sans-serif;
+    font-size: 64px;
+    line-height: 1.04;
+    letter-spacing: -0.03em;
+    font-weight: 800;
+  }
+  .copy-sub {
+    font-size: 26px;
+    font-weight: 500;
+    line-height: 1.4;
+    margin-top: 18px;
+    letter-spacing: -0.005em;
+    opacity: 0.92;
+  }
+  .copy-headline .arrow {
+    color: #2A7A4A;
+    font-weight: 800;
+  }
+  .canvas[data-theme="dark"] .copy-headline .arrow {
+    color: #7CD9A1;
+  }
+
+  /* ── Copy zone per scene ─────────────────────────────────────────────
+     Each scene has a quiet area where copy reads cleanly. */
+
+  /* desk-coffee — top of frame (gray wall). Copy goes top-center. */
+  .canvas[data-scene="desk-coffee"] .copy-block {
+    top: 6%; left: 50%;
+    transform: translateX(-50%);
+    width: 86%;
+    text-align: center;
+  }
+  .canvas[data-scene="desk-coffee"][data-aspect="16x9"] .copy-block {
+    top: 50%;
+    left: 5%;
+    transform: translateY(-50%);
+    width: 44%;
+    text-align: left;
+  }
+
+  /* workspace — top-left bright area. */
+  .canvas[data-scene="workspace"] .copy-block {
+    top: 6%; left: 6%;
+    width: 88%;
+    text-align: left;
+  }
+  .canvas[data-scene="workspace"][data-aspect="9x16"] .copy-block { width: 88%; top: 6%; }
+  .canvas[data-scene="workspace"][data-aspect="4x5"]  .copy-block { width: 88%; top: 5%; }
+  .canvas[data-scene="workspace"][data-aspect="1x1"]  .copy-block { width: 50%; top: 8%; }
+  .canvas[data-scene="workspace"][data-aspect="16x9"] .copy-block {
+    top: 50%; left: 5%;
+    transform: translateY(-50%);
+    width: 44%;
+  }
+
+  /* notebook — top, since horizontal photo. */
+  .canvas[data-scene="notebook"] .copy-block {
+    top: 6%; left: 50%;
+    transform: translateX(-50%);
+    width: 86%;
+    text-align: center;
+  }
+  .canvas[data-scene="notebook"][data-aspect="16x9"] .copy-block {
+    top: 50%; left: auto; right: 5%;
+    transform: translateY(-50%);
+    width: 44%;
+    text-align: left;
+  }
+  .canvas[data-scene="notebook"][data-aspect="9x16"] .copy-block {
+    top: 6%;
+    width: 90%;
+  }
+
+  /* Per-aspect headline sizing */
+  .canvas[data-aspect="9x16"] .copy-headline { font-size: 56px; }
+  .canvas[data-aspect="4x5"]  .copy-headline { font-size: 52px; }
+  .canvas[data-aspect="1x1"]  .copy-headline { font-size: 44px; }
+  .canvas[data-aspect="16x9"] .copy-headline { font-size: 60px; }
+
+  .canvas[data-aspect="9x16"] .copy-sub { font-size: 24px; }
+  .canvas[data-aspect="4x5"]  .copy-sub { font-size: 22px; }
+  .canvas[data-aspect="1x1"]  .copy-sub { font-size: 20px; }
+  .canvas[data-aspect="16x9"] .copy-sub { font-size: 24px; }
+
+  /* workspace 1x1 — extra-narrow because phone sits in the middle. Smaller
+     headline keeps copy in the top-left quadrant so it doesn't run into the
+     phone screen. */
+  .canvas[data-scene="workspace"][data-aspect="1x1"] .copy-headline { font-size: 38px; }
+  .canvas[data-scene="workspace"][data-aspect="1x1"] .copy-sub      { font-size: 18px; margin-top: 12px; }
+  .canvas[data-scene="workspace"][data-aspect="1x1"] .copy-tag      { font-size: 14px; margin-bottom: 10px; }
+
+  /* ── Wordmark (verbatim from _frame.html) ───────────────────────────── */
+  .wordmark {
+    position: absolute;
+    bottom: 56px;
+    left: 56px;
+    font-family: "Bricolage Grotesque", sans-serif;
+    font-size: 52px;
+    font-weight: 900;
+    letter-spacing: -0.03em;
+    line-height: 1;
+    display: inline-block;
+    z-index: 10;
+    pointer-events: none;
+  }
+  .canvas[data-theme="dark"] .wordmark { color: #FFFFFF; }
+  .canvas[data-theme="light"] .wordmark { color: #111c16; }
+  .wordmark::after {
+    content: "";
+    position: absolute;
+    left: 0; right: -4%;
+    bottom: -5px;
+    height: 9px;
+    background: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 120 4.2' preserveAspectRatio='none'><path d='M3 2.6 Q2 2.4 3 2.15 Q58 1.75 115 0.15 Q119 1 119 2 Q119 3 115 3.9 Q58 3.55 3 2.65 Q2 2.45 3 2.6 Z' fill='%232a7a4a'/></svg>") no-repeat center / 100% 100%;
+    pointer-events: none;
+  }
+  /* Bare variants put the wordmark bottom-right so it doesn't fight with
+     visible objects in scene corners (chair in desk-coffee, curtains in
+     workspace, fern in notebook). */
+  .canvas[data-wordmark-pos="bottom-right"] .wordmark {
+    left: auto;
+    right: 56px;
+  }
+  .canvas[data-aspect="16x9"] .wordmark {
+    bottom: 48px;
+  }
+</style>
+</head>
+<body>
+<div class="canvas" id="canvas">
+  <div class="phone-wrap" id="phone-wrap">
+    <div class="phone">
+      <span class="phone-side-btn silencer"></span>
+      <span class="phone-side-btn volup"></span>
+      <span class="phone-side-btn voldn"></span>
+      <span class="phone-side-btn power"></span>
+      <div class="screen">
+        <img id="screenshot" alt="" src="">
+        <div class="statusbar">
+          <div class="island"></div>
+          <div class="time">9:41</div>
+          <div class="indicators">
+            <svg width="18" height="11" viewBox="0 0 18 11" fill="currentColor"><rect x="0"  y="7" width="3" height="4" rx="0.7"/><rect x="5"  y="5" width="3" height="6" rx="0.7"/><rect x="10" y="2" width="3" height="9" rx="0.7"/><rect x="15" y="0" width="3" height="11" rx="0.7"/></svg>
+            <svg width="16" height="11" viewBox="0 0 16 11" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"><path d="M2 5.2 A 9 9 0 0 1 14 5.2"/><path d="M4.2 7.2 A 6 6 0 0 1 11.8 7.2"/><circle cx="8" cy="9.4" r="1.1" fill="currentColor"/></svg>
+            <svg width="26" height="11" viewBox="0 0 26 11" fill="none" stroke="currentColor" stroke-width="1.1"><rect x="0.5" y="0.5" width="22" height="10" rx="2.4"/><rect x="2"   y="2"   width="18" height="7"  rx="1.2" fill="currentColor" stroke="none"/><rect x="23.4" y="3.6" width="1.8" height="3.8" rx="0.6" fill="currentColor" stroke="none"/></svg>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div id="copy-slot"></div>
+  <div class="wordmark" id="wordmark">Able</div>
+</div>
+
+<script>
+(function () {
+  const params = new URLSearchParams(location.search);
+  const shot   = params.get("shot")   || "";
+  const w      = parseInt(params.get("w") || "1080", 10);
+  const h      = parseInt(params.get("h") || "1920", 10);
+  const scene  = params.get("scene")  || "desk-coffee";
+  const theme  = params.get("theme")  || (scene === "desk-coffee" ? "dark" : "light");
+  const copyMode = params.get("copy") || "show";
+  const wordmarkPos = params.get("wordmarkPos") || "bottom-left";
+  const phoneScale = parseFloat(params.get("phoneScale") || "0");
+
+  const canvas = document.getElementById("canvas");
+  canvas.style.width  = w + "px";
+  canvas.style.height = h + "px";
+  canvas.dataset.scene = scene;
+  canvas.dataset.theme = theme;
+  if (wordmarkPos === "bottom-right") canvas.dataset.wordmarkPos = "bottom-right";
+  if (w === 1920 && h === 1080)      canvas.dataset.aspect = "16x9";
+  else if (w === 1080 && h === 1080) canvas.dataset.aspect = "1x1";
+  else if (w === 1080 && h === 1350) canvas.dataset.aspect = "4x5";
+  else if (w === 1080 && h === 1920) canvas.dataset.aspect = "9x16";
+
+  // Default phone scale per aspect — slightly tighter than _frame because the
+  // photo backgrounds carry their own visual weight; an over-scaled phone
+  // dominates the composition.
+  let scale = phoneScale;
+  if (!scale) {
+    if (w === 1080 && h === 1920)      scale = 1.20;  // 9:16 — was clipping at top
+    else if (w === 1080 && h === 1080) scale = 0.85;
+    else if (w === 1080 && h === 1350) scale = 1.00;  // 4:5 — was clipping
+    else if (w === 1920 && h === 1080) scale = 0.92;
+    else scale = Math.min(w, h) / 1100;
+  }
+  // notebook is a 4:3 photo — phone sits in white margin, can be a bit smaller
+  // so the whole composition (laptop edge + notebook + phone) reads as a scene.
+  if (scene === "notebook") {
+    scale *= 0.92;
+  }
+  // workspace — bump phone scale so it fully covers the real phone in the
+  // photo. The Able phone (422×876) at 1.0 maps to roughly the same size as
+  // the real phone in the original 1920×2880 image when scaled ~1.15×.
+  if (scene === "workspace") {
+    scale *= 1.15;
+  }
+  document.getElementById("phone-wrap").style.setProperty("--phone-scale", scale);
+
+  function escapeHtml(s) {
+    return String(s).replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
+  }
+  function nl2br(s) {
+    return escapeHtml(s).replace(/\\n/g, "<br>").replace(/\n/g, "<br>");
+  }
+  function arrows(s) {
+    return s.replace(/\[arrow\]/g, '<span class="arrow">→</span>');
+  }
+  function fmt(s) { return arrows(nl2br(s)); }
+
+  // Copy block.
+  if (copyMode !== "hide") {
+    const tag    = params.get("tag")   || "";
+    const line1  = params.get("line1") || "";
+    const sub    = params.get("sub")   || "";
+    if (tag || line1 || sub) {
+      const slot = document.getElementById("copy-slot");
+      const block = document.createElement("div");
+      block.className = "copy-block";
+      block.innerHTML =
+        (tag ? '<div class="copy-tag">' + escapeHtml(tag) + '</div>' : '') +
+        (line1 ? '<div class="copy-headline">' + fmt(line1) + '</div>' : '') +
+        (sub ? '<div class="copy-sub">' + fmt(sub) + '</div>' : '');
+      slot.replaceWith(block);
+    }
+  } else {
+    document.getElementById("copy-slot").remove();
+  }
+
+  // Load the screenshot.
+  if (shot) {
+    const img = document.getElementById("screenshot");
+    img.src = "_raw/" + shot;
+    img.onload = () => { window.__shotReady = true; };
+    img.onerror = () => { window.__shotReady = "error"; };
+  } else {
+    window.__shotReady = true;
+  }
+
+  // Wait one frame after layout for the bg image to decode.
+  requestAnimationFrame(() => {
+    const bgImg = new Image();
+    bgImg.onload = () => { window.__bgReady = true; };
+    bgImg.onerror = () => { window.__bgReady = "error"; };
+    const sceneToFile = {
+      "desk-coffee": "../lifestyle-base/desk-laptop-coffee.jpeg",
+      "workspace": "../lifestyle-base/minimalist-workspace.jpeg",
+      "notebook": "../lifestyle-base/desk-notebook.jpeg",
+    };
+    bgImg.src = sceneToFile[scene];
+  });
+})();
+</script>
+</body>
+</html>

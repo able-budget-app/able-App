@@ -1,0 +1,688 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Able product shot composer</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<!-- Bricolage Grotesque is the ONLY display face per Able brand. No second
+     face. Italic + weight variations carry the visual range that handwritten
+     fonts would otherwise. -->
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400;12..96,500;12..96,600;12..96,700;12..96,800;12..96,900&display=swap" rel="stylesheet">
+<style>
+  /*
+   * Phone-frame composer. URL params:
+   *   ?shot=01-dashboard.png   (relative to ./_raw/)
+   *   &w=1080&h=1920           (canvas dimensions in px — pre-zoom)
+   *   &layout=center|right|left
+   *   &bg=sage|cream|forest|charcoal
+   *   &copy=hide|show          (used by use-templates only; ignored in bare frame)
+   *
+   * The page renders at exactly w×h CSS pixels. Playwright captures at
+   * deviceScaleFactor=2 → output is 2160×3840 etc. ImageMagick downsamples
+   * back to the target export size in the script.
+   */
+  :root {
+    --bg-sage:     #E6EBE0;   /* matches the reference mockup */
+    --bg-cream:    #F2EEE3;
+    --bg-forest:   #1F3A2B;   /* Able dark green */
+    --bg-charcoal: #1A1F1B;
+    --frame:       #564A66;   /* iPhone 15 Pro purple body */
+    --frame-edge:  #6E627E;   /* highlight band */
+    --frame-deep:  #2E2638;   /* shadow band */
+    --bezel:       #0A0A0A;
+    --island:      #050505;
+  }
+  * { box-sizing: border-box; }
+  html, body { margin: 0; padding: 0; }
+  body {
+    font-family: "Bricolage Grotesque", -apple-system, BlinkMacSystemFont, "Helvetica Neue", Arial, sans-serif;
+    -webkit-font-smoothing: antialiased;
+    font-feature-settings: "ss01" on, "ss02" on;
+  }
+  .canvas {
+    position: relative;
+    overflow: hidden;
+    /* w/h injected via inline style by capture script */
+  }
+  .canvas[data-bg="sage"]     { background: var(--bg-sage); }
+  .canvas[data-bg="cream"]    { background: var(--bg-cream); }
+  .canvas[data-bg="forest"]   { background: var(--bg-forest); }
+  .canvas[data-bg="charcoal"] { background: var(--bg-charcoal); }
+
+  /* Subtle radial glow behind the phone for depth (works on every bg). */
+  .canvas::before {
+    content: "";
+    position: absolute; inset: 0;
+    background: radial-gradient(ellipse at 50% 50%, rgba(255,255,255,0.18) 0%, transparent 55%);
+    pointer-events: none;
+  }
+  .canvas[data-bg="sage"]::before    { background: radial-gradient(ellipse at 50% 50%, rgba(255,255,255,0.45) 0%, transparent 55%); }
+  .canvas[data-bg="forest"]::before  { background: radial-gradient(ellipse at 50% 50%, rgba(120,180,140,0.18) 0%, transparent 60%); }
+
+  /* The phone wrapper handles position + scale. */
+  .phone-wrap {
+    position: absolute;
+    left: 50%; top: 50%;
+    transform: translate(-50%, -50%) scale(var(--phone-scale, 1));
+    transform-origin: center center;
+    transition: none;
+  }
+  .canvas[data-layout="right"] .phone-wrap { left: 72%; }
+  .canvas[data-layout="left"]  .phone-wrap { left: 28%; }
+
+  /* The phone itself — fixed pixel dimensions matching the captured screenshot
+     ratio (390 × 844). Outer frame is a rounded rect; the inner cutout is the
+     screen. */
+  .phone {
+    position: relative;
+    width: 422px;
+    height: 876px;
+    background: var(--frame);
+    background:
+      linear-gradient(135deg, var(--frame-edge) 0%, var(--frame) 22%, var(--frame) 78%, var(--frame-deep) 100%);
+    border-radius: 62px;
+    padding: 16px;
+    box-shadow:
+      0 1px 0 1.5px rgba(255,255,255,0.18) inset,
+      0 -1px 0 1.5px rgba(0,0,0,0.3) inset,
+      0 0 0 1px rgba(0,0,0,0.18),
+      0 38px 64px rgba(0,0,0,0.22),
+      0 14px 28px rgba(0,0,0,0.15);
+  }
+  /* Inner bezel ring (the black between frame and screen). */
+  .phone::before {
+    content: "";
+    position: absolute;
+    inset: 6px;
+    border-radius: 56px;
+    background: var(--bezel);
+    z-index: 1;
+  }
+  /* Side buttons — silencer, vol up, vol down on left; power on right. */
+  .phone-side-btn {
+    position: absolute;
+    background: linear-gradient(to right, var(--frame-deep) 0%, var(--frame-edge) 50%, var(--frame-deep) 100%);
+    z-index: 0;
+  }
+  .phone-side-btn.silencer { left: -3px;  top: 110px; width: 4px; height: 26px; border-radius: 2px 0 0 2px; }
+  .phone-side-btn.volup    { left: -3px;  top: 170px; width: 4px; height: 60px; border-radius: 2px 0 0 2px; }
+  .phone-side-btn.voldn    { left: -3px;  top: 248px; width: 4px; height: 60px; border-radius: 2px 0 0 2px; }
+  .phone-side-btn.power    { right: -3px; top: 200px; width: 4px; height: 88px; border-radius: 0 2px 2px 0; }
+
+  /* Screen container — holds the screenshot. Captures already include 56px
+     of sage top padding (injected at capture time) so the iOS chrome and
+     dynamic island sit in that empty zone without overlapping app content. */
+  .screen {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    border-radius: 50px;
+    overflow: hidden;
+    z-index: 2;
+    background: #EFF3EE;
+  }
+  .screen img {
+    width: 100%;
+    height: 100%;
+    display: block;
+    object-fit: cover;
+    object-position: top center;
+  }
+
+  /* iOS-style status bar overlay (time + indicators) sits over the captured
+     padding zone. Position absolute so it doesn't push content. */
+  .statusbar {
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 56px;
+    color: #0A0A0A;
+    font-family: -apple-system, "SF Pro Text", "Helvetica Neue", sans-serif;
+    font-weight: 600;
+    font-size: 16px;
+    z-index: 4;
+    pointer-events: none;
+  }
+  .statusbar .time {
+    position: absolute;
+    left: 28px; top: 50%;
+    transform: translateY(-50%);
+    font-feature-settings: "tnum";
+    letter-spacing: -0.01em;
+  }
+  .statusbar .indicators {
+    position: absolute;
+    right: 28px; top: 50%;
+    transform: translateY(-50%);
+    display: flex; align-items: center; gap: 6px;
+  }
+  .statusbar svg { display: block; }
+
+  /* Dynamic island — black pill, centered in the status bar zone. */
+  .island {
+    position: absolute;
+    top: 11px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 124px;
+    height: 35px;
+    background: var(--island);
+    border-radius: 22px;
+    z-index: 5;
+    box-shadow: 0 0 0 0.5px rgba(255,255,255,0.06) inset;
+  }
+
+  /* ─────────────────────────────── USE TEMPLATES ─────────────────────────────
+     Triggered by ?template=feature-bullets|hero-line|callout|comparison|
+     carousel-slide. Each template positions the phone and adds copy chrome. */
+
+  /* feature-bullets: phone right, hook + bullet list left. Hook uses
+     Bricolage Grotesque italic at heavy weight (the brand's display face
+     carrying the editorial feel). No handwritten font. */
+  .canvas[data-template="feature-bullets"] {
+    background: var(--bg-sage);
+  }
+  .canvas[data-template="feature-bullets"] .phone-wrap {
+    left: 72%;
+  }
+  .canvas[data-template="feature-bullets"] .copy-block {
+    position: absolute;
+    left: 6%;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 38%;
+    color: #111c16;
+  }
+  .canvas[data-template="feature-bullets"] .copy-eyebrow {
+    font-size: 18px;
+    font-weight: 800;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: #2A7A4A;
+    margin-bottom: 18px;
+  }
+  .canvas[data-template="feature-bullets"] .copy-hook {
+    font-family: "Bricolage Grotesque", sans-serif;
+    font-size: 76px;
+    line-height: 1.02;
+    letter-spacing: -0.03em;
+    color: #111c16;
+    margin-bottom: 36px;
+    font-weight: 800;
+  }
+  /* Vertical aspects squeeze the side column to ~410px wide. Auto-wrap at
+     76px destroys readability — drop further so explicit \n breaks control
+     the layout instead of the wrap. Also widen the column slightly. */
+  .canvas[data-template="feature-bullets"][data-aspect="9x16"] .copy-block,
+  .canvas[data-template="feature-bullets"][data-aspect="4x5"]  .copy-block {
+    width: 42%;
+    left: 5%;
+  }
+  .canvas[data-template="feature-bullets"][data-aspect="9x16"] .phone-wrap,
+  .canvas[data-template="feature-bullets"][data-aspect="4x5"]  .phone-wrap {
+    left: 73%;
+  }
+  .canvas[data-template="feature-bullets"][data-aspect="9x16"] .copy-hook,
+  .canvas[data-template="feature-bullets"][data-aspect="4x5"]  .copy-hook {
+    font-size: 46px;
+    line-height: 1.06;
+    margin-bottom: 28px;
+  }
+  .canvas[data-template="feature-bullets"][data-aspect="9x16"] .copy-bullets,
+  .canvas[data-template="feature-bullets"][data-aspect="4x5"]  .copy-bullets {
+    font-size: 21px;
+    padding: 24px 26px;
+    line-height: 1.5;
+  }
+  .canvas[data-template="feature-bullets"][data-aspect="1x1"] .copy-hook {
+    font-size: 52px;
+    line-height: 1.05;
+    margin-bottom: 26px;
+  }
+  .canvas[data-template="feature-bullets"][data-aspect="1x1"] .copy-bullets {
+    font-size: 21px;
+    padding: 24px 26px;
+  }
+  .canvas[data-template="feature-bullets"] .copy-hook .arrow {
+    color: #2A7A4A;
+    font-weight: 700;
+  }
+  .canvas[data-template="feature-bullets"] .copy-bullets {
+    background: #FFFFFF;
+    border-radius: 24px;
+    padding: 32px 34px;
+    list-style: none;
+    margin: 0;
+    font-size: 26px;
+    line-height: 1.5;
+    color: #111c16;
+    font-weight: 500;
+    box-shadow: 0 14px 38px rgba(0,0,0,0.06);
+    position: relative;
+  }
+  .canvas[data-template="feature-bullets"] .copy-bullets::after {
+    content: "";
+    position: absolute;
+    right: -20px; top: 50%;
+    transform: translateY(-50%);
+    border: 20px solid transparent;
+    border-left-color: #FFFFFF;
+    border-right: 0;
+  }
+  .canvas[data-template="feature-bullets"] .copy-bullets li {
+    display: flex; align-items: flex-start; gap: 14px;
+    padding: 6px 0;
+  }
+  .canvas[data-template="feature-bullets"] .copy-bullets li::before {
+    content: "";
+    flex-shrink: 0;
+    width: 22px; height: 22px;
+    margin-top: 8px;
+    background: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 22 22' fill='none' stroke='%232A7A4A' stroke-width='3' stroke-linecap='round' stroke-linejoin='round'><polyline points='4 11 9 16 18 6'/></svg>") no-repeat center;
+    background-size: 22px;
+  }
+
+  /* hero-line: phone center, headline above. Bricolage at display size. */
+  .canvas[data-template="hero-line"] {
+    background: var(--bg-sage);
+  }
+  .canvas[data-template="hero-line"] .phone-wrap { top: 60%; }
+  .canvas[data-template="hero-line"] .copy-block {
+    position: absolute;
+    top: 6%; left: 50%;
+    transform: translateX(-50%);
+    text-align: center;
+    width: 88%;
+    color: #111c16;
+  }
+  .canvas[data-template="hero-line"] .copy-line {
+    font-family: "Bricolage Grotesque", sans-serif;
+    font-size: 68px;
+    font-weight: 800;
+    letter-spacing: -0.03em;
+    line-height: 1.05;
+    color: #111c16;
+  }
+  /* On wider canvases (16:9), the headline can size up — there's room. */
+  .canvas[data-template="hero-line"][data-aspect="16x9"] .copy-line { font-size: 70px; }
+  .canvas[data-template="hero-line"][data-aspect="9x16"] .copy-line { font-size: 64px; }
+
+  /* 16:9 hero-line: switch to side-by-side. Phone right, copy left, both
+     vertically centered. The horizontal canvas has plenty of room for this
+     and the stacked layout caused the phone to clip into the sub-text. */
+  .canvas[data-template="hero-line"][data-aspect="16x9"] .phone-wrap {
+    top: 50%; left: 73%;
+  }
+  .canvas[data-template="hero-line"][data-aspect="16x9"] .copy-block {
+    top: 50%; left: 5%;
+    transform: translateY(-50%);
+    width: 50%;
+    text-align: left;
+  }
+  .canvas[data-template="hero-line"][data-aspect="16x9"] .copy-sub {
+    margin-top: 24px;
+  }
+  .canvas[data-template="hero-line"] .copy-line .arrow {
+    color: #2A7A4A;
+    font-weight: 700;
+    margin: 0 6px;
+  }
+  .canvas[data-template="hero-line"] .copy-sub {
+    font-size: 30px;
+    font-weight: 500;
+    color: #4a5c52;
+    margin-top: 20px;
+    line-height: 1.4;
+    letter-spacing: -0.005em;
+  }
+
+  /* callout: phone left, single highlight bubble pointing at a feature. */
+  .canvas[data-template="callout"] {
+    background: var(--bg-sage);
+  }
+  .canvas[data-template="callout"] .phone-wrap { left: 32%; }
+  .canvas[data-template="callout"] .copy-block {
+    position: absolute;
+    right: 5%; top: 50%;
+    transform: translateY(-50%);
+    width: 44%;
+  }
+  .canvas[data-template="callout"] .callout-bubble {
+    background: #1F3A2B;
+    color: #EFF3EE;
+    padding: 32px 36px;
+    border-radius: 28px;
+    font-family: "Bricolage Grotesque", sans-serif;
+    font-size: 34px;
+    line-height: 1.3;
+    font-weight: 700;
+    letter-spacing: -0.015em;
+    position: relative;
+    box-shadow: 0 18px 42px rgba(31,58,43,0.22);
+  }
+  /* Vertical aspects: shrink bubble font so multi-line copy doesn't push past
+     the canvas right edge. */
+  .canvas[data-template="callout"][data-aspect="9x16"] .callout-bubble,
+  .canvas[data-template="callout"][data-aspect="4x5"]  .callout-bubble,
+  .canvas[data-template="callout"][data-aspect="1x1"]  .callout-bubble {
+    font-size: 26px;
+    padding: 26px 28px;
+    border-radius: 22px;
+  }
+  .canvas[data-template="callout"][data-aspect="9x16"] .callout-bubble::before,
+  .canvas[data-template="callout"][data-aspect="4x5"]  .callout-bubble::before,
+  .canvas[data-template="callout"][data-aspect="1x1"]  .callout-bubble::before {
+    border-width: 16px;
+    left: -16px;
+    border-right-color: #1F3A2B;
+    border-left: 0;
+  }
+  .canvas[data-template="callout"] .callout-bubble::before {
+    content: "";
+    position: absolute;
+    left: -22px; top: 50%;
+    transform: translateY(-50%);
+    border: 22px solid transparent;
+    border-right-color: #1F3A2B;
+    border-left: 0;
+  }
+  /* Eyebrow tag now lives INSIDE the bubble — sits at the top in light green
+     against the dark forest bg. Previous design placed it as a sibling above
+     the bubble; on vertical aspects (4x5, 9x16) the tag x-extent overlapped
+     with the phone right edge, so the phone occluded the first letters. */
+  .canvas[data-template="callout"] .callout-tag {
+    display: block;
+    font-family: "Bricolage Grotesque", sans-serif;
+    font-size: 14px;
+    font-weight: 800;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: #B8E0C8;
+    margin-bottom: 14px;
+    opacity: 0.92;
+  }
+  .canvas[data-template="callout"][data-aspect="9x16"] .callout-tag,
+  .canvas[data-template="callout"][data-aspect="4x5"]  .callout-tag,
+  .canvas[data-template="callout"][data-aspect="1x1"]  .callout-tag {
+    font-size: 12px;
+    margin-bottom: 12px;
+  }
+
+  /* comparison: split panel — left "before" with pain bullets, right phone.
+     "WITHOUT" sits in muted uppercase eyebrow above bullets. No em dashes
+     per Able brand — uses period markers instead. */
+  .canvas[data-template="comparison"] { background: var(--bg-cream); }
+  .canvas[data-template="comparison"] .phone-wrap { left: 75%; }
+  .canvas[data-template="comparison"] .copy-block {
+    position: absolute;
+    left: 0; top: 0; bottom: 0; width: 50%;
+    display: flex; flex-direction: column;
+    justify-content: center;
+    padding: 0 7%;
+  }
+  .canvas[data-template="comparison"] .compare-head {
+    font-size: 20px; font-weight: 800; color: #C04060;
+    text-transform: uppercase; letter-spacing: 0.18em;
+    margin-bottom: 28px;
+  }
+  .canvas[data-template="comparison"] .compare-list {
+    list-style: none; padding: 0; margin: 0;
+    font-size: 30px; line-height: 1.45; color: #111c16;
+    font-weight: 500; letter-spacing: -0.005em;
+  }
+  .canvas[data-template="comparison"] .compare-list li {
+    padding: 12px 0; padding-left: 30px; position: relative;
+  }
+  .canvas[data-template="comparison"] .compare-list li::before {
+    content: ""; position: absolute; left: 0; top: 28px;
+    width: 14px; height: 2px; background: #C04060;
+  }
+  /* After-Able variant: green checkmarks instead of red dashes, green eyebrow.
+     Triggered by ?mode=after URL param → adds .after class to copy-block. */
+  .canvas[data-template="comparison"] .copy-block.after .compare-head { color: #2A7A4A; }
+  .canvas[data-template="comparison"] .copy-block.after .compare-list li::before {
+    content: "";
+    background: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 22 22' fill='none' stroke='%232A7A4A' stroke-width='3.2' stroke-linecap='round' stroke-linejoin='round'><polyline points='4 11 9 16 18 6'/></svg>") no-repeat center / 22px;
+    width: 22px; height: 22px; top: 16px; left: -2px;
+  }
+  .canvas[data-template="comparison"] .copy-block.after .compare-list li {
+    padding-left: 36px;
+  }
+
+  /* Canonical Able wordmark. Mirrors `.brand-wordmark` in app.html exactly:
+     just the word "Able" + the brand swoosh SVG underline (NOT reimplemented
+     — copied verbatim per `brand_asset_workflow` memory). Bricolage 900,
+     letter-spacing -.03em. Sits bottom-left by default; templates override. */
+  .wordmark {
+    position: absolute;
+    bottom: 56px;
+    left: 56px;
+    font-family: "Bricolage Grotesque", sans-serif;
+    font-size: 52px;
+    font-weight: 900;
+    color: #111c16;
+    letter-spacing: -0.03em;
+    line-height: 1;
+    display: inline-block;
+    z-index: 10;
+    pointer-events: none;
+  }
+  .wordmark::after {
+    content: "";
+    position: absolute;
+    left: 0; right: -4%;
+    bottom: -5px;
+    height: 9px;
+    background: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 120 4.2' preserveAspectRatio='none'><path d='M3 2.6 Q2 2.4 3 2.15 Q58 1.75 115 0.15 Q119 1 119 2 Q119 3 115 3.9 Q58 3.55 3 2.65 Q2 2.45 3 2.6 Z' fill='%232a7a4a'/></svg>") no-repeat center / 100% 100%;
+    pointer-events: none;
+  }
+  /* hero-line + carousel-slide put the phone at canvas center → wordmark
+     stays bottom-left. comparison shifts wordmark to top-right so it doesn't
+     conflict with the bullet copy block. */
+  .canvas[data-template="comparison"] .wordmark {
+    bottom: auto; left: auto;
+    top: 56px; right: 56px;
+  }
+  /* On 16:9 wide canvases, kick the wordmark slightly inward for safe-area.
+     The :not(comparison) qualifier prevents this rule from re-introducing
+     bottom/left on the comparison layout — when both are set alongside
+     top/right the element stretches and pins to top-left visually. */
+  .canvas[data-aspect="16x9"]:not([data-template="comparison"]) .wordmark {
+    bottom: 48px; left: 56px;
+  }
+  .canvas[data-aspect="16x9"][data-template="comparison"] .wordmark {
+    bottom: auto; left: auto;
+    top: 48px; right: 56px;
+  }
+
+  /* carousel-slide: title bar at top, phone below. (For IG carousels.)
+     On vertical aspects (9x16, 4x5) the phone is shrunk to fit the canvas
+     and the whole composition sits tighter — phone moves UP so the gap
+     between headline and phone reads as a unit, not floating space. */
+  .canvas[data-template="carousel-slide"] { background: var(--bg-sage); }
+  .canvas[data-template="carousel-slide"] .phone-wrap { top: 62%; }
+  .canvas[data-template="carousel-slide"][data-aspect="9x16"] .phone-wrap { top: 56%; }
+  .canvas[data-template="carousel-slide"][data-aspect="4x5"]  .phone-wrap { top: 60%; }
+  .canvas[data-template="carousel-slide"] .copy-block {
+    position: absolute;
+    top: 8%; left: 50%; transform: translateX(-50%);
+    width: 90%; text-align: center;
+  }
+  .canvas[data-template="carousel-slide"][data-aspect="9x16"] .copy-block { top: 11%; }
+  .canvas[data-template="carousel-slide"] .slide-num {
+    font-size: 20px; font-weight: 800; color: #2A7A4A;
+    letter-spacing: 0.16em; text-transform: uppercase;
+    margin-bottom: 10px;
+  }
+  .canvas[data-template="carousel-slide"] .slide-title {
+    font-family: "Bricolage Grotesque", sans-serif;
+    font-size: 60px; font-weight: 800; color: #111c16;
+    line-height: 1.06; letter-spacing: -0.025em;
+  }
+  /* Force intentional line breaks — see render-product-templates.py: copy
+     uses literal "\n" → rendered as <br>. Avoids ugly auto-wraps like
+     "Get a real / answer." mid-thought. */
+  .canvas[data-template="carousel-slide"] .slide-title br {
+    line-height: 1.1;
+  }
+</style>
+</head>
+<body>
+<div class="canvas" id="canvas">
+  <div class="phone-wrap" id="phone-wrap">
+    <div class="phone">
+      <span class="phone-side-btn silencer"></span>
+      <span class="phone-side-btn volup"></span>
+      <span class="phone-side-btn voldn"></span>
+      <span class="phone-side-btn power"></span>
+      <div class="screen">
+        <img id="screenshot" alt="" src="">
+        <div class="statusbar">
+          <div class="island"></div>
+          <div class="time">9:41</div>
+          <div class="indicators">
+            <!-- signal -->
+            <svg width="18" height="11" viewBox="0 0 18 11" fill="currentColor"><rect x="0"  y="7" width="3" height="4" rx="0.7"/><rect x="5"  y="5" width="3" height="6" rx="0.7"/><rect x="10" y="2" width="3" height="9" rx="0.7"/><rect x="15" y="0" width="3" height="11" rx="0.7"/></svg>
+            <!-- wifi -->
+            <svg width="16" height="11" viewBox="0 0 16 11" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"><path d="M2 5.2 A 9 9 0 0 1 14 5.2"/><path d="M4.2 7.2 A 6 6 0 0 1 11.8 7.2"/><circle cx="8" cy="9.4" r="1.1" fill="currentColor"/></svg>
+            <!-- battery -->
+            <svg width="26" height="11" viewBox="0 0 26 11" fill="none" stroke="currentColor" stroke-width="1.1"><rect x="0.5" y="0.5" width="22" height="10" rx="2.4"/><rect x="2"   y="2"   width="18" height="7"  rx="1.2" fill="currentColor" stroke="none"/><rect x="23.4" y="3.6" width="1.8" height="3.8" rx="0.6" fill="currentColor" stroke="none"/></svg>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div id="copy-slot"></div>
+  <div class="wordmark" id="wordmark">Able</div>
+</div>
+
+<script>
+(function () {
+  const params = new URLSearchParams(location.search);
+  const shot     = params.get("shot")     || "";
+  const w        = parseInt(params.get("w") || "1080", 10);
+  const h        = parseInt(params.get("h") || "1920", 10);
+  const layout   = params.get("layout")   || "center";
+  const bg       = params.get("bg")       || "sage";
+  const template = params.get("template") || "";
+  const phoneScale = parseFloat(params.get("phoneScale") || "1");
+
+  const canvas = document.getElementById("canvas");
+  canvas.style.width  = w + "px";
+  canvas.style.height = h + "px";
+  canvas.dataset.layout = layout;
+  canvas.dataset.bg = bg;
+  if (template) canvas.dataset.template = template;
+  // Aspect tag is used for safe-area tweaks (e.g., 16:9 wordmark inset).
+  if (w === 1920 && h === 1080) canvas.dataset.aspect = "16x9";
+  else if (w === 1080 && h === 1080) canvas.dataset.aspect = "1x1";
+  else if (w === 1080 && h === 1350) canvas.dataset.aspect = "4x5";
+  else if (w === 1080 && h === 1920) canvas.dataset.aspect = "9x16";
+
+  // Hide wordmark on bare-frame shots (no template) — the in-app "Become Able"
+  // header is already visible in the screenshot, doubling up looks redundant.
+  if (!template) {
+    document.getElementById("wordmark").style.display = "none";
+  }
+
+  // Helper: convert literal "\n" in URL params into <br> tags (escapes the
+  // surrounding text for safety). Used by template copy slots so authors can
+  // force intentional line breaks instead of relying on auto-wrap.
+  function escapeHtml(s) {
+    return String(s).replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
+  }
+  function nl2br(s) {
+    return escapeHtml(s).replace(/\\n/g, "<br>").replace(/\n/g, "<br>");
+  }
+  // Allow a literal "→" sentinel "[arrow]" → wrap in styled .arrow span.
+  function arrows(s) {
+    return s.replace(/\[arrow\]/g, '<span class="arrow">→</span>');
+  }
+  function fmt(s) { return arrows(nl2br(s)); }
+
+  // Default phone scale per aspect ratio. The phone is 422 × 876 at 1.0.
+  // We want it to look "right" in each canvas size.
+  let scale = phoneScale;
+  if (scale === 1) {
+    if (w === 1080 && h === 1920)      scale = 1.85;  // 9:16 story
+    else if (w === 1080 && h === 1080) scale = 1.05;  // 1:1 feed
+    else if (w === 1080 && h === 1350) scale = 1.40;  // 4:5 portrait
+    else if (w === 1920 && h === 1080) scale = 1.05;  // 16:9 landscape
+    else scale = Math.min(w, h) / 880;
+  }
+  // Inside templates, the phone takes less space to leave room for copy.
+  // 9:16 base scale is 1.85 — even at 0.78 multiplier the phone exceeds
+  // canvas height and clips the bottom nav. Vertical aspects need tighter
+  // clamps so the full phone (status bar + content + bottom nav) fits.
+  const isVertical = (w === 1080 && (h === 1920 || h === 1350));
+  if (template === "feature-bullets" || template === "callout" || template === "comparison") {
+    scale *= isVertical ? 0.62 : 0.78;
+  }
+  if (template === "hero-line" || template === "carousel-slide") {
+    scale *= isVertical ? 0.66 : 0.82;
+  }
+  document.getElementById("phone-wrap").style.setProperty("--phone-scale", scale);
+
+  // Load the screenshot.
+  if (shot) {
+    const img = document.getElementById("screenshot");
+    img.src = "_raw/" + shot;
+    img.onload = () => { window.__shotReady = true; };
+    img.onerror = () => { window.__shotReady = "error"; };
+  } else {
+    window.__shotReady = true;
+  }
+
+  // Inject template copy. Copy is parameterized via:
+  //   &hook=...   &line1=...   &line2=...   &bullets=a|b|c
+  if (template) {
+    const copySlot = document.getElementById("copy-slot");
+    const block = document.createElement("div");
+    block.className = "copy-block";
+
+    const hook   = params.get("hook")   || "";
+    const line1  = params.get("line1")  || "";
+    const line2  = params.get("line2")  || "";
+    const sub    = params.get("sub")    || "";
+    const bullets = (params.get("bullets") || "").split("|").filter(Boolean);
+    const tag    = params.get("tag")    || "";
+
+    const eyebrow = params.get("eyebrow") || "";
+    if (template === "feature-bullets") {
+      const ul = bullets.map(b => "<li>" + escapeHtml(b) + "</li>").join("");
+      block.innerHTML =
+        (eyebrow ? '<div class="copy-eyebrow">' + escapeHtml(eyebrow) + '</div>' : '') +
+        (hook ? '<div class="copy-hook">' + fmt(hook) + '</div>' : '') +
+        '<ul class="copy-bullets">' + ul + '</ul>';
+    }
+    if (template === "hero-line") {
+      block.innerHTML =
+        '<div class="copy-line">' + fmt(line1 || "From Unable [arrow] Able.") + '</div>' +
+        (sub ? '<div class="copy-sub">' + fmt(sub) + '</div>' : '');
+    }
+    if (template === "callout") {
+      // Eyebrow sits INSIDE the bubble (light green on dark forest bg) so it
+      // never overlaps with the phone z-stack on vertical aspects.
+      const tagSpan = tag ? '<span class="callout-tag">' + escapeHtml(tag) + '</span>' : '';
+      block.innerHTML =
+        '<div class="callout-bubble">' + tagSpan + fmt(line1 || "") + '</div>';
+    }
+    if (template === "comparison") {
+      const mode = params.get("mode") || "before";
+      if (mode === "after") block.classList.add("after");
+      const ul = bullets.map(b => "<li>" + escapeHtml(b) + "</li>").join("");
+      block.innerHTML =
+        '<div class="compare-head">' + escapeHtml(hook || (mode === "after" ? "After Able" : "Before Able")) + '</div>' +
+        '<ul class="compare-list">' + ul + '</ul>';
+    }
+    if (template === "carousel-slide") {
+      block.innerHTML =
+        (tag ? '<div class="slide-num">' + escapeHtml(tag) + '</div>' : '') +
+        '<div class="slide-title">' + fmt(line1 || "") + '</div>';
+    }
+    copySlot.replaceWith(block);
+  }
+})();
+</script>
+</body>
+</html>

@@ -80,7 +80,7 @@
         { name: 'Set aside for taxes',           why: '28% of every dollar to a separate tax account.',                    amount: splits.tax,    color: 'var(--ds-c2)',   bg: '#d9ecde',            type: 'fixed', destination: 'savings_bucket' },
         { name: 'Cover upcoming bills',          why: 'Rent, phone, internet, health, software in the next 14 days.',      amount: splits.bills,  color: 'var(--ds-t1)',   bg: 'var(--ds-card2)',    type: 'bills' },
         { name: 'Pay extra on Chase Sapphire CC', why: '22% APR — highest interest first.',                                amount: splits.debt,   color: 'var(--coral)',   bg: 'var(--coral-light)', type: 'debt' },
-        { name: 'Move to savings (buffer)',      why: 'Slow-month protection. 6-month goal: $14k.',                         amount: splits.buffer, color: 'var(--sky)',     bg: 'var(--sky-light)',   type: 'buffer' },
+        { name: 'Move to reserve',               why: 'Slow-month protection. 6-month goal: $14k.',                         amount: splits.buffer, color: 'var(--sky)',     bg: 'var(--sky-light)',   type: 'buffer' },
         { name: 'Pay yourself',                  why: '14% owner draw. Locked in regardless of season.',                    amount: splits.owner,  color: 'var(--ds-c2)',   bg: '#d9ecde',            type: 'ownerpay' },
         { name: 'Yours to spend freely',         why: '8% guilt-free. No tracking, no rules.',                              amount: splits.free,   color: 'var(--text2)',   bg: 'var(--bg2)',         type: 'free' },
       ].filter(function (j) { return j.amount > 0.01; }),
@@ -150,7 +150,7 @@
     profile: {
       name: 'Alex',
       business_type: 'Freelance design',
-      goals: 'Pay off the credit card, build a 6-month buffer, and stop the income roller coaster.',
+      goals: 'Pay off the credit card, build a 6-month reserve, and stop the income roller coaster.',
     },
     email_prefs: { dormancy: false, weekly: true },
     last_active: new Date().toISOString(),
@@ -165,17 +165,17 @@
     },
     {
       role: 'assistant',
-      content: "Nice deposit. Here's how I'd split it.\n\n**Taxes ($672)** off the top — 28% to your tax savings account. Non-negotiable.\n\n**Bills ($600)** covers rent, phone, internet, health insurance, and your CC minimum coming up in the next 14 days.\n\n**Pay yourself ($336)** — 14% owner draw. You earned it.\n\n**Extra to Chase Sapphire ($288)** — 22% APR is bleeding you. Hit it hard.\n\n**Buffer ($312)** — keeps you on pace to hit your 6-month goal of $14k.\n\n**Free spending ($192)** — guilt-free. Use it.",
+      content: "Nice deposit. Here's how I'd split it.\n\n**Taxes ($672)** off the top — 28% to your tax savings account. Non-negotiable.\n\n**Bills ($600)** covers rent, phone, internet, health insurance, and your CC minimum coming up in the next 14 days.\n\n**Pay yourself ($336)** — 14% owner draw. You earned it.\n\n**Extra to Chase Sapphire ($288)** — 22% APR is bleeding you. Hit it hard.\n\n**Reserve ($312)** — keeps you on pace to hit your 6-month goal of $14k.\n\n**Free spending ($192)** — guilt-free. Use it.",
       created_at: new Date(daysAgoTs(8) + 30000).toISOString(),
     },
     {
       role: 'user',
-      content: "Can I push more to the credit card and skip the buffer this round?",
+      content: "Can I push more to the credit card and skip the reserve this round?",
       created_at: new Date(daysAgoTs(8) + 120000).toISOString(),
     },
     {
       role: 'assistant',
-      content: "You can — but I'd push back a little.\n\nYou've got $3,200 in buffer right now. That's about 1.4 months of expenses. The CC will get paid off either way; the buffer is what stops the next slow month from putting you back on the card.\n\nIf you want to accelerate, I'd suggest: keep the buffer contribution, and pull from your free spending bucket this round. That gets the CC down faster without leaving you exposed.\n\nWant me to recompute the split that way?",
+      content: "You can, but I'd push back a little.\n\nYou've got $3,200 in reserve right now. That's about 1.4 months of expenses. The CC will get paid off either way; the reserve is what stops the next slow month from putting you back on the card.\n\nIf you want to accelerate, I'd suggest: keep the reserve contribution, and pull from your free spending bucket this round. That gets the CC down faster without leaving you exposed.\n\nWant me to recompute the split that way?",
       created_at: new Date(daysAgoTs(8) + 150000).toISOString(),
     },
   ];
@@ -275,20 +275,20 @@
         "",
         "**With $400 extra this month:** Balance drops to $3,800. Next month's interest charge falls from ~$77 to ~$70. Over the life of the debt, that single $400 saves you ~$190 in interest and chops about 4 months off the payoff.",
         "",
-        "**The catch:** your buffer is at $3,200, which is ~1.4 months of expenses. Goal is 6 months ($14k). Pulling $400 from buffer would set that timeline back ~2 weeks.",
+        "**The catch:** your reserve is at $3,200, which is ~1.4 months of expenses. Goal is 6 months ($14k). Pulling $400 from the reserve would set that timeline back ~2 weeks.",
         "",
-        "**My recommendation:** take it from your free-spending bucket this round, not buffer. You've got $192 sitting there from the last deposit and ~$200 from the round before. Combine those, top up another $50 from buffer, and you hit $400 without touching the safety net.",
+        "**My recommendation:** take it from your free-spending bucket this round, not the reserve. You've got $192 sitting there from the last deposit and ~$200 from the round before. Combine those, top up another $50 from the reserve, and you hit $400 without touching the safety net.",
         "",
         "Want me to recompute the next deposit with that split locked in?",
       ].join("\n");
     }
-    if (/buffer|emergency|safety|slow.*month/.test(m)) {
+    if (/reserve|buffer|emergency|safety|slow.*month/.test(m)) {
       return [
         "You're at $3,200 — about 1.4 months of expenses ($2,160/mo). Goal is 6 months ($14,000), so you're 23% of the way.",
         "",
-        "**Pace check:** with 15% of every deposit going to buffer (~$300/$400 per deposit, depending on size), you're on track to hit $14k in roughly 8-9 months at current income. Faster if income picks up, slower if it dips.",
+        "**Pace check:** with 15% of every deposit going to reserve (~$300/$400 per deposit, depending on size), you're on track to hit $14k in roughly 8-9 months at current income. Faster if income picks up, slower if it dips.",
         "",
-        "**One thing to watch:** the 22% APR on Chase Sapphire is more expensive than the buffer's growth, so once you're at 3 months ($6,500-ish), I'd consider routing more to debt. Buffer is for emergencies, not optimization. 3 months covers most slow-month scenarios for a freelance designer.",
+        "**One thing to watch:** the 22% APR on Chase Sapphire is more expensive than the reserve's growth, so once you're at 3 months ($6,500-ish), I'd consider routing more to debt. Reserve is for emergencies, not optimization. 3 months covers most slow-month scenarios for a freelance designer.",
       ].join("\n");
     }
     if (/tax|set.aside|quarterly/.test(m)) {
@@ -310,7 +310,7 @@
         "**2. Bills (next 14 days)** — Rent, Phone, Internet, Health, Software, CC minimum. Whatever's needed lands here first.",
         "**3. Pay yourself (14%)** — owner draw. Locked in.",
         "**4. Extra debt (20% of surplus)** — straight to Chase Sapphire (highest APR).",
-        "**5. Buffer (15% of surplus)** — toward your $14k goal.",
+        "**5. Reserve (15% of surplus)** — toward your $14k goal.",
         "**6. Free spending (8% of surplus)** — yours to use however.",
         "",
         "Want me to walk through what a specific deposit amount would look like?",
@@ -318,9 +318,9 @@
     }
     // Default: warm, grounded reply that references the persona.
     return [
-      "I'm reading your full picture: $4,200 on Chase Sapphire at 22%, $3,200 in buffer, six bills in the next two weeks totaling about $2,160, and a 28% tax rule pulling off the top of every deposit.",
+      "I'm reading your full picture: $4,200 on Chase Sapphire at 22%, $3,200 in reserve, six bills in the next two weeks totaling about $2,160, and a 28% tax rule pulling off the top of every deposit.",
       "",
-      "What's on your mind? Try \"can I pay extra on the card?\", \"how's my buffer pacing?\", or \"what about taxes?\"",
+      "What's on your mind? Try \"can I pay extra on the card?\", \"how's my reserve pacing?\", or \"what about taxes?\"",
     ].join("\n");
   }
   var stubClient = {
