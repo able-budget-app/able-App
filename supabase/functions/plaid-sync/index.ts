@@ -130,12 +130,12 @@ Deno.serve(async (req) => {
           40000,
         )),
       ]);
-      console.log(`plaid-sync: page ${page} fetched in ${Date.now() - tPage}ms (added=${resp.added.length}, modified=${resp.modified.length}, removed=${resp.removed.length}, has_more=${resp.has_more}, status=${resp.transactions_update_status})`);
+      console.log(`plaid-sync: item=${item.id} page ${page} fetched in ${Date.now() - tPage}ms (added=${resp.added.length}, modified=${resp.modified.length}, removed=${resp.removed.length}, has_more=${resp.has_more}, status=${resp.transactions_update_status})`);
 
       // Refresh balances from this page's accounts list.
       const tAcc = Date.now();
       await upsertAccounts(admin, item.id, userId, resp.accounts, accountMap);
-      console.log(`plaid-sync: page ${page} accounts upsert in ${Date.now() - tAcc}ms`);
+      console.log(`plaid-sync: item=${item.id} page ${page} accounts upsert in ${Date.now() - tAcc}ms`);
 
       // Persist transactions.
       if (resp.added.length) {
@@ -150,7 +150,7 @@ Deno.serve(async (req) => {
           if (error) console.error('insert added txns failed:', error);
         }
         totalAdded += resp.added.length;
-        console.log(`plaid-sync: page ${page} inserted ${rows.length} added txns in ${Date.now() - tIns}ms`);
+        console.log(`plaid-sync: item=${item.id} page ${page} inserted ${rows.length} added txns in ${Date.now() - tIns}ms`);
       }
 
       if (resp.modified.length) {
@@ -192,7 +192,7 @@ Deno.serve(async (req) => {
       updatePayload.historical_sync_complete = true;
     }
     await admin.from('plaid_items').update(updatePayload).eq('id', item.id);
-    console.log(`plaid-sync: done in ${Date.now() - tStart}ms, total added=${totalAdded}, modified=${totalModified}, removed=${totalRemoved}, status=${lastStatus}`);
+    console.log(`plaid-sync: item=${item.id} done in ${Date.now() - tStart}ms, total added=${totalAdded}, modified=${totalModified}, removed=${totalRemoved}, status=${lastStatus}`);
 
     // Auto-classify the just-synced transactions in the background. Skip
     // when nothing changed to save LLM calls. Defer via EdgeRuntime.waitUntil
