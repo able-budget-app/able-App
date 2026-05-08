@@ -236,11 +236,11 @@ if (!IS_PREVIEW) Deno.serve(async (req) => {
 
         if (profile.subscription_status === 'trialing') {
           if (hoursUntilEnd >= 36 && hoursUntilEnd <= 60 && !sentEver(userId, 'trial_day_5_nudge')) {
-            const ok = await sendTrialDay5(admin, email, userData);
+            const ok = await sendTrial2DaysLeft(admin, email, userData);
             if (ok) results.trial_day_5++; else results.errors++;
           }
           if (hoursUntilEnd >= 12 && hoursUntilEnd <= 36 && !sentEver(userId, 'trial_day_7_last_call')) {
-            const ok = await sendTrialDay7(admin, email, userData);
+            const ok = await sendTrial24hLeft(admin, email, userData);
             if (ok) results.trial_day_7++; else results.errors++;
           }
         } else if (profile.subscription_status === 'inactive' && trialEndMs < nowMs && trialEndMs > nowMs - 7 * 24 * 3_600_000) {
@@ -869,7 +869,7 @@ function buildCart(user: any, stage: '24h' | '3d' | '7d', unsub: string): { subj
   };
 }
 
-function buildTrialDay5(user: any, unsub: string): { subject: string; html: string } {
+function buildTrial2DaysLeft(user: any, unsub: string): { subject: string; html: string } {
   const inner = hero({ eyebrow: 'Heads up', title: 'Your trial ends in 2 days.' })
     + heroNumber({ label: 'Days left', value: '2', sub: 'Card on file gets charged on day 31' })
     + paragraph(`If Able has clicked, no action needed. Subscription starts automatically.`, { topMargin: 18 })
@@ -881,7 +881,7 @@ function buildTrialDay5(user: any, unsub: string): { subject: string; html: stri
   };
 }
 
-function buildTrialDay7(user: any, unsub: string): { subject: string; html: string } {
+function buildTrial24hLeft(user: any, unsub: string): { subject: string; html: string } {
   const inner = hero({ eyebrow: 'Last call', tone: 'amber', title: 'Your trial ends tomorrow.' })
     + paragraph(`To continue, do nothing. Subscription starts automatically.`, { topMargin: 18 })
     + paragraph(`To cancel, do it now in Settings. Two taps.`, { topMargin: 10 })
@@ -1028,14 +1028,15 @@ async function sendCart(admin: any, email: string, user: any, stage: '24h' | '3d
   return sendViaResend(admin, email, subject, html, `cart_${stage}`, user.id);
 }
 
-async function sendTrialDay5(admin: any, email: string, user: any) {
-  const { subject, html } = buildTrialDay5(user, unsubUrl(user.unsubscribe_token));
+async function sendTrial2DaysLeft(admin: any, email: string, user: any) {
+  const { subject, html } = buildTrial2DaysLeft(user, unsubUrl(user.unsubscribe_token));
   // DB type string preserved for the (user_id, type, sent_day) unique index.
   return sendViaResend(admin, email, subject, html, 'trial_day_5_nudge', user.id);
 }
 
-async function sendTrialDay7(admin: any, email: string, user: any) {
-  const { subject, html } = buildTrialDay7(user, unsubUrl(user.unsubscribe_token));
+async function sendTrial24hLeft(admin: any, email: string, user: any) {
+  const { subject, html } = buildTrial24hLeft(user, unsubUrl(user.unsubscribe_token));
+  // DB type string preserved for the (user_id, type, sent_day) unique index.
   return sendViaResend(admin, email, subject, html, 'trial_day_7_last_call', user.id);
 }
 
@@ -1125,8 +1126,8 @@ async function renderPreview(): Promise<void> {
     { id: 'cart_24h', built: buildCart(userBase, '24h', fakeUnsub) },
     { id: 'cart_3d', built: buildCart(userBase, '3d', fakeUnsub) },
     { id: 'cart_7d', built: buildCart(userBase, '7d', fakeUnsub) },
-    { id: 'trial_2_days_left', built: buildTrialDay5(userBase, fakeUnsub) },
-    { id: 'trial_last_day', built: buildTrialDay7(userBase, fakeUnsub) },
+    { id: 'trial_2_days_left', built: buildTrial2DaysLeft(userBase, fakeUnsub) },
+    { id: 'trial_last_day', built: buildTrial24hLeft(userBase, fakeUnsub) },
     { id: 'trial_ended_no_convert', built: buildTrialEndedNoConvert(userBase, fakeUnsub) },
     { id: 'achievement_one_month_ahead', built: buildAchievement(userBase, 'one_month_ahead', fakeUnsub) },
     { id: 'achievement_debt_free', built: buildAchievement(userBase, 'debt_free', fakeUnsub) },
