@@ -11,14 +11,15 @@
 <meta property="og:url" content="https://becomeable.app/calculators/owner-pay/">
 <meta property="og:type" content="website">
 <meta property="og:site_name" content="Able">
-<meta name="twitter:card" content="summary">
-<script type="application/ld+json">{
-  "@context":"https://schema.org","@type":"WebApplication",
-  "name":"Owner Pay Calculator","description":"Calculate a sustainable paycheck for a business owner with variable income.",
-  "url":"https://becomeable.app/calculators/owner-pay/","applicationCategory":"FinanceApplication","operatingSystem":"Any",
-  "offers":{"@type":"Offer","price":"0","priceCurrency":"USD"},
-  "creator":{"@type":"Organization","name":"Able","url":"https://becomeable.app/"}
-}</script>
+<meta property="og:image" content="https://becomeable.app/brand/og-image.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Owner Pay Calculator for Variable Income | Able">
+<meta name="twitter:description" content="Figure out a sustainable paycheck to pay yourself from a business with unpredictable income.">
+<meta name="twitter:image" content="https://becomeable.app/brand/og-image.png">
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"WebApplication","name":"Owner Pay Calculator","description":"Calculate a sustainable paycheck for a business owner with variable income.","url":"https://becomeable.app/calculators/owner-pay/","applicationCategory":"FinanceApplication","operatingSystem":"Web","offers":{"@type":"Offer","price":"0","priceCurrency":"USD"},"publisher":{"@type":"Organization","name":"Able","url":"https://becomeable.app/"}}</script>
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Home","item":"https://becomeable.app/"},{"@type":"ListItem","position":2,"name":"Calculators","item":"https://becomeable.app/calculators/"},{"@type":"ListItem","position":3,"name":"Owner Pay Calculator","item":"https://becomeable.app/calculators/owner-pay/"}]}</script>
 <link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400;12..96,500;12..96,600;12..96,700;12..96,800;12..96,900&display=swap" rel="stylesheet">
 <style>
 :root{--ds-page:#f0f7f2;--ds-card:#fff;--ds-t1:#111c16;--ds-t2:#4a5c52;--ds-t3:#8ca898;--ds-t4:#c4d8cc;--ds-green:#2a7a4a;--ds-green2:#1f6038;--ds-green-l:#eaf5ee;--ds-c4:#c04060;--ds-f:'Bricolage Grotesque',-apple-system,sans-serif}
@@ -125,16 +126,16 @@ h1{font-size:clamp(1.9rem,4vw,2.6rem);font-weight:900;letter-spacing:-.03em;line
 
     <h2>How to actually pay yourself</h2>
     <ol>
-      <li>Open a separate business smoothing reserve account.</li>
-      <li>Whenever client money lands, cover taxes first, then current bills, then route the excess to the smoothing reserve.</li>
+      <li>Open a separate business reserve account.</li>
+      <li>Whenever client money lands, cover taxes first, then current bills, then route the excess to the reserve.</li>
       <li>On a set date (weekly, every two weeks, or monthly), move the paycheck amount from the business account to your personal checking.</li>
-      <li>On slow months, the smoothing reserve tops up the paycheck so it still goes out on time.</li>
+      <li>On slow months, the reserve tops up the paycheck so it still goes out on time.</li>
     </ol>
     <p>Full walk-through: <a href="/budgeting/pay-yourself-steady-paycheck/">How to Pay Yourself a Steady Paycheck From an Unsteady Business</a>.</p>
 
     <h2>When to raise it</h2>
     <ul>
-      <li>The smoothing reserve has been at or above three months of the paycheck for 90 days.</li>
+      <li>The reserve has been at or above three months of the paycheck for 90 days.</li>
       <li>Trailing 12-month average is up meaningfully (15% or more) for at least two quarters.</li>
       <li>You can absorb a 20% revenue hit next quarter without draining the reserve.</li>
     </ul>
@@ -142,7 +143,7 @@ h1{font-size:clamp(1.9rem,4vw,2.6rem);font-weight:900;letter-spacing:-.03em;line
   </div>
 
   <div class="cta-card">
-    <div class="cta-card-title">Let Able run the smoothing for you.</div>
+    <div class="cta-card-title">Let Able run the reserve for you.</div>
     <div class="cta-card-sub">Every deposit gets split automatically. Your paycheck lands on schedule, whether the business had a big week or a quiet one.</div>
     <a href="/app.html" class="cta-card-btn">Start your free 30-day trial</a>
     <div class="cta-card-fine">30 days free. Cancel anytime.</div>
@@ -186,7 +187,7 @@ function calc() {
     warn.textContent = `Heads up: the sustainable paycheck (${fmt(sustainable)}) is below your floor (${fmt(floor)}). The business cannot fully cover your life yet. Either cut the floor or grow the business before locking in this paycheck.`;
   } else if (sustainable < floor * 1.1) {
     warn.style.display = 'block';
-    warn.textContent = 'Tight but workable. You cover the floor with little margin. Build the smoothing reserve aggressively before raising the paycheck.';
+    warn.textContent = 'Tight but workable. You cover the floor with little margin. Build the reserve aggressively before raising the paycheck.';
   } else {
     warn.style.display = 'none';
   }

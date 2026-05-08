@@ -1,0 +1,648 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Floor-First Budgeting: A Method for Inconsistent Income</title>
+<meta name="description" content="Floor-First Budgeting is a per-deposit method for people whose income doesn't land on the 1st. Bills and taxes fill first. Then the reserve. Then everything else.">
+<link rel="canonical" href="https://becomeable.app/method/">
+<meta property="og:title" content="Floor-First Budgeting: A Method for Inconsistent Income">
+<meta property="og:description" content="Floor-First Budgeting is a per-deposit method for people whose income doesn't land on the 1st. Bills and taxes fill first. Then the reserve. Then everything else.">
+<meta property="og:url" content="https://becomeable.app/method/">
+<meta property="og:type" content="article">
+<meta property="og:site_name" content="Able">
+<meta property="og:image" content="https://becomeable.app/brand/og-image.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Floor-First Budgeting: A Method for Inconsistent Income">
+<meta name="twitter:description" content="A per-deposit method for people whose income doesn't land on the 1st. Bills and taxes fill first. Then the reserve. Then everything else.">
+<meta name="twitter:image" content="https://becomeable.app/brand/og-image.png">
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"Article","headline":"Floor-First Budgeting: A Method for Inconsistent Income","description":"Floor-First Budgeting is a per-deposit method for people whose income doesn't land on the 1st. Bills and taxes fill first. Then the reserve. Then everything else.","url":"https://becomeable.app/method/","datePublished":"2026-05-07","dateModified":"2026-05-07","image":"https://becomeable.app/brand/og-image.png","author":{"@type":"Organization","name":"Able","url":"https://becomeable.app/"},"publisher":{"@type":"Organization","name":"Able","url":"https://becomeable.app/","logo":{"@type":"ImageObject","url":"https://becomeable.app/brand/favicon.png"}},"mainEntityOfPage":"https://becomeable.app/method/","inLanguage":"en","about":{"@type":"Thing","name":"Floor-First Budgeting","description":"A per-deposit budgeting method designed for variable, freelance, and self-employed income."}}</script>
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Home","item":"https://becomeable.app/"},{"@type":"ListItem","position":2,"name":"The method","item":"https://becomeable.app/method/"}]}</script>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400;12..96,500;12..96,600;12..96,700;12..96,800;12..96,900&display=swap" rel="stylesheet">
+<style>
+:root {
+  --ds-page: #f0f7f2;
+  --ds-card: #ffffff;
+  --ds-t1: #111c16;
+  --ds-t2: #4a5c52;
+  --ds-t3: #8ca898;
+  --ds-t4: #c4d8cc;
+  --ds-green: #2a7a4a;
+  --ds-green2: #1f6038;
+  --ds-green-l: #eaf5ee;
+  --ds-f: 'Bricolage Grotesque', -apple-system, sans-serif;
+}
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+body {
+  font-family: var(--ds-f);
+  background: var(--ds-page);
+  color: var(--ds-t1);
+  line-height: 1.65;
+  -webkit-font-smoothing: antialiased;
+}
+a { color: var(--ds-green); text-decoration: underline; text-underline-offset: 2px; }
+a:hover { color: var(--ds-green2); }
+
+/* ── nav ─────────────────────────────────────────────────────────── */
+.site-nav {
+  padding: 1.5rem 2rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  max-width: 960px;
+  margin: 0 auto;
+}
+.site-logo {
+  font-size: 1.35rem;
+  font-weight: 900;
+  color: var(--ds-t1);
+  letter-spacing: -.03em;
+  position: relative;
+  display: inline-block;
+  line-height: 1;
+  padding-bottom: 3px;
+  text-decoration: none;
+}
+.site-logo::after {
+  content: '';
+  position: absolute;
+  left: 0;
+  right: -4%;
+  bottom: 0;
+  height: 5px;
+  background: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 120 4.2' preserveAspectRatio='none'><path d='M3 2.6 Q2 2.4 3 2.15 Q58 1.75 115 0.15 Q119 1 119 2 Q119 3 115 3.9 Q58 3.55 3 2.65 Q2 2.45 3 2.6 Z' fill='%232a7a4a'/></svg>") no-repeat center / 100% 100%;
+}
+.site-nav .cta {
+  background: var(--ds-green);
+  color: white;
+  padding: 10px 18px;
+  border-radius: 100px;
+  font-size: 13px;
+  font-weight: 800;
+  letter-spacing: -.01em;
+  transition: background .15s;
+  text-decoration: none;
+}
+.site-nav .cta:hover { background: var(--ds-green2); }
+
+/* ── article shell ───────────────────────────────────────────────── */
+.article-inner { max-width: 720px; margin: 0 auto; padding: 2rem 2rem 4rem; }
+.breadcrumb { font-size: 12px; font-weight: 700; color: var(--ds-t3); margin-bottom: 1.25rem; letter-spacing: .02em; }
+.breadcrumb a { color: var(--ds-t3); text-decoration: none; }
+.breadcrumb a:hover { color: var(--ds-green); }
+.article-eyebrow { font-size: 11px; font-weight: 800; letter-spacing: .14em; text-transform: uppercase; color: var(--ds-green); margin-bottom: .75rem; }
+.article-body h1 { font-size: clamp(2.1rem, 5vw, 3rem); font-weight: 900; letter-spacing: -.03em; line-height: 1.05; margin-bottom: 1rem; color: var(--ds-t1); }
+.article-body h2 { font-size: 1.55rem; font-weight: 800; letter-spacing: -.02em; line-height: 1.25; margin-top: 3rem; margin-bottom: 1rem; color: var(--ds-t1); }
+.article-body h3 { font-size: 1.15rem; font-weight: 800; letter-spacing: -.01em; margin-top: 1.5rem; margin-bottom: .5rem; color: var(--ds-t1); }
+.article-body p { font-size: 16.5px; color: var(--ds-t2); font-weight: 500; margin-bottom: 1rem; line-height: 1.7; }
+.article-body p a, .article-body li a { color: var(--ds-green); font-weight: 600; }
+.article-body strong { color: var(--ds-t1); font-weight: 800; }
+.article-body hr { border: none; border-top: 1px solid var(--ds-t4); margin: 2.5rem 0; }
+.article-body ul { margin: 1rem 0 1.25rem 1.25rem; color: var(--ds-t2); font-weight: 500; font-size: 16.5px; line-height: 1.7; }
+.article-body li { margin-bottom: .4rem; }
+.article-dek { font-size: 19px; color: var(--ds-t2); font-weight: 500; line-height: 1.55; margin-bottom: 2rem; }
+
+/* ── hero metaphor card ──────────────────────────────────────────── */
+.metaphor {
+  background: var(--ds-card);
+  border-radius: 20px;
+  padding: 1.75rem 1.5rem;
+  margin: 1rem 0 2.5rem;
+  border: 1px solid var(--ds-t4);
+}
+.metaphor-row {
+  display: grid;
+  grid-template-columns: 88px 1fr;
+  gap: 1rem;
+  align-items: center;
+  padding: .65rem 0;
+}
+.metaphor-row + .metaphor-row { border-top: 1px solid var(--ds-t4); }
+.metaphor-label {
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: .12em;
+  text-transform: uppercase;
+  text-align: right;
+  color: var(--ds-t3);
+}
+.metaphor-bar {
+  height: 18px;
+  border-radius: 100px;
+  position: relative;
+  overflow: hidden;
+}
+.metaphor-bar.floor { background: var(--ds-green); }
+.metaphor-bar.reserve { background: #b8d4c1; width: 65%; }
+.metaphor-bar.free { background: var(--ds-t4); width: 30%; }
+.metaphor-foot {
+  font-size: 13px;
+  color: var(--ds-t3);
+  margin-top: 1rem;
+  text-align: center;
+  font-weight: 600;
+  letter-spacing: -.01em;
+}
+
+/* ── the five rules ──────────────────────────────────────────────── */
+.rules {
+  margin: 2rem 0 1rem;
+}
+.rule {
+  background: var(--ds-card);
+  border-radius: 22px;
+  padding: 1.5rem 1.5rem 1.6rem;
+  margin-bottom: 1rem;
+  border: 1px solid var(--ds-t4);
+  display: grid;
+  grid-template-columns: 56px 1fr;
+  gap: 1.1rem;
+  align-items: start;
+}
+.rule-num {
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  background: var(--ds-green-l);
+  color: var(--ds-green);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 18px;
+  font-weight: 900;
+  letter-spacing: -.02em;
+}
+.rule-title {
+  font-size: 1.15rem;
+  font-weight: 800;
+  letter-spacing: -.01em;
+  color: var(--ds-t1);
+  margin-bottom: .35rem;
+  line-height: 1.3;
+}
+.rule-body {
+  font-size: 15.5px;
+  color: var(--ds-t2);
+  font-weight: 500;
+  line-height: 1.6;
+}
+.rule-4 {
+  background: linear-gradient(135deg, #eaf5ee 0%, #d9ecde 100%);
+  border-color: var(--ds-green);
+}
+.rule-4 .rule-num {
+  background: var(--ds-green);
+  color: white;
+}
+
+/* ── pull quote ──────────────────────────────────────────────────── */
+.article-body blockquote {
+  background: var(--ds-green-l);
+  border-left: 4px solid var(--ds-green);
+  border-radius: 18px;
+  padding: 1.25rem 1.5rem;
+  margin: 2rem 0;
+  font-size: 17px;
+  font-weight: 700;
+  color: var(--ds-t1);
+  line-height: 1.5;
+  letter-spacing: -.01em;
+}
+.article-body blockquote p { font-size: inherit; color: inherit; font-weight: inherit; margin: 0; }
+
+/* ── compare table ───────────────────────────────────────────────── */
+.compare {
+  margin: 1.5rem 0 2rem;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: .75rem;
+}
+.compare-col {
+  background: var(--ds-card);
+  border: 1px solid var(--ds-t4);
+  border-radius: 18px;
+  padding: 1.1rem 1.1rem 1.25rem;
+}
+.compare-col.with { border-color: var(--ds-green); background: var(--ds-green-l); }
+.compare-eyebrow {
+  font-size: 10.5px;
+  font-weight: 800;
+  letter-spacing: .14em;
+  text-transform: uppercase;
+  color: var(--ds-t3);
+  margin-bottom: .6rem;
+}
+.compare-col.with .compare-eyebrow { color: var(--ds-green); }
+.compare-row {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--ds-t2);
+  padding: .35rem 0;
+  line-height: 1.45;
+}
+.compare-col.with .compare-row { color: var(--ds-t1); font-weight: 700; }
+@media (max-width: 540px) {
+  .compare { grid-template-columns: 1fr; }
+}
+
+/* ── worked example ──────────────────────────────────────────────── */
+.example {
+  background: var(--ds-card);
+  border: 1px solid var(--ds-t4);
+  border-radius: 22px;
+  padding: 1.5rem 1.5rem 1.6rem;
+  margin: 1.25rem 0 2rem;
+}
+.example-deposit {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding-bottom: .85rem;
+  margin-bottom: .85rem;
+  border-bottom: 1px solid var(--ds-t4);
+}
+.example-deposit-label {
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: .12em;
+  text-transform: uppercase;
+  color: var(--ds-t3);
+}
+.example-deposit-amt {
+  font-size: 1.6rem;
+  font-weight: 900;
+  letter-spacing: -.02em;
+  color: var(--ds-t1);
+}
+.example-row {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: .5rem;
+  padding: .4rem 0;
+  font-size: 15px;
+}
+.example-row .lbl { color: var(--ds-t2); font-weight: 600; }
+.example-row .amt { font-weight: 800; color: var(--ds-t1); letter-spacing: -.01em; }
+.example-row.dim .lbl, .example-row.dim .amt { color: var(--ds-t3); font-weight: 600; }
+.example-foot {
+  margin-top: 1rem;
+  padding-top: .85rem;
+  border-top: 1px solid var(--ds-t4);
+  font-size: 13px;
+  color: var(--ds-t3);
+  font-weight: 600;
+  line-height: 1.55;
+}
+
+/* ── who-for grid ────────────────────────────────────────────────── */
+.who-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: .75rem;
+  margin: 1.25rem 0 1.5rem;
+}
+@media (max-width: 540px) {
+  .who-grid { grid-template-columns: 1fr; }
+}
+.who-card {
+  background: var(--ds-card);
+  border: 1px solid var(--ds-t4);
+  border-radius: 18px;
+  padding: 1rem 1.1rem 1.1rem;
+}
+.who-card-title {
+  font-size: 14.5px;
+  font-weight: 800;
+  letter-spacing: -.01em;
+  color: var(--ds-t1);
+  margin-bottom: .25rem;
+}
+.who-card-body {
+  font-size: 13.5px;
+  color: var(--ds-t2);
+  font-weight: 500;
+  line-height: 1.5;
+}
+.who-card-link {
+  font-size: 12px;
+  font-weight: 800;
+  color: var(--ds-green);
+  text-decoration: none;
+  letter-spacing: .02em;
+  margin-top: .5rem;
+  display: inline-block;
+}
+.who-card-link:hover { color: var(--ds-green2); text-decoration: underline; }
+
+/* ── q&a ─────────────────────────────────────────────────────────── */
+.qa { margin: 1rem 0 0; }
+.qa-item {
+  border-bottom: 1px solid var(--ds-t4);
+  padding: 1.1rem 0;
+}
+.qa-item:first-child { padding-top: 0; }
+.qa-q {
+  font-size: 16px;
+  font-weight: 800;
+  color: var(--ds-t1);
+  letter-spacing: -.01em;
+  margin-bottom: .5rem;
+  line-height: 1.4;
+}
+.qa-a {
+  font-size: 15px;
+  color: var(--ds-t2);
+  font-weight: 500;
+  line-height: 1.65;
+}
+
+/* ── CTA ─────────────────────────────────────────────────────────── */
+.cta-card {
+  background: linear-gradient(135deg, #eaf5ee 0%, #d9ecde 100%);
+  border-radius: 26px;
+  padding: 2rem 1.75rem;
+  margin-top: 3rem;
+  text-align: center;
+}
+.cta-card-title { font-size: 1.4rem; font-weight: 900; letter-spacing: -.02em; margin-bottom: .5rem; color: var(--ds-t1); line-height: 1.2; }
+.cta-card-sub { font-size: 14px; color: var(--ds-t2); font-weight: 600; margin-bottom: 1.25rem; line-height: 1.55; }
+.cta-card-btn {
+  display: inline-block;
+  background: var(--ds-green);
+  color: white;
+  padding: 14px 28px;
+  border-radius: 100px;
+  font-size: 15px;
+  font-weight: 800;
+  letter-spacing: -.01em;
+  text-decoration: none;
+  transition: background .15s, transform .15s;
+}
+.cta-card-btn:hover { background: var(--ds-green2); transform: translateY(-1px); }
+.cta-card-fine { font-size: 11px; color: var(--ds-t3); font-weight: 600; margin-top: .85rem; letter-spacing: .02em; }
+
+/* ── related ─────────────────────────────────────────────────────── */
+.related { margin-top: 3.5rem; padding-top: 2rem; border-top: 1px solid var(--ds-t4); }
+.related-label { font-size: 11px; font-weight: 800; letter-spacing: .14em; text-transform: uppercase; color: var(--ds-t3); margin-bottom: 1rem; }
+.related-list { list-style: none; padding: 0; margin: 0; }
+.related-list li { margin-bottom: .6rem; }
+.related-list a { font-size: 15px; font-weight: 700; color: var(--ds-t1); text-decoration: none; }
+.related-list a:hover { color: var(--ds-green); }
+.related-meta {
+  font-size: 12.5px;
+  color: var(--ds-t3);
+  font-weight: 500;
+  display: block;
+  margin-top: 1px;
+}
+
+/* ── footer ──────────────────────────────────────────────────────── */
+.site-footer {
+  border-top: 1px solid var(--ds-t4);
+  padding: 2rem;
+  text-align: center;
+  color: var(--ds-t3);
+  font-size: 13px;
+  font-weight: 600;
+  line-height: 1.6;
+}
+.site-footer a { color: var(--ds-t3); text-decoration: none; }
+.site-footer a:hover { color: var(--ds-green); }
+</style>
+</head>
+<body>
+<nav class="site-nav">
+  <a href="/" class="site-logo">Able</a>
+  <a href="/app.html" class="cta">Start free trial</a>
+</nav>
+
+<article class="article-inner">
+  <div class="breadcrumb"><a href="/">Home</a> / The method</div>
+  <div class="article-eyebrow">The method</div>
+  <div class="article-body">
+    <h1>Floor-First Budgeting</h1>
+    <p class="article-dek">A per-deposit budgeting method built for people whose income doesn't land on the 1st. Bills and taxes fill first. Then the reserve. Then everything else.</p>
+
+    <div class="metaphor" role="img" aria-label="Visual hierarchy: Floor fills fully first, then reserve, then free spending">
+      <div class="metaphor-row">
+        <div class="metaphor-label">Floor</div>
+        <div class="metaphor-bar floor"></div>
+      </div>
+      <div class="metaphor-row">
+        <div class="metaphor-label">Reserve</div>
+        <div class="metaphor-bar reserve"></div>
+      </div>
+      <div class="metaphor-row">
+        <div class="metaphor-label">Free</div>
+        <div class="metaphor-bar free"></div>
+      </div>
+      <div class="metaphor-foot">Every deposit fills the bars in this order.</div>
+    </div>
+
+    <h2>What it is</h2>
+    <p>Floor-First Budgeting is per-deposit allocation. Every dollar that lands gets a job before any of it gets to vote on dinner. The floor, your bills and your taxes, fills first. The reserve fills next. What's left is yours to spend.</p>
+    <p>Most budgeting tools are built around the calendar. You sit down on the 1st, divide what you have, and hope the math holds. Floor-First doesn't work that way. Every deposit, whether it's $400 or $4,000, gets allocated the moment it lands. That matches how freelancers, creators, and business owners actually get paid. If you've ever tried a monthly tool and felt like the math was racing, that's why. The tool was built for steady paychecks. Yours aren't steady.</p>
+    <p>The order is the whole method. Floor first. Reserve second. Free spending last. The order doesn't change because the deposit is small. The order doesn't change because the month is hard. It's a small-rules-big-system approach to <a href="/budgeting/">budgeting on inconsistent income</a>.</p>
+
+    <h2>The five rules</h2>
+
+    <div class="rules">
+      <div class="rule">
+        <div class="rule-num">1</div>
+        <div>
+          <div class="rule-title">Know your floor.</div>
+          <p class="rule-body">Bills plus tax equal the amount you can't miss. Everything else is downstream of this number. If you don't know it, you're guessing every month.</p>
+        </div>
+      </div>
+
+      <div class="rule">
+        <div class="rule-num">2</div>
+        <div>
+          <div class="rule-title">Every deposit fills the floor first.</div>
+          <p class="rule-body">Not month by month. Deposit by deposit. The big check buys you future months. The small check still buys you something. The split runs every time, on every amount.</p>
+        </div>
+      </div>
+
+      <div class="rule">
+        <div class="rule-num">3</div>
+        <div>
+          <div class="rule-title">Build your reserve before you spend.</div>
+          <p class="rule-body">Slow months get paid by the reserve, not by next month's panic. Reserve is the verb and the noun. You reserve until you have a reserve. This is the same instinct as <a href="/learn/pay-yourself-first/">paying yourself first</a>, applied to deposit-by-deposit income.</p>
+        </div>
+      </div>
+
+      <div class="rule rule-4">
+        <div class="rule-num">4</div>
+        <div>
+          <div class="rule-title">One month ahead = Able.</div>
+          <p class="rule-body">When next month's floor is already reserved, you've arrived. The math stops racing. Bills clear without thought. This is the destination.</p>
+        </div>
+      </div>
+
+      <div class="rule">
+        <div class="rule-num">5</div>
+        <div>
+          <div class="rule-title">Score reality, not the plan.</div>
+          <p class="rule-body">The month is judged on what happened, not what you intended. Five habits, scored monthly, in plain language.</p>
+        </div>
+      </div>
+    </div>
+
+    <blockquote>
+      <p>Rule 4 is the destination. Most people call that moment relief. Around here, it has a shorter name.</p>
+    </blockquote>
+
+    <h2>Why per-deposit beats monthly</h2>
+    <p>A monthly budget assumes a paycheck. When your income is spiky, a monthly budget puts the panic on the slow months and the false confidence on the big ones. The 1st rolls around, you total up what you have, and you split. Two weeks later, the math is wrong because reality changed.</p>
+    <p>Floor-First flattens that. The big deposit fills next month's floor while the cash is still in the bank. The small deposit still fills something. Every deposit moves you forward, even if it's tiny. Nothing waits for the 1st. Nothing waits for next paycheck.</p>
+    <p>If you've used a tool like YNAB and felt the friction of "I have to assign every dollar a job by the 1st," Floor-First is the alternative that doesn't require monthly ceremony. The job is assigned the moment the dollar lands. We wrote a longer breakdown of this in <a href="/compare/ynab-alternative-for-freelancers/">the YNAB alternative for freelancers</a>.</p>
+
+    <div class="compare">
+      <div class="compare-col">
+        <div class="compare-eyebrow">Monthly budget</div>
+        <div class="compare-row">Sit down on the 1st.</div>
+        <div class="compare-row">Divide what you have.</div>
+        <div class="compare-row">Slow month = scramble.</div>
+        <div class="compare-row">Big month = false floor.</div>
+      </div>
+      <div class="compare-col with">
+        <div class="compare-eyebrow">Floor-First</div>
+        <div class="compare-row">Allocate when money lands.</div>
+        <div class="compare-row">Floor and reserve, in that order.</div>
+        <div class="compare-row">Slow month = reserve covers it.</div>
+        <div class="compare-row">Big month = next month's floor.</div>
+      </div>
+    </div>
+
+    <h2>A worked example</h2>
+    <p>You're a freelance designer. Your floor is $3,200 a month: $2,200 in bills (rent, utilities, software, phone) plus a 22% tax set-aside. You have one client paying $4,000 and another paying $1,200, but the timing of either is never certain.</p>
+    <p>On the 5th, the $4,000 lands. The split runs immediately:</p>
+
+    <div class="example">
+      <div class="example-deposit">
+        <div class="example-deposit-label">Deposit · May 5</div>
+        <div class="example-deposit-amt">$4,000</div>
+      </div>
+      <div class="example-row"><span class="lbl">Tax (22%, off the top)</span><span class="amt">$880</span></div>
+      <div class="example-row"><span class="lbl">May floor (bills)</span><span class="amt">$2,200</span></div>
+      <div class="example-row"><span class="lbl">June floor (started)</span><span class="amt">$520</span></div>
+      <div class="example-row"><span class="lbl">Reserve (top-up)</span><span class="amt">$200</span></div>
+      <div class="example-row"><span class="lbl">Free spending</span><span class="amt">$200</span></div>
+      <div class="example-foot">Floor for May is funded. June is partially pre-funded. Slow weeks won't crater the plan.</div>
+    </div>
+
+    <p>On the 22nd, the $1,200 lands. The floor for May is already done, so the split skips ahead:</p>
+
+    <div class="example">
+      <div class="example-deposit">
+        <div class="example-deposit-label">Deposit · May 22</div>
+        <div class="example-deposit-amt">$1,200</div>
+      </div>
+      <div class="example-row dim"><span class="lbl">Tax (22%, off the top)</span><span class="amt">$264</span></div>
+      <div class="example-row"><span class="lbl">June floor (continues)</span><span class="amt">$700</span></div>
+      <div class="example-row"><span class="lbl">Reserve</span><span class="amt">$140</span></div>
+      <div class="example-row"><span class="lbl">Free spending</span><span class="amt">$96</span></div>
+      <div class="example-foot">June's floor is now $1,220 of $3,200 reserved. Two more deposits and June arrives funded.</div>
+    </div>
+
+    <p>That's the method in motion. No monthly ceremony. No "let me figure this out on the 1st." The plan updates every time money moves. You can run the numbers on yourself with the <a href="/calculators/baseline-income/">baseline income calculator</a> and the <a href="/calculators/tax-set-aside/">tax set-aside calculator</a>.</p>
+
+    <h2>Who this is for</h2>
+    <p>Floor-First is built for anyone whose income arrives in deposits instead of paychecks. If you're paid on a fixed schedule with the same amount every two weeks, you don't need this method. A monthly budget will work fine. If your deposits move, this is for you.</p>
+
+    <div class="who-grid">
+      <div class="who-card">
+        <div class="who-card-title">Freelancers</div>
+        <div class="who-card-body">Project payments arrive in lumps. Some land on the 5th, some on the 25th, some not at all that month.</div>
+        <a class="who-card-link" href="/budgeting/freelancer-budget/">Read the freelancer playbook →</a>
+      </div>
+      <div class="who-card">
+        <div class="who-card-title">Creators</div>
+        <div class="who-card-body">Ad payouts, sponsorship checks, platform deposits. The income shape is monthly but the amount swings.</div>
+        <a class="who-card-link" href="/budgeting/creator-budget/">Read the creator playbook →</a>
+      </div>
+      <div class="who-card">
+        <div class="who-card-title">Commission earners</div>
+        <div class="who-card-body">Sales reps, real estate agents, anyone paid on close. Big months and zero months in the same quarter.</div>
+        <a class="who-card-link" href="/budgeting/commission-income-budget/">Read the commission playbook →</a>
+      </div>
+      <div class="who-card">
+        <div class="who-card-title">Business owners</div>
+        <div class="who-card-body">Owner draws, irregular distributions, mixing personal and business cashflow on a single brain.</div>
+        <a class="who-card-link" href="/business/">Read the owner playbook →</a>
+      </div>
+    </div>
+
+    <p>If you've been through a stretch of <a href="/budgeting/feast-or-famine/">feast or famine months</a>, the method is built specifically for you. The reserve is what flattens the swing.</p>
+
+    <h2>What goes in the floor</h2>
+    <p>The floor is the amount you can't miss. Two things go in it: <strong>bills</strong> and <strong>taxes</strong>.</p>
+    <p>Bills are your fixed monthly costs. Rent or mortgage. Utilities. Phone. Internet. Software you use to make money. Insurance. Subscriptions you've actually decided to keep. Minimum payments on debt count too, since missing them costs you more than paying them.</p>
+    <p>Taxes belong in the floor because the IRS is going to collect, and a missed quarterly is one of the most expensive mistakes self-employed earners make. A 20% to 25% set-aside on every deposit usually lands you in safe territory. The exact percentage depends on your bracket and your state. We have a full guide on <a href="/taxes/how-much-to-set-aside/">how much to set aside for quarterly taxes</a> and a deeper one on <a href="/taxes/">quarterly taxes for self-employed earners</a>.</p>
+    <p>Things that do not go in the floor: groceries (variable), gas (variable), the occasional dinner out (variable), saving for a vacation (that's a reserve goal, not a floor). The floor is the line under which the lights start to flicker. Keep it tight.</p>
+
+    <h2>The reserve, in detail</h2>
+    <p>The reserve has two jobs. Job one is funding next month's floor before next month begins. Job two is acting as a buffer for slow stretches. Same pile of money, two functions.</p>
+    <p>Reserve is the verb and the noun. You <em>reserve</em> on every deposit (the verb). You build a <em>reserve</em> over time (the noun). When somebody says "I'm reserved through July," it means July's floor is already funded. When they say "my reserve covers two months," it means slow stretches don't break them.</p>
+    <p>For most variable-income earners, the goal is one full month of floor reserved before next month begins (Rule 4) and a separate cushion of two to three months of floor on top, for genuinely bad stretches. We treat the cushion as a longer-horizon goal, similar to <a href="/business/emergency-fund/">a business owner's emergency fund</a>.</p>
+
+    <h2>The destination</h2>
+    <p>When next month's floor is reserved before next month begins, the math is no longer racing. Bills clear without thought. Slow weeks stop being emergencies. The phone stops being a thing you avoid checking.</p>
+    <p>That's the moment. That's what the method is for. Most people call it relief. Around here, it has a shorter name.</p>
+
+    <h2>Common questions</h2>
+    <div class="qa">
+      <div class="qa-item">
+        <div class="qa-q">Is this the same as zero-based budgeting?</div>
+        <div class="qa-a">Same family, different cycle. Zero-based budgeting (YNAB's approach) assigns every dollar a job on a monthly cycle. Floor-First assigns every dollar a job per deposit. The principle is shared. The cadence is the difference, and the cadence is what matters when your income doesn't follow a calendar.</div>
+      </div>
+      <div class="qa-item">
+        <div class="qa-q">Where do irregular bills like quarterly insurance fit?</div>
+        <div class="qa-a">Spread them. A $1,200 quarterly insurance bill is $400 a month into the floor. The plan reserves $400 every month, and when the bill lands, the money is already there. The floor smooths irregular bills the same way the reserve smooths irregular income.</div>
+      </div>
+      <div class="qa-item">
+        <div class="qa-q">What if I have a really slow month?</div>
+        <div class="qa-a">That's what the reserve is for. A slow month draws on what previous months built. The split still runs on every dollar that does land, but the reserve is the safety net underneath. If you're in a slow stretch and the reserve isn't yet there, the priority is rebuilding it before any spending category gets full funding.</div>
+      </div>
+      <div class="qa-item">
+        <div class="qa-q">Does this work if I have debt?</div>
+        <div class="qa-a">Yes. Debt minimums sit inside the floor (you can't miss them). Above-minimum debt payments sit alongside the reserve as a separate line. The order is still floor first, but you can absolutely <a href="/learn/get-out-of-debt/">pay down debt aggressively</a> while running this method. The five-bucket version of the split has a dedicated debt bucket for exactly this reason.</div>
+      </div>
+    </div>
+
+    <hr />
+
+    <p>Floor-First Budgeting is the method behind Able. Every screen, every nudge, every score is built around the five rules above. To see the full system in motion, start a 30-day trial.</p>
+
+  </div>
+
+  <div class="cta-card">
+    <div class="cta-card-title">Run your deposits, not the other way around.</div>
+    <div class="cta-card-sub">30 days free. Card required so the trial starts cleanly. Cancel anytime in Settings.</div>
+    <a href="/app.html" class="cta-card-btn">Start your free 30-day trial</a>
+    <div class="cta-card-fine">You will not be charged until day 31.</div>
+  </div>
+
+  <div class="related">
+    <div class="related-label">Keep reading</div>
+    <ul class="related-list">
+      <li><a href="/budgeting/">How to budget with inconsistent income</a><span class="related-meta">The full pillar guide. Floor-First applied across every income shape.</span></li>
+      <li><a href="/learn/pay-yourself-first/">Pay yourself first</a><span class="related-meta">The instinct underneath rule 3 of Floor-First.</span></li>
+      <li><a href="/learn/how-money-works/">How money works</a><span class="related-meta">Seven money milestones for variable-income earners.</span></li>
+      <li><a href="/learn/get-out-of-debt/">Get out of debt</a><span class="related-meta">How the method handles debt without abandoning the floor.</span></li>
+      <li><a href="/taxes/">Quarterly taxes for self-employed</a><span class="related-meta">The tax half of the floor, in full.</span></li>
+      <li><a href="/compare/ynab-alternative-for-freelancers/">YNAB alternative for freelancers</a><span class="related-meta">Why per-deposit beats monthly assignment.</span></li>
+    </ul>
+  </div>
+
+</article>
+
+<footer class="site-footer">
+  <div><a href="/">Home</a> &middot; <a href="/method/">The method</a> &middot; <a href="/budgeting/">Budgeting</a> &middot; <a href="/taxes/">Taxes</a> &middot; <a href="/business/">Business</a> &middot; <a href="/learn/">Learn</a> &middot; <a href="/resources/">Resources</a> &middot; <a href="/app.html">Sign in</a> &middot; <a href="/privacy.html">Privacy</a> &middot; <a href="/terms.html">Terms</a></div>
+  <div style="margin-top:.5rem;">Become Able.</div>
+</footer>
+
+</body>
+</html>

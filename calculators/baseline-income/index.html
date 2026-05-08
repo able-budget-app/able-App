@@ -11,15 +11,15 @@
 <meta property="og:url" content="https://becomeable.app/calculators/baseline-income/">
 <meta property="og:type" content="website">
 <meta property="og:site_name" content="Able">
-<meta name="twitter:card" content="summary">
-<script type="application/ld+json">{
-  "@context":"https://schema.org","@type":"WebApplication",
-  "name":"Baseline Income Calculator",
-  "description":"Compute a steady-paycheck-equivalent baseline from 12 months of variable income.",
-  "url":"https://becomeable.app/calculators/baseline-income/","applicationCategory":"FinanceApplication","operatingSystem":"Any",
-  "offers":{"@type":"Offer","price":"0","priceCurrency":"USD"},
-  "creator":{"@type":"Organization","name":"Able","url":"https://becomeable.app/"}
-}</script>
+<meta property="og:image" content="https://becomeable.app/brand/og-image.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Baseline Income Calculator for Variable Income | Able">
+<meta name="twitter:description" content="Turn lumpy income into a steady baseline you can actually budget against.">
+<meta name="twitter:image" content="https://becomeable.app/brand/og-image.png">
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"WebApplication","name":"Baseline Income Calculator","description":"Compute a steady-paycheck-equivalent baseline from 12 months of variable income.","url":"https://becomeable.app/calculators/baseline-income/","applicationCategory":"FinanceApplication","operatingSystem":"Web","offers":{"@type":"Offer","price":"0","priceCurrency":"USD"},"publisher":{"@type":"Organization","name":"Able","url":"https://becomeable.app/"}}</script>
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Home","item":"https://becomeable.app/"},{"@type":"ListItem","position":2,"name":"Calculators","item":"https://becomeable.app/calculators/"},{"@type":"ListItem","position":3,"name":"Baseline Income Calculator","item":"https://becomeable.app/calculators/baseline-income/"}]}</script>
 <link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400;12..96,500;12..96,600;12..96,700;12..96,800;12..96,900&display=swap" rel="stylesheet">
 <style>
 :root{--ds-page:#f0f7f2;--ds-card:#fff;--ds-t1:#111c16;--ds-t2:#4a5c52;--ds-t3:#8ca898;--ds-t4:#c4d8cc;--ds-green:#2a7a4a;--ds-green2:#1f6038;--ds-green-l:#eaf5ee;--ds-c4:#c04060;--ds-f:'Bricolage Grotesque',-apple-system,sans-serif}
@@ -108,18 +108,18 @@ h1{font-size:clamp(1.9rem,4vw,2.6rem);font-weight:900;letter-spacing:-.03em;line
 
   <div class="body">
     <h2>What the number means</h2>
-    <p>Your baseline is the steadiest monthly take-home your income history can support without drawing a smoothing account toward empty. It is not an average. An average smooths over slow stretches; if you live on the full average, one bad quarter wipes out any reserve you have built.</p>
+    <p>Your baseline is the steadiest monthly take-home your income history can support without drawing a reserve account toward empty. It is not an average. An average smooths over slow stretches; if you live on the full average, one bad quarter wipes out any reserve you have built.</p>
     <p>We use 75 percent of your trailing average as a default. That cushion absorbs normal volatility without being so low that you feel broke during good stretches. More volatile income earners may want to drop the cushion to 65 or 70 percent.</p>
 
     <h2>How to use the baseline</h2>
     <ul>
-      <li><strong>As your monthly paycheck.</strong> Pay yourself this amount on a set date every month. Good months feed the smoothing reserve. Bad months get topped up from it.</li>
+      <li><strong>As your monthly paycheck.</strong> Pay yourself this amount on a set date every month. Good months feed the reserve. Bad months get topped up from it.</li>
       <li><strong>As a budget anchor.</strong> Plan categories off the baseline, not off the swings. You spend like a person with a steady paycheck, even though your business pays in lumps.</li>
       <li><strong>As a volatility signal.</strong> If your baseline keeps climbing year over year, the business is stabilizing. If it keeps dropping, it's time to rebuild pipeline.</li>
     </ul>
 
     <h2>Where this fits in the bigger picture</h2>
-    <p>The baseline number is the input to the owner-pay system: you fund bills and smoothing from every deposit, then pay yourself the baseline on a schedule. The system is described in detail here: <a href="/budgeting/pay-yourself-steady-paycheck/">How to Pay Yourself a Steady Paycheck From an Unsteady Business</a>.</p>
+    <p>The baseline number is the input to the owner-pay system: you fund bills and reserve from every deposit, then pay yourself the baseline on a schedule. The system is described in detail here: <a href="/budgeting/pay-yourself-steady-paycheck/">How to Pay Yourself a Steady Paycheck From an Unsteady Business</a>.</p>
   </div>
 
   <div class="cta-card">
@@ -156,7 +156,7 @@ function calc(){
   const max = Math.max(...deposits);
 
   document.getElementById('r-num').textContent = fmt(baseline);
-  document.getElementById('r-sub').textContent = 'Pay yourself this on a set schedule. Good months refill the smoothing account. Bad months draw from it.';
+  document.getElementById('r-sub').textContent = 'Pay yourself this on a set schedule. Good months refill the reserve account. Bad months draw from it.';
   document.getElementById('r-detail').innerHTML =
     `<strong>Months included:</strong> ${deposits.length}<br>` +
     `<strong>Average:</strong> ${fmt(avg)}/month<br>` +
