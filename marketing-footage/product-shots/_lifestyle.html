@@ -212,7 +212,7 @@
     left: 32%; top: 60%;
     transform: translate(-50%, -50%) rotate(-3deg) scale(var(--phone-scale, 1));
   }
-  .canvas[data-scene="notebook"][data-aspect="9x16"] .phone-wrap { left: 50%; top: 62%; }
+  .canvas[data-scene="notebook"][data-aspect="9x16"] .phone-wrap { left: 36%; top: 62%; }
   .canvas[data-scene="notebook"][data-aspect="4x5"]  .phone-wrap { left: 36%; top: 60%; }
   .canvas[data-scene="notebook"][data-aspect="1x1"]  .phone-wrap { left: 36%; top: 60%; }
   .canvas[data-scene="notebook"][data-aspect="16x9"] .phone-wrap { left: 28%; top: 58%; }
@@ -253,11 +253,27 @@
   }
   .copy-sub {
     font-size: 26px;
-    font-weight: 500;
+    font-weight: 600;
     line-height: 1.4;
     margin-top: 18px;
     letter-spacing: -0.005em;
-    opacity: 0.92;
+    opacity: 1;
+  }
+  /* Light-theme sub gets a stronger halo than the headline because the
+     smaller body text loses to busy photo regions faster. Two layered
+     shadows: a tight white blur so the glyph edge is clean, plus a wider
+     soft halo so the surrounding area gets washed lighter. */
+  .canvas[data-theme="light"] .copy-sub {
+    text-shadow:
+      0 0 8px rgba(255,255,255,0.95),
+      0 0 16px rgba(255,255,255,0.85),
+      0 2px 4px rgba(255,255,255,0.7);
+  }
+  /* Dark-theme sub gets a darker drop so it lifts off bright highlights. */
+  .canvas[data-theme="dark"] .copy-sub {
+    text-shadow:
+      0 0 10px rgba(0,0,0,0.55),
+      0 2px 6px rgba(0,0,0,0.5);
   }
   .copy-headline .arrow {
     color: #2A7A4A;
@@ -422,16 +438,18 @@
   else if (w === 1080 && h === 1350) canvas.dataset.aspect = "4x5";
   else if (w === 1080 && h === 1920) canvas.dataset.aspect = "9x16";
 
-  // Default phone scale per aspect — slightly tighter than _frame because the
-  // photo backgrounds carry their own visual weight; an over-scaled phone
-  // dominates the composition.
+  // Default phone scale per aspect — sized to read as a real phone *in*
+  // the scene, not a marketing overlay floating on top. Previous values
+  // (0.85 / 1.00 / 1.20 / 0.92) made the phone dominate the composition;
+  // ~35% reduction puts it at realistic size relative to the laptop /
+  // notebook / coffee mug in the photos.
   let scale = phoneScale;
   if (!scale) {
-    if (w === 1080 && h === 1920)      scale = 1.20;  // 9:16 — was clipping at top
-    else if (w === 1080 && h === 1080) scale = 0.85;
-    else if (w === 1080 && h === 1350) scale = 1.00;  // 4:5 — was clipping
-    else if (w === 1920 && h === 1080) scale = 0.92;
-    else scale = Math.min(w, h) / 1100;
+    if (w === 1080 && h === 1920)      scale = 0.78;  // 9:16
+    else if (w === 1080 && h === 1080) scale = 0.55;  // 1:1
+    else if (w === 1080 && h === 1350) scale = 0.65;  // 4:5
+    else if (w === 1920 && h === 1080) scale = 0.60;  // 16:9
+    else scale = Math.min(w, h) / 1700;
   }
   // notebook is a 4:3 photo — phone sits in white margin, can be a bit smaller
   // so the whole composition (laptop edge + notebook + phone) reads as a scene.

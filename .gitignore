@@ -36,6 +36,10 @@ marketing-footage/*.mp4
 # code for the renderers and must stay on origin.
 marketing-footage/product-shots/*
 !marketing-footage/product-shots/_*.html
+# Same pattern for the illustrations subdir (Plaid handshake etc.) —
+# track the HTML composer templates, ignore the rendered PNG output.
+marketing-footage/illustrations/*
+!marketing-footage/illustrations/_*.html
 
 # Cinematic Remotion sub-project (~660MB, separate workflow)
 able-reel/

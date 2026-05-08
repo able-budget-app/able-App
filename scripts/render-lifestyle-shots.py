@@ -63,109 +63,20 @@ SCENE_THEME = {
 # into any blog header, ad, or social slot without being topic-locked.
 # ──────────────────────────────────────────────────────────────────────────
 LIFESTYLE: list[LifestyleSpec] = [
-    # ── BARE (no copy) — one per scene, both wordmark positions ───────────
-    LifestyleSpec(
-        slug="bare-desk-coffee",
-        scene="desk-coffee",
-        params={"copy": "hide"},
-    ),
-    LifestyleSpec(
-        slug="bare-workspace",
-        scene="workspace",
-        params={"copy": "hide"},
-        wordmark_pos="bottom-right",
-    ),
+    # 2026-05-08: desk-coffee and workspace scenes dropped (Paul).
+    #   - desk-coffee: Able phone "floated in air" with no surface, didn't
+    #     resonate as a real-world moment.
+    #   - workspace: photo already contains a real iPhone, so overlaying
+    #     the Able phone on top read as visual collision.
+    # Only notebook scenes survive — the spiral notebook + fern + light
+    # backdrop is the cleanest "phone-on-a-real-surface" composition.
+
+    # ── BARE (no copy) ────────────────────────────────────────────────────
     LifestyleSpec(
         slug="bare-notebook",
         scene="notebook",
         params={"copy": "hide"},
         wordmark_pos="bottom-right",
-    ),
-
-    # ── desk-coffee scene (moody) → heavier copy ──────────────────────────
-    # Permission line — Able's load-bearing reframe. Two-beat structure.
-    LifestyleSpec(
-        slug="desk-coffee-permission",
-        scene="desk-coffee",
-        params={
-            "tag": "the reframe",
-            "line1": "The problem\nwas never you.",
-            "sub": "It was the advice you were handed.",
-        },
-    ),
-    # Cost of waiting — short urgency punch.
-    LifestyleSpec(
-        slug="desk-coffee-cost-of-waiting",
-        scene="desk-coffee",
-        params={
-            "tag": "the math",
-            "line1": "Every month you wait\nis another\n$500–$1,000 gone.",
-            "sub": "The leak doesn't pause while you figure it out.",
-        },
-    ),
-    # Wrong-tool hook (verbatim from social punch lines).
-    LifestyleSpec(
-        slug="desk-coffee-wrong-tool",
-        scene="desk-coffee",
-        shot="02-allocation-flow.png",
-        params={
-            "tag": "the diagnosis",
-            "line1": "You're not bad\nwith money.",
-            "sub": "You've been handed the wrong tool.",
-        },
-    ),
-    # Freezer pain — quote-pattern from able-customer-research.
-    LifestyleSpec(
-        slug="desk-coffee-freezer",
-        scene="desk-coffee",
-        params={
-            "tag": "the freeze",
-            "line1": "If money makes\nyou freeze,\nyou're not lazy.",
-            "sub": "You're under-equipped.",
-        },
-    ),
-
-    # ── workspace scene (bright) → success / breath copy ──────────────────
-    # Hero bookend — Able's signature transformation line.
-    LifestyleSpec(
-        slug="workspace-breathe",
-        scene="workspace",
-        shot="02-allocation-flow.png",
-        params={
-            "tag": "what changes",
-            "line1": "From holding\nyour breath\n[arrow] To finally\nable to breathe.",
-            "sub": "Money in. Planned in 60 seconds. Calm for the rest of the month.",
-        },
-    ),
-    # Calm-as-feature.
-    LifestyleSpec(
-        slug="workspace-calm-feature",
-        scene="workspace",
-        params={
-            "tag": "by design",
-            "line1": "Calm is a feature.\nNot a side effect.",
-            "sub": "Built for income that doesn't follow a paycheck schedule.",
-        },
-    ),
-    # Same income, different feeling.
-    LifestyleSpec(
-        slug="workspace-same-income",
-        scene="workspace",
-        shot="04-score.png",
-        params={
-            "tag": "after Able",
-            "line1": "Same income.\nDifferent feeling.",
-            "sub": "Same bills. Different system. Different month.",
-        },
-    ),
-    # Tagline — positioning line.
-    LifestyleSpec(
-        slug="workspace-tagline",
-        scene="workspace",
-        params={
-            "line1": "An app built\nfor entrepreneurs\nwith inconsistent\nincome.",
-            "sub": "becomeable.app",
-        },
     ),
 
     # ── notebook scene (bright horizontal-friendly) ───────────────────────
@@ -177,7 +88,11 @@ LIFESTYLE: list[LifestyleSpec] = [
         params={
             "tag": "this is what changes",
             "line1": "Become able.",
-            "sub": "Able to pay debt. To save without second-guessing. To predict what's coming.",
+            # Stacked one per line — single 3-sentence run on light photo
+            # is hard to read; sentence-per-line gives the halo room to
+            # do its job and matches the rhythm of "Bills paid. Taxes
+            # covered. Nothing leaked." on the no-leaks shot.
+            "sub": "Able to pay debt.\nTo save without second-guessing.\nTo predict what's coming.",
         },
         wordmark_pos="bottom-right",
     ),
@@ -291,10 +206,15 @@ async def main() -> None:
                             pass
                         await page.wait_for_timeout(600)
                         out = out_dir / f"{aspect}.png"
+                        # scale="device" preserves the 2x DSF resolution so
+                        # the embedded phone screen (which is small in scene)
+                        # stays sharp. Previous "css" scale forced the phone
+                        # screenshot to downsample to 1x output, producing
+                        # the pixelation Paul flagged 2026-05-08.
                         await page.screenshot(
                             path=str(out),
                             clip={"x": 0, "y": 0, "width": w, "height": h},
-                            scale="css",
+                            scale="device",
                         )
                         print(f"   → {out.relative_to(ROOT)} ({out.stat().st_size // 1024}KB)")
                     except Exception as e:

@@ -32,22 +32,57 @@ RAW_DIR = OUT_DIR / "_raw"
 PORT = 8767
 APP_URL = f"http://localhost:{PORT}/app.html"
 FRAME_URL = f"http://localhost:{PORT}/marketing-footage/product-shots/_frame.html"
-# Capture viewport. We add 56px to the height so the screenshot includes a
-# top "status bar" zone that the phone-frame composer overlays with iOS chrome
-# (time, signal, dynamic island) — keeps app content from getting covered.
+# Capture viewport. Matches the iPhone 15 Pro screen dimensions exactly
+# (390x844) so the phone-frame composer can show the full image without
+# clipping. Body padding-top: 56 is added by MARKETING_CSS to push app
+# content below the iOS status bar overlay rendered by the frame template.
+# Previous version used 844+56 height which left the bottom 56px of the
+# capture (where bottom nav + sheet CTAs live) outside the visible frame.
 STATUS_PAD = 56
-VIEWPORT = {"width": 390, "height": 844 + STATUS_PAD}
+VIEWPORT = {"width": 390, "height": 844}
 
 # CSS injected into every captured page: pads the body 56px from the top with
-# a sage color matching the page bg, hides scrollbars, and dismisses the
-# past-due bills banner so the dashboard reads as healthy. Also forces a
-# white-ish status-bar area when the page bg behind is transparent.
+# a sage color matching the page bg, hides scrollbars, and dismisses banners,
+# tours, and onboarding prompts that would otherwise leak into marketing shots.
 MARKETING_CSS = f"""
 html, body {{ background: #EBF1E5 !important; }}
 body {{ padding-top: {STATUS_PAD}px !important; }}
 .past-due-banner {{ display: none !important; }}
 ::-webkit-scrollbar {{ display: none !important; }}
 * {{ scrollbar-width: none !important; }}
+
+/* Hide the new-user tour overlay/spotlight/bubble — TOUR_STEPS spawn on
+   first-run home and would render on top of every captured screen. */
+.tour-overlay, .tour-spotlight, .tour-bubble {{ display: none !important; }}
+
+/* Hide the first-time "This is your Floor" popover. Triggered by
+   maybeShowFloorIntro() on home; gated by localStorage. We pre-set
+   the dismissal flag in goto_demo, but keep this rule as defense
+   in case the script runs before the localStorage write lands. */
+.db-floor-pop {{ display: none !important; }}
+
+/* Hide the "Connect your bank to finish setup" modal — fires when no
+   plaid_items row exists (always true in demo mode). Marketing shots
+   should never show this prompt. */
+#modal-bank-prompt {{ display: none !important; }}
+
+/* Hide the plan-floor callout — appears in onboarding plan-review only.
+   Steady-state plan view doesn't show it; capture should match. */
+.plan-floor-callout {{ display: none !important; }}
+
+/* Hide the deep-dive banner by default (it's specifically injected for
+   shot_deep_dive; on every other shot it should be empty/invisible). */
+#deep-dive-banner:empty {{ display: none !important; }}
+
+/* Hide the plan-refresh banner (Plaid recurring update notification)
+   from non-relevant shots. */
+#plan-refresh-banner {{ display: none !important; }}
+
+/* Mobile modal CSS sets padding-bottom: 0 so action buttons sit flush
+   against viewport bottom — fine on a real phone with safe-area-inset
+   handling, but in marketing captures the buttons get cropped. Add
+   bottom breathing room so Cancel/Save are always fully visible. */
+.modal {{ padding-bottom: 1.5rem !important; }}
 """
 
 # 4 export aspects. Names are filename-safe.
@@ -99,21 +134,39 @@ async def wait_for_app(page: Page) -> None:
 
 
 async def goto_demo(page: Page) -> None:
+    # Pre-set localStorage flags BEFORE navigation so first-time popovers
+    # (currently just the Floor intro) never spawn. add_init_script runs
+    # on every navigation in this context.
+    await page.add_init_script("""
+        try {
+            localStorage.setItem('able_seen_floor_intro', '1');
+        } catch (_) {}
+    """)
     await page.goto(f"{APP_URL}?demo=1")
     await wait_for_app(page)
-    # Inject marketing CSS (padding for status bar zone, hide past-due banner).
+    # Inject marketing CSS (padding, hide tour/banners/popovers/etc.).
     await page.add_style_tag(content=MARKETING_CSS)
     await page.wait_for_timeout(150)
 
 
 async def apply_marketing_state(page: Page) -> None:
-    """Override the rendered DOM so screenshots match the marketing reference.
-    `S` is a module-scoped `let` (not on window), so we can't mutate state from
-    Playwright. Instead we rewrite the dashboard hero HTML and the score card
-    text directly. Safe to call on any page — selectors no-op when absent."""
+    """Override the rendered DOM with a coherent marketing persona. Every
+    number across hero, score, chips, pace, and the alloc preview must
+    agree — viewers compare frames and any mismatch reads as broken.
+
+    Persona: Alex, freelance designer. Mid-month, on track.
+      Balance:        $1,200
+      Reserved:       $  270  (bills partially funded)
+      Available:      $  930
+      Score:           100/100  "Floor secured"
+      Chips:    Bills 30/30 · Pay self 20/20 · Debt 20/20 · Buffer 15/15 · Within 15/15
+      Pace:           $240 above floor (last 7 days)
+
+    The alloc preview ($930 split) is mocked separately in shot_allocation_
+    preview so the 6-job breakdown sums to exactly $930.
+    """
     await page.evaluate(r"""() => {
-        // 1. Replace the dashboard hero money card with marketing-correct numbers.
-        //    Mirrors renderHeroMoney() output for the "available > 0" branch.
+        // 1. Dashboard hero — balance, reserved, available, CTA.
         const hero = document.getElementById('db-hero-money');
         if (hero) {
             hero.innerHTML = `
@@ -137,25 +190,61 @@ async def apply_marketing_state(page: Page) -> None:
             `;
         }
 
-        // 2. Dashboard mini score → 54/100 BUILDING (matches reference mockup).
+        // 2. Dashboard mini score → 100/100 (matches the chip values below).
         const dbScoreNum = document.getElementById('db-score-big');
-        const dbScoreLabel = document.getElementById('db-score-grade');
-        const dbScoreBar = document.getElementById('db-score-fill');
-        if (dbScoreNum) dbScoreNum.textContent = '54';
-        if (dbScoreLabel) dbScoreLabel.textContent = 'Building';
-        if (dbScoreBar) dbScoreBar.style.width = '54%';
+        if (dbScoreNum) dbScoreNum.textContent = '100';
 
-        // 3. Score-page big number → 78 / "A, really solid".
-        //    The Score page has its own DOM; aspirational but believable score.
+        // 3. Score page big number → 100 / "Floor secured".
         const sBig = document.getElementById('score-big');
         const sGrade = document.getElementById('score-grade');
-        if (sBig) { sBig.textContent = '78'; sBig.style.color = 'var(--sage)'; }
-        if (sGrade) sGrade.textContent = 'A, really solid';
+        if (sBig) { sBig.textContent = '100'; sBig.style.color = 'var(--sage)'; }
+        if (sGrade) sGrade.textContent = 'Floor secured';
 
-        // 4. Hide the "Next 14 days" coach-style nudge that pops on the
-        //    bottom of the dashboard — visually crowds the marketing shot.
+        // 4. Habit chips — all five at max. 30+20+20+15+15 = 100, matches
+        //    the score number above. Renders the all-checkmark filled state.
+        const habits = document.getElementById('db-habits-row');
+        if (habits) {
+            const check = `<svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>`;
+            const chips = [
+                { name: 'Bills',    pts: 30, max: 30 },
+                { name: 'Pay self', pts: 20, max: 20 },
+                { name: 'Debt',     pts: 20, max: 20 },
+                { name: 'Buffer',   pts: 15, max: 15 },
+                { name: 'Within',   pts: 15, max: 15 },
+            ];
+            habits.innerHTML = chips.map(h => `
+              <div class="db-habit done" data-habit="${h.name.toLowerCase()}">
+                <div class="db-habit-ring">${check}</div>
+                <div class="db-habit-name">${h.name}</div>
+                <div class="db-habit-pts">${h.pts}/${h.max}</div>
+              </div>`).join('');
+        }
+
+        // 5. Hide the "Next 14 days" coach-style nudge that crowds the
+        //    bottom of the dashboard.
         const nudge = document.querySelector('.db-coach-nudge, .db-next-14');
         if (nudge) nudge.style.display = 'none';
+
+        // 6. Inject the floor-pace sparkline into the score card. Real one
+        //    is rendered by loadPaceLine() against Plaid spend data; in
+        //    demo mode there's none, so without injection the card reads
+        //    empty between score number and habit chips. Dark variant
+        //    matches the score-card's forest-green background.
+        const pace = document.getElementById('db-score-pace');
+        if (pace) {
+            pace.classList.add('db-score-pace--dark');
+            pace.style.display = 'block';
+            pace.innerHTML = `
+              <div style="display:flex;align-items:baseline;justify-content:space-between;gap:.5rem;margin-bottom:4px;">
+                <div class="db-pace-label">Floor pace · last 7 days</div>
+                <div class="db-pace-gap" style="color:#b8e0c8;">$240 above floor</div>
+              </div>
+              <svg width="100%" height="32" viewBox="0 0 200 32" preserveAspectRatio="none" style="display:block;">
+                <path d="M 0 24 L 200 8" stroke="rgba(255,255,255,.35)" stroke-width="1.5" stroke-dasharray="3,3" fill="none"/>
+                <path d="M 0 26 L 50 22 L 100 16 L 140 10 L 200 6" stroke="#b8e0c8" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+              </svg>
+              <div class="db-pace-foot"><span>7d ago</span><span>today</span></div>`;
+        }
     }""")
     await page.wait_for_timeout(250)
 
@@ -176,11 +265,42 @@ async def shot_dashboard(page: Page) -> None:
 
 
 async def shot_allocation_preview(page: Page) -> None:
-    """Click 'Tell me where it goes' so the alloc-preview modal renders the
-    full 6-job breakdown for the available $930 — this is the marquee
-    'every dollar gets a job' moment."""
+    """Alloc-preview modal split for the dashboard's $930 available — the
+    marquee 'every dollar gets a job' moment. Calls openAllocPreview
+    directly with mock jobs whose amounts sum to exactly $930. Bypasses
+    the real allocateAvailable() because that uses _availableToSpend()
+    against demo state ($5,000 balance - reserved = $3,150) which
+    contradicts the dashboard hero ($930)."""
     await goto_demo(page)
-    await page.evaluate("() => { if (typeof allocateAvailable === 'function') allocateAvailable(); }")
+    await page.evaluate(r"""() => {
+        // 6 mock jobs, percentages mirror the curated coach-reply split:
+        //   tax 28% · bills 25% · pay 14% · debt 12% · reserve 13% · free 8%
+        //   on $930 available → 260 + 233 + 130 + 112 + 121 + 74 = 930
+        const jobs = [
+          { name: 'Set aside for taxes',
+            why: '28% of every dollar to a separate tax account. Non-negotiable.',
+            amount: 260, color: 'var(--ds-c2)', bg: '#d9ecde', type: 'fixed',
+            destination: 'savings_bucket' },
+          { name: 'Top off bills (next 14 days)',
+            why: 'Phone, internet, health insurance, and the Chase minimum.',
+            amount: 233, color: 'var(--ds-t1)', bg: 'var(--ds-card2)', type: 'bills' },
+          { name: 'Pay yourself',
+            why: '14% owner draw. Locked in regardless of season.',
+            amount: 130, color: 'var(--ds-c2)', bg: '#d9ecde', type: 'ownerpay' },
+          { name: 'Extra to Chase Sapphire CC',
+            why: '22% APR is bleeding you. Highest interest first.',
+            amount: 112, color: 'var(--coral)', bg: 'var(--coral-light)', type: 'debt' },
+          { name: 'Move to reserve',
+            why: 'Slow-month protection. 6-month goal: $14k.',
+            amount: 121, color: 'var(--sky)', bg: 'var(--sky-light)', type: 'buffer' },
+          { name: 'Yours to spend freely',
+            why: '8% guilt-free. No tracking, no rules.',
+            amount: 74, color: 'var(--text2)', bg: 'var(--bg2)', type: 'free' },
+        ];
+        if (typeof openAllocPreview === 'function') {
+            openAllocPreview(930, 'Unallocated balance', jobs);
+        }
+    }""")
     await page.wait_for_timeout(900)
 
 
@@ -326,6 +446,196 @@ async def shot_refer(page: Page) -> None:
     await page.wait_for_timeout(500)
 
 
+async def shot_debts(page: Page) -> None:
+    """Plan → Debt sub-tab. Demo seed has one Chase CC; APR + minimum payment
+    visible from Plaid liabilities. Captures the post-Plaid debt UI."""
+    await goto_demo(page)
+    await page.evaluate("""() => {
+        if (typeof goTo === 'function') { goTo('plan'); setTimeout(() => goTo('debt'), 300); }
+    }""")
+    await page.wait_for_timeout(1100)
+    await page.evaluate("() => window.scrollTo(0, 0)")
+    await page.wait_for_timeout(250)
+
+
+async def shot_tax_view(page: Page) -> None:
+    """Home with the quarterly-tax-projection card visible. Demo seed may not
+    trigger the card (needs taxPct + recent income); inject the rendered DOM
+    directly so the marketing shot always shows it. scrollTo(0,0) keeps body
+    padding-top intact so the card sits below the iOS status bar overlay."""
+    await goto_demo(page)
+    await page.evaluate("() => { if (typeof goTo === 'function') goTo('home'); }")
+    await page.wait_for_timeout(700)
+    await apply_marketing_state(page)
+    await page.evaluate(r"""() => {
+        const wrap = document.getElementById('home-quarterly-tax');
+        if (!wrap) return;
+        wrap.innerHTML = `
+            <div class="qt-card">
+              <div class="qt-card-icon">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg>
+              </div>
+              <div class="qt-card-body">
+                <div class="qt-card-eyebrow">Next quarterly tax</div>
+                <div class="qt-card-title">Due Jun 16 (~40 days). 28% on $7,400 income last 90 days.</div>
+              </div>
+              <div class="qt-card-amt">$2,072</div>
+            </div>`;
+        wrap.style.display = '';
+        // Don't scrollIntoView — that hides body padding under the status
+        // bar. scrollTo(0,0) keeps padding visible and the card sits in
+        // its natural home-screen position.
+        window.scrollTo(0, 0);
+    }""")
+    await page.wait_for_timeout(450)
+
+
+async def shot_deep_dive(page: Page) -> None:
+    """Home with the deep-dive banner active. Demo seed won't have pending_review
+    items, so we inject the banner DOM directly. scrollTo(0,0) preserves body
+    padding-top so the banner doesn't slide under the iOS status bar."""
+    await goto_demo(page)
+    await page.evaluate("() => { if (typeof goTo === 'function') goTo('home'); }")
+    await page.wait_for_timeout(700)
+    await apply_marketing_state(page)
+    await page.evaluate(r"""() => {
+        const el = document.getElementById('deep-dive-banner');
+        if (!el) return;
+        el.innerHTML = `
+            <div class="deep-dive-banner">
+              <div class="deep-dive-banner-icon">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+              </div>
+              <div class="deep-dive-banner-body">
+                <div class="deep-dive-banner-title">3 new finds from your bank</div>
+                <div class="deep-dive-banner-sub">Able spotted 2 recurring charges and 1 income source you haven't classified.</div>
+              </div>
+              <button class="deep-dive-banner-cta">Review</button>
+            </div>`;
+        // scrollTo(0,0) instead of scrollIntoView — preserves body padding
+        // so the banner stays below the status-bar overlay.
+        window.scrollTo(0, 0);
+    }""")
+    await page.wait_for_timeout(450)
+
+
+async def shot_tax_classify(page: Page) -> None:
+    """Reclassify modal opened over the Activity page. Real outflow chip set
+    (Bill / Spending / Debt payment / Tax payment / Transfer) — same source
+    of truth the live app uses. Spending is the current category (matching
+    a freshly auto-classified Google Ads transaction); user is about to
+    flip it to a business expense by checking tax-deductible + setting the
+    business label. Renders the modal over a blurred Activity page so the
+    shot reads as the in-context flow."""
+    await goto_demo(page)
+    # Navigate to Plan → Activity so the modal backdrop shows the activity
+    # page (not home). The reclassify modal lives in this flow in real use.
+    await page.evaluate("""() => {
+        if (typeof goTo === 'function') { goTo('plan'); setTimeout(() => goTo('activity'), 300); }
+    }""")
+    await page.wait_for_timeout(900)
+    # Inject a few activity rows so the page has real-feeling content behind
+    # the modal (demo seed has no plaid_transactions, so the page reads empty).
+    await page.evaluate(r"""() => {
+        const list = document.getElementById('activity-list');
+        if (list) {
+            list.innerHTML = `
+              <div class="act-row" style="padding:14px 16px;border-bottom:1px solid var(--ds-line);display:flex;justify-content:space-between;align-items:center;background:white;">
+                <div><div style="font-size:14px;font-weight:800;color:var(--ds-t1);">Google Ads</div>
+                <div style="font-size:11px;color:var(--ds-t3);font-weight:600;margin-top:2px;">Wed, May 6 · auto · spending</div></div>
+                <div style="font-size:14px;font-weight:800;color:var(--ds-t1);">-$50.00</div>
+              </div>
+              <div class="act-row" style="padding:14px 16px;border-bottom:1px solid var(--ds-line);display:flex;justify-content:space-between;align-items:center;background:white;">
+                <div><div style="font-size:14px;font-weight:800;color:var(--ds-t1);">Acme Design Co</div>
+                <div style="font-size:11px;color:var(--ds-t3);font-weight:600;margin-top:2px;">Tue, May 5 · income</div></div>
+                <div style="font-size:14px;font-weight:800;color:var(--ds-green);">+$2,400.00</div>
+              </div>
+              <div class="act-row" style="padding:14px 16px;border-bottom:1px solid var(--ds-line);display:flex;justify-content:space-between;align-items:center;background:white;">
+                <div><div style="font-size:14px;font-weight:800;color:var(--ds-t1);">Adobe Creative Cloud</div>
+                <div style="font-size:11px;color:var(--ds-t3);font-weight:600;margin-top:2px;">Mon, May 4 · auto · spending</div></div>
+                <div style="font-size:14px;font-weight:800;color:var(--ds-t1);">-$54.99</div>
+              </div>`;
+        }
+        const modal = document.getElementById('modal-reclassify');
+        if (!modal) return;
+        const summary = document.getElementById('reclassify-summary');
+        if (summary) {
+            summary.innerHTML = `
+              <div style="font-size:18px;font-weight:900;color:var(--ds-t1);letter-spacing:-.01em;margin-bottom:4px;">−$50.00</div>
+              <div style="font-size:13px;font-weight:800;color:var(--ds-t1);">Google Ads</div>
+              <div style="font-size:11px;font-weight:600;color:var(--ds-t3);margin-top:3px;">Wed, May 6 · currently <span class="act-cat-badge discretionary">spending</span> <span class="act-pfc-badge">other general services</span> · 90% sure · "Google Ads"</div>`;
+        }
+        // Real chip set from ACTIVITY_OUTFLOW_CATS using .rc-chip styling.
+        // Spending is the auto-classified pick; user is about to switch it.
+        const chips = document.getElementById('reclassify-chips');
+        if (chips) {
+            chips.innerHTML = `
+              <button class="rc-chip">Bill</button>
+              <button class="rc-chip selected">Spending</button>
+              <button class="rc-chip">Debt payment</button>
+              <button class="rc-chip">Tax payment</button>
+              <button class="rc-chip">Transfer</button>`;
+        }
+        const businessInput = document.getElementById('reclassify-business');
+        if (businessInput) businessInput.value = 'Acme Design Co';
+        const taxBox = document.getElementById('reclassify-tax-deductible');
+        if (taxBox) taxBox.checked = true;
+        modal.style.display = 'flex';
+    }""")
+    await page.wait_for_timeout(450)
+
+
+async def shot_tax_export(page: Page) -> None:
+    """Tax-export modal opened with a populated category summary and active
+    Download CSV button. Renders over the Activity page (where the export
+    surface lives in real use)."""
+    await goto_demo(page)
+    await page.evaluate("""() => {
+        if (typeof goTo === 'function') { goTo('plan'); setTimeout(() => goTo('activity'), 300); }
+    }""")
+    await page.wait_for_timeout(900)
+    await page.evaluate(r"""() => {
+        const modal = document.getElementById('modal-tax-export');
+        if (!modal) return;
+        const sel = document.getElementById('tax-year');
+        if (sel) {
+            sel.innerHTML = '<option value="2026" selected>2026</option><option value="2025">2025</option>';
+        }
+        const dl = document.getElementById('tax-download-btn');
+        if (dl) dl.disabled = false;
+        const sum = document.getElementById('tax-summary');
+        if (sum) {
+            sum.innerHTML = `
+              <div style="display:flex;justify-content:space-between;align-items:baseline;background:var(--ds-green-l);border:1px solid var(--ds-green-m);border-radius:var(--ds-r2);padding:14px 16px;margin-bottom:1rem;">
+                <div>
+                  <div style="font-size:11px;font-weight:800;letter-spacing:.08em;text-transform:uppercase;color:var(--ds-green2);">Total tax-deductible</div>
+                  <div style="font-size:1.6rem;font-weight:900;color:var(--ds-t1);letter-spacing:-.02em;margin-top:2px;">$8,742.30</div>
+                </div>
+                <div style="font-size:12px;color:var(--ds-t2);font-weight:700;">42 transactions</div>
+              </div>
+              <div style="border:1px solid var(--ds-line);border-radius:var(--ds-r2);overflow:hidden;background:white;">
+                ${[
+                  ['Software', '$2,450.00', 14],
+                  ['Office supplies', '$1,820.55', 9],
+                  ['Travel', '$1,640.00', 6],
+                  ['Education', '$1,210.00', 4],
+                  ['Phone & internet', '$960.75', 5],
+                  ['Health insurance', '$661.00', 4],
+                ].map((r,i,a) => `
+                  <div style="display:flex;justify-content:space-between;padding:11px 14px;${i<a.length-1?'border-bottom:1px solid var(--ds-line);':''}">
+                    <div>
+                      <div style="font-size:13px;font-weight:800;color:var(--ds-t1);">${r[0]}</div>
+                      <div style="font-size:11px;font-weight:600;color:var(--ds-t3);margin-top:1px;">${r[2]} transactions</div>
+                    </div>
+                    <div style="font-size:13px;font-weight:800;color:var(--ds-t1);letter-spacing:-.005em;">${r[1]}</div>
+                  </div>`).join('')}
+              </div>`;
+        }
+        modal.style.display = 'flex';
+    }""")
+    await page.wait_for_timeout(450)
+
+
 SHOTS: list[Shot] = [
     Shot("01-dashboard",        "Dashboard / Allocate hero",  shot_dashboard),
     Shot("02-allocation-flow",  "Allocation preview modal",   shot_allocation_preview),
@@ -336,6 +646,16 @@ SHOTS: list[Shot] = [
     Shot("07-settings",         "Settings (rolling window)",  shot_settings),
     Shot("08-more-menu",        "More menu hub",              shot_more_menu),
     Shot("09-refer",            "Refer / earn free",          shot_refer),
+    Shot("10-debts",            "Plan → Debt (post-Plaid)",   shot_debts),
+    Shot("11-tax-view",         "Home → Quarterly tax",       shot_tax_view),
+    Shot("12-deep-dive",        "Home → Deep-dive banner",    shot_deep_dive),
+    Shot("13-tax-classify",     "Reclassify → tax-deductible",shot_tax_classify),
+    Shot("14-tax-export",       "Tax export modal",           shot_tax_export),
+    # 15-bank-connect dropped 2026-05-08 (Paul): the custom Able-branded
+    # bank-connect screen doesn't exist in the real app (Plaid Link is hosted),
+    # so it read as misleading marketing. Replaced by C4 task: a separate
+    # 3-icon Plaid digital-handshake illustration (bank → plaid → able) as
+    # a standalone marketing asset, not in the capture pipeline.
 ]
 
 
@@ -426,7 +746,7 @@ async def main() -> None:
 
             await browser.close()
         print(f"\n[shots] done → {OUT_DIR.relative_to(ROOT)}/")
-        print(f"        9 raw + {len(SHOTS) * len(ASPECTS)} composed PNGs")
+        print(f"        {len(SHOTS)} raw + {len(SHOTS) * len(ASPECTS)} composed PNGs")
     finally:
         if server:
             server.terminate()

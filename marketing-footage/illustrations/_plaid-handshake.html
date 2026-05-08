@@ -1,0 +1,290 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Plaid handshake — marketing illustration</title>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400;12..96,500;12..96,600;12..96,700;12..96,800;12..96,900&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg: #E6EBE0;
+  --card: #ffffff;
+  --t1: #111c16;
+  --t2: #4a5c52;
+  --t3: #8ca898;
+  --line: #c4d8cc;
+  --green: #2a7a4a;
+  --green-l: #eaf5ee;
+  --green-m: #b8d4c1;
+  --plaid: #111c2c;
+  --plaid-l: #f4f5f9;
+  --bank: #5b6e8c;
+  --bank-l: #eef2f8;
+  --f: 'Bricolage Grotesque', -apple-system, sans-serif;
+}
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html, body { background: #d9e8de; }
+body { font-family: var(--f); -webkit-font-smoothing: antialiased; }
+
+.canvas {
+  width: var(--w, 1080px);
+  height: var(--h, 1080px);
+  background: var(--bg);
+  position: relative;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  padding: clamp(40px, 6vmin, 100px);
+}
+
+/* Subtle radial highlight behind the icons. */
+.canvas::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(ellipse at 50% 50%, rgba(255,255,255,0.55) 0%, transparent 60%);
+  pointer-events: none;
+}
+
+.eyebrow {
+  font-size: clamp(16px, 1.4vmin, 22px);
+  font-weight: 800;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--green);
+  margin-bottom: clamp(36px, 5vmin, 68px);
+  position: relative;
+  z-index: 1;
+}
+
+/* The handshake row. Horizontal by default. */
+.row {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: clamp(20px, 3vmin, 48px);
+  position: relative;
+  z-index: 1;
+  width: 100%;
+}
+
+.card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  flex-shrink: 0;
+}
+
+.icon {
+  width: clamp(120px, 14vmin, 196px);
+  height: clamp(120px, 14vmin, 196px);
+  border-radius: 50%;
+  background: var(--card);
+  border: 2px solid var(--line);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow:
+    0 1px 0 rgba(255,255,255,0.7) inset,
+    0 8px 24px rgba(31,96,56,0.10),
+    0 18px 40px rgba(31,96,56,0.07);
+  margin-bottom: clamp(14px, 1.6vmin, 22px);
+  position: relative;
+}
+
+.icon.bank {
+  background: var(--bank-l);
+  border-color: rgba(91,110,140,0.35);
+  color: var(--bank);
+}
+.icon.bank svg {
+  width: 50%;
+  height: 50%;
+  stroke: currentColor;
+  fill: none;
+  stroke-width: 1.8;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.icon.plaid {
+  background: var(--plaid);
+  border-color: var(--plaid);
+  color: white;
+}
+.icon.plaid .plaid-mark {
+  font-size: clamp(54px, 6vmin, 90px);
+  font-weight: 900;
+  letter-spacing: -0.04em;
+  font-family: var(--f);
+  line-height: 1;
+  margin-top: -2px;
+}
+
+/* Able tile: use the actual app icon (rounded-square mark with A + swoosh).
+   No outer circle/border treatment — the icon's own rounded-square shape
+   stands as the brand mark. Slightly stronger drop-shadow than circles
+   above so it carries weight on busy backgrounds. */
+.icon.able {
+  background: transparent;
+  border: 0;
+  box-shadow: none;
+  padding: 0;
+  border-radius: 0;
+}
+.icon.able img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  border-radius: clamp(22px, 3vmin, 40px);
+  filter: drop-shadow(0 12px 32px rgba(31,96,56,0.28)) drop-shadow(0 4px 8px rgba(31,96,56,0.18));
+}
+
+/* Label below each icon. */
+.card-label {
+  font-size: clamp(15px, 1.6vmin, 22px);
+  font-weight: 800;
+  color: var(--t1);
+  letter-spacing: -0.01em;
+  text-align: center;
+}
+.card-sub {
+  font-size: clamp(11px, 1.1vmin, 14px);
+  font-weight: 600;
+  color: var(--t3);
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  margin-top: 4px;
+  text-align: center;
+}
+
+/* Connection line — three pulsing dots represent encrypted data flow. */
+.line {
+  display: flex;
+  align-items: center;
+  gap: clamp(6px, 0.9vmin, 14px);
+  flex-shrink: 0;
+  margin-bottom: clamp(34px, 3vmin, 54px);  /* aligns with icon center */
+}
+.dot {
+  width: clamp(8px, 0.9vmin, 14px);
+  height: clamp(8px, 0.9vmin, 14px);
+  border-radius: 50%;
+  background: var(--green);
+}
+.dot.dim { opacity: 0.55; background: var(--green-m); }
+.dot.dimmer { opacity: 0.3; background: var(--green-m); }
+
+.tagline {
+  margin-top: clamp(38px, 5vmin, 70px);
+  font-size: clamp(20px, 2.2vmin, 32px);
+  font-weight: 800;
+  color: var(--t1);
+  letter-spacing: -0.02em;
+  text-align: center;
+  line-height: 1.25;
+  position: relative;
+  z-index: 1;
+}
+
+.supporting {
+  margin-top: clamp(10px, 1vmin, 16px);
+  font-size: clamp(12px, 1.2vmin, 16px);
+  font-weight: 600;
+  color: var(--t2);
+  letter-spacing: -0.005em;
+  text-align: center;
+  position: relative;
+  z-index: 1;
+}
+.supporting .sep {
+  display: inline-block;
+  width: 4px;
+  height: 4px;
+  border-radius: 50%;
+  background: var(--t3);
+  vertical-align: middle;
+  margin: 0 .55em 2px;
+}
+
+/* Vertical orientation (9x16, 4x5). Icons stack vertically. */
+.canvas[data-orientation="vertical"] .row { flex-direction: column; gap: clamp(14px, 2vmin, 26px); }
+.canvas[data-orientation="vertical"] .line {
+  flex-direction: column;
+  margin-bottom: 0;
+  width: auto;
+}
+.canvas[data-orientation="vertical"] .icon {
+  width: clamp(110px, 18vmin, 180px);
+  height: clamp(110px, 18vmin, 180px);
+}
+.canvas[data-orientation="vertical"] .eyebrow { margin-bottom: clamp(20px, 3vmin, 40px); }
+
+/* Tighter spacing for square 1x1. */
+.canvas[data-aspect="1x1"] .icon {
+  width: clamp(120px, 16vmin, 200px);
+  height: clamp(120px, 16vmin, 200px);
+}
+
+/* Wide 16x9 — bigger icons, more breathing room. */
+.canvas[data-aspect="16x9"] .icon {
+  width: clamp(140px, 14vmin, 220px);
+  height: clamp(140px, 14vmin, 220px);
+}
+.canvas[data-aspect="16x9"] .row { gap: clamp(40px, 4vmin, 80px); }
+</style>
+</head>
+<body>
+<div class="canvas" id="canvas">
+  <div class="eyebrow">Integration</div>
+  <div class="row">
+    <div class="card">
+      <div class="icon bank" aria-hidden="true">
+        <svg viewBox="0 0 24 24"><path d="M3 21h18M3 10h18M5 6l7-3 7 3M4 10v11m4-11v11m4-11v11m4-11v11m4-11v11"/></svg>
+      </div>
+      <div class="card-label">Your bank</div>
+      <div class="card-sub">12,000+ supported</div>
+    </div>
+    <div class="line">
+      <span class="dot dimmer"></span><span class="dot dim"></span><span class="dot"></span>
+    </div>
+    <div class="card">
+      <div class="icon plaid" aria-hidden="true">
+        <span class="plaid-mark">P</span>
+      </div>
+      <div class="card-label">Plaid</div>
+      <div class="card-sub">256-bit encryption</div>
+    </div>
+    <div class="line">
+      <span class="dot"></span><span class="dot dim"></span><span class="dot dimmer"></span>
+    </div>
+    <div class="card">
+      <div class="icon able" aria-hidden="true">
+        <img src="/icon-1024.png" alt="Able">
+      </div>
+      <div class="card-label">Able</div>
+      <div class="card-sub">Read-only</div>
+    </div>
+  </div>
+  <div class="tagline">Connect your bank in seconds.</div>
+  <div class="supporting">Read-only<span class="sep"></span>Encrypted in transit and at rest<span class="sep"></span>Disconnect any time</div>
+</div>
+<script>
+(function(){
+  const canvas = document.getElementById('canvas');
+  const params = new URLSearchParams(location.search);
+  const w = parseInt(params.get('w') || '1080', 10);
+  const h = parseInt(params.get('h') || '1080', 10);
+  const aspect = params.get('aspect') || '1x1';
+  canvas.style.setProperty('--w', w + 'px');
+  canvas.style.setProperty('--h', h + 'px');
+  canvas.dataset.aspect = aspect;
+  // Vertical orientations: 9x16 and 4x5 (height > width significantly).
+  if (aspect === '9x16' || aspect === '4x5') canvas.dataset.orientation = 'vertical';
+  // Signal ready for the capture script (mirrors _frame.html convention).
+  setTimeout(() => { window.__shotReady = true; }, 100);
+})();
+</script>
+</body>
+</html>
