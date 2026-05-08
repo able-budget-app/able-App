@@ -17,6 +17,8 @@ if (!IS_PREVIEW) Deno.serve(async (req) => {
 
   const admin = createClient(SUPABASE_URL, SERVICE_ROLE);
   const results = {
+    signup_completed: 0, trial_day_2: 0, first_income_next_day: 0,
+    onboarding_day_7: 0, onboarding_day_14: 0,
     dormancy: 0, weekly: 0, bill_due: 0, low_buffer: 0, monthly_wrap: 0,
     cart_24h: 0, cart_3d: 0, cart_7d: 0,
     trial_day_5: 0, trial_day_7: 0, trial_ended_no_convert: 0,
@@ -161,6 +163,57 @@ if (!IS_PREVIEW) Deno.serve(async (req) => {
       // Day-window computed in this user's local timezone.
       const userTz = userData?.settings?.timezone || 'UTC';
       const { isMonday, isFirstOfMonth, tomorrowDay, todayStartMs } = userTzWindow(userTz);
+
+      // Onboarding welcome series (paid users only — they completed checkout).
+      // 5 emails over the first 14 days. Each is once-per-user-ever via
+      // sentEver. Welcome-03 is event-based off the user's first deposit;
+      // the others are calendar-from-signup. The 48h upper bound on
+      // signup_completed prevents a flood when this code first deploys.
+      if (hasPaid && userData?.unsubscribe_token) {
+        const ageHours = (nowMs - new Date(authUser.created_at).getTime()) / 3_600_000;
+
+        // Welcome-01: first cron after checkout, only for fresh signups.
+        if (ageHours < 48 && !sentEver(userId, 'signup_completed')) {
+          const ok = await sendSignupCompleted(admin, email, userData);
+          if (ok) results.signup_completed++; else results.errors++;
+        }
+
+        // Welcome-02: t+48h. Window 36-72h.
+        if (ageHours >= 36 && ageHours < 72 && !sentEver(userId, 'trial_day_2')) {
+          const ok = await sendTrialDay2(admin, email, userData);
+          if (ok) results.trial_day_2++; else results.errors++;
+        }
+
+        // Welcome-03: cron-day after first income logged. Find oldest history
+        // entry; if it was logged 12-72h ago and we haven't sent yet, fire.
+        // The 72h upper bound caps backfill if cron missed a run.
+        if (!sentEver(userId, 'first_income_next_day')) {
+          const history = Array.isArray(userData.history) ? userData.history : [];
+          if (history.length > 0) {
+            const firstDepositMs = history.reduce((min: number, h: any) => {
+              const t = new Date(h.date).getTime();
+              return Number.isFinite(t) && t < min ? t : min;
+            }, Number.POSITIVE_INFINITY);
+            const sinceDepositH = Number.isFinite(firstDepositMs) ? (nowMs - firstDepositMs) / 3_600_000 : 0;
+            if (sinceDepositH >= 12 && sinceDepositH < 72) {
+              const ok = await sendFirstIncomeNextDay(admin, email, userData);
+              if (ok) results.first_income_next_day++; else results.errors++;
+            }
+          }
+        }
+
+        // Welcome-04: day 7 progress check. Window 6.5-7.5d.
+        if (ageHours >= 156 && ageHours < 180 && !sentEver(userId, 'onboarding_day_7')) {
+          const ok = await sendOnboardingDay7(admin, email, userData);
+          if (ok) results.onboarding_day_7++; else results.errors++;
+        }
+
+        // Welcome-05: day 14 first review. Window 13.5-14.5d.
+        if (ageHours >= 324 && ageHours < 348 && !sentEver(userId, 'onboarding_day_14')) {
+          const ok = await sendOnboardingDay14(admin, email, userData);
+          if (ok) results.onboarding_day_14++; else results.errors++;
+        }
+      }
 
       // Abandoned cart sequence (non-payers only)
       if (!hasPaid && userData?.unsubscribe_token) {
@@ -515,6 +568,140 @@ const openAble = (tone: Tone = 'green') => cta({ label: 'Open Able', href: `${AP
 // in production and by renderPreview() locally.
 // ============================================================
 
+// Welcome-01. Fires on the first cron after a user has completed checkout
+// (paidStatuses includes 'trialing'). Confirms account, one job: log a deposit.
+function buildSignupCompleted(user: any, unsub: string): { subject: string; html: string } {
+  const inner = hero({
+    title: "You're in.",
+    lede: 'Account is ready.',
+  })
+    + paragraph(`Log your next deposit when it lands. Even a small one. Watching where the money goes is the whole app.`, { topMargin: 18 })
+    + openAble('green');
+  return {
+    subject: "you're in",
+    html: layout({ tone: 'green', inner, unsub }),
+  };
+}
+
+// Welcome-02. Fires 36-72h after signup. Explains the 5-bucket order with a
+// worked example. The order is the part most people miss: bills get covered
+// before debt or spending get a piece.
+function buildTrialDay2(user: any, unsub: string): { subject: string; html: string } {
+  const exampleRows = [
+    { label: 'Taxes', value: '$200' },
+    { label: 'Bills due in your window', value: '$450' },
+    { label: 'Smoothing reserve', value: '$150' },
+    { label: 'Debt', value: '$100' },
+    { label: 'Free spending', value: '$100' },
+  ];
+  const inner = hero({
+    eyebrow: 'Day 2',
+    title: 'The part most people miss.',
+  })
+    + paragraph(`Most budgeting apps split your money by category. Able splits it by purpose.`, { topMargin: 18 })
+    + paragraph(`Every deposit gets sorted into five jobs, in order: taxes, bills due in your window, smoothing reserve, debt, free spending. The order matters. Bills get covered before anything else gets a piece.`, { topMargin: 10 })
+    + `<div style="margin-top:18px;font-size:11px;font-weight:800;letter-spacing:.18em;text-transform:uppercase;color:${T.inkMuted};">Example deposit: $1,000</div>`
+    + `<div style="margin-top:8px;">${stats(exampleRows)}</div>`
+    + paragraph(`Your numbers will be different. The order stays the same.`, { topMargin: 14 })
+    + openAble('green');
+  return {
+    subject: 'the part most people miss',
+    html: layout({ tone: 'green', inner, unsub }),
+  };
+}
+
+// Welcome-03. Fires the cron-day after the first income is logged. Highest-
+// engagement moment in the lifecycle. Celebrate briefly, reinforce the
+// pattern, set the expectation that the value compounds.
+function buildFirstIncomeNextDay(user: any, unsub: string): { subject: string; html: string } {
+  const history = Array.isArray(user.history) ? user.history : [];
+  const firstDeposit = history.length > 0
+    ? history.reduce((min: any, h: any) => (new Date(h.date).getTime() < new Date(min.date).getTime() ? h : min), history[0])
+    : null;
+  const amount = firstDeposit?.amount ? money(firstDeposit.amount) : null;
+  const lede = amount
+    ? `Yesterday you logged ${amount}. That's the moment Able starts working.`
+    : `Yesterday you logged your first deposit. That's the moment Able starts working.`;
+  const inner = hero({ eyebrow: 'First deposit', title: 'First one in.', lede })
+    + paragraph(`From here, every deposit gets sorted the same way. Taxes first. Bills due in your window next. Reserve, debt, spending after. The pattern compounds.`, { topMargin: 18 })
+    + callout({ tone: 'green', body: `Two weeks of data and the smoothing curve starts to make sense. A month and the rhythm becomes visible.` })
+    + cta({ label: 'Log today\'s deposit', href: `${APP_URL}/app.html`, tone: 'green' });
+  return {
+    subject: 'first one in',
+    html: layout({ tone: 'green', inner, unsub }),
+  };
+}
+
+// Welcome-04. Day 7 progress check. Adapts to whether the user has been
+// active. Anti-guilt rule: a quiet week never reads as failure.
+function buildOnboardingDay7(user: any, unsub: string): { subject: string; html: string } {
+  const history = Array.isArray(user.history) ? user.history : [];
+  const cutoffMs = Date.now() - 7 * 24 * 60 * 60 * 1000;
+  const recent = history.filter((h: any) => new Date(h.date).getTime() >= cutoffMs);
+  const totalIn = recent.reduce((s: number, h: any) => s + (h.amount || 0), 0);
+  const debtPaid = recent.reduce((s: number, h: any) => s + (h.debtExtra || 0), 0);
+  const bufAdded = recent.reduce((s: number, h: any) => s + (h.bufContrib || 0), 0);
+
+  if (recent.length === 0) {
+    // Quiet week. Anti-guilt copy.
+    const inner = hero({ eyebrow: 'Week 1', title: 'Still here?' })
+      + paragraph(`Setting up Able takes two minutes. Logging the first deposit takes thirty seconds. After that the app starts to feel real.`, { topMargin: 18 })
+      + paragraph(`If this was a hard week, that's fine. Your account stays put.`, { topMargin: 10 })
+      + openAble('green');
+    return {
+      subject: 'still here?',
+      html: layout({ tone: 'green', inner, unsub }),
+    };
+  }
+
+  const statRows: Array<{ label: string; value: string }> = [
+    { label: 'Deposits logged', value: String(recent.length) },
+  ];
+  if (debtPaid > 0) statRows.push({ label: 'Extra to debt', value: money(debtPaid) });
+  if (bufAdded > 0) statRows.push({ label: 'Added to buffer', value: money(bufAdded) });
+
+  const inner = hero({ eyebrow: 'Week 1', title: 'A week in.' })
+    + heroNumber({ label: 'Income logged', value: money(totalIn) })
+    + `<div style="margin-top:18px;">${stats(statRows)}</div>`
+    + paragraph(`Week one patterns matter less than week two. Keep logging.`, { topMargin: 14 })
+    + openAble('green');
+  return {
+    subject: 'a week in',
+    html: layout({ tone: 'green', inner, unsub }),
+  };
+}
+
+// Welcome-05. Day 14 first review. Two weeks of data is the first horizon
+// where Able's smoothing math gets meaningful. Sets up monthly_wrap which
+// fires on the 1st of next month.
+function buildOnboardingDay14(user: any, unsub: string): { subject: string; html: string } {
+  const history = Array.isArray(user.history) ? user.history : [];
+  const cutoffMs = Date.now() - 14 * 24 * 60 * 60 * 1000;
+  const recent = history.filter((h: any) => new Date(h.date).getTime() >= cutoffMs);
+  const totalIn = recent.reduce((s: number, h: any) => s + (h.amount || 0), 0);
+  const debtPaid = recent.reduce((s: number, h: any) => s + (h.debtExtra || 0), 0);
+  const bufAdded = recent.reduce((s: number, h: any) => s + (h.bufContrib || 0), 0);
+  const buffer = parseFloat(user.buffer) || 0;
+
+  const statRows: Array<{ label: string; value: string }> = [
+    { label: 'Deposits logged', value: String(recent.length) },
+  ];
+  if (debtPaid > 0) statRows.push({ label: 'Extra to debt', value: money(debtPaid) });
+  if (bufAdded > 0) statRows.push({ label: 'Added to buffer', value: money(bufAdded) });
+  statRows.push({ label: 'Buffer now', value: money(buffer) });
+
+  const inner = hero({ eyebrow: 'Two weeks', title: 'Two weeks of data.' })
+    + heroNumber({ label: 'Income logged', value: money(totalIn), sub: `${recent.length} deposit${recent.length === 1 ? '' : 's'}` })
+    + `<div style="margin-top:18px;">${stats(statRows)}</div>`
+    + paragraph(`This is enough for the first real pattern to show up. The smoothing curve, the bills-due rhythm, how the two line up.`, { topMargin: 14 })
+    + paragraph(`Month one is almost done. The first monthly wrap will compare these two weeks to the next two.`, { topMargin: 10 })
+    + openAble('green');
+  return {
+    subject: 'two weeks of data',
+    html: layout({ tone: 'green', inner, unsub }),
+  };
+}
+
 function buildDormancy(user: any, unsub: string): { subject: string; html: string } {
   const bills = Array.isArray(user.bills) ? user.bills : [];
   const unpaidCount = bills.filter((b: any) => !b.paid).length;
@@ -786,6 +973,31 @@ function buildDeepDiveSummary(user: any, summary: { new_bills: number; new_debts
 // Sender wrappers. Build, then send.
 // ============================================================
 
+async function sendSignupCompleted(admin: any, email: string, user: any) {
+  const { subject, html } = buildSignupCompleted(user, unsubUrl(user.unsubscribe_token));
+  return sendViaResend(admin, email, subject, html, 'signup_completed', user.id);
+}
+
+async function sendTrialDay2(admin: any, email: string, user: any) {
+  const { subject, html } = buildTrialDay2(user, unsubUrl(user.unsubscribe_token));
+  return sendViaResend(admin, email, subject, html, 'trial_day_2', user.id);
+}
+
+async function sendFirstIncomeNextDay(admin: any, email: string, user: any) {
+  const { subject, html } = buildFirstIncomeNextDay(user, unsubUrl(user.unsubscribe_token));
+  return sendViaResend(admin, email, subject, html, 'first_income_next_day', user.id);
+}
+
+async function sendOnboardingDay7(admin: any, email: string, user: any) {
+  const { subject, html } = buildOnboardingDay7(user, unsubUrl(user.unsubscribe_token));
+  return sendViaResend(admin, email, subject, html, 'onboarding_day_7', user.id);
+}
+
+async function sendOnboardingDay14(admin: any, email: string, user: any) {
+  const { subject, html } = buildOnboardingDay14(user, unsubUrl(user.unsubscribe_token));
+  return sendViaResend(admin, email, subject, html, 'onboarding_day_14', user.id);
+}
+
 async function sendDormancy(admin: any, email: string, user: any) {
   const { subject, html } = buildDormancy(user, unsubUrl(user.unsubscribe_token));
   return sendViaResend(admin, email, subject, html, 'dormancy', user.id);
@@ -895,7 +1107,16 @@ async function renderPreview(): Promise<void> {
     id: 'preview-item-id',
   };
 
+  const userFirstIncome = { ...userBase, history: [{ date: new Date(today - 1 * dayMs).toISOString(), amount: 1240 }] };
+  const userQuietWeek = { ...userBase, history: [] };
+
   const templates = [
+    { id: 'signup_completed', built: buildSignupCompleted(userBase, fakeUnsub) },
+    { id: 'trial_day_2', built: buildTrialDay2(userBase, fakeUnsub) },
+    { id: 'first_income_next_day', built: buildFirstIncomeNextDay(userFirstIncome, fakeUnsub) },
+    { id: 'onboarding_day_7_active', built: buildOnboardingDay7(userWeek, fakeUnsub) },
+    { id: 'onboarding_day_7_quiet', built: buildOnboardingDay7(userQuietWeek, fakeUnsub) },
+    { id: 'onboarding_day_14', built: buildOnboardingDay14(userWeek, fakeUnsub) },
     { id: 'dormancy', built: buildDormancy(userBase, fakeUnsub) },
     { id: 'weekly', built: buildWeekly(userWeek, fakeUnsub) },
     { id: 'bill_due_tomorrow', built: buildBillDue(userBase, billsTomorrow, fakeUnsub) },
