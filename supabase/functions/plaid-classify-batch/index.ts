@@ -71,9 +71,17 @@ Deno.serve(async (req) => {
   if (req.method === 'OPTIONS') return new Response('ok', { headers: corsHeaders });
   if (req.method !== 'POST') return json({ error: 'POST only' }, 405);
 
-  const authHeader = req.headers.get('Authorization') ?? '';
-  const bearerToken = authHeader.replace(/^Bearer\s+/i, '');
-  if (!bearerToken || bearerToken !== SERVICE_ROLE) {
+  // Internal-only gate. Invoked by plaid-sync (post-sync auto-classify) and
+  // by direct service-role curl (manual backfills). Uses a custom shared
+  // secret rather than SUPABASE_SERVICE_ROLE_KEY because Supabase mutates
+  // the Authorization header on cross-region inter-function calls — see
+  // commit ac94d34 for the full backstory.
+  if (!INTERNAL_SECRET) {
+    console.error('plaid-classify-batch: INTERNAL_FUNCTION_SECRET unset');
+    return json({ error: 'not configured' }, 503);
+  }
+  const got = req.headers.get('x-internal-auth') ?? '';
+  if (got !== INTERNAL_SECRET) {
     return json({ error: 'Unauthorized' }, 401);
   }
 

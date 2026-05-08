@@ -25,6 +25,7 @@ import { jwtVerify, importJWK, decodeProtectedHeader, type JWK } from 'npm:jose@
 
 const SUPABASE_URL = Deno.env.get('SUPABASE_URL')!;
 const SERVICE_ROLE = Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')!;
+const INTERNAL_SECRET = Deno.env.get('INTERNAL_FUNCTION_SECRET') ?? '';
 const REPLAY_WINDOW_SECONDS = 5 * 60;
 const PLAID_ENV = Deno.env.get('PLAID_ENV') ?? 'sandbox';
 const PLAID_HOSTS: Record<string, string> = {
@@ -279,6 +280,7 @@ function scheduleBackgroundSync(plaidItemRowId: string): void {
     headers: {
       'Content-Type': 'application/json',
       Authorization: `Bearer ${SERVICE_ROLE}`,
+      'x-internal-auth': INTERNAL_SECRET,
     },
     body: JSON.stringify({ plaid_item_row_id: plaidItemRowId }),
   })
@@ -311,6 +313,7 @@ function scheduleRecurringRefresh(plaidItemRowId: string): void {
     headers: {
       'Content-Type': 'application/json',
       Authorization: `Bearer ${SERVICE_ROLE}`,
+      'x-internal-auth': INTERNAL_SECRET,
     },
     body: JSON.stringify({ plaid_item_row_id: plaidItemRowId, source: 'webhook' }),
   })

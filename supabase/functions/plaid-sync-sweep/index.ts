@@ -15,6 +15,7 @@ import { createClient } from 'npm:@supabase/supabase-js@2';
 
 const SUPABASE_URL = Deno.env.get('SUPABASE_URL')!;
 const SERVICE_ROLE = Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')!;
+const INTERNAL_SECRET = Deno.env.get('INTERNAL_FUNCTION_SECRET') ?? '';
 
 const STALE_AFTER_MIN = 60;     // items quieter than this get a re-sync
 const MAX_ITEMS_PER_RUN = 50;   // sanity cap so a backlog can't fanout-bomb
@@ -93,6 +94,7 @@ async function triggerSyncFor(plaidItemRowId: string): Promise<void> {
     headers: {
       'Content-Type': 'application/json',
       Authorization: `Bearer ${SERVICE_ROLE}`,
+      'x-internal-auth': INTERNAL_SECRET,
     },
     body: JSON.stringify({ plaid_item_row_id: plaidItemRowId }),
   });

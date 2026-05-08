@@ -23,6 +23,7 @@ import { transactionsRecurringGet, type RecurringStream } from '../_shared/plaid
 
 const SUPABASE_URL = Deno.env.get('SUPABASE_URL')!;
 const SERVICE_ROLE = Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')!;
+const INTERNAL_SECRET = Deno.env.get('INTERNAL_FUNCTION_SECRET') ?? '';
 
 const corsHeaders = {
   'Access-Control-Allow-Origin': '*',
@@ -37,13 +38,20 @@ Deno.serve(async (req) => {
   if (req.method !== 'POST') return json({ error: 'POST only' }, 405);
 
   try {
-    // Two callers (mirrors plaid-sync): a logged-in user (JWT in
-    // Authorization) or an internal service-role caller (the webhook on
-    // RECURRING_TRANSACTIONS_UPDATE). Service-role bypasses the user check
-    // since the user is offline when Plaid pings us.
+    // Three callers (mirrors plaid-sync):
+    //   1. Logged-in user (JWT in Authorization) — from the client app.
+    //   2. Internal Edge Function (webhook on RECURRING_TRANSACTIONS_UPDATE)
+    //      — sends x-internal-auth. The gateway mutates the Authorization
+    //      header on cross-region inter-function calls, which 401'd this
+    //      path silently before the fix; x-internal-auth survives intact
+    //      (commit ac94d34 has the full backstory).
+    //   3. Direct service-role curl — bearer equals SUPABASE_SERVICE_ROLE_KEY,
+    //      doesn't go through the gateway, so the bearer compare still works.
     const authHeader = req.headers.get('Authorization') ?? '';
     const bearerToken = authHeader.replace(/^Bearer\s+/i, '');
-    const isServiceCall = !!bearerToken && bearerToken === SERVICE_ROLE;
+    const internalHeader = req.headers.get('x-internal-auth') ?? '';
+    const isInternalCall = !!INTERNAL_SECRET && internalHeader === INTERNAL_SECRET;
+    const isServiceCall = isInternalCall || (!!bearerToken && bearerToken === SERVICE_ROLE);
 
     const body: Body = await req.json();
     if (!body?.plaid_item_row_id) {

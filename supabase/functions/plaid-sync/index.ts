@@ -32,6 +32,7 @@ import {
 
 const SUPABASE_URL = Deno.env.get('SUPABASE_URL')!;
 const SERVICE_ROLE = Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')!;
+const INTERNAL_SECRET = Deno.env.get('INTERNAL_FUNCTION_SECRET') ?? '';
 const MAX_PAGES = 50; // hard cap. Each page is up to 500 txns. 25k limit.
 
 const corsHeaders = {
@@ -47,13 +48,22 @@ Deno.serve(async (req) => {
   if (req.method !== 'POST') return json({ error: 'POST only' }, 405);
 
   try {
-    // Two callers: a logged-in user (JWT in Authorization) or an internal
-    // service-role caller (the webhook / cron). The latter passes the
-    // service role key directly so it can sync items for users who are
-    // offline. Bearer-equal-to-service-role is the trust boundary.
+    // Three callers:
+    //   1. Logged-in user (JWT in Authorization) — from the client app.
+    //   2. Internal Edge Function (webhook, sweep) — sends x-internal-auth.
+    //      Cross-region inter-function calls have their Authorization header
+    //      mutated by the Supabase gateway, which broke the original
+    //      service-role-bearer compare and silently 401'd the
+    //      webhook→sync chain (commit ac94d34 has the full backstory).
+    //      x-internal-auth survives the gateway intact.
+    //   3. Direct service-role curl (testing, manual backfill) — bearer
+    //      equals SUPABASE_SERVICE_ROLE_KEY. Doesn't go through the
+    //      gateway, so the bearer compare still works for this path.
     const authHeader = req.headers.get('Authorization') ?? '';
     const bearerToken = authHeader.replace(/^Bearer\s+/i, '');
-    const isServiceCall = !!bearerToken && bearerToken === SERVICE_ROLE;
+    const internalHeader = req.headers.get('x-internal-auth') ?? '';
+    const isInternalCall = !!INTERNAL_SECRET && internalHeader === INTERNAL_SECRET;
+    const isServiceCall = isInternalCall || (!!bearerToken && bearerToken === SERVICE_ROLE);
 
     const body: Body = await req.json();
     if (!body?.plaid_item_row_id) {
@@ -222,6 +232,7 @@ function scheduleBackgroundClassify(plaidItemRowId: string): void {
     headers: {
       'Content-Type': 'application/json',
       Authorization: `Bearer ${SERVICE_ROLE}`,
+      'x-internal-auth': INTERNAL_SECRET,
     },
     body: JSON.stringify({ plaid_item_row_id: plaidItemRowId }),
   })
