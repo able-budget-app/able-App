@@ -339,8 +339,61 @@ window.POSTS = [
     muted: "Don't wait for\na 'good month.'",
     punch: "Every deposit\nis a {good month.}" },
 
-  // Stat-fact posts (84-93) added separately once source verification
-  // returns from the research task — they need real citations.
+  // ─── Stat-fact posts (added 2026-05-08, layer "Stat") ───
+  // Each stat is real + cited via the meta footer (replaces the default
+  // "becomeable.app" line on these specific pieces). Sources verified
+  // via GAO, Federal Reserve SHED, JPMorgan Chase Institute,
+  // Transamerica, Kabbage, Bluevine, FreshBooks 2024-2026 reports.
+
+  { id: '84', slug: 'stat-sole-proprietors-underreport', cat: 'Stat', theme: 'page', tpl: 'A', eyebrow: 'mixed',
+    muted: "65% of sole proprietors\nunderreport income.",
+    punch: "By an average of\n{$13,500.}",
+    meta: 'Source: GAO, 2023' },
+
+  { id: '85', slug: 'stat-80-billion-tax-gap', cat: 'Stat', theme: 'black', tpl: 'A', eyebrow: 'mixed',
+    muted: "Sole proprietors leak\n$80 billion in taxes.",
+    punch: "{Every year.}\n16% of the tax gap.",
+    meta: 'Source: GAO, 2023' },
+
+  { id: '86', slug: 'stat-36-percent-volatility', cat: 'Stat', theme: 'page', tpl: 'A', eyebrow: 'mixed',
+    muted: "The median worker's income\nswings 36% month to month.",
+    punch: "Monthly budgets\n{break on that math.}",
+    meta: 'JPMorgan Chase Institute, 2015' },
+
+  { id: '87', slug: 'stat-58-percent-no-3mo-savings', cat: 'Stat', theme: 'white', tpl: 'A', eyebrow: 'gig',
+    muted: "58% of gig workers",
+    punch: "can't cover\n{3 months of expenses.}",
+    meta: 'Federal Reserve SHED, 2024' },
+
+  { id: '88', slug: 'stat-third-couldnt-make-rent', cat: 'Stat', theme: 'page', tpl: 'A', eyebrow: 'gig',
+    muted: "1 in 3 gig workers",
+    punch: "couldn't make rent\n{without their gig.}",
+    meta: 'Federal Reserve SHED, 2024' },
+
+  { id: '89', slug: 'stat-15-percent-no-retirement', cat: 'Stat', theme: 'white', tpl: 'A', eyebrow: 'mixed',
+    muted: "15% of self-employed\nworkers",
+    punch: "{never save}\nfor retirement.",
+    meta: 'Transamerica, 2019' },
+
+  { id: '90', slug: 'stat-half-skip-paying-themselves', cat: 'Stat', theme: 'green', tpl: 'A', eyebrow: 'business',
+    muted: "Half of small business\nowners",
+    punch: "go 2+ months without\n{paying themselves.}",
+    meta: 'Kabbage, 2019' },
+
+  { id: '91', slug: 'stat-80-percent-cash-flow-stress', cat: 'Stat', theme: 'page', tpl: 'A', eyebrow: 'business',
+    muted: "80% of small business\nowners deal with\ncash flow stress.",
+    punch: "{Multiple times}\na year.",
+    meta: 'Bluevine, 2026' },
+
+  { id: '92', slug: 'stat-51-percent-uneven-cash-flow', cat: 'Stat', theme: 'white', tpl: 'A', eyebrow: 'business',
+    muted: "51% of small employer\nfirms cite",
+    punch: "{uneven cash flow}\nas their biggest\nfinancial challenge.",
+    meta: 'Federal Reserve, 2025' },
+
+  { id: '93', slug: 'stat-26-percent-confident-on-taxes', cat: 'Stat', theme: 'glass-dark', tpl: 'A', eyebrow: 'mixed',
+    muted: "Only 26% of self-employed\nfeel confident about taxes.",
+    punch: "The rest pay\n{from fear.}",
+    meta: 'FreshBooks, 2025' },
 ];
 
 
