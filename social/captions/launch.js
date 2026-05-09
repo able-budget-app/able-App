@@ -242,35 +242,35 @@ Built Able for that shape. Free for 7 days. $14.99/mo or $129/yr after.`,
 
   '1|Sun': {
     // B07 audience-built-for-ents · brandscript
-    ig: `Built for entrepreneurs with inconsistent income.
+    ig: `Built for anyone with inconsistent income.
 
-Not freelancers, not contractors, not "self-employed" as a checkbox on a form — entrepreneurs. People who run their own thing and live off whatever it pays.
+Freelancers. Creators. Contractors. Gig drivers. Commission earners. Business owners. Anyone whose paycheck doesn't follow a schedule.
 
 The whole tool assumes that. Free for 7 days.
 Link in bio.
 
-#entrepreneur #freelancing #1099life #variableincome #smallbusiness`,
+#variableincome #freelancing #1099life #creator #smallbusiness`,
 
-    tt: `Built for entrepreneurs with inconsistent income.
+    tt: `Built for anyone with inconsistent income.
 
 The whole app assumes your paycheck doesn't exist.
 
 becomeable.app
 
-#entrepreneur #freelancetok #1099`,
+#variableincome #freelancetok #1099`,
 
-    li: `Built for entrepreneurs with inconsistent income.
+    li: `Built for anyone with inconsistent income.
 
-Most "money tools for entrepreneurs" are spreadsheets with a coat of paint, or apps designed for a W-2 worker that say the word "freelancer" in their marketing. The math underneath assumes a steady paycheck either way.
+Most "money tools for freelancers" are spreadsheets with a coat of paint, or apps designed for a W-2 worker that put the word "freelancer" in their marketing. The math underneath assumes a steady paycheck either way.
 
 Able is built the other direction. The whole product assumes:
 
-— Your income doesn't follow a schedule.
-— You owe taxes nobody is withholding for you.
-— Some months are up. Some months are nothing. Both are normal.
-— You need every dollar to have a job the moment it arrives, because if it sits, it leaks.
+· Your income doesn't follow a schedule.
+· You owe taxes nobody is withholding for you.
+· Some months are up. Some months are nothing. Both are normal.
+· You need every dollar to have a job the moment it arrives, because if it sits, it leaks.
 
-If you're an entrepreneur with inconsistent income — freelance, contract, creator, one-person business — the tool was built for the actual shape of your money.
+If your income is variable, freelance, contract, creator, commission, gig, one-person business, the tool was built for the actual shape of your money.
 
 Free for 7 days. $14.99/mo or $129/yr after.`,
   },
@@ -409,7 +409,7 @@ becomeable.app
 
     li: `You shouldn't have to be a CFO to have a calm month.
 
-Run through what most "tools for self-employed people" actually require: download statements, categorize transactions, reconcile a spreadsheet, project quarterly tax, separate business and personal, build a 12-month forecast. That's a finance job. People who run businesses for a living hire someone to do that.
+Run through what most "tools for variable income" actually require: download statements, categorize transactions, reconcile a spreadsheet, project quarterly tax, separate business and personal, build a 12-month forecast. That's a finance job. People who already have a job hire someone to do that.
 
 If you're a one-person business — freelancer, creator, consultant, contractor — you're already doing the work that pays. Adding a second job to manage the money from the first one is a recipe for nothing changing.
 
@@ -791,7 +791,7 @@ Free for 7 days. $14.99/mo or $129/yr after.`,
     // 09 free-to-try · single
     ig: `Free to try. Built for inconsistent income.
 
-If your last twelve months looked nothing like a steady paycheck, this is the budgeting tool built for that. Not "for entrepreneurs" as a marketing line — for the actual shape of your money.
+If your last twelve months looked nothing like a steady paycheck, this is the budgeting tool built for that. Not "for freelancers" as a marketing line, but for the actual shape of your money.
 
 Free for 7 days. Link in bio.
 
@@ -1790,11 +1790,11 @@ becomeable.app
 
 #freelancetok #1099 #moneytok`,
 
-    li: `The "three to six months emergency fund" advice was built for W-2 workers. If you're self-employed, three months isn't enough.
+    li: `The "three to six months emergency fund" advice was built for W-2 workers. If your income is variable, three months isn't enough.
 
 W-2 workers have layers of cushion the advice silently assumes. Unemployment insurance kicks in if they lose the job. Severance is often part of the exit. Paid leave covers medical events. Employer health insurance carries through gaps. The "emergency fund" is one of several backstops.
 
-If you're self-employed, none of those exist. Lose the work, lose all income, immediately. Get sick, lose income for the duration. Take a vacation, lose income. Slow quarter, lose income. Your "emergency fund" isn't a backstop. It's the first, second, and third layer of cushion.
+If you're paid in deposits instead of paychecks, none of those exist. Lose the work, lose all income, immediately. Get sick, lose income for the duration. Take a vacation, lose income. Slow quarter, lose income. Your "emergency fund" isn't a backstop. It's the first, second, and third layer of cushion.
 
 The right baseline for variable-income work is closer to nine months of bills covered, not three. Not because you're paranoid — because the math actually requires it once you account for the absence of every other backstop the standard advice assumed.
 
@@ -2108,7 +2108,7 @@ Free for 7 days. $14.99/mo or $129/yr after.`,
 
   '9|Sun': {
     // B17 paralysis-dont-move-it · brandscript
-    ig: `If you're an entrepreneur, here's why you don't move the money.
+    ig: `If your income is variable, here's why you don't move the money.
 
 You don't move it because you don't know when the next check is coming.
 
@@ -2116,7 +2116,7 @@ That paralysis isn't a personality trait. It's a structural response to variable
 
 Free for 7 days. Link in bio.
 
-#entrepreneur #1099life #variableincome #moneymindset #freelancelife`,
+#variableincome #1099life #freelancelife #moneymindset #creator`,
 
     tt: `You don't move the money.
 
@@ -2260,7 +2260,7 @@ Free for 7 days. $14.99/mo or $129/yr after.`,
 
   '10|Thu': {
     // 41 tired-of-bracing · single
-    ig: `If you're an entrepreneur, this was built for one reason.
+    ig: `If your income is variable, this was built for one reason.
 
 I built Able so I'd stop bracing.
 
@@ -2270,7 +2270,7 @@ The bracing wasn't about money. It was about not knowing what the system was doi
 
 Free for 7 days. Link in bio.
 
-#entrepreneur #freelancing #1099life #moneymindset #variableincome`,
+#variableincome #freelancing #1099life #moneymindset #creator`,
 
     tt: `Built Able so I'd stop bracing.
 
@@ -2340,7 +2340,7 @@ Free for 7 days. $14.99/mo or $129/yr after.`,
 
   '10|Sun': {
     // B13 fear-not-knowing · brandscript
-    ig: `If you're an entrepreneur, here's the real reason you can't pay down debt.
+    ig: `If your income is variable, here's the real reason you can't pay down debt.
 
 Not because you don't want to.
 
@@ -2350,9 +2350,9 @@ That's a structural fear. A reserve dissolves it.
 
 Free for 7 days. Link in bio.
 
-#entrepreneur #1099life #variableincome #freelancelife #moneymindset`,
+#variableincome #1099life #freelancelife #moneymindset #creator`,
 
-    tt: `Why entrepreneurs don't pay down debt.
+    tt: `Why people with variable income don't pay down debt.
 
 Not because they don't want to.
 
@@ -2362,7 +2362,9 @@ becomeable.app
 
 #freelancetok #1099 #moneymindset`,
 
-    li: `Entrepreneurs don't fail to pay down debt because they don't want to. They fail because they're afraid of not knowing when the next check is coming.
+    li: `People with variable income don't fail to pay down debt because they don't want to. They fail because they're afraid of not knowing when the next check is coming.
+
+Freelancers, contractors, creators, gig drivers, commission earners, business owners. Same shape underneath. Same fear.
 
 That sentence is the real diagnosis behind most variable-income debt situations. Not lack of intent. Not lack of math literacy. A structural fear that's perfectly rational given the income shape.
 
@@ -2610,7 +2612,7 @@ Free for 7 days. $14.99/mo or $129/yr after.`,
 
   '11|Sun': {
     // B10 villain-assume-paycheck · brandscript
-    ig: `If you're an entrepreneur, here's the real villain.
+    ig: `If your income is variable, here's the real villain.
 
 Most budgeting apps assume a steady paycheck.
 
@@ -2618,7 +2620,7 @@ Yours isn't steady. The mismatch makes every other tool feel hostile to your inc
 
 Free for 7 days. Link in bio.
 
-#entrepreneur #freelancing #1099life #variableincome #budgeting`,
+#variableincome #freelancing #1099life #creator #budgeting`,
 
     tt: `Most budgeting apps assume a steady paycheck.
 
@@ -2649,7 +2651,7 @@ Free for 7 days. $14.99/mo or $129/yr after.`,
 
   '12|Mon': {
     // 05 leak-math · single
-    ig: `If you're an entrepreneur, here's the math of the leak.
+    ig: `If your income is variable, here's the math of the leak.
 
 $7 here. A snack. A subscription.
 
@@ -2659,7 +2661,7 @@ Not a discipline issue. Money without a job leaks. Every time.
 
 Free for 7 days. Link in bio.
 
-#entrepreneur #1099life #variableincome #budgeting #freelancelife`,
+#variableincome #1099life #freelancelife #budgeting #creator`,
 
     tt: `$7 here. A subscription.
 
@@ -2884,7 +2886,7 @@ Free for 7 days. $14.99/mo or $129/yr after.`,
 
   '12|Sun': {
     // B19 paralysis-400-gone · brandscript
-    ig: `If you're an entrepreneur, here's the paralysis anchor.
+    ig: `If your income is variable, here's the paralysis anchor.
 
 By the end of the month, $400 is gone. Nothing paid down. Nothing saved. Nothing to show for it.
 
@@ -2892,7 +2894,7 @@ Not a willpower problem. A structure problem. Fixable.
 
 Free for 7 days. Link in bio.
 
-#entrepreneur #1099life #variableincome #moneymindset #freelancelife`,
+#variableincome #1099life #freelancelife #moneymindset #creator`,
 
     tt: `By Day 30: $400 gone.
 
@@ -3098,23 +3100,23 @@ Free for 7 days. $14.99/mo or $129/yr after.`,
 
   '13|Sun': {
     // B05 audience-struggles-to-budget · brandscript
-    ig: `If you're an entrepreneur who struggles to budget inconsistent income, this is for you.
+    ig: `If you struggle to budget inconsistent income, this is for you.
 
 Not generic advice. Not a paycheck-shaped budget. A system built for the income shape you actually have.
 
 Free for 7 days. Link in bio.
 
-#entrepreneur #1099life #variableincome #freelancelife #smallbusiness`,
+#variableincome #1099life #freelancelife #creator #smallbusiness`,
 
-    tt: `For the entrepreneur who struggles to budget inconsistent income.
+    tt: `For anyone who struggles to budget inconsistent income.
 
 Not generic advice. A system for the income you have.
 
 becomeable.app
 
-#freelancetok #1099 #entrepreneur`,
+#freelancetok #1099 #variableincome`,
 
-    li: `For the entrepreneur who struggles to budget inconsistent income.
+    li: `For anyone who struggles to budget inconsistent income.
 
 The struggle isn't a discipline issue. It's a category issue. Generic budgeting tools assume regular paychecks. Variable income breaks the assumption, which breaks the tool, which leaves the user holding a tool that produces wrong answers if they follow the instructions correctly.
 
@@ -3316,15 +3318,15 @@ Free for 7 days. $14.99/mo or $129/yr after.`,
 
   '14|Sun': {
     // B06 audience-cant-budget · brandscript
-    ig: `If you're an entrepreneur who can't budget inconsistent income, you're not alone.
+    ig: `If you can't seem to budget inconsistent income, you're not alone.
 
 It's not a discipline problem. The available tools were built for paychecks. They don't fit your income shape.
 
 Free for 7 days. Link in bio.
 
-#entrepreneur #1099life #variableincome #freelancelife #smallbusiness`,
+#variableincome #1099life #freelancelife #creator #smallbusiness`,
 
-    tt: `For entrepreneurs who can't budget inconsistent income.
+    tt: `For anyone who can't budget inconsistent income.
 
 Not a discipline problem.
 
@@ -3332,15 +3334,15 @@ The tools were built for paychecks.
 
 becomeable.app
 
-#freelancetok #1099 #entrepreneur`,
+#freelancetok #1099 #variableincome`,
 
-    li: `For entrepreneurs who can't budget inconsistent income.
+    li: `For anyone who can't budget inconsistent income.
 
 The "can't" is doing real work in that sentence. It's not "won't." It's not "haven't tried." It's "actively cannot, despite trying." That's the experience of trying to apply paycheck-shaped budgeting tools to variable income.
 
 The categories don't fit. The monthly allocation interface assumes a known monthly income. The savings goal calculator assumes a baseline. The "this month vs. last month" comparison gives meaningless answers. After enough rounds of trying generic tools and watching them fail, "can't budget" becomes the lived experience.
 
-But the user wasn't the problem. The tools were the problem. Once the tools match the income shape — split-first allocation, percentage-driven buckets, a reserve, tax-on-every-deposit — the budgeting starts working. Same person. Different tools. Different result.
+But the user wasn't the problem. The tools were the problem. Once the tools match the income shape, with split-first allocation, percentage-driven buckets, a reserve, and tax-on-every-deposit, the budgeting starts working. Same person. Different tools. Different result.
 
 Free for 7 days. $14.99/mo or $129/yr after.`,
   },
@@ -4167,17 +4169,17 @@ Free for 7 days. $14.99/mo or $129/yr after.`,
 
   '18|Fri': {
     // C36 pay-yourself-first · carousel
-    ig: `If you're an entrepreneur, here's the reframe. (Swipe.)
+    ig: `If you run your own thing, here's the reframe. (Swipe.)
 
-Most entrepreneurs are their own last priority. You're running a job that pays others. Money follows structure, not hope.
+Most owners are their own last priority. You're running a job that pays others. Money follows structure, not hope.
 
 Start with 5%. Beats zero by infinity.
 
 Free for 7 days. Link in bio.
 
-#entrepreneur #smallbusiness #1099life #freelancing #variableincome`,
+#smallbusiness #1099life #freelancing #variableincome #creator`,
 
-    tt: `Most entrepreneurs are their own last priority.
+    tt: `Most owners are their own last priority.
 
 You're running a job that pays others.
 
@@ -4185,11 +4187,11 @@ Start with 5%.
 
 becomeable.app
 
-#entrepreneur #1099 #freelancetok`,
+#smallbusiness #1099 #freelancetok`,
 
-    li: `Pay yourself first. The variable-income entrepreneur version.
+    li: `Pay yourself first. The variable-income version.
 
-Most entrepreneurs are their own last priority. The work pays clients, contractors, software vendors, the brokerage, the platform, the IRS. Whatever's left at the end is what the entrepreneur takes home. Some months "what's left" is fine. Some months it isn't.
+Most owners are their own last priority. The work pays clients, contractors, software vendors, the brokerage, the platform, the IRS. Whatever's left at the end is what the owner takes home. Some months "what's left" is fine. Some months it isn't.
 
 The fix is structural. Pay yourself first means: a personal paycheck routes from the business to the owner before discretionary business spending happens. The amount can be small. 5% of every deposit beats 0% by infinity. The percentage is less important than the routing.
 
@@ -4428,7 +4430,7 @@ Free for 7 days. $14.99/mo or $129/yr after.`,
 
   '19|Sun': {
     // B33 identity-pay-down-slow-months · brandscript
-    ig: `If you're an entrepreneur, here's the new identity.
+    ig: `If your income is variable, here's the new identity.
 
 I am able to pay down debt, even on slow months.
 
@@ -4436,7 +4438,7 @@ That sentence is the outcome. Not "I make more." Not "I save 20%." The structura
 
 Free for 7 days. Link in bio.
 
-#entrepreneur #1099life #variableincome #debt #moneymindset`,
+#variableincome #1099life #freelancelife #debt #moneymindset`,
 
     tt: `I am able to pay down debt.
 
@@ -4619,7 +4621,7 @@ Free for 7 days. $14.99/mo or $129/yr after.`,
 
   '20|Fri': {
     // C37 how-money-works · carousel
-    ig: `If you're an entrepreneur, here's how money actually works. (Swipe.)
+    ig: `If your income is variable, here's how money actually works. (Swipe.)
 
 Money is a skill, not a personality. Nobody taught you. Not your fault.
 
@@ -4627,7 +4629,7 @@ Rule of 72: divide 72 by the rate. Years until your money doubles.
 
 Free for 7 days. Link in bio.
 
-#entrepreneur #moneymindset #personalfinance #1099life #investing`,
+#variableincome #moneymindset #personalfinance #1099life #investing`,
 
     tt: `Money is a skill, not a personality.
 
@@ -5056,7 +5058,7 @@ Free for 7 days. $14.99/mo or $129/yr after.`,
 
 Free for 7 days. Link in bio.
 
-#smallbusiness #entrepreneur #1099life #businessfunding #freelancing`,
+#smallbusiness #variableincome #1099life #businessfunding #freelancing`,
 
     tt: `Business funding.
 
@@ -5066,7 +5068,7 @@ Personal vs business credit = 2 systems.
 
 becomeable.app
 
-#smallbusiness #entrepreneur #1099`,
+#smallbusiness #variableincome #1099`,
 
     li: `Business funding without losing it. The basics.
 
@@ -5186,7 +5188,7 @@ Free for 7 days. $14.99/mo or $129/yr after.`,
 
   '23|Wed': {
     // 33 asks-for-nothing · single
-    ig: `If you're an entrepreneur, here's the test.
+    ig: `If your income is variable, here's the test.
 
 The best money system asks you for nothing.
 
@@ -5194,7 +5196,7 @@ No daily check-ins. No streaks. No nudges to engage. The right tool runs underne
 
 Free for 7 days. Link in bio.
 
-#entrepreneur #1099life #freelancing #variableincome #personalfinance`,
+#variableincome #1099life #freelancing #creator #personalfinance`,
 
     tt: `The best money system.
 
@@ -5700,15 +5702,15 @@ Free for 7 days. $14.99/mo or $129/yr after.`,
 
   '25|Thu': {
     // 52 pay-yourself-wrong · single
-    ig: `If you're an entrepreneur, here's the trap.
+    ig: `If you run your own thing, here's the trap.
 
 Pay yourself last. Pay yourself wrong.
 
-Most entrepreneurs run a job that pays everyone except them. The fix is mechanical: a percentage of every deposit, routed to personal pay before discretionary business spending.
+Most owners run a job that pays everyone except them. The fix is mechanical: a percentage of every deposit, routed to personal pay before discretionary business spending.
 
 Free for 7 days. Link in bio.
 
-#entrepreneur #smallbusiness #1099life #freelancing #moneymindset`,
+#smallbusiness #1099life #freelancing #moneymindset #variableincome`,
 
     tt: `Pay yourself last.
 
@@ -5716,11 +5718,11 @@ Pay yourself wrong.
 
 becomeable.app
 
-#freelancetok #1099 #entrepreneur`,
+#freelancetok #1099 #smallbusiness`,
 
     li: `Pay yourself last. Pay yourself wrong.
 
-That's the trap most variable-income entrepreneurs fall into. The work pays clients, contractors, software vendors, the platform, the IRS. Whatever's left at the end is what the entrepreneur takes home. Some months "what's left" is fine. Some months it isn't. Many months it's nothing.
+That's the trap most variable-income owners fall into. The work pays clients, contractors, software vendors, the platform, the IRS. Whatever's left at the end is what the owner takes home. Some months "what's left" is fine. Some months it isn't. Many months it's nothing.
 
 The "pay yourself last" pattern feels responsible. It feels like the right priority — business obligations first, personal extraction second. In practice, it means the business never pays the owner reliably. The owner becomes the unfunded line item.
 
