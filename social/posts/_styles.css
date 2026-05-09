@@ -191,12 +191,12 @@ html, body {
   margin-top: 56px;
   gap: 56px;
 }
-.tpl-C.pos-right .product-row  { grid-template-columns: 1fr 360px; }
-.tpl-C.pos-left  .product-row  { grid-template-columns: 360px 1fr; }
+.tpl-C.pos-right .product-row  { grid-template-columns: 1fr 420px; }
+.tpl-C.pos-left  .product-row  { grid-template-columns: 420px 1fr; }
 .tpl-C.pos-left  .product-text { grid-column: 2; grid-row: 1; }
 .tpl-C.pos-left  .product-shot { grid-column: 1; grid-row: 1; }
-.tpl-C.pos-center .product-row { grid-template-columns: 1fr; gap: 36px; justify-items: center; text-align: center; }
-.tpl-C.pos-center .product-shot { width: 360px; }
+.tpl-C.pos-center .product-row { grid-template-columns: 1fr; gap: 28px; justify-items: center; text-align: center; }
+.tpl-C.pos-center .product-shot { width: 420px; }
 .tpl-C.pos-center .product-text { max-width: 880px; }
 
 .tpl-C .product-text {
@@ -204,14 +204,15 @@ html, body {
   flex-direction: column;
   justify-content: center;
 }
+/* Bare phone: PNG already has the bezel + drop shadow baked in (composer
+   captured with omit_background). No card frame needed — phone reads
+   directly against the post's theme bg. */
 .tpl-C .product-shot {
   width: 100%;
   aspect-ratio: 9 / 16;
-  border-radius: 32px;
-  background-size: cover;
+  background-size: contain;
   background-position: center;
   background-repeat: no-repeat;
-  box-shadow: 0 24px 60px rgba(0,0,0,.18), 0 6px 18px rgba(0,0,0,.10);
 }
 
 .muted {

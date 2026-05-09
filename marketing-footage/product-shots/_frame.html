@@ -49,6 +49,12 @@
   .canvas[data-bg="cream"]    { background: var(--bg-cream); }
   .canvas[data-bg="forest"]   { background: var(--bg-forest); }
   .canvas[data-bg="charcoal"] { background: var(--bg-charcoal); }
+  /* Transparent variant — used for embeds in other surfaces (social posts).
+     Drops the canvas bg AND the radial glow so the phone is visible against
+     whatever bg the consumer composites onto. Phone shadow remains and reads
+     correctly against any color. */
+  .canvas[data-bg="transparent"]            { background: transparent; }
+  .canvas[data-bg="transparent"]::before    { display: none; }
 
   /* Subtle radial glow behind the phone for depth (works on every bg). */
   .canvas::before {

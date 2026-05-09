@@ -674,6 +674,26 @@ async def capture_raw(page: Page, shot: Shot) -> Path:
 # ──────────────────────────────────────────────────────────────────────────
 # Phase 2: composed phone-frame shots
 # ──────────────────────────────────────────────────────────────────────────
+async def compose_bare(page: Page, slug: str, w: int, h: int) -> None:
+    """Compose a transparent-bg variant — phone with shadow, no canvas color.
+    Used by social posts that embed the phone over the post's own theme bg."""
+    out_dir = OUT_DIR / slug
+    out_dir.mkdir(parents=True, exist_ok=True)
+    out = out_dir / "9x16-bare.png"
+
+    url = f"{FRAME_URL}?shot={slug}.png&w={w}&h={h}&bg=transparent"
+    await page.goto(url)
+    await page.wait_for_function("() => window.__shotReady === true", timeout=10000)
+    await page.wait_for_timeout(200)
+    await page.screenshot(
+        path=str(out),
+        clip={"x": 0, "y": 0, "width": w, "height": h},
+        scale="css",
+        omit_background=True,
+    )
+    print(f"   → {out.relative_to(ROOT)} ({out.stat().st_size // 1024}KB)")
+
+
 async def compose(page: Page, slug: str, aspect: str, w: int, h: int) -> None:
     out_dir = OUT_DIR / slug
     out_dir.mkdir(parents=True, exist_ok=True)
@@ -743,6 +763,19 @@ async def main() -> None:
                     except Exception as e:
                         print(f"  [error] {shot.slug}/{aspect}: {e}")
                     await ctx.close()
+                # Transparent-bg variant (9x16 only — used by social posts).
+                ctx = await browser.new_context(
+                    viewport={"width": 1080, "height": 1920},
+                    device_scale_factor=2,
+                    bypass_csp=True,
+                )
+                page = await ctx.new_page()
+                page.on("pageerror", lambda e: print(f"  [pageerror] {e}"))
+                try:
+                    await compose_bare(page, shot.slug, 1080, 1920)
+                except Exception as e:
+                    print(f"  [error] {shot.slug}/9x16-bare: {e}")
+                await ctx.close()
 
             await browser.close()
         print(f"\n[shots] done → {OUT_DIR.relative_to(ROOT)}/")

@@ -50,7 +50,7 @@ function renderSlideInto(root, post) {
   // The shot is a CSS background pulled from /marketing-footage/product-shots/<shot>/9x16.png.
   let stackHtml;
   if (post.tpl === 'C') {
-    const shotUrl = `/marketing-footage/product-shots/${post.shot}/9x16.png`;
+    const shotUrl = `/marketing-footage/product-shots/${post.shot}/9x16-bare.png`;
     stackHtml = `
       <div class="product-row">
         <div class="product-text">${mutedHtml}${punchHtml}</div>
