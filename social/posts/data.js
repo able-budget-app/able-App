@@ -754,7 +754,7 @@ window.CAROUSELS = [
         punch: "Overpay:\n{scramble}.",
         meta: '2 / 7' },
       { tpl: 'A', eyebrow: 'fcb',
-        muted: "The smoothing\nreserve.",
+        muted: "The\nreserve.",
         punch: "{A dam}\non a river.",
         meta: '3 / 7' },
       { tpl: 'A', eyebrow: 'fcb',

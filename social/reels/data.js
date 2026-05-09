@@ -258,7 +258,7 @@ window.REELS = [
       { text: "{One pile.}\nFive jobs.", durationSec: 2.5 },
       { text: "1. {Taxes} —\noff the top.", durationSec: 2.5 },
       { text: "2. {Bills} —\nbefore they're due.", durationSec: 2.5 },
-      { text: "3. {Smoothing} —\nfor next month.", durationSec: 2.5 },
+      { text: "3. {Reserve} —\nfor next month.", durationSec: 2.5 },
       { text: "4. {Debt} —\non schedule.", durationSec: 2.5 },
       { text: "5. {Free} —\nguilt-free.", durationSec: 2.5 },
       { text: "{Split first.}\nSpend last.", durationSec: 3 },
