@@ -88,9 +88,11 @@ Deno.serve(async (req) => {
     const admin = createClient(SUPABASE_URL, SERVICE_ROLE);
 
     // Fetch the txn (service-role query, then verify it belongs to the user).
+    // `date` is needed by syncBillForOverride to derive a default due_day when
+    // we add a bill from an override that doesn't match a recurring stream.
     const { data: txn, error: txnErr } = await admin
       .from('plaid_transactions')
-      .select('id, user_id, merchant_name, name, amount')
+      .select('id, user_id, merchant_name, name, amount, date')
       .eq('id', body.txn_row_id)
       .single();
     if (txnErr || !txn) {
