@@ -50,7 +50,7 @@ window.PRODUCT_POSTS = [
   { id: 'P05', slug: 'product-coach-knows', cat: 'Product', theme: 'green', tpl: 'C', eyebrow: 'mixed',
     pos: 'right', shot: '05-coach',
     muted: "A coach that knows",
-    punch: "your {real numbers.}" },
+    punch: "{your real}\nnumbers." },
 
   // P06 — Log income
   { id: 'P06', slug: 'product-log-ten-seconds', cat: 'Product', theme: 'page', tpl: 'C', eyebrow: 'mixed',
@@ -60,8 +60,9 @@ window.PRODUCT_POSTS = [
 
   // P07 — Settings
   { id: 'P07', slug: 'product-settings-honest', cat: 'Product', theme: 'white', tpl: 'C', eyebrow: 'mixed',
-    pos: 'center', shot: '07-settings',
-    punch: "No tricks.\n{Just the math.}" },
+    pos: 'left', shot: '07-settings',
+    muted: "No tricks.",
+    punch: "Just the\n{math.}" },
 
   // P08 — More menu
   { id: 'P08', slug: 'product-more-everything', cat: 'Product', theme: 'glass-dark', tpl: 'C', eyebrow: 'mixed',
@@ -89,9 +90,9 @@ window.PRODUCT_POSTS = [
 
   // P12 — Deep dive
   { id: 'P12', slug: 'product-deep-dive', cat: 'Product', theme: 'glass-dark', tpl: 'C', eyebrow: 'mixed',
-    pos: 'center', shot: '12-deep-dive',
+    pos: 'right', shot: '12-deep-dive',
     muted: "12 months of history.",
-    punch: "{Bills you forgot} you had." },
+    punch: "Bills you\n{forgot} you had." },
 
   // P13 — Tax classify
   { id: 'P13', slug: 'product-tax-classify', cat: 'Product', theme: 'white', tpl: 'C', eyebrow: 'mixed',
@@ -109,11 +110,11 @@ window.PRODUCT_POSTS = [
   { id: 'P15', slug: 'product-balance-clear', cat: 'Product', theme: 'glass-dark', tpl: 'C', eyebrow: 'mixed',
     pos: 'left', shot: '01-dashboard',
     muted: "Available to spend.",
-    punch: "Real number.\n{Not the balance.}" },
+    punch: "Not your\n{balance.}" },
 
   // P16 — Bills alt
   { id: 'P16', slug: 'product-bills-no-surprise', cat: 'Product', theme: 'page', tpl: 'C', eyebrow: 'mixed',
-    pos: 'center', shot: '03-plan-bills',
+    pos: 'right', shot: '03-plan-bills',
     muted: "No more dread,",
     punch: "every {1st.}" },
 
@@ -133,12 +134,12 @@ window.PRODUCT_POSTS = [
   { id: 'P19', slug: 'product-score-honest', cat: 'Product', theme: 'page', tpl: 'C', eyebrow: 'mixed',
     pos: 'left', shot: '04-score',
     muted: "100/100.",
-    punch: "Or {honest about why} not." },
+    punch: "Or {honest}\nabout why not." },
 
   // P20 — Tax export final CTA
   { id: 'P20', slug: 'product-tax-export-cta', cat: 'Product', theme: 'glass-dark', tpl: 'C', eyebrow: 'mixed',
-    pos: 'center', shot: '14-tax-export',
+    pos: 'left', shot: '14-tax-export',
     muted: "30 days free.",
-    punch: "{Try it} before tax season." },
+    punch: "{Try it} before\ntax season." },
 
 ];
