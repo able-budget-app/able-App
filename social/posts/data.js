@@ -360,7 +360,7 @@ window.POSTS = [
     punch: "Monthly budgets\n{break on that math.}",
     meta: 'JPMorgan Chase Institute, 2015' },
 
-  { id: '87', slug: 'stat-58-percent-no-3mo-savings', cat: 'Stat', theme: 'white', tpl: 'A', eyebrow: 'gig',
+  { id: '87', slug: 'stat-58-percent-no-3mo-savings', cat: 'Stat', theme: 'white', tpl: 'A', eyebrow: 'gig', size: 'md',
     muted: "58% of gig workers",
     punch: "can't cover\n{3 months of expenses.}",
     meta: 'Federal Reserve SHED, 2024' },

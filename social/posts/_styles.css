@@ -171,6 +171,10 @@ html, body {
 .size-sm .punch { font-size: 60px; line-height: 1.12; letter-spacing: -.02em; }
 .size-sm .muted { font-size: 38px; line-height: 1.18; margin-bottom: 28px; }
 
+/* size-md — for punch lines that overflow at 104px but look thin at 60px (e.g. long stat reframes) */
+.size-md .punch { font-size: 84px; line-height: 1.04; letter-spacing: -.025em; }
+.size-md .muted { font-size: 52px; line-height: 1.10; margin-bottom: 32px; }
+
 .muted {
   font-size: 64px;
   font-weight: 600;
@@ -194,15 +198,21 @@ html, body {
   white-space: nowrap;
 }
 .underline::after {
+  /* Content underline: uniform body + short symmetric tips so the brand
+     "sharpie flick" stays consistent regardless of phrase length.
+     Dimensions track the parent font-size (em-based) so posts and reels
+     share the same proportions automatically. Fixed em right-extension
+     keeps the tail short on long phrases (no more 19px overshoot on
+     "$1,000–$2,000 gone."). */
   content: '';
   position: absolute;
   left: 0;
-  right: -3%;
-  bottom: -10px;
-  height: 13px;
+  right: -0.04em;
+  bottom: -0.135em;
+  height: 0.173em;
   background-color: var(--squiggle);
-  -webkit-mask-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 120 4.2' preserveAspectRatio='none'><path d='M3 2.6 Q2 2.4 3 2.15 Q58 1.75 115 0.15 Q119 1 119 2 Q119 3 115 3.9 Q58 3.55 3 2.65 Q2 2.45 3 2.6 Z' fill='white'/></svg>");
-  mask-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 120 4.2' preserveAspectRatio='none'><path d='M3 2.6 Q2 2.4 3 2.15 Q58 1.75 115 0.15 Q119 1 119 2 Q119 3 115 3.9 Q58 3.55 3 2.65 Q2 2.45 3 2.6 Z' fill='white'/></svg>");
+  -webkit-mask-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 120 4.2' preserveAspectRatio='none'><path d='M4 2.6 Q1.5 2.1 4 1.4 Q60 0.9 116 1.4 Q118.5 2.1 116 2.8 Q60 3.3 4 2.8 Q1.5 2.1 4 2.6 Z' fill='white'/></svg>");
+  mask-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 120 4.2' preserveAspectRatio='none'><path d='M4 2.6 Q1.5 2.1 4 1.4 Q60 0.9 116 1.4 Q118.5 2.1 116 2.8 Q60 3.3 4 2.8 Q1.5 2.1 4 2.6 Z' fill='white'/></svg>");
   -webkit-mask-repeat: no-repeat;
   mask-repeat: no-repeat;
   -webkit-mask-size: 100% 100%;
