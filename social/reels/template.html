@@ -77,8 +77,19 @@
           return html;
         }).join('');
 
+        // Eyebrow vocabulary (locked 2026-05-08, mirrors social/posts/_render.js).
+        // `mixed` is the brand default. Persona keys for targeted bunches.
+        const eyebrowText =
+          reel.eyebrow === 'mixed'      ? 'For mixed or unpredictable income' :
+          reel.eyebrow === 'freelance'  ? 'For freelancers and consultants' :
+          reel.eyebrow === 'creator'    ? 'For creators' :
+          reel.eyebrow === 'gig'        ? 'For gig and rideshare drivers' :
+          reel.eyebrow === 'commission' ? 'For commission earners' :
+          reel.eyebrow === 'business'   ? 'For small business owners' :
+          'For mixed or unpredictable income';
+
         root.innerHTML = `
-          <div class="eyebrow">${reel.id} · ${reel.slug}</div>
+          <div class="eyebrow">${eyebrowText}</div>
           <div class="beats-stage">${beatsHtml}</div>
           <div class="footer">
             <div class="wordmark">Able</div>
