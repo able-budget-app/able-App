@@ -29,10 +29,17 @@ function renderSlideInto(root, post) {
   // squiggle tracks each line's actual width. Without this, a {a\nb} where
   // a is wider than b draws a single underline at the bottom that extends
   // way past the end of "b" (as wide as "a") — see posts 62/64/B20.
+  // Also absorb trailing punctuation into the LAST segment's span so the
+  // period/comma can't orphan to its own line when the span+punct is
+  // wider than the row (e.g. C23 "Etsy income.", C40 "doesn't pretend.").
   const renderText = (str) => str
-    .replace(/\{([^}]+)\}/g, (_, inner) =>
-      inner.split('\n').map(seg => `<span class="underline">${seg}</span>`).join('\n')
-    )
+    .replace(/\{([^}]+)\}([.,;:!?]*)/g, (_, inner, punct) => {
+      const segs = inner.split('\n');
+      return segs.map((seg, i) => {
+        const text = (i === segs.length - 1) ? seg + punct : seg;
+        return `<span class="underline">${text}</span>`;
+      }).join('\n');
+    })
     .replace(/\n/g, '<br>');
 
   const mutedHtml = post.muted ? '<div class="muted">' + renderText(post.muted) + '</div>' : '';
