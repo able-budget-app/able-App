@@ -12401,23 +12401,33 @@ async function applyReclassify(){
       Able.track?.('activity_bulk_reclassify', { category, applied: bulkApplied, requested: bulkRequested, deductible: !!body.is_tax_deductible, business: !!body.business_label });
     }
 
-    // When the user reclassifies a recurring pattern → 'bill', the server-
-    // side plaid-classify-override now adds a row to user_data.bills (P0
-    // fix 2026-05-08). Refresh S.bills so the Bills page sees it without
-    // a full page reload.
-    if (createOverride && category === 'bill') {
+    // The server-side plaid-classify-override now syncs user_data.bills
+    // with the override decision: marking → bill adds, marking away from
+    // bill removes (P0 fix 2026-05-08, symmetric pass evening of same day).
+    // Refresh S.bills + S.debts so the Bills page sees both add and remove
+    // without a hard reload. Fires on any createOverride since we don't
+    // know the pre-reclassify category from the client side; cheap query.
+    if (createOverride) {
       try {
-        const { data: ud } = await sbGet()
+        const beforeCount = (S.bills || []).length;
+        const { data: ud, error: udErr } = await sbGet()
           .from('user_data')
-          .select('bills')
+          .select('bills,debts')
           .eq('id', currentUser.id)
           .single();
-        if (ud && Array.isArray(ud.bills)) {
-          S.bills = ud.bills.map((b) => ({ ...b, priority: b.priority || 2 }));
+        if (udErr) throw udErr;
+        if (ud) {
+          S.bills = (ud.bills || []).map((b) => ({ ...b, priority: b.priority || 2 }));
+          S.debts = (ud.debts || []).map((d) => ({ ...d, orig: d.orig != null ? d.orig : d.balance }));
+          const afterCount = S.bills.length;
+          console.log(`reclassify refresh: bills ${beforeCount} → ${afterCount}`);
           if (typeof renderBillsPage === 'function') renderBillsPage();
+          if (typeof refreshHome === 'function') refreshHome();
+        } else {
+          console.warn('reclassify refresh: no user_data row returned');
         }
       } catch (e) {
-        console.warn('reclassify→bill refresh failed:', e);
+        console.warn('reclassify refresh failed:', e);
       }
     }
 
