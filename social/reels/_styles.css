@@ -133,17 +133,17 @@ html, body {
   white-space: nowrap;
 }
 .underline::after {
-  /* See comment in social/posts/_styles.css — same shape, em-based
-     so the auto-fit font-size in reels gets the right proportions. */
+  /* See comment in social/posts/_styles.css — exact wordmark path,
+     em-based so the auto-fit font-size in reels scales it right. */
   content: '';
   position: absolute;
   left: 0;
-  right: -0.04em;
-  bottom: -0.135em;
-  height: 0.173em;
+  right: -4%;
+  bottom: -0.136em;
+  height: 0.205em;
   background-color: var(--squiggle);
-  -webkit-mask-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 120 4.2' preserveAspectRatio='none'><path d='M4 2.6 Q1.5 2.1 4 1.4 Q60 0.9 116 1.4 Q118.5 2.1 116 2.8 Q60 3.3 4 2.8 Q1.5 2.1 4 2.6 Z' fill='white'/></svg>");
-  mask-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 120 4.2' preserveAspectRatio='none'><path d='M4 2.6 Q1.5 2.1 4 1.4 Q60 0.9 116 1.4 Q118.5 2.1 116 2.8 Q60 3.3 4 2.8 Q1.5 2.1 4 2.6 Z' fill='white'/></svg>");
+  -webkit-mask-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 120 4.2' preserveAspectRatio='none'><path d='M3 2.6 Q2 2.4 3 2.15 Q58 1.75 115 0.15 Q119 1 119 2 Q119 3 115 3.9 Q58 3.55 3 2.65 Q2 2.45 3 2.6 Z' fill='white'/></svg>");
+  mask-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 120 4.2' preserveAspectRatio='none'><path d='M3 2.6 Q2 2.4 3 2.15 Q58 1.75 115 0.15 Q119 1 119 2 Q119 3 115 3.9 Q58 3.55 3 2.65 Q2 2.45 3 2.6 Z' fill='white'/></svg>");
   -webkit-mask-repeat: no-repeat;
   mask-repeat: no-repeat;
   -webkit-mask-size: 100% 100%;
