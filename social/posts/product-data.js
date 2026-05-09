@@ -142,4 +142,130 @@ window.PRODUCT_POSTS = [
     muted: "30 days free.",
     punch: "{Try it} before\ntax season." },
 
+  // ─────────────────────────────────────────────────────────────────────
+  // BRAND-SCRIPT PRODUCT POSTS (P21-P40)
+  // Each pairs a locked phrase from docs/brand-script.md with the shot
+  // that earns the line. Section labels in comments map to the script.
+  // ─────────────────────────────────────────────────────────────────────
+
+  // P21 — PROBLEM (external) · "Most budgeting apps assume a steady paycheck."
+  { id: 'P21', slug: 'product-bs-paycheck-assumption', cat: 'Brand-script', theme: 'page', tpl: 'C', eyebrow: 'mixed',
+    pos: 'right', shot: '03-plan-bills',
+    muted: "Most budgeting apps",
+    punch: "assume a\n{paycheck.}" },
+
+  // P22 — PROBLEM (internal) · "You freeze."
+  { id: 'P22', slug: 'product-bs-you-freeze', cat: 'Brand-script', theme: 'black', tpl: 'C', eyebrow: 'mixed',
+    pos: 'right', shot: '02-allocation-flow',
+    muted: "You don't move it.",
+    punch: "You {freeze.}" },
+
+  // P23 — PROBLEM (internal) · "Money that sits, leaks."
+  { id: 'P23', slug: 'product-bs-money-sits-leaks', cat: 'Brand-script', theme: 'glass-dark', tpl: 'C', eyebrow: 'mixed',
+    pos: 'left', shot: '06-log-income',
+    muted: "Money that sits,",
+    punch: "{leaks.}" },
+
+  // P24 — PROBLEM (philosophical) · "The problem was never you."
+  { id: 'P24', slug: 'product-bs-problem-not-you', cat: 'Brand-script', theme: 'green', tpl: 'C', eyebrow: 'mixed',
+    pos: 'right', shot: '05-coach',
+    muted: "The problem",
+    punch: "was never\n{you.}" },
+
+  // P25 — VILLAIN · "Day 30. Where did $1,000 go?"
+  { id: 'P25', slug: 'product-bs-day-30-leak', cat: 'Brand-script', theme: 'black', tpl: 'C', eyebrow: 'mixed',
+    pos: 'left', shot: '12-deep-dive',
+    muted: "Day 30.",
+    punch: "{Where} did\nit go?" },
+
+  // P26 — GUIDE (empathy) · "It was the advice you were handed."
+  { id: 'P26', slug: 'product-bs-not-your-fault', cat: 'Brand-script', theme: 'page', tpl: 'C', eyebrow: 'mixed',
+    pos: 'left', shot: '05-coach',
+    muted: "Not your fault.",
+    punch: "The {advice}\nwas wrong." },
+
+  // P27 — GUIDE (authority) · "Built for the way you actually get paid."
+  { id: 'P27', slug: 'product-bs-built-for-you', cat: 'Brand-script', theme: 'green', tpl: 'C', eyebrow: 'mixed',
+    pos: 'right', shot: '01-dashboard',
+    muted: "Built for the way",
+    punch: "you actually\nget {paid.}" },
+
+  // P28 — GUIDE (positioning) · "Same foundation. Different clock."
+  { id: 'P28', slug: 'product-bs-different-clock', cat: 'Brand-script', theme: 'white', tpl: 'C', eyebrow: 'mixed',
+    pos: 'left', shot: '04-score',
+    muted: "Same foundation.",
+    punch: "Different\n{clock.}" },
+
+  // P29 — PLAN (step 1) · "Log what came in. Ten seconds."
+  { id: 'P29', slug: 'product-bs-log-ten-seconds', cat: 'Brand-script', theme: 'page', tpl: 'C', eyebrow: 'mixed',
+    pos: 'right', shot: '06-log-income',
+    muted: "Log what came in.",
+    punch: "{Ten seconds.}" },
+
+  // P30 — PLAN (step 2) · "Able tells you where it goes."
+  { id: 'P30', slug: 'product-bs-where-it-goes', cat: 'Brand-script', theme: 'green', tpl: 'C', eyebrow: 'mixed',
+    pos: 'left', shot: '02-allocation-flow',
+    muted: "Able tells you",
+    punch: "where it\n{goes.}" },
+
+  // P31 — PLAN (step 3) · "Debt drops. Savings grow."
+  { id: 'P31', slug: 'product-bs-debt-drops', cat: 'Brand-script', theme: 'glass-dark', tpl: 'C', eyebrow: 'mixed',
+    pos: 'right', shot: '04-score',
+    muted: "Debt drops.",
+    punch: "Savings {grow.}" },
+
+  // P32 — FAILURE STAKES · "The cost of waiting compounds."
+  { id: 'P32', slug: 'product-bs-cost-of-waiting', cat: 'Brand-script', theme: 'black', tpl: 'C', eyebrow: 'mixed',
+    pos: 'right', shot: '12-deep-dive',
+    muted: "The cost of waiting",
+    punch: "{compounds.}" },
+
+  // P33 — FAILURE STAKES · "The cost of starting is $14.99."
+  { id: 'P33', slug: 'product-bs-cost-of-starting', cat: 'Brand-script', theme: 'white', tpl: 'C', eyebrow: 'mixed',
+    pos: 'right', shot: '07-settings',
+    muted: "The cost of starting.",
+    punch: "Is {$14.99.}" },
+
+  // P34 — SUCCESS · "Nothing leaked."
+  { id: 'P34', slug: 'product-bs-nothing-leaked', cat: 'Brand-script', theme: 'page', tpl: 'C', eyebrow: 'mixed',
+    pos: 'left', shot: '03-plan-bills',
+    muted: "Bills paid.",
+    punch: "Nothing\n{leaked.}" },
+
+  // P35 — SUCCESS · "End of the month, you know exactly where every dollar went."
+  { id: 'P35', slug: 'product-bs-every-dollar', cat: 'Brand-script', theme: 'green', tpl: 'C', eyebrow: 'mixed',
+    pos: 'right', shot: '04-score',
+    muted: "End of the month.",
+    punch: "Every {dollar}\naccounted for." },
+
+  // P36 — SUCCESS · "The fear of the next check fades."
+  { id: 'P36', slug: 'product-bs-fear-fades', cat: 'Brand-script', theme: 'glass-dark', tpl: 'C', eyebrow: 'mixed',
+    pos: 'left', shot: '05-coach',
+    muted: "The fear of",
+    punch: "the next check\n{fades.}" },
+
+  // P37 — IDENTITY · "I am able to pay down debt, even on slow months."
+  { id: 'P37', slug: 'product-bs-i-am-able-debt', cat: 'Brand-script', theme: 'page', tpl: 'C', eyebrow: 'mixed',
+    pos: 'right', shot: '10-debts',
+    muted: "I am able",
+    punch: "to {pay down}\ndebt." },
+
+  // P38 — IDENTITY · "I am able to save without second-guessing."
+  { id: 'P38', slug: 'product-bs-i-am-able-save', cat: 'Brand-script', theme: 'green', tpl: 'C', eyebrow: 'mixed',
+    pos: 'left', shot: '04-score',
+    muted: "I am able",
+    punch: "to {save.}" },
+
+  // P39 — TRANSFORMATION · "From holding your breath → To breathing."
+  { id: 'P39', slug: 'product-bs-from-breath', cat: 'Brand-script', theme: 'page', tpl: 'C', eyebrow: 'mixed',
+    pos: 'right', shot: '01-dashboard',
+    muted: "From holding your breath.",
+    punch: "To {breathing.}" },
+
+  // P40 — TRANSFORMATION (closing tagline) · "From Unable → Able."
+  { id: 'P40', slug: 'product-bs-from-unable-to-able', cat: 'Brand-script', theme: 'glass-dark', tpl: 'C', eyebrow: 'mixed',
+    pos: 'left', shot: '01-dashboard',
+    muted: "From {Unable.}",
+    punch: "To Able." },
+
 ];
