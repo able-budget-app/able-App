@@ -158,6 +158,11 @@ async def export_carousels(page, items: list[dict], force: bool) -> int:
         url = f"{SERVER_URL}/social/posts/carousel.html?id={c['id']}"
         await page.goto(url, wait_until="networkidle")
         await page.evaluate("document.fonts.ready")
+        # Hide the in-browser-preview "Slide N" tag — it's positioned at
+        # top:-12px on .slide-wrap so it bleeds 12px into the top of
+        # .post's bounding box, ending up as half a green chip in the
+        # corner of every exported PNG. Preview keeps it; exports drop it.
+        await page.add_style_tag(content=".slide-tag { display: none !important; }")
         await page.wait_for_timeout(200)
         slide_els = page.locator(".slides .post")
         actual = await slide_els.count()
