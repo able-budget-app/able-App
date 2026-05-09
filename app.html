@@ -5214,7 +5214,28 @@ async function obRunPlaidPipeline() {
 
     obAnswers.plaid_pipeline.step = 'analyze';
     if (OB_QUESTIONS[obStep]?.type === 'plaid') renderObStep();
-    const data = await obPipelineStep('analyze', () => obInvokeWithTimeout(sb, 'plaid-analyze', { plaid_item_row_id: itemRowId, profile_hint }, 120000));
+    // Poll the analyzer's readiness gate. Server returns HTTP 202 with
+    // status:'not_ready' when plaid_recurring_streams is empty AND it's
+    // been less than 3 min since last sync — server fires recurring-
+    // refresh in the background to populate streams during the wait.
+    // Client cap is 5 min (slightly past the 3-min server cap) as a
+    // safety net for full disconnects. After the cap fires force_run:
+    // true so the user always gets a plan, even with sparse data.
+    const ANALYZE_POLL_DEADLINE = Date.now() + 5 * 60 * 1000;
+    let analyzePolls = 0;
+    let data;
+    while (true) {
+      const forceRun = Date.now() > ANALYZE_POLL_DEADLINE;
+      const reqBody = { plaid_item_row_id: itemRowId, profile_hint };
+      if (forceRun) reqBody.force_run = true;
+      data = await obPipelineStep('analyze', () => obInvokeWithTimeout(sb, 'plaid-analyze', reqBody, 120000));
+      if (!data || data.status !== 'not_ready') break;
+      if (forceRun) break; // shouldn't happen — force_run bypasses the gate — but guard anyway
+      analyzePolls++;
+      console.log(`[Pipeline] analyze waiting for recurring (poll ${analyzePolls}, streams=${data.stream_count}, t_since_sync=${Math.round((data.time_since_sync_ms || 0) / 1000)}s)`);
+      const retryAfter = Math.max(5, Math.min(30, Number(data.retry_after_seconds) || 15));
+      await new Promise((r) => setTimeout(r, retryAfter * 1000));
+    }
     if (!data?.plan_id) throw new Error('analyze returned no plan_id');
 
     obAnswers.plaid_plan = {

@@ -23,7 +23,17 @@ import Anthropic from 'npm:@anthropic-ai/sdk@^0.40.0';
 
 const SUPABASE_URL = Deno.env.get('SUPABASE_URL')!;
 const SERVICE_ROLE = Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')!;
+const INTERNAL_SECRET = Deno.env.get('INTERNAL_FUNCTION_SECRET') ?? '';
 const ANTHROPIC_API_KEY = Deno.env.get('ANTHROPIC_API_KEY')!;
+
+// Streams readiness gate. Don't run the analyzer until recurring detection
+// has populated plaid_recurring_streams; otherwise the plan is built from
+// raw transactions and produces noisy income/bill detection (10× off on
+// variable income, 5+ recurring bills missed in 2026-05-08 E2E test).
+// 3-minute cap so users with genuinely zero recurring outflows don't get
+// stuck — past the cap, run anyway with whatever data is there.
+const READY_STREAM_FLOOR = 1;
+const READY_TIME_CAP_MS = 3 * 60 * 1000;
 
 const corsHeaders = {
   'Access-Control-Allow-Origin': '*',
@@ -122,6 +132,12 @@ type AnalyzerInput = {
 type Body = {
   plaid_item_row_id: string;
   profile_hint?: AnalyzerInput['profile'];
+  // Set true to bypass the streams readiness gate. Used by the client's
+  // analyze poll loop when its hard cap fires — gives the user a plan
+  // even if recurring detection never produced data (e.g. account with
+  // genuinely no recurring outflows, or Plaid's recurring product still
+  // PRODUCT_NOT_READY past our 3-minute server cap).
+  force_run?: boolean;
 };
 
 Deno.serve(async (req) => {
@@ -163,13 +179,41 @@ Deno.serve(async (req) => {
 
     const { data: item, error: itemErr } = await admin
       .from('plaid_items')
-      .select('id, user_id, lookback_months')
+      .select('id, user_id, lookback_months, last_sync_at')
       .eq('id', body.plaid_item_row_id)
       .single();
     if (itemErr || !item) return json({ error: 'Item not found' }, 404);
     if (item.user_id !== userId) return json({ error: 'Forbidden' }, 403);
 
     const lookback = item.lookback_months as 6 | 12 | 24;
+
+    // Readiness gate (P0 fix 2026-05-08). When plaid_recurring_streams is
+    // empty AND it hasn't been long since last sync, return 202 not_ready
+    // so the client polls. Fire a recurring-refresh in the background to
+    // try to populate streams from Plaid's API while the client waits.
+    // Past the time cap, fall through and run with whatever data exists.
+    if (!body.force_run) {
+      const { count: streamCount } = await admin
+        .from('plaid_recurring_streams')
+        .select('*', { count: 'exact', head: true })
+        .eq('user_id', userId);
+      const lastSync = item.last_sync_at ? new Date(item.last_sync_at as string).getTime() : 0;
+      const timeSinceSyncMs = lastSync ? Date.now() - lastSync : Number.POSITIVE_INFINITY;
+      if ((streamCount ?? 0) < READY_STREAM_FLOOR && timeSinceSyncMs < READY_TIME_CAP_MS) {
+        scheduleRecurringRefresh(item.id);
+        // Use HTTP 200 (not 202) so supabase-js's functions.invoke treats
+        // this as a success and returns the body via the `data` field.
+        // Mirrors plaid-sync's NOT_READY pattern — status is in the body.
+        return json({
+          status: 'not_ready',
+          reason: 'awaiting_recurring',
+          stream_count: streamCount ?? 0,
+          time_since_sync_ms: timeSinceSyncMs,
+          time_cap_ms: READY_TIME_CAP_MS,
+          retry_after_seconds: 15,
+        });
+      }
+    }
 
     // Accounts inside this item — used to scope transactions, and the
     // credit/line-of-credit ones get passed to the LLM as the truth
@@ -369,6 +413,38 @@ function json(body: unknown, status = 200) {
     status,
     headers: { ...corsHeaders, 'Content-Type': 'application/json' },
   });
+}
+
+// Fire plaid-recurring-refresh in the background when the readiness gate
+// turns the analyzer away. Plaid's /transactions/recurring/get can take
+// minutes to be ready after a fresh connect, but each call is cheap and
+// idempotent — repeated firing during the client's poll window gives us
+// the best chance of capturing streams the moment Plaid is ready. Uses
+// x-internal-auth (commit e102ebc) so the cross-region inter-function
+// call doesn't get gateway-mutated into a 401.
+function scheduleRecurringRefresh(plaidItemRowId: string): void {
+  const url = `${SUPABASE_URL}/functions/v1/plaid-recurring-refresh`;
+  const work = fetch(url, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      Authorization: `Bearer ${SERVICE_ROLE}`,
+      'x-internal-auth': INTERNAL_SECRET,
+    },
+    body: JSON.stringify({ plaid_item_row_id: plaidItemRowId, source: 'analyzer-gate' }),
+  })
+    .then(async (r) => {
+      const text = await r.text().catch(() => '');
+      if (!r.ok) {
+        console.error(`analyze→recurring-refresh failed for item ${plaidItemRowId} (${r.status}): ${text}`);
+      } else {
+        console.log(`analyze→recurring-refresh ok for item ${plaidItemRowId}: ${text}`);
+      }
+    })
+    .catch((e) => console.error(`analyze→recurring-refresh threw for item ${plaidItemRowId}:`, e));
+
+  const er = (globalThis as unknown as { EdgeRuntime?: { waitUntil?: (p: Promise<unknown>) => void } }).EdgeRuntime;
+  if (er?.waitUntil) er.waitUntil(work);
 }
 
 // Aggregate raw transactions into a compact payload for the LLM.
