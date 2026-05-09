@@ -25,9 +25,15 @@ function renderSlideInto(root, post) {
 
   const meta = post.meta || 'becomeable.app';
 
+  // Split multi-line {...} chunks into one underline span per line so the
+  // squiggle tracks each line's actual width. Without this, a {a\nb} where
+  // a is wider than b draws a single underline at the bottom that extends
+  // way past the end of "b" (as wide as "a") — see posts 62/64/B20.
   const renderText = (str) => str
-    .replace(/\n/g, '<br>')
-    .replace(/\{([^}]+)\}/g, '<span class="underline">$1</span>');
+    .replace(/\{([^}]+)\}/g, (_, inner) =>
+      inner.split('\n').map(seg => `<span class="underline">${seg}</span>`).join('\n')
+    )
+    .replace(/\n/g, '<br>');
 
   const mutedHtml = post.muted ? '<div class="muted">' + renderText(post.muted) + '</div>' : '';
   const punchHtml = '<div class="punch">' + renderText(post.punch) + '</div>';
