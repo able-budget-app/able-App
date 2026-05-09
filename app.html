@@ -2295,13 +2295,13 @@ posthog.init('phc_B6PH36QxpExnyBYhfScFFF6LhDvoyxuFr6PypJuxxky3', {
       <div class="card">
         <div style="font-size:13px;color:var(--ds-t2);font-weight:600;line-height:1.7;margin-bottom:1rem;">Once bills in your planning window are reserved, leftover money is split across these buckets. They must add up to 100 or less.</div>
         <div style="background:var(--ds-green-l);border-radius:var(--ds-r1);padding:11px 14px;margin-bottom:1.25rem;display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;">
-          <div style="font-size:12px;font-weight:600;color:var(--ds-t2);line-height:1.5;flex:1;min-width:180px;">Not sure? Most freelancers do well with: 5% pay yourself, 50% extra debt, 35% buffer, 10% spend.</div>
+          <div style="font-size:12px;font-weight:600;color:var(--ds-t2);line-height:1.5;flex:1;min-width:180px;">Not sure? Most freelancers do well with: 5% pay yourself, 50% extra debt, 35% reserve, 10% spend.</div>
           <button class="btn btn-sm" type="button" onclick="applyRecommendedSplit()" style="font-size:12px;font-weight:800;background:var(--ds-green);color:#fff;border:none;padding:8px 14px;border-radius:18px;cursor:pointer;white-space:nowrap;">Use this</button>
         </div>
         <div class="form-row">
           <div class="field"><label>Pay yourself (%)</label><input type="number" id="set-owner" min="0" max="100" step="1" oninput="updateSplitPreview()"><div style="font-size:11px;color:var(--ds-t3);font-weight:600;margin-top:5px;">Owner draw. Non-negotiable.</div></div>
           <div class="field"><label>Extra debt payoff (%)</label><input type="number" id="set-debt" min="0" max="100" step="1" oninput="updateSplitPreview()"><div style="font-size:11px;color:var(--ds-t3);font-weight:600;margin-top:5px;">Highest-interest debt first</div></div>
-          <div class="field"><label>Savings / buffer (%)</label><input type="number" id="set-buf" min="0" max="100" step="1" oninput="updateSplitPreview()"><div style="font-size:11px;color:var(--ds-t3);font-weight:600;margin-top:5px;">Move to a separate savings account</div></div>
+          <div class="field"><label>Reserve (%)</label><input type="number" id="set-buf" min="0" max="100" step="1" oninput="updateSplitPreview()"><div style="font-size:11px;color:var(--ds-t3);font-weight:600;margin-top:5px;">Move to a separate savings account</div></div>
           <div class="field"><label>Free to spend (%)</label><input type="number" id="set-free" min="0" max="100" step="1" oninput="updateSplitPreview()"><div style="font-size:11px;color:var(--ds-t3);font-weight:600;margin-top:5px;">No guilt attached. It's yours.</div></div>
         </div>
         <div id="split-preview" style="margin-top:.85rem;"></div>
@@ -2350,8 +2350,8 @@ posthog.init('phc_B6PH36QxpExnyBYhfScFFF6LhDvoyxuFr6PypJuxxky3', {
         <label style="display:flex;align-items:flex-start;gap:12px;padding:12px 0;border-bottom:1px solid var(--ds-t4);cursor:pointer;">
           <input type="checkbox" id="ep-low_buffer" onchange="toggleEmailPref('low_buffer',this.checked)" style="width:20px;height:20px;accent-color:var(--ds-green);margin-top:1px;flex-shrink:0;">
           <div style="flex:1;">
-            <div style="font-weight:700;font-size:14px;color:var(--ds-t1);">Buffer running low</div>
-            <div style="font-size:12px;color:var(--ds-t3);font-weight:600;margin-top:3px;line-height:1.5;">If your buffer drops below half a month of bills, we'll let you know so you can rebuild before a slow stretch.</div>
+            <div style="font-weight:700;font-size:14px;color:var(--ds-t1);">Reserve running low</div>
+            <div style="font-size:12px;color:var(--ds-t3);font-weight:600;margin-top:3px;line-height:1.5;">If your reserve drops below half a month of bills, we'll let you know so you can rebuild before a slow stretch.</div>
           </div>
         </label>
         <label style="display:flex;align-items:flex-start;gap:12px;padding:12px 0;border-bottom:1px solid var(--ds-t4);cursor:pointer;">
@@ -2372,7 +2372,7 @@ posthog.init('phc_B6PH36QxpExnyBYhfScFFF6LhDvoyxuFr6PypJuxxky3', {
           <input type="checkbox" id="ep-weekly" onchange="toggleEmailPref('weekly',this.checked)" style="width:20px;height:20px;accent-color:var(--ds-green);margin-top:1px;flex-shrink:0;">
           <div style="flex:1;">
             <div style="font-weight:700;font-size:14px;color:var(--ds-t1);">Weekly summary</div>
-            <div style="font-size:12px;color:var(--ds-t3);font-weight:600;margin-top:3px;line-height:1.5;">Every Monday: income logged, bills paid, debt paydown, where your buffer stands.</div>
+            <div style="font-size:12px;color:var(--ds-t3);font-weight:600;margin-top:3px;line-height:1.5;">Every Monday: income logged, bills paid, debt paydown, where your reserve stands.</div>
           </div>
         </label>
       </div>
@@ -2501,7 +2501,7 @@ posthog.init('phc_B6PH36QxpExnyBYhfScFFF6LhDvoyxuFr6PypJuxxky3', {
     <div class="coach-panel-header">
       <div>
         <div style="font-family:var(--ds-f);font-size:1.25rem;font-weight:800;color:var(--ds-t1);letter-spacing:-.02em;">Coach</div>
-        <div style="font-size:12px;color:var(--ds-t2);font-weight:600;margin-top:2px;">Ask anything about your money. I see your bills, debts, buffer, and income.</div>
+        <div style="font-size:12px;color:var(--ds-t2);font-weight:600;margin-top:2px;">Ask anything about your money. I see your bills, debts, reserve, and income.</div>
       </div>
       <button class="coach-close" onclick="closeCoachPanel()" aria-label="Close">✕</button>
     </div>
@@ -2647,7 +2647,7 @@ posthog.init('phc_B6PH36QxpExnyBYhfScFFF6LhDvoyxuFr6PypJuxxky3', {
 <div class="modal-bg" id="modal-buffer" style="display:none;">
   <div class="modal">
     <button class="modal-close" onclick="closeModal('modal-buffer')" aria-label="Close"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button>
-    <div class="modal-title">Update buffer fund</div>
+    <div class="modal-title">Update reserve</div>
     <div class="field"><label>Current balance ($)</label><input type="number" id="buf-inp" placeholder="0" min="0" step="0.01"></div>
     <div style="font-size:12px;color:var(--ds-t2);font-weight:600;margin-top:12px;line-height:1.6;background:#eaf2fc;border-radius:var(--ds-r1);padding:12px 14px;">Money set aside for slow months. Goal is one full month of bills. Update whenever you move money in or out.</div>
     <div class="modal-actions"><button class="btn" onclick="closeModal('modal-buffer')">Cancel</button><button class="btn btn-primary" onclick="saveBuffer()">Save</button></div>
@@ -2679,7 +2679,7 @@ posthog.init('phc_B6PH36QxpExnyBYhfScFFF6LhDvoyxuFr6PypJuxxky3', {
     <button class="modal-close" onclick="closeModal('modal-balance')" aria-label="Close"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button>
     <div class="modal-title">Money in your spending accounts</div>
     <div class="field"><label>Total ($)</label><input type="number" id="bal-inp" placeholder="0" min="0" step="0.01"></div>
-    <div style="font-size:12px;color:var(--ds-t2);font-weight:600;margin-top:12px;line-height:1.6;background:#eaf2fc;border-radius:var(--ds-r1);padding:12px 14px;">Add up your checking and any account you actively spend from. Skip your buffer/savings — that's tracked separately. Update this whenever your balance changes.</div>
+    <div style="font-size:12px;color:var(--ds-t2);font-weight:600;margin-top:12px;line-height:1.6;background:#eaf2fc;border-radius:var(--ds-r1);padding:12px 14px;">Add up your checking and any account you actively spend from. Skip your reserve/savings — that's tracked separately. Update this whenever your balance changes.</div>
     <div class="modal-actions"><button class="btn" onclick="closeModal('modal-balance')">Cancel</button><button class="btn btn-primary" onclick="saveBalance()">Save</button></div>
   </div>
 </div>
@@ -2741,7 +2741,7 @@ posthog.init('phc_B6PH36QxpExnyBYhfScFFF6LhDvoyxuFr6PypJuxxky3', {
   <div class="modal">
     <button class="modal-close" onclick="closeModal('modal-edit-income')" aria-label="Close"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button>
     <div class="modal-title">Edit income</div>
-    <div style="font-size:12px;color:var(--ds-t2);font-weight:600;margin-bottom:14px;line-height:1.6;background:var(--ds-green-l);border-radius:var(--ds-r1);padding:10px 12px;">Saving will reverse the original allocation and re-run it with the new amount. Debt balances and buffer will be adjusted.</div>
+    <div style="font-size:12px;color:var(--ds-t2);font-weight:600;margin-bottom:14px;line-height:1.6;background:var(--ds-green-l);border-radius:var(--ds-r1);padding:10px 12px;">Saving will reverse the original allocation and re-run it with the new amount. Debt balances and reserve will be adjusted.</div>
     <div class="form-row">
       <div class="field"><label>Amount ($)</label><input type="number" id="ei-amount" placeholder="0" min="0" step="0.01"></div>
       <div class="field"><label>Source</label><select id="ei-source"></select></div>
@@ -3857,7 +3857,7 @@ const OB_QUESTIONS = [
     choices: [
       { value: 'crush_debt',   label: 'Crush debt',          sub: 'More of every dollar pays off what you owe.' },
       { value: 'build_safety', label: 'Build a safety net',  sub: 'More set aside for slow months and surprises.' },
-      { value: 'balanced',     label: 'Balanced',            sub: 'Mix between debt payoff, buffer, and free spending.' }
+      { value: 'balanced',     label: 'Balanced',            sub: 'Mix between debt payoff, reserve, and free spending.' }
     ]
   },
   {
@@ -6035,7 +6035,7 @@ function obRenderPlanReviewUI() {
     return `<div class="plan-row-list">
       <div class="plan-list-row"><span>Owner draw</span><span class="meta">${s.owner_pct}%</span></div>
       <div class="plan-list-row"><span>Extra to debt</span><span class="meta">${s.debt_pct}%</span></div>
-      <div class="plan-list-row"><span>Extra to buffer</span><span class="meta">${s.reserve_pct}%</span></div>
+      <div class="plan-list-row"><span>Extra to reserve</span><span class="meta">${s.reserve_pct}%</span></div>
       <div class="plan-list-row"><span>Extra to free spending</span><span class="meta">${s.free_pct}%</span></div>
     </div>`;
   }, () => {
@@ -6050,7 +6050,7 @@ function obRenderPlanReviewUI() {
       <div class="plan-split-grid">
         <label>Owner draw <input id="plan-split-owner" type="number" min="0" max="100" value="${s.owner_pct}"></label>
         <label>Extra to debt <input id="plan-split-debt" type="number" min="0" max="100" value="${s.debt_pct}"></label>
-        <label>Extra to buffer <input id="plan-split-buffer" type="number" min="0" max="100" value="${s.reserve_pct}"></label>
+        <label>Extra to reserve <input id="plan-split-buffer" type="number" min="0" max="100" value="${s.reserve_pct}"></label>
         <label>Extra to free <input id="plan-split-free" type="number" min="0" max="100" value="${s.free_pct}"></label>
       </div>
       <div class="plan-split-sum" style="${sum === 100 ? 'color:#2a7a4a;' : 'color:#a04545;'}">Sum: ${sum}% ${sum === 100 ? '✓' : '· must total 100'}</div>`;
@@ -7470,8 +7470,8 @@ function computeJobs(amount,source,useCurrentIncome=true) {
         ?'Fixed allocations left '+fr(shortfall)+' short on bills'
         :fr(shortfall)+' short on bills due in the next '+allocWindow()+' days',
       why:causedByFixed
-        ?'Bills due in the next '+allocWindow()+' days total '+fr(windowNeeded)+' but only '+fr(Math.max(0,rem))+' is left after fixed allocations. Pause a rule or cover the gap from buffer.'
-        :'Bills due in the next '+allocWindow()+' days total '+fr(windowNeeded)+'. This deposit only covers '+fr(Math.max(0,rem))+'. Cover the rest from buffer or your next deposit.',
+        ?'Bills due in the next '+allocWindow()+' days total '+fr(windowNeeded)+' but only '+fr(Math.max(0,rem))+' is left after fixed allocations. Pause a rule or cover the gap from the reserve.'
+        :'Bills due in the next '+allocWindow()+' days total '+fr(windowNeeded)+'. This deposit only covers '+fr(Math.max(0,rem))+'. Cover the rest from the reserve or your next deposit.',
       amount:0,
     });
   }
@@ -8026,7 +8026,7 @@ function renderDashboard(){
       {key:'bills', name:'Bills',   tip:"How much of this month's bill total is paid or set aside.",                                pts:score.components.bills,  max:30, on:()=>goTo('bills')},
       {key:'pay',   name:'Pay self',tip:"Owner draw this month against your set pay-yourself target.",                              pts:score.components.pay,    max:20, on:()=>goTo('settings')},
       {key:'debt',  name:'Debt',    tip:"Anything sent to debt above the minimums this month.",                                     pts:score.components.debt,   max:20, on:()=>goTo('debt')},
-      {key:'buffer',name:'Buffer',  tip:"Money set aside for next month's Floor. Slow months get paid by the buffer, not by panic.",pts:score.components.buffer, max:15, on:()=>openBufferModal()},
+      {key:'buffer',name:'Reserve',  tip:"Money set aside for next month's Floor. Slow months get paid by the reserve, not by panic.",pts:score.components.buffer, max:15, on:()=>openBufferModal()},
       {key:'within',name:'Within',  tip:"Discretionary spending under target. Auto-credited until expense tracking ships.",         pts:score.components.budget, max:15, on:()=>goTo('score')},
     ];
     const checkSvg=`<svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>`;
@@ -8242,7 +8242,7 @@ function deleteIncome(id){
   const idx=S.history.findIndex(h=>h.id===id);
   if(idx<0)return;
   const entry=S.history[idx];
-  if(!confirm(`Delete ${f2(entry.amount)} from ${entry.source}?\n\nThis will reverse the allocation: money goes back to debt balances and out of your buffer.`))return;
+  if(!confirm(`Delete ${f2(entry.amount)} from ${entry.source}?\n\nThis will reverse the allocation: money goes back to debt balances and out of your reserve.`))return;
   reverseJobs(entry);
   S.history.splice(idx,1);
   save();refreshHome();renderDebtPage();
@@ -9131,7 +9131,7 @@ function renderScore(){
       <div style="display:grid;grid-template-columns:repeat(2,1fr);gap:.85rem;">
         <div><div style="font-size:10px;font-weight:700;color:var(--ds-t3);text-transform:uppercase;letter-spacing:.08em;">Total income</div><div style="font-family:var(--ds-f);font-size:1.25rem;font-weight:900;color:var(--ds-green);letter-spacing:-.02em;margin-top:2px;">${fr(sumIncome)}</div></div>
         <div><div style="font-size:10px;font-weight:700;color:var(--ds-t3);text-transform:uppercase;letter-spacing:.08em;">Extra to debt</div><div style="font-family:var(--ds-f);font-size:1.25rem;font-weight:900;color:var(--ds-c4);letter-spacing:-.02em;margin-top:2px;">${fr(sumDebt)}</div></div>
-        <div><div style="font-size:10px;font-weight:700;color:var(--ds-t3);text-transform:uppercase;letter-spacing:.08em;">To buffer</div><div style="font-family:var(--ds-f);font-size:1.25rem;font-weight:900;color:var(--ds-c5);letter-spacing:-.02em;margin-top:2px;">${fr(sumBuffer)}</div></div>
+        <div><div style="font-size:10px;font-weight:700;color:var(--ds-t3);text-transform:uppercase;letter-spacing:.08em;">To reserve</div><div style="font-family:var(--ds-f);font-size:1.25rem;font-weight:900;color:var(--ds-c5);letter-spacing:-.02em;margin-top:2px;">${fr(sumBuffer)}</div></div>
         <div><div style="font-size:10px;font-weight:700;color:var(--ds-t3);text-transform:uppercase;letter-spacing:.08em;">Avg score</div><div style="font-family:var(--ds-f);font-size:1.25rem;font-weight:900;color:var(--ds-t1);letter-spacing:-.02em;margin-top:2px;">${avgScore}</div></div>
       </div>
     </div>`;
@@ -9155,7 +9155,7 @@ function renderScore(){
     <div style="font-size:11px;font-weight:700;color:var(--ds-t2);display:flex;gap:10px;flex-wrap:wrap;">
       <span>${fr(m.income||0)} earned</span>
       ${m.debtPaid>0?`<span>· ${fr(m.debtPaid)} to debt</span>`:''}
-      ${m.bufAdded>0?`<span>· ${fr(m.bufAdded)} to buffer</span>`:''}
+      ${m.bufAdded>0?`<span>· ${fr(m.bufAdded)} to reserve</span>`:''}
       ${m.billsCount?`<span>· ${billsCoveragePct}% bills paid</span>`:''}
     </div>`;
     mh.appendChild(d);
@@ -9746,7 +9746,7 @@ function renderHabitDetailRows({s1,s2,s3,s4,s5}){
     { label:'Bills covered',         sub:'Bills paid or set aside this month.',                 val:s1, max:30 },
     { label:'Paid yourself',         sub:'Owner draw against your monthly target.',             val:s5, max:20 },
     { label:'Extra debt payments',   sub:'Anything sent to debt above the minimums.',           val:s2, max:20 },
-    { label:'Buffer fund added',     sub:"Money set aside toward next month's floor.",          val:s3, max:15 },
+    { label:'Reserve added',     sub:"Money set aside toward next month's floor.",          val:s3, max:15 },
     { label:'Within your income',    sub:'Auto-credited for now. Real tracking ships with the expense module.', val:s4, max:15 },
   ];
   const checkSvg = `<svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>`;
@@ -9784,7 +9784,7 @@ function openMonthDetail(idx){
         <div class="metric"><div class="metric-label">Income</div><div class="metric-val" style="color:var(--ds-green);">${fr(m.income||0)}</div></div>
         <div class="metric"><div class="metric-label">Score</div><div class="metric-val" style="color:var(--ds-t1);">${m.score}</div></div>
         <div class="metric"><div class="metric-label">Extra to debt</div><div class="metric-val" style="color:var(--ds-c4);">${fr(m.debtPaid||0)}</div></div>
-        <div class="metric"><div class="metric-label">To buffer</div><div class="metric-val" style="color:var(--ds-c5);">${fr(m.bufAdded||0)}</div></div>
+        <div class="metric"><div class="metric-label">To reserve</div><div class="metric-val" style="color:var(--ds-c5);">${fr(m.bufAdded||0)}</div></div>
       </div>
       ${m.billsCount?`
         <div class="sec" style="margin-top:0;">Bills that month (${billsPaid.length}/${m.billsCount} paid)</div>
@@ -9798,7 +9798,7 @@ function openMonthDetail(idx){
           ${incomeRows.map(h=>`<div style="display:flex;justify-content:space-between;font-size:12px;padding:3px 0;font-weight:600;color:var(--ds-t1);"><span>${escapeHtml(h.source)} <span style="color:var(--ds-t3);font-weight:500;">· ${escapeHtml(h.date||'')}</span></span><span style="color:var(--ds-green);">+${f2(h.amount)}</span></div>`).join('')}
         </div>
       `:''}
-      ${m.totalDebtEnd!=null?`<div style="font-size:12px;color:var(--ds-t2);font-weight:600;margin-bottom:.5rem;">Debt at month close: <strong>${fr(m.totalDebtEnd)}</strong> · Buffer: <strong>${fr(m.bufferEnd||0)}</strong></div>`:''}
+      ${m.totalDebtEnd!=null?`<div style="font-size:12px;color:var(--ds-t2);font-weight:600;margin-bottom:.5rem;">Debt at month close: <strong>${fr(m.totalDebtEnd)}</strong> · Reserve: <strong>${fr(m.bufferEnd||0)}</strong></div>`:''}
       <div class="modal-actions">
         <button class="btn" onclick="document.getElementById('modal-month-detail').remove()">Close</button>
       </div>
@@ -13452,7 +13452,7 @@ function renderHeroMoney(){
         <span class="db-hero-available-label">Short by</span>
         <span class="db-hero-available-val db-hero-available-val--neg">${f2(short)}</span>
       </div>
-      <div class="db-hero-shortfall">Reservations exceed your balance. Skip a bill, dip into your buffer, or wait for the next deposit to fill the gap.</div>
+      <div class="db-hero-shortfall">Reservations exceed your balance. Skip a bill, dip into your reserve, or wait for the next deposit to fill the gap.</div>
       ${floorStrip}
       ${primaryCta}
     `;
@@ -13777,7 +13777,7 @@ const TOUR_STEPS = [
     bullets: [
       "Bills covered",
       "Debt paid down",
-      "Buffer built",
+      "Reserve built",
       "Paying yourself",
       "Living within your income",
     ],
@@ -14648,14 +14648,14 @@ const LC_LESSONS = {
         "Able is built around this. That's why you're here."
       ],
       keyPoints: [
-        { icon: 'shield', text: "<strong>Build a buffer first.</strong> Stack one full month of bills in a separate savings account before aggressive debt payoff. Slow months won't force you back onto cards." },
+        { icon: 'shield', text: "<strong>Build a reserve first.</strong> Stack one full month of bills in a separate savings account before aggressive debt payoff. Slow months won't force you back onto cards." },
         { icon: 'chart', text: '<strong>Know your floor.</strong> The exact monthly minimum to cover every debt. Never go below it.' },
         { icon: 'trending', text: '<strong>Surge on good months.</strong> Big check? Most of the surplus goes to your target debt. Not lifestyle. Not catching up. Straight to debt.' },
-        { icon: 'calendar', text: '<strong>Review every 30 days.</strong> Variable income means the plan flexes. Check your floor, buffer, and debt progress once a month. Adjust.' }
+        { icon: 'calendar', text: '<strong>Review every 30 days.</strong> Variable income means the plan flexes. Check your floor, reserve, and debt progress once a month. Adjust.' }
       ],
       callout: {
         title: 'Use the app',
-        text: 'Allocate handles this automatically. Log income, Able splits it across bills, target debt, and buffer based on your settings. The system works for you.'
+        text: 'Allocate handles this automatically. Log income, Able splits it across bills, target debt, and reserve based on your settings. The system works for you.'
       }
     },
     {
@@ -14704,7 +14704,7 @@ const LC_LESSONS = {
         { title: 'Week 1: List everything', desc: "List every debt. Creditor, balance, minimum, rate, due date. You can't solve what you can't see." },
         { title: 'Week 2: Calculate your DTI', desc: "Use the formula from Lesson 3. Write it at the top of the list. That's your starting score." },
         { title: 'Week 3: Pick your target', desc: "Using snowball or avalanche, circle the one debt you'll attack first." },
-        { title: 'Week 4: Build your buffer', desc: 'Open a separate savings account. Route 5 to 10% of every income into it. Goal: one month of bills.' },
+        { title: 'Week 4: Build your reserve', desc: 'Open a separate savings account. Route 5 to 10% of every income into it. Goal: one month of bills.' },
         { title: 'Month 2: Call for rate cuts', desc: 'Call every credit card and ask for a rate reduction. 30 minutes. Can save you thousands.' },
         { title: 'Month 2: Start surge payments', desc: 'Let Able route surplus income to your target debt on good months.' },
         { title: 'Month 3: Review progress', desc: 'Recalculate your DTI. Check how much principal you knocked off. Adjust if needed.' },
@@ -14741,7 +14741,7 @@ const LC_LESSONS = {
         "These are the habits that keep you free."
       ],
       keyPoints: [
-        { icon: 'shield', text: "<strong>Keep your buffer funded.</strong> It's what stops slow months from becoming credit card months. Never spend it to zero." },
+        { icon: 'shield', text: "<strong>Keep your reserve funded.</strong> It's what stops slow months from becoming credit card months. Never spend it to zero." },
         { icon: 'card', text: "<strong>Pay cards in full every month.</strong> Can't pay the full statement? You can't afford what you bought. This one rule prevents 90% of debt." },
         { icon: 'chart', text: "<strong>Track net worth monthly.</strong> Total assets minus debts. This one number tells you whether you're moving forward, regardless of income." },
         { icon: 'target', text: '<strong>Leave room for guilt-free spending.</strong> Deprivation budgets fail. Build spending money in. Able does this on purpose.' },
@@ -14840,7 +14840,7 @@ const LC_LESSONS = {
         { icon: 'calendar', text: '<strong>Manually pay the statement balance.</strong> Autopay protects your credit. Manual full payments protect your bank account from interest.' },
         { icon: 'alert', text: '<strong>Match due dates to pay dates.</strong> Most issuers let you change the due date. Line it up with when you have the most cash.' },
         { icon: 'clock', text: "<strong>Variable income? Pay weekly.</strong> Don't wait for the due date. Pay cards weekly as income comes in. Keeps utilization low, guarantees on-time status." },
-        { icon: 'shield', text: '<strong>Keep a buffer in checking.</strong> Autopay failures from insufficient funds = late payments. A small cushion prevents it.' }
+        { icon: 'shield', text: '<strong>Keep a cushion in checking.</strong> Autopay failures from insufficient funds = late payments. A small cushion prevents it.' }
       ]
     },
     {
@@ -15837,7 +15837,7 @@ function lcSurviveStateHTML(s) {
     <div class="lc-survive-state">
       <div class="lc-survive-stat"><div class="lc-survive-stat-lbl">Balance</div><div class="lc-survive-stat-val" style="color:${s.balance < 0 ? 'var(--ds-c4)' : 'var(--ds-t1)'};">${s.balance < 0 ? '-' : ''}$${Math.abs(Math.round(s.balance)).toLocaleString()}</div></div>
       <div class="lc-survive-stat"><div class="lc-survive-stat-lbl">Debt</div><div class="lc-survive-stat-val" style="color:var(--ds-c4);">$${Math.round(s.debt).toLocaleString()}</div></div>
-      <div class="lc-survive-stat"><div class="lc-survive-stat-lbl">Buffer</div><div class="lc-survive-stat-val" style="color:var(--ds-c5);">$${Math.round(s.buffer).toLocaleString()}</div></div>
+      <div class="lc-survive-stat"><div class="lc-survive-stat-lbl">Reserve</div><div class="lc-survive-stat-val" style="color:var(--ds-c5);">$${Math.round(s.buffer).toLocaleString()}</div></div>
       <div class="lc-survive-stat"><div class="lc-survive-stat-lbl">Paid self</div><div class="lc-survive-stat-val" style="color:var(--ds-c2);">$${Math.round(s.ownerPaid).toLocaleString()}</div></div>
     </div>
   `;
@@ -16035,7 +16035,7 @@ function lcSurviveFinish() {
   const debtDown = s.debt < SURVIVE_MONTH_START.debt;
   parts.push({ label: 'Debt decreased', pts: debtDown ? 30 : 0, max: 30, pass: debtDown });
   const bufUp = s.buffer > SURVIVE_MONTH_START.buffer;
-  parts.push({ label: 'Buffer grew', pts: bufUp ? 20 : 0, max: 20, pass: bufUp });
+  parts.push({ label: 'Reserve grew', pts: bufUp ? 20 : 0, max: 20, pass: bufUp });
   const paidSelf = s.ownerPaid >= 200;
   parts.push({ label: 'Paid yourself at least $200', pts: paidSelf ? 20 : 0, max: 20, pass: paidSelf });
   score = parts.reduce((t, p) => t + p.pts, 0);
@@ -16221,16 +16221,16 @@ function lcBeatMarkPlayed() {
 const LC_RED_FLAG_SCENARIOS = [
   {
     id: 'vegas',
-    scenario: "You just had your biggest month in 6 months: $15k. A friend suggests a weekend in Vegas to celebrate. Bills are due next week and your buffer is $400.",
+    scenario: "You just had your biggest month in 6 months: $15k. A friend suggests a weekend in Vegas to celebrate. Bills are due next week and your reserve is $400.",
     question: "What's the red flag?",
     choices: [
       "Weekend trips are always irresponsible.",
-      "Your buffer is critically low for inconsistent income.",
+      "Your reserve is critically low for inconsistent income.",
       "You haven't worked hard enough to earn a break.",
       "You should invest the $15k instead.",
     ],
     correct: 1,
-    lesson: "One big month isn't a plan. With lumpy income, the buffer comes first. Cover bills, stack cushion, then splurge.",
+    lesson: "One big month isn't a plan. With lumpy income, the reserve comes first. Cover bills, stack cushion, then splurge.",
   },
   {
     id: 'bt_transfer',
@@ -16303,12 +16303,12 @@ const LC_RED_FLAG_SCENARIOS = [
     question: "What's the red flag?",
     choices: [
       "You shouldn't buy a new laptop yet.",
-      "You don't have a buffer to absorb this, so a 'short-term' card balance often isn't.",
+      "You don't have a reserve to absorb this, so a 'short-term' card balance often isn't.",
       "You should finance it through the retailer.",
       "You should have backed up more.",
     ],
     correct: 1,
-    lesson: "Without a buffer, every emergency becomes a card balance, and card balances become interest. A buffer is what keeps 'short-term' actually short.",
+    lesson: "Without a reserve, every emergency becomes a card balance, and card balances become interest. A reserve is what keeps 'short-term' actually short.",
   },
 ];
 
@@ -17592,7 +17592,7 @@ const COACH_INTROS = {
   coach: { title: "What's on your mind?", examples: [
     "How am I doing this month?",
     "Which debt should I focus on first?",
-    "Is my buffer on track?",
+    "Is my reserve on track?",
     "What should I cut if income drops next month?",
   ]},
 };
