@@ -95,10 +95,14 @@ def start_server() -> tuple[socketserver.ThreadingTCPServer, str]:
 # ─────────────────────────────────────────────────────────────────────
 async def load_inventory(page) -> dict[str, list[dict]]:
     await page.goto(f"{SERVER_URL}/social/posts/template.html?id=01", wait_until="domcontentloaded")
-    posts        = await page.evaluate("window.POSTS         || []")
-    carousels    = await page.evaluate("window.CAROUSELS     || []")
-    brandscript  = await page.evaluate("window.BRANDSCRIPT   || []")
-    products     = await page.evaluate("window.PRODUCT_POSTS || []")
+    posts        = await page.evaluate("window.POSTS             || []")
+    carousels    = await page.evaluate("window.CAROUSELS         || []")
+    brandscript  = await page.evaluate("window.BRANDSCRIPT       || []")
+    products     = await page.evaluate("window.PRODUCT_POSTS     || []")
+    pcarousels   = await page.evaluate("window.PRODUCT_CAROUSELS || []")
+    # Product carousels render through the same pipeline; merge into the
+    # carousel inventory so --carousels picks them up.
+    carousels = list(carousels) + list(pcarousels)
     # REELS lives in reels/data.js — load that page to read it
     await page.goto(f"{SERVER_URL}/social/reels/template.html?id=R1", wait_until="domcontentloaded")
     reels        = await page.evaluate("window.REELS || []")

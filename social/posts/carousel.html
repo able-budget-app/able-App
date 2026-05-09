@@ -59,11 +59,13 @@
   <div class="slides" id="slides"></div>
 
   <script src="data.js"></script>
+  <script src="product-data.js"></script>
   <script src="_render.js"></script>
   <script>
     const params = new URLSearchParams(location.search);
     const id = params.get('id') || 'C2';
-    const carousel = (window.CAROUSELS || []).find(c => c.id === id);
+    const ALL_CAROUSELS = [...(window.CAROUSELS || []), ...(window.PRODUCT_CAROUSELS || [])];
+    const carousel = ALL_CAROUSELS.find(c => c.id === id);
     const slidesEl = document.getElementById('slides');
     const headerEl = document.getElementById('header');
 

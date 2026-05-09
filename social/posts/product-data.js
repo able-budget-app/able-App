@@ -269,3 +269,134 @@ window.PRODUCT_POSTS = [
     punch: "To Able." },
 
 ];
+
+
+// ─────────────────────────────────────────────────────────────────────
+// PRODUCT-SHOT CAROUSELS
+// Multi-slide carousels using the tpl-C product-shot template alongside
+// existing tpl-A (muted+punch) and tpl-B (single statement) text slides.
+// ID prefix `PC` — keeps them sortable separately from the numeric C-id
+// text-only carousels in data.js.
+// ─────────────────────────────────────────────────────────────────────
+window.PRODUCT_CAROUSELS = [
+
+  // PC1 — Your first week with Able (product walkthrough)
+  { id: 'PC1', slug: 'product-first-week', theme: 'page', slides: [
+      { tpl: 'B', eyebrow: 'Swipe →',
+        punch: "Your first week\nwith {Able.}",
+        meta: '1 / 6' },
+      { tpl: 'C', eyebrow: 'Day 1', pos: 'right', shot: '01-dashboard',
+        muted: "Connect your bank.",
+        punch: "Plan ready in\n{3 minutes.}",
+        meta: '2 / 6' },
+      { tpl: 'C', eyebrow: 'Day 2', pos: 'left', shot: '06-log-income',
+        muted: "First deposit lands.",
+        punch: "Already\n{split.}",
+        meta: '3 / 6' },
+      { tpl: 'C', eyebrow: 'Day 4', pos: 'right', shot: '03-plan-bills',
+        muted: "First bill comes due.",
+        punch: "Already\n{reserved.}",
+        meta: '4 / 6' },
+      { tpl: 'C', eyebrow: 'Day 7', pos: 'left', shot: '04-score',
+        muted: "End of week one.",
+        punch: "Floor steady.\nReserve {growing.}",
+        meta: '5 / 6' },
+      { tpl: 'A', theme: 'green', eyebrow: 'mixed',
+        muted: "$14.99 a month.",
+        punch: "Or $129 a year.\n{Save $50.}",
+        meta: 'becomeable.app' },
+  ] },
+
+  // PC2 — How Able works (5-step product tour)
+  { id: 'PC2', slug: 'product-how-it-works', theme: 'green', slides: [
+      { tpl: 'B', eyebrow: 'Swipe →',
+        punch: "How {Able} works.",
+        meta: '1 / 7' },
+      { tpl: 'C', theme: 'page', eyebrow: 'Step 1', pos: 'right', shot: '06-log-income',
+        muted: "Log what came in.",
+        punch: "{Ten seconds.}",
+        meta: '2 / 7' },
+      { tpl: 'C', theme: 'page', eyebrow: 'Step 2', pos: 'left', shot: '02-allocation-flow',
+        muted: "Able tells you",
+        punch: "where it\n{goes.}",
+        meta: '3 / 7' },
+      { tpl: 'C', theme: 'page', eyebrow: 'Step 3', pos: 'right', shot: '03-plan-bills',
+        muted: "Bills funded",
+        punch: "before they're\n{due.}",
+        meta: '4 / 7' },
+      { tpl: 'C', theme: 'page', eyebrow: 'Step 4', pos: 'left', shot: '04-score',
+        muted: "Debt drops.",
+        punch: "Savings\n{grow.}",
+        meta: '5 / 7' },
+      { tpl: 'C', theme: 'page', eyebrow: 'Step 5', pos: 'right', shot: '05-coach',
+        muted: "Coach checks in",
+        punch: "when something\n{looks off.}",
+        meta: '6 / 7' },
+      { tpl: 'A', theme: 'green', eyebrow: 'mixed',
+        muted: "$14.99 a month.",
+        punch: "Or $129 a year.\n{Free for 30.}",
+        meta: 'becomeable.app' },
+  ] },
+
+  // PC3 — Built for variable income (5 features)
+  { id: 'PC3', slug: 'product-built-for-variable', theme: 'glass-dark', slides: [
+      { tpl: 'B', eyebrow: 'Swipe →',
+        punch: "Built for\n{variable income.}",
+        meta: '1 / 7' },
+      { tpl: 'C', theme: 'page', eyebrow: 'The floor', pos: 'right', shot: '01-dashboard',
+        muted: "Bills + tax.",
+        punch: "{Funded first.}",
+        meta: '2 / 7' },
+      { tpl: 'C', theme: 'green', eyebrow: 'Splits', pos: 'left', shot: '02-allocation-flow',
+        muted: "Per deposit.",
+        punch: "Five {jobs.}",
+        meta: '3 / 7' },
+      { tpl: 'C', theme: 'page', eyebrow: 'Score', pos: 'right', shot: '04-score',
+        muted: "Score the month.",
+        punch: "Reality.\nNot the {plan.}",
+        meta: '4 / 7' },
+      { tpl: 'C', theme: 'green', eyebrow: 'Coach', pos: 'left', shot: '05-coach',
+        muted: "Knows your real",
+        punch: "{numbers.}",
+        meta: '5 / 7' },
+      { tpl: 'C', theme: 'page', eyebrow: 'Tax export', pos: 'right', shot: '14-tax-export',
+        muted: "April morning.",
+        punch: "{One CSV.}",
+        meta: '6 / 7' },
+      { tpl: 'A', theme: 'green', eyebrow: 'mixed',
+        muted: "30 days free.",
+        punch: "Card required.\n{Cancel anytime.}",
+        meta: 'becomeable.app' },
+  ] },
+
+  // PC4 — From Unable → Able (transformation arc)
+  { id: 'PC4', slug: 'product-from-unable-to-able', theme: 'page', slides: [
+      { tpl: 'B', theme: 'glass-dark', eyebrow: 'Swipe →',
+        punch: "From {Unable.}\nTo Able.",
+        meta: '1 / 7' },
+      { tpl: 'A', theme: 'glass-dark', eyebrow: 'Before',
+        muted: "Money sits.",
+        punch: "Money\n{leaks.}",
+        meta: '2 / 7' },
+      { tpl: 'A', theme: 'black', eyebrow: 'Day 30',
+        muted: "Where did $1,000 go?",
+        punch: "{Shame.}\nNot a plan.",
+        meta: '3 / 7' },
+      { tpl: 'C', theme: 'page', eyebrow: 'After', pos: 'right', shot: '01-dashboard',
+        muted: "Every bill covered.",
+        punch: "Every dollar\n{accounted for.}",
+        meta: '4 / 7' },
+      { tpl: 'C', theme: 'green', eyebrow: 'After', pos: 'left', shot: '04-score',
+        muted: "Nothing leaked.",
+        punch: "Floor {steady.}",
+        meta: '5 / 7' },
+      { tpl: 'B', theme: 'green', eyebrow: 'mixed',
+        punch: "From holding\nyour breath.\nTo {breathing.}",
+        meta: '6 / 7' },
+      { tpl: 'A', theme: 'glass-dark', eyebrow: 'mixed',
+        muted: "30 days free.",
+        punch: "{Become Able.}",
+        meta: 'becomeable.app' },
+  ] },
+
+];
