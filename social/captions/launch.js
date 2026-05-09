@@ -9,7 +9,7 @@
 //   links — (optional) override for the relevant_links column. Defaults to "becomeable.app".
 //
 // Voice rules: short sentences, no em dashes, no emojis, permission-not-blame,
-// no founder name, $14.99/mo + $129/yr (NOT $9.99/$79), 7-day free trial (card required).
+// no founder name, $14.99/mo + $129/yr (NOT $9.99/$79), 30-day free trial (card required).
 
 window.LAUNCH_CAPTIONS = {
 
@@ -27,7 +27,7 @@ A wave. Some weeks: high tide. Some weeks: dry.
 You don't need more discipline.
 You need a budget that bends with the water.
 
-Built for waves. Free for 7 days.
+Built for waves. Free for 30 days.
 Link in bio.
 
 #freelancing #1099life #variableincome #budgeting #creatorlife`,
@@ -50,7 +50,7 @@ If you freelance, run a one-person business, sell on commission, or live off roy
 
 The fix isn't more discipline. It's a tool that bends with the water.
 
-Built Able for that. Free for 7 days, $14.99/mo or $129/yr after.`,
+Built Able for that. Free for 30 days, $14.99/mo or $129/yr after.`,
   },
 
   '1|Tue': {
@@ -64,7 +64,7 @@ The Shame Cycler: relief, spend, hate, repeat.
 Same person. Different week.
 That's not a discipline problem. That's a system problem.
 
-Free for 7 days. Link in bio.
+Free for 30 days. Link in bio.
 
 #freelancing #1099life #variableincome #budgeting #moneymindset`,
 
@@ -89,7 +89,7 @@ Same person. Different week.
 
 This is not a discipline problem. Three different "discipline failures" in three weeks doesn't add up to a willpower diagnosis. It adds up to a missing system. Specifically, a system built for income that doesn't follow a schedule.
 
-That's what Able is. Free for 7 days, $14.99/mo or $129/yr after.`,
+That's what Able is. Free for 30 days, $14.99/mo or $129/yr after.`,
   },
 
   '1|Wed': {
@@ -100,7 +100,7 @@ Swipe to find which week you're in. (You'll recognize all three.)
 
 It's not willpower. It's the wrong tool. Apps built for a paycheck don't work when your paycheck doesn't exist.
 
-Built for variable income. Free for 7 days.
+Built for variable income. Free for 30 days.
 Link in bio.
 
 #freelancing #1099life #variableincome #budgeting #selfemployed`,
@@ -129,7 +129,7 @@ The reason most budgeting apps don't fix any of these is that they were built fo
 
 The fix is a system that doesn't pretend your paycheck looks like everyone else's. Built Able to be that system.
 
-Free for 7 days. $14.99/mo or $129/yr after.`,
+Free for 30 days. $14.99/mo or $129/yr after.`,
   },
 
   '1|Thu': {
@@ -140,7 +140,7 @@ The freeze is a real response. Money lands. You know there are bills. Taxes. Deb
 
 That's not a willpower failure. That's missing tools.
 
-Built for the freeze. Free for 7 days.
+Built for the freeze. Free for 30 days.
 Link in bio.
 
 #freelancing #1099life #variableincome #moneymindset #selfemployed`,
@@ -165,7 +165,7 @@ The freeze isn't a willpower failure. It's the predictable response to a setup t
 
 The fix is a tool that names the next move for you, the moment money arrives. That's what Able does.
 
-Free for 7 days. $14.99/mo or $129/yr after.`,
+Free for 30 days. $14.99/mo or $129/yr after.`,
   },
 
   '1|Fri': {
@@ -176,7 +176,7 @@ Swipe for the four assumptions they're built on (and you don't have any of them)
 
 You don't need more discipline. You need a system that doesn't pretend.
 
-Free for 7 days. Link in bio.
+Free for 30 days. Link in bio.
 
 #freelancing #1099life #variableincome #budgeting #selfemployed`,
 
@@ -205,7 +205,7 @@ You don't need more discipline. You need a system that doesn't pretend your inco
 
 That's what Able is built for.
 
-Free for 7 days. $14.99/mo or $129/yr after.`,
+Free for 30 days. $14.99/mo or $129/yr after.`,
   },
 
   '1|Sat': {
@@ -214,7 +214,7 @@ Free for 7 days. $14.99/mo or $129/yr after.`,
 
 If you've ever read a budgeting article and thought "this isn't built for me" — you were right. It wasn't.
 
-Built for variable income. Free for 7 days.
+Built for variable income. Free for 30 days.
 Link in bio.
 
 #freelancing #1099life #variableincome #budgeting #selfemployed`,
@@ -237,7 +237,7 @@ You can spend a decade trying to be "better with money" using a tool that was wr
 
 The fix isn't more willpower. It's the right tool for the shape of your income.
 
-Built Able for that shape. Free for 7 days. $14.99/mo or $129/yr after.`,
+Built Able for that shape. Free for 30 days. $14.99/mo or $129/yr after.`,
   },
 
   '1|Sun': {
@@ -246,7 +246,7 @@ Built Able for that shape. Free for 7 days. $14.99/mo or $129/yr after.`,
 
 Freelancers. Creators. Contractors. Gig drivers. Commission earners. Business owners. Anyone whose paycheck doesn't follow a schedule.
 
-The whole tool assumes that. Free for 7 days.
+The whole tool assumes that. Free for 30 days.
 Link in bio.
 
 #variableincome #freelancing #1099life #creator #smallbusiness`,
@@ -272,7 +272,7 @@ Able is built the other direction. The whole product assumes:
 
 If your income is variable, freelance, contract, creator, commission, gig, one-person business, the tool was built for the actual shape of your money.
 
-Free for 7 days. $14.99/mo or $129/yr after.`,
+Free for 30 days. $14.99/mo or $129/yr after.`,
   },
 
   // ─────────────────────────────────────────────────────────
@@ -289,7 +289,7 @@ Day 1: forget you ever blamed.
 
 The loop isn't a flaw in you. It's the predictable output of a system that was never built. We built one.
 
-Free for 7 days. Link in bio.
+Free for 30 days. Link in bio.
 
 #freelancing #1099life #variableincome #moneymindset #selfemployed`,
 
@@ -317,7 +317,7 @@ The loop is not a personal failing. It's the predictable output of a setup with 
 
 The fix is the answer. Every dollar gets a job. Day 1, automatically. Built Able to do that.
 
-Free for 7 days. $14.99/mo or $129/yr after.`,
+Free for 30 days. $14.99/mo or $129/yr after.`,
   },
 
   '2|Tue': {
@@ -330,7 +330,7 @@ Not "trying harder."
 
 A system. Built for variable income.
 
-Free for 7 days. Link in bio.
+Free for 30 days. Link in bio.
 
 #freelancing #1099life #variableincome #moneymindset #budgeting`,
 
@@ -348,7 +348,7 @@ The reason the result is the same is that effort isn't the missing variable. The
 
 When that system runs, "discipline" becomes irrelevant. The decisions are already made. There's nothing to white-knuckle.
 
-Built Able to be that system. Free for 7 days. $14.99/mo or $129/yr after.`,
+Built Able to be that system. Free for 30 days. $14.99/mo or $129/yr after.`,
   },
 
   '2|Wed': {
@@ -357,7 +357,7 @@ Built Able to be that system. Free for 7 days. $14.99/mo or $129/yr after.`,
 
 If your income is variable, the "save 20% of every paycheck" advice is broken before it starts. You don't have a steady 20%. You don't have a steady anything.
 
-Built for income like yours. Free for 7 days.
+Built for income like yours. Free for 30 days.
 Link in bio.
 
 #freelancing #1099life #variableincome #budgeting #selfemployed`,
@@ -383,7 +383,7 @@ A plan built for income like yours starts with different assumptions:
 
 Able is built around those assumptions. The discipline most people are reaching for stops being relevant once the plan fits the income.
 
-Free for 7 days. $14.99/mo or $129/yr after.`,
+Free for 30 days. $14.99/mo or $129/yr after.`,
   },
 
   '2|Thu': {
@@ -394,7 +394,7 @@ But that's the bar most "money tools" set. Spreadsheets. Categories. Quarterly p
 
 A calm month should be the default, not a reward for advanced bookkeeping.
 
-Built that way. Free for 7 days.
+Built that way. Free for 30 days.
 Link in bio.
 
 #freelancing #1099life #variableincome #budgeting #selfemployed`,
@@ -417,7 +417,7 @@ A calm month should be the floor, not a reward for advanced bookkeeping. The too
 
 That's the split Able is built around.
 
-Free for 7 days. $14.99/mo or $129/yr after.`,
+Free for 30 days. $14.99/mo or $129/yr after.`,
   },
 
   '2|Fri': {
@@ -426,7 +426,7 @@ Free for 7 days. $14.99/mo or $129/yr after.`,
 
 Swipe for the day-by-day. (Spoiler: nothing exciting happens. That's the entire point.)
 
-Free for 7 days. Link in bio.
+Free for 30 days. Link in bio.
 
 #freelancing #1099life #variableincome #budgeting #selfemployed`,
 
@@ -455,7 +455,7 @@ This is what calm-specific feels like. Boring on purpose. Specific by design. Th
 
 If your last 12 months looked nothing like this, that's not a discipline gap. That's a missing system.
 
-Free for 7 days. $14.99/mo or $129/yr after.`,
+Free for 30 days. $14.99/mo or $129/yr after.`,
   },
 
   '2|Sat': {
@@ -466,7 +466,7 @@ Most money apps want you opening them every day. Notifications. Streaks. AI insi
 
 Able wants the opposite. Open it less. Forget about it more. The math runs while you're doing your actual job.
 
-Free for 7 days. Link in bio.
+Free for 30 days. Link in bio.
 
 #freelancing #1099life #variableincome #budgeting #selfemployed`,
 
@@ -488,7 +488,7 @@ The thing you actually want is to think about money less. Not in a denial way �
 
 Boring is the goal. Specific is how you get there. Specifically: every dollar gets a job the moment it arrives, taxes come off the top, bills are covered before they're due, the reserve protects slow months, debt drops on schedule, what's left is yours to spend. With those decisions made automatically, there's nothing to obsess over.
 
-Built Able for that. Free for 7 days. $14.99/mo or $129/yr after.`,
+Built Able for that. Free for 30 days. $14.99/mo or $129/yr after.`,
   },
 
   '2|Sun': {
@@ -497,7 +497,7 @@ Built Able for that. Free for 7 days. $14.99/mo or $129/yr after.`,
 
 No leftover money. No "we'll figure it out later." Every deposit, sorted into taxes, bills, reserve, debt, free spending — before you even see it.
 
-Free for 7 days. Link in bio.
+Free for 30 days. Link in bio.
 
 #freelancing #1099life #variableincome #budgeting #selfemployed`,
 
@@ -519,7 +519,7 @@ When the money has a job, it stops drifting. The leak closes.
 
 That's the entire mechanic Able runs on.
 
-Free for 7 days. $14.99/mo or $129/yr after.`,
+Free for 30 days. $14.99/mo or $129/yr after.`,
   },
 
   // ─────────────────────────────────────────────────────────
@@ -535,7 +535,7 @@ That's the whole model.
 Taxes. Bills. Reserve. Debt. Free.
 In that order. Every deposit. Automatically.
 
-Free for 7 days. Link in bio.
+Free for 30 days. Link in bio.
 
 #freelancing #1099life #variableincome #budgeting #selfemployed`,
 
@@ -563,7 +563,7 @@ Every deposit splits, the moment it arrives, into five jobs:
 
 Spend last. Out of bucket five only. The first four are protected because the split happened before any spending was possible.
 
-Built Able to run this exact model, automatically. Free for 7 days. $14.99/mo or $129/yr after.`,
+Built Able to run this exact model, automatically. Free for 30 days. $14.99/mo or $129/yr after.`,
   },
 
   '3|Tue': {
@@ -578,7 +578,7 @@ Built Able to run this exact model, automatically. Free for 7 days. $14.99/mo or
 
 Split first. Spend last.
 
-Free for 7 days. Link in bio.
+Free for 30 days. Link in bio.
 
 #freelancing #1099life #variableincome #budgeting #selfemployed`,
 
@@ -602,7 +602,7 @@ Five. Free spending — what's left, yours, guilt-free. This bucket is small on 
 
 Split first. Spend last. The order matters more than the math.
 
-That's Able. Free for 7 days. $14.99/mo or $129/yr after.`,
+That's Able. Free for 30 days. $14.99/mo or $129/yr after.`,
   },
 
   '3|Wed': {
@@ -611,7 +611,7 @@ That's Able. Free for 7 days. $14.99/mo or $129/yr after.`,
 
 Three steps. The whole system. (Swipe.)
 
-Free for 7 days. Link in bio.
+Free for 30 days. Link in bio.
 
 #freelancing #1099life #variableincome #budgeting #selfemployed`,
 
@@ -637,7 +637,7 @@ Step three. Tap each move off as you do it. Each tap is a tiny dopamine hit — 
 
 Run that loop for a few months. Debt drops. Savings grow. The fear that runs in the background of every Sunday afternoon starts to fade. Not because you became more disciplined. Because the system you needed finally exists.
 
-Free for 7 days. $14.99/mo or $129/yr after.`,
+Free for 30 days. $14.99/mo or $129/yr after.`,
   },
 
   '3|Thu': {
@@ -650,7 +650,7 @@ Shame.
 
 (The biggest reason people don't build a system isn't laziness. It's avoiding the look at how bad it's gotten. The system makes the look unnecessary.)
 
-Free for 7 days. Link in bio.
+Free for 30 days. Link in bio.
 
 #freelancing #1099life #variableincome #taxes #selfemployed`,
 
@@ -674,7 +674,7 @@ Shame. The hardest one to name. The reason most people don't build a real system
 
 That's the actual offer. Not "save more." Not "try harder." A system that ends those three things.
 
-Free for 7 days. $14.99/mo or $129/yr after.`,
+Free for 30 days. $14.99/mo or $129/yr after.`,
   },
 
   '3|Fri': {
@@ -685,7 +685,7 @@ The actual timeline. (No "results may vary" — nothing happens on its own. The 
 
 Swipe.
 
-Free for 7 days. Link in bio.
+Free for 30 days. Link in bio.
 
 #freelancing #1099life #variableincome #budgeting #selfemployed`,
 
@@ -718,12 +718,12 @@ Day 90. You don't recognize past-you. The freezing, the panic, the avoidance —
 
 This is not a "results may vary" pitch. The timeline isn't a promise about how fast you'll see results — it's the system doing its job in calendar time. Show up, log deposits, let the rules run.
 
-Free for 7 days. $14.99/mo or $129/yr after.`,
+Free for 30 days. $14.99/mo or $129/yr after.`,
   },
 
   '3|Sat': {
     // 63 free-seven-days · single
-    ig: `Free for 7 days.
+    ig: `Free for 30 days.
 
 If you've made it to this post and you're still scrolling — the cost of one more month of "I'll figure it out later" is bigger than the cost of trying.
 
@@ -731,7 +731,7 @@ Link in bio.
 
 #freelancing #1099life #variableincome #budgeting #selfemployed`,
 
-    tt: `Free for 7 days. Card on file. Cancel anytime.
+    tt: `Free for 30 days. Card on file. Cancel anytime.
 
 If you've watched this far, you already know.
 
@@ -739,7 +739,7 @@ becomeable.app
 
 #freelancetok #1099 #moneytok`,
 
-    li: `Free for 7 days.
+    li: `Free for 30 days.
 
 The math of waiting on this one is the easiest math in the post.
 
@@ -756,7 +756,7 @@ Card required at signup. Cancel anytime in the trial with no charge.`,
 
 The whole brand is in two words. Unable was the freezing, the leaking, the bracing, the shame. Able is the math running, the bills paid, the breath taken.
 
-Free for 7 days. Link in bio.
+Free for 30 days. Link in bio.
 
 #freelancing #1099life #variableincome #identity #selfemployed`,
 
@@ -780,7 +780,7 @@ The arrow between them is a system that doesn't pretend your income looks like a
 
 There is no "becoming able" without that arrow. Discipline alone doesn't get you there, because the freezing was never about discipline.
 
-Free for 7 days. $14.99/mo or $129/yr after.`,
+Free for 30 days. $14.99/mo or $129/yr after.`,
   },
 
   // ─────────────────────────────────────────────────────────
@@ -793,7 +793,7 @@ Free for 7 days. $14.99/mo or $129/yr after.`,
 
 If your last twelve months looked nothing like a steady paycheck, this is the budgeting tool built for that. Not "for freelancers" as a marketing line, but for the actual shape of your money.
 
-Free for 7 days. Link in bio.
+Free for 30 days. Link in bio.
 
 #freelancing #1099life #variableincome #budgeting #selfemployed`,
 
@@ -819,7 +819,7 @@ Seven days, free, no charge in the trial. Card required at signup. Cancel anytim
 Taxes. Bills. Reserve. Debt. Free.
 The split happens the moment money lands. You don't have to think.
 
-Free for 7 days. Link in bio.
+Free for 30 days. Link in bio.
 
 #freelancing #1099life #variableincome #budgeting #selfemployed`,
 
@@ -837,7 +837,7 @@ Able runs a different sequence. The moment the deposit lands, it's split — tax
 
 The "auto" in auto-routed isn't magic. It's a set of rules you set up once at the start. After that, the system runs without you.
 
-Free for 7 days. $14.99/mo or $129/yr after.`,
+Free for 30 days. $14.99/mo or $129/yr after.`,
   },
 
   '4|Wed': {
@@ -848,7 +848,7 @@ Freezer. Leaker. Shame Cycler. All three are structural, not personal.
 
 Swipe through and find your week.
 
-Free for 7 days. Link in bio.
+Free for 30 days. Link in bio.
 
 #freelancing #1099life #variableincome #moneymindset #selfemployed`,
 
@@ -874,7 +874,7 @@ All three look like personal failings. None of them are. They're the predictable
 
 A system that runs without you is what closes all three loops. That's what Able is built to be.
 
-Free for 7 days. $14.99/mo or $129/yr after.`,
+Free for 30 days. $14.99/mo or $129/yr after.`,
   },
 
   '4|Thu': {
@@ -883,7 +883,7 @@ Free for 7 days. $14.99/mo or $129/yr after.`,
 
 The standard diagnosis for "where did the money go" is that you spent too much. For variable-income people, that's usually wrong. The deeper issue is that the money sat unmoved on Day 1, and once money sits, it leaks.
 
-Built for the freeze. Free for 7 days. Link in bio.
+Built for the freeze. Free for 30 days. Link in bio.
 
 #freelancing #1099life #variableincome #moneymindset #selfemployed`,
 
@@ -903,7 +903,7 @@ The actual pattern, in most freelancer/contractor/creator cases, is this: a depo
 
 The fix isn't more discipline against the leak. It's eliminating the freeze on Day 1, by having the decisions already made before the money arrives. That's what Able does.
 
-Free for 7 days. $14.99/mo or $129/yr after.`,
+Free for 30 days. $14.99/mo or $129/yr after.`,
   },
 
   '4|Fri': {
@@ -914,7 +914,7 @@ Day 1 to Day 31, every month, on schedule. (Swipe.)
 
 It's not a willpower problem. It's a Day 1 problem.
 
-Free for 7 days. Link in bio.
+Free for 30 days. Link in bio.
 
 #freelancing #1099life #variableincome #budgeting #selfemployed`,
 
@@ -946,7 +946,7 @@ The whole pattern is downstream of one missing decision: what every dollar's job
 
 This is not a willpower problem. It's a Day 1 problem. Built Able for Day 1.
 
-Free for 7 days. $14.99/mo or $129/yr after.`,
+Free for 30 days. $14.99/mo or $129/yr after.`,
   },
 
   '4|Sat': {
@@ -955,7 +955,7 @@ Free for 7 days. $14.99/mo or $129/yr after.`,
 
 That's what gets said in our DMs constantly. Apps measure. Systems decide. You don't need another dashboard showing you what already happened — you need something that decides what to do, the moment money lands.
 
-Built as a system. Free for 7 days. Link in bio.
+Built as a system. Free for 30 days. Link in bio.
 
 #freelancing #1099life #variableincome #budgeting #selfemployed`,
 
@@ -977,7 +977,7 @@ A system makes the decisions before the leak can happen. The moment money arrive
 
 The shift from "another app" to "a system" is the difference between knowing where the money went and knowing where every dollar is going.
 
-Built Able as a system, not an app. Free for 7 days. $14.99/mo or $129/yr after.`,
+Built Able as a system, not an app. Free for 30 days. $14.99/mo or $129/yr after.`,
   },
 
   '4|Sun': {
@@ -986,7 +986,7 @@ Built Able as a system, not an app. Free for 7 days. $14.99/mo or $129/yr after.
 
 Five words. They're either the most important thing about a money tool or they're not. For you, they are.
 
-Free for 7 days. Link in bio.
+Free for 30 days. Link in bio.
 
 #freelancing #1099life #variableincome #budgeting #selfemployed`,
 
@@ -1006,7 +1006,7 @@ If your income looks like that, the lack of a tool built for it is the entire re
 
 Able was built for that case specifically. Not as a feature. As the foundational assumption.
 
-Free for 7 days. $14.99/mo or $129/yr after.`,
+Free for 30 days. $14.99/mo or $129/yr after.`,
   },
 
   // ─────────────────────────────────────────────────────────
@@ -1019,7 +1019,7 @@ Free for 7 days. $14.99/mo or $129/yr after.`,
 
 If you tried harder every month for the last five years and the result was the same every December, that's not a willpower diagnosis. That's a missing structure.
 
-Built for the structure. Free for 7 days. Link in bio.
+Built for the structure. Free for 30 days. Link in bio.
 
 #freelancing #1099life #variableincome #budgeting #selfemployed`,
 
@@ -1041,7 +1041,7 @@ The reason discipline-as-strategy keeps failing isn't that you're undisciplined.
 
 Built Able to be the structure.
 
-Free for 7 days. $14.99/mo or $129/yr after.`,
+Free for 30 days. $14.99/mo or $129/yr after.`,
   },
 
   '5|Tue': {
@@ -1053,7 +1053,7 @@ They show what already happened. By then it's too late.
 
 You don't need a different version of the same broken tool. You need a system for variable.
 
-Free for 7 days. Link in bio.
+Free for 30 days. Link in bio.
 
 #freelancing #1099life #variableincome #budgeting #selfemployed`,
 
@@ -1077,7 +1077,7 @@ What you actually need is the inverse: a system that decides what each dollar's 
 
 That's the gap Able is built to close.
 
-Free for 7 days. $14.99/mo or $129/yr after.`,
+Free for 30 days. $14.99/mo or $129/yr after.`,
   },
 
   '5|Wed': {
@@ -1088,7 +1088,7 @@ Five reasons. Same root cause. (Swipe.)
 
 It's the assumption. Not you.
 
-Free for 7 days. Link in bio.
+Free for 30 days. Link in bio.
 
 #freelancing #1099life #variableincome #budgeting #selfemployed`,
 
@@ -1120,7 +1120,7 @@ The root cause is the same in all five: the assumption baked into the software i
 
 The fix isn't a better dashboard. It's a system designed from the start around the actual shape of variable income. Splits every deposit the moment it arrives. Doesn't wait for a Monday review. Doesn't ask you to be an accountant.
 
-Built Able from that angle. Free for 7 days. $14.99/mo or $129/yr after.`,
+Built Able from that angle. Free for 30 days. $14.99/mo or $129/yr after.`,
   },
 
   '5|Thu': {
@@ -1131,7 +1131,7 @@ If a single $400 charge hit your account, you'd see it instantly and react. The 
 
 The fix isn't more vigilance. It's a system that closes the leak before it starts.
 
-Free for 7 days. Link in bio.
+Free for 30 days. Link in bio.
 
 #freelancing #1099life #variableincome #budgeting #selfemployed`,
 
@@ -1151,7 +1151,7 @@ Detection fails because the leak is below the threshold of "I should pay attenti
 
 Same income. No leak. That's what Able does.
 
-Free for 7 days. $14.99/mo or $129/yr after.`,
+Free for 30 days. $14.99/mo or $129/yr after.`,
   },
 
   '5|Fri': {
@@ -1160,7 +1160,7 @@ Free for 7 days. $14.99/mo or $129/yr after.`,
 
 (If you can't say "yes" to most of these, the system isn't there yet. Swipe.)
 
-Free for 7 days. Link in bio.
+Free for 30 days. Link in bio.
 
 #freelancing #1099life #variableincome #moneymindset #selfemployed`,
 
@@ -1190,7 +1190,7 @@ Five. Year-end isn't a panic event. It's just Tuesday. Taxes are sitting where t
 
 If most of those land as "no, that's not me," you don't have a discipline gap. You have a missing system.
 
-That's what Able is. Free for 7 days. $14.99/mo or $129/yr after.`,
+That's what Able is. Free for 30 days. $14.99/mo or $129/yr after.`,
   },
 
   '5|Sun': {
@@ -1201,7 +1201,7 @@ Three words. The whole product is built around this single observation. Idle mon
 
 The fix is to never let it sit. Every dollar gets a job, the moment it arrives.
 
-Free for 7 days. Link in bio.
+Free for 30 days. Link in bio.
 
 #freelancing #1099life #variableincome #budgeting #selfemployed`,
 
@@ -1223,7 +1223,7 @@ The fix is to never let it sit. Each dollar gets a specific job — taxes, bills
 
 That's the entire mechanic Able runs on.
 
-Free for 7 days. $14.99/mo or $129/yr after.`,
+Free for 30 days. $14.99/mo or $129/yr after.`,
   },
 
   // ─────────────────────────────────────────────────────────
@@ -1242,7 +1242,7 @@ Free for 7 days. $14.99/mo or $129/yr after.`,
 
 That's the whole system. Order matters more than the math. Once it runs, you stop having to make money decisions in the moment.
 
-Free for 7 days. Link in bio.
+Free for 30 days. Link in bio.
 
 #freelancing #1099life #variableincome #budgeting #selfemployed`,
 
@@ -1270,7 +1270,7 @@ Five. Free. What's left, yours, guilt-free. This bucket is small on purpose. It'
 
 The order matters more than the math. Most personal finance is "spend, then save what's left." That's bucket five first, with the rest "later." With variable income, "later" never arrives. Reverse the order. Spend last.
 
-Built Able to run this exact model, automatically. Free for 7 days. $14.99/mo or $129/yr after.`,
+Built Able to run this exact model, automatically. Free for 30 days. $14.99/mo or $129/yr after.`,
   },
 
   '6|Tue': {
@@ -1285,7 +1285,7 @@ Built Able to run this exact model, automatically. Free for 7 days. $14.99/mo or
 
 That's it. That's the whole product.
 
-$14.99/mo or $129/yr (save $50). Free for 7 days. Link in bio.
+$14.99/mo or $129/yr (save $50). Free for 30 days. Link in bio.
 
 #freelancing #1099life #variableincome #budgeting #selfemployed`,
 
@@ -1311,7 +1311,7 @@ Free — guilt-free. What's left after the four jobs above are done. This is the
 
 The whole product is built around running this loop, automatically, the moment a deposit hits.
 
-$14.99/mo or $129/yr (save $50 with annual). Free for 7 days first.`,
+$14.99/mo or $129/yr (save $50 with annual). Free for 30 days first.`,
   },
 
   '6|Wed': {
@@ -1322,7 +1322,7 @@ Five buckets. Specific jobs. (Swipe.)
 
 When the money has a job, it stops drifting. The leak closes.
 
-$14.99/mo or $129/yr. Free for 7 days. Link in bio.
+$14.99/mo or $129/yr. Free for 30 days. Link in bio.
 
 #freelancing #1099life #variableincome #budgeting #selfemployed`,
 
@@ -1352,7 +1352,7 @@ Bucket five: free. What's left after the first four jobs are done. Spend without
 
 When every dollar has a job, the money stops drifting. The leak closes. The "where did it all go" question doesn't have anywhere to come from.
 
-$14.99/mo or $129/yr (save $50 on annual). Free for 7 days first.`,
+$14.99/mo or $129/yr (save $50 on annual). Free for 30 days first.`,
   },
 
   '6|Thu': {
@@ -1361,7 +1361,7 @@ $14.99/mo or $129/yr (save $50 on annual). Free for 7 days first.`,
 
 That's the entire user experience. Money lands. The split runs. You don't think.
 
-Free for 7 days. Link in bio.
+Free for 30 days. Link in bio.
 
 #freelancing #1099life #variableincome #budgeting #selfemployed`,
 
@@ -1383,7 +1383,7 @@ The "already" in "already sorted" is the part that matters. Not "sorted when you
 
 That's what makes the system actually feel like a system instead of another to-do list.
 
-Free for 7 days. $14.99/mo or $129/yr after.`,
+Free for 30 days. $14.99/mo or $129/yr after.`,
   },
 
   '6|Fri': {
@@ -1395,7 +1395,7 @@ Big check, you feel rich. Three weeks of nothing, you panic. Repeat. (Swipe.)
 
 It's not discipline. It's a missing structure.
 
-Free for 7 days. Link in bio.
+Free for 30 days. Link in bio.
 
 #freelancing #1099life #variableincome #budgeting #selfemployed`,
 
@@ -1425,7 +1425,7 @@ The fix is to route every deposit into five accounts with specific jobs the mome
 
 Same income. No cycle. That's the entire pitch.
 
-Free for 7 days. $14.99/mo or $129/yr after.`,
+Free for 30 days. $14.99/mo or $129/yr after.`,
   },
 
   '6|Sun': {
@@ -1434,7 +1434,7 @@ Free for 7 days. $14.99/mo or $129/yr after.`,
 
 That sentence is either common sense or revolutionary, depending on whether your last twelve months looked like a paycheck. For most freelancers, contractors, creators — it's the latter.
 
-Free for 7 days. Link in bio.
+Free for 30 days. Link in bio.
 
 #freelancing #1099life #variableincome #budgeting #selfemployed`,
 
@@ -1456,7 +1456,7 @@ A budget that works without that paycheck has to start with different building b
 
 That's what Able is built around. The whole product was designed from the assumption that there is no paycheck.
 
-Free for 7 days. $14.99/mo or $129/yr after.`,
+Free for 30 days. $14.99/mo or $129/yr after.`,
   },
 
   // ─────────────────────────────────────────────────────────
@@ -1469,7 +1469,7 @@ Free for 7 days. $14.99/mo or $129/yr after.`,
 
 That single mismatch is why nothing has worked for you. Not because you tried wrong tools — because the entire industry built tools for someone else.
 
-We built ours for you. Free for 7 days. Link in bio.
+We built ours for you. Free for 30 days. Link in bio.
 
 #freelancing #1099life #variableincome #budgeting #selfemployed`,
 
@@ -1491,7 +1491,7 @@ You either pick the closest option (lying to the tool) or skip the question (bre
 
 The fix isn't a budgeting app with a "freelancer mode" toggle. The fix is a tool whose foundational assumption is that your income doesn't follow a schedule. Different assumption, different math, different product.
 
-That's what Able is. Free for 7 days. $14.99/mo or $129/yr after.`,
+That's what Able is. Free for 30 days. $14.99/mo or $129/yr after.`,
   },
 
   '7|Tue': {
@@ -1504,7 +1504,7 @@ Not in April. The second it clears.
 
 Move it the moment it lands, or you'll spend it.
 
-Free for 7 days. Link in bio.
+Free for 30 days. Link in bio.
 
 #freelancing #1099life #taxes #1099 #selfemployed`,
 
@@ -1530,7 +1530,7 @@ The fix is structural, not motivational. The 30% has to be physically moved to a
 
 That's what Able's tax bucket does, automatically.
 
-Free for 7 days. $14.99/mo or $129/yr after.`,
+Free for 30 days. $14.99/mo or $129/yr after.`,
   },
 
   '7|Wed': {
@@ -1540,7 +1540,7 @@ Free for 7 days. $14.99/mo or $129/yr after.`,
 
 The 30% rule, the April panic, and the fix. (Swipe.)
 
-Free for 7 days. Link in bio.
+Free for 30 days. Link in bio.
 
 #freelancing #1099life #taxes #1099 #selfemployed`,
 
@@ -1572,7 +1572,7 @@ Six. The fix is a tax bucket that fills automatically. The moment a deposit land
 
 Seven. The structural fix beats the motivational one every time. You're not going to "be more disciplined about taxes" if you've spent ten years not being more disciplined about taxes. The bucket does the discipline for you.
 
-That's what Able's tax bucket is. Free for 7 days. $14.99/mo or $129/yr after.`,
+That's what Able's tax bucket is. Free for 30 days. $14.99/mo or $129/yr after.`,
   },
 
   '7|Thu': {
@@ -1584,7 +1584,7 @@ The mental shift is the whole game. Stop thinking of the gross deposit as your m
 
 When you treat it that way, you stop being shocked in April.
 
-Free for 7 days. Link in bio.
+Free for 30 days. Link in bio.
 
 #freelancing #1099life #taxes #1099 #selfemployed`,
 
@@ -1610,7 +1610,7 @@ The bucket structure forces frame two automatically. The 30% leaves the spending
 
 That's what Able's tax bucket is for.
 
-Free for 7 days. $14.99/mo or $129/yr after.`,
+Free for 30 days. $14.99/mo or $129/yr after.`,
   },
 
   '7|Fri': {
@@ -1622,7 +1622,7 @@ The math, the formula, and the rule of thumb if you're guessing. (Swipe.)
 
 If you're 1099 and wonder if 20% is "enough" — it almost certainly isn't.
 
-Free for 7 days. Link in bio.
+Free for 30 days. Link in bio.
 
 #freelancing #1099life #taxes #1099 #selfemployed`,
 
@@ -1653,7 +1653,7 @@ The rule isn't to guess once and hope. The rule is to move that percentage of ev
 
 That's what Able's tax bucket does, automatically.
 
-Free for 7 days. $14.99/mo or $129/yr after.`,
+Free for 30 days. $14.99/mo or $129/yr after.`,
   },
 
   '7|Sun': {
@@ -1662,7 +1662,7 @@ Free for 7 days. $14.99/mo or $129/yr after.`,
 
 Debt-payoff plans don't fail because of motivation. They fail because slow months knock the plan off-schedule, and once it's off, it dies. The fix is a reserve in front of the slow months.
 
-Free for 7 days. Link in bio.
+Free for 30 days. Link in bio.
 
 #freelancing #1099life #variableincome #debtfree #selfemployed`,
 
@@ -1685,7 +1685,7 @@ The fix is bucket three: a reserve that funds slow months specifically so debt p
 
 That's how variable-income debt actually gets paid down. Not heroic discipline. A reserve in front of the slow months.
 
-Free for 7 days. $14.99/mo or $129/yr after.`,
+Free for 30 days. $14.99/mo or $129/yr after.`,
   },
 
   // ─────────────────────────────────────────────────────────
@@ -1700,7 +1700,7 @@ Most money advice is loud and abstract. "Save more!" "Cut expenses!" "Build weal
 
 Specific is the only kind of help that helps.
 
-Free for 7 days. Link in bio.
+Free for 30 days. Link in bio.
 
 #freelancing #1099life #variableincome #budgeting #selfemployed`,
 
@@ -1724,7 +1724,7 @@ Calm and specific is the inverse pattern. Quiet voice. Specific answer to a spec
 
 That's the voice we built Able around — both the product and how we communicate. Calm beats panic. Specific beats vague.
 
-Free for 7 days. $14.99/mo or $129/yr after.`,
+Free for 30 days. $14.99/mo or $129/yr after.`,
   },
 
   '8|Tue': {
@@ -1736,7 +1736,7 @@ The penalty is about 9% annually, plus interest. Pay what you can. Beats nothing
 
 The real fix: a reserve in front of slow months, so quarterlies always get paid even when income drops.
 
-Free for 7 days. Link in bio.
+Free for 30 days. Link in bio.
 
 #freelancing #1099life #taxes #1099 #selfemployed`,
 
@@ -1766,7 +1766,7 @@ The structural fix for next quarter: bucket one is taxes off the top, bucket thr
 
 That's what Able is built around.
 
-Free for 7 days. $14.99/mo or $129/yr after.`,
+Free for 30 days. $14.99/mo or $129/yr after.`,
   },
 
   '8|Wed': {
@@ -1775,7 +1775,7 @@ Free for 7 days. $14.99/mo or $129/yr after.`,
 
 The standard "3-6 months emergency fund" advice was built for W-2 workers. You don't have unemployment, severance, or paid leave. Your baseline needs to include the shocks. (Swipe.)
 
-Free for 7 days. Link in bio.
+Free for 30 days. Link in bio.
 
 #freelancing #1099life #variableincome #emergencyfund #selfemployed`,
 
@@ -1800,7 +1800,7 @@ The right baseline for variable-income work is closer to nine months of bills co
 
 Run that math, and slow quarters stop threatening anything. They become "this is what the reserve is for" instead of "we are in trouble."
 
-That's how the reserve bucket in Able is sized. Free for 7 days. $14.99/mo or $129/yr after.`,
+That's how the reserve bucket in Able is sized. Free for 30 days. $14.99/mo or $129/yr after.`,
   },
 
   '8|Thu': {
@@ -1811,7 +1811,7 @@ A surprising number of variable-income people don't know what's in their tax buc
 
 Knowing is the fix.
 
-Free for 7 days. Link in bio.
+Free for 30 days. Link in bio.
 
 #freelancing #1099life #variableincome #budgeting #selfemployed`,
 
@@ -1836,7 +1836,7 @@ The leak feeds on the visibility gap. Money that has no clear location and no cl
 
 That's what Able shows you, all the time. Tax bucket dollar amount. Bills total. Reserve total. Free balance. Four numbers. Always current. Always visible.
 
-Free for 7 days. $14.99/mo or $129/yr after.`,
+Free for 30 days. $14.99/mo or $129/yr after.`,
   },
 
   '8|Fri': {
@@ -1846,7 +1846,7 @@ Free for 7 days. $14.99/mo or $129/yr after.`,
 
 What to do today, what the penalty actually costs, and how to prevent it next time. (Swipe.)
 
-Free for 7 days. Link in bio.
+Free for 30 days. Link in bio.
 
 #freelancing #1099life #taxes #1099 #selfemployed`,
 
@@ -1874,7 +1874,7 @@ Prevention going forward: route 30% of every deposit to a tax bucket the moment 
 
 That's what Able is built around.
 
-Free for 7 days. $14.99/mo or $129/yr after.`,
+Free for 30 days. $14.99/mo or $129/yr after.`,
   },
 
   '8|Sun': {
@@ -1883,7 +1883,7 @@ Free for 7 days. $14.99/mo or $129/yr after.`,
 
 That's the actual outcome. Not "wealth." Not "financial freedom." Just the day-to-day feeling that the system is running and the numbers are doing what they're supposed to do.
 
-Free for 7 days. Link in bio.
+Free for 30 days. Link in bio.
 
 #freelancing #1099life #variableincome #moneymindset #selfemployed`,
 
@@ -1903,7 +1903,7 @@ Confidence is being able to open the bank app on a Sunday and not feel anything.
 
 The paralysis goes because there's nothing to be paralyzed by — the decisions are already made. The breath-holding goes because there's nothing to brace for — the system already accounted for the thing you'd brace against.
 
-That's the small, specific outcome. Free for 7 days. $14.99/mo or $129/yr after.`,
+That's the small, specific outcome. Free for 30 days. $14.99/mo or $129/yr after.`,
   },
 
   // ─────────────────────────────────────────────────────────
@@ -1920,7 +1920,7 @@ Day 30: you brace before opening the app.
 
 It's not willpower. It's a missing system.
 
-Free for 7 days. Link in bio.
+Free for 30 days. Link in bio.
 
 #freelancing #1099life #variableincome #budgeting #selfemployed`,
 
@@ -1945,7 +1945,7 @@ What changes the loop is structure, not income. The moment a deposit arrives, th
 
 This is what "Day 1 to Day 30" means in practice. Not a discipline problem. A structural one.
 
-Free for 7 days. $14.99/mo or $129/yr after.`,
+Free for 30 days. $14.99/mo or $129/yr after.`,
   },
 
   '9|Tue': {
@@ -1956,7 +1956,7 @@ Day 1: money lands. Day 7: a subscription. Day 14: the leak. Day 30: $4,000 gone
 
 Not willpower. A Day 1 problem.
 
-Free for 7 days. Link in bio.
+Free for 30 days. Link in bio.
 
 #freelancing #1099life #variableincome #budgeting #selfemployed`,
 
@@ -1988,7 +1988,7 @@ The interesting question is what changes that loop. Not "try harder next month."
 
 Day 1 stops being the problem because Day 1 already handled it.
 
-Free for 7 days. $14.99/mo or $129/yr after.`,
+Free for 30 days. $14.99/mo or $129/yr after.`,
   },
 
   '9|Wed': {
@@ -1997,7 +1997,7 @@ Free for 7 days. $14.99/mo or $129/yr after.`,
 
 5 steps that turn "money I'm afraid to look at" into "money that already has jobs."
 
-Free for 7 days. Link in bio.
+Free for 30 days. Link in bio.
 
 #freelancing #1099life #variableincome #budgeting #selfemployed`,
 
@@ -2025,7 +2025,7 @@ Step 5: Spend what's left without flinching. If steps 1-4 are running, what's le
 
 This is what Able does on every deposit, automatically.
 
-Free for 7 days. $14.99/mo or $129/yr after.`,
+Free for 30 days. $14.99/mo or $129/yr after.`,
   },
 
   '9|Thu': {
@@ -2036,7 +2036,7 @@ It's a Day 14 problem.
 
 The deposit arrived. The bills were going to be fine. Then by Day 14, somehow it's smaller. By Day 30 it's gone. Same income, same intention, different result.
 
-Free for 7 days. Link in bio.
+Free for 30 days. Link in bio.
 
 #freelancing #1099life #variableincome #budgeting #selfemployed`,
 
@@ -2062,7 +2062,7 @@ Day 30 arrives, the bills come due, and the math doesn't add up the way it did o
 
 The fix isn't "be more careful for those 14 days." That's been tried. The fix is to make those 14 days impossible — by routing every dollar to a specific bucket the second the deposit clears, before any spending decisions start happening.
 
-Free for 7 days. $14.99/mo or $129/yr after.`,
+Free for 30 days. $14.99/mo or $129/yr after.`,
   },
 
   '9|Fri': {
@@ -2073,7 +2073,7 @@ Day 1: tax %. Day 2: bills. Day 3: debt. Day 4: reserve. Day 5: what's left is f
 
 That's the whole onboarding.
 
-Free for 7 days. Link in bio.
+Free for 30 days. Link in bio.
 
 #freelancing #1099life #variableincome #budgeting #selfemployed`,
 
@@ -2103,7 +2103,7 @@ Day 5: Whatever's left after taxes, bills, debt, and reserve is free. Genuinely 
 
 That's the full onboarding. Eight minutes total. The point is the system, not the setup.
 
-Free for 7 days. $14.99/mo or $129/yr after.`,
+Free for 30 days. $14.99/mo or $129/yr after.`,
   },
 
   '9|Sun': {
@@ -2114,7 +2114,7 @@ You don't move it because you don't know when the next check is coming.
 
 That paralysis isn't a personality trait. It's a structural response to variable income. A reserve dissolves it.
 
-Free for 7 days. Link in bio.
+Free for 30 days. Link in bio.
 
 #variableincome #1099life #freelancelife #moneymindset #creator`,
 
@@ -2138,7 +2138,7 @@ The fix is structural, not psychological. The thing that dissolves the paralysis
 
 Once the reserve is full enough, you stop holding money hostage in checking. The decisions get easier because the consequences of being wrong get smaller. That's the entire design.
 
-Free for 7 days. $14.99/mo or $129/yr after.`,
+Free for 30 days. $14.99/mo or $129/yr after.`,
   },
 
   // ─────────────────────────────────────────────────────────
@@ -2153,7 +2153,7 @@ Money would land. I'd see it. I wouldn't move it.
 
 Not because I was lazy. Because I didn't know when the next check was coming.
 
-Free for 7 days. Link in bio.
+Free for 30 days. Link in bio.
 
 #freelancing #1099life #variableincome #freelancelife #selfemployed`,
 
@@ -2179,7 +2179,7 @@ I built Able for that version of me. Specifically the part that froze. Specifica
 
 It's the tool I needed five years ago.
 
-Free for 7 days. $14.99/mo or $129/yr after.`,
+Free for 30 days. $14.99/mo or $129/yr after.`,
   },
 
   '10|Tue': {
@@ -2190,7 +2190,7 @@ I'm a freelancer. I froze. Not because I was bad. Every tool assumed a paycheck.
 
 I built it to stop the math. The tool I needed five years ago.
 
-Free for 7 days. Link in bio.
+Free for 30 days. Link in bio.
 
 #freelancing #1099life #variableincome #freelancelife #selfemployed`,
 
@@ -2217,7 +2217,7 @@ The fix wasn't a better spreadsheet. It wasn't more discipline. It was a tool th
 
 That's what I built. Specifically because that's what I needed.
 
-Free for 7 days. $14.99/mo or $129/yr after.`,
+Free for 30 days. $14.99/mo or $129/yr after.`,
   },
 
   '10|Wed': {
@@ -2226,7 +2226,7 @@ Free for 7 days. $14.99/mo or $129/yr after.`,
 
 Connect a bank or don't. Tell it your expected income. Pick buckets. Each deposit auto-allocates before you see it. That's the system.
 
-Free for 7 days. Link in bio.
+Free for 30 days. Link in bio.
 
 #freelancing #1099life #variableincome #budgeting #selfemployed`,
 
@@ -2255,7 +2255,7 @@ Step 5: The Coach pings you when something looks off. Not gamified. Not nagging.
 
 That's the system. The whole loop is split-first-spend-last, applied automatically, on every deposit. No discipline required. No spreadsheet maintenance. No "figure out the right answer" work.
 
-Free for 7 days. $14.99/mo or $129/yr after.`,
+Free for 30 days. $14.99/mo or $129/yr after.`,
   },
 
   '10|Thu': {
@@ -2268,7 +2268,7 @@ Bracing every Day 30. Bracing before opening the bank app. Bracing whenever a sl
 
 The bracing wasn't about money. It was about not knowing what the system was doing.
 
-Free for 7 days. Link in bio.
+Free for 30 days. Link in bio.
 
 #variableincome #freelancing #1099life #moneymindset #creator`,
 
@@ -2296,7 +2296,7 @@ The fix for bracing isn't "stop worrying." It's "build a system worth trusting."
 
 That's the small, specific outcome the app sells.
 
-Free for 7 days. $14.99/mo or $129/yr after.`,
+Free for 30 days. $14.99/mo or $129/yr after.`,
   },
 
   '10|Fri': {
@@ -2307,7 +2307,7 @@ Per month: about $2,000 leaks. Six months: $12,000. One year: $24,000. Not bad w
 
 The math chooses for you.
 
-Free for 7 days. Link in bio.
+Free for 30 days. Link in bio.
 
 #freelancing #1099life #variableincome #budgeting #selfemployed`,
 
@@ -2335,7 +2335,7 @@ What forces the fix is reading the compound number written out. Per month: small
 
 The interesting detail is that closing the leak doesn't require earning more or spending less. It requires assigning every dollar a job the moment the deposit clears. The leak only exists in the gap between when money arrives and when it gets a job. Close the gap, the leak closes.
 
-Free for 7 days. $14.99/mo or $129/yr after.`,
+Free for 30 days. $14.99/mo or $129/yr after.`,
   },
 
   '10|Sun': {
@@ -2348,7 +2348,7 @@ Because you're afraid of not knowing when the next check is coming.
 
 That's a structural fear. A reserve dissolves it.
 
-Free for 7 days. Link in bio.
+Free for 30 days. Link in bio.
 
 #variableincome #1099life #freelancelife #moneymindset #creator`,
 
@@ -2376,7 +2376,7 @@ That's the order of operations Able is built around. Tax bucket first, because t
 
 Five jobs. In order. Every deposit.
 
-Free for 7 days. $14.99/mo or $129/yr after.`,
+Free for 30 days. $14.99/mo or $129/yr after.`,
   },
 
   // ─────────────────────────────────────────────────────────
@@ -2391,7 +2391,7 @@ You're under-instructed.
 
 Every budgeting tool assumes you have a steady paycheck and a baseline. You don't. The instructions don't fit the income. The result looks like a discipline problem. It isn't.
 
-Free for 7 days. Link in bio.
+Free for 30 days. Link in bio.
 
 #freelancing #1099life #variableincome #budgeting #selfemployed`,
 
@@ -2419,7 +2419,7 @@ The fix is instructions that fit the income shape. Variable income wants split-f
 
 That's what Able instructs.
 
-Free for 7 days. $14.99/mo or $129/yr after.`,
+Free for 30 days. $14.99/mo or $129/yr after.`,
   },
 
   '11|Tue': {
@@ -2430,7 +2430,7 @@ You were handed the wrong tool.
 
 Every other budgeting tool assumes a paycheck. Yours is variable. The tool didn't fit. That's the whole story.
 
-Free for 7 days. Link in bio.
+Free for 30 days. Link in bio.
 
 #freelancing #1099life #variableincome #budgeting #selfemployed`,
 
@@ -2454,7 +2454,7 @@ A tool built for variable income doesn't ask the user to project the month. It s
 
 The shame, the freeze, the leak — none of these are the user. They're the gap between the income shape and the tool shape. Close the gap, the symptoms close.
 
-Free for 7 days. $14.99/mo or $129/yr after.`,
+Free for 30 days. $14.99/mo or $129/yr after.`,
   },
 
   '11|Wed': {
@@ -2465,7 +2465,7 @@ Not investment advice. Not a credit card. Not another spreadsheet you'll abandon
 
 Just one thing: split every deposit.
 
-Free for 7 days. Link in bio.
+Free for 30 days. Link in bio.
 
 #freelancing #1099life #variableincome #budgeting #selfemployed`,
 
@@ -2496,7 +2496,7 @@ Just one thing: split every deposit. That's the entire scope. Tax bucket. Bills.
 
 The narrowness of the scope is intentional. A tool that does one thing precisely is more useful than a tool that does many things vaguely.
 
-Free for 7 days. $14.99/mo or $129/yr after.`,
+Free for 30 days. $14.99/mo or $129/yr after.`,
   },
 
   '11|Thu': {
@@ -2507,7 +2507,7 @@ You're using the wrong app.
 
 Mainstream budgeting tools were built for a paycheck. Variable income breaks every one of their core assumptions.
 
-Free for 7 days. Link in bio.
+Free for 30 days. Link in bio.
 
 #freelancing #1099life #variableincome #budgeting #selfemployed`,
 
@@ -2533,7 +2533,7 @@ A tool built specifically for variable income has different defaults. It treats 
 
 You're not behind. The tool was wrong.
 
-Free for 7 days. $14.99/mo or $129/yr after.`,
+Free for 30 days. $14.99/mo or $129/yr after.`,
   },
 
   '11|Fri': {
@@ -2543,7 +2543,7 @@ Free for 7 days. $14.99/mo or $129/yr after.`,
 Monthly: $14.99. Cancel anytime.
 Annual: $129. Save $50.
 
-Free for 7 days either way. Pick after the trial.
+Free for 30 days either way. Pick after the trial.
 
 Link in bio.
 
@@ -2554,7 +2554,7 @@ Link in bio.
 $14.99/mo. Cancel anytime.
 $129/yr. Save $50.
 
-Free for 7 days. Pick either after.
+Free for 30 days. Pick either after.
 
 becomeable.app
 
@@ -2566,13 +2566,13 @@ Monthly is $14.99 a month, cancel anytime. The right pick if you want to try it 
 
 Annual is $129 for the year. Saves $50 versus paying monthly. The right pick if you've already decided this is the model you want, and you'd rather pay once and not think about it again. The break-even is around month nine.
 
-Either way: free for 7 days at signup. Card required at signup, but no charge during the trial. Cancel anytime in the trial window with zero charge. The card requirement is there to keep bot signups out, not to slip in a surprise charge.
+Either way: free for 30 days at signup. Card required at signup, but no charge during the trial. Cancel anytime in the trial window with zero charge. The card requirement is there to keep bot signups out, not to slip in a surprise charge.
 
 Most variable-income earners go monthly first to confirm the system fits their actual income pattern. After two or three months, the ones who like it switch to annual to save the $50. That's a sensible path.
 
 The pricing matches the product. The product fixes a specific structural problem. The price is bounded enough that anyone seeing meaningful improvement in their tax bucket alone will recoup it.
 
-Free for 7 days. $14.99/mo or $129/yr after.`,
+Free for 30 days. $14.99/mo or $129/yr after.`,
   },
 
   '11|Sat': {
@@ -2583,7 +2583,7 @@ Other apps want your attention. This one wants the math right.
 
 No streaks. No confetti. No AI insights you won't read. Boring is the feature.
 
-Free for 7 days. Link in bio.
+Free for 30 days. Link in bio.
 
 #freelancing #1099life #variableincome #budgeting #selfemployed`,
 
@@ -2607,7 +2607,7 @@ Boring is the feature. Specifically: every deposit gets split the same way. Ever
 
 No streak counter to maintain. No confetti when you hit an arbitrary goal. No "AI insight" that's just a category total dressed up as insight. The app stays out of your way and does the math correctly. That's the design specification.
 
-Free for 7 days. $14.99/mo or $129/yr after.`,
+Free for 30 days. $14.99/mo or $129/yr after.`,
   },
 
   '11|Sun': {
@@ -2618,7 +2618,7 @@ Most budgeting apps assume a steady paycheck.
 
 Yours isn't steady. The mismatch makes every other tool feel hostile to your income shape.
 
-Free for 7 days. Link in bio.
+Free for 30 days. Link in bio.
 
 #variableincome #freelancing #1099life #creator #budgeting`,
 
@@ -2642,7 +2642,7 @@ It isn't. It's a design problem. A tool built for variable income makes differen
 
 When the assumptions match the income, the friction disappears. The tool stops feeling hostile. The feeling that "budgeting just doesn't work for me" goes away because the budgeting tool actually fits.
 
-Free for 7 days. $14.99/mo or $129/yr after.`,
+Free for 30 days. $14.99/mo or $129/yr after.`,
   },
 
   // ─────────────────────────────────────────────────────────
@@ -2659,7 +2659,7 @@ By Day 30: $1,000 to $2,000 gone.
 
 Not a discipline issue. Money without a job leaks. Every time.
 
-Free for 7 days. Link in bio.
+Free for 30 days. Link in bio.
 
 #variableincome #1099life #freelancelife #budgeting #creator`,
 
@@ -2685,7 +2685,7 @@ The fix is not to police individual purchases. That's been tried. It doesn't sca
 
 Same income. Different result. The structure does the work.
 
-Free for 7 days. $14.99/mo or $129/yr after.`,
+Free for 30 days. $14.99/mo or $129/yr after.`,
   },
 
   '12|Tue': {
@@ -2696,7 +2696,7 @@ $1,200 tax. $1,800 bills. $300 subscriptions. $400 just grabbed. $300 leak.
 
 Feels small in the moment. The compound is huge.
 
-Free for 7 days. Link in bio.
+Free for 30 days. Link in bio.
 
 #freelancing #1099life #variableincome #budgeting #selfemployed`,
 
@@ -2726,7 +2726,7 @@ $300 leak. Money that genuinely cannot be accounted for. Bank fees, foreign tran
 
 Total: $4,000. The interesting question is which of these were decisions and which were drift. The drift is the entire focus.
 
-Free for 7 days. $14.99/mo or $129/yr after.`,
+Free for 30 days. $14.99/mo or $129/yr after.`,
   },
 
   '12|Wed': {
@@ -2737,7 +2737,7 @@ $1,200 tax. $1,800 bills. $300 subs. $400 grabbed. $300 leak.
 
 The leak feels small. The compound is huge.
 
-Free for 7 days. Link in bio.
+Free for 30 days. Link in bio.
 
 #freelancing #1099life #variableincome #budgeting #selfemployed`,
 
@@ -2769,7 +2769,7 @@ The $300 leak is the residual. Bank fees, mistakes, drift. Cleaner systems shrin
 
 Same $4,000. Different relationship to it.
 
-Free for 7 days. $14.99/mo or $129/yr after.`,
+Free for 30 days. $14.99/mo or $129/yr after.`,
   },
 
   '12|Thu': {
@@ -2780,7 +2780,7 @@ You're guessing.
 
 Variable income without structure is decision after decision with imperfect information. The exhaustion isn't laziness. It's mental load with no offload.
 
-Free for 7 days. Link in bio.
+Free for 30 days. Link in bio.
 
 #freelancing #1099life #variableincome #moneymindset #selfemployed`,
 
@@ -2806,7 +2806,7 @@ The fix is to remove the guessing, not increase the willpower. A system that spl
 
 Same person. Different cognitive load. The structure does the thinking.
 
-Free for 7 days. $14.99/mo or $129/yr after.`,
+Free for 30 days. $14.99/mo or $129/yr after.`,
   },
 
   '12|Fri': {
@@ -2818,7 +2818,7 @@ Move 30% since January. By April, the bill is paid. Not a financial event. Just 
 
 Guessing, or a system.
 
-Free for 7 days. Link in bio.
+Free for 30 days. Link in bio.
 
 #freelancing #1099life #variableincome #taxes #selfemployed`,
 
@@ -2842,7 +2842,7 @@ The interesting detail is that the upstream choice doesn't require math skill or
 
 April becomes paperwork instead of an event. That's the specific outcome. The tax bill arrives, you compare it to the tax bucket, you write the check, you move on. The emotional weight that April carries for most freelancers is downstream of the upstream missing default. Fix the default, the weight leaves.
 
-Free for 7 days. $14.99/mo or $129/yr after.`,
+Free for 30 days. $14.99/mo or $129/yr after.`,
   },
 
   '12|Sat': {
@@ -2853,7 +2853,7 @@ Day 1: money lands. Day 14: $23 here. $48 there. $12 again. Day 30: $400 gone. N
 
 The leak isn't dramatic. That's why it persists.
 
-Free for 7 days. Link in bio.
+Free for 30 days. Link in bio.
 
 #freelancing #1099life #variableincome #budgeting #selfemployed`,
 
@@ -2881,7 +2881,7 @@ The leak isn't dramatic, which is why it persists. Dramatic problems get fixed b
 
 The fix isn't "pay attention to small purchases." Attention is finite. Spending it on $7 decisions is not a sustainable strategy. The fix is to make the small purchases come out of a specifically named, specifically sized bucket that has a hard limit. When the bucket is empty, the small purchases stop. The brain doesn't need to engage. The structure does the work.
 
-Free for 7 days. $14.99/mo or $129/yr after.`,
+Free for 30 days. $14.99/mo or $129/yr after.`,
   },
 
   '12|Sun': {
@@ -2892,7 +2892,7 @@ By the end of the month, $400 is gone. Nothing paid down. Nothing saved. Nothing
 
 Not a willpower problem. A structure problem. Fixable.
 
-Free for 7 days. Link in bio.
+Free for 30 days. Link in bio.
 
 #variableincome #1099life #freelancelife #moneymindset #creator`,
 
@@ -2916,7 +2916,7 @@ The reason small undifferentiated spending doesn't accumulate is that it has no 
 
 The fix is to make small spending come out of a bucket with a defined ceiling, and route the rest of every deposit to mechanisms that compound. Tax bucket, bills, reserve, debt principal, savings. Five jobs, one of them small and intentional, four of them building toward outcomes you can name.
 
-Free for 7 days. $14.99/mo or $129/yr after.`,
+Free for 30 days. $14.99/mo or $129/yr after.`,
   },
 
   // ─────────────────────────────────────────────────────────
@@ -2931,7 +2931,7 @@ You're protecting yourself from it.
 
 Because there's no system underneath. Looking at the number means making decisions you don't have information for. Avoidance is rational.
 
-Free for 7 days. Link in bio.
+Free for 30 days. Link in bio.
 
 #creator #creatorlife #creatoreconomy #variableincome #youtuber`,
 
@@ -2953,7 +2953,7 @@ When the questions can't be answered, looking at the number costs more than igno
 
 The fix is structural. Once each deposit is routed the moment it lands — taxes off the top, bills covered, reserve topped off, debt scheduled, what's left genuinely free — the bank app becomes a status check, not a decision point. The questions are pre-answered. Looking is no longer expensive.
 
-Free for 7 days. $14.99/mo or $129/yr after.`,
+Free for 30 days. $14.99/mo or $129/yr after.`,
   },
 
   '13|Tue': {
@@ -2966,7 +2966,7 @@ Bills paid. Taxes covered. Debt shrinking. Savings growing. Nothing leaked.
 
 Not more money. A different system underneath the same money.
 
-Free for 7 days. Link in bio.
+Free for 30 days. Link in bio.
 
 #creator #creatorlife #variableincome #creatoreconomy #youtuber`,
 
@@ -2990,7 +2990,7 @@ Bills paid: every cycle, on time, without scrambling. Taxes covered: the tax buc
 
 Nothing leaked. That last one is the felt difference. The leak is the thing that makes the same income feel different in a bad system vs. a good one. Close the leak by giving every dollar a job at deposit, and the same income feels measurably different.
 
-Free for 7 days. $14.99/mo or $129/yr after.`,
+Free for 30 days. $14.99/mo or $129/yr after.`,
   },
 
   '13|Wed': {
@@ -3002,7 +3002,7 @@ Platform. Brand deals. Merch. Subscriptions. Affiliate.
 
 The algorithm is a black box. You don't budget it. You smooth it.
 
-Free for 7 days. Link in bio.
+Free for 30 days. Link in bio.
 
 #creator #creatorlife #variableincome #creatoreconomy #youtuber`,
 
@@ -3026,7 +3026,7 @@ The trap is treating a viral month as the new normal. It isn't. The compound 12-
 
 Pay yourself a number that's below your best and above your worst. Route the difference to a reserve. Slow months draw on the reserve. Big months refill it. Same paycheck, same day, regardless of what the algorithm did this week.
 
-Free for 7 days. $14.99/mo or $129/yr after.`,
+Free for 30 days. $14.99/mo or $129/yr after.`,
   },
 
   '13|Thu': {
@@ -3037,7 +3037,7 @@ It's not personal finance. It's variable income.
 
 Different category, different rules, different tools. The personal finance industry treats you like an edge case. You're not.
 
-Free for 7 days. Link in bio.
+Free for 30 days. Link in bio.
 
 #creator #creatorlife #variableincome #creatoreconomy #1099life`,
 
@@ -3059,7 +3059,7 @@ Variable income isn't a flavor of personal finance. It's a different category. T
 
 The category needs its own toolkit. Split-first allocation. Percentage-based bucket funding tied to incoming dollars, not fixed monthly amounts. A reserve that sits between income and bills. Tax bucket on every deposit because there's no employer withholding. Free spending capped at what's left after the four other buckets are funded.
 
-Free for 7 days. $14.99/mo or $129/yr after.`,
+Free for 30 days. $14.99/mo or $129/yr after.`,
   },
 
   '13|Fri': {
@@ -3071,7 +3071,7 @@ Income is lumpy. Bills aren't. The reserve is a dam on the river.
 
 75% of your 12-month average. Same number, same day. Boring is the feature.
 
-Free for 7 days. Link in bio.
+Free for 30 days. Link in bio.
 
 #creator #creatorlife #variableincome #creatoreconomy #freelancelife`,
 
@@ -3095,7 +3095,7 @@ The number to pay yourself: 75% of your 12-month rolling average. Below your bes
 
 Same number, same day. Every month. The system pays you. You don't have to decide.
 
-Free for 7 days. $14.99/mo or $129/yr after.`,
+Free for 30 days. $14.99/mo or $129/yr after.`,
   },
 
   '13|Sun': {
@@ -3104,7 +3104,7 @@ Free for 7 days. $14.99/mo or $129/yr after.`,
 
 Not generic advice. Not a paycheck-shaped budget. A system built for the income shape you actually have.
 
-Free for 7 days. Link in bio.
+Free for 30 days. Link in bio.
 
 #variableincome #1099life #freelancelife #creator #smallbusiness`,
 
@@ -3124,7 +3124,7 @@ The right tool starts from the opposite assumption: income arrives lumpy, on its
 
 That's the entire reframe. Once the tool fits the income shape, the struggle leaves. Not because the user got more disciplined. Because the tool stopped fighting the income.
 
-Free for 7 days. $14.99/mo or $129/yr after.`,
+Free for 30 days. $14.99/mo or $129/yr after.`,
   },
 
   // ─────────────────────────────────────────────────────────
@@ -3139,7 +3139,7 @@ Same income. Different feeling.
 
 Project-based work has gaps between projects. The income amount doesn't change. The system underneath does.
 
-Free for 7 days. Link in bio.
+Free for 30 days. Link in bio.
 
 #freelancedesigner #freelancedev #freelancing #1099life #variableincome`,
 
@@ -3162,7 +3162,7 @@ A system that treats gaps as a known feature, not an exception, fixes this. The 
 
 Same income. Different feeling.
 
-Free for 7 days. $14.99/mo or $129/yr after.`,
+Free for 30 days. $14.99/mo or $129/yr after.`,
   },
 
   '14|Tue': {
@@ -3174,7 +3174,7 @@ Income is lumpy. Bills are not. The income reserve is a dam on a river.
 
 Same paycheck. Same day. Boring is the feature.
 
-Free for 7 days. Link in bio.
+Free for 30 days. Link in bio.
 
 #freelancing #1099life #variableincome #freelancelife #selfemployed`,
 
@@ -3198,7 +3198,7 @@ That's the entire metaphor, and it maps cleanly to a working setup. Big months o
 
 Boring is the feature. Specifically: same number, same day. Forever. Until you choose to change it.
 
-Free for 7 days. $14.99/mo or $129/yr after.`,
+Free for 30 days. $14.99/mo or $129/yr after.`,
   },
 
   '14|Wed': {
@@ -3210,7 +3210,7 @@ Project-based income has gaps. Net-60 means you're funding their business. Your 
 
 Tax. Floor. Reserve. Then yours.
 
-Free for 7 days. Link in bio.
+Free for 30 days. Link in bio.
 
 #freelancedesigner #freelancedev #freelancing #1099life #remotework`,
 
@@ -3242,7 +3242,7 @@ Reserve. Big enough to cover the Floor through the longest expected gap plus the
 
 Tax. Floor. Reserve. Then yours.
 
-Free for 7 days. $14.99/mo or $129/yr after.`,
+Free for 30 days. $14.99/mo or $129/yr after.`,
   },
 
   '14|Thu': {
@@ -3253,7 +3253,7 @@ Personal finance was built for W-2s.
 
 You're playing on hard mode. Same game, different rules. The advice that worked for someone with a paycheck doesn't transfer cleanly. You're not bad at it. You're playing a different game.
 
-Free for 7 days. Link in bio.
+Free for 30 days. Link in bio.
 
 #freelancing #1099life #variableincome #remotework #freelancelife`,
 
@@ -3277,7 +3277,7 @@ When you play any game with the wrong rulebook, you lose. Not because you're wor
 
 The fix is the right rulebook. Variable-income rules are different in specific, learnable ways. Once they're applied, the same income performs differently. The "hard mode" feeling lifts.
 
-Free for 7 days. $14.99/mo or $129/yr after.`,
+Free for 30 days. $14.99/mo or $129/yr after.`,
   },
 
   '14|Fri': {
@@ -3289,7 +3289,7 @@ Session income looks predictable until a referral drought hits. Insurance delays
 
 Income reserve. Bills paid in dry weeks.
 
-Free for 7 days. Link in bio.
+Free for 30 days. Link in bio.
 
 #coachlife #coaching #consultant #freelancelife #1099life`,
 
@@ -3313,7 +3313,7 @@ The other piece coaches frequently miss: the relationship between client volume 
 
 Income reserve. Bills paid in dry weeks. Free to say no.
 
-Free for 7 days. $14.99/mo or $129/yr after.`,
+Free for 30 days. $14.99/mo or $129/yr after.`,
   },
 
   '14|Sun': {
@@ -3322,7 +3322,7 @@ Free for 7 days. $14.99/mo or $129/yr after.`,
 
 It's not a discipline problem. The available tools were built for paychecks. They don't fit your income shape.
 
-Free for 7 days. Link in bio.
+Free for 30 days. Link in bio.
 
 #variableincome #1099life #freelancelife #creator #smallbusiness`,
 
@@ -3344,7 +3344,7 @@ The categories don't fit. The monthly allocation interface assumes a known month
 
 But the user wasn't the problem. The tools were the problem. Once the tools match the income shape, with split-first allocation, percentage-driven buckets, a reserve, and tax-on-every-deposit, the budgeting starts working. Same person. Different tools. Different result.
 
-Free for 7 days. $14.99/mo or $129/yr after.`,
+Free for 30 days. $14.99/mo or $129/yr after.`,
   },
 
   // ─────────────────────────────────────────────────────────
@@ -3359,7 +3359,7 @@ Bills paid. Taxes covered. Nothing leaked.
 
 That's the whole sentence. Not "I made more money." Not "I hit a goal." The bills are paid, the tax money is sitting where it should, and nothing got reabsorbed into general spending.
 
-Free for 7 days. Link in bio.
+Free for 30 days. Link in bio.
 
 #gigworker #rideshare #doordash #1099life #variableincome`,
 
@@ -3385,7 +3385,7 @@ Nothing leaked: the small undifferentiated spending that aggregates to $1,000-$2
 
 The compound of those three sentences across twelve months is the difference between "I earn enough" and "I'm not making it." Same income. Different result.
 
-Free for 7 days. $14.99/mo or $129/yr after.`,
+Free for 30 days. $14.99/mo or $129/yr after.`,
   },
 
   '15|Tue': {
@@ -3398,7 +3398,7 @@ The Shame Cycle. Relief, leak, panic.
 
 All three are structural. Not personal.
 
-Free for 7 days. Link in bio.
+Free for 30 days. Link in bio.
 
 #gigworker #rideshare #1099life #variableincome #moneymindset`,
 
@@ -3424,7 +3424,7 @@ The Shame Cycle. The user moves between freezing and leaking. Big deposit lands,
 
 All three resolve when every dollar gets a job at deposit. The patterns weren't moral failures. They were the predictable response to an unstructured system.
 
-Free for 7 days. $14.99/mo or $129/yr after.`,
+Free for 30 days. $14.99/mo or $129/yr after.`,
   },
 
   '15|Wed': {
@@ -3436,7 +3436,7 @@ Income is daily and fragile. Your gross is not your take-home. Maintenance is yo
 
 25% aside before you see it. Rainy days funded early.
 
-Free for 7 days. Link in bio.
+Free for 30 days. Link in bio.
 
 #rideshare #uber #lyft #gigworker #1099life`,
 
@@ -3464,7 +3464,7 @@ The fix is structural. Set 25% aside the moment income lands — covers tax plus
 
 Funded early. Bills don't blink during slow stretches.
 
-Free for 7 days. $14.99/mo or $129/yr after.`,
+Free for 30 days. $14.99/mo or $129/yr after.`,
   },
 
   '15|Thu': {
@@ -3475,7 +3475,7 @@ Some apps ask you to assign every dollar.
 
 Money you don't have yet. The instructions assume a paycheck on a schedule. Variable income breaks the assumption.
 
-Free for 7 days. Link in bio.
+Free for 30 days. Link in bio.
 
 #gigworker #rideshare #1099life #variableincome #budgeting`,
 
@@ -3499,7 +3499,7 @@ The variable-income alternative is split-first. Money gets categories the moment
 
 Same outcome (every dollar has a job). Different timing (allocation at deposit, not at month-start). Materially less friction for variable income.
 
-Free for 7 days. $14.99/mo or $129/yr after.`,
+Free for 30 days. $14.99/mo or $129/yr after.`,
   },
 
   '15|Fri': {
@@ -3511,7 +3511,7 @@ Commission lands. Half is the brokerage. Deals fall through. Q4 closes are what 
 
 Tax. Floor. Reserve. Slow seasons without scrambling.
 
-Free for 7 days. Link in bio.
+Free for 30 days. Link in bio.
 
 #realestate #realtor #realestateagent #commission #1099life`,
 
@@ -3537,7 +3537,7 @@ Q4 closes are what you worked in Q3. The work-to-payment lag is the killer for c
 
 The fix: tax bucket on every check, Floor pre-funded, Reserve big enough to cover the longest realistic dry stretch. Slow seasons stop being scrambling seasons. The reserve does the absorbing.
 
-Free for 7 days. $14.99/mo or $129/yr after.`,
+Free for 30 days. $14.99/mo or $129/yr after.`,
   },
 
   '15|Sun': {
@@ -3548,7 +3548,7 @@ Not freelancers specifically. Not creators specifically. Anyone whose income arr
 
 A budget tool that bends with the water.
 
-Free for 7 days. Link in bio.
+Free for 30 days. Link in bio.
 
 #variableincome #1099life #freelancing #gigworker #commission`,
 
@@ -3571,7 +3571,7 @@ The shape produces specific structural problems. Tax money has to be set aside m
 
 The shape also has a specific structural fix. Split-first allocation. A reserve that absorbs lumpiness. Percentage-based bucket funding. Tax-on-every-deposit. The fix isn't industry-specific. It's category-specific.
 
-Free for 7 days. $14.99/mo or $129/yr after.`,
+Free for 30 days. $14.99/mo or $129/yr after.`,
   },
 
   // ─────────────────────────────────────────────────────────
@@ -3586,7 +3586,7 @@ Permission to stop white-knuckling.
 
 Every Q4 push, every slow January, every "did this seller refund clear yet" check. The white-knuckling is the symptom. A reserve dissolves it.
 
-Free for 7 days. Link in bio.
+Free for 30 days. Link in bio.
 
 #etsyseller #etsy #ecommerce #smallbusiness #1099life`,
 
@@ -3611,7 +3611,7 @@ A reserve dissolves white-knuckling structurally. Bills are funded for the next 
 
 The relief is specific. You stop checking the bank app on weekends. You stop running cash-flow simulations in your head while doing the work. The work gets better because attention is freed up to do the work, not police the money.
 
-Free for 7 days. $14.99/mo or $129/yr after.`,
+Free for 30 days. $14.99/mo or $129/yr after.`,
   },
 
   '16|Tue': {
@@ -3621,7 +3621,7 @@ Free for 7 days. $14.99/mo or $129/yr after.`,
 
 Move 30% since January. By April, the bill is paid. Just paperwork. Not an event.
 
-Free for 7 days. Link in bio.
+Free for 30 days. Link in bio.
 
 #etsyseller #ecommerce #1099life #taxes #smallbusiness`,
 
@@ -3645,7 +3645,7 @@ If 30% has not been routed, the 1099-K becomes a crisis document. The reported g
 
 The interesting detail is that the upstream choice is small. Route 30% on each payout to a separate account. Automatic if it's set up. Monthly if it isn't. Once it's routed, April is a non-event.
 
-Free for 7 days. $14.99/mo or $129/yr after.`,
+Free for 30 days. $14.99/mo or $129/yr after.`,
   },
 
   '16|Wed': {
@@ -3657,7 +3657,7 @@ Q4 is 40% of revenue. Inventory cash sits in products. 1099-K shows the gross, n
 
 Tax bucket from every deposit. Q4 funds the other 9 months.
 
-Free for 7 days. Link in bio.
+Free for 30 days. Link in bio.
 
 #etsyseller #etsy #ecommerce #handmade #smallbusiness`,
 
@@ -3689,7 +3689,7 @@ Q4 income funds the next 9 months, not Q4 lifestyle. The reserve absorbs the sea
 
 Inventory cash gets tracked separately from operating cash. Don't confuse "I sold $X this month" with "I have $X liquid."
 
-Free for 7 days. $14.99/mo or $129/yr after.`,
+Free for 30 days. $14.99/mo or $129/yr after.`,
   },
 
   '16|Thu': {
@@ -3700,7 +3700,7 @@ Most apps show what already happened.
 
 By the time the spending category goes red, the spending already occurred. Hindsight isn't useful when the goal is preventing the leak.
 
-Free for 7 days. Link in bio.
+Free for 30 days. Link in bio.
 
 #ecommerce #etsyseller #onlineseller #smallbusiness #1099life`,
 
@@ -3724,7 +3724,7 @@ Variable-income earners specifically don't benefit from retrospective dashboards
 
 What works: split-first allocation, applied automatically the moment a deposit clears. The decisions are made at deposit time. The retrospective view is a status check, not a reckoning. The leak doesn't happen in the first place because the dollars are routed before the spending decisions can pull from them.
 
-Free for 7 days. $14.99/mo or $129/yr after.`,
+Free for 30 days. $14.99/mo or $129/yr after.`,
   },
 
   '16|Fri': {
@@ -3736,7 +3736,7 @@ Commission is a job where the rules change monthly. "If I just had three good mo
 
 Tax. Bills. Reserve. Slow months funded ahead.
 
-Free for 7 days. Link in bio.
+Free for 30 days. Link in bio.
 
 #commissionsales #salesperson #saleslife #1099life #variableincome`,
 
@@ -3764,7 +3764,7 @@ Tax bucket on every check. Bills pre-funded from the reserve, not from this mont
 
 You're not bad with money. You're using the wrong brain — the one that tries to time good months. Use the structural one. The system handles the volatility.
 
-Free for 7 days. $14.99/mo or $129/yr after.`,
+Free for 30 days. $14.99/mo or $129/yr after.`,
   },
 
   '16|Sun': {
@@ -3775,7 +3775,7 @@ Inconsistent income makes budgeting feel impossible.
 
 The "feels" is doing work. It's not impossible. The available tools were the wrong tools. With the right tool, the feeling lifts.
 
-Free for 7 days. Link in bio.
+Free for 30 days. Link in bio.
 
 #variableincome #1099life #freelancing #budgeting #moneymindset`,
 
@@ -3799,7 +3799,7 @@ It isn't. The tools were wrong. The category — variable income — has its own
 
 The "feels impossible" is a category mismatch, not a personal failure. The feeling lifts when the toolkit matches the income shape.
 
-Free for 7 days. $14.99/mo or $129/yr after.`,
+Free for 30 days. $14.99/mo or $129/yr after.`,
   },
 
   // ─────────────────────────────────────────────────────────
@@ -3817,7 +3817,7 @@ $1,200 belongs to the IRS.
 
 The 30% rule isn't tax advice. It's a structural reality. Move it the moment the deposit clears.
 
-Free for 7 days. Link in bio.
+Free for 30 days. Link in bio.
 
 #1099life #freelancing #selfemployed #taxes #variableincome`,
 
@@ -3841,7 +3841,7 @@ The fix is mechanical. Route 30% to a separate account the moment a deposit clea
 
 April becomes paperwork instead of a reckoning. The bucket that's been filling all year is what pays the bill.
 
-Free for 7 days. $14.99/mo or $129/yr after.`,
+Free for 30 days. $14.99/mo or $129/yr after.`,
   },
 
   '17|Tue': {
@@ -3852,7 +3852,7 @@ You're not overspending. You're freezing.
 
 Money sits. Money leaks. Direct it, or it leaks. Same money, more work.
 
-Free for 7 days. Link in bio.
+Free for 30 days. Link in bio.
 
 #freelancing #1099life #variableincome #budgeting #moneymindset`,
 
@@ -3878,7 +3878,7 @@ The fix is direction. Every dollar gets a job the moment it lands. Tax bucket. B
 
 Same money. More work, in the structural sense — each dollar working in its assigned role instead of dispersing into general spending.
 
-Free for 7 days. $14.99/mo or $129/yr after.`,
+Free for 30 days. $14.99/mo or $129/yr after.`,
   },
 
   '17|Wed': {
@@ -3890,7 +3890,7 @@ Issued by clients, not platforms. Threshold: $600. Didn't get one? The IRS still
 
 Track every payment. Tie out at year-end.
 
-Free for 7 days. Link in bio.
+Free for 30 days. Link in bio.
 
 #1099life #freelancing #1099nec #taxes #selfemployed`,
 
@@ -3916,7 +3916,7 @@ Didn't get a 1099-NEC you expected? Track the payments yourself. Your records ar
 
 The structural fix: log every income event as it happens. Don't wait for forms in January. By the time forms arrive, the year's records should already match what's reported. April becomes confirmation, not reconstruction.
 
-Free for 7 days. $14.99/mo or $129/yr after.`,
+Free for 30 days. $14.99/mo or $129/yr after.`,
   },
 
   '17|Thu': {
@@ -3927,7 +3927,7 @@ If 30% isn't moved, it isn't yours.
 
 Tax money sitting in checking is tax money about to be spent. The act of moving it the second the deposit clears is the difference between a tax bucket and an April crisis.
 
-Free for 7 days. Link in bio.
+Free for 30 days. Link in bio.
 
 #1099life #freelancing #selfemployed #taxes #variableincome`,
 
@@ -3949,7 +3949,7 @@ The fix is mechanical movement. Route 30% to a separate account the moment a dep
 
 Once the routing is automatic, the rest of the system relaxes. The remaining 70% becomes the actual amount available for bills, reserve, debt, and free spending. Decisions get made against an accurate balance instead of a misleading one.
 
-Free for 7 days. $14.99/mo or $129/yr after.`,
+Free for 30 days. $14.99/mo or $129/yr after.`,
   },
 
   '17|Fri': {
@@ -3961,7 +3961,7 @@ Stripe. PayPal. Venmo. Etsy. All issue them. The number shown is gross, not net.
 
 Reconcile fees, returns, refunds. Pay tax on net profit.
 
-Free for 7 days. Link in bio.
+Free for 30 days. Link in bio.
 
 #1099k #ecommerce #etsyseller #onlineseller #1099life`,
 
@@ -3987,7 +3987,7 @@ The fix is reconciliation. Keep your own books separately from what the platform
 
 By 2026, the 1099-K threshold drops to $600 across all platforms. Many more sellers will start receiving them. Reconciliation becomes critical. The 1099-K is informational. Your books are the source of truth.
 
-Free for 7 days. $14.99/mo or $129/yr after.`,
+Free for 30 days. $14.99/mo or $129/yr after.`,
   },
 
   '17|Sun': {
@@ -3998,7 +3998,7 @@ You were never taught how to budget a paycheck that doesn't follow a schedule.
 
 Not your fault. The school system, the personal finance industry, your parents — none of them had the vocabulary for this.
 
-Free for 7 days. Link in bio.
+Free for 30 days. Link in bio.
 
 #1099life #freelancing #selfemployed #variableincome #moneymindset`,
 
@@ -4020,7 +4020,7 @@ The result is a generation of variable-income earners who feel financially illit
 
 The fix is learning the variable-income toolkit. Split-first allocation. Percentage-based bucket funding. The reserve. Tax-on-every-deposit. None of it is hard. It's just not what you were taught. Once it's learned, the same income behaves predictably.
 
-Free for 7 days. $14.99/mo or $129/yr after.`,
+Free for 30 days. $14.99/mo or $129/yr after.`,
   },
 
   // ─────────────────────────────────────────────────────────
@@ -4035,7 +4035,7 @@ You don't need more income. You need fewer leaks.
 
 Most variable-income earners assume the answer is earning more. Earning more without closing leaks just means more dollars to leak. Same percentage gone, larger denominator.
 
-Free for 7 days. Link in bio.
+Free for 30 days. Link in bio.
 
 #freelancing #1099life #variableincome #budgeting #freelancelife`,
 
@@ -4057,7 +4057,7 @@ Closing the leak is more efficient than earning more. A 5% improvement in leak �
 
 Earn more is good advice eventually. Close the leaks is better advice first. Same effort. Different result.
 
-Free for 7 days. $14.99/mo or $129/yr after.`,
+Free for 30 days. $14.99/mo or $129/yr after.`,
   },
 
   '18|Tue': {
@@ -4068,7 +4068,7 @@ The cost of waiting. Per month: $2,000. Six months: $12,000. One year: $24,000.
 
 Not bad with money. A missing system. The math chooses for you.
 
-Free for 7 days. Link in bio.
+Free for 30 days. Link in bio.
 
 #freelancing #1099life #variableincome #budgeting #selfemployed`,
 
@@ -4096,7 +4096,7 @@ The waiting math is compound, not punitive. The leak feels small in any single m
 
 The fix doesn't require earning more. It requires routing every dollar to a job the moment a deposit clears.
 
-Free for 7 days. $14.99/mo or $129/yr after.`,
+Free for 30 days. $14.99/mo or $129/yr after.`,
   },
 
   '18|Wed': {
@@ -4107,7 +4107,7 @@ It's a wish dressed as advice. Saving requires left over. Variable income rarely
 
 Move savings first. Spend what's left.
 
-Free for 7 days. Link in bio.
+Free for 30 days. Link in bio.
 
 #variableincome #1099life #freelancing #budgeting #saving`,
 
@@ -4131,7 +4131,7 @@ The variable-income version: route a percentage of every deposit to a savings bu
 
 Same money. Different order. The order is the entire fix.
 
-Free for 7 days. $14.99/mo or $129/yr after.`,
+Free for 30 days. $14.99/mo or $129/yr after.`,
   },
 
   '18|Thu': {
@@ -4142,7 +4142,7 @@ Free for 7 days. $14.99/mo or $129/yr after.`,
 
 Once it's in a separate account, you don't count it as available money. The brain stops weighing it in spending decisions. April stops being a financial event.
 
-Free for 7 days. Link in bio.
+Free for 30 days. Link in bio.
 
 #1099life #freelancing #selfemployed #taxes #variableincome`,
 
@@ -4164,7 +4164,7 @@ The fix is to make the 30% invisible at the moment of deposit. Either auto-route
 
 Once the 30% is invisible, the remaining 70% becomes the actual operating balance. Decisions made against 70% are accurate. The tax bucket fills itself. April stops being a financial event because the math was already done.
 
-Free for 7 days. $14.99/mo or $129/yr after.`,
+Free for 30 days. $14.99/mo or $129/yr after.`,
   },
 
   '18|Fri': {
@@ -4175,7 +4175,7 @@ Most owners are their own last priority. You're running a job that pays others. 
 
 Start with 5%. Beats zero by infinity.
 
-Free for 7 days. Link in bio.
+Free for 30 days. Link in bio.
 
 #smallbusiness #1099life #freelancing #variableincome #creator`,
 
@@ -4199,7 +4199,7 @@ The reason this works specifically for variable income: it removes the "wait unt
 
 A different account is critical. Owner pay sitting in the operating account is owner pay about to be spent on operating expenses. Different account, different mental category, different actual outcome.
 
-Free for 7 days. $14.99/mo or $129/yr after.`,
+Free for 30 days. $14.99/mo or $129/yr after.`,
   },
 
   '18|Sun': {
@@ -4210,7 +4210,7 @@ Stop living unpredictable check to unpredictable check.
 
 That phrase is doing real work. Not paycheck to paycheck — that implies a paycheck. Unpredictable check to unpredictable check captures the actual rhythm.
 
-Free for 7 days. Link in bio.
+Free for 30 days. Link in bio.
 
 #variableincome #1099life #freelancing #moneymindset #freelancelife`,
 
@@ -4230,7 +4230,7 @@ The outcome of a working system is the breaking of that cycle. The relief stops 
 
 Same income. Different rhythm. The rhythm is what produces the day-to-day feeling. Fix the rhythm, the feeling lifts.
 
-Free for 7 days. $14.99/mo or $129/yr after.`,
+Free for 30 days. $14.99/mo or $129/yr after.`,
   },
 
   // ─────────────────────────────────────────────────────────
@@ -4246,7 +4246,7 @@ Free for 7 days. $14.99/mo or $129/yr after.`,
 
 Move 30% on every deposit. That's a system. Specific action, specific timing, specific outcome.
 
-Free for 7 days. Link in bio.
+Free for 30 days. Link in bio.
 
 #1099life #freelancing #selfemployed #taxes #budgeting`,
 
@@ -4272,7 +4272,7 @@ The variable-income financial framework is built from systems like this. Move 30
 
 Same person. With a system. Different outcome.
 
-Free for 7 days. $14.99/mo or $129/yr after.`,
+Free for 30 days. $14.99/mo or $129/yr after.`,
   },
 
   '19|Tue': {
@@ -4284,7 +4284,7 @@ Step 1: separate savings account. Step 2: pick 30%. Step 3: move it every deposi
 
 April becomes paperwork. Not an event.
 
-Free for 7 days. Link in bio.
+Free for 30 days. Link in bio.
 
 #1099life #freelancing #taxes #selfemployed #variableincome`,
 
@@ -4311,7 +4311,7 @@ Step 4: Same day, before spending. The window between deposit and split is where
 
 April becomes paperwork. The bucket has filled itself all year. The 1040 just confirms a number you've already funded.
 
-Free for 7 days. $14.99/mo or $129/yr after.`,
+Free for 30 days. $14.99/mo or $129/yr after.`,
   },
 
   '19|Wed': {
@@ -4321,7 +4321,7 @@ Free for 7 days. $14.99/mo or $129/yr after.`,
 
 The form where your business lives. Line 1: gross. Lines 4-6: COGS. Lines 8-27: expenses. Line 31: net profit (what gets taxed).
 
-Free for 7 days. Link in bio.
+Free for 30 days. Link in bio.
 
 #1099life #scheduleC #freelancing #taxes #selfemployed`,
 
@@ -4350,7 +4350,7 @@ Line 31: Net profit. Gross minus COGS minus expenses. This is what gets taxed. S
 
 The implication: every dollar of legitimate business expense reduces Line 31, which reduces tax owed. Tracking expenses isn't optional. It's the difference between paying tax on $80,000 of net vs. $50,000 of net.
 
-Free for 7 days. $14.99/mo or $129/yr after.`,
+Free for 30 days. $14.99/mo or $129/yr after.`,
   },
 
   '19|Thu': {
@@ -4361,7 +4361,7 @@ You don't need to be better. You need a different starting point.
 
 Most variable-income financial advice tells you to do the same things harder. Different starting point, same effort, different result.
 
-Free for 7 days. Link in bio.
+Free for 30 days. Link in bio.
 
 #freelancing #1099life #variableincome #moneymindset #budgeting`,
 
@@ -4383,7 +4383,7 @@ A different starting point: assume the system is broken and replace it. Variable
 
 The reframe is small but matters. The user isn't broken. The starting point was wrong. Fix the starting point and the rest follows.
 
-Free for 7 days. $14.99/mo or $129/yr after.`,
+Free for 30 days. $14.99/mo or $129/yr after.`,
   },
 
   '19|Fri': {
@@ -4395,7 +4395,7 @@ Health insurance premiums. Half of SE tax. Vehicle. Equipment. Retirement.
 
 Each one reduces what gets taxed.
 
-Free for 7 days. Link in bio.
+Free for 30 days. Link in bio.
 
 #selfemployed #1099life #taxes #freelancing #smallbusiness`,
 
@@ -4425,7 +4425,7 @@ Retirement. SEP-IRA contributions are fully deductible up to ~25% of net SE inco
 
 Each deduction reduces Line 31 on Schedule C. Lower Line 31 means lower tax. Track everything throughout the year, not at year-end.
 
-Free for 7 days. $14.99/mo or $129/yr after.`,
+Free for 30 days. $14.99/mo or $129/yr after.`,
   },
 
   '19|Sun': {
@@ -4436,7 +4436,7 @@ I am able to pay down debt, even on slow months.
 
 That sentence is the outcome. Not "I make more." Not "I save 20%." The structural confidence that debt gets reduced regardless of what the income did this month.
 
-Free for 7 days. Link in bio.
+Free for 30 days. Link in bio.
 
 #variableincome #1099life #freelancelife #debt #moneymindset`,
 
@@ -4460,7 +4460,7 @@ This is the difference between debt-payoff plans that work for variable income a
 
 The identity follows the structure. "I am able to pay down debt, even on slow months" is true once the structure is in place. It wasn't true before, regardless of intent.
 
-Free for 7 days. $14.99/mo or $129/yr after.`,
+Free for 30 days. $14.99/mo or $129/yr after.`,
   },
 
   // ─────────────────────────────────────────────────────────
@@ -4475,7 +4475,7 @@ Three months of slow. What does that actually cost?
 
 Without a reserve, three slow months is a survival event. With a reserve, three slow months is a normal month repeated three times. The math is the same. The system underneath is different.
 
-Free for 7 days. Link in bio.
+Free for 30 days. Link in bio.
 
 #freelancing #1099life #variableincome #budgeting #freelancelife`,
 
@@ -4499,7 +4499,7 @@ Building the reserve is the highest-leverage move most variable-income earners c
 
 Three months of slow is the right scenario to plan for. It's common enough to be likely, severe enough to break weak systems, recoverable with a working one.
 
-Free for 7 days. $14.99/mo or $129/yr after.`,
+Free for 30 days. $14.99/mo or $129/yr after.`,
   },
 
   '20|Tue': {
@@ -4510,7 +4510,7 @@ Day 1: tax %. Day 2: bills. Day 3: debt schedule. Day 4: reserve target. Day 5: 
 
 Eight minutes total. The system runs from there.
 
-Free for 7 days. Link in bio.
+Free for 30 days. Link in bio.
 
 #freelancing #1099life #variableincome #budgeting #selfemployed`,
 
@@ -4540,7 +4540,7 @@ Day 5: Whatever's left after taxes, bills, debt, and reserve is free. Genuinely 
 
 Eight minutes total. The system runs from there. Every deposit gets split automatically against the structure you set up in week one. No ongoing maintenance.
 
-Free for 7 days. $14.99/mo or $129/yr after.`,
+Free for 30 days. $14.99/mo or $129/yr after.`,
   },
 
   '20|Wed': {
@@ -4552,7 +4552,7 @@ Two methods: simplified ($5 per sq ft) or actual (document everything).
 
 Run both. Take the bigger.
 
-Free for 7 days. Link in bio.
+Free for 30 days. Link in bio.
 
 #homeoffice #1099life #freelancing #remotework #taxes`,
 
@@ -4581,7 +4581,7 @@ The right approach: run both calculations. Take whichever produces the bigger de
 
 Documentation matters either way. Photos of the space, square footage measurement, records of business use. The IRS audits home office deductions more aggressively than most categories.
 
-Free for 7 days. $14.99/mo or $129/yr after.`,
+Free for 30 days. $14.99/mo or $129/yr after.`,
   },
 
   '20|Thu': {
@@ -4592,7 +4592,7 @@ The cost of waiting is bigger than the cost of starting.
 
 Setting up a system feels expensive in the moment. Not setting one up costs more, every month, forever. The compound math is brutal.
 
-Free for 7 days. Link in bio.
+Free for 30 days. Link in bio.
 
 #freelancing #1099life #variableincome #moneymindset #budgeting`,
 
@@ -4616,7 +4616,7 @@ The cost of starting is also recoverable. The first month after a system is in p
 
 Starting is the cheaper option. Waiting is the expensive option. The math is unambiguous. The hesitation is psychological, not financial.
 
-Free for 7 days. $14.99/mo or $129/yr after.`,
+Free for 30 days. $14.99/mo or $129/yr after.`,
   },
 
   '20|Fri': {
@@ -4627,7 +4627,7 @@ Money is a skill, not a personality. Nobody taught you. Not your fault.
 
 Rule of 72: divide 72 by the rate. Years until your money doubles.
 
-Free for 7 days. Link in bio.
+Free for 30 days. Link in bio.
 
 #variableincome #moneymindset #personalfinance #1099life #investing`,
 
@@ -4651,7 +4651,7 @@ Third sentence: Money follows structure, not hope. The structural choices — wh
 
 The Rule of 72 is the most useful single math fact in personal finance. Divide 72 by your annual return rate. The result is how many years your money takes to double. At 1% savings: 72 years. At 8% stock market: 9 years. The compound math of those two paths is the entire reason "save in a HYSA" and "invest the index" produce different lifetime outcomes.
 
-Free for 7 days. $14.99/mo or $129/yr after.`,
+Free for 30 days. $14.99/mo or $129/yr after.`,
   },
 
   '20|Sun': {
@@ -4662,7 +4662,7 @@ Traditional apps assume a steady paycheck. Able assumes your income is lumpy, un
 
 Different starting assumption. Different working tool.
 
-Free for 7 days. Link in bio.
+Free for 30 days. Link in bio.
 
 #variableincome #1099life #freelancing #budgeting #freelancelife`,
 
@@ -4684,7 +4684,7 @@ In a tool that assumes lumpy income: split-first allocation triggered by deposit
 
 Same product category. Different starting assumption. Different tool entirely.
 
-Free for 7 days. $14.99/mo or $129/yr after.`,
+Free for 30 days. $14.99/mo or $129/yr after.`,
   },
 
   // ─────────────────────────────────────────────────────────
@@ -4699,7 +4699,7 @@ You're not failing at budgeting. Budgeting is failing you.
 
 Generic budgeting tools were built around a steady paycheck. Variable income breaks the assumptions. The failure isn't yours.
 
-Free for 7 days. Link in bio.
+Free for 30 days. Link in bio.
 
 #freelancing #1099life #variableincome #budgeting #moneymindset`,
 
@@ -4721,7 +4721,7 @@ So the user follows generic instructions. The instructions produce wrong answers
 
 A tool that fits variable income produces different results without changing the user. Same person, different toolkit. The "failing at budgeting" identity dissolves when the budgeting actually works.
 
-Free for 7 days. $14.99/mo or $129/yr after.`,
+Free for 30 days. $14.99/mo or $129/yr after.`,
   },
 
   '21|Tue': {
@@ -4732,7 +4732,7 @@ A dam. On a river. Big check flows in. Slow week flows out. Bills funded. Always
 
 The reserve is the thing that makes lumpy income feel steady.
 
-Free for 7 days. Link in bio.
+Free for 30 days. Link in bio.
 
 #freelancing #1099life #variableincome #budgeting #freelancelife`,
 
@@ -4759,7 +4759,7 @@ The reserve is the structural difference between variable income that feels chao
 
 Build the reserve gradually. One month of bills as the floor. Three months as the comfortable upper end. Every big deposit feeds it. Slow months draw from it. Eventually it runs without attention.
 
-Free for 7 days. $14.99/mo or $129/yr after.`,
+Free for 30 days. $14.99/mo or $129/yr after.`,
   },
 
   '21|Wed': {
@@ -4771,7 +4771,7 @@ Last month: $7,400. Month before: $3,100. Budgeting your best month leaves you b
 
 Tax. Bills. Reserve. Debt. Free.
 
-Free for 7 days. Link in bio.
+Free for 30 days. Link in bio.
 
 #freelancing #1099life #variableincome #budgeting #freelancelife`,
 
@@ -4801,7 +4801,7 @@ Big deposits fund all five aggressively. Slow deposits still fund all five, just
 
 It's not discipline. It's structure. The structure handles what discipline can't.
 
-Free for 7 days. $14.99/mo or $129/yr after.`,
+Free for 30 days. $14.99/mo or $129/yr after.`,
   },
 
   '21|Thu': {
@@ -4812,7 +4812,7 @@ The day you stop guessing is the day you stop bracing.
 
 The bracing is downstream of the guessing. Once the math is done in real time, automatically, the guessing leaves. The bracing leaves with it.
 
-Free for 7 days. Link in bio.
+Free for 30 days. Link in bio.
 
 #freelancing #1099life #variableincome #moneymindset #freelancelife`,
 
@@ -4836,7 +4836,7 @@ The downstream effect is felt: opening the bank app without tightening up. Takin
 
 The structure produces the calm. Not the willpower.
 
-Free for 7 days. $14.99/mo or $129/yr after.`,
+Free for 30 days. $14.99/mo or $129/yr after.`,
   },
 
   '21|Fri': {
@@ -4847,7 +4847,7 @@ Every debt book assumes steady income. Yours isn't. Those plans break fast.
 
 Reserve covers minimums. Good months attack principal.
 
-Free for 7 days. Link in bio.
+Free for 30 days. Link in bio.
 
 #freelancing #1099life #variableincome #debtfree #debtfreejourney`,
 
@@ -4875,7 +4875,7 @@ Move 2: Good months attack principal. Above the reserve, surplus from strong mon
 
 This combination — protected schedule via reserve, accelerated principal via good months — produces consistent debt reduction even on variable income. The slow months don't reset. The good months speed up.
 
-Free for 7 days. $14.99/mo or $129/yr after.`,
+Free for 30 days. $14.99/mo or $129/yr after.`,
   },
 
   '21|Sun': {
@@ -4886,7 +4886,7 @@ I am able to save without second-guessing.
 
 That second-guessing is what burns most savings goals. Once savings is automated as a percentage of every deposit, the second-guessing dissolves.
 
-Free for 7 days. Link in bio.
+Free for 30 days. Link in bio.
 
 #freelancing #1099life #variableincome #saving #moneymindset`,
 
@@ -4908,7 +4908,7 @@ The fix is automating the savings as a percentage of every deposit, routed at th
 
 Same person. Same income. The second-guessing leaves because the decision-making leaves.
 
-Free for 7 days. $14.99/mo or $129/yr after.`,
+Free for 30 days. $14.99/mo or $129/yr after.`,
   },
 
   // ─────────────────────────────────────────────────────────
@@ -4923,7 +4923,7 @@ Coming from Mint? The replacement still assumes a paycheck.
 
 Most "Mint alternatives" inherited Mint's defaults. Same paycheck-shaped tool with a different logo. Variable income breaks all of them the same way.
 
-Free for 7 days. Link in bio.
+Free for 30 days. Link in bio.
 
 #freelancing #1099life #variableincome #budgeting #personalfinance`,
 
@@ -4945,7 +4945,7 @@ What changed for variable-income earners isn't who shut down. It's whether the a
 
 A tool built specifically for variable income makes different default assumptions. Income arrives lumpy. Allocation happens at deposit, not at month-start. Buckets are percentage-driven. A reserve sits between income and bills. None of those defaults match the Mint inheritance.
 
-Free for 7 days. $14.99/mo or $129/yr after.`,
+Free for 30 days. $14.99/mo or $129/yr after.`,
   },
 
   '22|Tue': {
@@ -4956,7 +4956,7 @@ Your spreadsheet is dying. Opened three times this quarter. Can't follow variabl
 
 You don't need a better spreadsheet. You need a system.
 
-Free for 7 days. Link in bio.
+Free for 30 days. Link in bio.
 
 #freelancing #1099life #variableincome #budgeting #freelancelife`,
 
@@ -4980,7 +4980,7 @@ A better spreadsheet doesn't fix this. The maintenance is the problem. The fix i
 
 A system that runs without manual entry — that splits deposits automatically, tracks bucket balances continuously, alerts when something looks off — replaces the spreadsheet with structure. The spreadsheet phase was a sign that variable income needed its own toolkit. The system delivers what the spreadsheet was reaching for, without the maintenance burden.
 
-Free for 7 days. $14.99/mo or $129/yr after.`,
+Free for 30 days. $14.99/mo or $129/yr after.`,
   },
 
   '22|Wed': {
@@ -4991,7 +4991,7 @@ Two factors dominate. Payment history (35%). Utilization (30%, keep below 10%).
 
 Pay balances down: 30 to 60 points in 30 days.
 
-Free for 7 days. Link in bio.
+Free for 30 days. Link in bio.
 
 #1099life #freelancing #creditscore #personalfinance #variableincome`,
 
@@ -5016,7 +5016,7 @@ Credit utilization is the faster lever. Most scoring models penalize high utiliz
 
 The variable-income-specific advice: automate everything. Auto-pay minimums. Auto-pay statement balance if cash flow allows. Never miss a payment due to attention drift. The reserve makes this automation reliable.
 
-Free for 7 days. $14.99/mo or $129/yr after.`,
+Free for 30 days. $14.99/mo or $129/yr after.`,
   },
 
   '22|Thu': {
@@ -5027,7 +5027,7 @@ Money is energy. Direct it, or it leaks.
 
 Same money, two outcomes. The difference is whether you give each dollar a job before it has a chance to drift.
 
-Free for 7 days. Link in bio.
+Free for 30 days. Link in bio.
 
 #freelancing #1099life #variableincome #moneymindset #freelancelife`,
 
@@ -5047,7 +5047,7 @@ Energy with a destination produces work. Money with a job produces specific outc
 
 The reframe is small but useful. Stop thinking of money as a static pool to manage. Start thinking of it as energy to direct. The act of directing — at the moment of deposit, into specific buckets — is what produces the difference between "I made $4,000 and have nothing to show for it" and "I made $4,000 and here's what each piece did."
 
-Free for 7 days. $14.99/mo or $129/yr after.`,
+Free for 30 days. $14.99/mo or $129/yr after.`,
   },
 
   '22|Fri': {
@@ -5056,7 +5056,7 @@ Free for 7 days. $14.99/mo or $129/yr after.`,
 
 80% of small business loans get denied. The reasons are all fixable. Personal vs business credit are two systems. Set up the business first.
 
-Free for 7 days. Link in bio.
+Free for 30 days. Link in bio.
 
 #smallbusiness #variableincome #1099life #businessfunding #freelancing`,
 
@@ -5082,7 +5082,7 @@ PAYDEX is the Dun & Bradstreet score lenders look at for business credit. Lender
 
 The implication: if business funding might be in your future, set up the business credit infrastructure now. The work is small monthly attention. The payoff is larger and easier loans years later.
 
-Free for 7 days. $14.99/mo or $129/yr after.`,
+Free for 30 days. $14.99/mo or $129/yr after.`,
   },
 
   '22|Sun': {
@@ -5093,7 +5093,7 @@ Actually build your savings.
 
 The "actually" is doing work. Most variable-income earners try and quit. The structure is what makes the savings stick.
 
-Free for 7 days. Link in bio.
+Free for 30 days. Link in bio.
 
 #variableincome #1099life #freelancing #saving #moneymindset`,
 
@@ -5113,7 +5113,7 @@ The structural fix: route a percentage of every deposit to savings the moment th
 
 Same income. Different mechanism. Across a year, the percentage-of-deposit approach saves materially more than the "save what's left" approach, because the percentage runs without willpower. Same person. Different result.
 
-Free for 7 days. $14.99/mo or $129/yr after.`,
+Free for 30 days. $14.99/mo or $129/yr after.`,
   },
 
   // ─────────────────────────────────────────────────────────
@@ -5128,7 +5128,7 @@ Spreadsheets ask you to be an accountant. You shouldn't have to be.
 
 The mental tax of running spreadsheet math while also doing the actual work is the real cost. A system removes the tax.
 
-Free for 7 days. Link in bio.
+Free for 30 days. Link in bio.
 
 #freelancing #1099life #variableincome #budgeting #freelancelife`,
 
@@ -5148,7 +5148,7 @@ Doing the bookkeeping in addition to the actual work means doing two jobs simult
 
 The fix isn't more accountant-style discipline. It's automation that replaces the accountant role. A system that splits deposits automatically, tracks bucket balances continuously, calculates tax obligations in real time — all without manual data entry — removes the second job. You go back to one job: the actual work. The math runs underneath.
 
-Free for 7 days. $14.99/mo or $129/yr after.`,
+Free for 30 days. $14.99/mo or $129/yr after.`,
   },
 
   '23|Tue': {
@@ -5159,7 +5159,7 @@ Free for 7 days. $14.99/mo or $129/yr after.`,
 
 Saving needs left over. Variable income rarely has it. Reverse the order.
 
-Free for 7 days. Link in bio.
+Free for 30 days. Link in bio.
 
 #variableincome #1099life #freelancing #saving #moneymindset`,
 
@@ -5183,7 +5183,7 @@ Implementation: route a percentage of every deposit to savings at the moment the
 
 Same money. Different order. Same income produces materially more savings across a year, because the percentage-based mechanism runs without willpower or ongoing decision-making. Reverse the order, the saving happens.
 
-Free for 7 days. $14.99/mo or $129/yr after.`,
+Free for 30 days. $14.99/mo or $129/yr after.`,
   },
 
   '23|Wed': {
@@ -5194,7 +5194,7 @@ The best money system asks you for nothing.
 
 No daily check-ins. No streaks. No nudges to engage. The right tool runs underneath your life and doesn't require attention to do its job.
 
-Free for 7 days. Link in bio.
+Free for 30 days. Link in bio.
 
 #variableincome #1099life #freelancing #creator #personalfinance`,
 
@@ -5218,7 +5218,7 @@ The user opens the app once a week, maybe, just to check. The app's job is to be
 
 The bar: if the app demands attention to do its job, it's the wrong tool. If the app does its job without your attention, it might be the right one.
 
-Free for 7 days. $14.99/mo or $129/yr after.`,
+Free for 30 days. $14.99/mo or $129/yr after.`,
   },
 
   '23|Thu': {
@@ -5229,7 +5229,7 @@ Every month you guess, another $2,000 gone.
 
 That's not a moral failure. It's the cost of running variable income without a system. The leak compounds. The cost is real. The fix is small.
 
-Free for 7 days. Link in bio.
+Free for 30 days. Link in bio.
 
 #freelancing #1099life #variableincome #budgeting #moneymindset`,
 
@@ -5253,7 +5253,7 @@ Once the routing is in place, the leak closes. Not because the user got more dis
 
 Same person. Same income. $2,000 a month staying in productive use instead of leaking out.
 
-Free for 7 days. $14.99/mo or $129/yr after.`,
+Free for 30 days. $14.99/mo or $129/yr after.`,
   },
 
   '23|Fri': {
@@ -5264,7 +5264,7 @@ Cancels your subscriptions. Doesn't fix the leak.
 
 The leak isn't subscriptions specifically. It's undifferentiated dollars sitting in checking. Cutting subscriptions trims the symptom. The cause persists.
 
-Free for 7 days. Link in bio.
+Free for 30 days. Link in bio.
 
 #1099life #freelancing #variableincome #budgeting #subscriptions`,
 
@@ -5286,7 +5286,7 @@ Cancelling subscriptions trims one symptom. The other symptoms persist. The doll
 
 The cause is structural. Money without a job leaks. The fix is structural too. Give every dollar a job at the moment of deposit. The leak closes at the source, not at the symptom.
 
-Free for 7 days. $14.99/mo or $129/yr after.`,
+Free for 30 days. $14.99/mo or $129/yr after.`,
   },
 
   '23|Sat': {
@@ -5297,7 +5297,7 @@ You're not bad with money.
 
 Wrong tool. Not wrong you.
 
-Free for 7 days. Link in bio.
+Free for 30 days. Link in bio.
 
 #freelancing #1099life #variableincome #moneymindset #freelancelife`,
 
@@ -5323,7 +5323,7 @@ Dreading April: the rational response to having tax money mixed with operating m
 
 All three resolve when the tool fits the income shape. The freeze, the late-night check, the April dread — none of them are personal failures. They're symptoms of a structural mismatch.
 
-Free for 7 days. $14.99/mo or $129/yr after.`,
+Free for 30 days. $14.99/mo or $129/yr after.`,
   },
 
   '23|Sun': {
@@ -5334,7 +5334,7 @@ I am able to budget inconsistent income.
 
 Past tense doesn't matter. Whatever you tried before that didn't work was a tool problem, not a you problem.
 
-Free for 7 days. Link in bio.
+Free for 30 days. Link in bio.
 
 #variableincome #1099life #freelancing #budgeting #moneymindset`,
 
@@ -5352,7 +5352,7 @@ The capability is real once the structure is in place. Splitting deposits at the
 
 The identity follows the structure. Before the structure, the identity is some version of "I can't budget" or "I'm bad with money" or "money stresses me out." After the structure, the identity becomes "I am able to budget inconsistent income" — past failures notwithstanding, because past failures were tool failures, not personal ones.
 
-Free for 7 days. $14.99/mo or $129/yr after.`,
+Free for 30 days. $14.99/mo or $129/yr after.`,
   },
 
   // ─────────────────────────────────────────────────────────
@@ -5367,7 +5367,7 @@ You're not bad with money. You were handed the wrong tool.
 
 Same income. Different tool. Different result. The math is unambiguous.
 
-Free for 7 days. Link in bio.
+Free for 30 days. Link in bio.
 
 #freelancing #1099life #variableincome #budgeting #moneymindset`,
 
@@ -5389,7 +5389,7 @@ When the tool doesn't fit, the user follows generic instructions that produce wr
 
 A tool built for variable income makes different default assumptions and produces different results. Same person. Different toolkit. The "bad with money" identity dissolves when the budgeting actually works.
 
-Free for 7 days. $14.99/mo or $129/yr after.`,
+Free for 30 days. $14.99/mo or $129/yr after.`,
   },
 
   '24|Tue': {
@@ -5400,7 +5400,7 @@ The shame isn't yours. It belongs to the tool.
 
 Generic finance advice was built for someone with different income. The fail produced shame. The shame should land on the tool, not on you.
 
-Free for 7 days. Link in bio.
+Free for 30 days. Link in bio.
 
 #freelancing #1099life #variableincome #moneymindset #shame`,
 
@@ -5422,7 +5422,7 @@ It isn't. The shame should land on the tool. The tool was wrong for the use case
 
 Once the tool fits — once it's specifically built for variable income — the shame stops accumulating. The system works. The user's experience matches their effort. The identity shifts.
 
-Free for 7 days. $14.99/mo or $129/yr after.`,
+Free for 30 days. $14.99/mo or $129/yr after.`,
   },
 
   '24|Wed': {
@@ -5433,7 +5433,7 @@ I didn't want to be a budgeter. I wanted to be done thinking about money.
 
 That sentence captures the actual goal. Not better budgeting. Less mental space spent on it.
 
-Free for 7 days. Link in bio.
+Free for 30 days. Link in bio.
 
 #freelancing #1099life #variableincome #moneymindset #budgeting`,
 
@@ -5455,7 +5455,7 @@ The right tool is the one you forget about. It runs underneath the day, splits d
 
 Done thinking about money is the real outcome. The tools that demand engagement are getting in the way of that outcome. The right tool gets out of the way.
 
-Free for 7 days. $14.99/mo or $129/yr after.`,
+Free for 30 days. $14.99/mo or $129/yr after.`,
   },
 
   '24|Thu': {
@@ -5466,7 +5466,7 @@ You're not bad at math. You're missing a system.
 
 The math is fine. The math wasn't the problem. The thing missing is structure that runs without your attention. Add the structure, the math runs.
 
-Free for 7 days. Link in bio.
+Free for 30 days. Link in bio.
 
 #freelancing #1099life #variableincome #budgeting #moneymindset`,
 
@@ -5488,7 +5488,7 @@ A system replaces execution-by-attention with execution-by-routing. The 30% move
 
 Same person. Same math knowledge. The system is the difference.
 
-Free for 7 days. $14.99/mo or $129/yr after.`,
+Free for 30 days. $14.99/mo or $129/yr after.`,
   },
 
   '24|Fri': {
@@ -5499,7 +5499,7 @@ Split every deposit. Stop bracing.
 
 Two sentences. The split produces the structure. The structure produces the calm. The calm replaces the bracing.
 
-Free for 7 days. Link in bio.
+Free for 30 days. Link in bio.
 
 #freelancing #1099life #variableincome #budgeting #moneymindset`,
 
@@ -5521,7 +5521,7 @@ Two sentences. The whole instruction set, compressed.
 
 Two sentences. Repeatable. Mechanical. The structure produces the result. The directive doesn't require willpower. It requires a one-time setup that runs underneath everything afterward.
 
-Free for 7 days. $14.99/mo or $129/yr after.`,
+Free for 30 days. $14.99/mo or $129/yr after.`,
   },
 
   '24|Sat': {
@@ -5534,7 +5534,7 @@ I am able.
 
 That's the new identity. The structure produces it.
 
-Free for 7 days. Link in bio.
+Free for 30 days. Link in bio.
 
 #variableincome #1099life #freelancing #moneymindset #identity`,
 
@@ -5558,7 +5558,7 @@ I am able. Period. The "able" identity is what sits underneath all the specific 
 
 The identity follows the structure. "Unable" was the felt experience of running variable income through paycheck-shaped tools. "Able" is the felt experience of running variable income through tools built for it.
 
-Free for 7 days. $14.99/mo or $129/yr after.`,
+Free for 30 days. $14.99/mo or $129/yr after.`,
   },
 
   '24|Sun': {
@@ -5569,7 +5569,7 @@ Every month you wait is another $500 to $1,000 gone.
 
 The wait isn't free. It's the most expensive option available. The cost compounds.
 
-Free for 7 days. Link in bio.
+Free for 30 days. Link in bio.
 
 #variableincome #1099life #freelancing #budgeting #moneymindset`,
 
@@ -5591,7 +5591,7 @@ The compound math: six months of waiting equals $3,000-$6,000. One year is $6,00
 
 The cost of starting is bounded. One hour, one tool, done. The cost of waiting is unbounded — it accrues every month indefinitely. The math is unambiguous. The hesitation is psychological, not financial.
 
-Free for 7 days. $14.99/mo or $129/yr after.`,
+Free for 30 days. $14.99/mo or $129/yr after.`,
   },
 
   // ─────────────────────────────────────────────────────────
@@ -5606,7 +5606,7 @@ Calm is a feature. Not a side effect.
 
 Most fintech optimizes for engagement. Able optimizes for calm. The fewer minutes you spend in it, the better it's doing its job.
 
-Free for 7 days. Link in bio.
+Free for 30 days. Link in bio.
 
 #freelancing #1099life #variableincome #moneymindset #personalfinance`,
 
@@ -5628,7 +5628,7 @@ The reason this is the right pattern for variable income specifically: the incom
 
 Calm isn't a side effect of the system working. It's the system's primary output. The bucket math, the auto-splits, the boring reliable execution — all of it produces calm by design. The features are calm-producing. Same money, different felt experience.
 
-Free for 7 days. $14.99/mo or $129/yr after.`,
+Free for 30 days. $14.99/mo or $129/yr after.`,
   },
 
   '25|Tue': {
@@ -5637,16 +5637,16 @@ Free for 7 days. $14.99/mo or $129/yr after.`,
 
 $14.99 a month. Or $129 a year. Save $50.
 
-7-day free trial either way. Card required at signup, no charge during the trial. Cancel anytime.
+30-day free trial either way. Card required at signup, no charge during the trial. Cancel anytime.
 
-Free for 7 days. Link in bio.
+Free for 30 days. Link in bio.
 
 #1099life #freelancing #variableincome #budgeting #pricing`,
 
     tt: `$14.99 a month.
 $129 a year. Save $50.
 
-Free for 7 days.
+Free for 30 days.
 
 becomeable.app
 
@@ -5658,13 +5658,13 @@ Monthly: $14.99 a month. Cancel anytime.
 
 Annual: $129 for the year. Saves $50 versus monthly. Break-even is around month nine.
 
-Free for 7 days at signup, either plan. Card required at signup. No charge during the trial window. Cancel anytime in the trial with zero charge. The card requirement is there to keep bot signups out, not to slip in a surprise charge.
+Free for 30 days at signup, either plan. Card required at signup. No charge during the trial window. Cancel anytime in the trial with zero charge. The card requirement is there to keep bot signups out, not to slip in a surprise charge.
 
 Most variable-income earners go monthly first to confirm the system fits their actual income pattern. After two or three months, the ones who like it switch to annual to save the $50. That's a sensible path.
 
 The pricing is bounded enough that anyone seeing meaningful improvement in their tax bucket alone will recoup it. The leak that gets closed by routing every deposit pays for the subscription many times over within the first quarter for most users.
 
-Free for 7 days. $14.99/mo or $129/yr after.`,
+Free for 30 days. $14.99/mo or $129/yr after.`,
   },
 
   '25|Wed': {
@@ -5675,7 +5675,7 @@ Most personal finance was built for two-income households. Yours isn't one.
 
 The advice that assumes a partner's stable W-2 doesn't transfer to single freelance income. The math is meaningfully different.
 
-Free for 7 days. Link in bio.
+Free for 30 days. Link in bio.
 
 #freelancing #1099life #variableincome #singleincome #budgeting`,
 
@@ -5697,7 +5697,7 @@ The implications are different for several core decisions. The reserve has to be
 
 The variable-income financial framework adjusts for this. Larger reserve targets. Health insurance treated as a Floor expense, not a discretionary one. Retirement automated as a percentage of every deposit. Each adjustment is small. Together they describe a financial setup that survives single-income variable income.
 
-Free for 7 days. $14.99/mo or $129/yr after.`,
+Free for 30 days. $14.99/mo or $129/yr after.`,
   },
 
   '25|Thu': {
@@ -5708,7 +5708,7 @@ Pay yourself last. Pay yourself wrong.
 
 Most owners run a job that pays everyone except them. The fix is mechanical: a percentage of every deposit, routed to personal pay before discretionary business spending.
 
-Free for 7 days. Link in bio.
+Free for 30 days. Link in bio.
 
 #smallbusiness #1099life #freelancing #moneymindset #variableincome`,
 
@@ -5732,7 +5732,7 @@ A different account is critical. Owner pay sitting in the operating account is o
 
 Pay yourself first. Pay yourself right.
 
-Free for 7 days. $14.99/mo or $129/yr after.`,
+Free for 30 days. $14.99/mo or $129/yr after.`,
   },
 
   '25|Fri': {
@@ -5744,7 +5744,7 @@ The retirement plan your CPA didn't mention.
 
 SEP-IRA contributions are fully deductible up to ~25% of net SE income. Big deduction. Most freelancers underuse it.
 
-Free for 7 days. Link in bio.
+Free for 30 days. Link in bio.
 
 #1099life #freelancing #selfemployed #retirement #taxes`,
 
@@ -5769,7 +5769,7 @@ The Solo 401k is a similar option with somewhat higher contribution limits and a
 
 The structural lever: route a percentage of every deposit to a SEP-IRA bucket throughout the year. By December, the bucket has the contribution amount. The funding happens gradually, the deduction is the same.
 
-Free for 7 days. $14.99/mo or $129/yr after.`,
+Free for 30 days. $14.99/mo or $129/yr after.`,
   },
 
   '25|Sat': {
@@ -5780,7 +5780,7 @@ What's the smallest month you could survive?
 
 That number is your Floor. It's the most useful number in variable-income financial planning. Below it, the system breaks. Above it, you have options.
 
-Free for 7 days. Link in bio.
+Free for 30 days. Link in bio.
 
 #freelancing #1099life #variableincome #budgeting #moneymindset`,
 
@@ -5804,7 +5804,7 @@ Most freelancers can identify their Floor in 20 minutes. The number is usually s
 
 What's the smallest month you could survive? Calculate it. Build the reserve to cover three of them. The rest of the financial framework follows from there.
 
-Free for 7 days. $14.99/mo or $129/yr after.`,
+Free for 30 days. $14.99/mo or $129/yr after.`,
   },
 
   '25|Sun': {
@@ -5815,7 +5815,7 @@ Become able.
 
 Not "be better." Not "try harder." Become able. The identity shift that comes with running variable income through tools built for it.
 
-Free for 7 days. Link in bio.
+Free for 30 days. Link in bio.
 
 #variableincome #1099life #freelancing #moneymindset #becomeable`,
 
@@ -5835,7 +5835,7 @@ The identity shift follows: "I am able to budget inconsistent income. I am able 
 
 Become able. The structure produces the identity. The identity wasn't earned through effort. It was earned through the right tool.
 
-Free for 7 days. $14.99/mo or $129/yr after.`,
+Free for 30 days. $14.99/mo or $129/yr after.`,
   },
 
 };

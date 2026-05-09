@@ -251,7 +251,7 @@ window.POSTS = [
 
   // 63 — L3 Sat · CTA CLOSE
   { id: '63', slug: 'free-seven-days', theme: 'green', tpl: 'B', eyebrow: 'mixed', center: true,
-    punch: "Free for {7 days}.\n{becomeable.app}" },
+    punch: "Free for {30 days}.\n{becomeable.app}" },
 ];
 
 
@@ -320,7 +320,7 @@ window.CAROUSELS = [
         punch: "It's a {Day 1}\nproblem.",
         meta: '7 / 8' },
       { tpl: 'B', eyebrow: 'freelance', theme: 'green',
-        punch: "{Free} for 7 days.\nBuilt for\nvariable income.",
+        punch: "{Free} for 30 days.\nBuilt for\nvariable income.",
         meta: 'becomeable.app' },
   ] },
 
@@ -415,7 +415,7 @@ window.CAROUSELS = [
         punch: "Fills {automatically}.",
         meta: '6 / 7' },
       { tpl: 'B', eyebrow: 'mixed',
-        punch: "{Free} for 7 days.\nBuilt for\nvariable income.",
+        punch: "{Free} for 30 days.\nBuilt for\nvariable income.",
         meta: 'becomeable.app' },
   ] },
 
@@ -479,7 +479,7 @@ window.CAROUSELS = [
         punch: "Not panic.\n{Just Tuesday.}",
         meta: '6 / 7' },
       { tpl: 'B', eyebrow: 'mixed',
-        punch: "{Free} for 7 days.\nBuilt for\nvariable income.",
+        punch: "{Free} for 30 days.\nBuilt for\nvariable income.",
         meta: 'becomeable.app' },
   ] },
 
@@ -566,7 +566,7 @@ window.CAROUSELS = [
         punch: "The math\nchooses {for you}.",
         meta: '6 / 7' },
       { tpl: 'B', eyebrow: 'mixed', theme: 'green',
-        punch: "{Free} for 7 days.\nBuilt for\nvariable income.",
+        punch: "{Free} for 30 days.\nBuilt for\nvariable income.",
         meta: 'becomeable.app' },
   ] },
 
@@ -647,7 +647,7 @@ window.CAROUSELS = [
         punch: "Wanting to\n{try it} first.",
         meta: '5 / 6' },
       { tpl: 'B', eyebrow: 'mixed',
-        punch: "{Free} for 7 days.\nThen pick\neither one.",
+        punch: "{Free} for 30 days.\nThen pick\neither one.",
         meta: 'becomeable.app' },
   ] },
 
@@ -710,7 +710,7 @@ window.CAROUSELS = [
         punch: "Same money.\n{More work.}",
         meta: '7 / 8' },
       { tpl: 'B', eyebrow: 'mixed', theme: 'green',
-        punch: "{Free} for 7 days.\nBuilt for\nvariable income.",
+        punch: "{Free} for 30 days.\nBuilt for\nvariable income.",
         meta: 'becomeable.app' },
   ] },
 
@@ -801,7 +801,7 @@ window.CAROUSELS = [
         punch: "Same number.\n{Same day.}",
         meta: '6 / 7' },
       { tpl: 'B', eyebrow: 'creator',
-        punch: "{Free} for 7 days.\nBuilt for\nvariable income.",
+        punch: "{Free} for 30 days.\nBuilt for\nvariable income.",
         meta: 'becomeable.app' },
   ] },
 
@@ -890,7 +890,7 @@ window.CAROUSELS = [
         punch: "Rainy days.\nFunded {early}.",
         meta: '6 / 7' },
       { tpl: 'B', eyebrow: 'gig',
-        punch: "{Free} for 7 days.\nBuilt for\nvariable income.",
+        punch: "{Free} for 30 days.\nBuilt for\nvariable income.",
         meta: 'becomeable.app' },
   ] },
 
@@ -977,7 +977,7 @@ window.CAROUSELS = [
         punch: "Slow months.\n{Funded ahead.}",
         meta: '6 / 7' },
       { tpl: 'B', eyebrow: 'commission',
-        punch: "{Free} for 7 days.\nBuilt for\nvariable income.",
+        punch: "{Free} for 30 days.\nBuilt for\nvariable income.",
         meta: 'becomeable.app' },
   ] },
 
@@ -1062,7 +1062,7 @@ window.CAROUSELS = [
         punch: "Tie out at {year-end}.",
         meta: '5 / 6' },
       { tpl: 'B', eyebrow: 'mixed',
-        punch: "{Free} for 7 days.\nBuilt for\nvariable income.",
+        punch: "{Free} for 30 days.\nBuilt for\nvariable income.",
         meta: 'becomeable.app' },
   ] },
 
@@ -1144,7 +1144,7 @@ window.CAROUSELS = [
         punch: "{Run both} numbers.\nTake the bigger.",
         meta: '5 / 6' },
       { tpl: 'B', eyebrow: 'mixed',
-        punch: "{Free} for 7 days.\nBuilt for\nvariable income.",
+        punch: "{Free} for 30 days.\nBuilt for\nvariable income.",
         meta: 'becomeable.app' },
   ] },
 
@@ -1234,7 +1234,7 @@ window.CAROUSELS = [
         punch: "Attack {principal}.",
         meta: '6 / 7' },
       { tpl: 'B', eyebrow: 'mixed', theme: 'green',
-        punch: "{Free} for 7 days.\nBuilt for\nvariable income.",
+        punch: "{Free} for 30 days.\nBuilt for\nvariable income.",
         meta: 'becomeable.app' },
   ] },
 
@@ -1321,7 +1321,7 @@ window.CAROUSELS = [
         punch: "Doubles every\n{9 years}.",
         meta: '6 / 7' },
       { tpl: 'B', eyebrow: 'mixed',
-        punch: "{Free} for 7 days.\nBuilt for\nvariable income.",
+        punch: "{Free} for 30 days.\nBuilt for\nvariable income.",
         meta: 'becomeable.app' },
   ] },
 
@@ -1454,7 +1454,7 @@ window.CAROUSELS = [
         punch: "Boring on purpose.\n{Specific by design.}",
         meta: '7 / 8' },
       { tpl: 'A', eyebrow: 'mixed', theme: 'green',
-        muted: "Free for 7 days.",
+        muted: "Free for 30 days.",
         punch: "$14.99/mo.\n{Or $129/yr.}",
         meta: 'becomeable.app' },
   ] },
@@ -1548,7 +1548,7 @@ window.CAROUSELS = [
         punch: "Day 90.\n{You don't recognize}\npast-you.",
         meta: '7 / 8' },
       { tpl: 'A', eyebrow: 'mixed', theme: 'green',
-        muted: "Free for 7 days.",
+        muted: "Free for 30 days.",
         punch: "{becomeable.app}",
         meta: 'becomeable.app' },
   ] },

@@ -16,7 +16,7 @@ window.REELS = [
       { text: "Day 30.\n{$4,000} gone?", durationSec: 3, theme: 'black' },
       { text: "Day 31.\n{Shame.}", durationSec: 2.5, theme: 'black' },
       { text: "Not willpower.\nA {Day 1} problem.", durationSec: 3.5, theme: 'green' },
-      { text: "{Free} for 7 days.\nbecomeable.app", durationSec: 4.5, theme: 'green' },
+      { text: "{Free} for 30 days.\nbecomeable.app", durationSec: 4.5, theme: 'green' },
     ] },
 
   // R2 — Where $4,000 actually goes (cloud black)
@@ -52,7 +52,7 @@ window.REELS = [
       { text: "Belongs to\n{the IRS}.", durationSec: 2.5 },
       { text: "Not April.\n{The second} it clears.", durationSec: 3 },
       { text: "Move it.\nOr {lose it}.", durationSec: 2.5 },
-      { text: "{Free} for 7 days.", durationSec: 2.5 },
+      { text: "{Free} for 30 days.", durationSec: 2.5 },
       { text: "becomeable.app", durationSec: 2.5 },
     ] },
 
@@ -65,7 +65,7 @@ window.REELS = [
       { text: "They show\nwhat {happened}.", durationSec: 3 },
       { text: "Too {late}.", durationSec: 2.5 },
       { text: "You need a system\nfor {variable}.", durationSec: 3 },
-      { text: "{Free} for 7 days.", durationSec: 2 },
+      { text: "{Free} for 30 days.", durationSec: 2 },
       { text: "becomeable.app", durationSec: 2 },
     ] },
 
@@ -87,7 +87,7 @@ window.REELS = [
       { text: "Money sits.\nMoney {leaks}.", durationSec: 2.5 },
       { text: "Direct it.\nOr {it leaks}.", durationSec: 3, theme: 'green' },
       { text: "Same money.\n{More work.}", durationSec: 3, theme: 'green' },
-      { text: "{Free} for 7 days.", durationSec: 2, theme: 'green' },
+      { text: "{Free} for 30 days.", durationSec: 2, theme: 'green' },
       { text: "becomeable.app", durationSec: 2.5, theme: 'green' },
     ] },
 
@@ -169,13 +169,13 @@ window.REELS = [
       { text: "becomeable.app", durationSec: 3.5, theme: 'green' },
     ] },
 
-  // R15 — Free 7-day trial CTA reel (green, 12s)
+  // R15 — Free 30-day trial CTA reel (green, 12s)
   { id: 'R15', slug: 'free-trial', theme: 'green', format: 'text-reel', durationSec: 12,
     beats: [
       { text: "Built for\n{inconsistent}.", durationSec: 3 },
       { text: "Every deposit.\n{Auto-routed.}", durationSec: 3 },
       { text: "Taxes. Bills.\n{Reserve.}", durationSec: 3 },
-      { text: "{Free} for 7 days.", durationSec: 3 },
+      { text: "{Free} for 30 days.", durationSec: 3 },
     ] },
 
   // R16 — The income reserve explained (page) — canonical explainer for the bucket-3 concept
@@ -262,7 +262,7 @@ window.REELS = [
       { text: "4. {Debt} —\non schedule.", durationSec: 2.5 },
       { text: "5. {Free} —\nguilt-free.", durationSec: 2.5 },
       { text: "{Split first.}\nSpend last.", durationSec: 3 },
-      { text: "Free for {7 days}.\nbecomeable.app", durationSec: 4 },
+      { text: "Free for {30 days}.\nbecomeable.app", durationSec: 4 },
     ] },
 
   // ── BRAND-MESSAGING REELS (R27–R31) ──
@@ -288,7 +288,7 @@ window.REELS = [
       { text: "Not a stricter\n{budget}.", durationSec: 2 },
       { text: "Not {trying harder}.", durationSec: 2 },
       { text: "A {system}.\nBuilt for variable.", durationSec: 3, theme: 'green' },
-      { text: "{Free} for 7 days.", durationSec: 1.5, theme: 'green' },
+      { text: "{Free} for 30 days.", durationSec: 1.5, theme: 'green' },
       { text: "becomeable.app", durationSec: 1.5, theme: 'green' },
     ] },
 
