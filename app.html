@@ -5104,7 +5104,13 @@ async function obRunPlaidPipeline() {
 
   obAnswers.plaid_pipeline = { status: 'running', step: 'sync', startedAt: Date.now(), recurringSkipped: false, attempts: 0 };
   // Refresh the connected-bank panel if the user is still looking at it.
-  if (OB_QUESTIONS[obStep]?.type === 'plaid') renderObStep();
+  // Guard against re-rendering after the user clicks Continue (which hides
+  // ob-question-area and shows ob-building) — without this guard, a late
+  // pipeline-progression callback would un-hide the question area and
+  // bounce the user back to step 8 (P1 fix 2026-05-08 evening).
+  const _stillOnPlaidPanel = () => OB_QUESTIONS[obStep]?.type === 'plaid'
+    && document.getElementById('ob-question-area')?.style.display !== 'none';
+  if (_stillOnPlaidPanel()) renderObStep();
 
   // Convert intake chip selections + the optional "Other" text into a
   // single human-readable string the analyzer LLM can use as context.
@@ -5149,7 +5155,7 @@ async function obRunPlaidPipeline() {
 
   try {
     obAnswers.plaid_pipeline.step = 'sync';
-    if (OB_QUESTIONS[obStep]?.type === 'plaid') renderObStep();
+    if (_stillOnPlaidPanel()) renderObStep();
     // Poll sync while Plaid is doing its initial pull. /transactions/sync
     // returns status:'NOT_READY' (with zero transactions) until INITIAL_UPDATE
     // or HISTORICAL_UPDATE arrives — typically 15-60s on major banks, can be
@@ -5170,7 +5176,7 @@ async function obRunPlaidPipeline() {
     }
 
     obAnswers.plaid_pipeline.step = 'classify';
-    if (OB_QUESTIONS[obStep]?.type === 'plaid') renderObStep();
+    if (_stillOnPlaidPanel()) renderObStep();
     // Each invocation processes up to 500 txns (max_batches:10, parallelism:4
     // inside plaid-classify-pending). Old loop did 10×50 sequential = 7min;
     // new loop does up to 5×500 with internal parallelism = ~3-5min worst
@@ -5185,7 +5191,7 @@ async function obRunPlaidPipeline() {
     }
 
     obAnswers.plaid_pipeline.step = 'recurring';
-    if (OB_QUESTIONS[obStep]?.type === 'plaid') renderObStep();
+    if (_stillOnPlaidPanel()) renderObStep();
     try {
       // Swapped 2026-05-04 from plaid-recurring-refresh (Plaid's
       // /transactions/recurring/get, which returned PRODUCT_NOT_READY for
@@ -5213,7 +5219,7 @@ async function obRunPlaidPipeline() {
     }
 
     obAnswers.plaid_pipeline.step = 'analyze';
-    if (OB_QUESTIONS[obStep]?.type === 'plaid') renderObStep();
+    if (_stillOnPlaidPanel()) renderObStep();
     // Poll the analyzer's readiness gate. Server returns HTTP 202 with
     // status:'not_ready' when plaid_recurring_streams is empty AND it's
     // been less than 3 min since last sync — server fires recurring-
@@ -5249,7 +5255,7 @@ async function obRunPlaidPipeline() {
       plan_id: data.plan_id,
       duration_ms: obAnswers.plaid_pipeline.finishedAt - obAnswers.plaid_pipeline.startedAt,
     });
-    if (OB_QUESTIONS[obStep]?.type === 'plaid') renderObStep();
+    if (_stillOnPlaidPanel()) renderObStep();
   } catch (e) {
     console.error('[Pipeline] failed:', e);
     obAnswers.plaid_pipeline.status = 'failed';
