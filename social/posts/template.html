@@ -19,11 +19,12 @@
   <div class="post" id="post"></div>
 
   <script src="data.js"></script>
+  <script src="product-data.js"></script>
   <script src="_render.js"></script>
   <script>
     const params = new URLSearchParams(location.search);
     const id = params.get('id') || '01';
-    const ALL = [...(window.POSTS || []), ...(window.BRANDSCRIPT || [])];
+    const ALL = [...(window.POSTS || []), ...(window.BRANDSCRIPT || []), ...(window.PRODUCT_POSTS || [])];
     const post = ALL.find(p => p.id === id);
     const root = document.getElementById('post');
 

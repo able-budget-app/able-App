@@ -95,9 +95,10 @@ def start_server() -> tuple[socketserver.ThreadingTCPServer, str]:
 # ─────────────────────────────────────────────────────────────────────
 async def load_inventory(page) -> dict[str, list[dict]]:
     await page.goto(f"{SERVER_URL}/social/posts/template.html?id=01", wait_until="domcontentloaded")
-    posts        = await page.evaluate("window.POSTS       || []")
-    carousels    = await page.evaluate("window.CAROUSELS   || []")
-    brandscript  = await page.evaluate("window.BRANDSCRIPT || []")
+    posts        = await page.evaluate("window.POSTS         || []")
+    carousels    = await page.evaluate("window.CAROUSELS     || []")
+    brandscript  = await page.evaluate("window.BRANDSCRIPT   || []")
+    products     = await page.evaluate("window.PRODUCT_POSTS || []")
     # REELS lives in reels/data.js — load that page to read it
     await page.goto(f"{SERVER_URL}/social/reels/template.html?id=R1", wait_until="domcontentloaded")
     reels        = await page.evaluate("window.REELS || []")
@@ -105,6 +106,7 @@ async def load_inventory(page) -> dict[str, list[dict]]:
         "posts": posts,
         "carousels": carousels,
         "brandscript": brandscript,
+        "products": products,
         "reels": reels,
     }
 
@@ -307,10 +309,13 @@ async def main() -> None:
                 if do_singles:
                     posts = filter_ids(inv["posts"], only_ids)
                     bs    = filter_ids(inv["brandscript"], only_ids)
+                    prod  = filter_ids(inv["products"], only_ids)
                     print(f"\n=== Singles ({len(posts)}) ===")
                     if posts: await export_singles(page, posts, args.force, "single")
                     print(f"\n=== Brand-script ({len(bs)}) ===")
                     if bs: await export_singles(page, bs, args.force, "brand")
+                    print(f"\n=== Product posts ({len(prod)}) ===")
+                    if prod: await export_singles(page, prod, args.force, "product")
 
                 if do_carousels:
                     cars = filter_ids(inv["carousels"], only_ids)

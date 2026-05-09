@@ -5,6 +5,7 @@ function renderSlideInto(root, post) {
   root.classList.add('tpl-' + post.tpl);
   if (post.center) root.classList.add('centered');
   if (post.size)   root.classList.add('size-' + post.size);
+  if (post.tpl === 'C' && post.pos) root.classList.add('pos-' + post.pos);
 
   // Eyebrow vocabulary (locked 2026-05-08).
   // - `mixed` is the brand default — most pieces use it.
@@ -45,9 +46,24 @@ function renderSlideInto(root, post) {
   const mutedHtml = post.muted ? '<div class="muted">' + renderText(post.muted) + '</div>' : '';
   const punchHtml = '<div class="punch">' + renderText(post.punch) + '</div>';
 
+  // tpl-C wraps the muted+punch in a product-text col next to a phone shot.
+  // The shot is a CSS background pulled from /marketing-footage/product-shots/<shot>/9x16.png.
+  let stackHtml;
+  if (post.tpl === 'C') {
+    const shotUrl = `/marketing-footage/product-shots/${post.shot}/9x16.png`;
+    stackHtml = `
+      <div class="product-row">
+        <div class="product-text">${mutedHtml}${punchHtml}</div>
+        <div class="product-shot" style="background-image:url('${shotUrl}');"></div>
+      </div>
+    `;
+  } else {
+    stackHtml = `<div class="stack">${mutedHtml}${punchHtml}</div>`;
+  }
+
   const inner = `
     <div class="eyebrow">${eyebrowText}</div>
-    <div class="stack">${mutedHtml}${punchHtml}</div>
+    ${stackHtml}
     <div class="footer">
       <div class="wordmark">Able</div>
       <div class="url">${meta}</div>

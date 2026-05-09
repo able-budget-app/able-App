@@ -175,6 +175,45 @@ html, body {
 .size-md .punch { font-size: 84px; line-height: 1.04; letter-spacing: -.025em; }
 .size-md .muted { font-size: 52px; line-height: 1.10; margin-bottom: 32px; }
 
+/* tpl-C — product-shot template. Phone shot embedded in the post canvas
+   alongside copy. Three positions: pos-right (phone right, copy left),
+   pos-left (mirror), pos-center (phone centered, copy below). Phone is
+   the existing 9x16 product-shot PNG (which has its own colored bg —
+   reads as a "phone card" inset on the post's theme bg). */
+.tpl-C .stack { gap: 0; }
+.tpl-C .punch { font-size: 76px; line-height: 1.04; letter-spacing: -.025em; }
+.tpl-C .muted { font-size: 44px; line-height: 1.14; margin-bottom: 22px; }
+
+.tpl-C .product-row {
+  display: grid;
+  flex: 1;
+  align-items: center;
+  margin-top: 56px;
+  gap: 56px;
+}
+.tpl-C.pos-right .product-row  { grid-template-columns: 1fr 360px; }
+.tpl-C.pos-left  .product-row  { grid-template-columns: 360px 1fr; }
+.tpl-C.pos-left  .product-text { grid-column: 2; grid-row: 1; }
+.tpl-C.pos-left  .product-shot { grid-column: 1; grid-row: 1; }
+.tpl-C.pos-center .product-row { grid-template-columns: 1fr; gap: 36px; justify-items: center; text-align: center; }
+.tpl-C.pos-center .product-shot { width: 360px; }
+.tpl-C.pos-center .product-text { max-width: 880px; }
+
+.tpl-C .product-text {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+.tpl-C .product-shot {
+  width: 100%;
+  aspect-ratio: 9 / 16;
+  border-radius: 32px;
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  box-shadow: 0 24px 60px rgba(0,0,0,.18), 0 6px 18px rgba(0,0,0,.10);
+}
+
 .muted {
   font-size: 64px;
   font-weight: 600;
