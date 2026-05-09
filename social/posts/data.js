@@ -274,7 +274,7 @@ window.POSTS = [
     punch: "Rent waits\n{fourteen.}" },
 
   { id: '68', slug: 'commission-then-silence', cat: 'Persona', theme: 'page', tpl: 'A', eyebrow: 'commission',
-    muted: "$30k commission lands.",
+    muted: "$8k commission lands.",
     punch: "Then six weeks\n{of silence.}" },
 
   { id: '69', slug: 'big-deal-not-whole-month', cat: 'Persona', theme: 'glass-dark', tpl: 'A', eyebrow: 'commission',
@@ -1910,9 +1910,9 @@ window.BRANDSCRIPT = [
     punch: "You need a plan built\nfor {income like yours.}" },
 
   // ── Solution / mechanic ──
-  { id: 'B22', slug: 'solution-every-dollar-job', cat: 'Solution', theme: 'green', tpl: 'A', eyebrow: 'mixed', size: 'sm',
-    muted: "Able gives every dollar",
-    punch: "a job the moment\n{it arrives.}" },
+  { id: 'B22', slug: 'solution-every-deposit-routed', cat: 'Solution', theme: 'green', tpl: 'A', eyebrow: 'mixed', size: 'sm',
+    muted: "Able routes each deposit",
+    punch: "to its {destination}\nthe moment\nit arrives." },
 
   { id: 'B23', slug: 'solution-without-paycheck', cat: 'Solution', theme: 'page', tpl: 'B', eyebrow: 'mixed',
     punch: "A budget that works\nwithout a {predictable\npaycheck.}" },
