@@ -6,9 +6,21 @@ function renderSlideInto(root, post) {
   if (post.center) root.classList.add('centered');
   if (post.size)   root.classList.add('size-' + post.size);
 
+  // Eyebrow vocabulary (locked 2026-05-08).
+  // - `mixed` is the brand default — most pieces use it.
+  // - 5 persona keys for targeted bunches (3 posts each in the cadence).
+  // - Old `ent` / `fcb` keys map to `mixed` for backward compat so
+  //   any in-flight rendering doesn't break before data files are swept.
   const eyebrowText =
-    post.eyebrow === 'ent' ? 'For entrepreneurs' :
-    post.eyebrow === 'fcb' ? 'For freelancers, creators &amp; business owners' :
+    post.eyebrow === 'mixed'      ? 'For anyone with mixed or unpredictable income.' :
+    post.eyebrow === 'freelance'  ? 'For freelancers and consultants.' :
+    post.eyebrow === 'creator'    ? 'For creators.' :
+    post.eyebrow === 'gig'        ? 'For gig and rideshare drivers.' :
+    post.eyebrow === 'commission' ? 'For commission earners.' :
+    post.eyebrow === 'business'   ? 'For small business owners.' :
+    // Legacy keys → fall through to the main brand line.
+    post.eyebrow === 'ent'        ? 'For anyone with mixed or unpredictable income.' :
+    post.eyebrow === 'fcb'        ? 'For anyone with mixed or unpredictable income.' :
     (post.eyebrow || '');
 
   const meta = post.meta || 'becomeable.app';
