@@ -318,6 +318,280 @@
           "text": "Without Able\nWhere did it go?"
         }
       ]
+    },
+    {
+      "filename": "home-overview.mp4",
+      "duration_sec": 8.6,
+      "markers": [
+        {
+          "name": "home_visible",
+          "seconds": 0.0
+        },
+        {
+          "name": "score_visible",
+          "seconds": 2.713
+        },
+        {
+          "name": "chips_visible",
+          "seconds": 5.629
+        }
+      ],
+      "captions": []
+    },
+    {
+      "filename": "plan-bills.mp4",
+      "duration_sec": 7.967,
+      "markers": [
+        {
+          "name": "home_visible",
+          "seconds": 0.0
+        },
+        {
+          "name": "bills_opened",
+          "seconds": 3.216
+        },
+        {
+          "name": "scroll_complete",
+          "seconds": 5.93
+        }
+      ],
+      "captions": []
+    },
+    {
+      "filename": "plan-whatif.mp4",
+      "duration_sec": 8.667,
+      "markers": [
+        {
+          "name": "home_visible",
+          "seconds": 0.0
+        },
+        {
+          "name": "whatif_opened",
+          "seconds": 3.038
+        },
+        {
+          "name": "amount_entered",
+          "seconds": 4.846
+        }
+      ],
+      "captions": []
+    },
+    {
+      "filename": "plan-forecast.mp4",
+      "duration_sec": 7.767,
+      "markers": [
+        {
+          "name": "home_visible",
+          "seconds": 0.0
+        },
+        {
+          "name": "forecast_opened",
+          "seconds": 3.119
+        },
+        {
+          "name": "form_visible",
+          "seconds": 5.432
+        }
+      ],
+      "captions": []
+    },
+    {
+      "filename": "plan-debt.mp4",
+      "duration_sec": 7.633,
+      "markers": [
+        {
+          "name": "home_visible",
+          "seconds": 0.0
+        },
+        {
+          "name": "debt_opened",
+          "seconds": 3.104
+        },
+        {
+          "name": "scroll_complete",
+          "seconds": 5.614
+        }
+      ],
+      "captions": []
+    },
+    {
+      "filename": "score-detail.mp4",
+      "duration_sec": 7.6,
+      "markers": [
+        {
+          "name": "home_visible",
+          "seconds": 0.0
+        },
+        {
+          "name": "score_opened",
+          "seconds": 1.587
+        },
+        {
+          "name": "scroll_complete",
+          "seconds": 4.398
+        }
+      ],
+      "captions": []
+    },
+    {
+      "filename": "more-learn.mp4",
+      "duration_sec": 8.0,
+      "markers": [
+        {
+          "name": "home_visible",
+          "seconds": 0.0
+        },
+        {
+          "name": "learn_opened",
+          "seconds": 3.262
+        },
+        {
+          "name": "scroll_complete",
+          "seconds": 5.88
+        }
+      ],
+      "captions": []
+    },
+    {
+      "filename": "more-refer.mp4",
+      "duration_sec": 8.267,
+      "markers": [
+        {
+          "name": "home_visible",
+          "seconds": 0.0
+        },
+        {
+          "name": "refer_opened",
+          "seconds": 3.263
+        },
+        {
+          "name": "scroll_complete",
+          "seconds": 5.781
+        }
+      ],
+      "captions": []
+    },
+    {
+      "filename": "more-settings.mp4",
+      "duration_sec": 8.033,
+      "markers": [
+        {
+          "name": "home_visible",
+          "seconds": 0.0
+        },
+        {
+          "name": "settings_opened",
+          "seconds": 3.281
+        },
+        {
+          "name": "scroll_complete",
+          "seconds": 5.999
+        }
+      ],
+      "captions": []
+    },
+    {
+      "filename": "log-income.mp4",
+      "duration_sec": 10.033,
+      "markers": [
+        {
+          "name": "home_visible",
+          "seconds": 0.0
+        },
+        {
+          "name": "sheet_opened",
+          "seconds": 1.859
+        },
+        {
+          "name": "preview_open",
+          "seconds": 5.137
+        },
+        {
+          "name": "confirmed",
+          "seconds": 7.79
+        }
+      ],
+      "captions": []
+    },
+    {
+      "filename": "coach-ask.mp4",
+      "duration_sec": 10.6,
+      "markers": [
+        {
+          "name": "home_visible",
+          "seconds": 0.0
+        },
+        {
+          "name": "coach_opened",
+          "seconds": 1.778
+        },
+        {
+          "name": "sent",
+          "seconds": 5.33
+        },
+        {
+          "name": "response_visible",
+          "seconds": 6.733
+        }
+      ],
+      "captions": []
+    },
+    {
+      "filename": "add-expected-income.mp4",
+      "duration_sec": 7.367,
+      "markers": [
+        {
+          "name": "home_visible",
+          "seconds": 0.0
+        },
+        {
+          "name": "modal_opened",
+          "seconds": 1.704
+        },
+        {
+          "name": "saved",
+          "seconds": 4.701
+        }
+      ],
+      "captions": []
+    },
+    {
+      "filename": "add-bill.mp4",
+      "duration_sec": 8.367,
+      "markers": [
+        {
+          "name": "home_visible",
+          "seconds": 0.0
+        },
+        {
+          "name": "modal_opened",
+          "seconds": 1.713
+        },
+        {
+          "name": "saved",
+          "seconds": 5.819
+        }
+      ],
+      "captions": []
+    },
+    {
+      "filename": "plan-activity.mp4",
+      "duration_sec": 9.967,
+      "markers": [
+        {
+          "name": "home_visible",
+          "seconds": 0.0
+        },
+        {
+          "name": "activity_opened",
+          "seconds": 3.094
+        },
+        {
+          "name": "tax_export_opened",
+          "seconds": 7.092
+        }
+      ],
+      "captions": []
     }
   ]
 }

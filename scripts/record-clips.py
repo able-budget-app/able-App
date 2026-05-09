@@ -207,512 +207,325 @@ class TimestampLogger:
 # ──────────────────────────────────────────────────────────────────────────
 # Per-clip recordings
 # ──────────────────────────────────────────────────────────────────────────
-async def record_clip_1_deposit(page: Page, ts: TimestampLogger) -> dict:
-    """deposit-allocation.mp4 — log $3,000, watch allocation, end on home."""
-    st = CursorState(x=195, y=820)
+# ──────────────────────────────────────────────────────────────────────────
+# Helpers shared across clips
+# ──────────────────────────────────────────────────────────────────────────
+async def smooth_scroll(page: Page, distance: int, duration_ms: int = 1500) -> None:
+    """Smoothly scroll the in-app scroll container by `distance` px."""
+    await page.evaluate(f"""
+      async () => {{
+        const c = document.querySelector('#main-scroll') || document.scrollingElement;
+        const start = c.scrollTop;
+        const target = Math.max(0, Math.min(c.scrollHeight - c.clientHeight, start + {distance}));
+        const dur = {duration_ms};
+        const t0 = performance.now();
+        await new Promise(r => {{
+          function step(t) {{
+            const p = Math.min(1, (t - t0) / dur);
+            const e = p < 0.5 ? 2*p*p : 1 - Math.pow(-2*p+2, 2)/2;
+            c.scrollTop = start + (target - start) * e;
+            if (p < 1) requestAnimationFrame(step);
+            else r();
+          }}
+          requestAnimationFrame(step);
+        }});
+      }}
+    """)
+
+
+# ──────────────────────────────────────────────────────────────────────────
+# Per-clip recordings
+# Each clip is feature-focused, 8-15s, no captions baked in (composited later
+# in CapCut). Order in the CLIPS list at the bottom matches the brief.
+# ──────────────────────────────────────────────────────────────────────────
+
+async def record_home_overview(page: Page, ts: TimestampLogger) -> dict:
+    """1) Home — main card, then scroll to score card, then to chips/history."""
     ts.reset()
     ts.mark("home_visible")
-    await beat(page, 800)
-
-    # Tap "Log income →" CTA in the hero card.
-    await click_el(page, st, 'button.db-hero-cta-primary[onclick*="openAllocateSheet"]', ms=700)
-    ts.mark("allocate_sheet_opened")
-    await beat(page, 800)
-
-    # Type amount slowly.
-    await page.locator("#inc-amount").click()
-    await beat(page, 300)
-    await slow_type(page, "3000", per_char_ms=180)
-    ts.mark("amount_entered")
-    await beat(page, 500)
-
-    # Pick income source via direct value set (the <select> picker on
-    # mobile is OS-native and disrupts recording). The app reads .value.
-    await page.locator("#inc-source").select_option("Freelance design")
-    await beat(page, 600)
-
-    # Tap "Tell me where it goes →". This opens the alloc-preview modal,
-    # but the bottom sheet's z-index sits above it; close the sheet so the
-    # preview breakdown is the visible foreground.
-    primary_in_sheet = "#db-allocate-sheet button.btn-primary"
-    await click_el(page, st, primary_in_sheet, ms=600)
-    await page.evaluate("closeAllocateSheet()")
-    ts.mark("preview_open")
-    # Hold on the preview so the viewer can read the breakdown
-    # (tax set-aside, bills, debt, reserve, owner pay, free).
-    await beat(page, 2200)
-
-    # Tap "Confirm & log it"
-    confirm_btn = '#modal-alloc-preview button.btn-primary'
-    await click_el(page, st, confirm_btn, ms=600)
-    ts.mark("allocation_confirmed")
-    await beat(page, 1800)  # post-confirm settle + score update
-
-    # Drift cursor up to look at the score, then idle.
-    await ease_move(page, st, 195, 350, ms=800)
+    await beat(page, 1000)
+    await smooth_scroll(page, 380, duration_ms=1700)
     ts.mark("score_visible")
-    await beat(page, 2200)
-
+    await beat(page, 1300)
+    await smooth_scroll(page, 360, duration_ms=1600)
+    ts.mark("chips_visible")
+    await beat(page, 1500)
     return {"markers": ts.to_list()}
 
 
-async def record_clip_2_bills(page: Page, ts: TimestampLogger) -> dict:
-    """bills-view.mp4 — open Bills, scroll, expand one, return."""
+async def record_plan_bills(page: Page, ts: TimestampLogger) -> dict:
+    """2) Plan tab → Bills sub-tab, scroll the bill list."""
     st = CursorState(x=195, y=820)
     ts.reset()
     ts.mark("home_visible")
     await beat(page, 700)
-
-    # Tap "Plan" tab to reveal sub-tabs.
-    await click_el(page, st, 'button.nav-tab[data-group="plan"]', ms=600)
-    await beat(page, 500)
-    # Tap "Bills" sub-tab.
-    await click_el(page, st, 'button.sub-tab[data-sub="bills"]', ms=600)
+    await click_el(page, st, 'button.nav-tab[data-group="plan"]', ms=550)
+    await beat(page, 350)
+    await click_el(page, st, 'button.sub-tab[data-sub="bills"]', ms=500)
     ts.mark("bills_opened")
     await beat(page, 1000)
-
-    # Slow scroll through the bill list.
-    await page.evaluate("""
-        async () => {
-          const container = document.querySelector('#main-scroll') || document.scrollingElement;
-          const target = container.scrollHeight - container.clientHeight;
-          const start = container.scrollTop;
-          const distance = Math.max(0, Math.min(target - start, 380));
-          const duration = 2200;
-          const t0 = performance.now();
-          await new Promise(resolve => {
-            function step(t) {
-              const p = Math.min(1, (t - t0) / duration);
-              const e = p < 0.5 ? 2*p*p : 1 - Math.pow(-2*p + 2, 2) / 2;
-              container.scrollTop = start + distance * e;
-              if (p < 1) requestAnimationFrame(step);
-              else resolve();
-            }
-            requestAnimationFrame(step);
-          });
-        }
-    """)
+    await smooth_scroll(page, 320, duration_ms=1700)
     ts.mark("scroll_complete")
-    await beat(page, 1800)
-
-    # Click on the first non-debt bill row to expand its detail (rent).
-    # The `bills-row` rows toggle inline detail when clicked.
-    rent_row = "div.bills-row >> nth=0"
-    try:
-        await click_el(page, st, rent_row, ms=600)
-        ts.mark("bill_expanded")
-        await beat(page, 1500)
-    except Exception:
-        ts.mark("bill_expand_skipped")
-
-    # Return to home.
-    await click_el(page, st, 'button.nav-tab[data-group="home"]', ms=600)
-    ts.mark("home_returned")
-    await beat(page, 1200)
+    await beat(page, 1300)
     return {"markers": ts.to_list()}
 
 
-async def record_clip_3_window(page: Page, ts: TimestampLogger) -> dict:
-    """rolling-window-settings.mp4 — toggle planning window 7→21→14."""
+async def record_plan_whatif(page: Page, ts: TimestampLogger) -> dict:
+    """3) Plan → What-if. Type a hypothetical amount, watch the split render."""
     st = CursorState(x=195, y=820)
     ts.reset()
     ts.mark("home_visible")
     await beat(page, 600)
-
-    # More tab → Settings.
-    await click_el(page, st, 'button.nav-tab[data-group="more"]', ms=550)
-    await beat(page, 400)
-    await click_el(page, st, 'button.sub-tab[data-sub="settings"]', ms=550)
-    ts.mark("settings_opened")
-    await beat(page, 700)
-
-    # Scroll the Planning Window section into view.
-    await page.evaluate("""() => {
-      const tabs = document.getElementById('window-tabs');
-      if (tabs) tabs.scrollIntoView({behavior:'smooth', block:'center'});
-    }""")
-    await beat(page, 900)
-    ts.mark("window_section_visible")
-
-    # Tap 7 days, hold.
-    await click_el(page, st, 'button.window-tab[data-win="7"]', ms=600)
-    ts.mark("window_set_7")
-    await beat(page, 1200)
-
-    # Tap 21 days, hold.
-    await click_el(page, st, 'button.window-tab[data-win="21"]', ms=600)
-    ts.mark("window_set_21")
-    await beat(page, 1200)
-
-    # Tap 14 days, hold.
-    await click_el(page, st, 'button.window-tab[data-win="14"]', ms=600)
-    ts.mark("window_set_14")
-    await beat(page, 1400)
-
-    # Close back to home.
-    await click_el(page, st, 'button.nav-tab[data-group="home"]', ms=550)
-    ts.mark("home_returned")
-    await beat(page, 700)
+    await click_el(page, st, 'button.nav-tab[data-group="plan"]', ms=500)
+    await beat(page, 300)
+    await click_el(page, st, 'button.sub-tab[data-sub="whatif"]', ms=500)
+    ts.mark("whatif_opened")
+    await beat(page, 800)
+    await page.locator("#wi-amount").click()
+    await beat(page, 250)
+    await slow_type(page, "5000", per_char_ms=170)
+    ts.mark("amount_entered")
+    await beat(page, 2000)
     return {"markers": ts.to_list()}
 
 
-async def record_clip_4_coach(page: Page, ts: TimestampLogger) -> dict:
-    """ai-coach.mp4 — open coach panel, ask the $400 question, watch reply."""
+async def record_plan_forecast(page: Page, ts: TimestampLogger) -> dict:
+    """4) Plan → Forecast. Lands on the page, scrolls to show the form."""
+    st = CursorState(x=195, y=820)
+    ts.reset()
+    ts.mark("home_visible")
+    await beat(page, 600)
+    await click_el(page, st, 'button.nav-tab[data-group="plan"]', ms=500)
+    await beat(page, 300)
+    await click_el(page, st, 'button.sub-tab[data-sub="forecast"]', ms=500)
+    ts.mark("forecast_opened")
+    await beat(page, 1000)
+    await smooth_scroll(page, 220, duration_ms=1300)
+    ts.mark("form_visible")
+    await beat(page, 1600)
+    return {"markers": ts.to_list()}
+
+
+async def record_plan_debt(page: Page, ts: TimestampLogger) -> dict:
+    """5) Plan → Debt. Scroll the debt list to show balances/APRs."""
+    st = CursorState(x=195, y=820)
+    ts.reset()
+    ts.mark("home_visible")
+    await beat(page, 600)
+    await click_el(page, st, 'button.nav-tab[data-group="plan"]', ms=500)
+    await beat(page, 300)
+    await click_el(page, st, 'button.sub-tab[data-sub="debt"]', ms=500)
+    ts.mark("debt_opened")
+    await beat(page, 900)
+    await smooth_scroll(page, 280, duration_ms=1600)
+    ts.mark("scroll_complete")
+    await beat(page, 1300)
+    return {"markers": ts.to_list()}
+
+
+async def record_plan_activity(page: Page, ts: TimestampLogger) -> dict:
+    """6) Plan → Activity. Scroll the feed, then open the Tax export modal."""
+    st = CursorState(x=195, y=820)
+    ts.reset()
+    ts.mark("home_visible")
+    await beat(page, 600)
+    await click_el(page, st, 'button.nav-tab[data-group="plan"]', ms=500)
+    await beat(page, 300)
+    await click_el(page, st, 'button.sub-tab[data-sub="activity"]', ms=500)
+    ts.mark("activity_opened")
+    await beat(page, 900)
+    await smooth_scroll(page, 200, duration_ms=1100)
+    await beat(page, 600)
+    # Tap the Tax export pill (sits at the top of the activity page).
+    await page.evaluate("""
+      () => {
+        const c = document.querySelector('#main-scroll') || document.scrollingElement;
+        c.scrollTop = 0;
+      }
+    """)
+    await beat(page, 500)
+    try:
+        await click_el(page, st, '.tax-export-pill', ms=500)
+        ts.mark("tax_export_opened")
+        await beat(page, 1700)
+    except Exception:
+        ts.mark("tax_export_skipped")
+        await beat(page, 600)
+    return {"markers": ts.to_list()}
+
+
+async def record_score_detail(page: Page, ts: TimestampLogger) -> dict:
+    """7) Score tab — scroll the detail."""
+    st = CursorState(x=195, y=820)
+    ts.reset()
+    ts.mark("home_visible")
+    await beat(page, 600)
+    await click_el(page, st, 'button.nav-tab[data-group="score"]', ms=500)
+    ts.mark("score_opened")
+    await beat(page, 1000)
+    await smooth_scroll(page, 360, duration_ms=1800)
+    ts.mark("scroll_complete")
+    await beat(page, 1500)
+    return {"markers": ts.to_list()}
+
+
+async def record_more_learn(page: Page, ts: TimestampLogger) -> dict:
+    """8) More → Learn. Scroll the lesson list."""
+    st = CursorState(x=195, y=820)
+    ts.reset()
+    ts.mark("home_visible")
+    await beat(page, 600)
+    await click_el(page, st, 'button.nav-tab[data-group="more"]', ms=500)
+    await beat(page, 300)
+    await click_el(page, st, 'button.sub-tab[data-sub="learn"]', ms=500)
+    ts.mark("learn_opened")
+    await beat(page, 900)
+    await smooth_scroll(page, 320, duration_ms=1700)
+    ts.mark("scroll_complete")
+    await beat(page, 1300)
+    return {"markers": ts.to_list()}
+
+
+async def record_more_refer(page: Page, ts: TimestampLogger) -> dict:
+    """9) More → Refer. Scroll the referral page."""
+    st = CursorState(x=195, y=820)
+    ts.reset()
+    ts.mark("home_visible")
+    await beat(page, 600)
+    await click_el(page, st, 'button.nav-tab[data-group="more"]', ms=500)
+    await beat(page, 300)
+    await click_el(page, st, 'button.sub-tab[data-sub="refer"]', ms=500)
+    ts.mark("refer_opened")
+    await beat(page, 900)
+    await smooth_scroll(page, 280, duration_ms=1600)
+    ts.mark("scroll_complete")
+    await beat(page, 1300)
+    return {"markers": ts.to_list()}
+
+
+async def record_more_settings(page: Page, ts: TimestampLogger) -> dict:
+    """10) More → Settings. Scroll the settings categories."""
+    st = CursorState(x=195, y=820)
+    ts.reset()
+    ts.mark("home_visible")
+    await beat(page, 600)
+    await click_el(page, st, 'button.nav-tab[data-group="more"]', ms=500)
+    await beat(page, 300)
+    await click_el(page, st, 'button.sub-tab[data-sub="settings"]', ms=500)
+    ts.mark("settings_opened")
+    await beat(page, 900)
+    await smooth_scroll(page, 320, duration_ms=1800)
+    ts.mark("scroll_complete")
+    await beat(page, 1300)
+    return {"markers": ts.to_list()}
+
+
+async def record_log_income(page: Page, ts: TimestampLogger) -> dict:
+    """11) Home → Log new income → preview the split → confirm. Watch hero update."""
+    st = CursorState(x=195, y=820)
+    ts.reset()
+    ts.mark("home_visible")
+    await beat(page, 700)
+    await click_el(page, st, 'button.db-hero-cta-primary[onclick*="openAllocateSheet"]', ms=550)
+    ts.mark("sheet_opened")
+    await beat(page, 600)
+    await page.locator("#inc-amount").click()
+    await beat(page, 250)
+    await slow_type(page, "3000", per_char_ms=170)
+    await beat(page, 350)
+    await page.locator("#inc-source").select_option("Freelance design")
+    await beat(page, 400)
+    await click_el(page, st, '#db-allocate-sheet button.btn-primary', ms=500)
+    await page.evaluate("closeAllocateSheet()")
+    ts.mark("preview_open")
+    await beat(page, 1700)
+    await click_el(page, st, '#modal-alloc-preview button.btn-primary', ms=500)
+    ts.mark("confirmed")
+    await beat(page, 1500)
+    return {"markers": ts.to_list()}
+
+
+async def record_coach_ask(page: Page, ts: TimestampLogger) -> dict:
+    """12) Coach — ask a question, watch the reply stream in."""
     st = CursorState(x=320, y=780)
     ts.reset()
     ts.mark("home_visible")
     await beat(page, 600)
-
-    # Tap the Coach FAB (bottom-right circular button).
-    await click_el(page, st, ".coach-fab", ms=700)
-    ts.mark("coach_opened")
-    await beat(page, 900)
-
-    # Focus the coach textarea, then slow-type the question.
-    await page.locator("#coach-input").click()
-    await beat(page, 350)
-    await slow_type(
-        page,
-        "Can I take an extra $400 and pay down my credit card?",
-        per_char_ms=55,
-    )
-    ts.mark("question_typed")
-    await beat(page, 600)
-
-    # Send.
-    await click_el(page, st, "#coach-send", ms=600)
-    ts.mark("question_sent")
-    # Wait for the loading bubble to be replaced by the assistant reply
-    # (our stub delays ~1.4s).
-    await page.wait_for_function(
-        "() => !document.querySelector('.coach-bubble.loading')",
-        timeout=8000,
-    )
-    ts.mark("response_streamed")
-    await beat(page, 1500)
-
-    # Scroll the coach messages container so the full reply is visible.
-    await page.evaluate("""() => {
-      const m = document.getElementById('coach-messages');
-      if (!m) return;
-      const target = m.scrollHeight;
-      const start = m.scrollTop;
-      const t0 = performance.now();
-      const dur = 1800;
-      function step(t) {
-        const p = Math.min(1, (t - t0) / dur);
-        const e = p < 0.5 ? 2*p*p : 1 - Math.pow(-2*p + 2, 2) / 2;
-        m.scrollTop = start + (target - start) * e;
-        if (p < 1) requestAnimationFrame(step);
-      }
-      requestAnimationFrame(step);
-    }""")
-    await beat(page, 2400)
-    ts.mark("scroll_complete")
-
-    # Hold on the final state long enough for the viewer to read the reply.
-    await beat(page, 4500)
-    ts.mark("hold_complete")
-    return {"markers": ts.to_list()}
-
-
-async def record_clip_5_walkthrough(page: Page, ts: TimestampLogger) -> dict:
-    """full-walkthrough.mp4 — brisk end-to-end tour."""
-    st = CursorState(x=195, y=820)
-    ts.reset()
-    ts.mark("home_visible")
-    await beat(page, 700)
-
-    # Log income $2,500.
-    await click_el(page, st, 'button.db-hero-cta-primary[onclick*="openAllocateSheet"]', ms=550)
-    await beat(page, 500)
-    await page.locator("#inc-amount").click()
-    await beat(page, 200)
-    await slow_type(page, "2500", per_char_ms=140)
-    await beat(page, 300)
-    await page.locator("#inc-source").select_option("Freelance design")
-    await beat(page, 350)
-    await click_el(page, st, "#db-allocate-sheet button.btn-primary", ms=500)
-    await page.evaluate("closeAllocateSheet()")
-    ts.mark("preview_open")
-    await beat(page, 1300)
-    await click_el(page, st, '#modal-alloc-preview button.btn-primary', ms=500)
-    ts.mark("allocation_confirmed")
-    await beat(page, 1500)
-
-    # Bills view.
-    await click_el(page, st, 'button.nav-tab[data-group="plan"]', ms=500)
-    await beat(page, 350)
-    await click_el(page, st, 'button.sub-tab[data-sub="bills"]', ms=500)
-    ts.mark("bills_opened")
-    await beat(page, 1500)
-    await page.evaluate("""() => {
-      const c = document.querySelector('#main-scroll') || document.scrollingElement;
-      const t = Math.min(c.scrollHeight - c.clientHeight, 280);
-      const t0 = performance.now(); const s = c.scrollTop;
-      function step(now){
-        const p = Math.min(1, (now - t0) / 1500);
-        const e = p < 0.5 ? 2*p*p : 1 - Math.pow(-2*p + 2, 2) / 2;
-        c.scrollTop = s + t * e;
-        if (p < 1) requestAnimationFrame(step);
-      }
-      requestAnimationFrame(step);
-    }""")
-    await beat(page, 1700)
-
-    # Coach question.
     await click_el(page, st, ".coach-fab", ms=550)
     ts.mark("coach_opened")
-    await beat(page, 600)
+    await beat(page, 700)
     await page.locator("#coach-input").click()
     await beat(page, 250)
     await slow_type(page, "How's my reserve pacing?", per_char_ms=50)
     await beat(page, 400)
     await click_el(page, st, "#coach-send", ms=500)
-    ts.mark("coach_sent")
-    await page.wait_for_function(
-        "() => !document.querySelector('.coach-bubble.loading')",
-        timeout=8000,
-    )
-    ts.mark("coach_response")
-    # Hold long enough for the viewer to read at least the first paragraph
-    # of the response before moving on.
-    await beat(page, 5500)
-
-    # Close coach, return to home.
-    await click_el(page, st, ".coach-close", ms=500)
-    await beat(page, 500)
-    await click_el(page, st, 'button.nav-tab[data-group="home"]', ms=550)
-    ts.mark("home_returned")
-    await ease_move(page, st, 195, 320, ms=900)
-    await beat(page, 3500)
-    ts.mark("hold_complete")
-    return {"markers": ts.to_list()}
-
-
-# ──────────────────────────────────────────────────────────────────────────
-# Cinematic Reels — second batch (2026-04-25 evening)
-# ──────────────────────────────────────────────────────────────────────────
-# These clips ship with caption *suggestions* in manifest.json (start/end/text)
-# but NO baked-in text overlay — final captions are layered in CapCut so they
-# stay editable. C1 is intended as the bottom half of a split-screen; the top
-# half "Without Able" panel is composited in CapCut using the captions array.
-
-async def record_clip_n1_day1to31(page: Page, ts: TimestampLogger) -> dict:
-    """narrative-day1-to-31.mp4 — 5 emotional beats over an end-to-end walkthrough."""
-    st = CursorState(x=195, y=820)
-    ts.reset()
-    ts.mark("home_visible")
-    await beat(page, 700)
-
-    # Day 1 — the deposit lands.
-    ts.cap_open("Day 1. A check comes in.")
-    await click_el(page, st, 'button.db-hero-cta-primary[onclick*="openAllocateSheet"]', ms=600)
-    await beat(page, 350)
-    await page.locator("#inc-amount").click()
-    await beat(page, 200)
-    await slow_type(page, "3000", per_char_ms=170)
-    await beat(page, 1900)
-    ts.mark("day1_amount_held")
-
-    # Day 7 — bills view, scrolled, conveys "everything's accounted for".
-    ts.cap_open("Day 7. Every bill paid. Nothing missed.")
-    await page.evaluate("closeAllocateSheet()")
-    await beat(page, 350)
-    await click_el(page, st, 'button.nav-tab[data-group="plan"]', ms=500)
-    await beat(page, 250)
-    await click_el(page, st, 'button.sub-tab[data-sub="bills"]', ms=500)
-    await beat(page, 800)
-    await page.evaluate("""() => {
-      const c = document.querySelector('#main-scroll') || document.scrollingElement;
-      const t = Math.min(c.scrollHeight - c.clientHeight, 320);
-      const s = c.scrollTop; const t0 = performance.now(); const dur = 2000;
-      function step(now){
-        const p = Math.min(1, (now - t0) / dur);
-        const e = p < 0.5 ? 2*p*p : 1 - Math.pow(-2*p + 2, 2) / 2;
-        c.scrollTop = s + t * e;
-        if (p < 1) requestAnimationFrame(step);
-      }
-      requestAnimationFrame(step);
-    }""")
-    await beat(page, 2200)
-    ts.mark("day7_bills_held")
-
-    # Day 14 — reserve holds (home, score visible).
-    ts.cap_open("Day 14. Reserve holds.")
-    await click_el(page, st, 'button.nav-tab[data-group="home"]', ms=500)
-    await beat(page, 600)
-    await ease_move(page, st, 195, 320, ms=900)
-    await beat(page, 2400)
-    ts.mark("day14_score_held")
-
-    # Day 30 — coach checks in.
-    ts.cap_open("Day 30. Coach checks in.")
-    await click_el(page, st, ".coach-fab", ms=600)
-    await beat(page, 500)
-    await page.locator("#coach-input").click()
-    await beat(page, 250)
-    await slow_type(page, "How's my reserve pacing?", per_char_ms=45)
-    await beat(page, 350)
-    await click_el(page, st, "#coach-send", ms=400)
-    await page.wait_for_function(
-        "() => !document.querySelector('.coach-bubble.loading')",
-        timeout=8000,
-    )
-    await beat(page, 2400)
-    ts.mark("day30_reply_held")
-
-    # Day 31 — back to a calm home.
-    ts.cap_open("Day 31. Where did your money go? You know.")
-    await click_el(page, st, ".coach-close", ms=400)
-    await beat(page, 400)
-    await click_el(page, st, 'button.nav-tab[data-group="home"]', ms=500)
-    await beat(page, 600)
-    await ease_move(page, st, 195, 380, ms=900)
-    await beat(page, 3200)
-    ts.cap_close()
-    ts.mark("day31_held")
-    return {"markers": ts.to_list()}
-
-
-async def record_clip_b1_allocation_snap(page: Page, ts: TimestampLogger) -> dict:
-    """broll-allocation-snap.mp4 — silent micro-loop: deposit → preview opens."""
-    st = CursorState(x=195, y=820)
-    ts.reset()
-    await beat(page, 250)
-
-    await click_el(page, st, 'button.db-hero-cta-primary[onclick*="openAllocateSheet"]', ms=400)
-    await beat(page, 250)
-    await page.locator("#inc-amount").click()
-    await beat(page, 150)
-    await slow_type(page, "3000", per_char_ms=70)
-    await page.locator("#inc-source").select_option("Freelance design")
-    await beat(page, 200)
-    await click_el(page, st, "#db-allocate-sheet button.btn-primary", ms=350)
-    await page.evaluate("closeAllocateSheet()")
-    ts.mark("preview_open")
-    await beat(page, 2200)  # hold on the staggered breakdown
-    return {"markers": ts.to_list()}
-
-
-async def record_clip_b2_bill_paid(page: Page, ts: TimestampLogger) -> dict:
-    """broll-bill-paid.mp4 — silent micro-loop: tap a bill's checkbox, watch it tick."""
-    st = CursorState(x=195, y=820)
-    ts.reset()
-    await beat(page, 200)
-
-    await click_el(page, st, 'button.nav-tab[data-group="plan"]', ms=350)
-    await beat(page, 200)
-    await click_el(page, st, 'button.sub-tab[data-sub="bills"]', ms=350)
-    await beat(page, 700)
-
-    # Find the first un-checked bill and tap its checkbtn. Some demo-seed bills
-    # are pre-paid (rendered with .checked); we want to capture the *transition*
-    # to checked, so prefer an unchecked row.
-    target = "div.bills-row .checkbtn:not(.checked) >> nth=0"
-    try:
-        await click_el(page, st, target, ms=400)
-        ts.mark("bill_paid")
-    except Exception:
-        # Fallback: first checkbtn regardless of state.
-        await click_el(page, st, "div.bills-row .checkbtn >> nth=0", ms=400)
-        ts.mark("bill_paid_fallback")
-    await beat(page, 1500)
-    return {"markers": ts.to_list()}
-
-
-async def record_clip_b3_coach_typing(page: Page, ts: TimestampLogger) -> dict:
-    """broll-coach-typing.mp4 — silent micro-loop: question → typing dots → reply."""
-    st = CursorState(x=320, y=780)
-    ts.reset()
-    await beat(page, 200)
-
-    await click_el(page, st, ".coach-fab", ms=450)
-    await beat(page, 400)
-    await page.locator("#coach-input").click()
-    await beat(page, 200)
-    await slow_type(page, "How's my reserve pacing?", per_char_ms=42)
-    await beat(page, 250)
-    await click_el(page, st, "#coach-send", ms=350)
-    ts.mark("typing")
+    ts.mark("sent")
     await page.wait_for_function(
         "() => !document.querySelector('.coach-bubble.loading')",
         timeout=8000,
     )
     ts.mark("response_visible")
-    await beat(page, 1300)
+    await beat(page, 2500)
     return {"markers": ts.to_list()}
 
 
-async def record_clip_c1_compare(page: Page, ts: TimestampLogger) -> dict:
-    """compare-without-with.mp4 — full-frame 'with Able' arc; manifest captions
-    drive the 'Without Able' top-half panel composited in CapCut.
-    """
+async def record_add_expected_income(page: Page, ts: TimestampLogger) -> dict:
+    """13) Home → Add expected income chip → fill out → save."""
     st = CursorState(x=195, y=820)
     ts.reset()
-
-    # 0–5s: deposit lands, allocation preview opens.
-    ts.cap_open("Without Able\n$3,000 in. No plan.")
-    await beat(page, 500)
-    await click_el(page, st, 'button.db-hero-cta-primary[onclick*="openAllocateSheet"]', ms=500)
-    await beat(page, 350)
-    await page.locator("#inc-amount").click()
-    await beat(page, 150)
-    await slow_type(page, "3000", per_char_ms=130)
-    await page.locator("#inc-source").select_option("Freelance design")
+    ts.mark("home_visible")
+    await beat(page, 700)
+    await click_el(page, st, '.db-chip-action[onclick*="openAddIncomeModal"]', ms=550)
+    ts.mark("modal_opened")
+    await beat(page, 700)
+    await page.locator("#qfc-amt").click()
     await beat(page, 250)
-    await click_el(page, st, "#db-allocate-sheet button.btn-primary", ms=400)
-    await page.evaluate("closeAllocateSheet()")
-    ts.mark("preview_open")
+    await slow_type(page, "2400", per_char_ms=160)
+    await beat(page, 400)
+    await click_el(page, st, "#qfc-save-btn", ms=500)
+    ts.mark("saved")
     await beat(page, 1500)
+    return {"markers": ts.to_list()}
 
-    # 5–9s: confirm; score updates; sense of order.
-    ts.cap_open("Without Able\nWeek 2: half of it gone?")
-    await click_el(page, st, "#modal-alloc-preview button.btn-primary", ms=400)
-    ts.mark("allocation_confirmed")
-    await beat(page, 1700)
-    await ease_move(page, st, 195, 320, ms=700)
-    await beat(page, 1100)
 
-    # 9–13s: bills view — every dollar already has a job.
-    ts.cap_open("Without Able\nMonth end: $0. Maybe overdraft.")
-    await click_el(page, st, 'button.nav-tab[data-group="plan"]', ms=400)
+async def record_add_bill(page: Page, ts: TimestampLogger) -> dict:
+    """14) Home → Add bill chip → fill name + amount → save."""
+    st = CursorState(x=195, y=820)
+    ts.reset()
+    ts.mark("home_visible")
+    await beat(page, 700)
+    await click_el(page, st, '.db-chip-action[onclick*="openAddBillModal"]', ms=550)
+    ts.mark("modal_opened")
+    await beat(page, 700)
+    await page.locator("#nb-name").click()
+    await beat(page, 250)
+    await slow_type(page, "Internet", per_char_ms=110)
+    await beat(page, 250)
+    await page.locator("#nb-amt").click()
     await beat(page, 200)
-    await click_el(page, st, 'button.sub-tab[data-sub="bills"]', ms=400)
-    await beat(page, 1100)
-    await page.evaluate("""() => {
-      const c = document.querySelector('#main-scroll') || document.scrollingElement;
-      const t = Math.min(c.scrollHeight - c.clientHeight, 220);
-      const s = c.scrollTop; const t0 = performance.now(); const dur = 1300;
-      function step(now){
-        const p = Math.min(1, (now - t0) / dur);
-        const e = p < 0.5 ? 2*p*p : 1 - Math.pow(-2*p + 2, 2) / 2;
-        c.scrollTop = s + t * e;
-        if (p < 1) requestAnimationFrame(step);
-      }
-      requestAnimationFrame(step);
-    }""")
-    await beat(page, 1100)
-
-    # 13–16s: hold while the contrast lands.
-    ts.cap_open("Without Able\nWhere did it go?")
-    await beat(page, 2400)
-    ts.cap_close()
-    ts.mark("hold_complete")
+    await slow_type(page, "85", per_char_ms=160)
+    await beat(page, 400)
+    await click_el(page, st, "#bill-save-btn", ms=500)
+    ts.mark("saved")
+    await beat(page, 1500)
     return {"markers": ts.to_list()}
 
 
 CLIPS: list[Clip] = [
-    Clip("deposit-allocation",       18.0, record_clip_1_deposit),
-    Clip("bills-view",               14.0, record_clip_2_bills),
-    Clip("rolling-window-settings",  15.0, record_clip_3_window),
-    Clip("ai-coach",                 23.0, record_clip_4_coach),
-    Clip("full-walkthrough",         40.0, record_clip_5_walkthrough),
-    Clip("narrative-day1-to-31",     32.0, record_clip_n1_day1to31),
-    Clip("broll-allocation-snap",     6.0, record_clip_b1_allocation_snap),
-    Clip("broll-bill-paid",           4.5, record_clip_b2_bill_paid),
-    Clip("broll-coach-typing",        7.5, record_clip_b3_coach_typing),
-    Clip("compare-without-with",     17.0, record_clip_c1_compare),
+    Clip("home-overview",          12.0, record_home_overview),
+    Clip("plan-bills",             10.0, record_plan_bills),
+    Clip("plan-whatif",            11.0, record_plan_whatif),
+    Clip("plan-forecast",          11.0, record_plan_forecast),
+    Clip("plan-debt",              10.0, record_plan_debt),
+    Clip("plan-activity",          13.0, record_plan_activity),
+    Clip("score-detail",           11.0, record_score_detail),
+    Clip("more-learn",             10.0, record_more_learn),
+    Clip("more-refer",             10.0, record_more_refer),
+    Clip("more-settings",          10.0, record_more_settings),
+    Clip("log-income",             14.0, record_log_income),
+    Clip("coach-ask",              14.0, record_coach_ask),
+    Clip("add-expected-income",    11.0, record_add_expected_income),
+    Clip("add-bill",               13.0, record_add_bill),
 ]
 
 
@@ -750,12 +563,21 @@ def start_static_server() -> subprocess.Popen | None:
     raise RuntimeError("static server failed to start")
 
 
+TRIM_START_SECONDS = 1.0  # strip the WebM intro: blank frame + font-fallback flash
+
 def transcode_to_mp4(webm: Path, mp4: Path, target_seconds: float) -> float:
-    """WebM → MP4 H.264 1080x1920 30fps + silent AAC, trimmed to target_seconds."""
+    """WebM → MP4 H.264 1080x1920 30fps + silent AAC, trimmed to target_seconds.
+
+    Skips the first TRIM_START_SECONDS of the WebM. Playwright begins recording
+    on context creation, so the first ~1s captures Chromium's blank-page state
+    and Bricolage Grotesque's font-swap flash. Trimming there makes every clip
+    open on a stable, brand-correct frame.
+    """
     if mp4.exists():
         mp4.unlink()
     cmd = [
         "ffmpeg", "-y",
+        "-ss", f"{TRIM_START_SECONDS:.3f}",
         "-i", str(webm),
         "-f", "lavfi", "-i", "anullsrc=channel_layout=stereo:sample_rate=48000",
         "-vf", f"scale={TARGET_W}:{TARGET_H}:flags=lanczos,fps={RECORD_FPS}",
@@ -816,6 +638,11 @@ async def run_one(playwright: Playwright, clip: Clip) -> ClipResult:
         "() => document.getElementById('app') && document.getElementById('app').style.display === 'block'",
         timeout=10000,
     )
+    # Wait for Bricolage Grotesque to finish loading. Without this, the first
+    # frames of the recording show the system-font fallback before the swap —
+    # the visible "font glitch" at clip start. Pair this with TRIM_START_SECONDS
+    # in transcode for a clean opening frame.
+    await page.evaluate("document.fonts.ready")
     # Defense in depth: if either popup snuck through (init-script timing race),
     # dismiss them programmatically before any click in the clip body fires.
     await page.evaluate("""
