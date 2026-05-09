@@ -15,7 +15,7 @@ window.REELS = [
       { text: "Day 1.\nMoney {lands}.", durationSec: 2.5 },
       { text: "Day 7.\nA {subscription}.", durationSec: 3 },
       { text: "Day 14.\nThe {leak}.", durationSec: 2.5, theme: 'black' },
-      { text: "Day 30.\n{$4,000} gone?", durationSec: 3, theme: 'black' },
+      { text: "Day 30.\n{$1,000} gone?", durationSec: 3, theme: 'black' },
       { text: "Day 31.\n{Shame.}", durationSec: 2.5, theme: 'black' },
       { text: "Not willpower.\nA {Day 1} problem.", durationSec: 3.5, theme: 'green' },
       { text: "{Free} for 30 days.\nbecomeable.app", durationSec: 4.5, theme: 'green' },
@@ -37,7 +37,7 @@ window.REELS = [
   // R3 — The 5 buckets in order (brand green) — order locked to app: tax→bills→debt→reserve→free
   { id: 'R3', slug: 'five-buckets', theme: 'green', format: 'text-reel', durationSec: 20, eyebrow: 'mixed',
     beats: [
-      { text: "Every dollar\ngets {a job}.", durationSec: 2.5 },
+      { text: "Every deposit.\n{Already split.}", durationSec: 2.5 },
       { text: "1. {Taxes.}\nOff the top.", durationSec: 2.5 },
       { text: "2. {Bills.}\nReserved early.", durationSec: 2.5 },
       { text: "3. {Debt.}\nOn schedule.", durationSec: 3 },
@@ -77,7 +77,7 @@ window.REELS = [
       { text: "You're not\n{bad with money}.", durationSec: 3 },
       { text: "You were handed\nthe {wrong tool}.", durationSec: 3 },
       { text: "Every app assumes\na {paycheck}.", durationSec: 3 },
-      { text: "Yours is {variable}.", durationSec: 2.5 },
+      { text: "Your income\nis {variable}.", durationSec: 2.5 },
       { text: "becomeable.app", durationSec: 2.5 },
     ] },
 
@@ -384,11 +384,11 @@ window.REELS = [
       { text: "becomeable.app", durationSec: 1.5 },
     ] },
 
-  // R37 — Tip: name every dollar (page)
+  // R37 — Tip: name every deposit (page)
   { id: 'R37', slug: 'tip-name-every-dollar', theme: 'page', format: 'text-reel', durationSec: 9, eyebrow: 'mixed',
     beats: [
       { text: "One rule.\n{For variable income.}", durationSec: 2.5 },
-      { text: "Every dollar\ngets {a job}.", durationSec: 3 },
+      { text: "Every deposit\ngets {a destination}.", durationSec: 3 },
       { text: "Before it\n{leaves your hand}.", durationSec: 2 },
       { text: "becomeable.app", durationSec: 1.5 },
     ] },

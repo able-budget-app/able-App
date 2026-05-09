@@ -315,7 +315,7 @@ Day 1: a deposit lands. The relief is so total that you forget you ever blamed y
 
 The loop is not a personal failing. It's the predictable output of a setup with no real system underneath. The brace, the blame, and the forget all happen because there is no answer to "where does each dollar go the moment it arrives." Without that answer, the only available coping strategy is the loop.
 
-The fix is the answer. Every dollar gets a job. Day 1, automatically. Built Able to do that.
+The fix is the answer. Every deposit gets a destination. Day 1, automatically. Built Able to do that.
 
 Free for 30 days. $14.99/mo or $129/yr after.`,
   },
@@ -486,7 +486,7 @@ That metric is the wrong metric for you.
 
 The thing you actually want is to think about money less. Not in a denial way — in a "the system is running and I trust it" way. The right tool is the one you open less and less over time, because the questions stop being open questions.
 
-Boring is the goal. Specific is how you get there. Specifically: every dollar gets a job the moment it arrives, taxes come off the top, bills are covered before they're due, the reserve protects slow months, debt drops on schedule, what's left is yours to spend. With those decisions made automatically, there's nothing to obsess over.
+Boring is the goal. Specific is how you get there. Specifically: every deposit gets a destination the moment it arrives, taxes come off the top, bills are covered before they're due, the reserve protects slow months, debt drops on schedule, what's left is yours to spend. With those decisions made automatically, there's nothing to obsess over.
 
 Built Able for that. Free for 30 days. $14.99/mo or $129/yr after.`,
   },
@@ -501,7 +501,7 @@ Free for 30 days. Link in bio.
 
 #freelancing #1099life #variableincome #budgeting #selfemployed`,
 
-    tt: `Every dollar gets a job the moment it arrives.
+    tt: `Every deposit gets a destination the moment it arrives.
 
 That's the whole product.
 
@@ -513,7 +513,7 @@ becomeable.app
 
 The reason money "disappears" between Day 1 and Day 30 is that it sits idle. Idle money is not idle for long — it leaks. $14 here. A subscription. A weekend. The leak isn't dramatic, which is why you can't see it. By Day 30, $400-$1,000 is gone, and there's nothing to point to.
 
-The fix is to never let money be idle in the first place. Every dollar gets a job — taxes off the top, bills covered, a slice to a reserve for slow months, debt killed down, what's left yours to spend, guilt-free — at the exact moment the deposit hits.
+The fix is to never let money be idle in the first place. Every deposit gets a destination — taxes off the top, bills covered, a slice to a reserve for slow months, debt killed down, what's left yours to spend, guilt-free — at the exact moment the deposit hits.
 
 When the money has a job, it stops drifting. The leak closes.
 
@@ -1199,7 +1199,7 @@ That's what Able is. Free for 30 days. $14.99/mo or $129/yr after.`,
 
 Three words. The whole product is built around this single observation. Idle money does not stay idle for long.
 
-The fix is to never let it sit. Every dollar gets a job, the moment it arrives.
+The fix is to never let it sit. Every deposit gets a destination, the moment it arrives.
 
 Free for 30 days. Link in bio.
 
@@ -1275,7 +1275,7 @@ Built Able to run this exact model, automatically. Free for 30 days. $14.99/mo o
 
   '6|Tue': {
     // R3 five-buckets · reel
-    ig: `Every dollar gets a job:
+    ig: `Every deposit gets a destination:
 
 1. Taxes — not yours.
 2. Bills — don't wait.
@@ -1289,7 +1289,7 @@ $14.99/mo or $129/yr (save $50). Free for 30 days. Link in bio.
 
 #freelancing #1099life #variableincome #budgeting #selfemployed`,
 
-    tt: `Every dollar gets a job.
+    tt: `Every deposit gets a destination.
 
 Taxes. Bills. Reserve. Debt. Free.
 
@@ -1297,7 +1297,7 @@ becomeable.app
 
 #freelancetok #1099 #moneytok`,
 
-    li: `Every dollar gets a job. The job-list is five items long.
+    li: `Every deposit gets a destination. The job-list is five items long.
 
 Taxes — not yours. The IRS doesn't withhold for self-employment income, so 25-35% of every deposit gets routed to a separate account you don't touch. Treat it like the IRS is already taking it.
 
@@ -1316,7 +1316,7 @@ $14.99/mo or $129/yr (save $50 with annual). Free for 30 days first.`,
 
   '6|Wed': {
     // C3 five-buckets · carousel
-    ig: `Every dollar gets a job →
+    ig: `Every deposit gets a destination →
 
 Five buckets. Specific jobs. (Swipe.)
 
@@ -1326,7 +1326,7 @@ $14.99/mo or $129/yr. Free for 30 days. Link in bio.
 
 #freelancing #1099life #variableincome #budgeting #selfemployed`,
 
-    tt: `Every dollar gets a job →
+    tt: `Every deposit gets a destination →
 
 1. Taxes ~30%. Not yours.
 2. Bills. Spread across months.
@@ -1338,7 +1338,7 @@ becomeable.app
 
 #freelancetok #1099 #moneytok`,
 
-    li: `Every dollar gets a job. Five buckets. Specific jobs each.
+    li: `Every deposit gets a destination. Five buckets. Specific jobs each.
 
 Bucket one: taxes. Roughly 30% of every deposit. Not yours. Move it the moment the deposit lands so you can't accidentally spend it.
 
@@ -3422,7 +3422,7 @@ The Leaker. Money lands and gets routed to a bucket — sometimes — but the sm
 
 The Shame Cycle. The user moves between freezing and leaking. Big deposit lands, brief relief, then the leak begins. By Day 28, the bracing starts. Day 30 confirms the worst. Day 1 of the new month, the cycle resets with promises to do better.
 
-All three resolve when every dollar gets a job at deposit. The patterns weren't moral failures. They were the predictable response to an unstructured system.
+All three resolve when every deposit gets a destination at deposit. The patterns weren't moral failures. They were the predictable response to an unstructured system.
 
 Free for 30 days. $14.99/mo or $129/yr after.`,
   },
@@ -3874,7 +3874,7 @@ The pile doesn't stay full. It leaks. Subscriptions renew. Small purchases happe
 
 The diagnosis is precise: not overspending, freezing. The leak isn't from spending too much. It's from money sitting undirected. Energy without a destination flows wherever gravity sends it. Money without a job behaves the same way.
 
-The fix is direction. Every dollar gets a job the moment it lands. Tax bucket. Bills. Reserve. Debt. Free spending. Five jobs, assigned at deposit, before any spending decisions can pull from the pool.
+The fix is direction. Every deposit gets a destination the moment it lands. Tax bucket. Bills. Reserve. Debt. Free spending. Five jobs, assigned at deposit, before any spending decisions can pull from the pool.
 
 Same money. More work, in the structural sense — each dollar working in its assigned role instead of dispersing into general spending.
 
