@@ -11,8 +11,17 @@ const APP_URL = (Deno.env.get('APP_URL') || 'https://becomeable.app').trim().rep
 const IS_PREVIEW = Deno.args.includes('--preview');
 
 if (!IS_PREVIEW) Deno.serve(async (req) => {
+  // Two auth paths:
+  //   1. pg_cron — sends Bearer ${CRON_SECRET} via the daily schedule.
+  //   2. Manual test — INTERNAL_FUNCTION_SECRET via x-internal-auth, used
+  //      by scripts/test-email-trigger.sh. Both are project-level secrets;
+  //      this is a backstop for testing without rotating CRON_SECRET (which
+  //      would require also updating the pg_cron job).
   const auth = req.headers.get('Authorization') ?? '';
-  if (auth !== `Bearer ${CRON_SECRET}`) {
+  const internalHeader = req.headers.get('x-internal-auth') ?? '';
+  const isCron = auth === `Bearer ${CRON_SECRET}`;
+  const isInternal = !!INTERNAL_SECRET && internalHeader === INTERNAL_SECRET;
+  if (!isCron && !isInternal) {
     return new Response(JSON.stringify({ error: 'Unauthorized' }), { status: 401 });
   }
 
