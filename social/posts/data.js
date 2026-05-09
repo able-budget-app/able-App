@@ -252,6 +252,95 @@ window.POSTS = [
   // 63 — L3 Sat · CTA CLOSE
   { id: '63', slug: 'free-seven-days', theme: 'green', tpl: 'B', eyebrow: 'mixed', center: true,
     punch: "Free for {30 days}.\n{becomeable.app}" },
+
+  // ─── Persona-targeted posts (added 2026-05-08, layer "Persona") ───
+  // 4 personas × 2 posts each. Each speaks the persona's own moment in
+  // first person without naming the persona — the eyebrow signals fit.
+
+  { id: '64', slug: 'fare-tuesday-rent-friday', cat: 'Persona', theme: 'page', tpl: 'A', eyebrow: 'gig',
+    muted: "Last fare was Tuesday.",
+    punch: "Rent's Friday.\n{This is what\nAble is for.}" },
+
+  { id: '65', slug: 'surge-ended', cat: 'Persona', theme: 'black', tpl: 'A', eyebrow: 'gig',
+    muted: "Surge ended\nat 9 PM.",
+    punch: "The bills don't\n{know that.}" },
+
+  { id: '66', slug: 'algorithm-cut-views', cat: 'Persona', theme: 'green', tpl: 'A', eyebrow: 'creator',
+    muted: "Algorithm cut\nyour views in half.",
+    punch: "The bills didn't\n{cut in half.}" },
+
+  { id: '67', slug: 'sponsor-60-rent-14', cat: 'Persona', theme: 'white', tpl: 'A', eyebrow: 'creator',
+    muted: "Sponsor pays in 60.",
+    punch: "Rent waits\n{fourteen.}" },
+
+  { id: '68', slug: 'commission-then-silence', cat: 'Persona', theme: 'page', tpl: 'A', eyebrow: 'commission',
+    muted: "$30k commission lands.",
+    punch: "Then six weeks\n{of silence.}" },
+
+  { id: '69', slug: 'big-deal-not-whole-month', cat: 'Persona', theme: 'glass-dark', tpl: 'A', eyebrow: 'commission',
+    muted: "Big deal closed.",
+    punch: "Don't make it\nyour {whole month.}" },
+
+  { id: '70', slug: 'net-60-net-zero', cat: 'Persona', theme: 'white', tpl: 'A', eyebrow: 'business',
+    muted: "Net-60 invoice.",
+    punch: "Bills are due\n{net-zero.}" },
+
+  { id: '71', slug: 'last-on-payroll', cat: 'Persona', theme: 'green', tpl: 'A', eyebrow: 'business',
+    muted: "You're the last person\non payroll.",
+    punch: "{Pay yourself}\nfirst." },
+
+  // ─── Tactical money tips (added 2026-05-08, layer "Tip") ───
+  // 12 imperative actionable tips. All use the main `mixed` eyebrow.
+
+  { id: '72', slug: 'budget-by-deposit', cat: 'Tip', theme: 'page', tpl: 'A', eyebrow: 'mixed',
+    muted: "Don't budget\nby month.",
+    punch: "Budget by\n{deposit.}" },
+
+  { id: '73', slug: 'taxes-first-always', cat: 'Tip', theme: 'white', tpl: 'B', eyebrow: 'mixed',
+    punch: "Set aside taxes\n{first.}\nAlways." },
+
+  { id: '74', slug: 'refill-the-reserve', cat: 'Tip', theme: 'green', tpl: 'A', eyebrow: 'mixed',
+    muted: "Slow week?",
+    punch: "Don't dip in.\n{Refill the reserve}\nnext paycheck." },
+
+  { id: '75', slug: 'spread-the-big-check', cat: 'Tip', theme: 'page', tpl: 'A', eyebrow: 'mixed',
+    muted: "Big check?",
+    punch: "Don't spend it.\n{Spread it.}" },
+
+  { id: '76', slug: 'bills-debt-spending', cat: 'Tip', theme: 'white', tpl: 'A', eyebrow: 'mixed',
+    muted: "Bills before debt.",
+    punch: "{Debt} before\nspending." },
+
+  { id: '77', slug: 'reserve-floor-under-floor', cat: 'Tip', theme: 'glass-dark', tpl: 'A', eyebrow: 'mixed',
+    muted: "Reserve isn't\noptional.",
+    punch: "It's the\n{floor under}\nthe floor." },
+
+  { id: '78', slug: 'irs-doesnt-care', cat: 'Tip', theme: 'green', tpl: 'A', eyebrow: 'mixed',
+    muted: "The IRS doesn't care\nwhat kind of month\nyou had.",
+    punch: "Set aside taxes\n{off the top.}" },
+
+  { id: '79', slug: 'if-you-cant-see-it-move-it', cat: 'Tip', theme: 'white', tpl: 'A', eyebrow: 'mixed',
+    muted: "If you can't see it,",
+    punch: "{move it.}" },
+
+  { id: '80', slug: 'same-rule-per-deposit', cat: 'Tip', theme: 'page', tpl: 'A', eyebrow: 'mixed',
+    muted: "Variable income\nneeds variable rules.",
+    punch: "Same rule.\n{Per deposit.}" },
+
+  { id: '81', slug: 'one-pile-five-jobs', cat: 'Tip', theme: 'green', tpl: 'A', eyebrow: 'mixed',
+    muted: "One pile.\nFive jobs.",
+    punch: "{That's the\nwhole system.}" },
+
+  { id: '82', slug: 'pay-yourself-first-tip', cat: 'Tip', theme: 'page', tpl: 'A', eyebrow: 'mixed',
+    muted: "Don't pay yourself\nlast.",
+    punch: "Pay yourself\n{first.}" },
+
+  { id: '83', slug: 'every-deposit-good-month', cat: 'Tip', theme: 'white', tpl: 'A', eyebrow: 'mixed',
+    muted: "Don't wait for\na 'good month.'",
+    punch: "Every deposit\nis a {good month.}" },
+
+  // Stat-fact posts (84-93) added separately once source verification
+  // returns from the research task — they need real citations.
 ];
 
 
@@ -1550,6 +1639,122 @@ window.CAROUSELS = [
       { tpl: 'A', eyebrow: 'mixed', theme: 'green',
         muted: "Free for 30 days.",
         punch: "{becomeable.app}",
+        meta: 'becomeable.app' },
+  ] },
+
+  // ─── Education carousels (added 2026-05-08, layer "Edu") ───
+  // Concept-teaching, not tactical. Walks the reader through ideas they
+  // need to understand to use Able well or appreciate why it exists.
+
+  // C46 — Emergency fund vs reserve (page · pricing CTA)
+  { id: 'C46', slug: 'emergency-fund-vs-reserve', cat: 'Edu', theme: 'page', slides: [
+      { tpl: 'B', eyebrow: 'Swipe →',
+        punch: "Emergency fund\nvs {reserve.}\nWhat's the\ndifference?",
+        meta: '1 / 6' },
+      { tpl: 'A', eyebrow: 'mixed',
+        muted: "Emergency fund.",
+        punch: "For unexpected things.\nJob loss. Hospital.\n{Big repair.}",
+        meta: '2 / 6' },
+      { tpl: 'A', eyebrow: 'mixed',
+        muted: "Reserve.",
+        punch: "For expected variability.\nSlow weeks.\n{Light months.}",
+        meta: '3 / 6' },
+      { tpl: 'A', eyebrow: 'mixed',
+        muted: "Emergency fund:\n3 to 6 months\nof essentials.",
+        punch: "Sits {untouched.}",
+        meta: '4 / 6' },
+      { tpl: 'A', eyebrow: 'mixed',
+        muted: "Reserve:\n1 to 3 months\nof floor.",
+        punch: "{Refilled} every\ndeposit.",
+        meta: '5 / 6' },
+      { tpl: 'B', eyebrow: 'mixed', theme: 'green',
+        punch: "Build both.\nDifferent jobs.\n{Free for 30 days.}",
+        meta: 'becomeable.app' },
+  ] },
+
+  // C47 — Quarterly taxes 5-min primer (white · website CTA)
+  { id: 'C47', slug: 'quarterly-taxes-primer', cat: 'Edu', theme: 'white', slides: [
+      { tpl: 'B', eyebrow: 'Swipe →',
+        punch: "Quarterly taxes.\nThe {five-minute}\nprimer.",
+        meta: '1 / 7' },
+      { tpl: 'A', eyebrow: 'mixed',
+        muted: "If you'll owe more\nthan $1,000 in taxes",
+        punch: "off non-W-2 income,\nthe IRS wants\n{quarterly payments.}",
+        meta: '2 / 7' },
+      { tpl: 'A', eyebrow: 'mixed',
+        muted: "Four due dates:",
+        punch: "Apr 15. Jun 15.\nSep 15. {Jan 15.}",
+        meta: '3 / 7' },
+      { tpl: 'A', eyebrow: 'mixed',
+        muted: "How much?",
+        punch: "{25 to 30 percent}\nof net income\neach quarter.",
+        meta: '4 / 7' },
+      { tpl: 'A', eyebrow: 'mixed',
+        muted: "Don't have it?",
+        punch: "{Underpayment penalty}\nkicks in.",
+        meta: '5 / 7' },
+      { tpl: 'A', eyebrow: 'mixed',
+        muted: "The fix:",
+        punch: "Set aside on every\ndeposit.\n{Not on April 14.}",
+        meta: '6 / 7' },
+      { tpl: 'B', eyebrow: 'mixed', theme: 'green',
+        punch: "Built into Able.\n{Free for 30 days.}",
+        meta: 'becomeable.app' },
+  ] },
+
+  // C48 — Why monthly budgets fail with variable income (page · website)
+  { id: 'C48', slug: 'monthly-budgets-fail', cat: 'Edu', theme: 'page', slides: [
+      { tpl: 'B', eyebrow: 'Swipe →',
+        punch: "Why monthly\nbudgets fail with\n{variable income.}",
+        meta: '1 / 6' },
+      { tpl: 'A', eyebrow: 'mixed',
+        muted: "Monthly budgets assume",
+        punch: "a {steady paycheck.}\nYours isn't.",
+        meta: '2 / 6' },
+      { tpl: 'A', eyebrow: 'mixed',
+        muted: "You sit down\non the 1st.\nYou divide what\nyou have.",
+        punch: "The math is wrong\nby the {15th.}",
+        meta: '3 / 6' },
+      { tpl: 'A', eyebrow: 'mixed',
+        muted: "Big month:",
+        punch: "false confidence.\nSlow month:\n{scramble.}",
+        meta: '4 / 6' },
+      { tpl: 'A', eyebrow: 'mixed',
+        muted: "Per-deposit budget\nhandles both.",
+        punch: "Each dollar gets a job\n{when it lands.}",
+        meta: '5 / 6' },
+      { tpl: 'B', eyebrow: 'mixed', theme: 'green',
+        punch: "That's Floor-First.\n{Free for 30 days.}",
+        meta: 'becomeable.app' },
+  ] },
+
+  // C49 — 5 mistakes 1099 workers make in year one (black · website)
+  { id: 'C49', slug: 'five-mistakes-1099-year-one', cat: 'Edu', theme: 'black', slides: [
+      { tpl: 'B', eyebrow: 'Swipe →',
+        punch: "5 mistakes\n1099 workers make\nin {year one.}",
+        meta: '1 / 7' },
+      { tpl: 'A', eyebrow: 'mixed',
+        muted: "1.",
+        punch: "Not setting aside\ntaxes\n{per deposit.}",
+        meta: '2 / 7' },
+      { tpl: 'A', eyebrow: 'mixed',
+        muted: "2.",
+        punch: "Co-mingling\nbusiness and personal\n{accounts.}",
+        meta: '3 / 7' },
+      { tpl: 'A', eyebrow: 'mixed',
+        muted: "3.",
+        punch: "Treating big checks\nlike a {raise.}",
+        meta: '4 / 7' },
+      { tpl: 'A', eyebrow: 'mixed',
+        muted: "4.",
+        punch: "No emergency fund.\n{No reserve.}",
+        meta: '5 / 7' },
+      { tpl: 'A', eyebrow: 'mixed',
+        muted: "5.",
+        punch: "Paying themselves\n{last.}",
+        meta: '6 / 7' },
+      { tpl: 'B', eyebrow: 'mixed', theme: 'green',
+        punch: "Built for variable income.\n{Free for 30 days.}",
         meta: 'becomeable.app' },
   ] },
 ];
