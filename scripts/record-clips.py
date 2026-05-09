@@ -215,7 +215,7 @@ async def record_clip_1_deposit(page: Page, ts: TimestampLogger) -> dict:
     await beat(page, 800)
 
     # Tap "Log income →" CTA in the hero card.
-    await click_el(page, st, ".db-hero-cta", ms=700)
+    await click_el(page, st, 'button.db-hero-cta-primary[onclick*="openAllocateSheet"]', ms=700)
     ts.mark("allocate_sheet_opened")
     await beat(page, 800)
 
@@ -239,7 +239,7 @@ async def record_clip_1_deposit(page: Page, ts: TimestampLogger) -> dict:
     await page.evaluate("closeAllocateSheet()")
     ts.mark("preview_open")
     # Hold on the preview so the viewer can read the breakdown
-    # (tax set-aside, bills, debt, buffer, owner pay, free).
+    # (tax set-aside, bills, debt, reserve, owner pay, free).
     await beat(page, 2200)
 
     # Tap "Confirm & log it"
@@ -424,7 +424,7 @@ async def record_clip_5_walkthrough(page: Page, ts: TimestampLogger) -> dict:
     await beat(page, 700)
 
     # Log income $2,500.
-    await click_el(page, st, ".db-hero-cta", ms=550)
+    await click_el(page, st, 'button.db-hero-cta-primary[onclick*="openAllocateSheet"]', ms=550)
     await beat(page, 500)
     await page.locator("#inc-amount").click()
     await beat(page, 200)
@@ -466,7 +466,7 @@ async def record_clip_5_walkthrough(page: Page, ts: TimestampLogger) -> dict:
     await beat(page, 600)
     await page.locator("#coach-input").click()
     await beat(page, 250)
-    await slow_type(page, "How's my buffer pacing?", per_char_ms=50)
+    await slow_type(page, "How's my reserve pacing?", per_char_ms=50)
     await beat(page, 400)
     await click_el(page, st, "#coach-send", ms=500)
     ts.mark("coach_sent")
@@ -507,7 +507,7 @@ async def record_clip_n1_day1to31(page: Page, ts: TimestampLogger) -> dict:
 
     # Day 1 — the deposit lands.
     ts.cap_open("Day 1. A check comes in.")
-    await click_el(page, st, ".db-hero-cta", ms=600)
+    await click_el(page, st, 'button.db-hero-cta-primary[onclick*="openAllocateSheet"]', ms=600)
     await beat(page, 350)
     await page.locator("#inc-amount").click()
     await beat(page, 200)
@@ -538,8 +538,8 @@ async def record_clip_n1_day1to31(page: Page, ts: TimestampLogger) -> dict:
     await beat(page, 2200)
     ts.mark("day7_bills_held")
 
-    # Day 14 — buffer holds (home, score visible).
-    ts.cap_open("Day 14. Buffer holds.")
+    # Day 14 — reserve holds (home, score visible).
+    ts.cap_open("Day 14. Reserve holds.")
     await click_el(page, st, 'button.nav-tab[data-group="home"]', ms=500)
     await beat(page, 600)
     await ease_move(page, st, 195, 320, ms=900)
@@ -552,7 +552,7 @@ async def record_clip_n1_day1to31(page: Page, ts: TimestampLogger) -> dict:
     await beat(page, 500)
     await page.locator("#coach-input").click()
     await beat(page, 250)
-    await slow_type(page, "How's my buffer pacing?", per_char_ms=45)
+    await slow_type(page, "How's my reserve pacing?", per_char_ms=45)
     await beat(page, 350)
     await click_el(page, st, "#coach-send", ms=400)
     await page.wait_for_function(
@@ -581,7 +581,7 @@ async def record_clip_b1_allocation_snap(page: Page, ts: TimestampLogger) -> dic
     ts.reset()
     await beat(page, 250)
 
-    await click_el(page, st, ".db-hero-cta", ms=400)
+    await click_el(page, st, 'button.db-hero-cta-primary[onclick*="openAllocateSheet"]', ms=400)
     await beat(page, 250)
     await page.locator("#inc-amount").click()
     await beat(page, 150)
@@ -631,7 +631,7 @@ async def record_clip_b3_coach_typing(page: Page, ts: TimestampLogger) -> dict:
     await beat(page, 400)
     await page.locator("#coach-input").click()
     await beat(page, 200)
-    await slow_type(page, "How's my buffer pacing?", per_char_ms=42)
+    await slow_type(page, "How's my reserve pacing?", per_char_ms=42)
     await beat(page, 250)
     await click_el(page, st, "#coach-send", ms=350)
     ts.mark("typing")
@@ -654,7 +654,7 @@ async def record_clip_c1_compare(page: Page, ts: TimestampLogger) -> dict:
     # 0–5s: deposit lands, allocation preview opens.
     ts.cap_open("Without Able\n$3,000 in. No plan.")
     await beat(page, 500)
-    await click_el(page, st, ".db-hero-cta", ms=500)
+    await click_el(page, st, 'button.db-hero-cta-primary[onclick*="openAllocateSheet"]', ms=500)
     await beat(page, 350)
     await page.locator("#inc-amount").click()
     await beat(page, 150)
@@ -800,6 +800,13 @@ async def run_one(playwright: Playwright, clip: Clip) -> ClipResult:
     page = await context.new_page()
     page.on("console", lambda m: print(f"  [console.{m.type}] {m.text}") if m.type in ("error", "warning") else None)
     page.on("pageerror", lambda e: print(f"  [pageerror] {e}"))
+    # Pre-seed localStorage / sessionStorage flags so the first-run intro popups
+    # (floor-intro tooltip + bank-connect prompt modal) don't intercept clicks.
+    # Both are sticky-dismissible and live behind these flags in app.html.
+    await page.add_init_script("""
+      try { localStorage.setItem('able_seen_floor_intro', '1'); } catch(_) {}
+      try { sessionStorage.setItem('able_bank_prompt_dismissed', '1'); } catch(_) {}
+    """)
     # Move cursor off-screen until first ease_move plants it.
     await page.mouse.move(-50, -50)
 
@@ -809,6 +816,16 @@ async def run_one(playwright: Playwright, clip: Clip) -> ClipResult:
         "() => document.getElementById('app') && document.getElementById('app').style.display === 'block'",
         timeout=10000,
     )
+    # Defense in depth: if either popup snuck through (init-script timing race),
+    # dismiss them programmatically before any click in the clip body fires.
+    await page.evaluate("""
+      () => {
+        const pop = document.querySelector('.db-floor-pop');
+        if (pop) pop.remove();
+        const m = document.getElementById('modal-bank-prompt');
+        if (m) m.style.display = 'none';
+      }
+    """)
     # Inject the visible cursor now that the app DOM is fully attached.
     status = await page.evaluate(CURSOR_SETUP)
     if status != "attached":

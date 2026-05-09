@@ -16,7 +16,7 @@
   "clips": [
     {
       "filename": "deposit-allocation.mp4",
-      "duration_sec": 16.933,
+      "duration_sec": 16.833,
       "markers": [
         {
           "name": "home_visible",
@@ -24,25 +24,26 @@
         },
         {
           "name": "allocate_sheet_opened",
-          "seconds": 2.151
+          "seconds": 2.145
         },
         {
           "name": "amount_entered",
-          "seconds": 4.006
+          "seconds": 4.024
         },
         {
           "name": "preview_open",
-          "seconds": 6.178
+          "seconds": 6.218
         },
         {
           "name": "allocation_confirmed",
-          "seconds": 9.413
+          "seconds": 9.521
         },
         {
           "name": "score_visible",
-          "seconds": 12.485
+          "seconds": 12.576
         }
-      ]
+      ],
+      "captions": []
     },
     {
       "filename": "bills-view.mp4",
@@ -54,21 +55,22 @@
         },
         {
           "name": "bills_opened",
-          "seconds": 3.385
+          "seconds": 3.567
         },
         {
           "name": "scroll_complete",
-          "seconds": 6.598
+          "seconds": 6.78
         },
         {
           "name": "bill_expanded",
-          "seconds": 9.475
+          "seconds": 9.579
         },
         {
           "name": "home_returned",
-          "seconds": 12.391
+          "seconds": 12.392
         }
-      ]
+      ],
+      "captions": []
     },
     {
       "filename": "rolling-window-settings.mp4",
@@ -80,29 +82,30 @@
         },
         {
           "name": "settings_opened",
-          "seconds": 3.569
+          "seconds": 3.56
         },
         {
           "name": "window_section_visible",
-          "seconds": 5.176
+          "seconds": 5.168
         },
         {
           "name": "window_set_7",
-          "seconds": 6.341
+          "seconds": 6.337
         },
         {
           "name": "window_set_21",
-          "seconds": 8.691
+          "seconds": 8.76
         },
         {
           "name": "window_set_14",
-          "seconds": 11.009
+          "seconds": 11.09
         },
         {
           "name": "home_returned",
-          "seconds": 13.493
+          "seconds": 13.59
         }
-      ]
+      ],
+      "captions": []
     },
     {
       "filename": "ai-coach.mp4",
@@ -114,33 +117,34 @@
         },
         {
           "name": "coach_opened",
-          "seconds": 1.967
+          "seconds": 1.98
         },
         {
           "name": "question_typed",
-          "seconds": 6.271
+          "seconds": 6.334
         },
         {
           "name": "question_sent",
-          "seconds": 7.942
+          "seconds": 8.01
         },
         {
           "name": "response_streamed",
-          "seconds": 9.348
+          "seconds": 9.415
         },
         {
           "name": "scroll_complete",
-          "seconds": 13.256
+          "seconds": 13.326
         },
         {
           "name": "hold_complete",
-          "seconds": 17.759
+          "seconds": 17.83
         }
-      ]
+      ],
+      "captions": []
     },
     {
       "filename": "full-walkthrough.mp4",
-      "duration_sec": 35.267,
+      "duration_sec": 35.933,
       "markers": [
         {
           "name": "home_visible",
@@ -148,37 +152,38 @@
         },
         {
           "name": "preview_open",
-          "seconds": 4.764
+          "seconds": 4.85
         },
         {
           "name": "allocation_confirmed",
-          "seconds": 7.002
+          "seconds": 7.123
         },
         {
           "name": "bills_opened",
-          "seconds": 10.802
+          "seconds": 11.068
         },
         {
           "name": "coach_opened",
-          "seconds": 15.296
+          "seconds": 15.595
         },
         {
           "name": "coach_sent",
-          "seconds": 18.709
+          "seconds": 19.126
         },
         {
           "name": "coach_response",
-          "seconds": 20.114
+          "seconds": 20.53
         },
         {
           "name": "home_returned",
-          "seconds": 28.36
+          "seconds": 28.913
         },
         {
           "name": "hold_complete",
-          "seconds": 33.37
+          "seconds": 33.886
         }
-      ]
+      ],
+      "captions": []
     },
     {
       "filename": "narrative-day1-to-31.mp4",
@@ -190,49 +195,49 @@
         },
         {
           "name": "day1_amount_held",
-          "seconds": 5.106
+          "seconds": 5.109
         },
         {
           "name": "day7_bills_held",
-          "seconds": 10.855
+          "seconds": 11.075
         },
         {
           "name": "day14_score_held",
-          "seconds": 16.366
+          "seconds": 16.636
         },
         {
           "name": "day30_reply_held",
-          "seconds": 24.484
+          "seconds": 24.817
         },
         {
           "name": "day31_held",
-          "seconds": 31.857
+          "seconds": 32.337
         }
       ],
       "captions": [
         {
-          "start": 0.702,
-          "end": 5.106,
+          "start": 0.705,
+          "end": 5.11,
           "text": "Day 1. A check comes in."
         },
         {
-          "start": 5.106,
-          "end": 10.855,
+          "start": 5.11,
+          "end": 11.075,
           "text": "Day 7. Every bill paid. Nothing missed."
         },
         {
-          "start": 10.855,
-          "end": 16.366,
-          "text": "Day 14. Buffer holds."
+          "start": 11.075,
+          "end": 16.636,
+          "text": "Day 14. Reserve holds."
         },
         {
-          "start": 16.366,
-          "end": 24.484,
+          "start": 16.636,
+          "end": 24.817,
           "text": "Day 30. Coach checks in."
         },
         {
-          "start": 24.484,
-          "end": 31.857,
+          "start": 24.817,
+          "end": 32.337,
           "text": "Day 31. Where did your money go? You know."
         }
       ]
@@ -243,7 +248,7 @@
       "markers": [
         {
           "name": "preview_open",
-          "seconds": 2.931
+          "seconds": 2.996
         }
       ],
       "captions": []
@@ -254,7 +259,7 @@
       "markers": [
         {
           "name": "bill_paid",
-          "seconds": 3.501
+          "seconds": 3.68
         }
       ],
       "captions": []
@@ -265,11 +270,11 @@
       "markers": [
         {
           "name": "typing",
-          "seconds": 3.791
+          "seconds": 3.96
         },
         {
           "name": "response_visible",
-          "seconds": 5.197
+          "seconds": 5.364
         }
       ],
       "captions": []
@@ -280,36 +285,36 @@
       "markers": [
         {
           "name": "preview_open",
-          "seconds": 3.661
+          "seconds": 3.768
         },
         {
           "name": "allocation_confirmed",
-          "seconds": 5.996
+          "seconds": 6.124
         },
         {
           "name": "hold_complete",
-          "seconds": 16.426
+          "seconds": 16.714
         }
       ],
       "captions": [
         {
           "start": 0.0,
-          "end": 5.164,
+          "end": 5.271,
           "text": "Without Able\n$3,000 in. No plan."
         },
         {
-          "start": 5.164,
-          "end": 9.842,
+          "start": 5.271,
+          "end": 10.009,
           "text": "Without Able\nWeek 2: half of it gone?"
         },
         {
-          "start": 9.842,
-          "end": 14.023,
+          "start": 10.009,
+          "end": 14.312,
           "text": "Without Able\nMonth end: $0. Maybe overdraft."
         },
         {
-          "start": 14.023,
-          "end": 16.426,
+          "start": 14.312,
+          "end": 16.714,
           "text": "Without Able\nWhere did it go?"
         }
       ]
