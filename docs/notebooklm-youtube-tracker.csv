@@ -1,20 +1,16 @@
-page_url,page_title,page_type,cluster,priority,status,last_updated,notebook_url,source_materials,prompt_used,video_duration_target,video_duration_actual,youtube_video_id,youtube_url,yt_title,yt_description,yt_tags,yt_thumbnail_path,yt_playlist,yt_chapters,embed_position,embed_status,schema_status,view_count_30d,clickthrough_30d,notes
-/budgeting/,How to Budget With Inconsistent Income: The Complete Guide,pillar,budgeting,1,draft,2026-05-09,,"able-content/budgeting/index.md | docs/brand-script.md | docs/floor-first-method.md | ~/.claude/skills/able-app-capabilities/SKILL.md | able-content/budgeting/freelancer-budget.md | able-content/budgeting/feast-or-famine.md | able-content/budgeting/pay-yourself-steady-paycheck.md","[Universal preamble — paste from notebooklm-youtube-spec.md] + [Pillar article addition]: This is a pillar article — comprehensive and evergreen. Cover the methodology in depth. Explain the floor concept clearly. Walk through Floor-First Budgeting's 5 rules. Use specific numbers when the article cites them ($500 to $1,000 monthly leak, etc.). End on the identity shift: From Unable to Able.",6 min,,,,How to Budget With Inconsistent Income (Floor-First Method) | Able,"Most budgeting advice was built for steady paychecks. Here's how to budget when your income doesn't arrive on a schedule.
+slug,page_url,page_title,page_type,cluster,priority,status,last_updated,notebook_url,source_materials,prompt_used,video_duration_target,video_duration_actual,youtube_video_id,youtube_url,yt_title,yt_description,yt_tags,yt_thumbnail_path,video_drive_id,yt_playlist,yt_chapters,embed_position,embed_status,schema_status,view_count_30d,clickthrough_30d,notes
+budgeting,/budgeting/,How to Budget With Inconsistent Income: The Complete Guide,pillar,budgeting,1,draft,,,(see docs/notebooklm-sources/),(see docs/notebooklm-youtube-spec.md),3-4 min,,,,How to Budget With Inconsistent Income (Complete Guide) | Able,"Budgeting advice was built for steady paychecks. This is the complete guide to budgeting when your income is lumpy, unpredictable, and rarely on schedule.
 
-How to budget when your income doesn't arrive on a steady schedule. From Able — the budgeting app built for inconsistent income.
+From Able — the budgeting app built for inconsistent income.
 
 🔗 Read the full article: https://becomeable.app/budgeting/?utm_source=youtube&utm_medium=video&utm_campaign=budgeting
 
 ⏱ Chapters
-00:00 Why monthly budgets fail variable income
-01:00 The floor: bills + tax
-02:00 Per-deposit allocation
-03:30 Building the reserve
-04:30 One month ahead = Able
-05:30 Score reality, not the plan
+00:00 Intro
+(fill from script.json before publish)
 
-📚 The methodology
-Floor-First Budgeting is per-deposit allocation that pays your bills and taxes before any dollar gets to vote on dinner. Five rules:
+📚 Floor-First Budgeting
+Per-deposit allocation that pays your bills and taxes before any dollar gets to vote on dinner. Five rules:
 1. Know your floor. Bills plus tax equal the amount you can't miss.
 2. Every deposit fills the floor first.
 3. Build your reserve before you spend.
@@ -25,9 +21,1729 @@ Floor-First Budgeting is per-deposit allocation that pays your bills and taxes b
 https://becomeable.app?utm_source=youtube&utm_medium=video&utm_campaign=budgeting
 $14.99/month or $129/year. Card required, no charge until day 31. Cancel anytime.
 
-#FloorFirstBudgeting #VariableIncome #FreelanceMoney","Able, Able app, becomeable, Floor-First Budgeting, variable income, inconsistent income, budgeting for freelancers, 1099 budgeting, budgeting app, how to budget with inconsistent income, freelance budget, self-employed budget","marketing-footage/youtube-thumbnails/budgeting-pillar.png",Pillars,"00:00 Why monthly budgets fail variable income
-01:00 The floor: bills + tax
-02:00 Per-deposit allocation
-03:30 Building the reserve
-04:30 One month ahead = Able
-05:30 Score reality, not the plan",top,pending,pending,,,Pilot — first NotebookLM video. Test brand voice and quality before scaling.
+#FloorFirstBudgeting #VariableIncome #FreelanceMoney","Able, Able app, becomeable, Floor-First Budgeting, variable income, inconsistent income, budgeting for freelancers, 1099 budgeting, budgeting app, how to budget, freelance budget, self-employed budget",article-video/videos/budgeting/thumbnail.png,,Budgeting,,top,pending,pending,,,
+business,/business/,How to Pay Yourself as a Business Owner With Variable Income,pillar,business,1,draft,,,(see docs/notebooklm-sources/),(see docs/notebooklm-youtube-spec.md),3-4 min,,,,How to Pay Yourself as a Business Owner With Variable Income | Able,"Your business income is inconsistent. Your bills are not. Here is how to pay yourself a real paycheck from a business that pays you in unpredictable amounts.
+
+From Able — the budgeting app built for inconsistent income.
+
+🔗 Read the full article: https://becomeable.app/business/?utm_source=youtube&utm_medium=video&utm_campaign=business
+
+⏱ Chapters
+00:00 Intro
+(fill from script.json before publish)
+
+📚 Floor-First Budgeting
+Per-deposit allocation that pays your bills and taxes before any dollar gets to vote on dinner. Five rules:
+1. Know your floor. Bills plus tax equal the amount you can't miss.
+2. Every deposit fills the floor first.
+3. Build your reserve before you spend.
+4. One month ahead = Able.
+5. Score reality, not the plan.
+
+🎁 Try Able free for 30 days
+https://becomeable.app?utm_source=youtube&utm_medium=video&utm_campaign=business
+$14.99/month or $129/year. Card required, no charge until day 31. Cancel anytime.
+
+#FloorFirstBudgeting #VariableIncome #FreelanceMoney","Able, Able app, becomeable, Floor-First Budgeting, variable income, inconsistent income, budgeting for freelancers, 1099 budgeting, budgeting app, small business credit, emergency fund, business cash flow",article-video/videos/business/thumbnail.png,,Business,,top,pending,pending,,,
+learn-improve-your-credit-score,/learn/improve-your-credit-score/,How to Improve Your Credit Score,pillar,learn-credit,1,draft,,,(see docs/notebooklm-sources/),(see docs/notebooklm-youtube-spec.md),3-4 min,,,,How to Improve Your Credit Score | Able Learn,"Everything you need to add 50-150 points to your score in 90 days. Understand the system, fix the damage, and build it back stronger.
+
+From Able — the budgeting app built for inconsistent income.
+
+🔗 Read the full article: https://becomeable.app/learn/improve-your-credit-score/?utm_source=youtube&utm_medium=video&utm_campaign=learn-credit
+
+⏱ Chapters
+00:00 Intro
+(fill from script.json before publish)
+
+📚 Floor-First Budgeting
+Per-deposit allocation that pays your bills and taxes before any dollar gets to vote on dinner. Five rules:
+1. Know your floor. Bills plus tax equal the amount you can't miss.
+2. Every deposit fills the floor first.
+3. Build your reserve before you spend.
+4. One month ahead = Able.
+5. Score reality, not the plan.
+
+🎁 Try Able free for 30 days
+https://becomeable.app?utm_source=youtube&utm_medium=video&utm_campaign=learn-credit
+$14.99/month or $129/year. Card required, no charge until day 31. Cancel anytime.
+
+#FloorFirstBudgeting #VariableIncome #FreelanceMoney","Able, Able app, becomeable, Floor-First Budgeting, variable income, inconsistent income, budgeting for freelancers, 1099 budgeting, budgeting app, credit score, improve credit, FICO score",article-video/videos/learn-improve-your-credit-score/thumbnail.png,,Learn — Improve Your Credit Score,,top,pending,pending,,,
+learn-get-out-of-debt,/learn/get-out-of-debt/,How to Get Out of Debt,pillar,learn-debt,1,draft,,,(see docs/notebooklm-sources/),(see docs/notebooklm-youtube-spec.md),3-4 min,,,,How to Get Out of Debt | Able Learn,"A step-by-step plan for paying off debt when your income moves around. Built for entrepreneurs who need flexibility, not rigid rules.
+
+From Able — the budgeting app built for inconsistent income.
+
+🔗 Read the full article: https://becomeable.app/learn/get-out-of-debt/?utm_source=youtube&utm_medium=video&utm_campaign=learn-debt
+
+⏱ Chapters
+00:00 Intro
+(fill from script.json before publish)
+
+📚 Floor-First Budgeting
+Per-deposit allocation that pays your bills and taxes before any dollar gets to vote on dinner. Five rules:
+1. Know your floor. Bills plus tax equal the amount you can't miss.
+2. Every deposit fills the floor first.
+3. Build your reserve before you spend.
+4. One month ahead = Able.
+5. Score reality, not the plan.
+
+🎁 Try Able free for 30 days
+https://becomeable.app?utm_source=youtube&utm_medium=video&utm_campaign=learn-debt
+$14.99/month or $129/year. Card required, no charge until day 31. Cancel anytime.
+
+#FloorFirstBudgeting #VariableIncome #FreelanceMoney","Able, Able app, becomeable, Floor-First Budgeting, variable income, inconsistent income, budgeting for freelancers, 1099 budgeting, budgeting app, how to get out of debt, debt snowball, debt avalanche",article-video/videos/learn-get-out-of-debt/thumbnail.png,,Learn — Get Out of Debt,,top,pending,pending,,,
+learn-get-business-funding,/learn/get-business-funding/,How to Get Funding,pillar,learn-funding,1,draft,,,(see docs/notebooklm-sources/),(see docs/notebooklm-youtube-spec.md),3-4 min,,,,How to Get Funding | Able Learn,"From personal credit to business credit to SBA loans. The real roadmap to getting approved for the capital your business needs.
+
+From Able — the budgeting app built for inconsistent income.
+
+🔗 Read the full article: https://becomeable.app/learn/get-business-funding/?utm_source=youtube&utm_medium=video&utm_campaign=learn-funding
+
+⏱ Chapters
+00:00 Intro
+(fill from script.json before publish)
+
+📚 Floor-First Budgeting
+Per-deposit allocation that pays your bills and taxes before any dollar gets to vote on dinner. Five rules:
+1. Know your floor. Bills plus tax equal the amount you can't miss.
+2. Every deposit fills the floor first.
+3. Build your reserve before you spend.
+4. One month ahead = Able.
+5. Score reality, not the plan.
+
+🎁 Try Able free for 30 days
+https://becomeable.app?utm_source=youtube&utm_medium=video&utm_campaign=learn-funding
+$14.99/month or $129/year. Card required, no charge until day 31. Cancel anytime.
+
+#FloorFirstBudgeting #VariableIncome #FreelanceMoney","Able, Able app, becomeable, Floor-First Budgeting, variable income, inconsistent income, budgeting for freelancers, 1099 budgeting, budgeting app, small business loan, SBA loan, business credit",article-video/videos/learn-get-business-funding/thumbnail.png,,Learn — Get Business Funding,,top,pending,pending,,,
+learn-how-money-works,/learn/how-money-works/,How Money Actually Works,pillar,learn-money,1,draft,,,(see docs/notebooklm-sources/),(see docs/notebooklm-youtube-spec.md),3-4 min,,,,How Money Actually Works | Able Learn,"The core principles that quietly decide whether you end up wealthy or stuck. Time, compounding, cash flow, and protection explained in plain language.
+
+From Able — the budgeting app built for inconsistent income.
+
+🔗 Read the full article: https://becomeable.app/learn/how-money-works/?utm_source=youtube&utm_medium=video&utm_campaign=learn-money
+
+⏱ Chapters
+00:00 Intro
+(fill from script.json before publish)
+
+📚 Floor-First Budgeting
+Per-deposit allocation that pays your bills and taxes before any dollar gets to vote on dinner. Five rules:
+1. Know your floor. Bills plus tax equal the amount you can't miss.
+2. Every deposit fills the floor first.
+3. Build your reserve before you spend.
+4. One month ahead = Able.
+5. Score reality, not the plan.
+
+🎁 Try Able free for 30 days
+https://becomeable.app?utm_source=youtube&utm_medium=video&utm_campaign=learn-money
+$14.99/month or $129/year. Card required, no charge until day 31. Cancel anytime.
+
+#FloorFirstBudgeting #VariableIncome #FreelanceMoney","Able, Able app, becomeable, Floor-First Budgeting, variable income, inconsistent income, budgeting for freelancers, 1099 budgeting, budgeting app, compound interest, rule of 72, money management",article-video/videos/learn-how-money-works/thumbnail.png,,Learn — How Money Works,,top,pending,pending,,,
+learn-pay-yourself-first,/learn/pay-yourself-first/,Pay Yourself First,pillar,learn-payself,1,draft,,,(see docs/notebooklm-sources/),(see docs/notebooklm-youtube-spec.md),3-4 min,,,,Pay Yourself First | Able Learn,"The one thing most entrepreneurs skip. Learn why it matters and the simplest way to start, even if you're deep in debt.
+
+From Able — the budgeting app built for inconsistent income.
+
+🔗 Read the full article: https://becomeable.app/learn/pay-yourself-first/?utm_source=youtube&utm_medium=video&utm_campaign=learn-payself
+
+⏱ Chapters
+00:00 Intro
+(fill from script.json before publish)
+
+📚 Floor-First Budgeting
+Per-deposit allocation that pays your bills and taxes before any dollar gets to vote on dinner. Five rules:
+1. Know your floor. Bills plus tax equal the amount you can't miss.
+2. Every deposit fills the floor first.
+3. Build your reserve before you spend.
+4. One month ahead = Able.
+5. Score reality, not the plan.
+
+🎁 Try Able free for 30 days
+https://becomeable.app?utm_source=youtube&utm_medium=video&utm_campaign=learn-payself
+$14.99/month or $129/year. Card required, no charge until day 31. Cancel anytime.
+
+#FloorFirstBudgeting #VariableIncome #FreelanceMoney","Able, Able app, becomeable, Floor-First Budgeting, variable income, inconsistent income, budgeting for freelancers, 1099 budgeting, budgeting app, pay yourself first, owner pay, owner draw",article-video/videos/learn-pay-yourself-first/thumbnail.png,,Learn — Pay Yourself First,,top,pending,pending,,,
+taxes,/taxes/,Quarterly Taxes for Self-Employed: The Complete Guide,pillar,taxes,1,draft,,,(see docs/notebooklm-sources/),(see docs/notebooklm-youtube-spec.md),3-4 min,,,,Quarterly Taxes for Self-Employed (Complete Guide) | Able,"If you're self-employed, the IRS expects you to pay taxes four times a year. Here is what quarterly taxes are, how much to send, and how to stop dreading April.
+
+From Able — the budgeting app built for inconsistent income.
+
+🔗 Read the full article: https://becomeable.app/taxes/?utm_source=youtube&utm_medium=video&utm_campaign=taxes
+
+⏱ Chapters
+00:00 Intro
+(fill from script.json before publish)
+
+📚 Floor-First Budgeting
+Per-deposit allocation that pays your bills and taxes before any dollar gets to vote on dinner. Five rules:
+1. Know your floor. Bills plus tax equal the amount you can't miss.
+2. Every deposit fills the floor first.
+3. Build your reserve before you spend.
+4. One month ahead = Able.
+5. Score reality, not the plan.
+
+🎁 Try Able free for 30 days
+https://becomeable.app?utm_source=youtube&utm_medium=video&utm_campaign=taxes
+$14.99/month or $129/year. Card required, no charge until day 31. Cancel anytime.
+
+#FloorFirstBudgeting #VariableIncome #FreelanceMoney","Able, Able app, becomeable, Floor-First Budgeting, variable income, inconsistent income, budgeting for freelancers, 1099 budgeting, budgeting app, quarterly taxes, self-employment tax, 1099 taxes, tax deduction",article-video/videos/taxes/thumbnail.png,,Taxes,,top,pending,pending,,,
+budgeting-coach-consultant-budget,/budgeting/coach-consultant-budget/,"How to Budget as a Coach, Consultant, or Therapist in Private Practice",supporting,budgeting,2,draft,,,(see docs/notebooklm-sources/),(see docs/notebooklm-youtube-spec.md),3-4 min,,,,"How to Budget as a Coach, Consultant, or Therapist | Able","Session income, package sales, referral gaps, and insurance delays. Here is how to budget when your paycheck depends on your calendar.
+
+From Able — the budgeting app built for inconsistent income.
+
+🔗 Read the full article: https://becomeable.app/budgeting/coach-consultant-budget/?utm_source=youtube&utm_medium=video&utm_campaign=budgeting
+
+⏱ Chapters
+00:00 Intro
+(fill from script.json before publish)
+
+📚 Floor-First Budgeting
+Per-deposit allocation that pays your bills and taxes before any dollar gets to vote on dinner. Five rules:
+1. Know your floor. Bills plus tax equal the amount you can't miss.
+2. Every deposit fills the floor first.
+3. Build your reserve before you spend.
+4. One month ahead = Able.
+5. Score reality, not the plan.
+
+🎁 Try Able free for 30 days
+https://becomeable.app?utm_source=youtube&utm_medium=video&utm_campaign=budgeting
+$14.99/month or $129/year. Card required, no charge until day 31. Cancel anytime.
+
+#FloorFirstBudgeting #VariableIncome #FreelanceMoney","Able, Able app, becomeable, Floor-First Budgeting, variable income, inconsistent income, budgeting for freelancers, 1099 budgeting, budgeting app, how to budget, freelance budget, self-employed budget",article-video/videos/budgeting-coach-consultant-budget/thumbnail.png,,Budgeting,,top,pending,pending,,,
+budgeting-commission-income-budget,/budgeting/commission-income-budget/,How to Budget on Commission Income (Without Living Commission to Commission),supporting,budgeting,2,draft,,,(see docs/notebooklm-sources/),(see docs/notebooklm-youtube-spec.md),3-4 min,,,,How to Budget on Commission Income | Able,"Commission income means huge months, dry months, and constant pressure to close. Here is how to budget when your paycheck depends on what you sold last week.
+
+From Able — the budgeting app built for inconsistent income.
+
+🔗 Read the full article: https://becomeable.app/budgeting/commission-income-budget/?utm_source=youtube&utm_medium=video&utm_campaign=budgeting
+
+⏱ Chapters
+00:00 Intro
+(fill from script.json before publish)
+
+📚 Floor-First Budgeting
+Per-deposit allocation that pays your bills and taxes before any dollar gets to vote on dinner. Five rules:
+1. Know your floor. Bills plus tax equal the amount you can't miss.
+2. Every deposit fills the floor first.
+3. Build your reserve before you spend.
+4. One month ahead = Able.
+5. Score reality, not the plan.
+
+🎁 Try Able free for 30 days
+https://becomeable.app?utm_source=youtube&utm_medium=video&utm_campaign=budgeting
+$14.99/month or $129/year. Card required, no charge until day 31. Cancel anytime.
+
+#FloorFirstBudgeting #VariableIncome #FreelanceMoney","Able, Able app, becomeable, Floor-First Budgeting, variable income, inconsistent income, budgeting for freelancers, 1099 budgeting, budgeting app, how to budget, freelance budget, self-employed budget",article-video/videos/budgeting-commission-income-budget/thumbnail.png,,Budgeting,,top,pending,pending,,,
+budgeting-creator-budget,/budgeting/creator-budget/,"How to Budget as a Content Creator (YouTube, TikTok, Instagram, Substack)",supporting,budgeting,2,draft,,,(see docs/notebooklm-sources/),(see docs/notebooklm-youtube-spec.md),3-4 min,,,,How to Budget as a Content Creator | Able,"Platform payouts, brand deals, memberships, merch. Creator income arrives on nobody's schedule. Here is how to budget when your paycheck depends on an algorithm.
+
+From Able — the budgeting app built for inconsistent income.
+
+🔗 Read the full article: https://becomeable.app/budgeting/creator-budget/?utm_source=youtube&utm_medium=video&utm_campaign=budgeting
+
+⏱ Chapters
+00:00 Intro
+(fill from script.json before publish)
+
+📚 Floor-First Budgeting
+Per-deposit allocation that pays your bills and taxes before any dollar gets to vote on dinner. Five rules:
+1. Know your floor. Bills plus tax equal the amount you can't miss.
+2. Every deposit fills the floor first.
+3. Build your reserve before you spend.
+4. One month ahead = Able.
+5. Score reality, not the plan.
+
+🎁 Try Able free for 30 days
+https://becomeable.app?utm_source=youtube&utm_medium=video&utm_campaign=budgeting
+$14.99/month or $129/year. Card required, no charge until day 31. Cancel anytime.
+
+#FloorFirstBudgeting #VariableIncome #FreelanceMoney","Able, Able app, becomeable, Floor-First Budgeting, variable income, inconsistent income, budgeting for freelancers, 1099 budgeting, budgeting app, how to budget, freelance budget, self-employed budget",article-video/videos/budgeting-creator-budget/thumbnail.png,,Budgeting,,top,pending,pending,,,
+budgeting-designer-developer-budget,/budgeting/designer-developer-budget/,How to Budget as a Freelance Designer or Developer,supporting,budgeting,2,draft,,,(see docs/notebooklm-sources/),(see docs/notebooklm-youtube-spec.md),3-4 min,,,,How to Budget as a Freelance Designer or Developer | Able,"Project-based income, net-60 invoices, and retainer gaps. Here is how to budget as a freelance designer or developer without going broke between projects.
+
+From Able — the budgeting app built for inconsistent income.
+
+🔗 Read the full article: https://becomeable.app/budgeting/designer-developer-budget/?utm_source=youtube&utm_medium=video&utm_campaign=budgeting
+
+⏱ Chapters
+00:00 Intro
+(fill from script.json before publish)
+
+📚 Floor-First Budgeting
+Per-deposit allocation that pays your bills and taxes before any dollar gets to vote on dinner. Five rules:
+1. Know your floor. Bills plus tax equal the amount you can't miss.
+2. Every deposit fills the floor first.
+3. Build your reserve before you spend.
+4. One month ahead = Able.
+5. Score reality, not the plan.
+
+🎁 Try Able free for 30 days
+https://becomeable.app?utm_source=youtube&utm_medium=video&utm_campaign=budgeting
+$14.99/month or $129/year. Card required, no charge until day 31. Cancel anytime.
+
+#FloorFirstBudgeting #VariableIncome #FreelanceMoney","Able, Able app, becomeable, Floor-First Budgeting, variable income, inconsistent income, budgeting for freelancers, 1099 budgeting, budgeting app, how to budget, freelance budget, self-employed budget",article-video/videos/budgeting-designer-developer-budget/thumbnail.png,,Budgeting,,top,pending,pending,,,
+budgeting-etsy-seller-budget,/budgeting/etsy-seller-budget/,How to Budget as an Etsy Seller or E-Commerce Business Owner,supporting,budgeting,2,draft,,,(see docs/notebooklm-sources/),(see docs/notebooklm-youtube-spec.md),3-4 min,,,,How to Budget as an Etsy Seller or E-Commerce Owner | Able,"Seasonal sales, platform fees, inventory cash flow, and 1099-K surprises. Here is how to budget when your income is tied to Q4 and your costs hide in your warehouse.
+
+From Able — the budgeting app built for inconsistent income.
+
+🔗 Read the full article: https://becomeable.app/budgeting/etsy-seller-budget/?utm_source=youtube&utm_medium=video&utm_campaign=budgeting
+
+⏱ Chapters
+00:00 Intro
+(fill from script.json before publish)
+
+📚 Floor-First Budgeting
+Per-deposit allocation that pays your bills and taxes before any dollar gets to vote on dinner. Five rules:
+1. Know your floor. Bills plus tax equal the amount you can't miss.
+2. Every deposit fills the floor first.
+3. Build your reserve before you spend.
+4. One month ahead = Able.
+5. Score reality, not the plan.
+
+🎁 Try Able free for 30 days
+https://becomeable.app?utm_source=youtube&utm_medium=video&utm_campaign=budgeting
+$14.99/month or $129/year. Card required, no charge until day 31. Cancel anytime.
+
+#FloorFirstBudgeting #VariableIncome #FreelanceMoney","Able, Able app, becomeable, Floor-First Budgeting, variable income, inconsistent income, budgeting for freelancers, 1099 budgeting, budgeting app, how to budget, freelance budget, self-employed budget",article-video/videos/budgeting-etsy-seller-budget/thumbnail.png,,Budgeting,,top,pending,pending,,,
+budgeting-feast-or-famine,/budgeting/feast-or-famine/,The Feast or Famine Cycle (And How to Break It),supporting,budgeting,2,draft,,,(see docs/notebooklm-sources/),(see docs/notebooklm-youtube-spec.md),3-4 min,,,,Feast or Famine Cycle: How to Break It as an Entrepreneur | Able,"Big month, dry month, panic, repeat. The feast or famine cycle is the defining pattern of self-employed income. Here is how to break it.
+
+From Able — the budgeting app built for inconsistent income.
+
+🔗 Read the full article: https://becomeable.app/budgeting/feast-or-famine/?utm_source=youtube&utm_medium=video&utm_campaign=budgeting
+
+⏱ Chapters
+00:00 Intro
+(fill from script.json before publish)
+
+📚 Floor-First Budgeting
+Per-deposit allocation that pays your bills and taxes before any dollar gets to vote on dinner. Five rules:
+1. Know your floor. Bills plus tax equal the amount you can't miss.
+2. Every deposit fills the floor first.
+3. Build your reserve before you spend.
+4. One month ahead = Able.
+5. Score reality, not the plan.
+
+🎁 Try Able free for 30 days
+https://becomeable.app?utm_source=youtube&utm_medium=video&utm_campaign=budgeting
+$14.99/month or $129/year. Card required, no charge until day 31. Cancel anytime.
+
+#FloorFirstBudgeting #VariableIncome #FreelanceMoney","Able, Able app, becomeable, Floor-First Budgeting, variable income, inconsistent income, budgeting for freelancers, 1099 budgeting, budgeting app, how to budget, freelance budget, self-employed budget",article-video/videos/budgeting-feast-or-famine/thumbnail.png,,Budgeting,,top,pending,pending,,,
+budgeting-freelancer-budget,/budgeting/freelancer-budget/,How to Budget as a Freelancer (Without Going Broke Between Invoices),supporting,budgeting,2,draft,,,(see docs/notebooklm-sources/),(see docs/notebooklm-youtube-spec.md),3-4 min,,,,How to Budget as a Freelancer | Able,"Freelancing means chasing invoices, waiting on payment, and never knowing when the next check will clear. Here is how to budget when your income doesn't arrive on a schedule.
+
+From Able — the budgeting app built for inconsistent income.
+
+🔗 Read the full article: https://becomeable.app/budgeting/freelancer-budget/?utm_source=youtube&utm_medium=video&utm_campaign=budgeting
+
+⏱ Chapters
+00:00 Intro
+(fill from script.json before publish)
+
+📚 Floor-First Budgeting
+Per-deposit allocation that pays your bills and taxes before any dollar gets to vote on dinner. Five rules:
+1. Know your floor. Bills plus tax equal the amount you can't miss.
+2. Every deposit fills the floor first.
+3. Build your reserve before you spend.
+4. One month ahead = Able.
+5. Score reality, not the plan.
+
+🎁 Try Able free for 30 days
+https://becomeable.app?utm_source=youtube&utm_medium=video&utm_campaign=budgeting
+$14.99/month or $129/year. Card required, no charge until day 31. Cancel anytime.
+
+#FloorFirstBudgeting #VariableIncome #FreelanceMoney","Able, Able app, becomeable, Floor-First Budgeting, variable income, inconsistent income, budgeting for freelancers, 1099 budgeting, budgeting app, how to budget, freelance budget, self-employed budget",article-video/videos/budgeting-freelancer-budget/thumbnail.png,,Budgeting,,top,pending,pending,,,
+budgeting-pay-yourself-steady-paycheck,/budgeting/pay-yourself-steady-paycheck/,How to Pay Yourself a Steady Paycheck From an Unsteady Business,supporting,budgeting,2,draft,,,(see docs/notebooklm-sources/),(see docs/notebooklm-youtube-spec.md),3-4 min,,,,How to Pay Yourself a Steady Paycheck From an Unsteady Business | Able,"Your income is lumpy. Your bills are not. Here is how to pay yourself a steady paycheck out of a business that pays you in unpredictable chunks.
+
+From Able — the budgeting app built for inconsistent income.
+
+🔗 Read the full article: https://becomeable.app/budgeting/pay-yourself-steady-paycheck/?utm_source=youtube&utm_medium=video&utm_campaign=budgeting
+
+⏱ Chapters
+00:00 Intro
+(fill from script.json before publish)
+
+📚 Floor-First Budgeting
+Per-deposit allocation that pays your bills and taxes before any dollar gets to vote on dinner. Five rules:
+1. Know your floor. Bills plus tax equal the amount you can't miss.
+2. Every deposit fills the floor first.
+3. Build your reserve before you spend.
+4. One month ahead = Able.
+5. Score reality, not the plan.
+
+🎁 Try Able free for 30 days
+https://becomeable.app?utm_source=youtube&utm_medium=video&utm_campaign=budgeting
+$14.99/month or $129/year. Card required, no charge until day 31. Cancel anytime.
+
+#FloorFirstBudgeting #VariableIncome #FreelanceMoney","Able, Able app, becomeable, Floor-First Budgeting, variable income, inconsistent income, budgeting for freelancers, 1099 budgeting, budgeting app, how to budget, freelance budget, self-employed budget",article-video/videos/budgeting-pay-yourself-steady-paycheck/thumbnail.png,,Budgeting,,top,pending,pending,,,
+budgeting-real-estate-agent-budget,/budgeting/real-estate-agent-budget/,"How to Budget as a Real Estate Agent (Commission Income, Chargebacks, Seasonality)",supporting,budgeting,2,draft,,,(see docs/notebooklm-sources/),(see docs/notebooklm-youtube-spec.md),3-4 min,,,,How to Budget as a Real Estate Agent | Able,"Commission checks, dry stretches, chargebacks when deals fall through, brokerage splits. Here is how to budget when your paycheck depends on what closes this month.
+
+From Able — the budgeting app built for inconsistent income.
+
+🔗 Read the full article: https://becomeable.app/budgeting/real-estate-agent-budget/?utm_source=youtube&utm_medium=video&utm_campaign=budgeting
+
+⏱ Chapters
+00:00 Intro
+(fill from script.json before publish)
+
+📚 Floor-First Budgeting
+Per-deposit allocation that pays your bills and taxes before any dollar gets to vote on dinner. Five rules:
+1. Know your floor. Bills plus tax equal the amount you can't miss.
+2. Every deposit fills the floor first.
+3. Build your reserve before you spend.
+4. One month ahead = Able.
+5. Score reality, not the plan.
+
+🎁 Try Able free for 30 days
+https://becomeable.app?utm_source=youtube&utm_medium=video&utm_campaign=budgeting
+$14.99/month or $129/year. Card required, no charge until day 31. Cancel anytime.
+
+#FloorFirstBudgeting #VariableIncome #FreelanceMoney","Able, Able app, becomeable, Floor-First Budgeting, variable income, inconsistent income, budgeting for freelancers, 1099 budgeting, budgeting app, how to budget, freelance budget, self-employed budget",article-video/videos/budgeting-real-estate-agent-budget/thumbnail.png,,Budgeting,,top,pending,pending,,,
+budgeting-rideshare-driver-budget,/budgeting/rideshare-driver-budget/,"How to Budget for Uber, Lyft, and DoorDash Drivers",supporting,budgeting,2,draft,,,(see docs/notebooklm-sources/),(see docs/notebooklm-youtube-spec.md),3-4 min,,,,"How to Budget as an Uber, Lyft, or DoorDash Driver | Able","Rideshare and delivery income is daily, weather-dependent, and hides vehicle costs. Here is how to budget when your paycheck is different every week.
+
+From Able — the budgeting app built for inconsistent income.
+
+🔗 Read the full article: https://becomeable.app/budgeting/rideshare-driver-budget/?utm_source=youtube&utm_medium=video&utm_campaign=budgeting
+
+⏱ Chapters
+00:00 Intro
+(fill from script.json before publish)
+
+📚 Floor-First Budgeting
+Per-deposit allocation that pays your bills and taxes before any dollar gets to vote on dinner. Five rules:
+1. Know your floor. Bills plus tax equal the amount you can't miss.
+2. Every deposit fills the floor first.
+3. Build your reserve before you spend.
+4. One month ahead = Able.
+5. Score reality, not the plan.
+
+🎁 Try Able free for 30 days
+https://becomeable.app?utm_source=youtube&utm_medium=video&utm_campaign=budgeting
+$14.99/month or $129/year. Card required, no charge until day 31. Cancel anytime.
+
+#FloorFirstBudgeting #VariableIncome #FreelanceMoney","Able, Able app, becomeable, Floor-First Budgeting, variable income, inconsistent income, budgeting for freelancers, 1099 budgeting, budgeting app, how to budget, freelance budget, self-employed budget",article-video/videos/budgeting-rideshare-driver-budget/thumbnail.png,,Budgeting,,top,pending,pending,,,
+business-emergency-fund,/business/emergency-fund/,Emergency Fund for Entrepreneurs: Why Three Months Isn't Enough,supporting,business,2,draft,,,(see docs/notebooklm-sources/),(see docs/notebooklm-youtube-spec.md),3-4 min,,,,Emergency Fund for Entrepreneurs: Why 3 Months Isn't Enough | Able,"The standard advice is three to six months of expenses. For entrepreneurs with inconsistent income, that's not enough. Here is the real number and how to build it.
+
+From Able — the budgeting app built for inconsistent income.
+
+🔗 Read the full article: https://becomeable.app/business/emergency-fund/?utm_source=youtube&utm_medium=video&utm_campaign=business
+
+⏱ Chapters
+00:00 Intro
+(fill from script.json before publish)
+
+📚 Floor-First Budgeting
+Per-deposit allocation that pays your bills and taxes before any dollar gets to vote on dinner. Five rules:
+1. Know your floor. Bills plus tax equal the amount you can't miss.
+2. Every deposit fills the floor first.
+3. Build your reserve before you spend.
+4. One month ahead = Able.
+5. Score reality, not the plan.
+
+🎁 Try Able free for 30 days
+https://becomeable.app?utm_source=youtube&utm_medium=video&utm_campaign=business
+$14.99/month or $129/year. Card required, no charge until day 31. Cancel anytime.
+
+#FloorFirstBudgeting #VariableIncome #FreelanceMoney","Able, Able app, becomeable, Floor-First Budgeting, variable income, inconsistent income, budgeting for freelancers, 1099 budgeting, budgeting app, small business credit, emergency fund, business cash flow",article-video/videos/business-emergency-fund/thumbnail.png,,Business,,top,pending,pending,,,
+learn-improve-your-credit-score-automating-on-time-payments,/learn/improve-your-credit-score/automating-on-time-payments/,Automating on-time payments,supporting,learn-credit,2,draft,,,(see docs/notebooklm-sources/),(see docs/notebooklm-youtube-spec.md),3-4 min,,,,Automating on-time payments | Able Learn,"Never miss a payment again. Payment history is 35% of your score. One missed payment can cost 60 to 110 points. Fix is simple: automate everything.
+
+From Able — the budgeting app built for inconsistent income.
+
+🔗 Read the full article: https://becomeable.app/learn/improve-your-credit-score/automating-on-time-payments/?utm_source=youtube&utm_medium=video&utm_campaign=learn-credit
+
+⏱ Chapters
+00:00 Intro
+(fill from script.json before publish)
+
+📚 Floor-First Budgeting
+Per-deposit allocation that pays your bills and taxes before any dollar gets to vote on dinner. Five rules:
+1. Know your floor. Bills plus tax equal the amount you can't miss.
+2. Every deposit fills the floor first.
+3. Build your reserve before you spend.
+4. One month ahead = Able.
+5. Score reality, not the plan.
+
+🎁 Try Able free for 30 days
+https://becomeable.app?utm_source=youtube&utm_medium=video&utm_campaign=learn-credit
+$14.99/month or $129/year. Card required, no charge until day 31. Cancel anytime.
+
+#FloorFirstBudgeting #VariableIncome #FreelanceMoney","Able, Able app, becomeable, Floor-First Budgeting, variable income, inconsistent income, budgeting for freelancers, 1099 budgeting, budgeting app, credit score, improve credit, FICO score",article-video/videos/learn-improve-your-credit-score-automating-on-time-payments/thumbnail.png,,Learn — Improve Your Credit Score,,top,pending,pending,,,
+learn-improve-your-credit-score-building-credit-from-scratch-or-scratch-again,/learn/improve-your-credit-score/building-credit-from-scratch-or-scratch-again/,Building credit from scratch (or scratch again),supporting,learn-credit,2,draft,,,(see docs/notebooklm-sources/),(see docs/notebooklm-youtube-spec.md),3-4 min,,,,Building credit from scratch (or scratch again) | Able Learn,"Thin file or damaged credit starter kit. No credit history or a major hit? You rebuild from the foundation. Specific tools can get you to a 700+ score in 12 t
+
+From Able — the budgeting app built for inconsistent income.
+
+🔗 Read the full article: https://becomeable.app/learn/improve-your-credit-score/building-credit-from-scratch-or-scratch-again/?utm_source=youtube&utm_medium=video&utm_campaign=learn-credit
+
+⏱ Chapters
+00:00 Intro
+(fill from script.json before publish)
+
+📚 Floor-First Budgeting
+Per-deposit allocation that pays your bills and taxes before any dollar gets to vote on dinner. Five rules:
+1. Know your floor. Bills plus tax equal the amount you can't miss.
+2. Every deposit fills the floor first.
+3. Build your reserve before you spend.
+4. One month ahead = Able.
+5. Score reality, not the plan.
+
+🎁 Try Able free for 30 days
+https://becomeable.app?utm_source=youtube&utm_medium=video&utm_campaign=learn-credit
+$14.99/month or $129/year. Card required, no charge until day 31. Cancel anytime.
+
+#FloorFirstBudgeting #VariableIncome #FreelanceMoney","Able, Able app, becomeable, Floor-First Budgeting, variable income, inconsistent income, budgeting for freelancers, 1099 budgeting, budgeting app, credit score, improve credit, FICO score",article-video/videos/learn-improve-your-credit-score-building-credit-from-scratch-or-scratch-again/thumbnail.png,,Learn — Improve Your Credit Score,,top,pending,pending,,,
+learn-improve-your-credit-score-credit-mix-and-account-age,/learn/improve-your-credit-score/credit-mix-and-account-age/,Credit mix and account age,supporting,learn-credit,2,draft,,,(see docs/notebooklm-sources/),(see docs/notebooklm-youtube-spec.md),3-4 min,,,,Credit mix and account age | Able Learn,"Why variety matters. The last 25% of your score comes from two smaller factors. Account age and credit mix.
+
+From Able — the budgeting app built for inconsistent income.
+
+🔗 Read the full article: https://becomeable.app/learn/improve-your-credit-score/credit-mix-and-account-age/?utm_source=youtube&utm_medium=video&utm_campaign=learn-credit
+
+⏱ Chapters
+00:00 Intro
+(fill from script.json before publish)
+
+📚 Floor-First Budgeting
+Per-deposit allocation that pays your bills and taxes before any dollar gets to vote on dinner. Five rules:
+1. Know your floor. Bills plus tax equal the amount you can't miss.
+2. Every deposit fills the floor first.
+3. Build your reserve before you spend.
+4. One month ahead = Able.
+5. Score reality, not the plan.
+
+🎁 Try Able free for 30 days
+https://becomeable.app?utm_source=youtube&utm_medium=video&utm_campaign=learn-credit
+$14.99/month or $129/year. Card required, no charge until day 31. Cancel anytime.
+
+#FloorFirstBudgeting #VariableIncome #FreelanceMoney","Able, Able app, becomeable, Floor-First Budgeting, variable income, inconsistent income, budgeting for freelancers, 1099 budgeting, budgeting app, credit score, improve credit, FICO score",article-video/videos/learn-improve-your-credit-score-credit-mix-and-account-age/thumbnail.png,,Learn — Improve Your Credit Score,,top,pending,pending,,,
+learn-improve-your-credit-score-disputing-errors-and-removing-collections,/learn/improve-your-credit-score/disputing-errors-and-removing-collections/,Disputing errors and removing collections,supporting,learn-credit,2,draft,,,(see docs/notebooklm-sources/),(see docs/notebooklm-youtube-spec.md),3-4 min,,,,Disputing errors and removing collections | Able Learn,"Your credit report cleanup checklist. Errors and collections are the biggest anchors on most credit reports. Federal tools let you fight both effectively.
+
+From Able — the budgeting app built for inconsistent income.
+
+🔗 Read the full article: https://becomeable.app/learn/improve-your-credit-score/disputing-errors-and-removing-collections/?utm_source=youtube&utm_medium=video&utm_campaign=learn-credit
+
+⏱ Chapters
+00:00 Intro
+(fill from script.json before publish)
+
+📚 Floor-First Budgeting
+Per-deposit allocation that pays your bills and taxes before any dollar gets to vote on dinner. Five rules:
+1. Know your floor. Bills plus tax equal the amount you can't miss.
+2. Every deposit fills the floor first.
+3. Build your reserve before you spend.
+4. One month ahead = Able.
+5. Score reality, not the plan.
+
+🎁 Try Able free for 30 days
+https://becomeable.app?utm_source=youtube&utm_medium=video&utm_campaign=learn-credit
+$14.99/month or $129/year. Card required, no charge until day 31. Cancel anytime.
+
+#FloorFirstBudgeting #VariableIncome #FreelanceMoney","Able, Able app, becomeable, Floor-First Budgeting, variable income, inconsistent income, budgeting for freelancers, 1099 budgeting, budgeting app, credit score, improve credit, FICO score",article-video/videos/learn-improve-your-credit-score-disputing-errors-and-removing-collections/thumbnail.png,,Learn — Improve Your Credit Score,,top,pending,pending,,,
+learn-improve-your-credit-score-fico-vs-vantagescore,/learn/improve-your-credit-score/fico-vs-vantagescore/,FICO vs VantageScore,supporting,learn-credit,2,draft,,,(see docs/notebooklm-sources/),(see docs/notebooklm-youtube-spec.md),3-4 min,,,,FICO vs VantageScore | Able Learn,"Why you have different scores. You have multiple credit scores and they aren't the same. Most free credit apps show VantageScore. Most real lenders pull FICO.
+
+From Able — the budgeting app built for inconsistent income.
+
+🔗 Read the full article: https://becomeable.app/learn/improve-your-credit-score/fico-vs-vantagescore/?utm_source=youtube&utm_medium=video&utm_campaign=learn-credit
+
+⏱ Chapters
+00:00 Intro
+(fill from script.json before publish)
+
+📚 Floor-First Budgeting
+Per-deposit allocation that pays your bills and taxes before any dollar gets to vote on dinner. Five rules:
+1. Know your floor. Bills plus tax equal the amount you can't miss.
+2. Every deposit fills the floor first.
+3. Build your reserve before you spend.
+4. One month ahead = Able.
+5. Score reality, not the plan.
+
+🎁 Try Able free for 30 days
+https://becomeable.app?utm_source=youtube&utm_medium=video&utm_campaign=learn-credit
+$14.99/month or $129/year. Card required, no charge until day 31. Cancel anytime.
+
+#FloorFirstBudgeting #VariableIncome #FreelanceMoney","Able, Able app, becomeable, Floor-First Budgeting, variable income, inconsistent income, budgeting for freelancers, 1099 budgeting, budgeting app, credit score, improve credit, FICO score",article-video/videos/learn-improve-your-credit-score-fico-vs-vantagescore/thumbnail.png,,Learn — Improve Your Credit Score,,top,pending,pending,,,
+learn-improve-your-credit-score-hard-vs-soft-inquiries,/learn/improve-your-credit-score/hard-vs-soft-inquiries/,Hard vs soft inquiries,supporting,learn-credit,2,draft,,,(see docs/notebooklm-sources/),(see docs/notebooklm-youtube-spec.md),3-4 min,,,,Hard vs soft inquiries | Able Learn,"How to shop without wrecking your score. Every credit pull is either soft (no score impact) or hard (small temporary drop). Knowing the difference lets you sh
+
+From Able — the budgeting app built for inconsistent income.
+
+🔗 Read the full article: https://becomeable.app/learn/improve-your-credit-score/hard-vs-soft-inquiries/?utm_source=youtube&utm_medium=video&utm_campaign=learn-credit
+
+⏱ Chapters
+00:00 Intro
+(fill from script.json before publish)
+
+📚 Floor-First Budgeting
+Per-deposit allocation that pays your bills and taxes before any dollar gets to vote on dinner. Five rules:
+1. Know your floor. Bills plus tax equal the amount you can't miss.
+2. Every deposit fills the floor first.
+3. Build your reserve before you spend.
+4. One month ahead = Able.
+5. Score reality, not the plan.
+
+🎁 Try Able free for 30 days
+https://becomeable.app?utm_source=youtube&utm_medium=video&utm_campaign=learn-credit
+$14.99/month or $129/year. Card required, no charge until day 31. Cancel anytime.
+
+#FloorFirstBudgeting #VariableIncome #FreelanceMoney","Able, Able app, becomeable, Floor-First Budgeting, variable income, inconsistent income, budgeting for freelancers, 1099 budgeting, budgeting app, credit score, improve credit, FICO score",article-video/videos/learn-improve-your-credit-score-hard-vs-soft-inquiries/thumbnail.png,,Learn — Improve Your Credit Score,,top,pending,pending,,,
+learn-improve-your-credit-score-how-your-credit-score-actually-works,/learn/improve-your-credit-score/how-your-credit-score-actually-works/,How your credit score actually works,supporting,learn-credit,2,draft,,,(see docs/notebooklm-sources/),(see docs/notebooklm-youtube-spec.md),3-4 min,,,,How your credit score actually works | Able Learn,"The five factors explained simply. Your credit score is a three-digit number between 300 and 850. Lenders use it to decide whether to approve you for anything
+
+From Able — the budgeting app built for inconsistent income.
+
+🔗 Read the full article: https://becomeable.app/learn/improve-your-credit-score/how-your-credit-score-actually-works/?utm_source=youtube&utm_medium=video&utm_campaign=learn-credit
+
+⏱ Chapters
+00:00 Intro
+(fill from script.json before publish)
+
+📚 Floor-First Budgeting
+Per-deposit allocation that pays your bills and taxes before any dollar gets to vote on dinner. Five rules:
+1. Know your floor. Bills plus tax equal the amount you can't miss.
+2. Every deposit fills the floor first.
+3. Build your reserve before you spend.
+4. One month ahead = Able.
+5. Score reality, not the plan.
+
+🎁 Try Able free for 30 days
+https://becomeable.app?utm_source=youtube&utm_medium=video&utm_campaign=learn-credit
+$14.99/month or $129/year. Card required, no charge until day 31. Cancel anytime.
+
+#FloorFirstBudgeting #VariableIncome #FreelanceMoney","Able, Able app, becomeable, Floor-First Budgeting, variable income, inconsistent income, budgeting for freelancers, 1099 budgeting, budgeting app, credit score, improve credit, FICO score",article-video/videos/learn-improve-your-credit-score-how-your-credit-score-actually-works/thumbnail.png,,Learn — Improve Your Credit Score,,top,pending,pending,,,
+learn-improve-your-credit-score-mastering-credit-utilization,/learn/improve-your-credit-score/mastering-credit-utilization/,Mastering credit utilization,supporting,learn-credit,2,draft,,,(see docs/notebooklm-sources/),(see docs/notebooklm-youtube-spec.md),3-4 min,,,,Mastering credit utilization | Able Learn,"The fastest way to boost your score. Credit utilization is the percentage of available credit you're using. $10,000 in limits and $3,000 in balances equals 30
+
+From Able — the budgeting app built for inconsistent income.
+
+🔗 Read the full article: https://becomeable.app/learn/improve-your-credit-score/mastering-credit-utilization/?utm_source=youtube&utm_medium=video&utm_campaign=learn-credit
+
+⏱ Chapters
+00:00 Intro
+(fill from script.json before publish)
+
+📚 Floor-First Budgeting
+Per-deposit allocation that pays your bills and taxes before any dollar gets to vote on dinner. Five rules:
+1. Know your floor. Bills plus tax equal the amount you can't miss.
+2. Every deposit fills the floor first.
+3. Build your reserve before you spend.
+4. One month ahead = Able.
+5. Score reality, not the plan.
+
+🎁 Try Able free for 30 days
+https://becomeable.app?utm_source=youtube&utm_medium=video&utm_campaign=learn-credit
+$14.99/month or $129/year. Card required, no charge until day 31. Cancel anytime.
+
+#FloorFirstBudgeting #VariableIncome #FreelanceMoney","Able, Able app, becomeable, Floor-First Budgeting, variable income, inconsistent income, budgeting for freelancers, 1099 budgeting, budgeting app, credit score, improve credit, FICO score",article-video/videos/learn-improve-your-credit-score-mastering-credit-utilization/thumbnail.png,,Learn — Improve Your Credit Score,,top,pending,pending,,,
+learn-improve-your-credit-score-pulling-and-reading-your-credit-report,/learn/improve-your-credit-score/pulling-and-reading-your-credit-report/,Pulling and reading your credit report,supporting,learn-credit,2,draft,,,(see docs/notebooklm-sources/),(see docs/notebooklm-youtube-spec.md),3-4 min,,,,Pulling and reading your credit report | Able Learn,"What to look for on your report. Your credit report isn't your score. The score is a number. The report is the record of every account, payment, and inquiry. 
+
+From Able — the budgeting app built for inconsistent income.
+
+🔗 Read the full article: https://becomeable.app/learn/improve-your-credit-score/pulling-and-reading-your-credit-report/?utm_source=youtube&utm_medium=video&utm_campaign=learn-credit
+
+⏱ Chapters
+00:00 Intro
+(fill from script.json before publish)
+
+📚 Floor-First Budgeting
+Per-deposit allocation that pays your bills and taxes before any dollar gets to vote on dinner. Five rules:
+1. Know your floor. Bills plus tax equal the amount you can't miss.
+2. Every deposit fills the floor first.
+3. Build your reserve before you spend.
+4. One month ahead = Able.
+5. Score reality, not the plan.
+
+🎁 Try Able free for 30 days
+https://becomeable.app?utm_source=youtube&utm_medium=video&utm_campaign=learn-credit
+$14.99/month or $129/year. Card required, no charge until day 31. Cancel anytime.
+
+#FloorFirstBudgeting #VariableIncome #FreelanceMoney","Able, Able app, becomeable, Floor-First Budgeting, variable income, inconsistent income, budgeting for freelancers, 1099 budgeting, budgeting app, credit score, improve credit, FICO score",article-video/videos/learn-improve-your-credit-score-pulling-and-reading-your-credit-report/thumbnail.png,,Learn — Improve Your Credit Score,,top,pending,pending,,,
+learn-improve-your-credit-score-your-90-day-credit-improvement-plan,/learn/improve-your-credit-score/your-90-day-credit-improvement-plan/,Your 90-day credit improvement plan,supporting,learn-credit,2,draft,,,(see docs/notebooklm-sources/),(see docs/notebooklm-youtube-spec.md),3-4 min,,,,Your 90-day credit improvement plan | Able Learn,"Add 50-150 points in 3 months. The playbook for adding significant points in 90 days. Don't skip steps. Don't reorder. The sequence matters.
+
+From Able — the budgeting app built for inconsistent income.
+
+🔗 Read the full article: https://becomeable.app/learn/improve-your-credit-score/your-90-day-credit-improvement-plan/?utm_source=youtube&utm_medium=video&utm_campaign=learn-credit
+
+⏱ Chapters
+00:00 Intro
+(fill from script.json before publish)
+
+📚 Floor-First Budgeting
+Per-deposit allocation that pays your bills and taxes before any dollar gets to vote on dinner. Five rules:
+1. Know your floor. Bills plus tax equal the amount you can't miss.
+2. Every deposit fills the floor first.
+3. Build your reserve before you spend.
+4. One month ahead = Able.
+5. Score reality, not the plan.
+
+🎁 Try Able free for 30 days
+https://becomeable.app?utm_source=youtube&utm_medium=video&utm_campaign=learn-credit
+$14.99/month or $129/year. Card required, no charge until day 31. Cancel anytime.
+
+#FloorFirstBudgeting #VariableIncome #FreelanceMoney","Able, Able app, becomeable, Floor-First Budgeting, variable income, inconsistent income, budgeting for freelancers, 1099 budgeting, budgeting app, credit score, improve credit, FICO score",article-video/videos/learn-improve-your-credit-score-your-90-day-credit-improvement-plan/thumbnail.png,,Learn — Improve Your Credit Score,,top,pending,pending,,,
+learn-get-out-of-debt-build-your-debt-payoff-schedule,/learn/get-out-of-debt/build-your-debt-payoff-schedule/,Build your debt payoff schedule,supporting,learn-debt,2,draft,,,(see docs/notebooklm-sources/),(see docs/notebooklm-youtube-spec.md),3-4 min,,,,Build your debt payoff schedule | Able Learn,"Your 90-day action plan. You have the theory. Time to build the plan. A 90-day starter schedule from drowning to moving.
+
+From Able — the budgeting app built for inconsistent income.
+
+🔗 Read the full article: https://becomeable.app/learn/get-out-of-debt/build-your-debt-payoff-schedule/?utm_source=youtube&utm_medium=video&utm_campaign=learn-debt
+
+⏱ Chapters
+00:00 Intro
+(fill from script.json before publish)
+
+📚 Floor-First Budgeting
+Per-deposit allocation that pays your bills and taxes before any dollar gets to vote on dinner. Five rules:
+1. Know your floor. Bills plus tax equal the amount you can't miss.
+2. Every deposit fills the floor first.
+3. Build your reserve before you spend.
+4. One month ahead = Able.
+5. Score reality, not the plan.
+
+🎁 Try Able free for 30 days
+https://becomeable.app?utm_source=youtube&utm_medium=video&utm_campaign=learn-debt
+$14.99/month or $129/year. Card required, no charge until day 31. Cancel anytime.
+
+#FloorFirstBudgeting #VariableIncome #FreelanceMoney","Able, Able app, becomeable, Floor-First Budgeting, variable income, inconsistent income, budgeting for freelancers, 1099 budgeting, budgeting app, how to get out of debt, debt snowball, debt avalanche",article-video/videos/learn-get-out-of-debt-build-your-debt-payoff-schedule/thumbnail.png,,Learn — Get Out of Debt,,top,pending,pending,,,
+learn-get-out-of-debt-dealing-with-collections,/learn/get-out-of-debt/dealing-with-collections/,Dealing with collections,supporting,learn-debt,2,draft,,,(see docs/notebooklm-sources/),(see docs/notebooklm-youtube-spec.md),3-4 min,,,,Dealing with collections | Able Learn,"Know your rights. Collections rules are different. The Fair Debt Collection Practices Act (FDCPA) gives you rights most people don't know exist.
+
+From Able — the budgeting app built for inconsistent income.
+
+🔗 Read the full article: https://becomeable.app/learn/get-out-of-debt/dealing-with-collections/?utm_source=youtube&utm_medium=video&utm_campaign=learn-debt
+
+⏱ Chapters
+00:00 Intro
+(fill from script.json before publish)
+
+📚 Floor-First Budgeting
+Per-deposit allocation that pays your bills and taxes before any dollar gets to vote on dinner. Five rules:
+1. Know your floor. Bills plus tax equal the amount you can't miss.
+2. Every deposit fills the floor first.
+3. Build your reserve before you spend.
+4. One month ahead = Able.
+5. Score reality, not the plan.
+
+🎁 Try Able free for 30 days
+https://becomeable.app?utm_source=youtube&utm_medium=video&utm_campaign=learn-debt
+$14.99/month or $129/year. Card required, no charge until day 31. Cancel anytime.
+
+#FloorFirstBudgeting #VariableIncome #FreelanceMoney","Able, Able app, becomeable, Floor-First Budgeting, variable income, inconsistent income, budgeting for freelancers, 1099 budgeting, budgeting app, how to get out of debt, debt snowball, debt avalanche",article-video/videos/learn-get-out-of-debt-dealing-with-collections/thumbnail.png,,Learn — Get Out of Debt,,top,pending,pending,,,
+learn-get-out-of-debt-debt-consolidation-when-to-use-it,/learn/get-out-of-debt/debt-consolidation-when-to-use-it/,Debt consolidation: when to use it,supporting,learn-debt,2,draft,,,(see docs/notebooklm-sources/),(see docs/notebooklm-youtube-spec.md),3-4 min,,,,Debt consolidation: when to use it | Able Learn,"A tool, not a magic fix. Consolidation combines multiple debts into one loan, usually at a lower rate. Done right, you save thousands. Done wrong, you pay mor
+
+From Able — the budgeting app built for inconsistent income.
+
+🔗 Read the full article: https://becomeable.app/learn/get-out-of-debt/debt-consolidation-when-to-use-it/?utm_source=youtube&utm_medium=video&utm_campaign=learn-debt
+
+⏱ Chapters
+00:00 Intro
+(fill from script.json before publish)
+
+📚 Floor-First Budgeting
+Per-deposit allocation that pays your bills and taxes before any dollar gets to vote on dinner. Five rules:
+1. Know your floor. Bills plus tax equal the amount you can't miss.
+2. Every deposit fills the floor first.
+3. Build your reserve before you spend.
+4. One month ahead = Able.
+5. Score reality, not the plan.
+
+🎁 Try Able free for 30 days
+https://becomeable.app?utm_source=youtube&utm_medium=video&utm_campaign=learn-debt
+$14.99/month or $129/year. Card required, no charge until day 31. Cancel anytime.
+
+#FloorFirstBudgeting #VariableIncome #FreelanceMoney","Able, Able app, becomeable, Floor-First Budgeting, variable income, inconsistent income, budgeting for freelancers, 1099 budgeting, budgeting app, how to get out of debt, debt snowball, debt avalanche",article-video/videos/learn-get-out-of-debt-debt-consolidation-when-to-use-it/thumbnail.png,,Learn — Get Out of Debt,,top,pending,pending,,,
+learn-get-out-of-debt-debt-snowball-vs-debt-avalanche,/learn/get-out-of-debt/debt-snowball-vs-debt-avalanche/,Debt snowball vs debt avalanche,supporting,learn-debt,2,draft,,,(see docs/notebooklm-sources/),(see docs/notebooklm-youtube-spec.md),3-4 min,,,,Debt snowball vs debt avalanche | Able Learn,"Pick the method that fits your brain. Two main strategies, both work. The one that wins is the one you'll actually stick with.
+
+From Able — the budgeting app built for inconsistent income.
+
+🔗 Read the full article: https://becomeable.app/learn/get-out-of-debt/debt-snowball-vs-debt-avalanche/?utm_source=youtube&utm_medium=video&utm_campaign=learn-debt
+
+⏱ Chapters
+00:00 Intro
+(fill from script.json before publish)
+
+📚 Floor-First Budgeting
+Per-deposit allocation that pays your bills and taxes before any dollar gets to vote on dinner. Five rules:
+1. Know your floor. Bills plus tax equal the amount you can't miss.
+2. Every deposit fills the floor first.
+3. Build your reserve before you spend.
+4. One month ahead = Able.
+5. Score reality, not the plan.
+
+🎁 Try Able free for 30 days
+https://becomeable.app?utm_source=youtube&utm_medium=video&utm_campaign=learn-debt
+$14.99/month or $129/year. Card required, no charge until day 31. Cancel anytime.
+
+#FloorFirstBudgeting #VariableIncome #FreelanceMoney","Able, Able app, becomeable, Floor-First Budgeting, variable income, inconsistent income, budgeting for freelancers, 1099 budgeting, budgeting app, how to get out of debt, debt snowball, debt avalanche",article-video/videos/learn-get-out-of-debt-debt-snowball-vs-debt-avalanche/thumbnail.png,,Learn — Get Out of Debt,,top,pending,pending,,,
+learn-get-out-of-debt-good-debt-vs-bad-debt,/learn/get-out-of-debt/good-debt-vs-bad-debt/,Good debt vs bad debt,supporting,learn-debt,2,draft,,,(see docs/notebooklm-sources/),(see docs/notebooklm-youtube-spec.md),3-4 min,,,,Good debt vs bad debt | Able Learn,"Not all debt is the enemy. Most advice treats all debt like poison. That's lazy. A 3% mortgage is nothing like a 26% credit card.
+
+From Able — the budgeting app built for inconsistent income.
+
+🔗 Read the full article: https://becomeable.app/learn/get-out-of-debt/good-debt-vs-bad-debt/?utm_source=youtube&utm_medium=video&utm_campaign=learn-debt
+
+⏱ Chapters
+00:00 Intro
+(fill from script.json before publish)
+
+📚 Floor-First Budgeting
+Per-deposit allocation that pays your bills and taxes before any dollar gets to vote on dinner. Five rules:
+1. Know your floor. Bills plus tax equal the amount you can't miss.
+2. Every deposit fills the floor first.
+3. Build your reserve before you spend.
+4. One month ahead = Able.
+5. Score reality, not the plan.
+
+🎁 Try Able free for 30 days
+https://becomeable.app?utm_source=youtube&utm_medium=video&utm_campaign=learn-debt
+$14.99/month or $129/year. Card required, no charge until day 31. Cancel anytime.
+
+#FloorFirstBudgeting #VariableIncome #FreelanceMoney","Able, Able app, becomeable, Floor-First Budgeting, variable income, inconsistent income, budgeting for freelancers, 1099 budgeting, budgeting app, how to get out of debt, debt snowball, debt avalanche",article-video/videos/learn-get-out-of-debt-good-debt-vs-bad-debt/thumbnail.png,,Learn — Get Out of Debt,,top,pending,pending,,,
+learn-get-out-of-debt-how-to-handle-debt-with-variable-income,/learn/get-out-of-debt/how-to-handle-debt-with-variable-income/,How to handle debt with variable income,supporting,learn-debt,2,draft,,,(see docs/notebooklm-sources/),(see docs/notebooklm-youtube-spec.md),3-4 min,,,,How to handle debt with variable income | Able Learn,"The missing playbook for entrepreneurs. Every debt book assumes steady income. If yours isn't, those plans break by month three. You need a different approach
+
+From Able — the budgeting app built for inconsistent income.
+
+🔗 Read the full article: https://becomeable.app/learn/get-out-of-debt/how-to-handle-debt-with-variable-income/?utm_source=youtube&utm_medium=video&utm_campaign=learn-debt
+
+⏱ Chapters
+00:00 Intro
+(fill from script.json before publish)
+
+📚 Floor-First Budgeting
+Per-deposit allocation that pays your bills and taxes before any dollar gets to vote on dinner. Five rules:
+1. Know your floor. Bills plus tax equal the amount you can't miss.
+2. Every deposit fills the floor first.
+3. Build your reserve before you spend.
+4. One month ahead = Able.
+5. Score reality, not the plan.
+
+🎁 Try Able free for 30 days
+https://becomeable.app?utm_source=youtube&utm_medium=video&utm_campaign=learn-debt
+$14.99/month or $129/year. Card required, no charge until day 31. Cancel anytime.
+
+#FloorFirstBudgeting #VariableIncome #FreelanceMoney","Able, Able app, becomeable, Floor-First Budgeting, variable income, inconsistent income, budgeting for freelancers, 1099 budgeting, budgeting app, how to get out of debt, debt snowball, debt avalanche",article-video/videos/learn-get-out-of-debt-how-to-handle-debt-with-variable-income/thumbnail.png,,Learn — Get Out of Debt,,top,pending,pending,,,
+learn-get-out-of-debt-know-your-debt-to-income-ratio,/learn/get-out-of-debt/know-your-debt-to-income-ratio/,Know your debt-to-income ratio,supporting,learn-debt,2,draft,,,(see docs/notebooklm-sources/),(see docs/notebooklm-youtube-spec.md),3-4 min,,,,Know your debt-to-income ratio | Able Learn,"The number every lender looks at. Debt-to-income (DTI) is the number lenders use to decide whether to approve you for anything. Mortgage, business loan, credi
+
+From Able — the budgeting app built for inconsistent income.
+
+🔗 Read the full article: https://becomeable.app/learn/get-out-of-debt/know-your-debt-to-income-ratio/?utm_source=youtube&utm_medium=video&utm_campaign=learn-debt
+
+⏱ Chapters
+00:00 Intro
+(fill from script.json before publish)
+
+📚 Floor-First Budgeting
+Per-deposit allocation that pays your bills and taxes before any dollar gets to vote on dinner. Five rules:
+1. Know your floor. Bills plus tax equal the amount you can't miss.
+2. Every deposit fills the floor first.
+3. Build your reserve before you spend.
+4. One month ahead = Able.
+5. Score reality, not the plan.
+
+🎁 Try Able free for 30 days
+https://becomeable.app?utm_source=youtube&utm_medium=video&utm_campaign=learn-debt
+$14.99/month or $129/year. Card required, no charge until day 31. Cancel anytime.
+
+#FloorFirstBudgeting #VariableIncome #FreelanceMoney","Able, Able app, becomeable, Floor-First Budgeting, variable income, inconsistent income, budgeting for freelancers, 1099 budgeting, budgeting app, how to get out of debt, debt snowball, debt avalanche",article-video/videos/learn-get-out-of-debt-know-your-debt-to-income-ratio/thumbnail.png,,Learn — Get Out of Debt,,top,pending,pending,,,
+learn-get-out-of-debt-negotiating-with-creditors,/learn/get-out-of-debt/negotiating-with-creditors/,Negotiating with creditors,supporting,learn-debt,2,draft,,,(see docs/notebooklm-sources/),(see docs/notebooklm-youtube-spec.md),3-4 min,,,,Negotiating with creditors | Able Learn,"You have more leverage than you think. Most people never call their creditors. They assume the rate on the statement is fixed and customer service can't help.
+
+From Able — the budgeting app built for inconsistent income.
+
+🔗 Read the full article: https://becomeable.app/learn/get-out-of-debt/negotiating-with-creditors/?utm_source=youtube&utm_medium=video&utm_campaign=learn-debt
+
+⏱ Chapters
+00:00 Intro
+(fill from script.json before publish)
+
+📚 Floor-First Budgeting
+Per-deposit allocation that pays your bills and taxes before any dollar gets to vote on dinner. Five rules:
+1. Know your floor. Bills plus tax equal the amount you can't miss.
+2. Every deposit fills the floor first.
+3. Build your reserve before you spend.
+4. One month ahead = Able.
+5. Score reality, not the plan.
+
+🎁 Try Able free for 30 days
+https://becomeable.app?utm_source=youtube&utm_medium=video&utm_campaign=learn-debt
+$14.99/month or $129/year. Card required, no charge until day 31. Cancel anytime.
+
+#FloorFirstBudgeting #VariableIncome #FreelanceMoney","Able, Able app, becomeable, Floor-First Budgeting, variable income, inconsistent income, budgeting for freelancers, 1099 budgeting, budgeting app, how to get out of debt, debt snowball, debt avalanche",article-video/videos/learn-get-out-of-debt-negotiating-with-creditors/thumbnail.png,,Learn — Get Out of Debt,,top,pending,pending,,,
+learn-get-out-of-debt-staying-out-of-debt-for-good,/learn/get-out-of-debt/staying-out-of-debt-for-good/,Staying out of debt for good,supporting,learn-debt,2,draft,,,(see docs/notebooklm-sources/),(see docs/notebooklm-youtube-spec.md),3-4 min,,,,Staying out of debt for good | Able Learn,"The habits that prevent relapse. Staying out of debt is harder than getting out. Most people pay it off and end up back within 3 to 5 years.
+
+From Able — the budgeting app built for inconsistent income.
+
+🔗 Read the full article: https://becomeable.app/learn/get-out-of-debt/staying-out-of-debt-for-good/?utm_source=youtube&utm_medium=video&utm_campaign=learn-debt
+
+⏱ Chapters
+00:00 Intro
+(fill from script.json before publish)
+
+📚 Floor-First Budgeting
+Per-deposit allocation that pays your bills and taxes before any dollar gets to vote on dinner. Five rules:
+1. Know your floor. Bills plus tax equal the amount you can't miss.
+2. Every deposit fills the floor first.
+3. Build your reserve before you spend.
+4. One month ahead = Able.
+5. Score reality, not the plan.
+
+🎁 Try Able free for 30 days
+https://becomeable.app?utm_source=youtube&utm_medium=video&utm_campaign=learn-debt
+$14.99/month or $129/year. Card required, no charge until day 31. Cancel anytime.
+
+#FloorFirstBudgeting #VariableIncome #FreelanceMoney","Able, Able app, becomeable, Floor-First Budgeting, variable income, inconsistent income, budgeting for freelancers, 1099 budgeting, budgeting app, how to get out of debt, debt snowball, debt avalanche",article-video/videos/learn-get-out-of-debt-staying-out-of-debt-for-good/thumbnail.png,,Learn — Get Out of Debt,,top,pending,pending,,,
+learn-get-out-of-debt-why-getting-out-of-debt-feels-impossible,/learn/get-out-of-debt/why-getting-out-of-debt-feels-impossible/,Why getting out of debt feels impossible,supporting,learn-debt,2,draft,,,(see docs/notebooklm-sources/),(see docs/notebooklm-youtube-spec.md),3-4 min,,,,Why getting out of debt feels impossible | Able Learn,"The real reason you feel stuck. The treadmill is real. You make money, pay minimums, cover expenses, and end up back where you started. It's a cycle that hits
+
+From Able — the budgeting app built for inconsistent income.
+
+🔗 Read the full article: https://becomeable.app/learn/get-out-of-debt/why-getting-out-of-debt-feels-impossible/?utm_source=youtube&utm_medium=video&utm_campaign=learn-debt
+
+⏱ Chapters
+00:00 Intro
+(fill from script.json before publish)
+
+📚 Floor-First Budgeting
+Per-deposit allocation that pays your bills and taxes before any dollar gets to vote on dinner. Five rules:
+1. Know your floor. Bills plus tax equal the amount you can't miss.
+2. Every deposit fills the floor first.
+3. Build your reserve before you spend.
+4. One month ahead = Able.
+5. Score reality, not the plan.
+
+🎁 Try Able free for 30 days
+https://becomeable.app?utm_source=youtube&utm_medium=video&utm_campaign=learn-debt
+$14.99/month or $129/year. Card required, no charge until day 31. Cancel anytime.
+
+#FloorFirstBudgeting #VariableIncome #FreelanceMoney","Able, Able app, becomeable, Floor-First Budgeting, variable income, inconsistent income, budgeting for freelancers, 1099 budgeting, budgeting app, how to get out of debt, debt snowball, debt avalanche",article-video/videos/learn-get-out-of-debt-why-getting-out-of-debt-feels-impossible/thumbnail.png,,Learn — Get Out of Debt,,top,pending,pending,,,
+learn-get-business-funding-alternative-funding-and-the-mca-trap,/learn/get-business-funding/alternative-funding-and-the-mca-trap/,Alternative funding and the MCA trap,supporting,learn-funding,2,draft,,,(see docs/notebooklm-sources/),(see docs/notebooklm-youtube-spec.md),3-4 min,,,,Alternative funding and the MCA trap | Able Learn,"Fast money comes at a brutal cost. When banks say no, alternative lenders fill the gap. Some are legitimate. Others are predatory products that can destroy a 
+
+From Able — the budgeting app built for inconsistent income.
+
+🔗 Read the full article: https://becomeable.app/learn/get-business-funding/alternative-funding-and-the-mca-trap/?utm_source=youtube&utm_medium=video&utm_campaign=learn-funding
+
+⏱ Chapters
+00:00 Intro
+(fill from script.json before publish)
+
+📚 Floor-First Budgeting
+Per-deposit allocation that pays your bills and taxes before any dollar gets to vote on dinner. Five rules:
+1. Know your floor. Bills plus tax equal the amount you can't miss.
+2. Every deposit fills the floor first.
+3. Build your reserve before you spend.
+4. One month ahead = Able.
+5. Score reality, not the plan.
+
+🎁 Try Able free for 30 days
+https://becomeable.app?utm_source=youtube&utm_medium=video&utm_campaign=learn-funding
+$14.99/month or $129/year. Card required, no charge until day 31. Cancel anytime.
+
+#FloorFirstBudgeting #VariableIncome #FreelanceMoney","Able, Able app, becomeable, Floor-First Budgeting, variable income, inconsistent income, budgeting for freelancers, 1099 budgeting, budgeting app, small business loan, SBA loan, business credit",article-video/videos/learn-get-business-funding-alternative-funding-and-the-mca-trap/thumbnail.png,,Learn — Get Business Funding,,top,pending,pending,,,
+learn-get-business-funding-building-paydex-to-80,/learn/get-business-funding/building-paydex-to-80/,Building PAYDEX to 80+,supporting,learn-funding,2,draft,,,(see docs/notebooklm-sources/),(see docs/notebooklm-youtube-spec.md),3-4 min,,,,Building PAYDEX to 80+ | Able Learn,"The fastest path to business credit. Once your business infrastructure is set, build a PAYDEX of 80 or higher. That's the threshold lenders and vendors want b
+
+From Able — the budgeting app built for inconsistent income.
+
+🔗 Read the full article: https://becomeable.app/learn/get-business-funding/building-paydex-to-80/?utm_source=youtube&utm_medium=video&utm_campaign=learn-funding
+
+⏱ Chapters
+00:00 Intro
+(fill from script.json before publish)
+
+📚 Floor-First Budgeting
+Per-deposit allocation that pays your bills and taxes before any dollar gets to vote on dinner. Five rules:
+1. Know your floor. Bills plus tax equal the amount you can't miss.
+2. Every deposit fills the floor first.
+3. Build your reserve before you spend.
+4. One month ahead = Able.
+5. Score reality, not the plan.
+
+🎁 Try Able free for 30 days
+https://becomeable.app?utm_source=youtube&utm_medium=video&utm_campaign=learn-funding
+$14.99/month or $129/year. Card required, no charge until day 31. Cancel anytime.
+
+#FloorFirstBudgeting #VariableIncome #FreelanceMoney","Able, Able app, becomeable, Floor-First Budgeting, variable income, inconsistent income, budgeting for freelancers, 1099 budgeting, budgeting app, small business loan, SBA loan, business credit",article-video/videos/learn-get-business-funding-building-paydex-to-80/thumbnail.png,,Learn — Get Business Funding,,top,pending,pending,,,
+learn-get-business-funding-business-credit-cards-explained,/learn/get-business-funding/business-credit-cards-explained/,Business credit cards explained,supporting,learn-funding,2,draft,,,(see docs/notebooklm-sources/),(see docs/notebooklm-youtube-spec.md),3-4 min,,,,Business credit cards explained | Able Learn,"Personal guarantee vs true business credit. Business cards come in two flavors, and most people don't know which one they have. The difference determines whet
+
+From Able — the budgeting app built for inconsistent income.
+
+🔗 Read the full article: https://becomeable.app/learn/get-business-funding/business-credit-cards-explained/?utm_source=youtube&utm_medium=video&utm_campaign=learn-funding
+
+⏱ Chapters
+00:00 Intro
+(fill from script.json before publish)
+
+📚 Floor-First Budgeting
+Per-deposit allocation that pays your bills and taxes before any dollar gets to vote on dinner. Five rules:
+1. Know your floor. Bills plus tax equal the amount you can't miss.
+2. Every deposit fills the floor first.
+3. Build your reserve before you spend.
+4. One month ahead = Able.
+5. Score reality, not the plan.
+
+🎁 Try Able free for 30 days
+https://becomeable.app?utm_source=youtube&utm_medium=video&utm_campaign=learn-funding
+$14.99/month or $129/year. Card required, no charge until day 31. Cancel anytime.
+
+#FloorFirstBudgeting #VariableIncome #FreelanceMoney","Able, Able app, becomeable, Floor-First Budgeting, variable income, inconsistent income, budgeting for freelancers, 1099 budgeting, budgeting app, small business loan, SBA loan, business credit",article-video/videos/learn-get-business-funding-business-credit-cards-explained/thumbnail.png,,Learn — Get Business Funding,,top,pending,pending,,,
+learn-get-business-funding-grants-where-to-actually-find-them,/learn/get-business-funding/grants-where-to-actually-find-them/,Grants: where to actually find them,supporting,learn-funding,2,draft,,,(see docs/notebooklm-sources/),(see docs/notebooklm-youtube-spec.md),3-4 min,,,,Grants: where to actually find them | Able Learn,"Free money exists, but it takes work. Grants are the best funding. You don't pay them back. Also the most competitive. Most small business grants go to specif
+
+From Able — the budgeting app built for inconsistent income.
+
+🔗 Read the full article: https://becomeable.app/learn/get-business-funding/grants-where-to-actually-find-them/?utm_source=youtube&utm_medium=video&utm_campaign=learn-funding
+
+⏱ Chapters
+00:00 Intro
+(fill from script.json before publish)
+
+📚 Floor-First Budgeting
+Per-deposit allocation that pays your bills and taxes before any dollar gets to vote on dinner. Five rules:
+1. Know your floor. Bills plus tax equal the amount you can't miss.
+2. Every deposit fills the floor first.
+3. Build your reserve before you spend.
+4. One month ahead = Able.
+5. Score reality, not the plan.
+
+🎁 Try Able free for 30 days
+https://becomeable.app?utm_source=youtube&utm_medium=video&utm_campaign=learn-funding
+$14.99/month or $129/year. Card required, no charge until day 31. Cancel anytime.
+
+#FloorFirstBudgeting #VariableIncome #FreelanceMoney","Able, Able app, becomeable, Floor-First Budgeting, variable income, inconsistent income, budgeting for freelancers, 1099 budgeting, budgeting app, small business loan, SBA loan, business credit",article-video/videos/learn-get-business-funding-grants-where-to-actually-find-them/thumbnail.png,,Learn — Get Business Funding,,top,pending,pending,,,
+learn-get-business-funding-personal-credit-vs-business-credit,/learn/get-business-funding/personal-credit-vs-business-credit/,Personal credit vs business credit,supporting,learn-funding,2,draft,,,(see docs/notebooklm-sources/),(see docs/notebooklm-youtube-spec.md),3-4 min,,,,Personal credit vs business credit | Able Learn,"Two separate systems. Most owners don't know their business can build its own credit profile. That changes how funding works.
+
+From Able — the budgeting app built for inconsistent income.
+
+🔗 Read the full article: https://becomeable.app/learn/get-business-funding/personal-credit-vs-business-credit/?utm_source=youtube&utm_medium=video&utm_campaign=learn-funding
+
+⏱ Chapters
+00:00 Intro
+(fill from script.json before publish)
+
+📚 Floor-First Budgeting
+Per-deposit allocation that pays your bills and taxes before any dollar gets to vote on dinner. Five rules:
+1. Know your floor. Bills plus tax equal the amount you can't miss.
+2. Every deposit fills the floor first.
+3. Build your reserve before you spend.
+4. One month ahead = Able.
+5. Score reality, not the plan.
+
+🎁 Try Able free for 30 days
+https://becomeable.app?utm_source=youtube&utm_medium=video&utm_campaign=learn-funding
+$14.99/month or $129/year. Card required, no charge until day 31. Cancel anytime.
+
+#FloorFirstBudgeting #VariableIncome #FreelanceMoney","Able, Able app, becomeable, Floor-First Budgeting, variable income, inconsistent income, budgeting for freelancers, 1099 budgeting, budgeting app, small business loan, SBA loan, business credit",article-video/videos/learn-get-business-funding-personal-credit-vs-business-credit/thumbnail.png,,Learn — Get Business Funding,,top,pending,pending,,,
+learn-get-business-funding-sba-loans-explained,/learn/get-business-funding/sba-loans-explained/,SBA loans explained,supporting,learn-funding,2,draft,,,(see docs/notebooklm-sources/),(see docs/notebooklm-youtube-spec.md),3-4 min,,,,SBA loans explained | Able Learn,"The cheapest money you can borrow. The SBA doesn't lend directly. They guarantee loans made by banks, so banks take less risk, and you get better rates and lo
+
+From Able — the budgeting app built for inconsistent income.
+
+🔗 Read the full article: https://becomeable.app/learn/get-business-funding/sba-loans-explained/?utm_source=youtube&utm_medium=video&utm_campaign=learn-funding
+
+⏱ Chapters
+00:00 Intro
+(fill from script.json before publish)
+
+📚 Floor-First Budgeting
+Per-deposit allocation that pays your bills and taxes before any dollar gets to vote on dinner. Five rules:
+1. Know your floor. Bills plus tax equal the amount you can't miss.
+2. Every deposit fills the floor first.
+3. Build your reserve before you spend.
+4. One month ahead = Able.
+5. Score reality, not the plan.
+
+🎁 Try Able free for 30 days
+https://becomeable.app?utm_source=youtube&utm_medium=video&utm_campaign=learn-funding
+$14.99/month or $129/year. Card required, no charge until day 31. Cancel anytime.
+
+#FloorFirstBudgeting #VariableIncome #FreelanceMoney","Able, Able app, becomeable, Floor-First Budgeting, variable income, inconsistent income, budgeting for freelancers, 1099 budgeting, budgeting app, small business loan, SBA loan, business credit",article-video/videos/learn-get-business-funding-sba-loans-explained/thumbnail.png,,Learn — Get Business Funding,,top,pending,pending,,,
+learn-get-business-funding-setting-up-a-fundable-business,/learn/get-business-funding/setting-up-a-fundable-business/,Setting up a fundable business,supporting,learn-funding,2,draft,,,(see docs/notebooklm-sources/),(see docs/notebooklm-youtube-spec.md),3-4 min,,,,Setting up a fundable business | Able Learn,"The infrastructure lenders expect to see. Before applying for funding, your business has to look like a real business to any lender pulling your file. This ta
+
+From Able — the budgeting app built for inconsistent income.
+
+🔗 Read the full article: https://becomeable.app/learn/get-business-funding/setting-up-a-fundable-business/?utm_source=youtube&utm_medium=video&utm_campaign=learn-funding
+
+⏱ Chapters
+00:00 Intro
+(fill from script.json before publish)
+
+📚 Floor-First Budgeting
+Per-deposit allocation that pays your bills and taxes before any dollar gets to vote on dinner. Five rules:
+1. Know your floor. Bills plus tax equal the amount you can't miss.
+2. Every deposit fills the floor first.
+3. Build your reserve before you spend.
+4. One month ahead = Able.
+5. Score reality, not the plan.
+
+🎁 Try Able free for 30 days
+https://becomeable.app?utm_source=youtube&utm_medium=video&utm_campaign=learn-funding
+$14.99/month or $129/year. Card required, no charge until day 31. Cancel anytime.
+
+#FloorFirstBudgeting #VariableIncome #FreelanceMoney","Able, Able app, becomeable, Floor-First Budgeting, variable income, inconsistent income, budgeting for freelancers, 1099 budgeting, budgeting app, small business loan, SBA loan, business credit",article-video/videos/learn-get-business-funding-setting-up-a-fundable-business/thumbnail.png,,Learn — Get Business Funding,,top,pending,pending,,,
+learn-get-business-funding-understanding-business-credit-bureaus,/learn/get-business-funding/understanding-business-credit-bureaus/,Understanding business credit bureaus,supporting,learn-funding,2,draft,,,(see docs/notebooklm-sources/),(see docs/notebooklm-youtube-spec.md),3-4 min,,,,Understanding business credit bureaus | Able Learn,"The three agencies that rate your business. Personal credit has Experian, Equifax, TransUnion. Business credit has three too: Dun & Bradstreet, Experian Busin
+
+From Able — the budgeting app built for inconsistent income.
+
+🔗 Read the full article: https://becomeable.app/learn/get-business-funding/understanding-business-credit-bureaus/?utm_source=youtube&utm_medium=video&utm_campaign=learn-funding
+
+⏱ Chapters
+00:00 Intro
+(fill from script.json before publish)
+
+📚 Floor-First Budgeting
+Per-deposit allocation that pays your bills and taxes before any dollar gets to vote on dinner. Five rules:
+1. Know your floor. Bills plus tax equal the amount you can't miss.
+2. Every deposit fills the floor first.
+3. Build your reserve before you spend.
+4. One month ahead = Able.
+5. Score reality, not the plan.
+
+🎁 Try Able free for 30 days
+https://becomeable.app?utm_source=youtube&utm_medium=video&utm_campaign=learn-funding
+$14.99/month or $129/year. Card required, no charge until day 31. Cancel anytime.
+
+#FloorFirstBudgeting #VariableIncome #FreelanceMoney","Able, Able app, becomeable, Floor-First Budgeting, variable income, inconsistent income, budgeting for freelancers, 1099 budgeting, budgeting app, small business loan, SBA loan, business credit",article-video/videos/learn-get-business-funding-understanding-business-credit-bureaus/thumbnail.png,,Learn — Get Business Funding,,top,pending,pending,,,
+learn-get-business-funding-why-small-business-owners-get-denied,/learn/get-business-funding/why-small-business-owners-get-denied/,Why small business owners get denied,supporting,learn-funding,2,draft,,,(see docs/notebooklm-sources/),(see docs/notebooklm-youtube-spec.md),3-4 min,,,,Why small business owners get denied | Able Learn,"The reasons behind the rejections. Roughly 80% of small business loan applications get denied. The reasons are almost always the same handful of issues, all f
+
+From Able — the budgeting app built for inconsistent income.
+
+🔗 Read the full article: https://becomeable.app/learn/get-business-funding/why-small-business-owners-get-denied/?utm_source=youtube&utm_medium=video&utm_campaign=learn-funding
+
+⏱ Chapters
+00:00 Intro
+(fill from script.json before publish)
+
+📚 Floor-First Budgeting
+Per-deposit allocation that pays your bills and taxes before any dollar gets to vote on dinner. Five rules:
+1. Know your floor. Bills plus tax equal the amount you can't miss.
+2. Every deposit fills the floor first.
+3. Build your reserve before you spend.
+4. One month ahead = Able.
+5. Score reality, not the plan.
+
+🎁 Try Able free for 30 days
+https://becomeable.app?utm_source=youtube&utm_medium=video&utm_campaign=learn-funding
+$14.99/month or $129/year. Card required, no charge until day 31. Cancel anytime.
+
+#FloorFirstBudgeting #VariableIncome #FreelanceMoney","Able, Able app, becomeable, Floor-First Budgeting, variable income, inconsistent income, budgeting for freelancers, 1099 budgeting, budgeting app, small business loan, SBA loan, business credit",article-video/videos/learn-get-business-funding-why-small-business-owners-get-denied/thumbnail.png,,Learn — Get Business Funding,,top,pending,pending,,,
+learn-get-business-funding-your-6-month-funding-readiness-roadmap,/learn/get-business-funding/your-6-month-funding-readiness-roadmap/,Your 6-month funding readiness roadmap,supporting,learn-funding,2,draft,,,(see docs/notebooklm-sources/),(see docs/notebooklm-youtube-spec.md),3-4 min,,,,Your 6-month funding readiness roadmap | Able Learn,"From unfundable to approved. The full playbook for going from unfundable to approved in six months. The sequence matters. Each step builds on the last.
+
+From Able — the budgeting app built for inconsistent income.
+
+🔗 Read the full article: https://becomeable.app/learn/get-business-funding/your-6-month-funding-readiness-roadmap/?utm_source=youtube&utm_medium=video&utm_campaign=learn-funding
+
+⏱ Chapters
+00:00 Intro
+(fill from script.json before publish)
+
+📚 Floor-First Budgeting
+Per-deposit allocation that pays your bills and taxes before any dollar gets to vote on dinner. Five rules:
+1. Know your floor. Bills plus tax equal the amount you can't miss.
+2. Every deposit fills the floor first.
+3. Build your reserve before you spend.
+4. One month ahead = Able.
+5. Score reality, not the plan.
+
+🎁 Try Able free for 30 days
+https://becomeable.app?utm_source=youtube&utm_medium=video&utm_campaign=learn-funding
+$14.99/month or $129/year. Card required, no charge until day 31. Cancel anytime.
+
+#FloorFirstBudgeting #VariableIncome #FreelanceMoney","Able, Able app, becomeable, Floor-First Budgeting, variable income, inconsistent income, budgeting for freelancers, 1099 budgeting, budgeting app, small business loan, SBA loan, business credit",article-video/videos/learn-get-business-funding-your-6-month-funding-readiness-roadmap/thumbnail.png,,Learn — Get Business Funding,,top,pending,pending,,,
+learn-how-money-works-compound-interest-and-the-time-value-of-money,/learn/how-money-works/compound-interest-and-the-time-value-of-money/,Compound interest and the time value of money,supporting,learn-money,2,draft,,,(see docs/notebooklm-sources/),(see docs/notebooklm-youtube-spec.md),3-4 min,,,,Compound interest and the time value of money | Able Learn,"Why starting early beats starting bigger. Compound interest is when your money earns money, then that money earns money, then that. The Rule of 72 stacked ove
+
+From Able — the budgeting app built for inconsistent income.
+
+🔗 Read the full article: https://becomeable.app/learn/how-money-works/compound-interest-and-the-time-value-of-money/?utm_source=youtube&utm_medium=video&utm_campaign=learn-money
+
+⏱ Chapters
+00:00 Intro
+(fill from script.json before publish)
+
+📚 Floor-First Budgeting
+Per-deposit allocation that pays your bills and taxes before any dollar gets to vote on dinner. Five rules:
+1. Know your floor. Bills plus tax equal the amount you can't miss.
+2. Every deposit fills the floor first.
+3. Build your reserve before you spend.
+4. One month ahead = Able.
+5. Score reality, not the plan.
+
+🎁 Try Able free for 30 days
+https://becomeable.app?utm_source=youtube&utm_medium=video&utm_campaign=learn-money
+$14.99/month or $129/year. Card required, no charge until day 31. Cancel anytime.
+
+#FloorFirstBudgeting #VariableIncome #FreelanceMoney","Able, Able app, becomeable, Floor-First Budgeting, variable income, inconsistent income, budgeting for freelancers, 1099 budgeting, budgeting app, compound interest, rule of 72, money management",article-video/videos/learn-how-money-works-compound-interest-and-the-time-value-of-money/thumbnail.png,,Learn — How Money Works,,top,pending,pending,,,
+learn-how-money-works-firsts-the-big-life-moments,/learn/how-money-works/firsts-the-big-life-moments/,Firsts: the big life moments,supporting,learn-money,2,draft,,,(see docs/notebooklm-sources/),(see docs/notebooklm-youtube-spec.md),3-4 min,,,,Firsts: the big life moments | Able Learn,"First car, first home, marriage, family. Everyone hits the same money moments. First car. First home. Marriage. Career change. Starting a family. Retirement. 
+
+From Able — the budgeting app built for inconsistent income.
+
+🔗 Read the full article: https://becomeable.app/learn/how-money-works/firsts-the-big-life-moments/?utm_source=youtube&utm_medium=video&utm_campaign=learn-money
+
+⏱ Chapters
+00:00 Intro
+(fill from script.json before publish)
+
+📚 Floor-First Budgeting
+Per-deposit allocation that pays your bills and taxes before any dollar gets to vote on dinner. Five rules:
+1. Know your floor. Bills plus tax equal the amount you can't miss.
+2. Every deposit fills the floor first.
+3. Build your reserve before you spend.
+4. One month ahead = Able.
+5. Score reality, not the plan.
+
+🎁 Try Able free for 30 days
+https://becomeable.app?utm_source=youtube&utm_medium=video&utm_campaign=learn-money
+$14.99/month or $129/year. Card required, no charge until day 31. Cancel anytime.
+
+#FloorFirstBudgeting #VariableIncome #FreelanceMoney","Able, Able app, becomeable, Floor-First Budgeting, variable income, inconsistent income, budgeting for freelancers, 1099 budgeting, budgeting app, compound interest, rule of 72, money management",article-video/videos/learn-how-money-works-firsts-the-big-life-moments/thumbnail.png,,Learn — How Money Works,,top,pending,pending,,,
+learn-how-money-works-milestone-2-proper-protection,/learn/how-money-works/milestone-2-proper-protection/,Milestone 2: Proper protection,supporting,learn-money,2,draft,,,(see docs/notebooklm-sources/),(see docs/notebooklm-youtube-spec.md),3-4 min,,,,Milestone 2: Proper protection | Able Learn,"Protect your income before you grow it. Most people think wealth building starts with investing. It starts with protection. One uninsured accident or early de
+
+From Able — the budgeting app built for inconsistent income.
+
+🔗 Read the full article: https://becomeable.app/learn/how-money-works/milestone-2-proper-protection/?utm_source=youtube&utm_medium=video&utm_campaign=learn-money
+
+⏱ Chapters
+00:00 Intro
+(fill from script.json before publish)
+
+📚 Floor-First Budgeting
+Per-deposit allocation that pays your bills and taxes before any dollar gets to vote on dinner. Five rules:
+1. Know your floor. Bills plus tax equal the amount you can't miss.
+2. Every deposit fills the floor first.
+3. Build your reserve before you spend.
+4. One month ahead = Able.
+5. Score reality, not the plan.
+
+🎁 Try Able free for 30 days
+https://becomeable.app?utm_source=youtube&utm_medium=video&utm_campaign=learn-money
+$14.99/month or $129/year. Card required, no charge until day 31. Cancel anytime.
+
+#FloorFirstBudgeting #VariableIncome #FreelanceMoney","Able, Able app, becomeable, Floor-First Budgeting, variable income, inconsistent income, budgeting for freelancers, 1099 budgeting, budgeting app, compound interest, rule of 72, money management",article-video/videos/learn-how-money-works-milestone-2-proper-protection/thumbnail.png,,Learn — How Money Works,,top,pending,pending,,,
+learn-how-money-works-milestone-3-emergency-fund,/learn/how-money-works/milestone-3-emergency-fund/,Milestone 3: Emergency fund,supporting,learn-money,2,draft,,,(see docs/notebooklm-sources/),(see docs/notebooklm-youtube-spec.md),3-4 min,,,,Milestone 3: Emergency fund | Able Learn,"The cash that keeps you off the credit card. An emergency fund is cash set aside for life's surprises. Flat tire. Medical bill. A month where work doesn't com
+
+From Able — the budgeting app built for inconsistent income.
+
+🔗 Read the full article: https://becomeable.app/learn/how-money-works/milestone-3-emergency-fund/?utm_source=youtube&utm_medium=video&utm_campaign=learn-money
+
+⏱ Chapters
+00:00 Intro
+(fill from script.json before publish)
+
+📚 Floor-First Budgeting
+Per-deposit allocation that pays your bills and taxes before any dollar gets to vote on dinner. Five rules:
+1. Know your floor. Bills plus tax equal the amount you can't miss.
+2. Every deposit fills the floor first.
+3. Build your reserve before you spend.
+4. One month ahead = Able.
+5. Score reality, not the plan.
+
+🎁 Try Able free for 30 days
+https://becomeable.app?utm_source=youtube&utm_medium=video&utm_campaign=learn-money
+$14.99/month or $129/year. Card required, no charge until day 31. Cancel anytime.
+
+#FloorFirstBudgeting #VariableIncome #FreelanceMoney","Able, Able app, becomeable, Floor-First Budgeting, variable income, inconsistent income, budgeting for freelancers, 1099 budgeting, budgeting app, compound interest, rule of 72, money management",article-video/videos/learn-how-money-works-milestone-3-emergency-fund/thumbnail.png,,Learn — How Money Works,,top,pending,pending,,,
+learn-how-money-works-milestone-4-debt-management,/learn/how-money-works/milestone-4-debt-management/,Milestone 4: Debt management,supporting,learn-money,2,draft,,,(see docs/notebooklm-sources/),(see docs/notebooklm-youtube-spec.md),3-4 min,,,,Milestone 4: Debt management | Able Learn,"The drag on every wealth plan. Debt is the biggest drag on wealth building. Every dollar of interest can't compound for your future. The 4 most common adult d
+
+From Able — the budgeting app built for inconsistent income.
+
+🔗 Read the full article: https://becomeable.app/learn/how-money-works/milestone-4-debt-management/?utm_source=youtube&utm_medium=video&utm_campaign=learn-money
+
+⏱ Chapters
+00:00 Intro
+(fill from script.json before publish)
+
+📚 Floor-First Budgeting
+Per-deposit allocation that pays your bills and taxes before any dollar gets to vote on dinner. Five rules:
+1. Know your floor. Bills plus tax equal the amount you can't miss.
+2. Every deposit fills the floor first.
+3. Build your reserve before you spend.
+4. One month ahead = Able.
+5. Score reality, not the plan.
+
+🎁 Try Able free for 30 days
+https://becomeable.app?utm_source=youtube&utm_medium=video&utm_campaign=learn-money
+$14.99/month or $129/year. Card required, no charge until day 31. Cancel anytime.
+
+#FloorFirstBudgeting #VariableIncome #FreelanceMoney","Able, Able app, becomeable, Floor-First Budgeting, variable income, inconsistent income, budgeting for freelancers, 1099 budgeting, budgeting app, compound interest, rule of 72, money management",article-video/videos/learn-how-money-works-milestone-4-debt-management/thumbnail.png,,Learn — How Money Works,,top,pending,pending,,,
+learn-how-money-works-milestone-5-cash-flow,/learn/how-money-works/milestone-5-cash-flow/,Milestone 5: Cash flow,supporting,learn-money,2,draft,,,(see docs/notebooklm-sources/),(see docs/notebooklm-youtube-spec.md),3-4 min,,,,Milestone 5: Cash flow | Able Learn,"The gap between earning and spending. Cash flow is the most important number most people don't track. Income minus expenses = freedom. Bigger gap, more option
+
+From Able — the budgeting app built for inconsistent income.
+
+🔗 Read the full article: https://becomeable.app/learn/how-money-works/milestone-5-cash-flow/?utm_source=youtube&utm_medium=video&utm_campaign=learn-money
+
+⏱ Chapters
+00:00 Intro
+(fill from script.json before publish)
+
+📚 Floor-First Budgeting
+Per-deposit allocation that pays your bills and taxes before any dollar gets to vote on dinner. Five rules:
+1. Know your floor. Bills plus tax equal the amount you can't miss.
+2. Every deposit fills the floor first.
+3. Build your reserve before you spend.
+4. One month ahead = Able.
+5. Score reality, not the plan.
+
+🎁 Try Able free for 30 days
+https://becomeable.app?utm_source=youtube&utm_medium=video&utm_campaign=learn-money
+$14.99/month or $129/year. Card required, no charge until day 31. Cancel anytime.
+
+#FloorFirstBudgeting #VariableIncome #FreelanceMoney","Able, Able app, becomeable, Floor-First Budgeting, variable income, inconsistent income, budgeting for freelancers, 1099 budgeting, budgeting app, compound interest, rule of 72, money management",article-video/videos/learn-how-money-works-milestone-5-cash-flow/thumbnail.png,,Learn — How Money Works,,top,pending,pending,,,
+learn-how-money-works-milestone-6-build-wealth,/learn/how-money-works/milestone-6-build-wealth/,Milestone 6: Build wealth,supporting,learn-money,2,draft,,,(see docs/notebooklm-sources/),(see docs/notebooklm-youtube-spec.md),3-4 min,,,,Milestone 6: Build wealth | Able Learn,"Making your money work for you. With protection set, emergency fund funded, and debt under control, make your money work for you. That means investing. Not da
+
+From Able — the budgeting app built for inconsistent income.
+
+🔗 Read the full article: https://becomeable.app/learn/how-money-works/milestone-6-build-wealth/?utm_source=youtube&utm_medium=video&utm_campaign=learn-money
+
+⏱ Chapters
+00:00 Intro
+(fill from script.json before publish)
+
+📚 Floor-First Budgeting
+Per-deposit allocation that pays your bills and taxes before any dollar gets to vote on dinner. Five rules:
+1. Know your floor. Bills plus tax equal the amount you can't miss.
+2. Every deposit fills the floor first.
+3. Build your reserve before you spend.
+4. One month ahead = Able.
+5. Score reality, not the plan.
+
+🎁 Try Able free for 30 days
+https://becomeable.app?utm_source=youtube&utm_medium=video&utm_campaign=learn-money
+$14.99/month or $129/year. Card required, no charge until day 31. Cancel anytime.
+
+#FloorFirstBudgeting #VariableIncome #FreelanceMoney","Able, Able app, becomeable, Floor-First Budgeting, variable income, inconsistent income, budgeting for freelancers, 1099 budgeting, budgeting app, compound interest, rule of 72, money management",article-video/videos/learn-how-money-works-milestone-6-build-wealth/thumbnail.png,,Learn — How Money Works,,top,pending,pending,,,
+learn-how-money-works-milestone-7-protect-wealth,/learn/how-money-works/milestone-7-protect-wealth/,Milestone 7: Protect wealth,supporting,learn-money,2,draft,,,(see docs/notebooklm-sources/),(see docs/notebooklm-youtube-spec.md),3-4 min,,,,Milestone 7: Protect wealth | Able Learn,"The three quiet threats to every nest egg. Building wealth is only half the job. Keeping it is the other half. Most people don't lose money in crashes. They l
+
+From Able — the budgeting app built for inconsistent income.
+
+🔗 Read the full article: https://becomeable.app/learn/how-money-works/milestone-7-protect-wealth/?utm_source=youtube&utm_medium=video&utm_campaign=learn-money
+
+⏱ Chapters
+00:00 Intro
+(fill from script.json before publish)
+
+📚 Floor-First Budgeting
+Per-deposit allocation that pays your bills and taxes before any dollar gets to vote on dinner. Five rules:
+1. Know your floor. Bills plus tax equal the amount you can't miss.
+2. Every deposit fills the floor first.
+3. Build your reserve before you spend.
+4. One month ahead = Able.
+5. Score reality, not the plan.
+
+🎁 Try Able free for 30 days
+https://becomeable.app?utm_source=youtube&utm_medium=video&utm_campaign=learn-money
+$14.99/month or $129/year. Card required, no charge until day 31. Cancel anytime.
+
+#FloorFirstBudgeting #VariableIncome #FreelanceMoney","Able, Able app, becomeable, Floor-First Budgeting, variable income, inconsistent income, budgeting for freelancers, 1099 budgeting, budgeting app, compound interest, rule of 72, money management",article-video/videos/learn-how-money-works-milestone-7-protect-wealth/thumbnail.png,,Learn — How Money Works,,top,pending,pending,,,
+learn-how-money-works-money-is-a-skill-you-can-learn,/learn/how-money-works/money-is-a-skill-you-can-learn/,Money is a skill you can learn,supporting,learn-money,2,draft,,,(see docs/notebooklm-sources/),(see docs/notebooklm-youtube-spec.md),3-4 min,,,,Money is a skill you can learn | Able Learn,"Financial literacy is a human right. Most people feel behind on money because nobody taught them. Not in school, not at home, not at work. You were expected t
+
+From Able — the budgeting app built for inconsistent income.
+
+🔗 Read the full article: https://becomeable.app/learn/how-money-works/money-is-a-skill-you-can-learn/?utm_source=youtube&utm_medium=video&utm_campaign=learn-money
+
+⏱ Chapters
+00:00 Intro
+(fill from script.json before publish)
+
+📚 Floor-First Budgeting
+Per-deposit allocation that pays your bills and taxes before any dollar gets to vote on dinner. Five rules:
+1. Know your floor. Bills plus tax equal the amount you can't miss.
+2. Every deposit fills the floor first.
+3. Build your reserve before you spend.
+4. One month ahead = Able.
+5. Score reality, not the plan.
+
+🎁 Try Able free for 30 days
+https://becomeable.app?utm_source=youtube&utm_medium=video&utm_campaign=learn-money
+$14.99/month or $129/year. Card required, no charge until day 31. Cancel anytime.
+
+#FloorFirstBudgeting #VariableIncome #FreelanceMoney","Able, Able app, becomeable, Floor-First Budgeting, variable income, inconsistent income, budgeting for freelancers, 1099 budgeting, budgeting app, compound interest, rule of 72, money management",article-video/videos/learn-how-money-works-money-is-a-skill-you-can-learn/thumbnail.png,,Learn — How Money Works,,top,pending,pending,,,
+learn-how-money-works-the-rule-of-72,/learn/how-money-works/the-rule-of-72/,The Rule of 72,supporting,learn-money,2,draft,,,(see docs/notebooklm-sources/),(see docs/notebooklm-youtube-spec.md),3-4 min,,,,The Rule of 72 | Able Learn,"The math shortcut that reveals everything. The Rule of 72 is the most useful piece of math in personal finance. It tells you how long money takes to double at
+
+From Able — the budgeting app built for inconsistent income.
+
+🔗 Read the full article: https://becomeable.app/learn/how-money-works/the-rule-of-72/?utm_source=youtube&utm_medium=video&utm_campaign=learn-money
+
+⏱ Chapters
+00:00 Intro
+(fill from script.json before publish)
+
+📚 Floor-First Budgeting
+Per-deposit allocation that pays your bills and taxes before any dollar gets to vote on dinner. Five rules:
+1. Know your floor. Bills plus tax equal the amount you can't miss.
+2. Every deposit fills the floor first.
+3. Build your reserve before you spend.
+4. One month ahead = Able.
+5. Score reality, not the plan.
+
+🎁 Try Able free for 30 days
+https://becomeable.app?utm_source=youtube&utm_medium=video&utm_campaign=learn-money
+$14.99/month or $129/year. Card required, no charge until day 31. Cancel anytime.
+
+#FloorFirstBudgeting #VariableIncome #FreelanceMoney","Able, Able app, becomeable, Floor-First Budgeting, variable income, inconsistent income, budgeting for freelancers, 1099 budgeting, budgeting app, compound interest, rule of 72, money management",article-video/videos/learn-how-money-works-the-rule-of-72/thumbnail.png,,Learn — How Money Works,,top,pending,pending,,,
+learn-pay-yourself-first-owner-pay-account-setup,/learn/pay-yourself-first/owner-pay-account-setup/,Where to Send Your Owner Pay (Account Setup for Variable Income),supporting,learn-payself,2,draft,,,(see docs/notebooklm-sources/),(see docs/notebooklm-youtube-spec.md),3-4 min,,,,Where to Send Your Owner Pay (Account Setup) | Able Learn,"The right pay-yourself-first account is not your operating account. Here is exactly which account to use, where to open it, and how to wire the auto-transfers.
+
+From Able — the budgeting app built for inconsistent income.
+
+🔗 Read the full article: https://becomeable.app/learn/pay-yourself-first/owner-pay-account-setup/?utm_source=youtube&utm_medium=video&utm_campaign=learn-payself
+
+⏱ Chapters
+00:00 Intro
+(fill from script.json before publish)
+
+📚 Floor-First Budgeting
+Per-deposit allocation that pays your bills and taxes before any dollar gets to vote on dinner. Five rules:
+1. Know your floor. Bills plus tax equal the amount you can't miss.
+2. Every deposit fills the floor first.
+3. Build your reserve before you spend.
+4. One month ahead = Able.
+5. Score reality, not the plan.
+
+🎁 Try Able free for 30 days
+https://becomeable.app?utm_source=youtube&utm_medium=video&utm_campaign=learn-payself
+$14.99/month or $129/year. Card required, no charge until day 31. Cancel anytime.
+
+#FloorFirstBudgeting #VariableIncome #FreelanceMoney","Able, Able app, becomeable, Floor-First Budgeting, variable income, inconsistent income, budgeting for freelancers, 1099 budgeting, budgeting app, pay yourself first, owner pay, owner draw",article-video/videos/learn-pay-yourself-first-owner-pay-account-setup/thumbnail.png,,Learn — Pay Yourself First,,top,pending,pending,,,
+learn-pay-yourself-first-owner-pay-ladder,/learn/pay-yourself-first/owner-pay-ladder/,The Owner Pay Ladder: Going From 5% to a Real Salary,supporting,learn-payself,2,draft,,,(see docs/notebooklm-sources/),(see docs/notebooklm-youtube-spec.md),3-4 min,,,,The Owner Pay Ladder: 5% to a Real Salary | Able Learn,"Pay yourself first is not a fixed percentage forever. Here is the ladder that takes you from 5% on every deposit to a real owner salary on a real schedule.
+
+From Able — the budgeting app built for inconsistent income.
+
+🔗 Read the full article: https://becomeable.app/learn/pay-yourself-first/owner-pay-ladder/?utm_source=youtube&utm_medium=video&utm_campaign=learn-payself
+
+⏱ Chapters
+00:00 Intro
+(fill from script.json before publish)
+
+📚 Floor-First Budgeting
+Per-deposit allocation that pays your bills and taxes before any dollar gets to vote on dinner. Five rules:
+1. Know your floor. Bills plus tax equal the amount you can't miss.
+2. Every deposit fills the floor first.
+3. Build your reserve before you spend.
+4. One month ahead = Able.
+5. Score reality, not the plan.
+
+🎁 Try Able free for 30 days
+https://becomeable.app?utm_source=youtube&utm_medium=video&utm_campaign=learn-payself
+$14.99/month or $129/year. Card required, no charge until day 31. Cancel anytime.
+
+#FloorFirstBudgeting #VariableIncome #FreelanceMoney","Able, Able app, becomeable, Floor-First Budgeting, variable income, inconsistent income, budgeting for freelancers, 1099 budgeting, budgeting app, pay yourself first, owner pay, owner draw",article-video/videos/learn-pay-yourself-first-owner-pay-ladder/thumbnail.png,,Learn — Pay Yourself First,,top,pending,pending,,,
+learn-pay-yourself-first-pay-yourself-first-in-debt,/learn/pay-yourself-first/pay-yourself-first-in-debt/,Pay Yourself First When You're in Debt,supporting,learn-payself,2,draft,,,(see docs/notebooklm-sources/),(see docs/notebooklm-youtube-spec.md),3-4 min,,,,Pay Yourself First When You're in Debt | Able Learn,"The standard advice says pay off debt before you pay yourself. That advice is wrong. Here is why you start paying yourself first even when you're in debt.
+
+From Able — the budgeting app built for inconsistent income.
+
+🔗 Read the full article: https://becomeable.app/learn/pay-yourself-first/pay-yourself-first-in-debt/?utm_source=youtube&utm_medium=video&utm_campaign=learn-payself
+
+⏱ Chapters
+00:00 Intro
+(fill from script.json before publish)
+
+📚 Floor-First Budgeting
+Per-deposit allocation that pays your bills and taxes before any dollar gets to vote on dinner. Five rules:
+1. Know your floor. Bills plus tax equal the amount you can't miss.
+2. Every deposit fills the floor first.
+3. Build your reserve before you spend.
+4. One month ahead = Able.
+5. Score reality, not the plan.
+
+🎁 Try Able free for 30 days
+https://becomeable.app?utm_source=youtube&utm_medium=video&utm_campaign=learn-payself
+$14.99/month or $129/year. Card required, no charge until day 31. Cancel anytime.
+
+#FloorFirstBudgeting #VariableIncome #FreelanceMoney","Able, Able app, becomeable, Floor-First Budgeting, variable income, inconsistent income, budgeting for freelancers, 1099 budgeting, budgeting app, pay yourself first, owner pay, owner draw",article-video/videos/learn-pay-yourself-first-pay-yourself-first-in-debt/thumbnail.png,,Learn — Pay Yourself First,,top,pending,pending,,,
+learn-pay-yourself-first-pay-yourself-first-mistakes,/learn/pay-yourself-first/pay-yourself-first-mistakes/,The 7 Most Common Pay Yourself First Mistakes,supporting,learn-payself,2,draft,,,(see docs/notebooklm-sources/),(see docs/notebooklm-youtube-spec.md),3-4 min,,,,The 7 Most Common Pay Yourself First Mistakes | Able Learn,"Pay yourself first sounds simple, then breaks in seven predictable ways. Here is the catalog of the most common failures and the fix for each one.
+
+From Able — the budgeting app built for inconsistent income.
+
+🔗 Read the full article: https://becomeable.app/learn/pay-yourself-first/pay-yourself-first-mistakes/?utm_source=youtube&utm_medium=video&utm_campaign=learn-payself
+
+⏱ Chapters
+00:00 Intro
+(fill from script.json before publish)
+
+📚 Floor-First Budgeting
+Per-deposit allocation that pays your bills and taxes before any dollar gets to vote on dinner. Five rules:
+1. Know your floor. Bills plus tax equal the amount you can't miss.
+2. Every deposit fills the floor first.
+3. Build your reserve before you spend.
+4. One month ahead = Able.
+5. Score reality, not the plan.
+
+🎁 Try Able free for 30 days
+https://becomeable.app?utm_source=youtube&utm_medium=video&utm_campaign=learn-payself
+$14.99/month or $129/year. Card required, no charge until day 31. Cancel anytime.
+
+#FloorFirstBudgeting #VariableIncome #FreelanceMoney","Able, Able app, becomeable, Floor-First Budgeting, variable income, inconsistent income, budgeting for freelancers, 1099 budgeting, budgeting app, pay yourself first, owner pay, owner draw",article-video/videos/learn-pay-yourself-first-pay-yourself-first-mistakes/thumbnail.png,,Learn — Pay Yourself First,,top,pending,pending,,,
+learn-pay-yourself-first-pay-yourself-first-percentage,/learn/pay-yourself-first/pay-yourself-first-percentage/,How to Pick Your Pay Yourself First Percentage,supporting,learn-payself,2,draft,,,(see docs/notebooklm-sources/),(see docs/notebooklm-youtube-spec.md),3-4 min,,,,How to Pick Your Pay Yourself First Percentage | Able Learn,"The right pay-yourself-first percentage depends on debt, profitability, and stage. Use this decision tree to pick a number you will actually keep.
+
+From Able — the budgeting app built for inconsistent income.
+
+🔗 Read the full article: https://becomeable.app/learn/pay-yourself-first/pay-yourself-first-percentage/?utm_source=youtube&utm_medium=video&utm_campaign=learn-payself
+
+⏱ Chapters
+00:00 Intro
+(fill from script.json before publish)
+
+📚 Floor-First Budgeting
+Per-deposit allocation that pays your bills and taxes before any dollar gets to vote on dinner. Five rules:
+1. Know your floor. Bills plus tax equal the amount you can't miss.
+2. Every deposit fills the floor first.
+3. Build your reserve before you spend.
+4. One month ahead = Able.
+5. Score reality, not the plan.
+
+🎁 Try Able free for 30 days
+https://becomeable.app?utm_source=youtube&utm_medium=video&utm_campaign=learn-payself
+$14.99/month or $129/year. Card required, no charge until day 31. Cancel anytime.
+
+#FloorFirstBudgeting #VariableIncome #FreelanceMoney","Able, Able app, becomeable, Floor-First Budgeting, variable income, inconsistent income, budgeting for freelancers, 1099 budgeting, budgeting app, pay yourself first, owner pay, owner draw",article-video/videos/learn-pay-yourself-first-pay-yourself-first-percentage/thumbnail.png,,Learn — Pay Yourself First,,top,pending,pending,,,
+learn-pay-yourself-first-pay-yourself-first-variable-income,/learn/pay-yourself-first/pay-yourself-first-variable-income/,Pay Yourself First on Inconsistent Income,supporting,learn-payself,2,draft,,,(see docs/notebooklm-sources/),(see docs/notebooklm-youtube-spec.md),3-4 min,,,,Pay Yourself First on Inconsistent Income | Able Learn,"Variable income breaks every pay-yourself-first system built for steady paychecks. Here is the per-deposit version that works when your income is lumpy.
+
+From Able — the budgeting app built for inconsistent income.
+
+🔗 Read the full article: https://becomeable.app/learn/pay-yourself-first/pay-yourself-first-variable-income/?utm_source=youtube&utm_medium=video&utm_campaign=learn-payself
+
+⏱ Chapters
+00:00 Intro
+(fill from script.json before publish)
+
+📚 Floor-First Budgeting
+Per-deposit allocation that pays your bills and taxes before any dollar gets to vote on dinner. Five rules:
+1. Know your floor. Bills plus tax equal the amount you can't miss.
+2. Every deposit fills the floor first.
+3. Build your reserve before you spend.
+4. One month ahead = Able.
+5. Score reality, not the plan.
+
+🎁 Try Able free for 30 days
+https://becomeable.app?utm_source=youtube&utm_medium=video&utm_campaign=learn-payself
+$14.99/month or $129/year. Card required, no charge until day 31. Cancel anytime.
+
+#FloorFirstBudgeting #VariableIncome #FreelanceMoney","Able, Able app, becomeable, Floor-First Budgeting, variable income, inconsistent income, budgeting for freelancers, 1099 budgeting, budgeting app, pay yourself first, owner pay, owner draw",article-video/videos/learn-pay-yourself-first-pay-yourself-first-variable-income/thumbnail.png,,Learn — Pay Yourself First,,top,pending,pending,,,
+learn-pay-yourself-first-profit-first-vs-pay-yourself-first,/learn/pay-yourself-first/profit-first-vs-pay-yourself-first/,Profit First vs Pay Yourself First: What's the Difference?,supporting,learn-payself,2,draft,,,(see docs/notebooklm-sources/),(see docs/notebooklm-youtube-spec.md),3-4 min,,,,Profit First vs Pay Yourself First: What's the Difference? | Able Learn,"Profit First and Pay Yourself First sound interchangeable. They are not. Here is the honest comparison, where each one fits, and how to pick between them.
+
+From Able — the budgeting app built for inconsistent income.
+
+🔗 Read the full article: https://becomeable.app/learn/pay-yourself-first/profit-first-vs-pay-yourself-first/?utm_source=youtube&utm_medium=video&utm_campaign=learn-payself
+
+⏱ Chapters
+00:00 Intro
+(fill from script.json before publish)
+
+📚 Floor-First Budgeting
+Per-deposit allocation that pays your bills and taxes before any dollar gets to vote on dinner. Five rules:
+1. Know your floor. Bills plus tax equal the amount you can't miss.
+2. Every deposit fills the floor first.
+3. Build your reserve before you spend.
+4. One month ahead = Able.
+5. Score reality, not the plan.
+
+🎁 Try Able free for 30 days
+https://becomeable.app?utm_source=youtube&utm_medium=video&utm_campaign=learn-payself
+$14.99/month or $129/year. Card required, no charge until day 31. Cancel anytime.
+
+#FloorFirstBudgeting #VariableIncome #FreelanceMoney","Able, Able app, becomeable, Floor-First Budgeting, variable income, inconsistent income, budgeting for freelancers, 1099 budgeting, budgeting app, pay yourself first, owner pay, owner draw",article-video/videos/learn-pay-yourself-first-profit-first-vs-pay-yourself-first/thumbnail.png,,Learn — Pay Yourself First,,top,pending,pending,,,
+learn-pay-yourself-first-what-pay-yourself-first-means,/learn/pay-yourself-first/what-pay-yourself-first-means/,"What ""Pay Yourself First"" Actually Means (And What It Isn't)",supporting,learn-payself,2,draft,,,(see docs/notebooklm-sources/),(see docs/notebooklm-youtube-spec.md),3-4 min,,,,"What ""Pay Yourself First"" Actually Means (And What It Isn't) | Able Learn","Pay yourself first sounds simple. In practice most people get the order wrong, the destination wrong, the percentage wrong. Here is what it actually means.
+
+From Able — the budgeting app built for inconsistent income.
+
+🔗 Read the full article: https://becomeable.app/learn/pay-yourself-first/what-pay-yourself-first-means/?utm_source=youtube&utm_medium=video&utm_campaign=learn-payself
+
+⏱ Chapters
+00:00 Intro
+(fill from script.json before publish)
+
+📚 Floor-First Budgeting
+Per-deposit allocation that pays your bills and taxes before any dollar gets to vote on dinner. Five rules:
+1. Know your floor. Bills plus tax equal the amount you can't miss.
+2. Every deposit fills the floor first.
+3. Build your reserve before you spend.
+4. One month ahead = Able.
+5. Score reality, not the plan.
+
+🎁 Try Able free for 30 days
+https://becomeable.app?utm_source=youtube&utm_medium=video&utm_campaign=learn-payself
+$14.99/month or $129/year. Card required, no charge until day 31. Cancel anytime.
+
+#FloorFirstBudgeting #VariableIncome #FreelanceMoney","Able, Able app, becomeable, Floor-First Budgeting, variable income, inconsistent income, budgeting for freelancers, 1099 budgeting, budgeting app, pay yourself first, owner pay, owner draw",article-video/videos/learn-pay-yourself-first-what-pay-yourself-first-means/thumbnail.png,,Learn — Pay Yourself First,,top,pending,pending,,,
+learn-pay-yourself-first-what-to-do-with-owner-pay,/learn/pay-yourself-first/what-to-do-with-owner-pay/,What to Do With Your Owner Pay (The Priority Stack),supporting,learn-payself,2,draft,,,(see docs/notebooklm-sources/),(see docs/notebooklm-youtube-spec.md),3-4 min,,,,What to Do With Your Owner Pay (The Priority Stack) | Able Learn,"You set up pay yourself first and the money is now landing in your personal account. Now what? Here is the priority stack for where it should actually go.
+
+From Able — the budgeting app built for inconsistent income.
+
+🔗 Read the full article: https://becomeable.app/learn/pay-yourself-first/what-to-do-with-owner-pay/?utm_source=youtube&utm_medium=video&utm_campaign=learn-payself
+
+⏱ Chapters
+00:00 Intro
+(fill from script.json before publish)
+
+📚 Floor-First Budgeting
+Per-deposit allocation that pays your bills and taxes before any dollar gets to vote on dinner. Five rules:
+1. Know your floor. Bills plus tax equal the amount you can't miss.
+2. Every deposit fills the floor first.
+3. Build your reserve before you spend.
+4. One month ahead = Able.
+5. Score reality, not the plan.
+
+🎁 Try Able free for 30 days
+https://becomeable.app?utm_source=youtube&utm_medium=video&utm_campaign=learn-payself
+$14.99/month or $129/year. Card required, no charge until day 31. Cancel anytime.
+
+#FloorFirstBudgeting #VariableIncome #FreelanceMoney","Able, Able app, becomeable, Floor-First Budgeting, variable income, inconsistent income, budgeting for freelancers, 1099 budgeting, budgeting app, pay yourself first, owner pay, owner draw",article-video/videos/learn-pay-yourself-first-what-to-do-with-owner-pay/thumbnail.png,,Learn — Pay Yourself First,,top,pending,pending,,,
+learn-pay-yourself-first-why-youre-not-paying-yourself-and-why-thats-killing-your-business,/learn/pay-yourself-first/why-youre-not-paying-yourself-and-why-thats-killing-your-business/,Why You're Not Paying Yourself (And Why That's Killing Your Business),supporting,learn-payself,2,draft,,,(see docs/notebooklm-sources/),(see docs/notebooklm-youtube-spec.md),3-4 min,,,,Why You're Not Paying Yourself (And Why That's Killing Your Business) | Able Learn,"The one thing most entrepreneurs skip. Most entrepreneurs are their own last priority. You pay the contractor. You pay the tools. You pay the bills. What's le
+
+From Able — the budgeting app built for inconsistent income.
+
+🔗 Read the full article: https://becomeable.app/learn/pay-yourself-first/why-youre-not-paying-yourself-and-why-thats-killing-your-business/?utm_source=youtube&utm_medium=video&utm_campaign=learn-payself
+
+⏱ Chapters
+00:00 Intro
+(fill from script.json before publish)
+
+📚 Floor-First Budgeting
+Per-deposit allocation that pays your bills and taxes before any dollar gets to vote on dinner. Five rules:
+1. Know your floor. Bills plus tax equal the amount you can't miss.
+2. Every deposit fills the floor first.
+3. Build your reserve before you spend.
+4. One month ahead = Able.
+5. Score reality, not the plan.
+
+🎁 Try Able free for 30 days
+https://becomeable.app?utm_source=youtube&utm_medium=video&utm_campaign=learn-payself
+$14.99/month or $129/year. Card required, no charge until day 31. Cancel anytime.
+
+#FloorFirstBudgeting #VariableIncome #FreelanceMoney","Able, Able app, becomeable, Floor-First Budgeting, variable income, inconsistent income, budgeting for freelancers, 1099 budgeting, budgeting app, pay yourself first, owner pay, owner draw",article-video/videos/learn-pay-yourself-first-why-youre-not-paying-yourself-and-why-thats-killing-your-business/thumbnail.png,,Learn — Pay Yourself First,,top,pending,pending,,,
+taxes-1099-k-explained,/taxes/1099-k-explained/,"What Is a 1099-K? Explained for Stripe, PayPal, Venmo, Etsy, and Platform Sellers",supporting,taxes,2,draft,,,(see docs/notebooklm-sources/),(see docs/notebooklm-youtube-spec.md),3-4 min,,,,"1099-K Explained for Stripe, PayPal, Etsy, Venmo | Able","What a 1099-K is, the threshold changes, what to do when it arrives, and how to avoid double-reporting your income. Plain-English guide.
+
+From Able — the budgeting app built for inconsistent income.
+
+🔗 Read the full article: https://becomeable.app/taxes/1099-k-explained/?utm_source=youtube&utm_medium=video&utm_campaign=taxes
+
+⏱ Chapters
+00:00 Intro
+(fill from script.json before publish)
+
+📚 Floor-First Budgeting
+Per-deposit allocation that pays your bills and taxes before any dollar gets to vote on dinner. Five rules:
+1. Know your floor. Bills plus tax equal the amount you can't miss.
+2. Every deposit fills the floor first.
+3. Build your reserve before you spend.
+4. One month ahead = Able.
+5. Score reality, not the plan.
+
+🎁 Try Able free for 30 days
+https://becomeable.app?utm_source=youtube&utm_medium=video&utm_campaign=taxes
+$14.99/month or $129/year. Card required, no charge until day 31. Cancel anytime.
+
+#FloorFirstBudgeting #VariableIncome #FreelanceMoney","Able, Able app, becomeable, Floor-First Budgeting, variable income, inconsistent income, budgeting for freelancers, 1099 budgeting, budgeting app, quarterly taxes, self-employment tax, 1099 taxes, tax deduction",article-video/videos/taxes-1099-k-explained/thumbnail.png,,Taxes,,top,pending,pending,,,
+taxes-1099-nec-explained,/taxes/1099-nec-explained/,What Is a 1099-NEC? Plain-English Guide for Freelancers and Contractors,supporting,taxes,2,draft,,,(see docs/notebooklm-sources/),(see docs/notebooklm-youtube-spec.md),3-4 min,,,,1099-NEC Explained for Freelancers and Contractors | Able,"What is a 1099-NEC, who gets one, who sends them, and what to do with it at tax time. Plain-English guide for freelancers, contractors, and side hustlers.
+
+From Able — the budgeting app built for inconsistent income.
+
+🔗 Read the full article: https://becomeable.app/taxes/1099-nec-explained/?utm_source=youtube&utm_medium=video&utm_campaign=taxes
+
+⏱ Chapters
+00:00 Intro
+(fill from script.json before publish)
+
+📚 Floor-First Budgeting
+Per-deposit allocation that pays your bills and taxes before any dollar gets to vote on dinner. Five rules:
+1. Know your floor. Bills plus tax equal the amount you can't miss.
+2. Every deposit fills the floor first.
+3. Build your reserve before you spend.
+4. One month ahead = Able.
+5. Score reality, not the plan.
+
+🎁 Try Able free for 30 days
+https://becomeable.app?utm_source=youtube&utm_medium=video&utm_campaign=taxes
+$14.99/month or $129/year. Card required, no charge until day 31. Cancel anytime.
+
+#FloorFirstBudgeting #VariableIncome #FreelanceMoney","Able, Able app, becomeable, Floor-First Budgeting, variable income, inconsistent income, budgeting for freelancers, 1099 budgeting, budgeting app, quarterly taxes, self-employment tax, 1099 taxes, tax deduction",article-video/videos/taxes-1099-nec-explained/thumbnail.png,,Taxes,,top,pending,pending,,,
+taxes-bad-month-quarterly-taxes,/taxes/bad-month-quarterly-taxes/,What to Do When Quarterlies Are Due and You Had a Bad Month,supporting,taxes,2,draft,,,(see docs/notebooklm-sources/),(see docs/notebooklm-youtube-spec.md),3-4 min,,,,Quarterly Taxes Due and You Had a Bad Month? What to Do | Able,"Quarterly taxes are due in two weeks. Your last month was brutal. Here is what to do, what the IRS actually does when you're short, and how to stop this from happening again.
+
+From Able — the budgeting app built for inconsistent income.
+
+🔗 Read the full article: https://becomeable.app/taxes/bad-month-quarterly-taxes/?utm_source=youtube&utm_medium=video&utm_campaign=taxes
+
+⏱ Chapters
+00:00 Intro
+(fill from script.json before publish)
+
+📚 Floor-First Budgeting
+Per-deposit allocation that pays your bills and taxes before any dollar gets to vote on dinner. Five rules:
+1. Know your floor. Bills plus tax equal the amount you can't miss.
+2. Every deposit fills the floor first.
+3. Build your reserve before you spend.
+4. One month ahead = Able.
+5. Score reality, not the plan.
+
+🎁 Try Able free for 30 days
+https://becomeable.app?utm_source=youtube&utm_medium=video&utm_campaign=taxes
+$14.99/month or $129/year. Card required, no charge until day 31. Cancel anytime.
+
+#FloorFirstBudgeting #VariableIncome #FreelanceMoney","Able, Able app, becomeable, Floor-First Budgeting, variable income, inconsistent income, budgeting for freelancers, 1099 budgeting, budgeting app, quarterly taxes, self-employment tax, 1099 taxes, tax deduction",article-video/videos/taxes-bad-month-quarterly-taxes/thumbnail.png,,Taxes,,top,pending,pending,,,
+taxes-home-office-deduction,/taxes/home-office-deduction/,The Home Office Deduction for Self-Employed (Simplified vs Actual),supporting,taxes,2,draft,,,(see docs/notebooklm-sources/),(see docs/notebooklm-youtube-spec.md),3-4 min,,,,Home Office Deduction Guide for Self-Employed | Able,"Simplified method or actual expense method? Here is the home office deduction explained with real math so freelancers and business owners pick the right one.
+
+From Able — the budgeting app built for inconsistent income.
+
+🔗 Read the full article: https://becomeable.app/taxes/home-office-deduction/?utm_source=youtube&utm_medium=video&utm_campaign=taxes
+
+⏱ Chapters
+00:00 Intro
+(fill from script.json before publish)
+
+📚 Floor-First Budgeting
+Per-deposit allocation that pays your bills and taxes before any dollar gets to vote on dinner. Five rules:
+1. Know your floor. Bills plus tax equal the amount you can't miss.
+2. Every deposit fills the floor first.
+3. Build your reserve before you spend.
+4. One month ahead = Able.
+5. Score reality, not the plan.
+
+🎁 Try Able free for 30 days
+https://becomeable.app?utm_source=youtube&utm_medium=video&utm_campaign=taxes
+$14.99/month or $129/year. Card required, no charge until day 31. Cancel anytime.
+
+#FloorFirstBudgeting #VariableIncome #FreelanceMoney","Able, Able app, becomeable, Floor-First Budgeting, variable income, inconsistent income, budgeting for freelancers, 1099 budgeting, budgeting app, quarterly taxes, self-employment tax, 1099 taxes, tax deduction",article-video/videos/taxes-home-office-deduction/thumbnail.png,,Taxes,,top,pending,pending,,,
+taxes-how-much-to-set-aside,/taxes/how-much-to-set-aside/,How Much Should I Set Aside for Taxes as a 1099 Worker?,supporting,taxes,2,draft,,,(see docs/notebooklm-sources/),(see docs/notebooklm-youtube-spec.md),3-4 min,,,,How Much Should I Set Aside for Taxes as a 1099 Worker? | Able,"The short answer is 25 to 35 percent. The real answer depends on your state, your bracket, and your deductions. Here is how to nail your number.
+
+From Able — the budgeting app built for inconsistent income.
+
+🔗 Read the full article: https://becomeable.app/taxes/how-much-to-set-aside/?utm_source=youtube&utm_medium=video&utm_campaign=taxes
+
+⏱ Chapters
+00:00 Intro
+(fill from script.json before publish)
+
+📚 Floor-First Budgeting
+Per-deposit allocation that pays your bills and taxes before any dollar gets to vote on dinner. Five rules:
+1. Know your floor. Bills plus tax equal the amount you can't miss.
+2. Every deposit fills the floor first.
+3. Build your reserve before you spend.
+4. One month ahead = Able.
+5. Score reality, not the plan.
+
+🎁 Try Able free for 30 days
+https://becomeable.app?utm_source=youtube&utm_medium=video&utm_campaign=taxes
+$14.99/month or $129/year. Card required, no charge until day 31. Cancel anytime.
+
+#FloorFirstBudgeting #VariableIncome #FreelanceMoney","Able, Able app, becomeable, Floor-First Budgeting, variable income, inconsistent income, budgeting for freelancers, 1099 budgeting, budgeting app, quarterly taxes, self-employment tax, 1099 taxes, tax deduction",article-video/videos/taxes-how-much-to-set-aside/thumbnail.png,,Taxes,,top,pending,pending,,,
+taxes-schedule-c-walkthrough,/taxes/schedule-c-walkthrough/,Schedule C Line by Line: A Walk-Through for Self-Employed Filers,supporting,taxes,2,draft,,,(see docs/notebooklm-sources/),(see docs/notebooklm-youtube-spec.md),3-4 min,,,,Schedule C Walk-Through Line by Line | Able,"A plain-English walk-through of every line on Schedule C, the form where self-employed people report business income and expenses.
+
+From Able — the budgeting app built for inconsistent income.
+
+🔗 Read the full article: https://becomeable.app/taxes/schedule-c-walkthrough/?utm_source=youtube&utm_medium=video&utm_campaign=taxes
+
+⏱ Chapters
+00:00 Intro
+(fill from script.json before publish)
+
+📚 Floor-First Budgeting
+Per-deposit allocation that pays your bills and taxes before any dollar gets to vote on dinner. Five rules:
+1. Know your floor. Bills plus tax equal the amount you can't miss.
+2. Every deposit fills the floor first.
+3. Build your reserve before you spend.
+4. One month ahead = Able.
+5. Score reality, not the plan.
+
+🎁 Try Able free for 30 days
+https://becomeable.app?utm_source=youtube&utm_medium=video&utm_campaign=taxes
+$14.99/month or $129/year. Card required, no charge until day 31. Cancel anytime.
+
+#FloorFirstBudgeting #VariableIncome #FreelanceMoney","Able, Able app, becomeable, Floor-First Budgeting, variable income, inconsistent income, budgeting for freelancers, 1099 budgeting, budgeting app, quarterly taxes, self-employment tax, 1099 taxes, tax deduction",article-video/videos/taxes-schedule-c-walkthrough/thumbnail.png,,Taxes,,top,pending,pending,,,
+taxes-self-employment-tax-deductions,/taxes/self-employment-tax-deductions/,16 Self-Employment Tax Deductions You Should Not Miss,supporting,taxes,2,draft,,,(see docs/notebooklm-sources/),(see docs/notebooklm-youtube-spec.md),3-4 min,,,,16 Self-Employment Tax Deductions You Should Not Miss | Able,"The 16 deductions most self-employed people underuse. Each one reduces what you actually pay. Plain-English guide with what qualifies and what doesn't.
+
+From Able — the budgeting app built for inconsistent income.
+
+🔗 Read the full article: https://becomeable.app/taxes/self-employment-tax-deductions/?utm_source=youtube&utm_medium=video&utm_campaign=taxes
+
+⏱ Chapters
+00:00 Intro
+(fill from script.json before publish)
+
+📚 Floor-First Budgeting
+Per-deposit allocation that pays your bills and taxes before any dollar gets to vote on dinner. Five rules:
+1. Know your floor. Bills plus tax equal the amount you can't miss.
+2. Every deposit fills the floor first.
+3. Build your reserve before you spend.
+4. One month ahead = Able.
+5. Score reality, not the plan.
+
+🎁 Try Able free for 30 days
+https://becomeable.app?utm_source=youtube&utm_medium=video&utm_campaign=taxes
+$14.99/month or $129/year. Card required, no charge until day 31. Cancel anytime.
+
+#FloorFirstBudgeting #VariableIncome #FreelanceMoney","Able, Able app, becomeable, Floor-First Budgeting, variable income, inconsistent income, budgeting for freelancers, 1099 budgeting, budgeting app, quarterly taxes, self-employment tax, 1099 taxes, tax deduction",article-video/videos/taxes-self-employment-tax-deductions/thumbnail.png,,Taxes,,top,pending,pending,,,

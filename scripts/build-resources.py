@@ -275,6 +275,30 @@ def render_html(fm, body_md, related_titles):
 
     body_html = rewrite_links(body_html)
 
+    # YouTube embed (when frontmatter has youtube_id). Renders above the
+    # body so the embed sits above the fold. The companion VideoObject
+    # JSON-LD goes into the schema block lower down.
+    youtube_id = fm.get("youtube_id")
+    youtube_embed = ""
+    if youtube_id:
+        youtube_embed = (
+            '<div class="video-embed" style="margin:24px 0 36px;">'
+            '<div style="font-weight:800;font-size:12px;letter-spacing:.18em;'
+            'text-transform:uppercase;color:#2a7a4a;margin-bottom:12px;">'
+            'Watch the overview</div>'
+            '<div style="position:relative;padding-bottom:56.25%;height:0;'
+            'overflow:hidden;border-radius:18px;background:#0e1a14;'
+            'box-shadow:0 12px 40px rgba(0,0,0,.12);">'
+            f'<iframe src="https://www.youtube.com/embed/{escape_html(youtube_id)}" '
+            f'title="{escape_html(title)}" '
+            'style="position:absolute;top:0;left:0;width:100%;height:100%;border:0;" '
+            'allow="accelerometer; clipboard-write; encrypted-media; gyroscope; picture-in-picture" '
+            'allowfullscreen></iframe>'
+            '</div>'
+            '</div>'
+        )
+    body_html = youtube_embed + body_html
+
     # Related block
     related_html = ""
     if related_md_items:
@@ -295,7 +319,10 @@ def render_html(fm, body_md, related_titles):
         '</div>'
     )
 
-    # JSON-LD
+    # JSON-LD — Article schema, plus VideoObject when there's an embedded
+    # YouTube video. Both can sit on one page; Google reads them
+    # independently and surfaces the page in video-rich-results when the
+    # VideoObject is present.
     schema = (
         '<script type="application/ld+json">{'
         f'"@context":"https://schema.org","@type":"Article",'
@@ -308,6 +335,23 @@ def render_html(fm, body_md, related_titles):
         '"inLanguage":"en"'
         '}</script>'
     )
+    if youtube_id:
+        upload_date = fm.get("youtube_uploaded", "")
+        thumb_url = (
+            f'https://becomeable.app/marketing-footage/youtube-thumbnails/'
+            f'{escape_html(youtube_id)}.png'
+        )
+        schema += (
+            '<script type="application/ld+json">{'
+            f'"@context":"https://schema.org","@type":"VideoObject",'
+            f'"name":{escape_json(title)},'
+            f'"description":{escape_json(meta_desc)},'
+            f'"thumbnailUrl":[{escape_json(thumb_url)}],'
+            + (f'"uploadDate":{escape_json(upload_date)},' if upload_date else '')
+            + f'"contentUrl":{escape_json(f"https://www.youtube.com/watch?v={youtube_id}")},'
+            f'"embedUrl":{escape_json(f"https://www.youtube.com/embed/{youtube_id}")}'
+            '}</script>'
+        )
 
     breadcrumb_parts = ['<a href="/">Home</a>']
     # Build breadcrumb from URL segments so multi-level paths like
