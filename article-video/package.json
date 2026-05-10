@@ -5,12 +5,16 @@
   "description": "Remotion-based pipeline that turns an Able article into a 3-4 min YouTube video with OpenAI TTS narration and brand-correct visuals.",
   "scripts": {
     "new": "tsx scripts/new-video.ts",
+    "draft": "tsx scripts/draft-script.ts",
     "tts": "tsx scripts/generate-audio.ts",
     "studio": "remotion studio src/index.ts",
     "render": "remotion render src/index.ts ArticleVideo videos/$VIDEO/out.mp4 --props=videos/$VIDEO/script.json",
-    "build": "npm run tts && npm run render"
+    "thumbnail": "remotion still src/index.ts Thumbnail videos/$VIDEO/thumbnail.png --props=videos/$VIDEO/script.json --log=warn",
+    "build": "npm run tts && npm run thumbnail && npm run render",
+    "all": "tsx scripts/build-all.ts"
   },
   "dependencies": {
+    "@anthropic-ai/sdk": "^0.95.1",
     "@remotion/bundler": "^4.0.250",
     "@remotion/cli": "^4.0.250",
     "@remotion/renderer": "^4.0.250",

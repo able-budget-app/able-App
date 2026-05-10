@@ -1,6 +1,7 @@
 import React from 'react';
 import {Composition, getInputProps} from 'remotion';
 import {ArticleVideo, ArticleVideoProps} from './ArticleVideo';
+import {Thumbnail, ThumbnailProps} from './Thumbnail';
 import {FPS} from './style';
 
 // Root registers the ArticleVideo composition. Duration is computed from
@@ -31,6 +32,7 @@ const defaultProps: ArticleVideoProps = {
 
 export const RemotionRoot: React.FC = () => {
   return (
+    <>
     <Composition
       id="ArticleVideo"
       component={ArticleVideo}
@@ -56,5 +58,21 @@ export const RemotionRoot: React.FC = () => {
         };
       }}
     />
+    {/* Thumbnail — single-frame composition (rendered with `remotion still`)
+        Same script.json shape so a video and its thumbnail share one source. */}
+    <Composition
+      id="Thumbnail"
+      component={Thumbnail}
+      defaultProps={{
+        title: defaultProps.title,
+        subtitle: defaultProps.subtitle,
+        segments: defaultProps.segments,
+      } as ThumbnailProps}
+      width={1280}
+      height={720}
+      fps={1}
+      durationInFrames={1}
+    />
+    </>
   );
 };
