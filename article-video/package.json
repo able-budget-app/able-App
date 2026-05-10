@@ -7,6 +7,7 @@
     "new": "tsx scripts/new-video.ts",
     "draft": "tsx scripts/draft-script.ts",
     "draft-all": "tsx scripts/draft-all.ts",
+    "chapters": "tsx scripts/chapter-list.ts",
     "tts": "tsx scripts/generate-audio.ts",
     "studio": "remotion studio src/index.ts",
     "render": "remotion render src/index.ts ArticleVideo videos/$VIDEO/out.mp4 --props=videos/$VIDEO/script.json",
