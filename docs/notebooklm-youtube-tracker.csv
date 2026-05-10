@@ -1,0 +1,33 @@
+page_url,page_title,page_type,cluster,priority,status,last_updated,notebook_url,source_materials,prompt_used,video_duration_target,video_duration_actual,youtube_video_id,youtube_url,yt_title,yt_description,yt_tags,yt_thumbnail_path,yt_playlist,yt_chapters,embed_position,embed_status,schema_status,view_count_30d,clickthrough_30d,notes
+/budgeting/,How to Budget With Inconsistent Income: The Complete Guide,pillar,budgeting,1,draft,2026-05-09,,"able-content/budgeting/index.md | docs/brand-script.md | docs/floor-first-method.md | ~/.claude/skills/able-app-capabilities/SKILL.md | able-content/budgeting/freelancer-budget.md | able-content/budgeting/feast-or-famine.md | able-content/budgeting/pay-yourself-steady-paycheck.md","[Universal preamble — paste from notebooklm-youtube-spec.md] + [Pillar article addition]: This is a pillar article — comprehensive and evergreen. Cover the methodology in depth. Explain the floor concept clearly. Walk through Floor-First Budgeting's 5 rules. Use specific numbers when the article cites them ($500 to $1,000 monthly leak, etc.). End on the identity shift: From Unable to Able.",6 min,,,,How to Budget With Inconsistent Income (Floor-First Method) | Able,"Most budgeting advice was built for steady paychecks. Here's how to budget when your income doesn't arrive on a schedule.
+
+How to budget when your income doesn't arrive on a steady schedule. From Able — the budgeting app built for inconsistent income.
+
+🔗 Read the full article: https://becomeable.app/budgeting/?utm_source=youtube&utm_medium=video&utm_campaign=budgeting
+
+⏱ Chapters
+00:00 Why monthly budgets fail variable income
+01:00 The floor: bills + tax
+02:00 Per-deposit allocation
+03:30 Building the reserve
+04:30 One month ahead = Able
+05:30 Score reality, not the plan
+
+📚 The methodology
+Floor-First Budgeting is per-deposit allocation that pays your bills and taxes before any dollar gets to vote on dinner. Five rules:
+1. Know your floor. Bills plus tax equal the amount you can't miss.
+2. Every deposit fills the floor first.
+3. Build your reserve before you spend.
+4. One month ahead = Able.
+5. Score reality, not the plan.
+
+🎁 Try Able free for 30 days
+https://becomeable.app?utm_source=youtube&utm_medium=video&utm_campaign=budgeting
+$14.99/month or $129/year. Card required, no charge until day 31. Cancel anytime.
+
+#FloorFirstBudgeting #VariableIncome #FreelanceMoney","Able, Able app, becomeable, Floor-First Budgeting, variable income, inconsistent income, budgeting for freelancers, 1099 budgeting, budgeting app, how to budget with inconsistent income, freelance budget, self-employed budget","marketing-footage/youtube-thumbnails/budgeting-pillar.png",Pillars,"00:00 Why monthly budgets fail variable income
+01:00 The floor: bills + tax
+02:00 Per-deposit allocation
+03:30 Building the reserve
+04:30 One month ahead = Able
+05:30 Score reality, not the plan",top,pending,pending,,,Pilot — first NotebookLM video. Test brand voice and quality before scaling.
