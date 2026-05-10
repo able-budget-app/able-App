@@ -4,6 +4,7 @@
   "private": true,
   "description": "Remotion-based pipeline that turns an Able article into a 3-4 min YouTube video with OpenAI TTS narration and brand-correct visuals.",
   "scripts": {
+    "new": "tsx scripts/new-video.ts",
     "tts": "tsx scripts/generate-audio.ts",
     "studio": "remotion studio src/index.ts",
     "render": "remotion render src/index.ts ArticleVideo videos/$VIDEO/out.mp4 --props=videos/$VIDEO/script.json",
