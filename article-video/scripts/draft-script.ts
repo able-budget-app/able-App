@@ -14,7 +14,7 @@
  * Calls Claude Sonnet, expects JSON response, validates the schema, writes
  * videos/<slug>/script.json.
  *
- * Cost: ~$0.05-0.10 per article on claude-sonnet-4-7. Output goes through
+ * Cost: ~$0.05-0.10 per article on claude-sonnet-4-6. Output goes through
  * a strict JSON parser; if the model returns prose around the JSON, we
  * extract the first {...} block.
  */
@@ -158,12 +158,12 @@ const client = new Anthropic();
 
 console.log(`[draft] article=${articlePath}`);
 console.log(`[draft] slug=${slug}, target_segments=${segmentTarget}`);
-console.log(`[draft] calling claude-sonnet-4-7...`);
+console.log(`[draft] calling claude-sonnet-4-6...`);
 
 (async () => {
   const start = Date.now();
   const res = await client.messages.create({
-    model: 'claude-sonnet-4-7',
+    model: 'claude-sonnet-4-6',
     max_tokens: 8000,
     system: SYSTEM_PROMPT,
     messages: [{role: 'user', content: USER_PROMPT}],
