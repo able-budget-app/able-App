@@ -13,6 +13,8 @@ secondary_keywords:
   - how to budget without a steady paycheck
 cluster: budgeting
 page_type: pillar
+youtube_id: "Y8-nTegVbs8"
+youtube_uploaded: "2026-05-10"
 internal_links:
   - /budgeting/freelancer-budget/
   - /budgeting/commission-income-budget/
