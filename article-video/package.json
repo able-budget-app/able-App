@@ -1,0 +1,28 @@
+{
+  "name": "able-article-video",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Remotion-based pipeline that turns an Able article into a 3-4 min YouTube video with OpenAI TTS narration and brand-correct visuals.",
+  "scripts": {
+    "tts": "tsx scripts/generate-audio.ts",
+    "studio": "remotion studio src/Root.tsx",
+    "render": "remotion render src/Root.tsx ArticleVideo videos/$VIDEO/out.mp4 --props=videos/$VIDEO/script.json",
+    "build": "npm run tts && npm run render"
+  },
+  "dependencies": {
+    "@remotion/bundler": "^4.0.250",
+    "@remotion/cli": "^4.0.250",
+    "@remotion/renderer": "^4.0.250",
+    "openai": "^4.73.0",
+    "react": "^19.0.0",
+    "react-dom": "^19.0.0",
+    "remotion": "^4.0.250",
+    "zod": "^4.3.6"
+  },
+  "devDependencies": {
+    "@types/node": "^22.10.2",
+    "@types/react": "^19.0.2",
+    "tsx": "^4.19.2",
+    "typescript": "^5.7.2"
+  }
+}

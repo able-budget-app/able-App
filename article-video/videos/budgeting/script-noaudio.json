@@ -1,0 +1,14 @@
+{
+  "slug": "budgeting-test",
+  "title": "How to Budget With Inconsistent Income",
+  "subtitle": "The Floor-First method, explained.",
+  "voiceFile": "audio/silence.mp3",
+  "totalSeconds": 25,
+  "intro": {"durationSec": 4},
+  "outro": {"durationSec": 4, "tagline": "Become Able."},
+  "segments": [
+    {"id": "s1", "durationSec": 5, "eyebrow": "RULE 1", "headline": "Know your\n{floor.}", "subhead": "Bills + tax. The amount you can't miss.", "shot": "01-dashboard", "layout": "right", "theme": "page"},
+    {"id": "s2", "durationSec": 5, "eyebrow": "RULE 2", "headline": "Every deposit\nfills the {floor first.}", "shot": "02-allocation-flow", "layout": "left", "theme": "green"},
+    {"id": "s3", "durationSec": 7, "eyebrow": "RULE 3", "headline": "Build your {reserve}\nbefore you spend.", "subhead": "Slow months get paid by the reserve.", "shot": "01-dashboard", "layout": "right", "theme": "glass-dark"}
+  ]
+}

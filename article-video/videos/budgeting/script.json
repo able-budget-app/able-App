@@ -1,0 +1,79 @@
+{
+  "slug": "budgeting",
+  "title": "How to Budget With Inconsistent Income",
+  "subtitle": "The Floor-First method, explained.",
+  "voice": "sage",
+  "intro": {
+    "durationSec": 5,
+    "voiceText": "Most budgeting advice was built for steady paychecks. This is for everyone else.",
+    "spokenIntro": true
+  },
+  "segments": [
+    {
+      "id": "the-problem",
+      "voiceText": "If you are a freelancer, a creator, or a business owner, your income does not arrive on the first and the fifteenth. It lands when it lands. And every budgeting app on the market assumes the opposite.",
+      "eyebrow": "THE PROBLEM",
+      "headline": "Most apps assume\na {paycheck.}",
+      "subhead": "Yours is variable. The advice was wrong.",
+      "shot": "03-plan-bills",
+      "layout": "right",
+      "theme": "page"
+    },
+    {
+      "id": "the-floor",
+      "voiceText": "Floor-First Budgeting starts with one number. Your floor. That's bills plus tax. The amount you can not miss this month, no matter how the income lands.",
+      "eyebrow": "RULE 1",
+      "headline": "Know your\n{floor.}",
+      "subhead": "Bills + tax. The amount you can't miss.",
+      "shot": "01-dashboard",
+      "layout": "left",
+      "theme": "green"
+    },
+    {
+      "id": "every-deposit",
+      "voiceText": "Every deposit fills the floor first. Not month by month. Deposit by deposit. The moment money lands, it gets split. Tax off the top. Bills reserved. Then the rest.",
+      "eyebrow": "RULE 2",
+      "headline": "Every deposit\nfills the {floor first.}",
+      "subhead": "Not month by month. Deposit by deposit.",
+      "shot": "02-allocation-flow",
+      "layout": "right",
+      "theme": "page"
+    },
+    {
+      "id": "the-reserve",
+      "voiceText": "Slow months happen. Build your reserve before you spend, and slow months get paid by the reserve, not by next month's panic.",
+      "eyebrow": "RULE 3",
+      "headline": "Build your {reserve}\nbefore you spend.",
+      "subhead": "Slow months get paid by the reserve.",
+      "shot": "01-dashboard",
+      "layout": "left",
+      "theme": "glass-dark"
+    },
+    {
+      "id": "one-month-ahead",
+      "voiceText": "When next month's floor is already reserved before next month begins, you have arrived. Most people call that moment relief. We call it being Able.",
+      "eyebrow": "RULE 4",
+      "headline": "One month ahead\n= {Able.}",
+      "subhead": "When next month's floor is already reserved.",
+      "shot": "04-score",
+      "layout": "right",
+      "theme": "green"
+    },
+    {
+      "id": "score-reality",
+      "voiceText": "And at the end of the month, score reality. Not the plan. The month is judged on what happened, not what you intended.",
+      "eyebrow": "RULE 5",
+      "headline": "Score reality.\nNot the {plan.}",
+      "subhead": "Judged on what happened. Not what you intended.",
+      "shot": "04-score",
+      "layout": "left",
+      "theme": "page"
+    }
+  ],
+  "outro": {
+    "durationSec": 5,
+    "voiceText": "From Unable. To Able. Try it free for thirty days at becomeable.app.",
+    "tagline": "Become Able.",
+    "spokenOutro": true
+  }
+}

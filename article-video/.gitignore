@@ -1,0 +1,7 @@
+node_modules/
+public/audio/
+public/product-shots
+videos/*/out.mp4
+videos/_render/
+.DS_Store
+*.log
