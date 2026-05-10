@@ -151,24 +151,33 @@ This is a cluster overview page. Treat it as a tour through the topic. Mention t
 
 ## Source materials (what to load into every notebook)
 
-For every article, load these spines into NotebookLM as sources. They keep the AI's voice on-brand:
+Sources are pre-bundled at `docs/notebooklm-sources/`. **One-time setup:** copy each bundle into a Google Doc, save the URLs. **Per video:** add 3 sources to the notebook (brand spine + cluster bundle + the specific article).
 
-**Always include (the spine):**
-1. The article itself (paste markdown or save as PDF)
-2. `docs/brand-script.md` — the StoryBrand voice spine
-3. `docs/floor-first-method.md` — the methodology spine
-4. `~/.claude/skills/able-app-capabilities/SKILL.md` — what Able actually does (paste contents as plain text)
+**The 5 bundles (each → one Google Doc):**
 
-**Add per cluster:**
-- **Budgeting cluster:** the budgeting `index.md` pillar + 2–3 closest supporting articles
-- **Taxes cluster:** the taxes `index.md` pillar + the 2–3 closest supporting articles
-- **Business cluster:** the business `index.md` pillar + relevant supporting articles
-- **Learn cluster:** the learn supporting articles in the same sub-topic
+| Bundle file | What's in it | When to use it |
+|---|---|---|
+| `00-able-brand-spine.md` | brand-script + floor-first-method + app-capabilities | **Every notebook.** |
+| `budgeting-bundle.md` | budgeting/index.md + 10 supporting | Any budgeting video |
+| `taxes-bundle.md` | taxes/index.md + 7 supporting | Any taxes video |
+| `business-bundle.md` | business/index.md + emergency-fund | Any business video |
+| `learn-bundle.md` | 5 learn sub-pillar index pages | Any learn video |
 
-**Optional but useful:**
+**Per-notebook source list (3 sources):**
+1. Brand spine Google Doc (always)
+2. The relevant cluster bundle Google Doc
+3. The specific article being videofied (paste markdown or link the live URL)
+
+**Why bundles instead of loose files:** NotebookLM caps at 50 sources but quality drops well before that. 3 well-chosen sources beats 30 noisy ones. Bundling means the AI gets the whole brand context in one source instead of 11 small ones, and doesn't have to stitch context across files.
+
+**Regenerating bundles** (when underlying articles change):
+```bash
+./docs/notebooklm-sources/build-bundles.sh
+```
+Then re-paste the changed bundle into its Google Doc. Active notebooks won't auto-update — re-link or re-upload after a regeneration.
+
+**Optional but useful for specific videos:**
 - A research / source PDF the article cites (e.g., the JPMorgan Chase Institute volatility study, Federal Reserve SHED 2024)
-
-NotebookLM accepts up to 50 sources. Don't get cute — 6–8 high-quality sources beats 30 noisy ones.
 
 ---
 
