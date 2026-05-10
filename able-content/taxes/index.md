@@ -13,6 +13,8 @@ secondary_keywords:
   - self employment tax guide
 cluster: taxes
 page_type: pillar
+youtube_id: "APZCMXbdJpM"
+youtube_uploaded: "2026-05-10"
 internal_links:
   - /taxes/how-much-to-set-aside/
   - /taxes/bad-month-quarterly-taxes/

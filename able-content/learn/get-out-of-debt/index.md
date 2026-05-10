@@ -8,6 +8,8 @@ target_keyword: "how to get out of debt"
 secondary_keywords: []
 cluster: learn-debt
 page_type: pillar
+youtube_id: "VO6tNrHdfVU"
+youtube_uploaded: "2026-05-10"
 internal_links:
   - /learn/
   - /learn/get-out-of-debt/why-getting-out-of-debt-feels-impossible/

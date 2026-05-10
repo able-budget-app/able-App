@@ -8,6 +8,8 @@ target_keyword: "how to get funding"
 secondary_keywords: []
 cluster: learn-funding
 page_type: pillar
+youtube_id: "bK52-NKAN_g"
+youtube_uploaded: "2026-05-10"
 internal_links:
   - /learn/
   - /learn/get-business-funding/personal-credit-vs-business-credit/

@@ -8,6 +8,8 @@ target_keyword: "how money actually works"
 secondary_keywords: []
 cluster: learn-money
 page_type: pillar
+youtube_id: "UlMgWbKCfLw"
+youtube_uploaded: "2026-05-10"
 internal_links:
   - /learn/
   - /learn/how-money-works/money-is-a-skill-you-can-learn/

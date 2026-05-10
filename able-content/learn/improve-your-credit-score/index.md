@@ -8,6 +8,8 @@ target_keyword: "how to improve your credit score"
 secondary_keywords: []
 cluster: learn-credit
 page_type: pillar
+youtube_id: "5YI83Et6Rfk"
+youtube_uploaded: "2026-05-10"
 internal_links:
   - /learn/
   - /learn/improve-your-credit-score/how-your-credit-score-actually-works/

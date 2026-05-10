@@ -8,6 +8,8 @@ target_keyword: "pay yourself first"
 secondary_keywords: []
 cluster: learn-payself
 page_type: pillar
+youtube_id: "tYd3WLDsBpE"
+youtube_uploaded: "2026-05-10"
 internal_links:
   - /learn/
   - /learn/pay-yourself-first/why-youre-not-paying-yourself-and-why-thats-killing-your-business/

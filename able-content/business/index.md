@@ -12,6 +12,8 @@ secondary_keywords:
   - pay yourself from business
 cluster: business
 page_type: pillar
+youtube_id: "8oT6lEWZa1c"
+youtube_uploaded: "2026-05-10"
 internal_links:
   - /business/emergency-fund/
   - /budgeting/
