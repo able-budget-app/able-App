@@ -68,3 +68,6 @@ Other App Screenshots /
 /icon-animation.gif
 /icon-animation.mp4
 /scripts/render-icon-animation.py
+
+# OAuth tokens / API credentials — never commit
+secrets/
