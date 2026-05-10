@@ -13,13 +13,51 @@ Overwrites the file. The pre-existing pilot row is regenerated identically
 since it derives from able-content/budgeting/index.md.
 """
 import csv
+import json
 import yaml
 import sys
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parent.parent
 CONTENT_DIR = ROOT / "able-content"
+VIDEO_DIR = ROOT / "article-video" / "videos"
 OUT_PATH = ROOT / "docs" / "notebooklm-youtube-tracker.csv"
+
+
+def chapters_for(slug: str) -> str:
+    """If a script.json with durations exists for this slug, return a
+    YouTube-format chapter list. Empty string otherwise — caller leaves
+    the placeholder in the description so it's obvious nothing was
+    auto-filled yet."""
+    sj = VIDEO_DIR / slug / "script.json"
+    if not sj.exists():
+        return ""
+    try:
+        data = json.loads(sj.read_text())
+    except json.JSONDecodeError:
+        return ""
+
+    intro_d = data.get("intro", {}).get("durationSec")
+    outro_d = data.get("outro", {}).get("durationSec")
+    segs = data.get("segments", [])
+    if not intro_d or not segs or any("durationSec" not in s for s in segs):
+        # TTS hasn't run yet (durations missing). Don't fake chapters.
+        return ""
+
+    def fmt(sec: float) -> str:
+        m = int(sec // 60)
+        s = int(sec % 60)
+        return f"{m:02d}:{s:02d}"
+
+    lines = [f"{fmt(0)} Intro"]
+    t = intro_d
+    for seg in segs:
+        label = (seg.get("eyebrow") or seg.get("id", "")).title()
+        lines.append(f"{fmt(t)} {label}")
+        t += seg["durationSec"]
+    if outro_d:
+        lines.append(f"{fmt(t)} Outro")
+    return "\n".join(lines)
 
 # Cluster → playlist name mapping (mirrors the Make scenario spec)
 PLAYLIST_BY_CLUSTER = {
@@ -51,10 +89,11 @@ CLUSTER_TAGS = {
 }
 
 # YouTube description template — first 157 chars are the SEO snippet.
-def description_for(meta: dict, page_url: str, cluster: str) -> str:
+def description_for(meta: dict, page_url: str, cluster: str, chapters: str) -> str:
     hook = meta.get("meta_description") or meta.get("title", "")
     title = meta.get("title", "").rstrip(" .")
     utm = f"utm_source=youtube&utm_medium=video&utm_campaign={cluster}"
+    chapters_block = chapters if chapters else "00:00 Intro\n(fill from script.json before publish)"
     return (
         f"{hook}\n"
         f"\n"
@@ -63,8 +102,7 @@ def description_for(meta: dict, page_url: str, cluster: str) -> str:
         f"🔗 Read the full article: https://becomeable.app{page_url}?{utm}\n"
         f"\n"
         f"⏱ Chapters\n"
-        f"00:00 Intro\n"
-        f"(fill from script.json before publish)\n"
+        f"{chapters_block}\n"
         f"\n"
         f"📚 Floor-First Budgeting\n"
         f"Per-deposit allocation that pays your bills and taxes before any dollar gets to vote on dinner. Five rules:\n"
@@ -135,6 +173,20 @@ def main():
         tags = ", ".join(DEFAULT_TAGS + CLUSTER_TAGS.get(cluster, []))
         playlist = PLAYLIST_BY_CLUSTER.get(cluster, "Misc")
 
+        chapters = chapters_for(slug)
+        # Compute total runtime if we have one (from durations in script.json)
+        sj = VIDEO_DIR / slug / "script.json"
+        total = ""
+        if sj.exists():
+            try:
+                d = json.loads(sj.read_text())
+                if d.get("totalSeconds"):
+                    m = int(d["totalSeconds"] // 60)
+                    s = int(d["totalSeconds"] % 60)
+                    total = f"{m}:{s:02d}"
+            except Exception:
+                pass
+
         rows.append({
             "slug": slug,
             "page_url": page_url,
@@ -148,16 +200,16 @@ def main():
             "source_materials": "(see docs/notebooklm-sources/)",
             "prompt_used": "(see docs/notebooklm-youtube-spec.md)",
             "video_duration_target": "3-4 min",
-            "video_duration_actual": "",
+            "video_duration_actual": total,
             "youtube_video_id": "",
             "youtube_url": "",
             "yt_title": yt_title(meta),
-            "yt_description": description_for(meta, page_url, cluster),
+            "yt_description": description_for(meta, page_url, cluster, chapters),
             "yt_tags": tags,
             "yt_thumbnail_path": f"article-video/videos/{slug}/thumbnail.png",
             "video_drive_id": "",  # filled when uploaded to Drive
             "yt_playlist": playlist,
-            "yt_chapters": "",
+            "yt_chapters": chapters,
             "embed_position": "top",
             "embed_status": "pending",
             "schema_status": "pending",
