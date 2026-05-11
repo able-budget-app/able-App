@@ -54,7 +54,7 @@ Caveat carried forward: the `refer_*_joined` achievement tiles still need a back
 
 - ~~**Bump GitHub Actions runner deps before Node 20 sunset**~~ ✅ Already shipped — `functions-check.yml` is on `actions/checkout@v5` + `denoland/setup-deno@v2`.
 - ~~**Landing page updates pass**~~ ✅ Done 2026-05-09.
-- **Refresh the OG share-card graphic (`brand/og-image.png`).** Current image's wording is stale; needs a fresh tagline. 1200×630 PNG, used as the share preview on LinkedIn / X / iMessage / Facebook for every article + the homepage. Once redesigned, drop the new PNG at `brand/og-image.png` (same path) — no code changes needed since `build-resources.py` already references it. Surfaced 2026-05-11 during the article-share-card audit.
+- ~~**Refresh the OG share-card graphic (`brand/og-image.png`).**~~ ✅ Shipped 2026-05-11 in commit `271970b`. Tagline updated from "An app built for entrepreneurs who struggle to manage inconsistent income." → "An app built for people who struggle to budget inconsistent income." Synced across og-image, cover-linkedin, cover-facebook.
 
 ---
 
