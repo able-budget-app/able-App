@@ -23,6 +23,31 @@ const path = require('path');
 
 const ROOT = path.resolve(__dirname, '..');
 
+// Launch date — anchors the post_date column. W1 Mon = LAUNCH_DATE.
+// Override per-run with: LAUNCH_DATE=2026-05-11 node scripts/build-master-sheet.js
+// Default: the next Monday on or after today (so re-running mid-week doesn't
+// retroactively shift dates into the past).
+function nextMondayOnOrAfter(d) {
+  const c = new Date(d);
+  c.setHours(0, 0, 0, 0);
+  const day = c.getDay(); // 0=Sun, 1=Mon, ..., 6=Sat
+  const offset = day === 1 ? 0 : (8 - day) % 7;
+  c.setDate(c.getDate() + offset);
+  return c;
+}
+const LAUNCH_DATE = process.env.LAUNCH_DATE
+  ? new Date(process.env.LAUNCH_DATE + 'T00:00:00')
+  : nextMondayOnOrAfter(new Date());
+
+const DAY_OFFSET = { Mon: 0, Tue: 1, Wed: 2, Thu: 3, Fri: 4, Sat: 5, Sun: 6 };
+function postDateFor(weekN, dayName) {
+  const off = DAY_OFFSET[dayName];
+  if (off === undefined || !weekN) return '';
+  const d = new Date(LAUNCH_DATE);
+  d.setDate(d.getDate() + (weekN - 1) * 7 + off);
+  return d.toISOString().slice(0, 10);
+}
+
 // ─────────────────────────────────────────────────────────────────────
 // Load data sources
 // ─────────────────────────────────────────────────────────────────────
@@ -209,7 +234,7 @@ for (const week of WEEKS) {
     rows.push([
       week.n,
       d.day,
-      '',                                  // post_date — set after launch date is decided
+      postDateFor(week.n, d.day),          // post_date computed from LAUNCH_DATE
       item ? item._kind : d.type,
       d.id,
       item ? item.slug : '',

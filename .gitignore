@@ -75,3 +75,7 @@ secrets/
 # AI council reports + research experiments (research outputs, not source)
 council/
 experiments/
+
+# Article-video working folders (audio renders, screenshots, intermediate output)
+# Regenerable via article-video/scripts/* — heavy artifacts shouldn't be tracked.
+article-video/videos/
