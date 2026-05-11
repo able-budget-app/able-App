@@ -71,3 +71,7 @@ Other App Screenshots /
 
 # OAuth tokens / API credentials — never commit
 secrets/
+
+# AI council reports + research experiments (research outputs, not source)
+council/
+experiments/
