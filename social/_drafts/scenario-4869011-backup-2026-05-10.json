@@ -1,0 +1,18 @@
+{
+  "_note": "Backup of scenario 4869011 blueprint as of 2026-05-10 before LI removal attempt. Captured from scenarios_get response. Restore by passing the `flow` + `metadata` fields back via scenarios_update.",
+  "name": "Able social — daily cross-post (Phase 4 v1)",
+  "scheduling": {
+    "type": "indefinitely",
+    "interval": 60,
+    "restrict": [
+      {"days": [1,2,3,4,5,6], "time": ["12:00","12:01"], "months": [1,2,3,4,5,6,7,8,9,10,11,12]},
+      {"days": [0],           "time": ["16:00","16:01"], "months": [1,2,3,4,5,6,7,8,9,10,11,12]}
+    ]
+  },
+  "blueprint": {
+    "_note": "Full blueprint with LI modules 6/7 still present. See social/_drafts/scenario-4869011-clean.json for the LI-removed version we tried to apply.",
+    "linkedin_modules": ["id:6 linkedin:CreateCompanyImagePost", "id:7 linkedin:createOrganizationVideoPost"],
+    "linkedin_onerror": ["id:103", "id:104"],
+    "sheet_update_LI_column": "row 8 mapper.values['26'] = '{{ifempty(6.id; 7.id)}}' — was the LI URL writeback"
+  }
+}

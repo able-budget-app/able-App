@@ -1,0 +1,202 @@
+"""Take the current scenario 4869011 blueprint, strip LinkedIn, save clean version."""
+import json, sys
+from pathlib import Path
+
+# The current blueprint (from scenarios_get response)
+BP = {
+  "flow": [
+    {
+      "id": 1,
+      "mapper": {
+        "from": "drive", "limit": "1",
+        "filter": [[
+          {"a": "C", "b": "{{formatDate(now; \"YYYY-MM-DD\")}}", "o": "text:equal"},
+          {"a": "W", "b": "Posted", "o": "text:notequal"},
+        ]],
+        "orderBy": "__ROW_NUMBER__", "sheetId": "Sheet1", "fieldType": "string",
+        "sortOrder": "asc",
+        "spreadsheetId": "1FcBz6Fqk1QHHj0-r-lly6DXUKHtLX5d83vcQHbi9pFY",
+        "tableFirstRow": "A1:BZ1", "includesHeaders": True,
+        "valueRenderOption": "FORMATTED_VALUE", "dateTimeRenderOption": "FORMATTED_STRING",
+      },
+      "module": "google-sheets:filterRows", "version": 2,
+      "metadata": {"designer": {"x": 0, "y": 450}},
+      "parameters": {"__IMTCONN__": 7861260},
+    },
+    {
+      "id": 9,
+      "mapper": {
+        "limit": "1", "query": "{{1.`K`}}", "select": "map",
+        "folderId": "/1qb5TRHy5hvzeYwcNtImt5HugWm0FVX0E",
+        "operator": "=", "retrieve": "file", "searchType": "title",
+      },
+      "module": "google-drive:searchForFilesFolders", "version": 4,
+      "metadata": {"designer": {"x": 300, "y": 450}},
+      "parameters": {"__IMTCONN__": 7768388},
+    },
+    {
+      "id": 10,
+      "mapper": {
+        "file": "{{9.id}}", "select": "map",
+        "formatDrawings": "image/jpeg",
+        "formatDocuments": "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+        "formatSpreadsheets": "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+        "formatPresentations": "application/vnd.openxmlformats-officedocument.presentationml.presentation",
+      },
+      "module": "google-drive:getAFile", "version": 4,
+      "metadata": {"designer": {"x": 600, "y": 450}},
+      "parameters": {"__IMTCONN__": 7768388},
+    },
+    {
+      "id": 11,
+      "mapper": {
+        "file": "{{10.data}}", "type": "upload", "file_type": "data",
+        "mime_type": "{{if(1.`D` = \"reel\"; \"video/mp4\"; \"image/jpeg\")}}",
+        "resourceType": "{{if(1.`D` = \"reel\"; \"video\"; \"image\")}}",
+        "use_filename": True,
+      },
+      "module": "cloudinary:UploadResource", "version": 1,
+      "metadata": {"designer": {"x": 900, "y": 450}},
+      "parameters": {"__IMTCONN__": 7840247},
+    },
+    {
+      "id": 2, "mapper": None, "module": "builtin:BasicRouter",
+      "routes": [
+        # ROUTE 1 — IG (image + reel)
+        {"flow": [
+          {
+            "id": 3,
+            "filter": {"name": "Image formats", "conditions": [
+              [{"a": "{{1.`D`}}", "b": "single",      "o": "text:equal"}],
+              [{"a": "{{1.`D`}}", "b": "brandscript", "o": "text:equal"}],
+              [{"a": "{{1.`D`}}", "b": "carousel",    "o": "text:equal"}],
+            ]},
+            "mapper": {
+              "caption": "{{1.`N`}}", "accountId": "17841424386374684",
+              "image_url": "{{11.secure_url}}",
+            },
+            "module": "instagram-business:CreatePostPhoto",
+            "onerror": [{
+              "id": 100,
+              "mapper": {
+                "to": ["pauljohnson912@gmail.com"],
+                "html": "Post id {{1.`E`}} | format {{1.`D`}} | slug {{1.`F`}} | error: {{ifempty(error.message; \"unknown\")}}",
+                "subject": "Able social FAILED · {{formatDate(now; \"YYYY-MM-DD\")}} · IG photo",
+              },
+              "module": "google-email:ActionSendEmail", "version": 1,
+              "metadata": {"designer": {"x": 1800, "y": 0}},
+              "parameters": {"account": 7727156},
+            }],
+            "version": 1,
+            "metadata": {"designer": {"x": 1500, "y": 0}},
+            "parameters": {"__IMTCONN__": 8570232},
+          },
+          {
+            "id": 4,
+            "filter": {"name": "Reel format", "conditions": [
+              [{"a": "{{1.`D`}}", "b": "reel", "o": "text:equal"}],
+            ]},
+            "mapper": {
+              "caption": "{{1.`N`}}", "accountId": "17841424386374684",
+              "video_url": "{{11.secure_url}}", "share_to_feed": True,
+            },
+            "module": "instagram-business:CreateAReelPost",
+            "onerror": [{
+              "id": 101,
+              "mapper": {
+                "to": ["pauljohnson912@gmail.com"],
+                "html": "Post id {{1.`E`}} | format {{1.`D`}} | slug {{1.`F`}} | error: {{ifempty(error.message; \"unknown\")}}",
+                "subject": "Able social FAILED · {{formatDate(now; \"YYYY-MM-DD\")}} · IG reel",
+              },
+              "module": "google-email:ActionSendEmail", "version": 1,
+              "metadata": {"designer": {"x": 2100, "y": 0}},
+              "parameters": {"account": 7727156},
+            }],
+            "version": 1,
+            "metadata": {"designer": {"x": 1800, "y": 0}},
+            "parameters": {"__IMTCONN__": 8570232},
+          },
+        ]},
+        # ROUTE 2 — FB (image only — reels skipped per FB Pages limitations)
+        {"flow": [
+          {
+            "id": 5,
+            "filter": {"name": "Image formats (FB)", "conditions": [
+              [{"a": "{{1.`D`}}", "b": "reel", "o": "text:notequal"}],
+            ]},
+            "mapper": {
+              "photos": [{"data": "{{10.data}}", "type": "data", "fileName": "{{10.name}}"}],
+              "message": "{{1.`Q`}}", "page_id": "1109886258870626",
+            },
+            "module": "facebook-pages:CreatePostWithPhotos",
+            "onerror": [{
+              "id": 102,
+              "mapper": {
+                "to": ["pauljohnson912@gmail.com"],
+                "html": "Post id {{1.`E`}} | format {{1.`D`}} | slug {{1.`F`}} | error: {{ifempty(error.message; \"unknown\")}}",
+                "subject": "Able social FAILED · {{formatDate(now; \"YYYY-MM-DD\")}} · FB photo",
+              },
+              "module": "google-email:ActionSendEmail", "version": 1,
+              "metadata": {"designer": {"x": 1800, "y": 300}},
+              "parameters": {"account": 7727156},
+            }],
+            "version": 6,
+            "metadata": {"designer": {"x": 1500, "y": 300}},
+            "parameters": {"__IMTCONN__": 8570232},
+          },
+        ]},
+        # ROUTE 3 — Sheet update (was route 4; LinkedIn route removed)
+        # NOTE: column 26 (li_url) intentionally not written.
+        {"flow": [
+          {
+            "id": 8,
+            "mapper": {
+              "from": "drive",
+              "values": {
+                "22": "Posted",
+                "23": "{{ifempty(3.id; 4.id)}}",
+                "24": "{{5.id}}",
+                "25": "manual",
+                "27": "{{formatDate(now; \"YYYY-MM-DD HH:mm\")}}",
+              },
+              "sheetId": "Sheet1", "rowNumber": "{{1.__ROW_NUMBER__}}",
+              "spreadsheetId": "1FcBz6Fqk1QHHj0-r-lly6DXUKHtLX5d83vcQHbi9pFY",
+              "tableFirstRow": "A1:BZ1", "includesHeaders": True,
+              "valueInputOption": "USER_ENTERED",
+            },
+            "module": "google-sheets:updateRow", "version": 2,
+            "metadata": {"designer": {"x": 1500, "y": 600}},
+            "parameters": {"__IMTCONN__": 7861260},
+          },
+        ]},
+      ],
+      "version": 1,
+      "metadata": {"designer": {"x": 1200, "y": 450}},
+    },
+  ],
+  "name": "Able social — daily cross-post (IG + FB)",
+  "metadata": {
+    "instant": False, "version": 1,
+    "designer": {"orphans": []},
+    "scenario": {
+      "dlq": False, "dataloss": False, "maxErrors": 3,
+      "autoCommit": True, "roundtrips": 1, "sequential": False,
+      "confidential": False, "freshVariables": False,
+      "autoCommitTriggerLast": True,
+    },
+  },
+  "scheduling": {
+    "type": "indefinitely", "interval": 60,
+    "restrict": [
+      {"days": [1,2,3,4,5,6], "time": ["12:00","12:01"], "months": list(range(1,13))},
+      {"days": [0],           "time": ["16:00","16:01"], "months": list(range(1,13))},
+    ],
+  },
+  "interface": {"input": [], "output": []},
+}
+
+out = Path('/Users/pauljohnson/Desktop/Able/social/_drafts/scenario-4869011-clean.json')
+out.write_text(json.dumps(BP, indent=2))
+print(f"Wrote {out}")
+print(f"Routes: {len(BP['flow'][4]['routes'])} (was 4 with LI, now 3)")
+print(f"Modules in flow: {sum(1 for f in BP['flow'])} top-level + {sum(len(r['flow']) for r in BP['flow'][4]['routes'])} in router")
