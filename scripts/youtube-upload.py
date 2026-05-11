@@ -162,7 +162,7 @@ def main():
     if not header:
         sys.exit("error: sheet is empty")
 
-    cols = {h: i for i, h in enumerate(header)}
+    cols = {h.strip(): i for i, h in enumerate(header)}
     required = ["slug", "status", "yt_title", "yt_description", "yt_tags", "youtube_video_id"]
     missing = [c for c in required if c not in cols]
     if missing:

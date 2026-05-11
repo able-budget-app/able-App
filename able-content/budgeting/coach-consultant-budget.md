@@ -12,6 +12,7 @@ secondary_keywords:
   - solopreneur budget
   - coaching business finances
 cluster: budgeting
+youtube_id: "thWItIDeYIo"
 page_type: supporting
 parent: /budgeting/
 internal_links:

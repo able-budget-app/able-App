@@ -12,6 +12,7 @@ secondary_keywords:
   - online seller taxes
   - 1099-k etsy taxes
 cluster: budgeting
+youtube_id: "0wbn6ylwZZk"
 page_type: supporting
 parent: /budgeting/
 internal_links:

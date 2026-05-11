@@ -73,7 +73,7 @@ The script.json schema:
   "slug": string,                         // url-safe slug
   "title": string,                        // shown on intro card; max ~60 chars
   "subtitle": string,                     // optional 1-line subtitle on intro
-  "voice": "sage" | "alloy" | "nova" | ...,  // OpenAI TTS voice; default "sage"
+  "voice": "onyx" | "ash" | "echo" | "ballad" | "verse" | ...,  // OpenAI TTS voice; default "onyx" (male narrator — brand decision 2026-05-10)
   "intro": {
     "durationSec": 5,
     "voiceText": string,                  // 1 sentence opener; hook in 8 sec

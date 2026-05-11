@@ -54,7 +54,7 @@ type Script = {
 };
 
 const script: Script = JSON.parse(readFileSync(SCRIPT_PATH, 'utf8'));
-const voice = script.voice ?? 'sage';
+const voice = script.voice ?? 'onyx';
 
 const client = new OpenAI();
 

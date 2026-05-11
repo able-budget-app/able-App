@@ -201,8 +201,10 @@ def main():
             "prompt_used": "(see docs/notebooklm-youtube-spec.md)",
             "video_duration_target": "3-4 min",
             "video_duration_actual": total,
-            "youtube_video_id": "",
-            "youtube_url": "",
+            "youtube_video_id": meta.get("youtube_id", ""),
+            "youtube_url": (
+                f"https://youtu.be/{meta['youtube_id']}" if meta.get("youtube_id") else ""
+            ),
             "yt_title": yt_title(meta),
             "yt_description": description_for(meta, page_url, cluster, chapters),
             "yt_tags": tags,
@@ -215,6 +217,11 @@ def main():
             "schema_status": "pending",
             "view_count_30d": "",
             "clickthrough_30d": "",
+            "linkedin_post_text": "",
+            "linkedin_status": "",
+            "linkedin_scheduled_date": "",
+            "linkedin_url": "",
+            "linkedin_posted_date": "",
             "notes": "",
         })
 
