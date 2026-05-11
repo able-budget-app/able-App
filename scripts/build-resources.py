@@ -22,6 +22,9 @@ import markdown
 
 REPO_ROOT = Path(__file__).resolve().parent.parent
 SITE_ORIGIN = "https://becomeable.app"
+OG_IMAGE = f"{SITE_ORIGIN}/brand/og-image.png"  # 1200×630 branded share card
+OG_IMAGE_W = 1200
+OG_IMAGE_H = 630
 
 NICE_TITLES = {
     "budgeting": "Budgeting with irregular income",
@@ -329,8 +332,9 @@ def render_html(fm, body_md, related_titles):
         f'"headline":{escape_json(title)},'
         f'"description":{escape_json(meta_desc)},'
         f'"url":{escape_json(canonical)},'
-        '"author":{"@type":"Organization","name":"Able"},'
-        '"publisher":{"@type":"Organization","name":"Able","url":"https://becomeable.app/"},'
+        f'"image":{escape_json(OG_IMAGE)},'
+        '"author":{"@type":"Organization","name":"Able","url":"https://becomeable.app/"},'
+        '"publisher":{"@type":"Organization","name":"Able","url":"https://becomeable.app/","logo":{"@type":"ImageObject","url":"https://becomeable.app/brand/favicon.png"}},'
         f'"mainEntityOfPage":{escape_json(canonical)},'
         '"inLanguage":"en"'
         '}</script>'
@@ -372,6 +376,35 @@ def render_html(fm, body_md, related_titles):
 
     breadcrumb_html = ' / '.join(breadcrumb_parts)
 
+    # BreadcrumbList JSON-LD — mirror the visible breadcrumb so Google can
+    # render hierarchical breadcrumbs in search results.
+    breadcrumb_items = [('Home', f'{SITE_ORIGIN}/')]
+    if segs:
+        for i in range(len(segs) - 1):
+            prefix = '/' + '/'.join(segs[:i + 1])
+            label = PATH_TITLES.get(prefix, segs[i].replace('-', ' ').title())
+            breadcrumb_items.append((label, f'{SITE_ORIGIN}{prefix}/'))
+        if len(segs) == 1:
+            prefix = '/' + segs[0]
+            breadcrumb_items.append(
+                (PATH_TITLES.get(prefix, cluster_label or title), canonical)
+            )
+        else:
+            breadcrumb_items.append((title, canonical))
+
+    breadcrumb_schema_items = ','.join(
+        '{"@type":"ListItem","position":' + str(i + 1)
+        + ',"name":' + escape_json(name)
+        + ',"item":' + escape_json(item) + '}'
+        for i, (name, item) in enumerate(breadcrumb_items)
+    )
+    breadcrumb_schema = (
+        '<script type="application/ld+json">{'
+        '"@context":"https://schema.org","@type":"BreadcrumbList",'
+        f'"itemListElement":[{breadcrumb_schema_items}]'
+        '}</script>'
+    )
+
     html = f"""<!DOCTYPE html>
 <html lang="en">
 <head>
@@ -385,8 +418,15 @@ def render_html(fm, body_md, related_titles):
 <meta property="og:url" content="{canonical}">
 <meta property="og:type" content="article">
 <meta property="og:site_name" content="Able">
-<meta name="twitter:card" content="summary">
+<meta property="og:image" content="{OG_IMAGE}">
+<meta property="og:image:width" content="{OG_IMAGE_W}">
+<meta property="og:image:height" content="{OG_IMAGE_H}">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="{escape_html(title)}">
+<meta name="twitter:description" content="{escape_html(meta_desc)}">
+<meta name="twitter:image" content="{OG_IMAGE}">
 {schema}
+{breadcrumb_schema}
 <link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400;12..96,500;12..96,600;12..96,700;12..96,800;12..96,900&display=swap" rel="stylesheet">
 <style>
 {CSS}

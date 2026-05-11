@@ -4,7 +4,7 @@
   "subtitle": "The Floor-First method, explained.",
   "voice": "sage",
   "intro": {
-    "durationSec": 5,
+    "durationSec": 7.248,
     "voiceText": "Most budgeting advice was built for steady paychecks. This is for everyone else.",
     "spokenIntro": true
   },
@@ -17,7 +17,8 @@
       "subhead": "Yours is variable. The advice was wrong.",
       "shot": "03-plan-bills",
       "layout": "right",
-      "theme": "page"
+      "theme": "page",
+      "durationSec": 15.864
     },
     {
       "id": "the-floor",
@@ -27,7 +28,8 @@
       "subhead": "Bills + tax. The amount you can't miss.",
       "shot": "01-dashboard",
       "layout": "left",
-      "theme": "green"
+      "theme": "green",
+      "durationSec": 13.464
     },
     {
       "id": "every-deposit",
@@ -37,7 +39,8 @@
       "subhead": "Not month by month. Deposit by deposit.",
       "shot": "02-allocation-flow",
       "layout": "right",
-      "theme": "page"
+      "theme": "page",
+      "durationSec": 14.664
     },
     {
       "id": "the-reserve",
@@ -47,7 +50,8 @@
       "subhead": "Slow months get paid by the reserve.",
       "shot": "01-dashboard",
       "layout": "left",
-      "theme": "glass-dark"
+      "theme": "glass-dark",
+      "durationSec": 10.968
     },
     {
       "id": "one-month-ahead",
@@ -57,7 +61,8 @@
       "subhead": "When next month's floor is already reserved.",
       "shot": "04-score",
       "layout": "right",
-      "theme": "green"
+      "theme": "green",
+      "durationSec": 12.648
     },
     {
       "id": "score-reality",
@@ -67,13 +72,16 @@
       "subhead": "Judged on what happened. Not what you intended.",
       "shot": "04-score",
       "layout": "left",
-      "theme": "page"
+      "theme": "page",
+      "durationSec": 9.6
     }
   ],
   "outro": {
-    "durationSec": 5,
+    "durationSec": 7.32,
     "voiceText": "From Unable. To Able. Try it free for thirty days at becomeable.app.",
     "tagline": "Become Able.",
     "spokenOutro": true
-  }
+  },
+  "totalSeconds": 91.77600000000001,
+  "voiceFile": "audio/budgeting.mp3"
 }

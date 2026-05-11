@@ -11,6 +11,7 @@ secondary_keywords:
   - budgeting as a freelancer
   - freelance income budget
 cluster: budgeting
+youtube_id: "K35WZ8Xx4wE"
 page_type: supporting
 parent: /budgeting/
 internal_links:

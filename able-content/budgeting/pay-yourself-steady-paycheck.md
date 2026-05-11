@@ -11,6 +11,7 @@ secondary_keywords:
   - pay yourself consistent income
   - smoothing reserve self-employed
 cluster: budgeting
+youtube_id: "1H452MSsLyo"
 page_type: supporting
 parent: /budgeting/
 internal_links:

@@ -12,6 +12,7 @@ secondary_keywords:
   - gig worker budget
   - delivery driver taxes
 cluster: budgeting
+youtube_id: "P-osA2nWG7Q"
 page_type: supporting
 parent: /budgeting/
 internal_links:
