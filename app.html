@@ -1832,8 +1832,8 @@ posthog.init('phc_B6PH36QxpExnyBYhfScFFF6LhDvoyxuFr6PypJuxxky3', {
   <!-- Past-due bills banner — visible only when monthly bills missed their due day -->
   <div id="past-due-banner"></div>
 
-  <!-- Plan-refresh banner — shows when Plaid's recurring detection arrived
-       AFTER a plan was already drafted (P2 #21). Filled by renderPlanRefreshBanner. -->
+  <!-- New-bank banner — fires only when a plaid_item was added after the
+       user already had a plan in place. Filled by renderPlanRefreshBanner. -->
   <div id="plan-refresh-banner"></div>
 
   <!-- Deep-dive banner — surfaces bills/debts the post-onboarding deep-dive
@@ -10668,69 +10668,72 @@ function renderDueTodayCard(){
       <button class="due-today-cta" onclick="goTo('bills')">Review</button>
     </div>`;
 }
-// Plan-refresh banner — fires when Plaid's RECURRING_TRANSACTIONS_UPDATE
-// webhook landed new streams AFTER we already drafted a plan. The user
-// should know their plan can be sharpened with the new data, without it
-// being a hard interrupt. Dismissable via X; "Refresh plan" hits the
-// analyzer's apply path again.
+// New-bank banner — fires ONLY when a plaid_item was connected after
+// the user already had a plan in place. Plaid's RECURRING_TRANSACTIONS_UPDATE
+// webhook flips recurring_status='fresh' for both newly-added banks AND
+// routine refreshes on the original bank; we suppress the routine case
+// because there's no useful action attached to it. The bigger multi-bank
+// delta UI (scoped analyzer pass + per-bank review modal) is tracked on
+// triage and will replace this banner's CTA when it ships.
 async function renderPlanRefreshBanner(){
   const el = document.getElementById('plan-refresh-banner');
   if (!el) return;
-  // Only meaningful for users who already have bills detected (i.e. have
-  // a draft plan). Without bills, the banner is noise — they're still
-  // in initial-sync territory.
-  if (!Array.isArray(S.bills) || S.bills.length === 0) { el.innerHTML = ''; return; }
+  el.innerHTML = '';
+  if (!Array.isArray(S.bills) || S.bills.length === 0) return;
   try {
     const sb = sbGet();
-    const { data, error } = await sb.from('plaid_items')
-      .select('id, recurring_status, last_recurring_refresh_at')
-      .eq('recurring_status', 'fresh')
-      .limit(1);
+    const { data: items, error } = await sb.from('plaid_items')
+      .select('id, institution_name, recurring_status, created_at')
+      .order('created_at', { ascending: true });
     if (error) throw error;
-    if (!data || data.length === 0) { el.innerHTML = ''; return; }
+    if (!items || items.length < 2) return;
+    const oldest = items[0];
+    const oldestT = oldest.created_at ? new Date(oldest.created_at).getTime() : 0;
+    const HOUR = 3600 * 1000;
+    // Non-oldest item, status=fresh, created >1h after the original bank.
+    // The 1h buffer rules out back-to-back adds during onboarding.
+    const newBank = items.find(i =>
+      i.id !== oldest.id &&
+      i.recurring_status === 'fresh' &&
+      i.created_at &&
+      (new Date(i.created_at).getTime() - oldestT) > HOUR
+    );
+    if (!newBank) return;
+    const bankName = escapeHtml(newBank.institution_name || 'Your new bank');
     el.innerHTML = `
       <div class="plan-refresh-banner" role="status">
         <div class="plan-refresh-banner-icon">
           <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><polyline points="23 4 23 10 17 10"/><path d="M20.49 15A9 9 0 1 1 5.64 5.64L23 10"/></svg>
         </div>
         <div class="plan-refresh-banner-body">
-          <div class="plan-refresh-banner-title">Your plan can be refined</div>
-          <div class="plan-refresh-banner-sub">Plaid finished detecting more recurring patterns. Re-run the analyzer to merge them in.</div>
+          <div class="plan-refresh-banner-title">${bankName} connected</div>
+          <div class="plan-refresh-banner-sub">Check Bills + Income for new entries to fold into your plan.</div>
         </div>
-        <button class="plan-refresh-banner-cta" onclick="refreshPlanFromBanner()">Refresh plan</button>
-        <button class="plan-refresh-banner-x" onclick="dismissPlanRefreshBanner()" aria-label="Dismiss">✕</button>
+        <button class="plan-refresh-banner-cta" onclick="reviewNewBankFromBanner('${newBank.id}')">Review</button>
+        <button class="plan-refresh-banner-x" onclick="dismissNewBankBanner('${newBank.id}')" aria-label="Dismiss">✕</button>
       </div>`;
   } catch (e) {
     console.warn('renderPlanRefreshBanner failed:', e);
-    el.innerHTML = '';
   }
 }
-async function dismissPlanRefreshBanner(){
-  // Move 'fresh' → 'applied' so the banner stops firing without re-running
-  // the analyzer. Different from "Refresh plan" — this is just acknowledging.
+async function dismissNewBankBanner(itemId){
   try {
     await sbGet().from('plaid_items')
       .update({ recurring_status: 'applied' })
-      .eq('recurring_status', 'fresh');
+      .eq('id', itemId);
   } catch (_) {}
   const el = document.getElementById('plan-refresh-banner');
   if (el) el.innerHTML = '';
 }
-async function refreshPlanFromBanner(){
-  // Trigger the analyzer-apply-plan flow with the latest streams. For v1
-  // we just navigate the user back into the plan review (the existing
-  // `obRenderPlanReview` flow handles the merge). Mark the items as
-  // 'applied' so the banner doesn't fire again until streams refresh.
+async function reviewNewBankFromBanner(itemId){
   try {
     await sbGet().from('plaid_items')
       .update({ recurring_status: 'applied' })
-      .eq('recurring_status', 'fresh');
+      .eq('id', itemId);
   } catch (_) {}
-  showToast('Plan refresh queued. Watch for the updated review.');
   const el = document.getElementById('plan-refresh-banner');
   if (el) el.innerHTML = '';
-  // The full re-review flow will be wired in a follow-up; for now we just
-  // surface the toast so the user knows something happened.
+  goTo('bills');
 }
 
 // ─── Web Push (P2 #14) ────────────────────────────────────────────────
