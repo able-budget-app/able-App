@@ -436,4 +436,108 @@ window.REELS = [
       { text: "{Then} you spend.", durationSec: 3 },
     ] },
 
+  // ── PRODUCT-CLIP REELS (R42-R55) — 14 reels paired with the May 9 product clips ──
+  // Format: 9:16 reel with copy block (muted + punch) above OR below a phone frame
+  // playing the clip MP4 from /marketing-footage/. Mirrors the tpl-C product-shot
+  // post style (see social/posts/product-data.js) translated to vertical video.
+  // `pos: 'top'` = copy on top, phone below. `pos: 'bottom'` = phone on top.
+
+  // R42 — home-overview (page, copy top)
+  { id: 'R42', slug: 'reel-product-floor-coverage', format: 'product-clip-reel',
+    theme: 'page', eyebrow: 'mixed', pos: 'top',
+    clip: 'home-overview', durationSec: 8.6,
+    muted: "Your floor.",
+    punch: "Bills + tax.\n{Funded first.}" },
+
+  // R43 — log-income (green, copy bottom)
+  { id: 'R43', slug: 'reel-product-log-ten-seconds', format: 'product-clip-reel',
+    theme: 'green', eyebrow: 'mixed', pos: 'bottom',
+    clip: 'log-income', durationSec: 10,
+    muted: "Log what came in.",
+    punch: "{Ten seconds.}" },
+
+  // R44 — plan-bills (white, copy top)
+  { id: 'R44', slug: 'reel-product-bills-funded', format: 'product-clip-reel',
+    theme: 'white', eyebrow: 'mixed', pos: 'top',
+    clip: 'plan-bills', durationSec: 8,
+    muted: "Every bill, on the page.",
+    punch: "{Funded} before\nthey're due." },
+
+  // R45 — plan-whatif (glass-dark, copy bottom)
+  { id: 'R45', slug: 'reel-product-whatif', format: 'product-clip-reel',
+    theme: 'glass-dark', eyebrow: 'mixed', pos: 'bottom',
+    clip: 'plan-whatif', durationSec: 8.5,
+    muted: "Stress-test next month.",
+    punch: "Before it\n{happens.}" },
+
+  // R46 — plan-forecast (page, copy top)
+  { id: 'R46', slug: 'reel-product-forecast', format: 'product-clip-reel',
+    theme: 'page', eyebrow: 'mixed', pos: 'top',
+    clip: 'plan-forecast', durationSec: 7.5,
+    muted: "What lands.\nWhat's owed.",
+    punch: "{Already}\nlined up." },
+
+  // R47 — plan-debt (black, copy bottom)
+  { id: 'R47', slug: 'reel-product-debt-snowball', format: 'product-clip-reel',
+    theme: 'black', eyebrow: 'mixed', pos: 'bottom',
+    clip: 'plan-debt', durationSec: 7.5,
+    muted: "Highest APR first.",
+    punch: "Watch it\n{drop.}" },
+
+  // R48 — plan-activity (green, copy top)
+  { id: 'R48', slug: 'reel-product-activity-tax', format: 'product-clip-reel',
+    theme: 'green', eyebrow: 'mixed', pos: 'top',
+    clip: 'plan-activity', durationSec: 9.5,
+    muted: "Every dollar, traced.",
+    punch: "{Tax-ready}\nin one tap." },
+
+  // R49 — score-detail (glass-dark, copy bottom)
+  { id: 'R49', slug: 'reel-product-score-reality', format: 'product-clip-reel',
+    theme: 'glass-dark', eyebrow: 'mixed', pos: 'bottom',
+    clip: 'score-detail', durationSec: 7.5,
+    muted: "Score the month.",
+    punch: "Reality.\nNot the {plan.}" },
+
+  // R50 — coach-ask (green, copy top)
+  { id: 'R50', slug: 'reel-product-coach-honest', format: 'product-clip-reel',
+    theme: 'green', eyebrow: 'mixed', pos: 'top',
+    clip: 'coach-ask', durationSec: 10.5,
+    muted: "Ask the scary question.",
+    punch: "Get an\n{honest} answer." },
+
+  // R51 — add-expected-income (page, copy bottom)
+  { id: 'R51', slug: 'reel-product-expected-income', format: 'product-clip-reel',
+    theme: 'page', eyebrow: 'mixed', pos: 'bottom',
+    clip: 'add-expected-income', durationSec: 7.5,
+    muted: "Expecting a deposit?",
+    punch: "Plan for it\n{now.}" },
+
+  // R52 — add-bill (white, copy top)
+  { id: 'R52', slug: 'reel-product-add-bill', format: 'product-clip-reel',
+    theme: 'white', eyebrow: 'mixed', pos: 'top',
+    clip: 'add-bill', durationSec: 8.5,
+    muted: "New bill?",
+    punch: "{Reserved} the second\nyou add it." },
+
+  // R53 — more-learn (page, copy bottom)
+  { id: 'R53', slug: 'reel-product-more-learn', format: 'product-clip-reel',
+    theme: 'page', eyebrow: 'mixed', pos: 'bottom',
+    clip: 'more-learn', durationSec: 8,
+    muted: "Built-in lessons.",
+    punch: "For variable\n{income.}" },
+
+  // R54 — more-refer (green, copy top)
+  { id: 'R54', slug: 'reel-product-refer', format: 'product-clip-reel',
+    theme: 'green', eyebrow: 'mixed', pos: 'top',
+    clip: 'more-refer', durationSec: 8.5,
+    muted: "3 friends start a trial.",
+    punch: "You get a\n{free month.}" },
+
+  // R55 — more-settings (glass-dark, copy bottom)
+  { id: 'R55', slug: 'reel-product-settings-honest', format: 'product-clip-reel',
+    theme: 'glass-dark', eyebrow: 'mixed', pos: 'bottom',
+    clip: 'more-settings', durationSec: 8,
+    muted: "No tricks.",
+    punch: "Just the\n{math.}" },
+
 ];

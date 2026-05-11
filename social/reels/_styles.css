@@ -191,6 +191,91 @@ html, body {
   padding-bottom: 8px;
 }
 
+/* product-clip-reel format — copy top-left always; phone frame plays the clip
+   below. Phone uses real iPhone proportions (9:19.5) with thin bezel + dynamic
+   island, video clipped to the screen area inside. */
+.format-product-clip-reel .phone-and-copy {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  margin: 50px 0;
+  gap: 60px;
+  z-index: 2;
+  min-height: 0;
+}
+
+.format-product-clip-reel .copy-block {
+  flex: 0 0 auto;
+  text-align: left;
+}
+.format-product-clip-reel .muted {
+  font-size: 56px;
+  font-weight: 600;
+  line-height: 1.10;
+  letter-spacing: -.02em;
+  color: var(--t2);
+  margin-bottom: 22px;
+}
+.format-product-clip-reel .punch {
+  font-size: 104px;
+  font-weight: 800;
+  line-height: 1.02;
+  letter-spacing: -.035em;
+  color: var(--t1);
+}
+
+.format-product-clip-reel .phone-block {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 0;
+}
+
+/* Phone frame — real iPhone proportions (9:19.5), thin bezel, deep radius.
+   Width-capped so the phone reads as a phone (not a billboard) inside the
+   1080-wide reel. The video is the screen content; a small dynamic-island
+   pill floats over the top of the screen for iPhone-accuracy. */
+.phone-frame {
+  position: relative;
+  height: 100%;
+  aspect-ratio: 9 / 19.5;
+  max-width: 62%;
+  background: #0a1410;
+  border-radius: 11.5%/5.4%;       /* iPhone-accurate corner radius */
+  padding: 1.6%;                   /* thin bezel as % of phone width */
+  box-shadow:
+    0 36px 90px rgba(0,0,0,.32),
+    0 10px 26px rgba(0,0,0,.16),
+    inset 0 0 0 2px #1c2922;
+}
+.phone-frame .screen {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  border-radius: 9.5%/4.4%;        /* slightly tighter than outer */
+  overflow: hidden;
+  background: #0a1410;
+}
+.phone-frame video {
+  width: 100%;
+  height: 100%;                    /* video fills the screen edge to edge */
+  object-fit: cover;
+  display: block;
+  background: #0a1410;
+}
+
+/* On dark themes, push the bezel a touch darker so the phone separates from bg */
+.theme-black .phone-frame,
+.theme-glass-dark .phone-frame,
+.theme-green .phone-frame {
+  background: #060d0a;
+  box-shadow:
+    0 36px 90px rgba(0,0,0,.46),
+    0 10px 26px rgba(0,0,0,.24),
+    inset 0 0 0 2px #14201b;
+}
+
 /* Talking-head format — teleprompter view (script + cue timeline) */
 .script {
   flex: 1;

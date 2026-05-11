@@ -190,6 +190,64 @@
           setTimeout(autoFitAndPlay, 100);
         }
 
+      } else if (reel.format === 'product-clip-reel') {
+        // Copy block top-left, phone frame below playing the marketing-footage
+        // MP4. Phone uses real iPhone proportions with a dynamic-island pill.
+        root.classList.add('format-product-clip-reel');
+
+        // Per-line underline spans + trailing punctuation absorbed (matches
+        // social/posts/_render.js so multi-line {chunks} underline correctly).
+        const renderProductText = (str) => str
+          .replace(/\{([^}]+)\}([.,;:!?]*)/g, (_, inner, punct) => {
+            const segs = inner.split('\n');
+            return segs.map((seg, i) => {
+              const text = (i === segs.length - 1) ? seg + punct : seg;
+              return `<span class="underline">${text}</span>`;
+            }).join('\n');
+          })
+          .replace(/\n/g, '<br>');
+
+        const eyebrowText =
+          reel.eyebrow === 'mixed'      ? 'For mixed or unpredictable income' :
+          reel.eyebrow === 'freelance'  ? 'For freelancers and consultants' :
+          reel.eyebrow === 'creator'    ? 'For creators' :
+          reel.eyebrow === 'gig'        ? 'For gig and rideshare drivers' :
+          reel.eyebrow === 'commission' ? 'For commission earners' :
+          reel.eyebrow === 'business'   ? 'For small business owners' :
+          'For mixed or unpredictable income';
+
+        const mutedHtml = reel.muted ? '<div class="muted">' + renderProductText(reel.muted) + '</div>' : '';
+        const punchHtml = '<div class="punch">' + renderProductText(reel.punch) + '</div>';
+        const clipUrl = `/marketing-footage/${reel.clip}.mp4`;
+
+        // Hide the reel until Bricolage is loaded — prevents the system-font
+        // → brand-font swap flash that's otherwise visible in the first ~150ms.
+        root.style.visibility = 'hidden';
+        const showWhenReady = () => { root.style.visibility = 'visible'; };
+        if (document.fonts && document.fonts.ready) {
+          document.fonts.ready.then(showWhenReady);
+        } else {
+          setTimeout(showWhenReady, 100);
+        }
+
+        root.innerHTML = `
+          <div class="eyebrow">${eyebrowText}</div>
+          <div class="phone-and-copy">
+            <div class="copy-block">${mutedHtml}${punchHtml}</div>
+            <div class="phone-block">
+              <div class="phone-frame">
+                <div class="screen">
+                  <video src="${clipUrl}" autoplay muted playsinline loop></video>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="footer">
+            <div class="wordmark">Able</div>
+            <div class="url">becomeable.app</div>
+          </div>
+        `;
+
       } else if (reel.format === 'talking-head') {
         // Render script + cues for filming reference
         const scriptHtml = reel.script.replace(/\n\n/g, '</p><p class="voice">').replace(/\n/g, '<br>');

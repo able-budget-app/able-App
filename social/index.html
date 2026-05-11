@@ -313,10 +313,12 @@
 
   <section class="panel" id="panel-cadence">
     <div class="cadence-meta">
-      <strong>25-week posting calendar — 3-week StoryBrand launch + 22-week sustaining cadence.</strong>
-      Launch (weeks 1–3) front-loads brand messaging through the StoryBrand arc:
-      <em>Hero &amp; problem</em> (W1) → <em>Guide / founder</em> (W2) → <em>Plan / CTA / success</em> (W3).
-      Sustaining (weeks 4–25) reinforces those beats through personas, deeper tax, habits, comparisons, and the pricing close in week 25.
+      <strong>65-week posting calendar — 3-week StoryBrand launch + 22-week sustaining + 40-week thematic depth.</strong>
+      <em>Launch</em> (W1-W3) front-loads brand messaging through the StoryBrand arc:
+      <em>Hero &amp; problem</em> (W1) → <em>Guide</em> (W2) → <em>Plan / CTA / success</em> (W3) — with product proof-points (R42, R50, P02) closing each week.
+      <em>Sustaining</em> (W4-W25) reinforces those beats through personas, deeper tax, habits, comparisons, and the pricing close in W25.
+      <em>Depth</em> (W26-W65) cycles ten 4-week thematic blocks: tax season → debt → reserve/slow-month → creator → gig → commission → business → calm/identity → Floor-First methodology → finale.
+      Brand-script lines + product singles reuse 2-3× across the 65 weeks; text-only singles place once.
       <br><br>
       Every week ends with a <strong>Sun · Brand script</strong> reinforcement — a verbatim phrase from the brand script chosen to echo that week's theme. 25 brand-script placements total; the remaining 16 lines stay in reserve for ads, retargeting, and email.
       <div class="legend">
@@ -330,6 +332,7 @@
   </section>
 
   <script src="posts/data.js"></script>
+  <script src="posts/product-data.js"></script>
   <script src="reels/data.js"></script>
   <script>
     const grid = document.getElementById('grid');
@@ -441,7 +444,7 @@
         { day: 'Wed', type: 'carousel', id: 'C39', note: 'Three kinds of broke at Day 30' },
         { day: 'Thu', type: 'single',   id: '56', note: 'Internal — you\'re not lazy, you\'re under-equipped' },
         { day: 'Fri', type: 'carousel', id: 'C40', note: 'Why apps fail you specifically' },
-        { day: 'Sat', type: 'single',   id: '57', note: 'Philosophical — handed the wrong tool' },
+        { day: 'Sat', type: 'reel',     id: 'R42', note: 'Product · Your floor — bills + tax funded first (home-overview clip)' },
       ]},
       { n: 2, theme: 'Launch · Guide (we get it, we built this)', days: [
         { day: 'Mon', type: 'single',   id: '58', note: 'The loop — Day 14, Day 30, Day 1' },
@@ -449,15 +452,15 @@
         { day: 'Wed', type: 'brandscript', id: 'B21', note: 'Permission line · You don\'t need more discipline (brandscript)' },
         { day: 'Thu', type: 'single',   id: '59', note: 'You shouldn\'t have to be a CFO' },
         { day: 'Fri', type: 'carousel', id: 'C42', note: 'What a calm month feels like' },
-        { day: 'Sat', type: 'single',   id: '60', note: 'Boring on purpose · Specific by design' },
+        { day: 'Sat', type: 'reel',     id: 'R50', note: 'Product · Coach — ask the scary question, get an honest answer (coach-ask clip)' },
       ]},
       { n: 3, theme: 'Launch · Plan + CTA + success/failure', days: [
         { day: 'Mon', type: 'single',   id: '61', note: 'The plan — split first, spend last' },
         { day: 'Tue', type: 'reel',     id: 'R23', note: 'Five buckets walkthrough' },
         { day: 'Wed', type: 'carousel', id: 'C45', note: 'How breathing again works (homepage 3 steps verbatim)' },
-        { day: 'Thu', type: 'single',   id: '62', note: 'Failure avoided — April. Surprise. Shame.' },
+        { day: 'Thu', type: 'single',   id: 'P02', note: 'Product · One deposit. Five jobs — in order.' },
         { day: 'Fri', type: 'carousel', id: 'C44', note: 'Day 1 to Day 90 transformation' },
-        { day: 'Sat', type: 'single',   id: '63', note: 'CTA close — free for 7 days' },
+        { day: 'Sat', type: 'single',   id: '63', note: 'CTA close — free for 30 days' },
       ]},
 
       // ─────────── SUSTAINING (weeks 4–25) — depth + breadth ───────────
@@ -475,6 +478,7 @@
         { day: 'Wed', type: 'carousel', id: 'C1' },
         { day: 'Thu', type: 'single',   id: '18' },
         { day: 'Fri', type: 'carousel', id: 'C8' },
+        { day: 'Sat', type: 'reel',     id: 'R49', note: 'Product · Score reveals reality, not the plan (score-detail clip)' },
       ]},
       { n: 6, theme: 'System · five buckets', days: [
         { day: 'Mon', type: 'single',   id: '43' },
@@ -482,6 +486,7 @@
         { day: 'Wed', type: 'carousel', id: 'C3' },
         { day: 'Thu', type: 'single',   id: '04' },
         { day: 'Fri', type: 'carousel', id: 'C16' },
+        { day: 'Sat', type: 'reel',     id: 'R44', note: 'Product · Bills funded before they\'re due (plan-bills clip)' },
       ]},
       { n: 7, theme: 'Tax · 30% rule', days: [
         { day: 'Mon', type: 'single',   id: '35' },
@@ -489,6 +494,7 @@
         { day: 'Wed', type: 'carousel', id: 'C5' },
         { day: 'Thu', type: 'single',   id: '36' },
         { day: 'Fri', type: 'carousel', id: 'C27' },
+        { day: 'Sat', type: 'reel',     id: 'R51', note: 'Product · Plan for income before it lands (add-expected-income clip)' },
       ]},
       { n: 8, theme: 'Calm · numbers over panic', days: [
         { day: 'Mon', type: 'single',   id: '22' },
@@ -496,6 +502,7 @@
         { day: 'Wed', type: 'carousel', id: 'C26' },
         { day: 'Thu', type: 'single',   id: '12' },
         { day: 'Fri', type: 'carousel', id: 'C30' },
+        { day: 'Sat', type: 'reel',     id: 'R45', note: 'Product · Stress-test next month before it happens (plan-whatif clip)' },
       ]},
       { n: 9, theme: 'Day 1 → Day 30', days: [
         { day: 'Mon', type: 'single',   id: '06' },
@@ -503,6 +510,7 @@
         { day: 'Wed', type: 'carousel', id: 'C6' },
         { day: 'Thu', type: 'single',   id: '21' },
         { day: 'Fri', type: 'carousel', id: 'C12' },
+        { day: 'Sat', type: 'reel',     id: 'R43', note: 'Product · Day 1 in ten seconds (log-income clip)' },
       ]},
       { n: 10, theme: 'Founder · why I built this', days: [
         { day: 'Mon', type: 'single',   id: '42' },
@@ -510,6 +518,7 @@
         { day: 'Wed', type: 'carousel', id: 'C43', note: 'How Able works in 8 slides (promoted from reserve, replaces C7)' },
         { day: 'Thu', type: 'single',   id: '41' },
         { day: 'Fri', type: 'carousel', id: 'C11' },
+        { day: 'Sat', type: 'reel',     id: 'R36', note: 'Tip · Move 30% the second it clears' },
       ]},
       { n: 11, theme: 'Comparison · wrong tool', days: [
         { day: 'Mon', type: 'single',   id: '27' },
@@ -533,6 +542,7 @@
         { day: 'Wed', type: 'carousel', id: 'C19' },
         { day: 'Thu', type: 'single',   id: '39' },
         { day: 'Fri', type: 'carousel', id: 'C18' },
+        { day: 'Sat', type: 'reel',     id: 'R33', note: 'Persona · Creator moment' },
       ]},
       { n: 14, theme: 'Persona · designers / devs / coaches', days: [
         { day: 'Mon', type: 'single',   id: '14' },
@@ -540,6 +550,7 @@
         { day: 'Wed', type: 'carousel', id: 'C20' },
         { day: 'Thu', type: 'single',   id: '30' },
         { day: 'Fri', type: 'carousel', id: 'C24' },
+        { day: 'Sat', type: 'reel',     id: 'R52', note: 'Product · Bill reserved the second you add it (add-bill clip)' },
       ]},
       { n: 15, theme: 'Persona · gig + real estate', days: [
         { day: 'Mon', type: 'single',   id: '19' },
@@ -547,6 +558,7 @@
         { day: 'Wed', type: 'carousel', id: 'C22' },
         { day: 'Thu', type: 'single',   id: '47' },
         { day: 'Fri', type: 'carousel', id: 'C21' },
+        { day: 'Sat', type: 'reel',     id: 'R32', note: 'Persona · Gig moment' },
       ]},
       { n: 16, theme: 'Persona · etsy + commission', days: [
         { day: 'Mon', type: 'single',   id: '16' },
@@ -554,6 +566,7 @@
         { day: 'Wed', type: 'carousel', id: 'C23' },
         { day: 'Thu', type: 'single',   id: '38' },
         { day: 'Fri', type: 'carousel', id: 'C25' },
+        { day: 'Sat', type: 'reel',     id: 'R34', note: 'Persona · Commission moment' },
       ]},
       { n: 17, theme: 'Tax · deeper (1099-NEC + 1099-K)', days: [
         { day: 'Mon', type: 'single',   id: '32' },
@@ -561,6 +574,7 @@
         { day: 'Wed', type: 'carousel', id: 'C28' },
         { day: 'Thu', type: 'single',   id: '24' },
         { day: 'Fri', type: 'carousel', id: 'C29' },
+        { day: 'Sat', type: 'reel',     id: 'R48', note: 'Product · Tax-ready in one tap (plan-activity clip)' },
       ]},
       { n: 18, theme: 'Habits · pay yourself', days: [
         { day: 'Mon', type: 'single',   id: '03' },
@@ -568,6 +582,7 @@
         { day: 'Wed', type: 'carousel', id: 'C10' },
         { day: 'Thu', type: 'single',   id: '50' },
         { day: 'Fri', type: 'carousel', id: 'C36' },
+        { day: 'Sat', type: 'reel',     id: 'R37', note: 'Tip · Every deposit gets a destination' },
       ]},
       { n: 19, theme: 'Setup · taxes + Schedule C', days: [
         { day: 'Mon', type: 'single',   id: '44' },
@@ -575,6 +590,7 @@
         { day: 'Wed', type: 'carousel', id: 'C32' },
         { day: 'Thu', type: 'single',   id: '45' },
         { day: 'Fri', type: 'carousel', id: 'C33' },
+        { day: 'Sat', type: 'reel',     id: 'R46', note: 'Product · What lands. What\'s owed. Already lined up. (plan-forecast clip)' },
       ]},
       { n: 20, theme: 'Sustain · home office + how money works', days: [
         { day: 'Mon', type: 'single',   id: '51' },
@@ -582,6 +598,7 @@
         { day: 'Wed', type: 'carousel', id: 'C31' },
         { day: 'Thu', type: 'single',   id: '26' },
         { day: 'Fri', type: 'carousel', id: 'C37' },
+        { day: 'Sat', type: 'reel',     id: 'R53', note: 'Product · Built-in lessons for variable income (more-learn clip)' },
       ]},
       { n: 21, theme: 'Drip · debt + freelancer budget', days: [
         { day: 'Mon', type: 'single',   id: '17' },
@@ -589,6 +606,7 @@
         { day: 'Wed', type: 'carousel', id: 'C17' },
         { day: 'Thu', type: 'single',   id: '23' },
         { day: 'Fri', type: 'carousel', id: 'C34' },
+        { day: 'Sat', type: 'reel',     id: 'R47', note: 'Product · Highest APR first. Watch it drop. (plan-debt clip)' },
       ]},
       { n: 22, theme: 'Drip · credit + business funding', days: [
         { day: 'Mon', type: 'single',   id: '46' },
@@ -596,6 +614,7 @@
         { day: 'Wed', type: 'carousel', id: 'C35' },
         { day: 'Thu', type: 'single',   id: '10' },
         { day: 'Fri', type: 'carousel', id: 'C38' },
+        { day: 'Sat', type: 'reel',     id: 'R35', note: 'Persona · Business owner moment' },
       ]},
       { n: 23, theme: 'Drip · last reel, singles take over', days: [
         { day: 'Mon', type: 'single',   id: '37' },
@@ -619,12 +638,360 @@
         { day: 'Wed', type: 'single',   id: '48' },
         { day: 'Thu', type: 'single',   id: '52' },
         { day: 'Fri', type: 'single',   id: '53' },
-        { day: 'Sat', type: 'single',   id: '54', note: 'Final post' },
+        { day: 'Sat', type: 'single',   id: '54', note: 'Cycle close — restart Block 1 next week' },
+      ]},
+
+      // ─────────── BLOCK 1 · TAX SEASON DEEPER (W26-W29) ───────────
+      { n: 26, theme: 'Tax · 1099-NEC vs 1099-K (depth)', days: [
+        { day: 'Mon', type: 'single',   id: '64' },
+        { day: 'Tue', type: 'reel',     id: 'R39', note: 'Stat · 76% of self-employed have variable income' },
+        { day: 'Wed', type: 'carousel', id: 'C46' },
+        { day: 'Thu', type: 'single',   id: 'P11', note: 'Product · Off the top, every deposit (tax-view)' },
+        { day: 'Fri', type: 'carousel', id: 'PC5', note: 'Product · Tax season simplified' },
+        { day: 'Sat', type: 'reel',     id: 'R40', note: 'Stat · 36% of US workers freelance' },
+      ]},
+      { n: 27, theme: 'Tax · quarterly taxes during a bad month', days: [
+        { day: 'Mon', type: 'single',   id: '65' },
+        { day: 'Tue', type: 'reel',     id: 'R8', note: 'Bad-month quarterly (reused)' },
+        { day: 'Wed', type: 'carousel', id: 'C47' },
+        { day: 'Thu', type: 'single',   id: 'P14', note: 'Product · April morning. One CSV. (tax-export)' },
+        { day: 'Fri', type: 'carousel', id: 'C30', note: 'Bad-month quarterly carousel (reused)' },
+        { day: 'Sat', type: 'reel',     id: 'R51', note: 'Product · Plan for income before it lands (reused)' },
+      ]},
+      { n: 28, theme: 'Tax · Schedule C + deductions', days: [
+        { day: 'Mon', type: 'single',   id: '66' },
+        { day: 'Tue', type: 'reel',     id: 'R17', note: 'Tax-bucket setup (reused)' },
+        { day: 'Wed', type: 'carousel', id: 'C32', note: 'Schedule C carousel (reused)' },
+        { day: 'Thu', type: 'single',   id: 'P13', note: 'Product · Tag once, Able remembers forever (tax-classify)' },
+        { day: 'Fri', type: 'carousel', id: 'C33', note: 'SE deductions carousel (reused)' },
+        { day: 'Sat', type: 'reel',     id: 'R48', note: 'Product · Tax-ready in one tap (reused)' },
+      ]},
+      { n: 29, theme: 'Tax · home office + how money works', days: [
+        { day: 'Mon', type: 'single',   id: '67' },
+        { day: 'Tue', type: 'reel',     id: 'R4', note: 'Tax-math 30 (reused)' },
+        { day: 'Wed', type: 'carousel', id: 'C31', note: 'Home-office carousel (reused)' },
+        { day: 'Thu', type: 'single',   id: 'P11', note: 'Product · Off the top (reused 2x)' },
+        { day: 'Fri', type: 'carousel', id: 'C37', note: 'How money works (reused)' },
+        { day: 'Sat', type: 'reel',     id: 'R50', note: 'Product · Coach honest answer (reused)' },
+      ]},
+
+      // ─────────── BLOCK 2 · DEBT PAYOFF (W30-W33) ───────────
+      { n: 30, theme: 'Debt · snowball vs avalanche', days: [
+        { day: 'Mon', type: 'single',   id: '68' },
+        { day: 'Tue', type: 'reel',     id: 'R47', note: 'Product · Highest APR first (reused)' },
+        { day: 'Wed', type: 'carousel', id: 'C34', note: 'Get out of debt carousel (reused)' },
+        { day: 'Thu', type: 'single',   id: 'P10', note: 'Product · Highest APR first. Watch it drop. (debts)' },
+        { day: 'Fri', type: 'carousel', id: 'C17', note: 'Freelancer-budget carousel (reused)' },
+        { day: 'Sat', type: 'reel',     id: 'R29', note: 'Identity · I am able (reused)' },
+      ]},
+      { n: 31, theme: 'Debt · DTI + collections', days: [
+        { day: 'Mon', type: 'single',   id: '69' },
+        { day: 'Tue', type: 'reel',     id: 'R20', note: 'Save more isn\'t a plan (reused)' },
+        { day: 'Wed', type: 'carousel', id: 'C49' },
+        { day: 'Thu', type: 'single',   id: 'P37', note: 'Product · I am able to pay down debt (brand-script)' },
+        { day: 'Fri', type: 'carousel', id: 'C38', note: 'Business funding carousel (reused)' },
+        { day: 'Sat', type: 'reel',     id: 'R47', note: 'Product · Watch it drop (reused 2x)' },
+      ]},
+      { n: 32, theme: 'Debt · consolidation, when it helps', days: [
+        { day: 'Mon', type: 'single',   id: '70' },
+        { day: 'Tue', type: 'reel',     id: 'R19', note: 'Spreadsheet to system (reused)' },
+        { day: 'Wed', type: 'carousel', id: 'C48' },
+        { day: 'Thu', type: 'single',   id: '71' },
+        { day: 'Fri', type: 'carousel', id: 'C35', note: 'Credit-score carousel (reused)' },
+        { day: 'Sat', type: 'reel',     id: 'R10', note: 'Same income different feeling (reused)' },
+      ]},
+      { n: 33, theme: 'Debt · variable income payoff', days: [
+        { day: 'Mon', type: 'single',   id: '17', note: 'Reused — debt + variable' },
+        { day: 'Tue', type: 'reel',     id: 'R16', note: 'Income reserve (reused)' },
+        { day: 'Wed', type: 'carousel', id: 'C34', note: 'Get out of debt (reused 2x)' },
+        { day: 'Thu', type: 'single',   id: 'P31', note: 'Product · Debt drops. Savings grow. (brand-script)' },
+        { day: 'Fri', type: 'carousel', id: 'PC7', note: 'Product · 5 things you stop doing' },
+        { day: 'Sat', type: 'reel',     id: 'R47', note: 'Product · Watch it drop (reused 3x — capstone)' },
+      ]},
+
+      // ─────────── BLOCK 3 · SLOW-MONTH / RESERVE (W34-W37) ───────────
+      { n: 34, theme: 'Reserve · the dam on a river', days: [
+        { day: 'Mon', type: 'single',   id: '72' },
+        { day: 'Tue', type: 'reel',     id: 'R16', note: 'Income reserve (reused 2x)' },
+        { day: 'Wed', type: 'carousel', id: 'PC6', note: 'Product · The slow month' },
+        { day: 'Thu', type: 'single',   id: '73' },
+        { day: 'Fri', type: 'carousel', id: 'C26', note: 'Emergency fund (reused)' },
+        { day: 'Sat', type: 'reel',     id: 'R11', note: 'Steady paycheck (reused)' },
+      ]},
+      { n: 35, theme: 'Feast or famine — bridging the gap', days: [
+        { day: 'Mon', type: 'single',   id: '74' },
+        { day: 'Tue', type: 'reel',     id: 'R7', note: 'Freezing flowing (reused)' },
+        { day: 'Wed', type: 'carousel', id: 'C16', note: 'Feast or famine (reused)' },
+        { day: 'Thu', type: 'single',   id: 'P36', note: 'Product · The fear of next check fades' },
+        { day: 'Fri', type: 'carousel', id: 'PC6', note: 'Product · Slow month (reused)' },
+        { day: 'Sat', type: 'reel',     id: 'R45', note: 'Product · Stress-test next month (reused)' },
+      ]},
+      { n: 36, theme: 'Pay yourself a steady paycheck', days: [
+        { day: 'Mon', type: 'single',   id: '75' },
+        { day: 'Tue', type: 'reel',     id: 'R11', note: 'Steady paycheck (reused 2x)' },
+        { day: 'Wed', type: 'carousel', id: 'C18', note: 'Steady-paycheck carousel (reused)' },
+        { day: 'Thu', type: 'single',   id: 'P28', note: 'Product · Same foundation. Different clock.' },
+        { day: 'Fri', type: 'carousel', id: 'C36', note: 'Pay yourself first (reused)' },
+        { day: 'Sat', type: 'reel',     id: 'R46', note: 'Product · Already lined up (reused)' },
+      ]},
+      { n: 37, theme: 'Calm bridge — same income, different month', days: [
+        { day: 'Mon', type: 'single',   id: '76' },
+        { day: 'Tue', type: 'reel',     id: 'R10', note: 'Same income (reused 2x)' },
+        { day: 'Wed', type: 'carousel', id: 'C42', note: 'Calm month (reused)' },
+        { day: 'Thu', type: 'single',   id: 'P39', note: 'Product · From holding your breath. To breathing.' },
+        { day: 'Fri', type: 'carousel', id: 'PC4', note: 'Product · From Unable to Able' },
+        { day: 'Sat', type: 'reel',     id: 'R38', note: 'Tip · Floor first' },
+      ]},
+
+      // ─────────── BLOCK 4 · CREATOR PERSONA DEEP (W38-W41) ───────────
+      { n: 38, theme: 'Creator · sponsorships + windfalls', days: [
+        { day: 'Mon', type: 'single',   id: '77' },
+        { day: 'Tue', type: 'reel',     id: 'R33', note: 'Creator moment (reused)' },
+        { day: 'Wed', type: 'carousel', id: 'C19', note: 'Creator-budget carousel (reused)' },
+        { day: 'Thu', type: 'single',   id: 'P02', note: 'Product · One deposit. Five jobs. (reused 2x)' },
+        { day: 'Fri', type: 'carousel', id: 'PC2', note: 'Product · How Able works' },
+        { day: 'Sat', type: 'reel',     id: 'R43', note: 'Product · Ten seconds (reused)' },
+      ]},
+      { n: 39, theme: 'Creator · taxes when income is bursty', days: [
+        { day: 'Mon', type: 'single',   id: '78' },
+        { day: 'Tue', type: 'reel',     id: 'R4', note: 'Tax-math 30 (reused 2x)' },
+        { day: 'Wed', type: 'carousel', id: 'C28', note: '1099-NEC carousel (reused)' },
+        { day: 'Thu', type: 'single',   id: 'P11', note: 'Product · Off the top (reused 3x)' },
+        { day: 'Fri', type: 'carousel', id: 'C29', note: '1099-K carousel (reused)' },
+        { day: 'Sat', type: 'reel',     id: 'R51', note: 'Product · Plan for income (reused 2x)' },
+      ]},
+      { n: 40, theme: 'Etsy + marketplace creators', days: [
+        { day: 'Mon', type: 'single',   id: '79' },
+        { day: 'Tue', type: 'reel',     id: 'R13', note: 'April no panic (reused)' },
+        { day: 'Wed', type: 'carousel', id: 'C23', note: 'Etsy-seller carousel (reused)' },
+        { day: 'Thu', type: 'single',   id: 'P03', note: 'Product · Funded before they\'re due (bills)' },
+        { day: 'Fri', type: 'carousel', id: 'C24', note: 'Coach-consultant (reused)' },
+        { day: 'Sat', type: 'reel',     id: 'R44', note: 'Product · Bills funded (reused)' },
+      ]},
+      { n: 41, theme: 'Creator burnout · boring is the feature', days: [
+        { day: 'Mon', type: 'single',   id: '80' },
+        { day: 'Tue', type: 'reel',     id: 'R30', note: 'Anti-hustle (reused)' },
+        { day: 'Wed', type: 'carousel', id: 'PC8', note: 'Product · Why apps fail variable' },
+        { day: 'Thu', type: 'single',   id: 'P05', note: 'Product · Coach knows your real numbers' },
+        { day: 'Fri', type: 'carousel', id: 'C42', note: 'Calm month (reused 2x)' },
+        { day: 'Sat', type: 'reel',     id: 'R28', note: 'Permission · Not your fault (reused)' },
+      ]},
+
+      // ─────────── BLOCK 5 · GIG PERSONA DEEP (W42-W45) ───────────
+      { n: 42, theme: 'Gig · rideshare + delivery', days: [
+        { day: 'Mon', type: 'single',   id: '81' },
+        { day: 'Tue', type: 'reel',     id: 'R32', note: 'Gig moment (reused)' },
+        { day: 'Wed', type: 'carousel', id: 'C22', note: 'Rideshare-driver (reused)' },
+        { day: 'Thu', type: 'single',   id: 'P29', note: 'Product · Log what came in. Ten seconds.' },
+        { day: 'Fri', type: 'carousel', id: 'PC1', note: 'Product · Your first week with Able' },
+        { day: 'Sat', type: 'reel',     id: 'R43', note: 'Product · Log income ten seconds (reused 2x)' },
+      ]},
+      { n: 43, theme: 'Gig · mileage + deductions', days: [
+        { day: 'Mon', type: 'single',   id: '82' },
+        { day: 'Tue', type: 'reel',     id: 'R17', note: 'Tax-bucket setup (reused 2x)' },
+        { day: 'Wed', type: 'carousel', id: 'C32', note: 'Schedule C (reused 2x)' },
+        { day: 'Thu', type: 'single',   id: 'P13', note: 'Product · Tag once, remembered forever (reused)' },
+        { day: 'Fri', type: 'carousel', id: 'C33', note: 'SE deductions (reused 2x)' },
+        { day: 'Sat', type: 'reel',     id: 'R36', note: 'Tip · 30% the second it clears (reused)' },
+      ]},
+      { n: 44, theme: 'Gig · peak demand + uneven weeks', days: [
+        { day: 'Mon', type: 'single',   id: '83' },
+        { day: 'Tue', type: 'reel',     id: 'R12', note: 'Three days one cycle (reused)' },
+        { day: 'Wed', type: 'carousel', id: 'C12', note: 'Day-by-day (reused)' },
+        { day: 'Thu', type: 'single',   id: 'P15', note: 'Product · Available to spend, not your balance' },
+        { day: 'Fri', type: 'carousel', id: 'PC6', note: 'Product · Slow month (reused 2x)' },
+        { day: 'Sat', type: 'reel',     id: 'R49', note: 'Product · Score reality (reused)' },
+      ]},
+      { n: 45, theme: 'Gig · real-estate agents (deal-to-deal income)', days: [
+        { day: 'Mon', type: 'single',   id: '84' },
+        { day: 'Tue', type: 'reel',     id: 'R14', note: 'Cost of waiting (reused)' },
+        { day: 'Wed', type: 'carousel', id: 'C21', note: 'Real-estate agent (reused)' },
+        { day: 'Thu', type: 'single',   id: 'P28', note: 'Product · Different clock (reused)' },
+        { day: 'Fri', type: 'carousel', id: 'C25', note: 'Commission income (reused)' },
+        { day: 'Sat', type: 'reel',     id: 'R34', note: 'Commission moment (reused)' },
+      ]},
+
+      // ─────────── BLOCK 6 · COMMISSION PERSONA DEEP (W46-W49) ───────────
+      { n: 46, theme: 'Commission · big check, then crickets', days: [
+        { day: 'Mon', type: 'single',   id: '85' },
+        { day: 'Tue', type: 'reel',     id: 'R34', note: 'Commission moment (reused 2x)' },
+        { day: 'Wed', type: 'carousel', id: 'C25', note: 'Commission income (reused 2x)' },
+        { day: 'Thu', type: 'single',   id: 'P22', note: 'Product · You don\'t move it. You freeze. (brand-script)' },
+        { day: 'Fri', type: 'carousel', id: 'PC6', note: 'Product · Slow month (reused 3x)' },
+        { day: 'Sat', type: 'reel',     id: 'R45', note: 'Product · Stress-test (reused 2x)' },
+      ]},
+      { n: 47, theme: 'Commission · the bridge (reserve)', days: [
+        { day: 'Mon', type: 'single',   id: '86' },
+        { day: 'Tue', type: 'reel',     id: 'R16', note: 'Income reserve (reused 3x)' },
+        { day: 'Wed', type: 'carousel', id: 'C26', note: 'Emergency fund (reused 2x)' },
+        { day: 'Thu', type: 'single',   id: 'P34', note: 'Product · Bills paid. Nothing leaked. (brand-script)' },
+        { day: 'Fri', type: 'carousel', id: 'C42', note: 'Calm month (reused 3x)' },
+        { day: 'Sat', type: 'reel',     id: 'R44', note: 'Product · Bills funded (reused 2x)' },
+      ]},
+      { n: 48, theme: 'Commission · sales pros + lumpy income', days: [
+        { day: 'Mon', type: 'single',   id: '87' },
+        { day: 'Tue', type: 'reel',     id: 'R11', note: 'Steady paycheck (reused 3x)' },
+        { day: 'Wed', type: 'carousel', id: 'C18', note: 'Steady-paycheck (reused 2x)' },
+        { day: 'Thu', type: 'single',   id: 'P15', note: 'Product · Available to spend (reused)' },
+        { day: 'Fri', type: 'carousel', id: 'PC1', note: 'Product · Your first week (reused)' },
+        { day: 'Sat', type: 'reel',     id: 'R10', note: 'Same income (reused 3x)' },
+      ]},
+      { n: 49, theme: 'Commission · the math of feast/famine', days: [
+        { day: 'Mon', type: 'single',   id: '88' },
+        { day: 'Tue', type: 'reel',     id: 'R2', note: 'Where $4,000 goes (reused)' },
+        { day: 'Wed', type: 'carousel', id: 'C4', note: 'Money math carousel (reused)' },
+        { day: 'Thu', type: 'single',   id: 'P25', note: 'Product · Day 30. Where did it go? (brand-script)' },
+        { day: 'Fri', type: 'carousel', id: 'C13', note: 'Compound cost (reused)' },
+        { day: 'Sat', type: 'reel',     id: 'R31', note: '$400 paralysis (reused)' },
+      ]},
+
+      // ─────────── BLOCK 7 · BUSINESS OWNER DEEP (W50-W53) ───────────
+      { n: 50, theme: 'Business · owner pay percent', days: [
+        { day: 'Mon', type: 'single',   id: '89' },
+        { day: 'Tue', type: 'reel',     id: 'R35', note: 'Business owner moment (reused)' },
+        { day: 'Wed', type: 'carousel', id: 'C36', note: 'Pay yourself first (reused 2x)' },
+        { day: 'Thu', type: 'single',   id: 'P38', note: 'Product · I am able to save (brand-script)' },
+        { day: 'Fri', type: 'carousel', id: 'PC2', note: 'Product · How Able works (reused)' },
+        { day: 'Sat', type: 'reel',     id: 'R55', note: 'Product · No tricks. Just the math. (more-settings)' },
+      ]},
+      { n: 51, theme: 'Business · business credit + Paydex', days: [
+        { day: 'Mon', type: 'single',   id: '90' },
+        { day: 'Tue', type: 'reel',     id: 'R19', note: 'Spreadsheet to system (reused 2x)' },
+        { day: 'Wed', type: 'carousel', id: 'C38', note: 'Business funding (reused 2x)' },
+        { day: 'Thu', type: 'single',   id: 'P07', note: 'Product · No tricks. Just the math. (settings)' },
+        { day: 'Fri', type: 'carousel', id: 'C35', note: 'Credit-score (reused 2x)' },
+        { day: 'Sat', type: 'reel',     id: 'R54', note: 'Product · 3 friends start a trial (more-refer)' },
+      ]},
+      { n: 52, theme: 'Business · SBA + funding readiness', days: [
+        { day: 'Mon', type: 'single',   id: '91' },
+        { day: 'Tue', type: 'reel',     id: 'R6', note: 'Wrong tool (reused)' },
+        { day: 'Wed', type: 'carousel', id: 'C38', note: 'Business funding (reused 3x)' },
+        { day: 'Thu', type: 'single',   id: 'P27', note: 'Product · Built for the way you actually get paid' },
+        { day: 'Fri', type: 'carousel', id: 'PC8', note: 'Product · Why apps fail variable (reused)' },
+        { day: 'Sat', type: 'reel',     id: 'R35', note: 'Business owner moment (reused 2x)' },
+      ]},
+      { n: 53, theme: 'Business · multi-bank reality', days: [
+        { day: 'Mon', type: 'single',   id: '92' },
+        { day: 'Tue', type: 'reel',     id: 'R3', note: 'Five buckets (reused)' },
+        { day: 'Wed', type: 'carousel', id: 'C3', note: 'Five buckets carousel (reused)' },
+        { day: 'Thu', type: 'single',   id: 'P30', note: 'Product · Able tells you where it goes (reused 2x)' },
+        { day: 'Fri', type: 'carousel', id: 'PC3', note: 'Product · Built for variable income' },
+        { day: 'Sat', type: 'reel',     id: 'R48', note: 'Product · Tax-ready in one tap (reused 2x)' },
+      ]},
+
+      // ─────────── BLOCK 8 · CALM / IDENTITY / TRANSFORMATION (W54-W57) ───────────
+      { n: 54, theme: 'Identity · I am able', days: [
+        { day: 'Mon', type: 'single',   id: '93' },
+        { day: 'Tue', type: 'reel',     id: 'R29', note: 'Identity stack (reused 2x)' },
+        { day: 'Wed', type: 'carousel', id: 'C44', note: 'Day 1 to Day 90 (reused)' },
+        { day: 'Thu', type: 'single',   id: 'P37', note: 'Product · I am able to pay down debt (reused 2x)' },
+        { day: 'Fri', type: 'carousel', id: 'C45', note: 'Three steps verbatim (reused)' },
+        { day: 'Sat', type: 'reel',     id: 'R29', note: 'Identity · I am able (reused 3x — capstone)' },
+      ]},
+      { n: 55, theme: 'Transformation · breath again', days: [
+        { day: 'Mon', type: 'single',   id: '12', note: 'Reused — fear fades' },
+        { day: 'Tue', type: 'reel',     id: 'R10', note: 'Same income different feeling (reused 4x — anchor)' },
+        { day: 'Wed', type: 'carousel', id: 'PC4', note: 'Product · From Unable to Able (reused)' },
+        { day: 'Thu', type: 'single',   id: 'P39', note: 'Product · Holding breath to breathing (reused)' },
+        { day: 'Fri', type: 'carousel', id: 'C42', note: 'Calm month (reused 4x)' },
+        { day: 'Sat', type: 'reel',     id: 'R41', note: 'Floor-First in 3 beats' },
+      ]},
+      { n: 56, theme: 'Calm · numbers over panic (deeper)', days: [
+        { day: 'Mon', type: 'single',   id: '22', note: 'Reused — calm anchor' },
+        { day: 'Tue', type: 'reel',     id: 'R8', note: 'Bad-month quarterly (reused 2x)' },
+        { day: 'Wed', type: 'carousel', id: 'C30', note: 'Bad-month quarterly carousel (reused 2x)' },
+        { day: 'Thu', type: 'single',   id: 'P36', note: 'Product · Fear of next check fades (reused)' },
+        { day: 'Fri', type: 'carousel', id: 'C26', note: 'Emergency fund (reused 3x)' },
+        { day: 'Sat', type: 'reel',     id: 'R45', note: 'Product · Stress-test (reused 3x)' },
+      ]},
+      { n: 57, theme: 'Identity stack · the new self', days: [
+        { day: 'Mon', type: 'single',   id: '40', note: 'Reused — identity' },
+        { day: 'Tue', type: 'reel',     id: 'R29', note: 'Identity stack (reused 4x)' },
+        { day: 'Wed', type: 'carousel', id: 'C44', note: 'Day 1 to Day 90 (reused 2x)' },
+        { day: 'Thu', type: 'single',   id: 'P38', note: 'Product · I am able to save (reused 2x)' },
+        { day: 'Fri', type: 'carousel', id: 'PC4', note: 'Product · From Unable to Able (reused 2x)' },
+        { day: 'Sat', type: 'reel',     id: 'R28', note: 'Permission · Not your fault (reused 2x)' },
+      ]},
+
+      // ─────────── BLOCK 9 · METHODOLOGY — FLOOR-FIRST (W58-W61) ───────────
+      { n: 58, theme: 'Floor-First · the named method', days: [
+        { day: 'Mon', type: 'single',   id: '01', note: 'Reused — method anchor' },
+        { day: 'Tue', type: 'reel',     id: 'R41', note: 'Floor-First in 3 beats (reused)' },
+        { day: 'Wed', type: 'carousel', id: 'C45', note: 'Three steps verbatim (reused 2x)' },
+        { day: 'Thu', type: 'single',   id: 'P01', note: 'Product · Your floor. Bills + tax. Funded first.' },
+        { day: 'Fri', type: 'carousel', id: 'C9', note: 'Reused — methodology' },
+        { day: 'Sat', type: 'reel',     id: 'R38', note: 'Tip · Floor first (reused)' },
+      ]},
+      { n: 59, theme: 'Floor-First · 5 rules locked', days: [
+        { day: 'Mon', type: 'single',   id: '04', note: 'Reused — rules' },
+        { day: 'Tue', type: 'reel',     id: 'R23', note: 'Split first spend last (reused)' },
+        { day: 'Wed', type: 'carousel', id: 'C3', note: 'Five buckets (reused 2x)' },
+        { day: 'Thu', type: 'single',   id: 'P02', note: 'Product · Five jobs in order (reused 3x)' },
+        { day: 'Fri', type: 'carousel', id: 'C16', note: 'Feast or famine (reused 2x)' },
+        { day: 'Sat', type: 'reel',     id: 'R3', note: 'Five buckets reel (reused 2x)' },
+      ]},
+      { n: 60, theme: 'Floor-First · vs YNAB / vs Profit First', days: [
+        { day: 'Mon', type: 'single',   id: '27', note: 'Reused — comparison' },
+        { day: 'Tue', type: 'reel',     id: 'R5', note: 'Why apps fail variable (reused)' },
+        { day: 'Wed', type: 'carousel', id: 'C15', note: 'Comparison carousel (reused)' },
+        { day: 'Thu', type: 'single',   id: 'P28', note: 'Product · Different clock (reused 2x)' },
+        { day: 'Fri', type: 'carousel', id: 'C40', note: 'Apps fail you (reused)' },
+        { day: 'Sat', type: 'reel',     id: 'R6', note: 'Wrong tool (reused 2x)' },
+      ]},
+      { n: 61, theme: 'Floor-First · why now', days: [
+        { day: 'Mon', type: 'single',   id: '05', note: 'Reused — money math' },
+        { day: 'Tue', type: 'reel',     id: 'R14', note: 'Cost of waiting (reused 2x)' },
+        { day: 'Wed', type: 'carousel', id: 'C13', note: 'Compound cost (reused 2x)' },
+        { day: 'Thu', type: 'single',   id: 'P32', note: 'Product · The cost of waiting compounds.' },
+        { day: 'Fri', type: 'carousel', id: 'PC7', note: 'Product · 5 things you stop doing (reused)' },
+        { day: 'Sat', type: 'reel',     id: 'R20', note: 'Save more isn\'t a plan (reused 2x)' },
+      ]},
+
+      // ─────────── BLOCK 10 · FINALE + RETENTION (W62-W65) ───────────
+      { n: 62, theme: 'Pricing · cost of starting', days: [
+        { day: 'Mon', type: 'single',   id: '08', note: 'Reused — pricing' },
+        { day: 'Tue', type: 'reel',     id: 'R15', note: 'Free 30-day CTA (reused)' },
+        { day: 'Wed', type: 'carousel', id: 'C2', note: 'Reused — pricing setup' },
+        { day: 'Thu', type: 'single',   id: 'P33', note: 'Product · Cost of starting is $14.99.' },
+        { day: 'Fri', type: 'carousel', id: 'C9', note: 'Reused 2x' },
+        { day: 'Sat', type: 'reel',     id: 'R15', note: 'Free 30-day CTA (reused 2x)' },
+      ]},
+      { n: 63, theme: 'CTA · 30 days, card required', days: [
+        { day: 'Mon', type: 'single',   id: '20', note: 'Reused — pricing CTA' },
+        { day: 'Tue', type: 'reel',     id: 'R23', note: 'Split first spend last (reused 2x)' },
+        { day: 'Wed', type: 'carousel', id: 'PC3', note: 'Product · Built for variable income (reused)' },
+        { day: 'Thu', type: 'single',   id: 'P20', note: 'Product · 30 days free. Try it before tax season.' },
+        { day: 'Fri', type: 'carousel', id: 'PC1', note: 'Product · Your first week (reused 2x)' },
+        { day: 'Sat', type: 'reel',     id: 'R42', note: 'Product · Your floor (reused)' },
+      ]},
+      { n: 64, theme: 'Sustained · still going', days: [
+        { day: 'Mon', type: 'single',   id: '25', note: 'Reused — sustained' },
+        { day: 'Tue', type: 'reel',     id: 'R10', note: 'Same income (reused 5x)' },
+        { day: 'Wed', type: 'carousel', id: 'C44', note: 'Day 1 to 90 (reused 3x)' },
+        { day: 'Thu', type: 'single',   id: 'P35', note: 'Product · End of month, every dollar accounted for' },
+        { day: 'Fri', type: 'carousel', id: 'PC2', note: 'Product · How Able works (reused 2x)' },
+        { day: 'Sat', type: 'reel',     id: 'R29', note: 'Identity · I am able (reused 5x)' },
+      ]},
+      { n: 65, theme: 'Final · become Able (cycle close)', days: [
+        { day: 'Mon', type: 'single',   id: '54', note: 'Reused — final post' },
+        { day: 'Tue', type: 'reel',     id: 'R41', note: 'Floor-First in 3 beats (reused 2x)' },
+        { day: 'Wed', type: 'carousel', id: 'PC4', note: 'Product · From Unable to Able (reused 3x)' },
+        { day: 'Thu', type: 'single',   id: 'P40', note: 'Product · From Unable. To Able. (closing tagline)' },
+        { day: 'Fri', type: 'carousel', id: 'C45', note: 'Three steps verbatim (reused 3x)' },
+        { day: 'Sat', type: 'reel',     id: 'R15', note: 'Free 30-day CTA (reused 3x — final close)' },
       ]},
     ];
 
-    const postById = new Map((window.POSTS       || []).map(p => [p.id, p]));
-    const carById  = new Map((window.CAROUSELS   || []).map(c => [c.id, c]));
+    // Lookup maps — text + product variants merged so cadence rows can refer
+    // to either by id without knowing which array a piece lives in.
+    const postById = new Map([
+      ...(window.POSTS         || []).map(p => [p.id, p]),
+      ...(window.PRODUCT_POSTS || []).map(p => [p.id, p]),
+    ]);
+    const carById  = new Map([
+      ...(window.CAROUSELS         || []).map(c => [c.id, c]),
+      ...(window.PRODUCT_CAROUSELS || []).map(c => [c.id, c]),
+    ]);
     const reelById = new Map((window.REELS       || []).map(r => [r.id, r]));
     const bsById   = new Map((window.BRANDSCRIPT || []).map(b => [b.id, b]));
 
@@ -665,6 +1032,49 @@
       23: { id: 'B36', note: 'New identity · I am able to budget inconsistent income' },
       24: { id: 'B40', note: 'Cost of waiting · Every month is another $500–$1,000 gone' },
       25: { id: 'B38', note: 'Become able · Manifesto bookend (4 outcomes)' },
+      // ── W26-W65 brand-script Sun reinforcements ──
+      // Pulls from the 16 reserve lines (B02, B03, B04, B09, B14, B16, B18, B20,
+      // B28-B32, B35, B37, B42) plus reuses of the lines already placed above.
+      26: { id: 'B16', note: 'Paralysis · You freeze on Day 1' },
+      27: { id: 'B14', note: 'Real fear · The IRS doesn\'t care about your bad month' },
+      28: { id: 'B09', note: 'Audience · 1099 income, schedule C, no W-2' },
+      29: { id: 'B04', note: 'Brand lockup · Floor-First Budgeting (reserve)' },
+      30: { id: 'B25', note: 'Outcome · Finally pay down your debt (reused)' },
+      31: { id: 'B33', note: 'Identity · I am able to pay down debt (reused)' },
+      32: { id: 'B18', note: 'Paralysis · Day 14, $400 already gone' },
+      33: { id: 'B20', note: 'Paralysis · You don\'t over-spend, you under-direct' },
+      34: { id: 'B02', note: 'Brand lockup · Built for variable income (reserve)' },
+      35: { id: 'B23', note: 'Solution · Budget without a predictable paycheck (reused)' },
+      36: { id: 'B30', note: 'Transformation · It is predictable (reserve)' },
+      37: { id: 'B37', note: 'Transformation · Breathe again (reserve)' },
+      38: { id: 'B07', note: 'Audience tagline (reused) — creator block' },
+      39: { id: 'B25', note: 'Outcome · Pay down debt (reused 2x)' },
+      40: { id: 'B22', note: 'Solution mechanic (reused) — every dollar a job' },
+      41: { id: 'B39', note: 'Outcome · Confidence (reused)' },
+      42: { id: 'B05', note: 'Audience · Entrepreneur who struggles (reused)' },
+      43: { id: 'B11', note: 'Villain · Inconsistent feels impossible (reused)' },
+      44: { id: 'B19', note: 'Paralysis · $400 gone, nothing to show (reused)' },
+      45: { id: 'B13', note: 'Real fear · Next check (reused)' },
+      46: { id: 'B17', note: 'Paralysis · Don\'t move the money (reused 2x)' },
+      47: { id: 'B26', note: 'Outcome · Actually build savings (reused)' },
+      48: { id: 'B24', note: 'Solution · Lumpy income (reused)' },
+      49: { id: 'B40', note: 'Cost of waiting (reused)' },
+      50: { id: 'B03', note: 'Brand lockup · Reserve' },
+      51: { id: 'B28', note: 'Transformation · I am capable (reserve)' },
+      52: { id: 'B29', note: 'Transformation · I am able (reserve)' },
+      53: { id: 'B31', note: 'Transformation · I know what\'s coming (reserve)' },
+      54: { id: 'B33', note: 'Identity · I am able to pay down debt (reused 2x)' },
+      55: { id: 'B34', note: 'Identity · I am able to save (reused)' },
+      56: { id: 'B36', note: 'Identity · I am able to budget inconsistent (reused)' },
+      57: { id: 'B41', note: 'Transformation · From Unable → Able (reused)' },
+      58: { id: 'B32', note: 'Transformation · Money with intention (reserve)' },
+      59: { id: 'B22', note: 'Solution · Every dollar a job (reused 2x) — Floor-First spine' },
+      60: { id: 'B10', note: 'Villain · Apps assume a steady paycheck (reused)' },
+      61: { id: 'B40', note: 'Cost of waiting (reused 2x)' },
+      62: { id: 'B35', note: 'Identity · I have a plan (reserve)' },
+      63: { id: 'B41', note: 'Transformation · Unable → Able (reused 2x)' },
+      64: { id: 'B38', note: 'Manifesto bookend (reused)' },
+      65: { id: 'B42', note: 'Solution · Brand-script close (reserve, capstone)' },
     };
 
     const cadenceRoot = document.getElementById('cadence');

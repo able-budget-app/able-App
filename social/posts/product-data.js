@@ -334,7 +334,7 @@ window.PRODUCT_CAROUSELS = [
         meta: '6 / 7' },
       { tpl: 'A', theme: 'green', eyebrow: 'mixed',
         muted: "$14.99 a month.",
-        punch: "Or $129 a year.\n{Free for 30.}",
+        punch: "Or $129 a year.\nFree for {30.}",
         meta: 'becomeable.app' },
   ] },
 

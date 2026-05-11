@@ -64,6 +64,7 @@
     color: #2a7a4a;
   }
   .label .meta.talking-head { background: #f0e0d0; color: #c97c0a; }
+  .label .meta.product-clip-reel { background: #e0f0ea; color: #1f6038; }
   .frame-wrap {
     width: 100%;
     aspect-ratio: 9 / 16;
@@ -99,7 +100,7 @@
 <body>
   <a class="back" href="../index.html">← Back to social</a>
   <h1>Able reels</h1>
-  <div class="sub">20 reels · 1080×1920 · explicit text-box (no min-content shrink) · screen-record in Chrome to MP4.</div>
+  <div class="sub" id="sub">— · 1080×1920 · text-reels + product-clip-reels · screen-record in Chrome to MP4.</div>
 
   <div class="grid" id="grid"></div>
 
@@ -107,6 +108,12 @@
   <script>
     const grid = document.getElementById('grid');
     const v = Date.now(); // cache-bust the iframes so we always see the latest template + data
+
+    // Live count + format breakdown
+    const counts = REELS.reduce((acc, r) => { acc[r.format] = (acc[r.format] || 0) + 1; return acc; }, {});
+    const breakdown = Object.entries(counts).map(([k, n]) => `${n} ${k}`).join(' + ');
+    document.getElementById('sub').textContent =
+      `${REELS.length} reels (${breakdown}) · 1080×1920 · screen-record in Chrome to MP4.`;
 
     REELS.forEach(reel => {
       const card = document.createElement('div');

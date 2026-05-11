@@ -209,35 +209,25 @@ Free for 30 days. $14.99/mo or $129/yr after.`,
   },
 
   '1|Sat': {
-    // 57 wrong-tool-handed · single
-    ig: `You're not bad with money. You've been handed the wrong tool.
+    // R42 reel-product-floor-coverage · home-overview clip · IG+TT only
+    ig: `Your floor.
 
-If you've ever read a budgeting article and thought "this isn't built for me" — you were right. It wasn't.
+Bills + tax. Funded first.
 
-Built for variable income. Free for 30 days.
+That's what every Day 1 should feel like. Most don't.
+Built for the way you actually get paid.
+
+Free for 30 days. Card required. Cancel anytime.
 Link in bio.
 
-#freelancing #1099life #variableincome #budgeting #selfemployed`,
+#variableincome #freelancing #1099life #budgeting #floorfirst`,
 
-    tt: `You're not bad with money. You've been handed the wrong tool.
+    tt: `Your floor. Bills + tax. Funded first.
 
-The whole industry assumes you have a paycheck. You don't.
-
+That's what Day 1 should look like.
 becomeable.app
 
-#freelancetok #1099 #moneytok`,
-
-    li: `You're not bad with money. You've been handed the wrong tool.
-
-Every budgeting framework you've ever read was built for someone with a steady paycheck. A predictable amount, on a predictable day, with a predictable tax withholding done for them. If your income looks like that, the tools work. The math math's, the envelopes envelope.
-
-If your income doesn't look like that — freelancers, contractors, creators, commission roles, one-person businesses — the same tools fail. Not because you can't follow them. Because they were never built for the shape of your income in the first place.
-
-You can spend a decade trying to be "better with money" using a tool that was wrong from the start. Most people do. The shame compounds. The numbers don't move.
-
-The fix isn't more willpower. It's the right tool for the shape of your income.
-
-Built Able for that shape. Free for 30 days. $14.99/mo or $129/yr after.`,
+#freelancetok #moneytok #1099`,
   },
 
   '1|Sun': {
@@ -459,36 +449,26 @@ Free for 30 days. $14.99/mo or $129/yr after.`,
   },
 
   '2|Sat': {
-    // 60 boring-on-purpose · single
-    ig: `Boring is the goal. Specific is how you get there.
+    // R50 reel-product-coach-honest · coach-ask clip · IG+TT only
+    ig: `Ask the scary question.
 
-Most money apps want you opening them every day. Notifications. Streaks. AI insights. Engagement.
+"Can I cover this?"
+"What if I had a bad month?"
+"Where did $400 go?"
 
-Able wants the opposite. Open it less. Forget about it more. The math runs while you're doing your actual job.
+Get an honest answer. From a coach that knows your real numbers.
 
-Free for 30 days. Link in bio.
+Free for 30 days. Card required.
+Link in bio.
 
-#freelancing #1099life #variableincome #budgeting #selfemployed`,
+#variableincome #freelancing #moneymindset #aicoach #budgeting`,
 
-    tt: `Boring is the goal. Specific is how you get there.
+    tt: `Ask the scary question. Get an honest answer.
 
-The best money tool is the one you forget about.
-
+A coach that knows your real numbers.
 becomeable.app
 
 #freelancetok #1099 #moneytok`,
-
-    li: `Boring is the goal. Specific is how you get there.
-
-The current generation of money apps is built around engagement. Notifications, streaks, "AI insights," daily dashboards, push messages telling you about your spending. The metric the company is optimizing for is your time inside the app.
-
-That metric is the wrong metric for you.
-
-The thing you actually want is to think about money less. Not in a denial way — in a "the system is running and I trust it" way. The right tool is the one you open less and less over time, because the questions stop being open questions.
-
-Boring is the goal. Specific is how you get there. Specifically: every deposit gets a destination the moment it arrives, taxes come off the top, bills are covered before they're due, the reserve protects slow months, debt drops on schedule, what's left is yours to spend. With those decisions made automatically, there's nothing to obsess over.
-
-Built Able for that. Free for 30 days. $14.99/mo or $129/yr after.`,
   },
 
   '2|Sun': {
@@ -641,40 +621,25 @@ Free for 30 days. $14.99/mo or $129/yr after.`,
   },
 
   '3|Thu': {
-    // 62 april-surprise-shame · single
-    ig: `What you avoid:
+    // P02 product-deposit-routed · "One deposit. Five jobs in order." · IG+TT only
+    ig: `One deposit. Five jobs.
 
-April.
-Surprise.
-Shame.
+Tax. Bills. Debt. Reserve. Free.
+Already split. The second it clears.
 
-(The biggest reason people don't build a system isn't laziness. It's avoiding the look at how bad it's gotten. The system makes the look unnecessary.)
+That's not a budget. That's a system.
 
-Free for 30 days. Link in bio.
+Free for 30 days. Card required.
+Link in bio.
 
-#freelancing #1099life #variableincome #taxes #selfemployed`,
+#variableincome #freelancing #1099life #budgeting #floorfirst`,
 
-    tt: `What you avoid:
+    tt: `One deposit. Five jobs in order.
 
-April. Surprise. Shame.
-
-A system means the look is unnecessary.
-
+Tax. Bills. Debt. Reserve. Free. Already split.
 becomeable.app
 
-#freelancetok #1099 #taxtok`,
-
-    li: `What an actual system gets you, summarized in three things you stop having:
-
-April. The annual tax surprise. The "wait, how much?" panic in mid-March. The scrambling to come up with money you didn't set aside. With taxes coming off the top of every deposit, April is just "yep, here's the money I already had aside for this." A non-event.
-
-Surprise. The bigger pattern: a year of small leaks adding up to a number you didn't see coming. End-of-year, end-of-month, end-of-quarter. Surprise is the symptom of a system that doesn't tell you what's coming. The fix isn't more spreadsheets. It's a real-time system that runs in the background.
-
-Shame. The hardest one to name. The reason most people don't build a real system isn't that they don't want to — it's that they don't want to look at how bad it's gotten. The shame of opening the bank app is what keeps it closed. A system makes the look unnecessary, because there's nothing scary to find. The numbers are doing what they're supposed to do.
-
-That's the actual offer. Not "save more." Not "try harder." A system that ends those three things.
-
-Free for 30 days. $14.99/mo or $129/yr after.`,
+#freelancetok #moneytok #1099`,
   },
 
   '3|Fri': {
@@ -1193,6 +1158,28 @@ If most of those land as "no, that's not me," you don't have a discipline gap. Y
 That's what Able is. Free for 30 days. $14.99/mo or $129/yr after.`,
   },
 
+  '5|Sat': {
+    // R49 reel-product-score-reality · score-detail clip · IG+TT only
+    ig: `Score the month.
+
+Not the plan. Not what you intended.
+What actually happened.
+
+Most months, that's where the leaks were. Now you can see them.
+
+Free for 30 days. Card required.
+Link in bio.
+
+#variableincome #freelancing #budgeting #selfemployed #moneyhabits`,
+
+    tt: `Score the month. Reality. Not the plan.
+
+See the leaks before they compound.
+becomeable.app
+
+#freelancetok #1099 #moneytok`,
+  },
+
   '5|Sun': {
     // B15 paralysis-money-leaks · brandscript
     ig: `Money that sits, leaks.
@@ -1428,6 +1415,28 @@ Same income. No cycle. That's the entire pitch.
 Free for 30 days. $14.99/mo or $129/yr after.`,
   },
 
+  '6|Sat': {
+    // R44 reel-product-bills-funded · plan-bills clip · IG+TT only
+    ig: `Every bill, on the page.
+
+Funded before they're due.
+
+You don't dread the 1st when the money is already reserved.
+You dread the 1st when nobody told it where to sit.
+
+Free for 30 days.
+Link in bio.
+
+#variableincome #freelancing #1099life #budgeting #bills`,
+
+    tt: `Every bill on the page. Funded before it's due.
+
+The 1st stops being a cliff.
+becomeable.app
+
+#freelancetok #1099 #moneytok`,
+  },
+
   '6|Sun': {
     // B23 solution-without-paycheck · brandscript
     ig: `A budget that works without a predictable paycheck.
@@ -1656,6 +1665,28 @@ That's what Able's tax bucket does, automatically.
 Free for 30 days. $14.99/mo or $129/yr after.`,
   },
 
+  '7|Sat': {
+    // R51 reel-product-expected-income · add-expected-income clip · IG+TT only
+    ig: `Expecting a deposit?
+
+Plan for it now. Not when it lands.
+Tax already 30% off the top before you can spend it.
+
+April becomes paperwork. Not an event.
+
+Free for 30 days. Card required.
+Link in bio.
+
+#variableincome #freelancing #1099 #taxes #budgeting`,
+
+    tt: `Expecting a deposit? Plan for it now.
+
+Not when it lands. Before.
+becomeable.app
+
+#freelancetok #1099 #taxes #moneytok`,
+  },
+
   '7|Sun': {
     // B25 outcome-pay-down-debt · brandscript
     ig: `Finally pay down your debt.
@@ -1875,6 +1906,28 @@ Prevention going forward: route 30% of every deposit to a tax bucket the moment 
 That's what Able is built around.
 
 Free for 30 days. $14.99/mo or $129/yr after.`,
+  },
+
+  '8|Sat': {
+    // R45 reel-product-whatif · plan-whatif clip · IG+TT only
+    ig: `Stress-test next month.
+
+Type a slow number. Watch your floor still hold.
+Type a windfall. Watch the splits update.
+
+Calm comes from running the numbers before they run you.
+
+Free for 30 days.
+Link in bio.
+
+#variableincome #freelancing #budgeting #moneymindset #calmmoney`,
+
+    tt: `Stress-test next month. Before it happens.
+
+Type a slow month. See if your floor holds.
+becomeable.app
+
+#freelancetok #moneytok #1099`,
   },
 
   '8|Sun': {
@@ -2104,6 +2157,28 @@ Day 5: Whatever's left after taxes, bills, debt, and reserve is free. Genuinely 
 That's the full onboarding. Eight minutes total. The point is the system, not the setup.
 
 Free for 30 days. $14.99/mo or $129/yr after.`,
+  },
+
+  '9|Sat': {
+    // R43 reel-product-log-ten-seconds · log-income clip · IG+TT only
+    ig: `Day 1.
+
+Log what came in. Ten seconds.
+Already split into tax, bills, debt, reserve, free.
+
+Day 30 stops being a mystery when Day 1 is on a system.
+
+Free for 30 days. Card required.
+Link in bio.
+
+#variableincome #freelancing #1099 #budgeting #floorfirst`,
+
+    tt: `Log what came in. Ten seconds.
+
+Already split. Tax, bills, debt, reserve, free.
+becomeable.app
+
+#freelancetok #moneytok #1099`,
   },
 
   '9|Sun': {
@@ -2336,6 +2411,28 @@ What forces the fix is reading the compound number written out. Per month: small
 The interesting detail is that closing the leak doesn't require earning more or spending less. It requires assigning every dollar a job the moment the deposit clears. The leak only exists in the gap between when money arrives and when it gets a job. Close the gap, the leak closes.
 
 Free for 30 days. $14.99/mo or $129/yr after.`,
+  },
+
+  '10|Sat': {
+    // R36 reel-tip-30-percent · tip reel · IG+TT only
+    ig: `One tip for 1099 income.
+
+Move 30% the second it clears. Not April. The day of.
+
+That's it. That's the tip.
+Most "tax surprises" are missed-Day-1's stacked.
+
+Free for 30 days.
+Link in bio.
+
+#variableincome #freelancing #1099 #taxes #selfemployed`,
+
+    tt: `One tip for 1099 income.
+
+Move 30% the second it clears. Day of. Not April.
+becomeable.app
+
+#freelancetok #1099 #taxes`,
   },
 
   '10|Sun': {
@@ -3098,6 +3195,28 @@ Same number, same day. Every month. The system pays you. You don't have to decid
 Free for 30 days. $14.99/mo or $129/yr after.`,
   },
 
+  '13|Sat': {
+    // R33 reel-creator-moment · IG+TT only
+    ig: `Sponsorship hits. Feels like a windfall.
+
+Until tax day. Then it isn't.
+
+Every payout splits five ways: tax, bills, debt, reserve, free.
+The second it clears. Before you can spend it.
+
+Free for 30 days. Card required.
+Link in bio.
+
+#creator #creatoreconomy #variableincome #1099 #budgeting`,
+
+    tt: `Sponsorship hits. Feels like a windfall.
+
+Until tax day. Five-way split, day of.
+becomeable.app
+
+#creatortok #1099 #moneytok`,
+  },
+
   '13|Sun': {
     // B05 audience-struggles-to-budget · brandscript
     ig: `If you struggle to budget inconsistent income, this is for you.
@@ -3314,6 +3433,29 @@ The other piece coaches frequently miss: the relationship between client volume 
 Income reserve. Bills paid in dry weeks. Free to say no.
 
 Free for 30 days. $14.99/mo or $129/yr after.`,
+  },
+
+  '14|Sat': {
+    // R52 reel-product-add-bill · add-bill clip · IG+TT only
+    ig: `New bill?
+
+Reserved the second you add it.
+
+No spreadsheet. No "I'll get to it." New bill in, money set aside out.
+
+Built for people who don't want to think about money so they can think about their work.
+
+Free for 30 days.
+Link in bio.
+
+#freelancing #variableincome #1099 #consulting #budgeting`,
+
+    tt: `New bill? Reserved the second you add it.
+
+No spreadsheet. No "I'll get to it."
+becomeable.app
+
+#freelancetok #1099 #moneytok`,
   },
 
   '14|Sun': {
@@ -3538,6 +3680,29 @@ Q4 closes are what you worked in Q3. The work-to-payment lag is the killer for c
 The fix: tax bucket on every check, Floor pre-funded, Reserve big enough to cover the longest realistic dry stretch. Slow seasons stop being scrambling seasons. The reserve does the absorbing.
 
 Free for 30 days. $14.99/mo or $129/yr after.`,
+  },
+
+  '15|Sat': {
+    // R32 reel-gig-moment · IG+TT only
+    ig: `End of a long shift.
+
+Earnings hit. Already gone.
+Gas. Phone. Tax owed.
+
+Reserve 30% the second it lands.
+The rest is actually yours.
+
+Free for 30 days. Card required.
+Link in bio.
+
+#rideshare #gigwork #1099 #variableincome #budgeting`,
+
+    tt: `End of a long shift. Earnings hit. Already gone.
+
+Reserve 30% the second it lands.
+becomeable.app
+
+#rideshare #gigwork #1099 #moneytok`,
   },
 
   '15|Sun': {
@@ -3767,6 +3932,29 @@ You're not bad with money. You're using the wrong brain — the one that tries t
 Free for 30 days. $14.99/mo or $129/yr after.`,
   },
 
+  '16|Sat': {
+    // R34 reel-commission-moment · IG+TT only
+    ig: `Big commission lands.
+
+Then crickets for weeks.
+
+Lumpy income. Steady bills.
+The reserve is the bridge.
+Same paycheck, same day. Built from the lumpy.
+
+Free for 30 days.
+Link in bio.
+
+#commission #realestate #sales #variableincome #budgeting`,
+
+    tt: `Big commission lands. Then crickets for weeks.
+
+The reserve is the bridge.
+becomeable.app
+
+#realestate #commission #1099 #moneytok`,
+  },
+
   '16|Sun': {
     // B11 villain-feels-impossible · brandscript
     ig: `If you have inconsistent income, you've felt this.
@@ -3990,6 +4178,29 @@ By 2026, the 1099-K threshold drops to $600 across all platforms. Many more sell
 Free for 30 days. $14.99/mo or $129/yr after.`,
   },
 
+  '17|Sat': {
+    // R48 reel-product-activity-tax · plan-activity clip · IG+TT only
+    ig: `Every dollar, traced.
+
+Income, expense, deductible, tag. All in one place.
+Tax-ready. One tap.
+
+Schedule C used to be a weekend.
+Now it's a CSV.
+
+Free for 30 days. Card required.
+Link in bio.
+
+#1099 #taxes #freelancing #scheduleC #variableincome`,
+
+    tt: `Every dollar traced. Tax-ready in one tap.
+
+Schedule C in a CSV.
+becomeable.app
+
+#1099 #taxes #freelancetok`,
+  },
+
   '17|Sun': {
     // B12 villain-never-taught · brandscript
     ig: `If you're 1099, here's the diagnosis.
@@ -4200,6 +4411,29 @@ The reason this works specifically for variable income: it removes the "wait unt
 A different account is critical. Owner pay sitting in the operating account is owner pay about to be spent on operating expenses. Different account, different mental category, different actual outcome.
 
 Free for 30 days. $14.99/mo or $129/yr after.`,
+  },
+
+  '18|Sat': {
+    // R37 reel-tip-name-every-dollar · IG+TT only
+    ig: `One rule for variable income.
+
+Every deposit gets a destination.
+Before it leaves your hand.
+
+That's it. That's the habit.
+Variable income breaks the moment money sits unassigned.
+
+Free for 30 days.
+Link in bio.
+
+#variableincome #freelancing #1099 #budgeting #moneyhabits`,
+
+    tt: `Every deposit gets a destination. Before it leaves your hand.
+
+The whole habit, in one rule.
+becomeable.app
+
+#freelancetok #moneytok #1099`,
   },
 
   '18|Sun': {
@@ -4428,6 +4662,29 @@ Each deduction reduces Line 31 on Schedule C. Lower Line 31 means lower tax. Tra
 Free for 30 days. $14.99/mo or $129/yr after.`,
   },
 
+  '19|Sat': {
+    // R46 reel-product-forecast · plan-forecast clip · IG+TT only
+    ig: `What's landing this month.
+What's owed this month.
+
+Already lined up. Both sides on the same page.
+
+You stop running parallel calendars in your head.
+You start trusting the system.
+
+Free for 30 days. Card required.
+Link in bio.
+
+#freelancing #variableincome #1099 #budgeting #scheduleC`,
+
+    tt: `What lands. What's owed. Already lined up.
+
+Both sides on one page.
+becomeable.app
+
+#freelancetok #1099 #moneytok`,
+  },
+
   '19|Sun': {
     // B33 identity-pay-down-slow-months · brandscript
     ig: `If your income is variable, here's the new identity.
@@ -4654,6 +4911,28 @@ The Rule of 72 is the most useful single math fact in personal finance. Divide 7
 Free for 30 days. $14.99/mo or $129/yr after.`,
   },
 
+  '20|Sat': {
+    // R53 reel-product-more-learn · more-learn clip · IG+TT only
+    ig: `Built-in lessons.
+
+Not a generic finance app's "tips." Lessons written for variable income.
+
+Quarterlies. Reserves. Home office. Schedule C.
+The stuff a steady-paycheck guide never covers.
+
+Free for 30 days.
+Link in bio.
+
+#freelancing #variableincome #1099 #financialliteracy #selfemployed`,
+
+    tt: `Built-in lessons. For variable income.
+
+The stuff a steady-paycheck guide never covers.
+becomeable.app
+
+#freelancetok #1099 #moneytok`,
+  },
+
   '20|Sun': {
     // B24 solution-lumpy-on-purpose · brandscript
     ig: `If you have inconsistent income, here's the design.
@@ -4878,6 +5157,28 @@ This combination — protected schedule via reserve, accelerated principal via g
 Free for 30 days. $14.99/mo or $129/yr after.`,
   },
 
+  '21|Sat': {
+    // R47 reel-product-debt-snowball · plan-debt clip · IG+TT only
+    ig: `Highest APR first.
+
+Watch it drop.
+
+Same income, different month. Debt shrinks instead of compounding.
+Not a sprint. A schedule that bends with how you actually get paid.
+
+Free for 30 days. Card required.
+Link in bio.
+
+#debtfree #avalanche #variableincome #freelancing #1099`,
+
+    tt: `Highest APR first. Watch it drop.
+
+A schedule that bends with variable income.
+becomeable.app
+
+#debtfreejourney #freelancetok #moneytok`,
+  },
+
   '21|Sun': {
     // B34 identity-save-no-second-guess · brandscript
     ig: `If you're a freelancer, here's the new identity.
@@ -5083,6 +5384,28 @@ PAYDEX is the Dun & Bradstreet score lenders look at for business credit. Lender
 The implication: if business funding might be in your future, set up the business credit infrastructure now. The work is small monthly attention. The payoff is larger and easier loans years later.
 
 Free for 30 days. $14.99/mo or $129/yr after.`,
+  },
+
+  '22|Sat': {
+    // R35 reel-business-moment · IG+TT only
+    ig: `Revenue up. Owner pay flat.
+
+Because every dollar had someone else's job.
+
+Set an owner-pay percent. Every deposit honors it.
+Pay yourself first. Boring is right.
+
+Free for 30 days.
+Link in bio.
+
+#smallbusiness #ownership #variableincome #payyourselffirst #budgeting`,
+
+    tt: `Revenue up. Owner pay flat.
+
+Set an owner-pay percent. Every deposit honors it.
+becomeable.app
+
+#smallbusinesstok #ownerpay #moneytok`,
   },
 
   '22|Sun': {
@@ -5836,6 +6159,5423 @@ The identity shift follows: "I am able to budget inconsistent income. I am able 
 Become able. The structure produces the identity. The identity wasn't earned through effort. It was earned through the right tool.
 
 Free for 30 days. $14.99/mo or $129/yr after.`,
+  },
+
+  // ═════════════════════════════════════════════════════════
+  // PHASE 3 BATCH B — W26-W45 (Tax → Debt → Reserve → Creator → Gig)
+  // IG + TT only. LI omitted per the IG/TT-focused plan.
+  // Reused pieces get fresh, week-themed framing (not duplicates).
+  // ═════════════════════════════════════════════════════════
+
+  // ─── W26 · Tax · 1099-NEC vs 1099-K (depth) ───
+  '26|Mon': {
+    // 64 single
+    ig: `1099-NEC vs 1099-K. Two forms, different jobs.
+
+NEC: payments from clients (services).
+K: payments from platforms (Stripe, PayPal, Etsy, biz-tagged Venmo).
+
+Same income. Reported twice. The math is yours to untangle.
+
+A system that tags it the second it lands beats reading IRS pubs in March.
+
+Free for 30 days.
+Link in bio.
+
+#1099 #taxes #freelancing #selfemployed #scheduleC`,
+    tt: `1099-NEC vs 1099-K. Two forms. Different jobs.
+
+NEC = clients. K = platforms. Same income.
+becomeable.app
+
+#1099 #taxes #freelancetok`,
+  },
+  '26|Tue': {
+    // R39 stat-76-percent
+    ig: `76% of self-employed Americans have variable monthly income.
+
+The number is huge. The tools are still designed for the 24% with a paycheck.
+
+Built for the 76%. Free for 30 days.
+Link in bio.
+
+#variableincome #freelancing #1099 #selfemployed #budgeting`,
+    tt: `76% of self-employed have variable income.
+
+Every app still assumes the 24%.
+becomeable.app
+
+#freelancetok #1099 #moneytok`,
+  },
+  '26|Wed': {
+    // C46 emergency-fund-vs-reserve carousel
+    ig: `Emergency fund vs reserve. They're not the same thing.
+
+Emergency fund = unexpected events.
+Reserve = expected lumpiness.
+
+If your income is variable, you need both. The reserve is the bigger one.
+
+Swipe →
+Link in bio.
+
+#variableincome #freelancing #emergencyfund #reserve #budgeting`,
+    tt: `Emergency fund vs reserve. Two different jobs.
+
+One for surprises. One for the lumpy weeks.
+becomeable.app
+
+#freelancetok #moneytok #1099`,
+  },
+  '26|Thu': {
+    // P11 product-tax-set-aside
+    ig: `Off the top. Every deposit.
+
+April becomes paperwork. Not an event.
+
+The whole tax-surprise problem solved by one mechanic: tax money is moved before you see it as "available to spend."
+
+Free for 30 days.
+Link in bio.
+
+#1099 #taxes #variableincome #freelancing #scheduleC`,
+    tt: `Off the top. Every deposit.
+
+April becomes paperwork. Not an event.
+becomeable.app
+
+#1099 #taxes #freelancetok`,
+  },
+  '26|Fri': {
+    // PC5 product-tax-season carousel
+    ig: `Tax season, simplified.
+
+Off the top. Tag once. Find more. Export in one tap.
+
+Four mechanics. Most of what makes April brutal goes away.
+
+Swipe →
+Link in bio.
+
+#1099 #taxes #freelancing #scheduleC #variableincome`,
+    tt: `Tax season simplified. Four mechanics.
+
+Off the top. Tag once. Find more. Export.
+becomeable.app
+
+#1099 #taxes #freelancetok`,
+  },
+  '26|Sat': {
+    // R40 stat-36-million
+    ig: `36% of US workers freelance now.
+
+That's a third of the workforce paid in waves, not paychecks.
+
+Most budgeting tools still don't fit them.
+Built for the third. Free for 30 days.
+Link in bio.
+
+#freelancing #variableincome #1099 #creator #1099life`,
+    tt: `36% of US workers freelance now.
+
+Most budgeting tools still don't fit them.
+becomeable.app
+
+#freelancetok #1099 #moneytok`,
+  },
+  '26|Sun': {
+    // B16 paralysis · You freeze on Day 1
+    ig: `Day 1. Money lands. You freeze.
+
+Not because you're lazy. Because no one ever told you what to do with a deposit that wasn't a paycheck.
+
+Built for the freeze. Free for 30 days.
+Link in bio.
+
+#variableincome #freelancing #1099 #moneymindset #budgeting`,
+    tt: `Day 1. Money lands. You freeze.
+
+Not lazy. Untaught.
+becomeable.app
+
+#freelancetok #1099 #moneymindset`,
+  },
+
+  // ─── W27 · Tax · quarterly taxes during a bad month ───
+  '27|Mon': {
+    // 65 single
+    ig: `The quarterly-taxes-on-a-bad-month problem.
+
+The IRS doesn't care that this month was slow. The 15th comes anyway.
+
+The fix is months earlier: a tax bucket that fills on the good months so the bad ones don't blow up.
+
+Free for 30 days.
+Link in bio.
+
+#1099 #taxes #freelancing #variableincome #quarterly`,
+    tt: `Quarterlies due on a bad month.
+
+The IRS doesn't care. Fix is months earlier.
+becomeable.app
+
+#1099 #taxes #freelancetok`,
+  },
+  '27|Tue': {
+    // R8 bad-month-quarterly REUSE — fresh take for W27 quarterly week
+    ig: `Quarterlies are due. This month was slow.
+
+Penalty is about 8% on what you don't pay. Pay what you can. Beats nothing.
+
+Prevention next quarter: a bucket that fills the moment any deposit clears. Slow month, no panic.
+
+Free for 30 days.
+Link in bio.
+
+#1099 #taxes #quarterly #freelancing #variableincome`,
+    tt: `Bad month + quarterlies due.
+
+Pay what you can. Then build the bucket.
+becomeable.app
+
+#1099 #taxes #freelancetok`,
+  },
+  '27|Wed': {
+    // C47 quarterly-taxes-primer carousel
+    ig: `Quarterly taxes, the short version.
+
+Who owes. When. How much. What happens if you skip.
+
+If you've been guessing for years, this is the carousel.
+
+Swipe →
+Link in bio.
+
+#1099 #taxes #quarterly #freelancing #scheduleC`,
+    tt: `Quarterly taxes. Short version.
+
+Who. When. How much. What if you skip.
+becomeable.app
+
+#1099 #taxes #freelancetok`,
+  },
+  '27|Thu': {
+    // P14 product-tax-export
+    ig: `April morning.
+
+One CSV. That's it.
+
+The thing your accountant has been waiting for. Already tagged, already grouped, already exportable.
+
+Free for 30 days.
+Link in bio.
+
+#1099 #taxes #freelancing #scheduleC #accounting`,
+    tt: `April morning. One CSV.
+
+That's it. Already tagged.
+becomeable.app
+
+#1099 #taxes #freelancetok`,
+  },
+  '27|Fri': {
+    // C30 bad-month-quarterly carousel REUSE
+    ig: `What "8% penalty" actually costs you.
+
+If you skip a $3,000 quarterly, the math: ~$240 a year, on something you owe anyway. Plus interest. Plus stress.
+
+The bucket prevents the entire conversation.
+
+Swipe →
+Link in bio.
+
+#1099 #taxes #quarterly #freelancing #penalties`,
+    tt: `Skip a quarterly = ~8% penalty + interest.
+
+The bucket prevents the conversation.
+becomeable.app
+
+#1099 #taxes #freelancetok`,
+  },
+  '27|Sat': {
+    // R51 add-expected-income REUSE — quarterly framing
+    ig: `Big invoice clearing next week?
+
+Plan for it now. Reserve the tax piece before it lands.
+
+The check feels good either way. The difference is what April feels like.
+
+Free for 30 days.
+Link in bio.
+
+#1099 #taxes #variableincome #freelancing #quarterly`,
+    tt: `Big invoice clearing? Plan for it now.
+
+Tax piece reserved before it lands.
+becomeable.app
+
+#1099 #taxes #freelancetok`,
+  },
+  '27|Sun': {
+    // B14 real fear · IRS doesn't care about your bad month
+    ig: `The IRS doesn't care about your bad month.
+
+Slow January doesn't move the April deadline.
+
+The only thing that softens this is months of small reservations adding up. The tax bucket is the only protection.
+
+Free for 30 days.
+Link in bio.
+
+#1099 #taxes #variableincome #quarterly #freelancing`,
+    tt: `The IRS doesn't care about your bad month.
+
+The bucket is the only protection.
+becomeable.app
+
+#1099 #taxes #freelancetok`,
+  },
+
+  // ─── W28 · Tax · Schedule C + deductions ───
+  '28|Mon': {
+    // 66 single
+    ig: `Schedule C, in plain language.
+
+Income. Minus business expenses. Equals what you actually got taxed on.
+
+The deductions you missed last year are the ones you didn't track. Tagging during the year beats reconstructing in March.
+
+Free for 30 days.
+Link in bio.
+
+#scheduleC #1099 #taxes #freelancing #selfemployed`,
+    tt: `Schedule C in plain language.
+
+Income minus expenses = what you owe on.
+becomeable.app
+
+#scheduleC #1099 #freelancetok`,
+  },
+  '28|Tue': {
+    // R17 tax-bucket-setup REUSE — Schedule C framing
+    ig: `Tax bucket setup. Three steps.
+
+Pick the percent. Pick the destination. Move it the second every deposit clears.
+
+That's it. Schedule C in March writes itself when this is running.
+
+Free for 30 days.
+Link in bio.
+
+#scheduleC #1099 #taxes #freelancing #variableincome`,
+    tt: `Tax bucket setup. Three steps.
+
+Percent. Destination. Move it day-of.
+becomeable.app
+
+#scheduleC #1099 #freelancetok`,
+  },
+  '28|Wed': {
+    // C32 schedule-c carousel REUSE
+    ig: `What goes on Schedule C and what doesn't.
+
+Software. Phone. Mileage. Home office. Yes.
+Lunch with a friend. Personal Netflix. Costumes from your closet. No.
+
+The line is "ordinary and necessary for the business." Not "I bought it this year."
+
+Swipe →
+Link in bio.
+
+#scheduleC #1099 #deductions #freelancing #taxes`,
+    tt: `What goes on Schedule C, what doesn't.
+
+"Ordinary and necessary for the business."
+becomeable.app
+
+#scheduleC #1099 #freelancetok`,
+  },
+  '28|Thu': {
+    // P13 product-tax-classify
+    ig: `Tag once. Able remembers forever.
+
+Mark something deductible once. Every future occurrence inherits it.
+
+Most "I'll categorize at year-end" plans collapse. Tagging in real time is the version that survives.
+
+Free for 30 days.
+Link in bio.
+
+#scheduleC #1099 #taxes #deductions #freelancing`,
+    tt: `Tag once. Able remembers forever.
+
+Real-time beats year-end every time.
+becomeable.app
+
+#scheduleC #1099 #freelancetok`,
+  },
+  '28|Fri': {
+    // C33 SE deductions carousel REUSE
+    ig: `Self-employment deductions you almost missed.
+
+QBI. Health insurance premiums. Half of SE tax. Solo 401(k) contributions.
+
+Each is real money. The system catches them when you tag the inputs in real time.
+
+Swipe →
+Link in bio.
+
+#1099 #taxes #scheduleC #deductions #freelancing`,
+    tt: `SE deductions you almost missed.
+
+QBI. Health premiums. Half of SE tax. Solo 401(k).
+becomeable.app
+
+#1099 #taxes #freelancetok`,
+  },
+  '28|Sat': {
+    // R48 plan-activity REUSE — Schedule C closer
+    ig: `Every dollar, traced.
+
+Schedule C in a tap. Tagged income, tagged expenses, ready for export.
+
+The "March panic" used to be a weekend. Now it's a CSV.
+
+Free for 30 days.
+Link in bio.
+
+#scheduleC #1099 #taxes #freelancing #accounting`,
+    tt: `Every dollar traced. Schedule C in a tap.
+
+The March panic stops being a weekend.
+becomeable.app
+
+#scheduleC #1099 #freelancetok`,
+  },
+  '28|Sun': {
+    // B09 audience · 1099 income, schedule C, no W-2
+    ig: `If you've ever filed a Schedule C with no W-2 to balance it out:
+
+Built for you.
+
+The whole tool assumes 1099 income, no withholding, deductions you have to find yourself, and a quarterly schedule the IRS designed for someone else.
+
+Free for 30 days.
+Link in bio.
+
+#scheduleC #1099 #freelancing #selfemployed #taxes`,
+    tt: `Schedule C, no W-2 to balance it out.
+
+Built for you.
+becomeable.app
+
+#scheduleC #1099 #freelancetok`,
+  },
+
+  // ─── W29 · Tax · home office + how money works ───
+  '29|Mon': {
+    // 67 single
+    ig: `Home office deduction. The myth and the math.
+
+Myth: it triggers an audit.
+Math: it's been a standard deduction for decades. The simplified version is $5/sq ft up to 300 sq ft. Up to $1,500.
+
+If you work from home, you're leaving money on the table by not claiming it.
+
+Free for 30 days.
+Link in bio.
+
+#homeoffice #scheduleC #1099 #taxes #freelancing`,
+    tt: `Home office deduction myth: triggers an audit.
+
+Truth: been standard for decades. Simplified = $5/sqft.
+becomeable.app
+
+#scheduleC #homeoffice #1099 #freelancetok`,
+  },
+  '29|Tue': {
+    // R4 tax-math-30 REUSE — home office framing
+    ig: `30% off the top, every deposit.
+
+That's the rule. Not 25%. Not "I'll figure it out." 30%.
+
+Once it's running, the home-office deduction is a refund mechanic, not a budget mechanic.
+
+Free for 30 days.
+Link in bio.
+
+#1099 #taxes #scheduleC #variableincome #freelancing`,
+    tt: `30% off the top. Every deposit.
+
+The rule is the rule.
+becomeable.app
+
+#1099 #taxes #freelancetok`,
+  },
+  '29|Wed': {
+    // C31 home-office carousel REUSE
+    ig: `Home office, the simplified method.
+
+$5 per sq ft. Up to 300 sq ft. Up to $1,500.
+
+No measurements. No depreciation tables. No receipts for the carpet. Most freelancers should just take this.
+
+Swipe →
+Link in bio.
+
+#homeoffice #scheduleC #1099 #taxes #freelancing`,
+    tt: `Home office, simplified.
+
+$5/sqft. Up to 300 sqft. Up to $1,500.
+becomeable.app
+
+#scheduleC #homeoffice #1099 #freelancetok`,
+  },
+  '29|Thu': {
+    // P11 product-tax-set-aside REUSE
+    ig: `Off the top.
+
+Every deposit, tax piece moved before you see it as available.
+
+The home office, the QBI, the half of SE tax. None of those help if the cash isn't sitting somewhere when April comes. The bucket is the foundation.
+
+Free for 30 days.
+Link in bio.
+
+#1099 #taxes #scheduleC #freelancing #variableincome`,
+    tt: `Off the top. Every deposit.
+
+The bucket is the foundation.
+becomeable.app
+
+#1099 #taxes #freelancetok`,
+  },
+  '29|Fri': {
+    // C37 how-money-works carousel REUSE
+    ig: `How money actually works on a 1099.
+
+Gross. Self-employment tax. Income tax. Deductions. Net.
+
+Most people only see the gross. The system is what shows you the rest.
+
+Swipe →
+Link in bio.
+
+#1099 #taxes #moneymindset #financialliteracy #scheduleC`,
+    tt: `How money actually works on a 1099.
+
+Most people only see the gross.
+becomeable.app
+
+#1099 #taxes #freelancetok`,
+  },
+  '29|Sat': {
+    // R50 coach-ask REUSE — tax framing
+    ig: `Ask the scary tax question.
+
+"Can I afford to hire help?"
+"Do I owe quarterlies this round?"
+"Is my home office worth claiming?"
+
+Get an honest answer. From a coach that knows your real numbers.
+
+Free for 30 days.
+Link in bio.
+
+#aicoach #1099 #taxes #freelancing #variableincome`,
+    tt: `Ask the scary tax question. Honest answer.
+
+From a coach that knows your real numbers.
+becomeable.app
+
+#aicoach #1099 #taxes #freelancetok`,
+  },
+  '29|Sun': {
+    // B04 brand lockup · Floor-First Budgeting
+    ig: `Floor-First Budgeting.
+
+Bills + tax = the floor.
+Fill it first. Every other dollar is a real choice.
+
+The named method, written for variable income.
+
+Free for 30 days.
+Link in bio.
+
+#floorfirst #variableincome #1099 #budgeting #freelancing`,
+    tt: `Floor-First Budgeting.
+
+Bills + tax = the floor. Fill it first.
+becomeable.app
+
+#floorfirst #1099 #freelancetok`,
+  },
+
+  // ─── W30 · Debt · snowball vs avalanche ───
+  '30|Mon': {
+    // 68 single
+    ig: `Snowball vs avalanche.
+
+Snowball: smallest balance first. Wins on motivation.
+Avalanche: highest APR first. Wins on math.
+
+Most people pick by personality. Variable income picks by which one survives the slow months.
+
+Free for 30 days.
+Link in bio.
+
+#debtfree #snowball #avalanche #variableincome #freelancing`,
+    tt: `Snowball vs avalanche.
+
+Smallest balance vs highest APR.
+becomeable.app
+
+#debtfreejourney #freelancetok #1099`,
+  },
+  '30|Tue': {
+    // R47 plan-debt REUSE — snowball/avalanche framing
+    ig: `Highest APR first. Watch it drop.
+
+Avalanche math, on a schedule that bends with how you actually get paid.
+
+Big month: extra principal. Slow month: minimum holds. The trajectory still goes one way.
+
+Free for 30 days.
+Link in bio.
+
+#debtfree #avalanche #variableincome #1099 #freelancing`,
+    tt: `Highest APR first. Watch it drop.
+
+Bends with how you actually get paid.
+becomeable.app
+
+#debtfreejourney #avalanche #freelancetok`,
+  },
+  '30|Wed': {
+    // C34 get-out-of-debt carousel REUSE
+    ig: `Out of debt on variable income. The honest version.
+
+Step 1: a floor that holds. Step 2: a reserve that absorbs slow months. Step 3: extra principal whenever the system says it's safe.
+
+Skip the first two and the third doesn't survive a slow January.
+
+Swipe →
+Link in bio.
+
+#debtfree #variableincome #1099 #freelancing #budgeting`,
+    tt: `Out of debt on variable income. Honest version.
+
+Floor. Reserve. Then extra principal.
+becomeable.app
+
+#debtfreejourney #freelancetok #1099`,
+  },
+  '30|Thu': {
+    // P10 product-debt-snowball
+    ig: `Highest APR first. Watch it drop.
+
+The schedule writes itself. Each deposit hits the highest-rate balance first, with min payments held everywhere else.
+
+Six months in, the chart is the most honest progress report you've seen.
+
+Free for 30 days.
+Link in bio.
+
+#debtfree #avalanche #1099 #variableincome #freelancing`,
+    tt: `Highest APR first. Watch it drop.
+
+The schedule writes itself.
+becomeable.app
+
+#debtfreejourney #avalanche #freelancetok`,
+  },
+  '30|Fri': {
+    // C17 freelancer-budget carousel REUSE
+    ig: `A freelancer's budget. The actual shape.
+
+Floor (bills + tax). Reserve (slow-month bridge). Debt (on schedule). Free (whatever's left).
+
+It doesn't look like a salaried budget because it shouldn't.
+
+Swipe →
+Link in bio.
+
+#freelancing #variableincome #1099 #budgeting #floorfirst`,
+    tt: `A freelancer's budget. Actual shape.
+
+Floor. Reserve. Debt. Free.
+becomeable.app
+
+#freelancetok #1099 #floorfirst`,
+  },
+  '30|Sat': {
+    // R29 i-am-able REUSE — debt context
+    ig: `I am able to pay down debt, even on slow months.
+
+Not "if it's a good month."
+Not "next quarter."
+Even on the slow ones.
+
+That's the line that changes when the system is running.
+
+Free for 30 days.
+Link in bio.
+
+#debtfree #identity #variableincome #1099 #moneymindset`,
+    tt: `I am able to pay down debt, even on slow months.
+
+Not "if it's a good month."
+becomeable.app
+
+#debtfreejourney #1099 #moneymindset`,
+  },
+  '30|Sun': {
+    // B25 outcome · Finally pay down your debt
+    ig: `Finally pay down your debt.
+
+Not someday. Not when the income smooths out. On the variable income you actually have.
+
+The math doesn't need a steady paycheck. It needs a system.
+
+Free for 30 days.
+Link in bio.
+
+#debtfree #variableincome #1099 #freelancing #budgeting`,
+    tt: `Finally pay down your debt.
+
+On the income you actually have.
+becomeable.app
+
+#debtfreejourney #1099 #freelancetok`,
+  },
+
+  // ─── W31 · Debt · DTI + collections ───
+  '31|Mon': {
+    // 69 single
+    ig: `Your debt-to-income ratio when income is variable.
+
+The bank wants a clean number. Your reality is a 12-month average.
+
+Use the average + a 20% haircut for safety. That's what underwriters do anyway.
+
+Free for 30 days.
+Link in bio.
+
+#dti #debt #1099 #freelancing #variableincome`,
+    tt: `DTI on variable income.
+
+12-month average. Minus 20% for safety.
+becomeable.app
+
+#dti #1099 #freelancetok`,
+  },
+  '31|Tue': {
+    // R20 save-more REUSE — DTI/collections framing
+    ig: `"Save more" isn't a plan.
+
+It's a wish. Dressed as advice.
+
+Same with "pay it off faster" when you're already maxed out. The fix isn't more willpower. The fix is a floor that holds while debt drops.
+
+Free for 30 days.
+Link in bio.
+
+#debtfree #variableincome #1099 #moneymindset #budgeting`,
+    tt: `"Save more" isn't a plan. It's a wish.
+
+The fix isn't willpower. It's a floor.
+becomeable.app
+
+#debtfreejourney #1099 #moneytok`,
+  },
+  '31|Wed': {
+    // C49 five-mistakes-1099-year-one carousel
+    ig: `Five mistakes most freelancers make in year one.
+
+No tax bucket. No reserve. Treating gross as net. Mixing personal and business. Missing quarterlies.
+
+Each one compounds into the debt pile by year three. The fixes are small if you catch them early.
+
+Swipe →
+Link in bio.
+
+#1099 #freelancing #yearone #variableincome #budgeting`,
+    tt: `5 mistakes most freelancers make year one.
+
+Each one compounds into the debt pile.
+becomeable.app
+
+#1099 #freelancetok #yearone`,
+  },
+  '31|Thu': {
+    // P37 product-bs-i-am-able-debt
+    ig: `I am able to pay down debt.
+
+Not "I should." Not "I'm trying to." I am.
+
+The identity shifts when the schedule runs in the background. The phrase becomes literally true.
+
+Free for 30 days.
+Link in bio.
+
+#debtfree #identity #variableincome #1099 #moneymindset`,
+    tt: `I am able to pay down debt.
+
+The identity shifts when the schedule runs.
+becomeable.app
+
+#debtfreejourney #1099 #moneymindset`,
+  },
+  '31|Fri': {
+    // C38 business-funding carousel REUSE
+    ig: `Business funding when your DTI is rough.
+
+The order matters: build a clean 12 months of separation first. Personal account, business account, business credit.
+
+Then the funding conversation gets a lot easier.
+
+Swipe →
+Link in bio.
+
+#businessfunding #dti #smallbusiness #1099 #freelancing`,
+    tt: `Business funding when DTI is rough.
+
+Clean 12 months of separation first.
+becomeable.app
+
+#businessfunding #1099 #smallbusinesstok`,
+  },
+  '31|Sat': {
+    // R47 plan-debt REUSE 2x — DTI framing
+    ig: `The fastest way to fix your DTI:
+
+Move the highest-APR balance down. Same income, lower debt service, better ratio.
+
+The avalanche path runs in the background. You don't need to track it manually.
+
+Free for 30 days.
+Link in bio.
+
+#dti #debtfree #avalanche #1099 #variableincome`,
+    tt: `Fastest DTI fix: highest-APR balance down.
+
+Avalanche runs in the background.
+becomeable.app
+
+#dti #debtfreejourney #freelancetok`,
+  },
+  '31|Sun': {
+    // B33 identity · I am able to pay down debt, even on slow months
+    ig: `I am able to pay down debt, even on slow months.
+
+The identity stack starts with one true line. The rest follow.
+
+Free for 30 days.
+Link in bio.
+
+#debtfree #identity #variableincome #1099 #moneymindset`,
+    tt: `I am able to pay down debt, even on slow months.
+
+One true line. The rest follow.
+becomeable.app
+
+#debtfreejourney #identity #freelancetok`,
+  },
+
+  // ─── W32 · Debt · consolidation, when it helps ───
+  '32|Mon': {
+    // 70 single
+    ig: `Debt consolidation. The narrow case where it actually helps.
+
+You qualify for a lower rate. Your behavior changes (the cards don't refill). And the math actually beats keeping the debt where it is.
+
+Two of three: probably not worth it. One of three: definitely not.
+
+Free for 30 days.
+Link in bio.
+
+#debtconsolidation #debtfree #1099 #freelancing #variableincome`,
+    tt: `Consolidation: the narrow case it helps.
+
+Lower rate. Behavior change. Math beats current.
+becomeable.app
+
+#debtconsolidation #debtfreejourney #freelancetok`,
+  },
+  '32|Tue': {
+    // R19 spreadsheet-to-system REUSE — consolidation framing
+    ig: `Your spreadsheet is dying.
+
+Opened three times this quarter. Hasn't seen a real entry in months.
+
+You don't need a better spreadsheet. You need a system that runs whether you log in or not.
+
+Free for 30 days.
+Link in bio.
+
+#variableincome #1099 #freelancing #budgeting #spreadsheet`,
+    tt: `Your spreadsheet is dying.
+
+You don't need a better one. You need a system.
+becomeable.app
+
+#freelancetok #1099 #moneytok`,
+  },
+  '32|Wed': {
+    // C48 monthly-budgets-fail carousel
+    ig: `Why monthly budgets fail variable income.
+
+The whole framework assumes equal monthly inputs. Yours aren't equal. So the budget always "broke this month."
+
+It didn't break. It was wrong on Day 1.
+
+Swipe →
+Link in bio.
+
+#variableincome #budgeting #freelancing #1099 #floorfirst`,
+    tt: `Why monthly budgets fail variable income.
+
+Wrong on Day 1, not "broken this month."
+becomeable.app
+
+#freelancetok #1099 #moneytok`,
+  },
+  '32|Thu': {
+    // 71 single
+    ig: `Consolidation isn't a fresh start. It's a refinance.
+
+Same debt. New rate. Same behavior on top.
+
+The actual fresh start is the floor + reserve underneath, then attacking the principal that doesn't refill.
+
+Free for 30 days.
+Link in bio.
+
+#debtconsolidation #debtfree #1099 #variableincome #freelancing`,
+    tt: `Consolidation isn't a fresh start. It's a refinance.
+
+The fresh start is the floor underneath.
+becomeable.app
+
+#debtconsolidation #debtfreejourney #freelancetok`,
+  },
+  '32|Fri': {
+    // C35 credit-score carousel REUSE
+    ig: `What actually moves your credit score.
+
+Utilization (the biggest lever). On-time payments. Length of history. Mix of credit. New inquiries.
+
+Variable income makes utilization volatile. The reserve smooths the ratio month over month.
+
+Swipe →
+Link in bio.
+
+#creditscore #1099 #freelancing #variableincome #debtfree`,
+    tt: `What actually moves your credit score.
+
+Utilization is the biggest lever.
+becomeable.app
+
+#creditscore #1099 #freelancetok`,
+  },
+  '32|Sat': {
+    // R10 same-income REUSE — debt closer
+    ig: `Same income. Different feeling.
+
+Bills paid. Taxes covered. Debt shrinking. Savings growing. Nothing leaked.
+
+That's what every month becomes once the underneath is built.
+
+Free for 30 days.
+Link in bio.
+
+#variableincome #1099 #freelancing #debtfree #moneymindset`,
+    tt: `Same income. Different feeling.
+
+Debt shrinking. Savings growing.
+becomeable.app
+
+#freelancetok #1099 #moneytok`,
+  },
+  '32|Sun': {
+    // B18 paralysis · Day 14, $400 already gone
+    ig: `Day 14. $400 already gone.
+
+Not on anything memorable. $23 here, $48 there, $12 again. The receipt-by-receipt version.
+
+That's the leak that compounds into the debt pile by Day 30.
+
+Free for 30 days.
+Link in bio.
+
+#variableincome #1099 #freelancing #budgeting #moneyhabits`,
+    tt: `Day 14. $400 already gone.
+
+Receipt by receipt. Nothing memorable.
+becomeable.app
+
+#freelancetok #1099 #moneytok`,
+  },
+
+  // ─── W33 · Debt · variable income payoff ───
+  '33|Mon': {
+    // 17 reused — variable income debt closer
+    ig: `Paying down debt on variable income works differently.
+
+You can't promise the same monthly payment. You can promise: every deposit gives debt the next slot in line.
+
+The schedule still moves. Just on your income, not someone else's.
+
+Free for 30 days.
+Link in bio.
+
+#debtfree #variableincome #1099 #freelancing #budgeting`,
+    tt: `Pay down debt on variable income.
+
+Every deposit gives debt the next slot.
+becomeable.app
+
+#debtfreejourney #1099 #freelancetok`,
+  },
+  '33|Tue': {
+    // R16 income-reserve REUSE — debt context
+    ig: `The reserve is what keeps the debt schedule running.
+
+Slow month? You don't pause the avalanche. The reserve absorbs the gap.
+
+Big month? Both fill. The schedule accelerates.
+
+Free for 30 days.
+Link in bio.
+
+#reserve #debtfree #variableincome #1099 #freelancing`,
+    tt: `Reserve keeps the debt schedule running.
+
+Slow month doesn't pause it.
+becomeable.app
+
+#debtfreejourney #1099 #freelancetok`,
+  },
+  '33|Wed': {
+    // C34 get-out-of-debt REUSE 2x — variable income angle
+    ig: `Out of debt without a paycheck. The longer version.
+
+Step 1 is the floor. Step 2 is the reserve. Step 3 is the schedule.
+Most people skip 1 and 2 and try to brute-force step 3.
+
+That's the loop where you make progress and lose it on the next slow month.
+
+Swipe →
+Link in bio.
+
+#debtfree #variableincome #1099 #freelancing #budgeting`,
+    tt: `Out of debt without a paycheck.
+
+Floor. Reserve. Then schedule.
+becomeable.app
+
+#debtfreejourney #1099 #freelancetok`,
+  },
+  '33|Thu': {
+    // P31 product-bs-debt-drops
+    ig: `Debt drops. Savings grow.
+
+Same income. Both happen.
+
+The system splits every deposit before you can spend it. The two trajectories run in parallel without you choosing between them.
+
+Free for 30 days.
+Link in bio.
+
+#debtfree #savings #variableincome #1099 #freelancing`,
+    tt: `Debt drops. Savings grow.
+
+Same income. Both happen.
+becomeable.app
+
+#debtfreejourney #1099 #freelancetok`,
+  },
+  '33|Fri': {
+    // PC7 product-stop-doing carousel
+    ig: `Five things you stop doing with Able.
+
+Stop holding your breath on the 1st. Stop bracing for bills. Stop guessing if it'll work out. Stop dreading April. Stop pretending the plan worked.
+
+Swipe →
+Link in bio.
+
+#variableincome #1099 #freelancing #moneymindset #budgeting`,
+    tt: `5 things you stop doing.
+
+The whole list is the calm.
+becomeable.app
+
+#freelancetok #1099 #moneymindset`,
+  },
+  '33|Sat': {
+    // R47 plan-debt REUSE 3x — capstone
+    ig: `Highest APR first. Watch it drop.
+
+Six weeks in, the highest balance is 11% smaller. The schedule didn't lecture you. It just kept moving.
+
+Same income. Different chart.
+
+Free for 30 days.
+Link in bio.
+
+#debtfree #avalanche #variableincome #1099 #freelancing`,
+    tt: `Six weeks in. Highest balance 11% smaller.
+
+The schedule didn't lecture. It moved.
+becomeable.app
+
+#debtfreejourney #avalanche #freelancetok`,
+  },
+  '33|Sun': {
+    // B20 paralysis · You don't over-spend, you under-direct
+    ig: `You don't overspend. You under-direct.
+
+The money isn't disappearing into a hole of bad decisions. It's leaking through unassigned dollars.
+
+The fix isn't restraint. It's direction.
+
+Free for 30 days.
+Link in bio.
+
+#variableincome #1099 #freelancing #budgeting #moneymindset`,
+    tt: `You don't overspend. You under-direct.
+
+The fix isn't restraint. It's direction.
+becomeable.app
+
+#freelancetok #1099 #moneytok`,
+  },
+
+  // ─── W34 · Reserve · the dam on a river ───
+  '34|Mon': {
+    // 72 single
+    ig: `The reserve is a dam on a river.
+
+Big check? It fills.
+Slow week? You draw down.
+Bills are funded either way.
+
+That's the architecture. Without the dam, every wave hits the bills directly.
+
+Free for 30 days.
+Link in bio.
+
+#reserve #variableincome #1099 #freelancing #budgeting`,
+    tt: `Reserve = dam on a river.
+
+Bills funded either way.
+becomeable.app
+
+#reserve #freelancetok #1099`,
+  },
+  '34|Tue': {
+    // R16 income-reserve REUSE 2x — dam metaphor
+    ig: `Your reserve is a dam.
+
+Not a savings account. Not an emergency fund. A dam that holds back the variable so the predictable can keep running.
+
+The mechanic that turns lumpy income into a steady paycheck.
+
+Free for 30 days.
+Link in bio.
+
+#reserve #variableincome #1099 #freelancing #budgeting`,
+    tt: `Your reserve is a dam.
+
+Lumpy income → steady paycheck.
+becomeable.app
+
+#reserve #freelancetok #1099`,
+  },
+  '34|Wed': {
+    // PC6 product-slow-month carousel
+    ig: `When the slow month hits.
+
+Income drops. Bills don't.
+
+A reserve built on the good months. Coach checks in. Bills still covered. Floor steady.
+
+Slow months stop being a crisis.
+
+Swipe →
+Link in bio.
+
+#slowmonth #reserve #variableincome #1099 #freelancing`,
+    tt: `When the slow month hits.
+
+Income drops. Bills don't. Reserve covers it.
+becomeable.app
+
+#reserve #freelancetok #1099`,
+  },
+  '34|Thu': {
+    // 73 single
+    ig: `How much reserve do you actually need?
+
+Math: 1.5x your floor (bills + tax). That's the smoothing target for a typical variable-income month.
+
+Below that: you're vulnerable. Above it: you can run debt and growth in parallel.
+
+Free for 30 days.
+Link in bio.
+
+#reserve #variableincome #1099 #freelancing #budgeting`,
+    tt: `How much reserve? 1.5x your floor.
+
+Below = vulnerable. Above = you can run growth.
+becomeable.app
+
+#reserve #freelancetok #1099`,
+  },
+  '34|Fri': {
+    // C26 emergency-fund carousel REUSE
+    ig: `Emergency fund vs reserve, the carousel version.
+
+Different jobs. Both useful. Most people only have one (or neither).
+
+If your income is variable, the reserve is the bigger lift. Build it first.
+
+Swipe →
+Link in bio.
+
+#emergencyfund #reserve #variableincome #1099 #freelancing`,
+    tt: `Emergency fund vs reserve.
+
+Different jobs. Reserve is the bigger lift.
+becomeable.app
+
+#reserve #emergencyfund #freelancetok`,
+  },
+  '34|Sat': {
+    // R11 steady-paycheck REUSE — reserve closer
+    ig: `Pay yourself a steady paycheck.
+
+Income lumpy. Bills not.
+Build the reserve. The dam on the river.
+
+Same paycheck, same day. Boring is the feature.
+
+Free for 30 days.
+Link in bio.
+
+#payyourselffirst #variableincome #1099 #freelancing #reserve`,
+    tt: `Pay yourself a steady paycheck.
+
+Lumpy income → boring rhythm.
+becomeable.app
+
+#payyourselffirst #freelancetok #1099`,
+  },
+  '34|Sun': {
+    // B02 brand lockup · Built for variable income (reserve)
+    ig: `Built for variable income.
+
+Not "adapted for." Not "works with." Built for.
+
+The whole tool starts from the assumption that your income is lumpy. Every mechanic exists because of that.
+
+Free for 30 days.
+Link in bio.
+
+#variableincome #1099 #freelancing #floorfirst #budgeting`,
+    tt: `Built for variable income.
+
+Not adapted for. Built for.
+becomeable.app
+
+#variableincome #freelancetok #1099`,
+  },
+
+  // ─── W35 · Feast or famine — bridging the gap ───
+  '35|Mon': {
+    // 74 single
+    ig: `Feast or famine isn't a personality. It's a math problem.
+
+Income is variable. Bills are constant. Without a buffer between them, you ride the waves directly.
+
+The fix is structural, not motivational.
+
+Free for 30 days.
+Link in bio.
+
+#feastorfamine #variableincome #1099 #freelancing #reserve`,
+    tt: `Feast or famine = math problem.
+
+Variable income. Constant bills.
+becomeable.app
+
+#feastorfamine #freelancetok #1099`,
+  },
+  '35|Tue': {
+    // R7 freezing-flowing REUSE
+    ig: `You're not overspending. You're freezing.
+
+Money sits. Money leaks. Direct it or it leaves.
+
+Same income, different month. The variable becomes the predictable when the system runs.
+
+Free for 30 days.
+Link in bio.
+
+#variableincome #1099 #freelancing #moneymindset #budgeting`,
+    tt: `You're not overspending. You're freezing.
+
+Direct it or it leaves.
+becomeable.app
+
+#freelancetok #1099 #moneymindset`,
+  },
+  '35|Wed': {
+    // C16 feast-or-famine carousel REUSE
+    ig: `Feast or famine, the carousel.
+
+Six months in a year. Two are flush. Three are flat. One is rough.
+
+The reserve is what makes the flush ones useful and the rough ones survivable.
+
+Swipe →
+Link in bio.
+
+#feastorfamine #variableincome #1099 #freelancing #reserve`,
+    tt: `Feast or famine. Six months a year.
+
+Reserve makes flush useful and rough survivable.
+becomeable.app
+
+#feastorfamine #freelancetok #1099`,
+  },
+  '35|Thu': {
+    // P36 product-bs-fear-fades
+    ig: `The fear of the next check fades.
+
+Not because the income smoothed out. Because the system caught up.
+
+You stop checking the bank app at 1am. You stop running parallel calendars in your head.
+
+Free for 30 days.
+Link in bio.
+
+#moneymindset #variableincome #1099 #freelancing #calmmoney`,
+    tt: `The fear of the next check fades.
+
+Not income smoothing. System catching up.
+becomeable.app
+
+#freelancetok #1099 #moneymindset`,
+  },
+  '35|Fri': {
+    // PC6 product-slow-month REUSE — fresh angle
+    ig: `Slow month playbook.
+
+Income drops. Bills don't. The reserve absorbs.
+The coach proposes a buffer-pacing move. You confirm. The floor still holds.
+
+The whole thing was a five-tap night.
+
+Swipe →
+Link in bio.
+
+#slowmonth #reserve #variableincome #1099 #freelancing`,
+    tt: `Slow month. Five-tap night.
+
+Reserve absorbs. Floor holds.
+becomeable.app
+
+#slowmonth #freelancetok #1099`,
+  },
+  '35|Sat': {
+    // R45 plan-whatif REUSE — feast/famine framing
+    ig: `Stress-test the bad month.
+
+Type a slow number. Watch the floor. Watch the reserve absorb the difference.
+
+Calm comes from running the numbers before they run you.
+
+Free for 30 days.
+Link in bio.
+
+#stresstest #variableincome #1099 #freelancing #calmmoney`,
+    tt: `Stress-test the bad month.
+
+Watch the reserve absorb the difference.
+becomeable.app
+
+#freelancetok #1099 #calmmoney`,
+  },
+  '35|Sun': {
+    // B23 solution · Budget without a predictable paycheck
+    ig: `A budget that works without a predictable paycheck.
+
+The whole framework assumes lumpy. Tax bucket fills on every deposit. Reserve absorbs slow months. Bills get pre-funded. Debt drops on schedule.
+
+None of that requires you to know what next month looks like.
+
+Free for 30 days.
+Link in bio.
+
+#variableincome #1099 #freelancing #budgeting #floorfirst`,
+    tt: `A budget without a predictable paycheck.
+
+Doesn't require knowing next month.
+becomeable.app
+
+#variableincome #freelancetok #1099`,
+  },
+
+  // ─── W36 · Pay yourself a steady paycheck ───
+  '36|Mon': {
+    // 75 single
+    ig: `Pay yourself a steady paycheck.
+
+Set the amount. Set the day. Variable income flows in. Steady amount flows out.
+
+The dam on the river, in concrete settings.
+
+Free for 30 days.
+Link in bio.
+
+#payyourselffirst #variableincome #1099 #freelancing #reserve`,
+    tt: `Pay yourself a steady paycheck.
+
+Set amount. Set day. Variable in, steady out.
+becomeable.app
+
+#payyourselffirst #freelancetok #1099`,
+  },
+  '36|Tue': {
+    // R11 steady-paycheck REUSE 2x — pay yourself
+    ig: `Income is lumpy. Bills are not.
+
+Build the reserve. A dam on a river. Same paycheck, same day.
+
+Boring is the feature. The tool you forget about is the one that's working.
+
+Free for 30 days.
+Link in bio.
+
+#payyourselffirst #variableincome #1099 #freelancing #reserve`,
+    tt: `Income lumpy. Bills not.
+
+Same paycheck, same day. Boring is the feature.
+becomeable.app
+
+#payyourselffirst #freelancetok #1099`,
+  },
+  '36|Wed': {
+    // C18 steady-paycheck carousel REUSE
+    ig: `The steady-paycheck mechanic.
+
+Reserve is the buffer. Bills come on the schedule that bills demand. You get a reliable transfer on the day you pick.
+
+Slow weeks don't break the rhythm.
+
+Swipe →
+Link in bio.
+
+#payyourselffirst #variableincome #1099 #freelancing #reserve`,
+    tt: `Steady-paycheck mechanic.
+
+Reserve buffers. Bills run on schedule.
+becomeable.app
+
+#payyourselffirst #freelancetok #1099`,
+  },
+  '36|Thu': {
+    // P28 product-bs-different-clock
+    ig: `Same foundation. Different clock.
+
+Salaried budgets and variable budgets need the same things: bills, savings, debt, free spending.
+
+The difference is the clock. Theirs is monthly. Yours is per-deposit.
+
+Free for 30 days.
+Link in bio.
+
+#variableincome #1099 #freelancing #budgeting #floorfirst`,
+    tt: `Same foundation. Different clock.
+
+Theirs monthly. Yours per-deposit.
+becomeable.app
+
+#variableincome #freelancetok #1099`,
+  },
+  '36|Fri': {
+    // C36 pay-yourself-first carousel REUSE
+    ig: `Pay yourself first. The actual mechanic.
+
+Not "save what's left." Move it before the rest of the splits run. Your salary is the first job, not the leftover.
+
+Swipe →
+Link in bio.
+
+#payyourselffirst #variableincome #1099 #freelancing #savings`,
+    tt: `Pay yourself first. Actual mechanic.
+
+Not save-what's-left. Move it before splits.
+becomeable.app
+
+#payyourselffirst #freelancetok #1099`,
+  },
+  '36|Sat': {
+    // R46 plan-forecast REUSE — pay yourself framing
+    ig: `What lands. What's owed. What you pay yourself.
+
+All on one page.
+The forecast tells you whether the steady paycheck holds this month, next month, the month after.
+
+Free for 30 days.
+Link in bio.
+
+#forecast #payyourselffirst #variableincome #1099 #freelancing`,
+    tt: `What lands. What's owed. What you pay yourself.
+
+One page. Whole forecast.
+becomeable.app
+
+#forecast #payyourselffirst #freelancetok`,
+  },
+  '36|Sun': {
+    // B30 transformation · It is predictable
+    ig: `It is predictable.
+
+The income isn't. The system is.
+
+Bills covered on the same day every month. Tax bucket filling continuously. Debt dropping on schedule. The chaos is upstream of the floor.
+
+Free for 30 days.
+Link in bio.
+
+#calmmoney #variableincome #1099 #freelancing #floorfirst`,
+    tt: `It is predictable.
+
+The income isn't. The system is.
+becomeable.app
+
+#calmmoney #freelancetok #1099`,
+  },
+
+  // ─── W37 · Calm bridge — same income, different month ───
+  '37|Mon': {
+    // 76 single
+    ig: `Same income. Different month.
+
+The numbers don't change. What changes is the architecture underneath them.
+
+Floor. Reserve. Schedule. The same dollars do four times the work.
+
+Free for 30 days.
+Link in bio.
+
+#calmmoney #variableincome #1099 #freelancing #floorfirst`,
+    tt: `Same income. Different month.
+
+Same dollars. 4x the work.
+becomeable.app
+
+#calmmoney #freelancetok #1099`,
+  },
+  '37|Tue': {
+    // R10 same-income REUSE 2x — calm bridge
+    ig: `Same income. Different feeling.
+
+Bills paid. Taxes covered. Debt shrinking. Savings growing. Nothing leaked.
+
+The income didn't move. The architecture did.
+
+Free for 30 days.
+Link in bio.
+
+#calmmoney #variableincome #1099 #freelancing #moneymindset`,
+    tt: `Same income. Different feeling.
+
+The income didn't move. The architecture did.
+becomeable.app
+
+#calmmoney #freelancetok #1099`,
+  },
+  '37|Wed': {
+    // C42 calm-month carousel REUSE
+    ig: `What a calm month feels like.
+
+Bills covered before the 1st. Tax piece set aside. Reserve at target. Debt schedule moving.
+
+You open the app twice. You log income. You close it. That's the whole interaction.
+
+Swipe →
+Link in bio.
+
+#calmmoney #variableincome #1099 #freelancing #moneymindset`,
+    tt: `Calm month feel. Open twice. Log. Close.
+
+Whole interaction.
+becomeable.app
+
+#calmmoney #freelancetok #1099`,
+  },
+  '37|Thu': {
+    // P39 product-bs-from-breath
+    ig: `From holding your breath.
+
+To breathing.
+
+Two states. The transition takes about a quarter, not because the income changes, but because the system catches up.
+
+Free for 30 days.
+Link in bio.
+
+#calmmoney #variableincome #1099 #freelancing #moneymindset`,
+    tt: `From holding your breath. To breathing.
+
+The transition takes about a quarter.
+becomeable.app
+
+#calmmoney #freelancetok #1099`,
+  },
+  '37|Fri': {
+    // PC4 product-from-unable-to-able carousel
+    ig: `From Unable. To Able.
+
+Before: money sits. Money leaks. Day 30, where did $1,000 go?
+
+After: every bill covered. Every dollar accounted for. Floor steady. Nothing leaked.
+
+Same income. Different month.
+
+Swipe →
+Link in bio.
+
+#unabletoable #variableincome #1099 #freelancing #moneymindset`,
+    tt: `From Unable. To Able.
+
+Same income. Different month.
+becomeable.app
+
+#unabletoable #freelancetok #1099`,
+  },
+  '37|Sat': {
+    // R38 tip-floor-first
+    ig: `Bills + tax = the floor.
+
+Fill it first. Then everything else is a real choice.
+
+That's the rule. Not "save 20%." Not "follow your budget." Fill the floor, then everything downstream is honest.
+
+Free for 30 days.
+Link in bio.
+
+#floorfirst #variableincome #1099 #freelancing #budgeting`,
+    tt: `Bills + tax = the floor.
+
+Fill it first. Everything else is a real choice.
+becomeable.app
+
+#floorfirst #freelancetok #1099`,
+  },
+  '37|Sun': {
+    // B37 transformation · Breathe again (reserve)
+    ig: `Breathe again.
+
+The phrase you didn't realize you needed until you had it.
+
+Variable income runs through paycheck-shaped tools. Eventually the chest holds tension you can't name. The system unwinds it.
+
+Free for 30 days.
+Link in bio.
+
+#calmmoney #variableincome #1099 #freelancing #moneymindset`,
+    tt: `Breathe again.
+
+The phrase you didn't realize you needed.
+becomeable.app
+
+#calmmoney #freelancetok #1099`,
+  },
+
+  // ─── W38 · Creator · sponsorships + windfalls ───
+  '38|Mon': {
+    // 77 single
+    ig: `Sponsorships feel like windfalls.
+
+Until tax day. Then they aren't.
+
+The fix is splitting the second they clear: tax, bills, debt, reserve, free. The "windfall" feeling becomes the "free" slice. Smaller, real.
+
+Free for 30 days.
+Link in bio.
+
+#creator #sponsorships #1099 #taxes #variableincome`,
+    tt: `Sponsorships feel like windfalls. Until tax day.
+
+Split the second they clear.
+becomeable.app
+
+#creator #1099 #freelancetok`,
+  },
+  '38|Tue': {
+    // R33 creator-moment REUSE — sponsorship framing
+    ig: `Sponsorship hits. Already split.
+
+Tax. Bills. Debt. Reserve. Free.
+The "windfall" was always five smaller jobs. Now you can see them.
+
+Free for 30 days.
+Link in bio.
+
+#creator #sponsorships #1099 #taxes #variableincome`,
+    tt: `Sponsorship hits. Already split.
+
+Five smaller jobs. Always was.
+becomeable.app
+
+#creator #1099 #moneytok`,
+  },
+  '38|Wed': {
+    // C19 creator-budget carousel REUSE
+    ig: `A creator's budget. The actual shape.
+
+Sponsorships, ad rev, course launches, affiliate, brand deals. Five income streams, five different timings.
+
+The system works because it doesn't care which deposit lands. It splits the same way every time.
+
+Swipe →
+Link in bio.
+
+#creator #creatoreconomy #variableincome #1099 #budgeting`,
+    tt: `Creator's budget. Actual shape.
+
+Five streams, five timings. Same split.
+becomeable.app
+
+#creator #creatoreconomy #moneytok`,
+  },
+  '38|Thu': {
+    // P02 product-deposit-routed REUSE 2x — creator framing
+    ig: `One deposit. Five jobs.
+
+Tax. Bills. Debt. Reserve. Free.
+
+Whether it's a $200 ad-rev payout or a $20,000 sponsorship, the math is the same. The split is the same.
+
+Free for 30 days.
+Link in bio.
+
+#creator #1099 #variableincome #budgeting #floorfirst`,
+    tt: `One deposit. Five jobs.
+
+$200 ad-rev or $20K sponsorship. Same split.
+becomeable.app
+
+#creator #1099 #moneytok`,
+  },
+  '38|Fri': {
+    // PC2 product-how-it-works carousel
+    ig: `How Able works. The five-step tour.
+
+Log what came in. Able tells you where it goes. Bills funded before due. Debt drops. Coach checks in when something looks off.
+
+That's the whole product, in one carousel.
+
+Swipe →
+Link in bio.
+
+#variableincome #1099 #freelancing #budgeting #floorfirst`,
+    tt: `How Able works. Five steps.
+
+Log. Split. Fund. Drop. Check.
+becomeable.app
+
+#freelancetok #1099 #moneytok`,
+  },
+  '38|Sat': {
+    // R43 log-income REUSE — creator angle
+    ig: `New brand deal lands.
+
+Log it. Ten seconds. Already split.
+
+The creators who survive five years aren't the ones with the biggest checks. They're the ones who direct every deposit before they spend it.
+
+Free for 30 days.
+Link in bio.
+
+#creator #creatoreconomy #1099 #variableincome #budgeting`,
+    tt: `New brand deal. Log it. Ten seconds.
+
+Already split.
+becomeable.app
+
+#creator #creatoreconomy #moneytok`,
+  },
+  '38|Sun': {
+    // B07 audience tagline (reused) — creator block
+    ig: `Built for anyone with inconsistent income.
+
+Creators included. Sponsorship months and zero months. Ad-rev fluctuating. Course launches one quarter, nothing the next.
+
+The whole tool assumes the wave.
+
+Free for 30 days.
+Link in bio.
+
+#creator #variableincome #1099 #creatoreconomy #budgeting`,
+    tt: `Built for inconsistent income. Creators included.
+
+The whole tool assumes the wave.
+becomeable.app
+
+#creator #variableincome #freelancetok`,
+  },
+
+  // ─── W39 · Creator · taxes when income is bursty ───
+  '39|Mon': {
+    // 78 single
+    ig: `Bursty income, the tax math.
+
+$50K in March. $4K in May. Same year. The IRS averages it across quarterlies you owe each period.
+
+Skip the math: 30% off every deposit, regardless of size. April becomes paperwork.
+
+Free for 30 days.
+Link in bio.
+
+#creator #1099 #taxes #variableincome #quarterly`,
+    tt: `Bursty income tax math.
+
+30% off every deposit. Skip the per-quarter math.
+becomeable.app
+
+#creator #1099 #taxes`,
+  },
+  '39|Tue': {
+    // R4 tax-math-30 REUSE 2x — creator angle
+    ig: `30% off every deposit.
+
+Big sponsorship, small ad-rev, affiliate trickle. Doesn't matter the size. 30% routes to tax the second it clears.
+
+The bursty year stops being a tax surprise.
+
+Free for 30 days.
+Link in bio.
+
+#creator #1099 #taxes #variableincome #quarterly`,
+    tt: `30% off every deposit.
+
+Bursty year stops being a surprise.
+becomeable.app
+
+#creator #1099 #taxes`,
+  },
+  '39|Wed': {
+    // C28 1099-NEC carousel REUSE
+    ig: `1099-NEC, creators edition.
+
+Brand deals. Sponsorships. Direct client work. Anything paid for services.
+
+You'll get one from each payer over $600. The tags that match these deposits in your bank are the ones that need the cleanest categorization.
+
+Swipe →
+Link in bio.
+
+#creator #1099 #taxes #scheduleC #freelancing`,
+    tt: `1099-NEC for creators.
+
+Brand deals, sponsorships, services > $600.
+becomeable.app
+
+#creator #1099 #freelancetok`,
+  },
+  '39|Thu': {
+    // P11 product-tax-set-aside REUSE 3x — creator
+    ig: `Off the top. Every payout.
+
+Sponsorship lands. Tax piece moves before you see it as available. The "I'll save for taxes" promise stops being a promise.
+
+Free for 30 days.
+Link in bio.
+
+#creator #1099 #taxes #variableincome #floorfirst`,
+    tt: `Off the top. Every payout.
+
+The "I'll save for taxes" promise stops being a promise.
+becomeable.app
+
+#creator #1099 #taxes`,
+  },
+  '39|Fri': {
+    // C29 1099-K carousel REUSE
+    ig: `1099-K, creators edition.
+
+Stripe. PayPal. Patreon. Substack. Etsy. Anywhere a platform processed payments for you.
+
+The threshold dropped. More creators are getting these. The system tags them automatically.
+
+Swipe →
+Link in bio.
+
+#creator #1099 #taxes #patreon #stripe`,
+    tt: `1099-K for creators.
+
+Stripe, PayPal, Patreon, Substack, Etsy.
+becomeable.app
+
+#creator #1099 #freelancetok`,
+  },
+  '39|Sat': {
+    // R51 add-expected-income REUSE 2x — creator
+    ig: `Sponsorship invoice clearing next week?
+
+Plan for it now. Reserve the tax piece before it lands.
+
+The only difference between a "windfall" and a "tax surprise" is the timing of the split.
+
+Free for 30 days.
+Link in bio.
+
+#creator #sponsorships #1099 #taxes #variableincome`,
+    tt: `Sponsorship invoice clearing? Plan for it now.
+
+Windfall vs surprise = timing of the split.
+becomeable.app
+
+#creator #1099 #taxes`,
+  },
+  '39|Sun': {
+    // B25 outcome · Pay down debt (reused 2x)
+    ig: `Finally pay down your debt.
+
+Even on the bursty year. Even on the slow quarter. The schedule still runs. The reserve still holds.
+
+The income shape doesn't decide whether the math moves.
+
+Free for 30 days.
+Link in bio.
+
+#debtfree #creator #1099 #variableincome #freelancing`,
+    tt: `Finally pay down your debt.
+
+Even on the bursty year.
+becomeable.app
+
+#debtfreejourney #creator #1099`,
+  },
+
+  // ─── W40 · Etsy + marketplace creators ───
+  '40|Mon': {
+    // 79 single
+    ig: `Etsy + marketplace income, the math nobody tells you.
+
+Listing fees, transaction fees, payment processing, ads, shipping reimbursements. The "gross sale" is rarely the net.
+
+A system that tags the take-rate against every sale beats the spreadsheet you abandoned in March.
+
+Free for 30 days.
+Link in bio.
+
+#etsy #marketplace #1099 #taxes #ecommerce`,
+    tt: `Etsy gross ≠ net.
+
+Listing, transaction, processing, ads, shipping.
+becomeable.app
+
+#etsy #ecommerce #1099`,
+  },
+  '40|Tue': {
+    // R13 april-no-panic REUSE
+    ig: `April without the panic.
+
+Moved 30% since January. The bill is paid. Just paperwork.
+
+Etsy seller, Shopify owner, marketplace creator. Same mechanic, different platform.
+
+Free for 30 days.
+Link in bio.
+
+#etsy #marketplace #1099 #taxes #ecommerce`,
+    tt: `April without the panic.
+
+30% since January. Paperwork, not event.
+becomeable.app
+
+#etsy #1099 #taxes`,
+  },
+  '40|Wed': {
+    // C23 etsy-seller carousel REUSE
+    ig: `An Etsy seller's actual P&L.
+
+Gross sales. Minus fees. Minus shipping. Minus materials. Minus tax. = net.
+
+Most sellers know the gross. The system shows you the net week one.
+
+Swipe →
+Link in bio.
+
+#etsy #ecommerce #1099 #marketplace #budgeting`,
+    tt: `Etsy seller's P&L.
+
+Gross. Fees. Shipping. Materials. Tax. Net.
+becomeable.app
+
+#etsy #ecommerce #1099`,
+  },
+  '40|Thu': {
+    // P03 product-bills-funded
+    ig: `Every bill, on the page.
+
+Funded before they're due.
+
+Etsy fees. Shopify subscription. Cricut blades. Whatever the marketplace business runs on. Same architecture.
+
+Free for 30 days.
+Link in bio.
+
+#etsy #ecommerce #1099 #marketplace #budgeting`,
+    tt: `Every bill on the page. Funded before due.
+
+Same architecture, your platform.
+becomeable.app
+
+#etsy #ecommerce #1099`,
+  },
+  '40|Fri': {
+    // C24 coach-consultant carousel REUSE
+    ig: `Coaches and consultants budget.
+
+Hourly + retainer + course + workshop. Four income shapes, four different timings.
+
+The system doesn't care about the shape. It directs every deposit the same way.
+
+Swipe →
+Link in bio.
+
+#coach #consultant #1099 #variableincome #budgeting`,
+    tt: `Coach + consultant budget.
+
+Four income shapes. Same split.
+becomeable.app
+
+#coach #consultant #1099`,
+  },
+  '40|Sat': {
+    // R44 plan-bills REUSE — marketplace
+    ig: `Marketplace bills, on the page.
+
+Etsy fees, ad spend, subscription costs, shipping prepaid. Funded before they're due.
+
+The platform doesn't pause on a slow week. The reserve covers it.
+
+Free for 30 days.
+Link in bio.
+
+#etsy #ecommerce #1099 #marketplace #reserve`,
+    tt: `Marketplace bills on the page.
+
+Funded before due. Reserve covers slow weeks.
+becomeable.app
+
+#etsy #ecommerce #1099`,
+  },
+  '40|Sun': {
+    // B22 solution mechanic (reused) — every dollar a job
+    ig: `Every dollar gets a job the moment it arrives.
+
+Etsy sale. Sponsorship. Affiliate. Doesn't matter which one. Each dollar is split before you can spend it.
+
+That's the whole architecture.
+
+Free for 30 days.
+Link in bio.
+
+#variableincome #1099 #creator #etsy #floorfirst`,
+    tt: `Every dollar gets a job the moment it arrives.
+
+Whole architecture.
+becomeable.app
+
+#variableincome #freelancetok #1099`,
+  },
+
+  // ─── W41 · Creator burnout · boring is the feature ───
+  '41|Mon': {
+    // 80 single
+    ig: `Creator burnout has a money component most people miss.
+
+The constant decisions. The "should I take this brand deal." The "can I afford to skip a month." Every dollar is an open question.
+
+Closing the questions is what unloads the cognitive cost.
+
+Free for 30 days.
+Link in bio.
+
+#creatorburnout #creator #1099 #moneymindset #variableincome`,
+    tt: `Creator burnout has a money component.
+
+Closing the questions unloads the cognitive cost.
+becomeable.app
+
+#creatorburnout #creator #1099`,
+  },
+  '41|Tue': {
+    // R30 anti-hustle REUSE
+    ig: `Other apps want your attention.
+
+Streaks. Notifications. Daily insights. AI summaries you won't read.
+
+Able wants the math right. Boring is the feature. The tool you forget about is the one that's working.
+
+Free for 30 days.
+Link in bio.
+
+#creator #boringbutworks #variableincome #1099 #moneymindset`,
+    tt: `Other apps want attention. Boring is the feature.
+
+The tool you forget about is the one working.
+becomeable.app
+
+#creator #freelancetok #1099`,
+  },
+  '41|Wed': {
+    // PC8 product-why-apps-fail carousel
+    ig: `Why budgeting apps fail variable income.
+
+They assume a paycheck. They want monthly. They show what happened, too late.
+
+The fix: per-deposit, not per-month. Score reality, not the plan.
+
+Swipe →
+Link in bio.
+
+#variableincome #1099 #creator #budgeting #floorfirst`,
+    tt: `Why apps fail variable income.
+
+Assume paycheck. Want monthly. Show too late.
+becomeable.app
+
+#variableincome #freelancetok #1099`,
+  },
+  '41|Thu': {
+    // P05 product-coach-knows
+    ig: `A coach that knows your real numbers.
+
+Not generic finance tips. Not "consider tracking your spending." Coach knows what landed, what's owed, what's on the way.
+
+The answers are about your actual month.
+
+Free for 30 days.
+Link in bio.
+
+#aicoach #creator #1099 #variableincome #moneymindset`,
+    tt: `A coach that knows your real numbers.
+
+Answers about your actual month.
+becomeable.app
+
+#aicoach #creator #freelancetok`,
+  },
+  '41|Fri': {
+    // C42 calm-month carousel REUSE 2x
+    ig: `What a calm month feels like, creator edition.
+
+The brand deals come. The deals don't come. The reserve absorbs. The coach checks in. The math runs.
+
+You spent the month creating, not balance-checking at 1am.
+
+Swipe →
+Link in bio.
+
+#calmmoney #creator #1099 #variableincome #moneymindset`,
+    tt: `Calm month, creator edition.
+
+Spent the month creating. Not balance-checking.
+becomeable.app
+
+#calmmoney #creator #freelancetok`,
+  },
+  '41|Sat': {
+    // R28 not-your-fault REUSE
+    ig: `Not more discipline.
+Not a stricter budget.
+Not trying harder.
+
+A system. Built for variable income.
+
+Free for 30 days.
+Link in bio.
+
+#variableincome #creator #1099 #moneymindset #budgeting`,
+    tt: `Not discipline. Not stricter budget. Not trying harder.
+
+A system. Built for variable.
+becomeable.app
+
+#variableincome #freelancetok #1099`,
+  },
+  '41|Sun': {
+    // B39 outcome · Confidence
+    ig: `No more paralysis. Just confidence.
+
+You stop dreading the bank app. You stop running scenarios at 3am. The numbers do what they're supposed to do.
+
+Free for 30 days.
+Link in bio.
+
+#calmmoney #creator #1099 #variableincome #moneymindset`,
+    tt: `No more paralysis. Just confidence.
+
+Numbers do what they're supposed to.
+becomeable.app
+
+#calmmoney #freelancetok #1099`,
+  },
+
+  // ─── W42 · Gig · rideshare + delivery ───
+  '42|Mon': {
+    // 81 single
+    ig: `Rideshare and delivery, the math nobody runs for you.
+
+Gross fare ≠ what you keep. Gas. Phone. Mileage depreciation. Self-employment tax. Roughly: keep about 50-60% of what the app shows.
+
+Plan around the real number, not the displayed one.
+
+Free for 30 days.
+Link in bio.
+
+#rideshare #delivery #gigwork #1099 #variableincome`,
+    tt: `Rideshare gross ≠ what you keep.
+
+Real number ~50-60% of what the app shows.
+becomeable.app
+
+#rideshare #gigwork #1099`,
+  },
+  '42|Tue': {
+    // R32 gig-moment REUSE — rideshare
+    ig: `End of a long shift. Earnings hit. Already gone.
+
+Gas. Phone. Tax owed.
+
+Reserve 30% the second it lands. The rest is actually yours.
+
+Free for 30 days.
+Link in bio.
+
+#rideshare #delivery #gigwork #1099 #variableincome`,
+    tt: `End of a long shift. Already gone.
+
+Reserve 30%. The rest is actually yours.
+becomeable.app
+
+#rideshare #gigwork #1099`,
+  },
+  '42|Wed': {
+    // C22 rideshare-driver carousel REUSE
+    ig: `Rideshare driver's actual P&L.
+
+Gross earnings. Minus gas. Minus mileage. Minus phone share. Minus SE tax. = net.
+
+Most drivers haven't run this calc cleanly. The system tags it as you go.
+
+Swipe →
+Link in bio.
+
+#rideshare #gigwork #1099 #variableincome #scheduleC`,
+    tt: `Rideshare P&L.
+
+Gross. Gas. Mileage. Phone. SE tax. Net.
+becomeable.app
+
+#rideshare #gigwork #1099`,
+  },
+  '42|Thu': {
+    // P29 product-bs-log-ten-seconds
+    ig: `Log what came in. Ten seconds.
+
+End of shift. Earnings hit. Tap. Done.
+Already split into tax, gas reserve, bills, free.
+
+Ten seconds beats five months of "I'll figure out my deductions in March."
+
+Free for 30 days.
+Link in bio.
+
+#rideshare #gigwork #1099 #variableincome #budgeting`,
+    tt: `Log what came in. Ten seconds.
+
+End of shift. Tap. Done.
+becomeable.app
+
+#rideshare #gigwork #1099`,
+  },
+  '42|Fri': {
+    // PC1 product-first-week carousel
+    ig: `Your first week with Able, gig edition.
+
+Day 1: connect bank. Day 2: first earnings already split. Day 4: first bill reserved. Day 7: floor steady. Reserve growing.
+
+Built for end-of-shift, not Saturday afternoon.
+
+Swipe →
+Link in bio.
+
+#rideshare #gigwork #1099 #variableincome #budgeting`,
+    tt: `Your first week with Able. Gig edition.
+
+Day 1 connect. Day 7 floor steady.
+becomeable.app
+
+#rideshare #gigwork #1099`,
+  },
+  '42|Sat': {
+    // R43 log-income REUSE 2x — gig
+    ig: `Day 1 of any week. Earnings hit.
+
+Log what came in. Ten seconds.
+Already split. Tax, gas, bills, reserve, free.
+
+Day 30 stops being a mystery when Day 1 is on a system.
+
+Free for 30 days.
+Link in bio.
+
+#rideshare #gigwork #1099 #variableincome #budgeting`,
+    tt: `Earnings hit. Log. Ten seconds. Already split.
+
+Day 30 stops being a mystery.
+becomeable.app
+
+#rideshare #gigwork #1099`,
+  },
+  '42|Sun': {
+    // B05 audience · Entrepreneur who struggles
+    ig: `For the entrepreneur who struggles to budget inconsistent income.
+
+The app every other tool wanted you to use was built for someone else. Built this one for you.
+
+Free for 30 days.
+Link in bio.
+
+#variableincome #1099 #freelancing #budgeting #floorfirst`,
+    tt: `For the entrepreneur struggling with inconsistent income.
+
+Built for you specifically.
+becomeable.app
+
+#variableincome #freelancetok #1099`,
+  },
+
+  // ─── W43 · Gig · mileage + deductions ───
+  '43|Mon': {
+    // 82 single
+    ig: `Mileage deduction, the gig version.
+
+70¢ per mile in 2026. If you drove 15,000 miles for work, that's $10,500 off your taxable income.
+
+Most gig workers don't track. Most gig workers leave thousands on the table.
+
+Free for 30 days.
+Link in bio.
+
+#mileage #gigwork #1099 #taxes #scheduleC`,
+    tt: `Mileage deduction. 70¢/mi (2026).
+
+15K miles = $10,500 off taxable income.
+becomeable.app
+
+#mileage #gigwork #1099`,
+  },
+  '43|Tue': {
+    // R17 tax-bucket-setup REUSE 2x — gig mileage angle
+    ig: `Tax bucket, gig setup.
+
+30% off every fare. Mileage tagged in real time. Phone share allocated.
+
+Schedule C in March writes itself when this is running shift by shift.
+
+Free for 30 days.
+Link in bio.
+
+#gigwork #mileage #1099 #taxes #scheduleC`,
+    tt: `Tax bucket, gig setup.
+
+30% per fare. Mileage tagged. Phone share allocated.
+becomeable.app
+
+#gigwork #mileage #1099`,
+  },
+  '43|Wed': {
+    // C32 schedule-c carousel REUSE 2x — gig
+    ig: `Schedule C, gig edition.
+
+Mileage. Phone. Apps used for dispatching. A portion of car insurance. Maintenance.
+
+The "ordinary and necessary" line covers a lot when your office is a vehicle.
+
+Swipe →
+Link in bio.
+
+#scheduleC #gigwork #1099 #taxes #mileage`,
+    tt: `Schedule C, gig edition.
+
+Mileage, phone, apps, insurance share, maintenance.
+becomeable.app
+
+#scheduleC #gigwork #1099`,
+  },
+  '43|Thu': {
+    // P13 product-tax-classify REUSE — gig
+    ig: `Tag once. Able remembers forever.
+
+Mark a fare deductible. Every future Uber/Lyft/DoorDash payout inherits it.
+
+The "I'll go through 12 months of statements in February" plan was always going to fail. Real-time tagging is the version that survives.
+
+Free for 30 days.
+Link in bio.
+
+#gigwork #1099 #taxes #scheduleC #mileage`,
+    tt: `Tag once. Able remembers forever.
+
+Real-time beats February reconstruction.
+becomeable.app
+
+#gigwork #1099 #taxes`,
+  },
+  '43|Fri': {
+    // C33 SE deductions carousel REUSE 2x — gig
+    ig: `SE deductions you almost missed, gig edition.
+
+Mileage. Phone. Apps. Half of SE tax. QBI on profitable years.
+
+Every one of these is real money you're owed back.
+
+Swipe →
+Link in bio.
+
+#gigwork #1099 #taxes #scheduleC #deductions`,
+    tt: `SE deductions, gig edition.
+
+Mileage. Phone. Apps. Half SE tax. QBI.
+becomeable.app
+
+#gigwork #1099 #taxes`,
+  },
+  '43|Sat': {
+    // R36 tip-30-percent REUSE — gig
+    ig: `One tip for gig income.
+
+Move 30% the second the payout clears. Not Sunday. Not "next week." Day of.
+
+Most "tax surprises" are missed-Day-1's stacked. The fix is one tap per shift.
+
+Free for 30 days.
+Link in bio.
+
+#gigwork #1099 #taxes #rideshare #variableincome`,
+    tt: `One tip for gig income.
+
+30% off. Day of.
+becomeable.app
+
+#gigwork #rideshare #1099`,
+  },
+  '43|Sun': {
+    // B11 villain · Inconsistent feels impossible
+    ig: `Inconsistent income makes budgeting feel impossible.
+
+Until you find a tool that starts from inconsistent. Then the budgeting feels normal. The "impossible" was a tool problem.
+
+Free for 30 days.
+Link in bio.
+
+#variableincome #1099 #gigwork #freelancing #budgeting`,
+    tt: `Inconsistent income makes budgeting feel impossible.
+
+The "impossible" was a tool problem.
+becomeable.app
+
+#variableincome #freelancetok #1099`,
+  },
+
+  // ─── W44 · Gig · peak demand + uneven weeks ───
+  '44|Mon': {
+    // 83 single
+    ig: `Peak demand vs slow weeks. Same job. Different income.
+
+The mistake is using peak weeks as the baseline. The fix is using a 12-week trailing average for budgeting and treating peak surplus as reserve fuel.
+
+Free for 30 days.
+Link in bio.
+
+#gigwork #rideshare #variableincome #1099 #budgeting`,
+    tt: `Peak vs slow. Same job, different income.
+
+Use 12-week trailing average. Peak fuels reserve.
+becomeable.app
+
+#gigwork #rideshare #1099`,
+  },
+  '44|Tue': {
+    // R12 three-days REUSE — gig framing
+    ig: `Same person. Three days.
+
+Day 3: frozen on the money.
+Day 14: gone before you noticed.
+Day 31: relief, then panic.
+
+Same person, different week. Not a discipline problem. A system problem.
+
+Free for 30 days.
+Link in bio.
+
+#gigwork #variableincome #1099 #moneymindset #budgeting`,
+    tt: `Same person. Three days.
+
+Day 3 frozen. Day 14 gone. Day 31 panic.
+becomeable.app
+
+#gigwork #freelancetok #1099`,
+  },
+  '44|Wed': {
+    // C12 day-by-day carousel REUSE
+    ig: `Day 1 to Day 30, gig edition.
+
+Day 1: peak shift. $300 hits. $200 to floor, $90 to debt, $10 free.
+Day 14: slow week. $80 hits. Same split, smaller numbers.
+Day 30: floor still steady.
+
+The architecture, not the income, is what changes the month.
+
+Swipe →
+Link in bio.
+
+#gigwork #variableincome #1099 #budgeting #floorfirst`,
+    tt: `Day 1 to Day 30, gig edition.
+
+Architecture changes the month, not income.
+becomeable.app
+
+#gigwork #freelancetok #1099`,
+  },
+  '44|Thu': {
+    // P15 product-balance-clear
+    ig: `Available to spend. Not your balance.
+
+The bank shows the balance. The system shows what's actually free after the floor, the reserve, and the schedule.
+
+Two numbers, one honest.
+
+Free for 30 days.
+Link in bio.
+
+#variableincome #1099 #gigwork #budgeting #floorfirst`,
+    tt: `Available to spend. Not your balance.
+
+Two numbers. One honest.
+becomeable.app
+
+#variableincome #freelancetok #1099`,
+  },
+  '44|Fri': {
+    // PC6 product-slow-month REUSE 2x — gig
+    ig: `Slow week, gig edition.
+
+Earnings drop. Bills don't. The reserve absorbs the gap.
+
+The math worked because the peak weeks fed the reserve. Now the reserve feeds the floor.
+
+Swipe →
+Link in bio.
+
+#gigwork #rideshare #reserve #variableincome #1099`,
+    tt: `Slow week, gig edition.
+
+Reserve absorbs. Bills covered.
+becomeable.app
+
+#gigwork #reserve #1099`,
+  },
+  '44|Sat': {
+    // R49 score-detail REUSE — gig
+    ig: `Score the week.
+
+Reality. Not the plan.
+
+Drove 14 hours. Paid out $580. Tagged. Tax bucket grew $174. Three bills reserved. The week earned its score.
+
+Free for 30 days.
+Link in bio.
+
+#gigwork #rideshare #1099 #variableincome #scoring`,
+    tt: `Score the week. Reality.
+
+The week earned its score.
+becomeable.app
+
+#gigwork #freelancetok #1099`,
+  },
+  '44|Sun': {
+    // B19 paralysis · $400 gone, nothing to show (reused)
+    ig: `Day 30. $400 gone. Nothing to show for it.
+
+Not a personality flaw. The leak that happens when no dollar had a job on the way in.
+
+The fix is structural.
+
+Free for 30 days.
+Link in bio.
+
+#variableincome #1099 #gigwork #budgeting #moneyhabits`,
+    tt: `Day 30. $400 gone. Nothing to show.
+
+Not a flaw. A structural leak.
+becomeable.app
+
+#freelancetok #1099 #moneytok`,
+  },
+
+  // ─── W45 · Gig · real-estate agents (deal-to-deal income) ───
+  '45|Mon': {
+    // 84 single
+    ig: `Real-estate agents. Deal-to-deal income.
+
+Closing this week: $14K. Closing next week: $0. Two weeks later: $9K.
+
+The reserve is what turns this into a steady paycheck. Without it, every closing feels like rent for the next two months.
+
+Free for 30 days.
+Link in bio.
+
+#realestate #realestateagent #commission #variableincome #1099`,
+    tt: `Real estate. Deal-to-deal.
+
+$14K. $0. $9K. Reserve = steady paycheck.
+becomeable.app
+
+#realestate #commission #1099`,
+  },
+  '45|Tue': {
+    // R14 cost-of-waiting REUSE
+    ig: `The cost of waiting.
+
+Per month. $2,000 gone.
+Six months. $12,000 gone.
+One year. $24,000 gone.
+
+Not bad decisions. A missing system. The longer it runs, the bigger the gap.
+
+Free for 30 days.
+Link in bio.
+
+#realestate #commission #variableincome #1099 #moneymindset`,
+    tt: `Cost of waiting.
+
+$2K/mo → $24K/yr. Not bad decisions. Missing system.
+becomeable.app
+
+#realestate #commission #1099`,
+  },
+  '45|Wed': {
+    // C21 real-estate-agent carousel REUSE
+    ig: `Real estate agent budget. The actual shape.
+
+Commission deposit. Split: brokerage piece, tax piece, bills, reserve, free.
+Half of what landed wasn't yours. The system pre-handles the math.
+
+Swipe →
+Link in bio.
+
+#realestate #realestateagent #commission #1099 #budgeting`,
+    tt: `Real estate agent budget.
+
+Commission. Brokerage. Tax. Bills. Reserve. Free.
+becomeable.app
+
+#realestate #commission #1099`,
+  },
+  '45|Thu': {
+    // P28 product-bs-different-clock REUSE 2x
+    ig: `Same foundation. Different clock.
+
+Salaried agents (rare) and commission agents need the same things. Bills, tax, reserve, retirement.
+
+The difference is the clock. Commission is per-deal. Same architecture, different inputs.
+
+Free for 30 days.
+Link in bio.
+
+#realestate #commission #variableincome #1099 #budgeting`,
+    tt: `Same foundation. Different clock.
+
+Per-deal vs monthly. Same architecture.
+becomeable.app
+
+#realestate #commission #1099`,
+  },
+  '45|Fri': {
+    // C25 commission-income carousel REUSE
+    ig: `Commission income, the architecture.
+
+Big check lands. Five splits run. Tax piece reserved. Bills covered for next month. Reserve fills. Debt slot moves.
+
+The "windfall" was always five jobs. The system shows them.
+
+Swipe →
+Link in bio.
+
+#commission #realestate #sales #variableincome #1099`,
+    tt: `Commission income architecture.
+
+Five splits per check.
+becomeable.app
+
+#commission #realestate #1099`,
+  },
+  '45|Sat': {
+    // R34 commission-moment REUSE 2x
+    ig: `Big commission lands. Then crickets for weeks.
+
+Lumpy income. Steady bills.
+The reserve is the bridge.
+
+Same paycheck, same day. Built from the lumpy.
+
+Free for 30 days.
+Link in bio.
+
+#commission #realestate #variableincome #1099 #reserve`,
+    tt: `Big commission lands. Then crickets.
+
+Reserve is the bridge.
+becomeable.app
+
+#commission #realestate #1099`,
+  },
+  '45|Sun': {
+    // B13 real fear · Next check
+    ig: `Afraid of not knowing when the next check is coming in.
+
+That's the actual fear. Not bills. Not debt. The not-knowing.
+
+The system gives you a forecast. The fear gives way to a number.
+
+Free for 30 days.
+Link in bio.
+
+#variableincome #1099 #commission #realestate #moneymindset`,
+    tt: `The fear is the not-knowing.
+
+Forecast replaces fear with a number.
+becomeable.app
+
+#variableincome #freelancetok #1099`,
+  },
+
+  // ═════════════════════════════════════════════════════════
+  // PHASE 3 BATCH C — W46-W65 (Commission → Business → Calm/Identity → Floor-First → Finale)
+  // IG + TT only. LI omitted per the IG/TT-focused plan.
+  // Reused pieces get fresh, week-themed framing.
+  // ═════════════════════════════════════════════════════════
+
+  // ─── W46 · Commission · big check, then crickets ───
+  '46|Mon': {
+    // 85 single
+    ig: `Big commission lands. Then nothing for three weeks.
+
+The check feels like winning the lottery. Until you spend the third week eating the lottery.
+
+Lumpy income needs a steady-paycheck mechanic underneath. The reserve is the bridge.
+
+Free for 30 days.
+Link in bio.
+
+#commission #realestate #variableincome #1099 #reserve`,
+    tt: `Big commission. Then nothing for three weeks.
+
+Reserve = bridge between checks.
+becomeable.app
+
+#commission #realestate #1099`,
+  },
+  '46|Tue': {
+    // R34 commission-moment REUSE 2x
+    ig: `Big commission lands. Then crickets.
+
+Lumpy income. Steady bills. The reserve is the bridge.
+Same paycheck, same day. Built from the lumpy.
+
+Free for 30 days.
+Link in bio.
+
+#commission #realestate #variableincome #1099 #reserve`,
+    tt: `Big commission. Then crickets.
+
+Reserve is the bridge.
+becomeable.app
+
+#commission #realestate #1099`,
+  },
+  '46|Wed': {
+    // C25 commission-income carousel REUSE 2x
+    ig: `Commission income, the architecture.
+
+Big check lands. Five splits run. Tax piece reserved. Bills covered next month. Reserve fills. Debt slot moves.
+
+The "windfall" was always five jobs. The system shows them.
+
+Swipe →
+Link in bio.
+
+#commission #realestate #sales #variableincome #1099`,
+    tt: `Commission income architecture.
+
+Five splits per check. Always was.
+becomeable.app
+
+#commission #realestate #1099`,
+  },
+  '46|Thu': {
+    // P22 product-bs-you-freeze
+    ig: `You don't move it. You freeze.
+
+The check landed Friday. It's Wednesday. You haven't decided what's "for taxes" yet. The window keeps narrowing.
+
+Decide once. The system handles every check after.
+
+Free for 30 days.
+Link in bio.
+
+#commission #variableincome #1099 #moneymindset #budgeting`,
+    tt: `You don't move it. You freeze.
+
+Decide once. System handles every check after.
+becomeable.app
+
+#commission #freelancetok #1099`,
+  },
+  '46|Fri': {
+    // PC6 product-slow-month REUSE 3x — commission framing
+    ig: `When the slow month hits, commission edition.
+
+Income drops. Bills don't. The reserve absorbs the gap.
+
+The whole thing was a five-tap night. The next closing is still a month out.
+
+Swipe →
+Link in bio.
+
+#commission #realestate #slowmonth #reserve #variableincome`,
+    tt: `Slow month, commission edition.
+
+Reserve absorbs. Floor holds.
+becomeable.app
+
+#commission #realestate #1099`,
+  },
+  '46|Sat': {
+    // R45 plan-whatif REUSE 2x — commission
+    ig: `Stress-test the dry stretch.
+
+Type "no closing for 6 weeks." Watch the reserve absorb. Watch the floor still hold.
+
+Calm comes from running the numbers before they run you.
+
+Free for 30 days.
+Link in bio.
+
+#commission #realestate #stresstest #1099 #variableincome`,
+    tt: `Stress-test the dry stretch.
+
+Watch the reserve absorb. Floor still holds.
+becomeable.app
+
+#commission #realestate #1099`,
+  },
+  '46|Sun': {
+    // B17 paralysis · Don't move the money REUSE 2x
+    ig: `You don't move the money because you don't know when the next check is coming.
+
+That's the real reason. Not laziness. Not avoidance. Uncertainty about timing.
+
+A forecast replaces the uncertainty.
+
+Free for 30 days.
+Link in bio.
+
+#commission #variableincome #1099 #moneymindset #budgeting`,
+    tt: `You don't move the money because you don't know when the next check is coming.
+
+Forecast replaces uncertainty.
+becomeable.app
+
+#commission #freelancetok #1099`,
+  },
+
+  // ─── W47 · Commission · the bridge (reserve) ───
+  '47|Mon': {
+    // 86 single
+    ig: `The reserve isn't savings. It's a bridge.
+
+Savings is "for the future."
+Reserve is "for the gap between checks."
+
+Both useful. Different jobs. Variable income needs the bridge before the savings.
+
+Free for 30 days.
+Link in bio.
+
+#reserve #savings #commission #variableincome #1099`,
+    tt: `Reserve isn't savings. It's a bridge.
+
+Different jobs. Bridge before savings.
+becomeable.app
+
+#reserve #commission #1099`,
+  },
+  '47|Tue': {
+    // R16 income-reserve REUSE 3x
+    ig: `Your reserve is a dam.
+
+Big check fills it. Slow week draws it down. Bills stay funded either way.
+
+Without the dam, every wave hits the bills directly.
+
+Free for 30 days.
+Link in bio.
+
+#reserve #commission #variableincome #1099 #freelancing`,
+    tt: `Reserve is a dam.
+
+Big check fills. Slow week draws. Bills stay funded.
+becomeable.app
+
+#reserve #commission #1099`,
+  },
+  '47|Wed': {
+    // C26 emergency-fund carousel REUSE 2x
+    ig: `Emergency fund vs reserve, carousel edition.
+
+Emergency fund: unexpected events.
+Reserve: expected lumpiness.
+
+Variable income needs both. Reserve first. It runs more often.
+
+Swipe →
+Link in bio.
+
+#emergencyfund #reserve #variableincome #commission #1099`,
+    tt: `Emergency fund vs reserve.
+
+Reserve runs more often. Build it first.
+becomeable.app
+
+#reserve #emergencyfund #1099`,
+  },
+  '47|Thu': {
+    // P34 product-bs-nothing-leaked
+    ig: `Bills paid. Nothing leaked.
+
+Two phrases that should describe every month. They didn't, before. They do now.
+
+The leak is what compounds. Sealing it is the whole game.
+
+Free for 30 days.
+Link in bio.
+
+#variableincome #1099 #commission #budgeting #floorfirst`,
+    tt: `Bills paid. Nothing leaked.
+
+Sealing the leak is the whole game.
+becomeable.app
+
+#variableincome #freelancetok #1099`,
+  },
+  '47|Fri': {
+    // C42 calm-month carousel REUSE 3x — commission
+    ig: `Calm month, commission edition.
+
+Last closing was 18 days ago. The next one might be next week. Might be next month.
+
+Bills covered. Tax piece set aside. Reserve at target. The not-knowing stopped being scary.
+
+Swipe →
+Link in bio.
+
+#calmmoney #commission #realestate #1099 #variableincome`,
+    tt: `Calm month, commission edition.
+
+The not-knowing stopped being scary.
+becomeable.app
+
+#calmmoney #commission #1099`,
+  },
+  '47|Sat': {
+    // R44 plan-bills REUSE 2x — commission
+    ig: `Every bill, on the page.
+
+Funded before they're due. Reserve underneath funds the gap when commissions run thin.
+
+You stop checking dates. The dates take care of themselves.
+
+Free for 30 days.
+Link in bio.
+
+#commission #realestate #bills #1099 #variableincome`,
+    tt: `Every bill on the page. Funded before due.
+
+Reserve funds the gap.
+becomeable.app
+
+#commission #realestate #1099`,
+  },
+  '47|Sun': {
+    // B26 outcome · Actually build savings REUSE
+    ig: `Actually build your savings.
+
+Not "intend to save." Not "save what's left."
+Move it before the rest of the splits run. Watch it grow on the variable income you have.
+
+Free for 30 days.
+Link in bio.
+
+#savings #commission #variableincome #1099 #payyourselffirst`,
+    tt: `Actually build your savings.
+
+Not save-what's-left. Move it before splits.
+becomeable.app
+
+#savings #commission #1099`,
+  },
+
+  // ─── W48 · Commission · sales pros + lumpy income ───
+  '48|Mon': {
+    // 87 single
+    ig: `Sales pros and the steady-paycheck illusion.
+
+Top 1099 reps make six figures. Average rep makes lumps with gaps.
+The architecture is the same. Big check or small, every deposit gets the same five jobs.
+
+Free for 30 days.
+Link in bio.
+
+#sales #commission #1099 #variableincome #budgeting`,
+    tt: `Sales pros and lumpy income.
+
+Big check or small. Same five jobs.
+becomeable.app
+
+#sales #commission #1099`,
+  },
+  '48|Tue': {
+    // R11 steady-paycheck REUSE 3x — sales pro framing
+    ig: `Pay yourself a steady paycheck.
+
+Income is lumpy. Bills are not.
+Build the reserve. The dam on the river. Same paycheck, same day.
+
+Boring is the feature. The tool you forget about is the one that's working.
+
+Free for 30 days.
+Link in bio.
+
+#sales #commission #payyourselffirst #1099 #variableincome`,
+    tt: `Pay yourself a steady paycheck.
+
+Lumpy income → boring rhythm.
+becomeable.app
+
+#payyourselffirst #commission #1099`,
+  },
+  '48|Wed': {
+    // C18 steady-paycheck carousel REUSE 2x — sales pro
+    ig: `The steady-paycheck mechanic, sales edition.
+
+Reserve absorbs the dry months. Bills run on the schedule that bills demand. You get a reliable transfer on the day you pick.
+
+Quotas don't break the rhythm.
+
+Swipe →
+Link in bio.
+
+#sales #commission #payyourselffirst #variableincome #1099`,
+    tt: `Steady-paycheck mechanic, sales edition.
+
+Quotas don't break the rhythm.
+becomeable.app
+
+#payyourselffirst #commission #1099`,
+  },
+  '48|Thu': {
+    // P15 product-balance-clear REUSE
+    ig: `Available to spend. Not your balance.
+
+Bank shows the balance after a $30,000 commission lands.
+System shows what's actually free after the floor, the reserve, and the schedule. About a tenth of that.
+
+Free for 30 days.
+Link in bio.
+
+#commission #sales #1099 #budgeting #variableincome`,
+    tt: `Available to spend. Not your balance.
+
+After $30K commission: balance huge. Free is ~10%.
+becomeable.app
+
+#commission #sales #1099`,
+  },
+  '48|Fri': {
+    // PC1 product-first-week carousel REUSE
+    ig: `Your first week with Able, sales edition.
+
+Day 1: connect bank. Day 2: first commission lands, already split. Day 4: first bill reserved. Day 7: floor steady. Reserve growing.
+
+Built for closing days, not for HR onboarding rhythms.
+
+Swipe →
+Link in bio.
+
+#sales #commission #1099 #variableincome #budgeting`,
+    tt: `First week with Able, sales edition.
+
+Day 1 connect. Day 7 floor steady.
+becomeable.app
+
+#sales #commission #1099`,
+  },
+  '48|Sat': {
+    // R10 same-income REUSE 3x — sales pro
+    ig: `Same income. Different feeling.
+
+Q1 closings: $42K. Q2 closings: $42K.
+Q1: panicked twice. Bills late once. Tax surprise.
+Q2: nothing leaked. Same dollars, different architecture.
+
+Free for 30 days.
+Link in bio.
+
+#commission #sales #variableincome #1099 #moneymindset`,
+    tt: `Same income. Different feeling.
+
+Same dollars, different architecture.
+becomeable.app
+
+#commission #sales #1099`,
+  },
+  '48|Sun': {
+    // B24 solution · Lumpy income REUSE
+    ig: `Able assumes your income is lumpy, unpredictable, rarely on schedule.
+
+That's the foundational assumption. Every mechanic builds from there.
+
+Free for 30 days.
+Link in bio.
+
+#variableincome #commission #1099 #freelancing #floorfirst`,
+    tt: `Able assumes your income is lumpy.
+
+Every mechanic builds from there.
+becomeable.app
+
+#variableincome #commission #1099`,
+  },
+
+  // ─── W49 · Commission · the math of feast/famine ───
+  '49|Mon': {
+    // 88 single
+    ig: `The math of feast/famine, run honestly.
+
+Feast: $20K month. Famine: $1K month. Average: $10.5K. The bills assume $10.5K.
+
+The bills don't care about the average. They care about whether the cash is in the bucket on the 1st.
+
+Free for 30 days.
+Link in bio.
+
+#feastorfamine #commission #variableincome #1099 #budgeting`,
+    tt: `Feast/famine math.
+
+Bills don't care about the average.
+becomeable.app
+
+#feastorfamine #commission #1099`,
+  },
+  '49|Tue': {
+    // R2 where-4000-goes REUSE
+    ig: `Where $4,000 actually goes.
+
+$1,200 tax. $1,800 bills. $300 subs. $400 small grabs. $300 leaks.
+
+The $300 in leaks feels small. The compound is huge.
+
+Free for 30 days.
+Link in bio.
+
+#variableincome #1099 #commission #budgeting #moneyhabits`,
+    tt: `Where $4,000 actually goes.
+
+The $300 leak feels small. The compound is huge.
+becomeable.app
+
+#commission #freelancetok #1099`,
+  },
+  '49|Wed': {
+    // C4 money-math carousel REUSE
+    ig: `Money math, the variable-income version.
+
+Income (variable). Tax (off the top). Bills (constant). Debt (scheduled). Reserve (smoothing). Free (whatever's left).
+
+Six numbers. The system runs them every deposit.
+
+Swipe →
+Link in bio.
+
+#variableincome #1099 #commission #budgeting #floorfirst`,
+    tt: `Money math, variable income version.
+
+Six numbers. System runs them every deposit.
+becomeable.app
+
+#variableincome #freelancetok #1099`,
+  },
+  '49|Thu': {
+    // P25 product-bs-day-30-leak
+    ig: `Day 30. Where did it go?
+
+The phrase you stopped saying once the system started running. The "where" is on the page now. Tagged. Categorized. No mystery.
+
+Free for 30 days.
+Link in bio.
+
+#variableincome #1099 #commission #budgeting #moneyhabits`,
+    tt: `Day 30. Where did it go?
+
+The phrase you stopped saying.
+becomeable.app
+
+#variableincome #freelancetok #1099`,
+  },
+  '49|Fri': {
+    // C13 compound-cost carousel REUSE
+    ig: `Compound cost of waiting.
+
+Per month: $2,000 leaks.
+Six months: $12,000 gone.
+One year: $24,000 gone.
+
+Not bad decisions. A missing system. Each month it runs is the bigger compound number you didn't pay.
+
+Swipe →
+Link in bio.
+
+#variableincome #1099 #commission #budgeting #compoundcost`,
+    tt: `Compound cost of waiting.
+
+$2K/mo. $12K/6mo. $24K/yr.
+becomeable.app
+
+#commission #freelancetok #1099`,
+  },
+  '49|Sat': {
+    // R31 $400-paralysis REUSE
+    ig: `Day 1: money lands.
+Day 14: $23 here. $48 there. $12 again.
+Day 30: $400 gone. Nothing to show for it.
+
+Receipt-by-receipt. Nothing memorable. The leak that compounds.
+
+Free for 30 days.
+Link in bio.
+
+#variableincome #1099 #commission #budgeting #moneyhabits`,
+    tt: `Day 1 lands. Day 30, $400 gone. Nothing to show.
+
+Receipt by receipt. The leak that compounds.
+becomeable.app
+
+#commission #freelancetok #1099`,
+  },
+  '49|Sun': {
+    // B40 cost of waiting REUSE
+    ig: `Every month is another $500 to $1,000 gone.
+
+Not all at once. Not on anything memorable. Just the leak that runs without a system to seal it.
+
+The cost of waiting compounds. The cost of starting is $14.99.
+
+Free for 30 days.
+Link in bio.
+
+#variableincome #1099 #commission #compoundcost #budgeting`,
+    tt: `Every month, another $500-$1,000 gone.
+
+Cost of waiting compounds. Cost of starting is $14.99.
+becomeable.app
+
+#variableincome #commission #1099`,
+  },
+
+  // ─── W50 · Business · owner pay percent ───
+  '50|Mon': {
+    // 89 single
+    ig: `Owner pay as a percent of revenue.
+
+Pick the number. Stick to it. 10%. 30%. 50%. Whatever the business can support.
+
+The mistake most owners make: paying themselves what's left. There's never anything left.
+
+Free for 30 days.
+Link in bio.
+
+#smallbusiness #ownerpay #payyourselffirst #1099 #budgeting`,
+    tt: `Owner pay as % of revenue.
+
+Pick it. Stick. There's never anything "left."
+becomeable.app
+
+#ownerpay #smallbusinesstok #1099`,
+  },
+  '50|Tue': {
+    // R35 business-moment REUSE
+    ig: `Revenue up. Owner pay flat.
+
+Because every dollar had someone else's job.
+
+Set an owner-pay percent. Every deposit honors it. Pay yourself first. Boring is right.
+
+Free for 30 days.
+Link in bio.
+
+#smallbusiness #ownership #variableincome #payyourselffirst #budgeting`,
+    tt: `Revenue up. Owner pay flat.
+
+Set the percent. Every deposit honors it.
+becomeable.app
+
+#ownerpay #smallbusinesstok #1099`,
+  },
+  '50|Wed': {
+    // C36 pay-yourself-first carousel REUSE 2x — business
+    ig: `Pay yourself first, business owner edition.
+
+Revenue lands. Owner-pay percent runs. Tax runs. Bills run. What's left is the business reinvestment, not your salary.
+
+Reverse the order most owners use.
+
+Swipe →
+Link in bio.
+
+#smallbusiness #ownerpay #payyourselffirst #1099 #budgeting`,
+    tt: `Pay yourself first, owner edition.
+
+Reverse the order most owners use.
+becomeable.app
+
+#ownerpay #smallbusinesstok #1099`,
+  },
+  '50|Thu': {
+    // P38 product-bs-i-am-able-save
+    ig: `I am able to save.
+
+Not "I should save." Not "I'm trying to save." I am.
+
+The word changes when the structure does the work. Variable income runs through a system, the savings line moves on its own.
+
+Free for 30 days.
+Link in bio.
+
+#savings #identity #variableincome #1099 #payyourselffirst`,
+    tt: `I am able to save.
+
+The word changes when the structure does the work.
+becomeable.app
+
+#savings #identity #1099`,
+  },
+  '50|Fri': {
+    // PC2 product-how-it-works carousel REUSE
+    ig: `How Able works for owners.
+
+Log what came in (revenue + draws). Able tells you where it goes. Owner pay funded. Tax bucket fills. Reserve covers slow months.
+
+The five-step tour, in your business.
+
+Swipe →
+Link in bio.
+
+#smallbusiness #ownerpay #1099 #variableincome #budgeting`,
+    tt: `How Able works for owners.
+
+Log. Split. Fund. Pay yourself. Reserve.
+becomeable.app
+
+#smallbusinesstok #ownerpay #1099`,
+  },
+  '50|Sat': {
+    // R55 more-settings · "No tricks. Just the math."
+    ig: `No tricks. Just the math.
+
+Open the settings. The percentages are visible. The destinations are visible. The schedule is visible.
+
+You can change anything. Most owners don't, after the first week.
+
+Free for 30 days.
+Link in bio.
+
+#smallbusiness #1099 #variableincome #budgeting #floorfirst`,
+    tt: `No tricks. Just the math.
+
+Settings visible. Change anything.
+becomeable.app
+
+#smallbusinesstok #freelancetok #1099`,
+  },
+  '50|Sun': {
+    // B03 brand lockup · Reserve
+    ig: `Built for the business that doesn't have a payroll department.
+
+You are the payroll department. Now you have the tool.
+
+Free for 30 days.
+Link in bio.
+
+#smallbusiness #ownerpay #1099 #variableincome #budgeting`,
+    tt: `Built for the business without a payroll department.
+
+You are the payroll department.
+becomeable.app
+
+#smallbusinesstok #ownerpay #1099`,
+  },
+
+  // ─── W51 · Business · business credit + Paydex ───
+  '51|Mon': {
+    // 90 single
+    ig: `Paydex. The score nobody told you about.
+
+Business credit. 0-100 scale. 80+ is healthy. Built by paying vendors on time, on registered tradelines.
+
+Lenders look at it before they look at your personal score. Most owners don't know it exists.
+
+Free for 30 days.
+Link in bio.
+
+#paydex #businesscredit #smallbusiness #1099 #funding`,
+    tt: `Paydex. Business credit score 0-100.
+
+Lenders check it before personal credit.
+becomeable.app
+
+#paydex #businesscredit #smallbusinesstok`,
+  },
+  '51|Tue': {
+    // R19 spreadsheet-to-system REUSE 2x — business credit
+    ig: `Your spreadsheet won't build business credit.
+
+The system has to talk to vendors and bureaus. The spreadsheet talks to itself.
+
+Free for 30 days.
+Link in bio.
+
+#businesscredit #paydex #smallbusiness #1099 #funding`,
+    tt: `Spreadsheet won't build business credit.
+
+System talks to vendors. Spreadsheet talks to itself.
+becomeable.app
+
+#businesscredit #smallbusinesstok #1099`,
+  },
+  '51|Wed': {
+    // C38 business-funding carousel REUSE 2x
+    ig: `Business credit, the order to build it in.
+
+EIN. Business address. Business phone. Business bank. Business credit cards. Tradelines. Paydex.
+
+Each step compounds. Skip a step, the next one breaks.
+
+Swipe →
+Link in bio.
+
+#businesscredit #paydex #smallbusiness #1099 #funding`,
+    tt: `Business credit. Order matters.
+
+EIN → address → phone → bank → cards → tradelines → Paydex.
+becomeable.app
+
+#businesscredit #smallbusinesstok #paydex`,
+  },
+  '51|Thu': {
+    // P07 product-settings-honest
+    ig: `No tricks. Just the math.
+
+Settings page is the whole system, naked.
+Set the percentages. See the destinations. Watch the schedule run.
+
+The thing most apps hide is the only thing you should be looking at.
+
+Free for 30 days.
+Link in bio.
+
+#smallbusiness #1099 #variableincome #floorfirst #budgeting`,
+    tt: `No tricks. Just the math.
+
+Settings page = whole system, naked.
+becomeable.app
+
+#smallbusinesstok #freelancetok #1099`,
+  },
+  '51|Fri': {
+    // C35 credit-score carousel REUSE 2x
+    ig: `Personal vs business credit score.
+
+Personal: FICO 300-850. Built on personal debt behavior.
+Business: Paydex 0-100. Built on vendor payment behavior.
+
+Different scores. Different inputs. Both matter for funding.
+
+Swipe →
+Link in bio.
+
+#creditscore #paydex #businesscredit #smallbusiness #1099`,
+    tt: `Personal vs business credit.
+
+FICO 300-850. Paydex 0-100. Both matter.
+becomeable.app
+
+#creditscore #paydex #smallbusinesstok`,
+  },
+  '51|Sat': {
+    // R54 more-refer · "Free month"
+    ig: `3 friends start a trial. You get a free month.
+
+That's the whole referral. No funnel. No pyramid. Three friends, one month free.
+
+Free for 30 days.
+Link in bio.
+
+#variableincome #1099 #freelancing #referral #becomeable`,
+    tt: `3 friends start a trial. You get a free month.
+
+That's the whole referral.
+becomeable.app
+
+#freelancetok #1099 #moneytok`,
+  },
+  '51|Sun': {
+    // B28 transformation · I am capable (RESERVE)
+    ig: `I am capable.
+
+Of running this business. Of paying down the debt. Of saving without second-guessing.
+
+The structure produces the identity. The identity wasn't earned. It was inherited from the system.
+
+Free for 30 days.
+Link in bio.
+
+#identity #smallbusiness #1099 #variableincome #moneymindset`,
+    tt: `I am capable.
+
+Structure produces the identity.
+becomeable.app
+
+#identity #smallbusinesstok #1099`,
+  },
+
+  // ─── W52 · Business · SBA + funding readiness ───
+  '52|Mon': {
+    // 91 single
+    ig: `SBA loan readiness, the honest checklist.
+
+Two years of clean books. Personal credit 680+. Business plan with realistic projections. Skin in the game (10-30% down).
+
+Most denials are at one of these. Knowing where you fail is the start.
+
+Free for 30 days.
+Link in bio.
+
+#sba #businessfunding #smallbusiness #1099 #funding`,
+    tt: `SBA loan readiness, honest checklist.
+
+2yr clean books. 680+. Plan. 10-30% down.
+becomeable.app
+
+#sba #businessfunding #smallbusinesstok`,
+  },
+  '52|Tue': {
+    // R6 wrong-tool REUSE — funding context
+    ig: `You're not bad with business money. You've been handed the wrong tool.
+
+A small-business owner running a sole-prop on a personal-budgeting app is using a hammer to drive a screw.
+
+Built for the way you actually run a business.
+
+Free for 30 days.
+Link in bio.
+
+#smallbusiness #1099 #variableincome #budgeting #floorfirst`,
+    tt: `You've been handed the wrong tool.
+
+Hammer ≠ screw. Personal-budgeting ≠ small-business.
+becomeable.app
+
+#smallbusinesstok #freelancetok #1099`,
+  },
+  '52|Wed': {
+    // C38 business-funding REUSE 3x — SBA framing
+    ig: `Business funding, the SBA path.
+
+7(a) loans. 504 loans. Microloans. Each has a different threshold. Each requires the same prep: clean books, real plan, capable team.
+
+The book-keeping is the bottleneck. Solve that, the rest gets easier.
+
+Swipe →
+Link in bio.
+
+#sba #businessfunding #smallbusiness #1099 #funding`,
+    tt: `Business funding, SBA path.
+
+7(a). 504. Micro. Bookkeeping is the bottleneck.
+becomeable.app
+
+#sba #businessfunding #smallbusinesstok`,
+  },
+  '52|Thu': {
+    // P27 product-bs-built-for-you
+    ig: `Built for the way you actually get paid.
+
+Not a paycheck. Not a salary. Lumpy revenue, draws when the business can support them, no HR department in the basement.
+
+The whole tool starts from that.
+
+Free for 30 days.
+Link in bio.
+
+#smallbusiness #ownerpay #1099 #variableincome #budgeting`,
+    tt: `Built for the way you actually get paid.
+
+Lumpy revenue, draws when supported.
+becomeable.app
+
+#smallbusinesstok #ownerpay #1099`,
+  },
+  '52|Fri': {
+    // PC8 product-why-apps-fail REUSE
+    ig: `Why business-budgeting apps fail too.
+
+They assume a payroll department. They assume monthly. They assume revenue is also predictable.
+
+The fix: per-deposit, not per-month. Score reality. Forecast next.
+
+Swipe →
+Link in bio.
+
+#smallbusiness #1099 #variableincome #budgeting #floorfirst`,
+    tt: `Why business-budgeting apps fail.
+
+Assume payroll, monthly, predictable revenue.
+becomeable.app
+
+#smallbusinesstok #1099 #moneytok`,
+  },
+  '52|Sat': {
+    // R35 business-moment REUSE 2x
+    ig: `Revenue up. Owner pay still flat.
+
+Because every dollar had someone else's job. Marketing. Payroll. Reinvestment. Vendors. The owner is always last.
+
+Set the percent. Make yourself part of the math.
+
+Free for 30 days.
+Link in bio.
+
+#smallbusiness #ownerpay #1099 #variableincome #payyourselffirst`,
+    tt: `Revenue up. Owner pay flat.
+
+Owner always last. Set the percent.
+becomeable.app
+
+#ownerpay #smallbusinesstok #1099`,
+  },
+  '52|Sun': {
+    // B29 transformation · I am able (RESERVE)
+    ig: `I am able.
+
+Two words. The whole identity stack rests on them.
+
+The transition from "I'm trying" to "I am" doesn't come from effort. It comes from a system that runs whether or not you remember to push it.
+
+Free for 30 days.
+Link in bio.
+
+#identity #becomeable #variableincome #1099 #moneymindset`,
+    tt: `I am able.
+
+The transition from trying to being.
+becomeable.app
+
+#identity #becomeable #1099`,
+  },
+
+  // ─── W53 · Business · multi-bank reality ───
+  '53|Mon': {
+    // 92 single
+    ig: `Most variable-income owners run 2-4 bank accounts.
+
+Personal checking. Business checking. Tax savings. Maybe operating reserve.
+
+The tool that connects to them all and treats them as one system is the one that works.
+
+Free for 30 days.
+Link in bio.
+
+#smallbusiness #1099 #variableincome #budgeting #multibank`,
+    tt: `Most variable-income owners run 2-4 accounts.
+
+Connect them all. Treat as one system.
+becomeable.app
+
+#smallbusinesstok #freelancetok #1099`,
+  },
+  '53|Tue': {
+    // R3 five-buckets REUSE
+    ig: `Every deposit. Already split.
+
+1. Taxes. Off the top.
+2. Bills. Reserved early.
+3. Debt. On schedule.
+4. Reserve. For slow months.
+5. Free. Guilt-free.
+
+That's the whole structure. Deposits route automatically. Time saved per week: hours.
+
+Free for 30 days.
+Link in bio.
+
+#fivebuckets #variableincome #1099 #floorfirst #budgeting`,
+    tt: `Every deposit. Already split.
+
+Tax. Bills. Debt. Reserve. Free.
+becomeable.app
+
+#fivebuckets #freelancetok #1099`,
+  },
+  '53|Wed': {
+    // C3 five-buckets carousel REUSE
+    ig: `Five buckets, in order.
+
+The order matters. Tax can't be last. Reserve can't be skipped. Free has to actually be free (no shame, no second-guessing).
+
+The order is the system.
+
+Swipe →
+Link in bio.
+
+#fivebuckets #variableincome #1099 #floorfirst #budgeting`,
+    tt: `Five buckets, in order.
+
+Tax can't be last. Reserve can't be skipped.
+becomeable.app
+
+#fivebuckets #freelancetok #1099`,
+  },
+  '53|Thu': {
+    // P30 product-bs-where-it-goes REUSE 2x
+    ig: `Able tells you where it goes.
+
+You log what came in. The system runs the splits. The dashboard shows where every dollar landed.
+
+You stop guessing. You stop reconstructing. You start reading.
+
+Free for 30 days.
+Link in bio.
+
+#variableincome #1099 #smallbusiness #budgeting #floorfirst`,
+    tt: `Able tells you where it goes.
+
+Stop guessing. Stop reconstructing. Read.
+becomeable.app
+
+#variableincome #freelancetok #1099`,
+  },
+  '53|Fri': {
+    // PC3 product-built-for-variable carousel
+    ig: `Built for variable income, the feature tour.
+
+The floor. The splits. The score. The coach. The export.
+
+Five mechanics. Each does one thing well. Together they're the whole system.
+
+Swipe →
+Link in bio.
+
+#variableincome #1099 #freelancing #budgeting #floorfirst`,
+    tt: `Built for variable income. Feature tour.
+
+Floor. Splits. Score. Coach. Export.
+becomeable.app
+
+#variableincome #freelancetok #1099`,
+  },
+  '53|Sat': {
+    // R48 plan-activity REUSE 2x — multi-bank
+    ig: `Every dollar, traced.
+
+Business account. Personal. Tax savings. Operating reserve. All visible. All tagged. Tax-ready in one tap.
+
+The "where did that go" question stops being a question.
+
+Free for 30 days.
+Link in bio.
+
+#smallbusiness #1099 #scheduleC #variableincome #budgeting`,
+    tt: `Every dollar traced. Across accounts.
+
+"Where did that go" stops being a question.
+becomeable.app
+
+#smallbusinesstok #scheduleC #1099`,
+  },
+  '53|Sun': {
+    // B31 transformation · I know what's coming (RESERVE)
+    ig: `I know what's coming.
+
+Bills next week. Taxes next quarter. Debt schedule next year.
+None of it is a surprise. None of it is a reconstruction project.
+
+The forecast replaced the dread.
+
+Free for 30 days.
+Link in bio.
+
+#calmmoney #variableincome #1099 #forecast #moneymindset`,
+    tt: `I know what's coming.
+
+The forecast replaced the dread.
+becomeable.app
+
+#calmmoney #freelancetok #1099`,
+  },
+
+  // ─── W54 · Identity · I am able ───
+  '54|Mon': {
+    // 93 single
+    ig: `I am able.
+
+Two words. Everything else in this account is a dependent clause.
+
+Free for 30 days.
+Link in bio.
+
+#identity #becomeable #variableincome #1099 #moneymindset`,
+    tt: `I am able.
+
+Two words. Everything else is a dependent clause.
+becomeable.app
+
+#identity #becomeable #1099`,
+  },
+  '54|Tue': {
+    // R29 i-am-able REUSE 2x
+    ig: `I am able to pay down debt. Even on slow months.
+I am able to save. Without second-guessing.
+I am able.
+
+The identity stack starts with one true line. The rest follow.
+
+Free for 30 days.
+Link in bio.
+
+#identity #becomeable #variableincome #1099 #moneymindset`,
+    tt: `I am able to pay down debt.
+I am able to save.
+I am able.
+
+becomeable.app
+
+#identity #becomeable #1099`,
+  },
+  '54|Wed': {
+    // C44 day-1-to-90 carousel REUSE
+    ig: `Day 1 to Day 90. The transformation arc.
+
+Day 1: log first deposit. Day 30: first calm month. Day 60: reserve at target. Day 90: identity shifts.
+
+Three months. The system does most of the lifting.
+
+Swipe →
+Link in bio.
+
+#identity #becomeable #variableincome #1099 #floorfirst`,
+    tt: `Day 1 to Day 90. Transformation arc.
+
+Three months. System does the lifting.
+becomeable.app
+
+#becomeable #freelancetok #1099`,
+  },
+  '54|Thu': {
+    // P37 product-bs-i-am-able-debt REUSE 2x
+    ig: `I am able to pay down debt.
+
+Not "I should." Not "I'm trying." I am.
+
+The change happens when the schedule is on the page, the reserve absorbs the bad weeks, and the math keeps moving.
+
+Free for 30 days.
+Link in bio.
+
+#debtfree #identity #becomeable #1099 #variableincome`,
+    tt: `I am able to pay down debt.
+
+The schedule is on the page.
+becomeable.app
+
+#debtfreejourney #identity #1099`,
+  },
+  '54|Fri': {
+    // C45 three-steps carousel REUSE
+    ig: `Three steps. Verbatim from the homepage.
+
+1. Connect your bank.
+2. Confirm the plan.
+3. Schedule debt.
+
+That's it. The product, in three taps. The identity, in 90 days.
+
+Swipe →
+Link in bio.
+
+#becomeable #variableincome #1099 #floorfirst #budgeting`,
+    tt: `Three steps. Connect. Confirm. Schedule.
+
+Product in three taps. Identity in 90 days.
+becomeable.app
+
+#becomeable #freelancetok #1099`,
+  },
+  '54|Sat': {
+    // R29 i-am-able REUSE 3x — capstone
+    ig: `I am able.
+
+Two words. Read them again. Out loud if you can.
+The structure produces the identity. The identity wasn't earned. It was inherited.
+
+Free for 30 days.
+Link in bio.
+
+#identity #becomeable #variableincome #1099 #moneymindset`,
+    tt: `I am able.
+
+Read them out loud. Inherited, not earned.
+becomeable.app
+
+#identity #becomeable #1099`,
+  },
+  '54|Sun': {
+    // B33 identity · I am able to pay down debt REUSE 2x
+    ig: `I am able to pay down debt, even on slow months.
+
+The identity stack starts with one true line. The rest follow.
+
+Free for 30 days.
+Link in bio.
+
+#debtfree #identity #becomeable #variableincome #1099`,
+    tt: `I am able to pay down debt, even on slow months.
+
+The identity stack starts with one true line.
+becomeable.app
+
+#debtfreejourney #identity #1099`,
+  },
+
+  // ─── W55 · Transformation · breath again ───
+  '55|Mon': {
+    // 12 reused — fear fades
+    ig: `The fear of the next check fades.
+
+Not because the income smoothed out. Because the system caught up.
+
+Two states. Before, after. Same income. Different chest.
+
+Free for 30 days.
+Link in bio.
+
+#calmmoney #becomeable #variableincome #1099 #moneymindset`,
+    tt: `The fear of the next check fades.
+
+Same income. Different chest.
+becomeable.app
+
+#calmmoney #becomeable #1099`,
+  },
+  '55|Tue': {
+    // R10 same-income REUSE 4x — anchor
+    ig: `Same income. Different feeling.
+
+Bills paid. Taxes covered. Debt shrinking. Savings growing. Nothing leaked.
+
+The income didn't move. The architecture did.
+
+Free for 30 days.
+Link in bio.
+
+#calmmoney #becomeable #variableincome #1099 #moneymindset`,
+    tt: `Same income. Different feeling.
+
+The income didn't move. The architecture did.
+becomeable.app
+
+#calmmoney #becomeable #1099`,
+  },
+  '55|Wed': {
+    // PC4 product-from-unable-to-able carousel REUSE
+    ig: `From Unable. To Able.
+
+Before: money sits. Money leaks. Day 30, where did $1,000 go?
+After: every bill covered. Every dollar accounted for. Floor steady. Nothing leaked.
+
+The arc.
+
+Swipe →
+Link in bio.
+
+#unabletoable #becomeable #variableincome #1099 #moneymindset`,
+    tt: `From Unable. To Able.
+
+The arc.
+becomeable.app
+
+#unabletoable #becomeable #1099`,
+  },
+  '55|Thu': {
+    // P39 product-bs-from-breath REUSE
+    ig: `From holding your breath.
+
+To breathing.
+
+The chest you didn't realize was holding tension. The phrase you didn't realize you needed. The system unwinds it.
+
+Free for 30 days.
+Link in bio.
+
+#calmmoney #becomeable #variableincome #1099 #moneymindset`,
+    tt: `From holding your breath. To breathing.
+
+The system unwinds it.
+becomeable.app
+
+#calmmoney #becomeable #1099`,
+  },
+  '55|Fri': {
+    // C42 calm-month carousel REUSE 4x
+    ig: `What a calm month feels like.
+
+Bills covered before the 1st. Tax piece set aside. Reserve at target. Debt schedule moving.
+
+Open the app twice. Log income. Close. Whole interaction.
+
+Swipe →
+Link in bio.
+
+#calmmoney #becomeable #variableincome #1099 #moneymindset`,
+    tt: `Calm month feel. Open twice. Close.
+
+Whole interaction.
+becomeable.app
+
+#calmmoney #becomeable #1099`,
+  },
+  '55|Sat': {
+    // R41 edu-floor-first
+    ig: `Floor-First Budgeting, in three beats.
+
+Floor = bills + tax.
+Every deposit fills the floor first.
+Then you spend.
+
+The named method, written for variable income.
+
+Free for 30 days.
+Link in bio.
+
+#floorfirst #variableincome #1099 #budgeting #becomeable`,
+    tt: `Floor-First Budgeting in 3 beats.
+
+Floor. Fill. Spend.
+becomeable.app
+
+#floorfirst #freelancetok #1099`,
+  },
+  '55|Sun': {
+    // B34 identity · I am able to save REUSE
+    ig: `I am able to save without second-guessing.
+
+The second-guessing was the symptom. The unassigned dollars were the cause. Both are gone now.
+
+Free for 30 days.
+Link in bio.
+
+#savings #identity #becomeable #1099 #variableincome`,
+    tt: `I am able to save without second-guessing.
+
+Unassigned dollars were the cause.
+becomeable.app
+
+#savings #identity #1099`,
+  },
+
+  // ─── W56 · Calm · numbers over panic (deeper) ───
+  '56|Mon': {
+    // 22 reused — calm anchor
+    ig: `Calm doesn't come from earning more.
+
+Calm comes from running the numbers before they run you.
+
+Same income. Same bills. Different relationship with both.
+
+Free for 30 days.
+Link in bio.
+
+#calmmoney #variableincome #1099 #moneymindset #floorfirst`,
+    tt: `Calm doesn't come from earning more.
+
+Run the numbers before they run you.
+becomeable.app
+
+#calmmoney #freelancetok #1099`,
+  },
+  '56|Tue': {
+    // R8 bad-month-quarterly REUSE 2x — calm
+    ig: `Bad month, quarterly due. Calm version.
+
+The bucket was filling on every prior deposit. The slow month doesn't drain it.
+Pay what's due. Beats nothing. The IRS doesn't care about your bad month, but the bucket does the caring for you.
+
+Free for 30 days.
+Link in bio.
+
+#calmmoney #1099 #taxes #quarterly #variableincome`,
+    tt: `Bad month, quarterly due. Calm version.
+
+Bucket caring for you.
+becomeable.app
+
+#calmmoney #1099 #taxes`,
+  },
+  '56|Wed': {
+    // C30 bad-month-quarterly carousel REUSE 2x
+    ig: `The 8% penalty math, calm version.
+
+If you skipped a $3,000 quarterly: about $240/year on something you owed anyway. Plus interest. Plus stress.
+
+The bucket prevents all three. Calm is structural.
+
+Swipe →
+Link in bio.
+
+#calmmoney #1099 #taxes #quarterly #variableincome`,
+    tt: `8% penalty math, calm version.
+
+Bucket prevents penalty + interest + stress.
+becomeable.app
+
+#calmmoney #1099 #taxes`,
+  },
+  '56|Thu': {
+    // P36 product-bs-fear-fades REUSE
+    ig: `The fear of the next check fades.
+
+Not "I'm fine now."
+"The fear isn't running my decisions anymore."
+Different sentence. Different month.
+
+Free for 30 days.
+Link in bio.
+
+#calmmoney #becomeable #variableincome #1099 #moneymindset`,
+    tt: `The fear of the next check fades.
+
+Different sentence. Different month.
+becomeable.app
+
+#calmmoney #becomeable #1099`,
+  },
+  '56|Fri': {
+    // C26 emergency-fund carousel REUSE 3x
+    ig: `Emergency fund vs reserve, calm version.
+
+Both are about the same thing: removing the fear of bad days.
+The reserve removes the daily fear. The emergency fund removes the catastrophic fear. Different timescales, same job.
+
+Swipe →
+Link in bio.
+
+#calmmoney #emergencyfund #reserve #variableincome #1099`,
+    tt: `Emergency fund + reserve = removing fear.
+
+Different timescales, same job.
+becomeable.app
+
+#calmmoney #reserve #1099`,
+  },
+  '56|Sat': {
+    // R45 plan-whatif REUSE 3x — deep calm
+    ig: `Stress-test the worst.
+
+Type your slowest historical month. Watch the floor. Watch the reserve. Watch the schedule.
+
+Calm comes from knowing what would happen, not hoping it doesn't.
+
+Free for 30 days.
+Link in bio.
+
+#calmmoney #stresstest #variableincome #1099 #budgeting`,
+    tt: `Stress-test the worst.
+
+Knowing > hoping.
+becomeable.app
+
+#calmmoney #freelancetok #1099`,
+  },
+  '56|Sun': {
+    // B36 identity · I am able to budget inconsistent income REUSE
+    ig: `I am able to budget inconsistent income.
+
+The line that wasn't true a year ago.
+Not because you got better at willpower. Because the architecture changed.
+
+Free for 30 days.
+Link in bio.
+
+#identity #becomeable #variableincome #1099 #budgeting`,
+    tt: `I am able to budget inconsistent income.
+
+Architecture changed. Not willpower.
+becomeable.app
+
+#identity #becomeable #1099`,
+  },
+
+  // ─── W57 · Identity stack · the new self ───
+  '57|Mon': {
+    // 40 reused — identity
+    ig: `The identity stack.
+
+I am able to pay down debt, even on slow months.
+I am able to save without second-guessing.
+I am able to budget inconsistent income.
+I am able.
+
+Each line is a downstream effect of the system running.
+
+Free for 30 days.
+Link in bio.
+
+#identity #becomeable #variableincome #1099 #moneymindset`,
+    tt: `Identity stack.
+
+Pay down debt. Save. Budget. Be able.
+becomeable.app
+
+#identity #becomeable #1099`,
+  },
+  '57|Tue': {
+    // R29 i-am-able REUSE 4x
+    ig: `I am able.
+
+Two words. Every other phrase in the account is downstream of this one.
+
+The structure produces the identity. The identity didn't require effort.
+
+Free for 30 days.
+Link in bio.
+
+#identity #becomeable #variableincome #1099 #moneymindset`,
+    tt: `I am able.
+
+Identity didn't require effort.
+becomeable.app
+
+#identity #becomeable #1099`,
+  },
+  '57|Wed': {
+    // C44 day-1-to-90 carousel REUSE 2x
+    ig: `Day 1 to Day 90, the identity arc.
+
+Day 1: "I'm trying."
+Day 30: "I'm doing."
+Day 60: "I'm consistent."
+Day 90: "I am."
+
+Identity follows behavior. Behavior follows architecture.
+
+Swipe →
+Link in bio.
+
+#identity #becomeable #variableincome #1099 #moneymindset`,
+    tt: `Day 1 to 90 identity arc.
+
+Trying → doing → consistent → being.
+becomeable.app
+
+#identity #becomeable #1099`,
+  },
+  '57|Thu': {
+    // P38 product-bs-i-am-able-save REUSE 2x
+    ig: `I am able to save.
+
+The smaller version: "I'm watching the savings line move week over week without doing anything to make it move."
+
+Same thing.
+
+Free for 30 days.
+Link in bio.
+
+#savings #identity #becomeable #1099 #variableincome`,
+    tt: `I am able to save.
+
+Watching savings move without forcing it.
+becomeable.app
+
+#savings #identity #1099`,
+  },
+  '57|Fri': {
+    // PC4 product-from-unable-to-able carousel REUSE 2x
+    ig: `From Unable. To Able. The carousel arc.
+
+Before: money sits, money leaks, Day 30 where did $1,000 go.
+After: every bill covered, every dollar accounted for, floor steady, nothing leaked.
+
+The whole transformation, in seven slides.
+
+Swipe →
+Link in bio.
+
+#unabletoable #becomeable #identity #variableincome #1099`,
+    tt: `From Unable. To Able. Seven slides.
+
+Whole transformation.
+becomeable.app
+
+#unabletoable #becomeable #1099`,
+  },
+  '57|Sat': {
+    // R28 not-your-fault REUSE 2x
+    ig: `Not more discipline.
+Not a stricter budget.
+Not trying harder.
+
+A system. Built for variable income.
+
+The identity follows.
+
+Free for 30 days.
+Link in bio.
+
+#identity #becomeable #variableincome #1099 #moneymindset`,
+    tt: `Not discipline. Not stricter. Not trying harder.
+
+A system. Identity follows.
+becomeable.app
+
+#identity #becomeable #1099`,
+  },
+  '57|Sun': {
+    // B41 transformation · From Unable → Able REUSE
+    ig: `From Unable. To Able.
+
+The closing tagline. The brand seal.
+Earned through the system, not through effort. Inherited from the architecture, not from willpower.
+
+Free for 30 days.
+Link in bio.
+
+#unabletoable #becomeable #identity #variableincome #1099`,
+    tt: `From Unable. To Able.
+
+Earned through the system.
+becomeable.app
+
+#unabletoable #becomeable #1099`,
+  },
+
+  // ─── W58 · Floor-First · the named method ───
+  '58|Mon': {
+    // 01 reused — method anchor
+    ig: `Floor-First Budgeting.
+
+A named method for variable income. Five rules. Locked.
+
+Bills + tax = the floor. Fill it first. Every other dollar is a real choice.
+
+Free for 30 days.
+Link in bio.
+
+#floorfirst #variableincome #1099 #budgeting #methodology`,
+    tt: `Floor-First Budgeting.
+
+Named method. Five rules. Variable income.
+becomeable.app
+
+#floorfirst #freelancetok #1099`,
+  },
+  '58|Tue': {
+    // R41 edu-floor-first REUSE
+    ig: `Floor-First Budgeting, in three beats.
+
+Floor = bills + tax.
+Every deposit fills the floor first.
+Then you spend.
+
+That's the method. Locked.
+
+Free for 30 days.
+Link in bio.
+
+#floorfirst #variableincome #1099 #budgeting #methodology`,
+    tt: `Floor-First. Three beats.
+
+Floor. Fill. Spend.
+becomeable.app
+
+#floorfirst #freelancetok #1099`,
+  },
+  '58|Wed': {
+    // C45 three-steps carousel REUSE 2x — methodology
+    ig: `Floor-First, the three steps.
+
+1. Connect your bank.
+2. Confirm the plan (bills + tax floor).
+3. Schedule debt.
+
+That's the system. Then it runs.
+
+Swipe →
+Link in bio.
+
+#floorfirst #variableincome #1099 #budgeting #methodology`,
+    tt: `Floor-First. Three steps.
+
+Connect. Confirm floor. Schedule debt.
+becomeable.app
+
+#floorfirst #freelancetok #1099`,
+  },
+  '58|Thu': {
+    // P01 product-floor-coverage
+    ig: `Your floor.
+
+Bills + tax. Funded first.
+
+That's the visible thing. The dashboard's first card.
+
+Free for 30 days.
+Link in bio.
+
+#floorfirst #variableincome #1099 #budgeting #methodology`,
+    tt: `Your floor. Bills + tax. Funded first.
+
+The dashboard's first card.
+becomeable.app
+
+#floorfirst #freelancetok #1099`,
+  },
+  '58|Fri': {
+    // C9 reused — methodology
+    ig: `What "Floor-First" means in practice.
+
+You don't pay your bills "when you can." You pay them from a bucket that's already covered before they're due.
+
+You don't "save what's left." You move it before the rest of the splits run.
+
+You don't "figure out taxes in March." You move 30% on every deposit.
+
+Five rules. The method.
+
+Swipe →
+Link in bio.
+
+#floorfirst #variableincome #1099 #methodology #budgeting`,
+    tt: `Floor-First in practice.
+
+Bills pre-funded. Save first. Tax day-of.
+becomeable.app
+
+#floorfirst #freelancetok #1099`,
+  },
+  '58|Sat': {
+    // R38 tip-floor-first REUSE
+    ig: `Bills + tax = the floor.
+
+Fill it first. Every other dollar is a real choice.
+
+Not "save 20%." Not "stick to the budget." Fill the floor. Then everything downstream is honest.
+
+Free for 30 days.
+Link in bio.
+
+#floorfirst #variableincome #1099 #budgeting #methodology`,
+    tt: `Bills + tax = the floor. Fill first.
+
+Then everything downstream is honest.
+becomeable.app
+
+#floorfirst #freelancetok #1099`,
+  },
+  '58|Sun': {
+    // B32 transformation · Money with intention (RESERVE)
+    ig: `Money with intention.
+
+Every dollar already had a job before it landed. The intention wasn't yours to invent each month. It was built into the architecture.
+
+Free for 30 days.
+Link in bio.
+
+#intention #floorfirst #variableincome #1099 #moneymindset`,
+    tt: `Money with intention.
+
+Built into the architecture. Not invented monthly.
+becomeable.app
+
+#floorfirst #freelancetok #1099`,
+  },
+
+  // ─── W59 · Floor-First · 5 rules locked ───
+  '59|Mon': {
+    // 04 reused — rules
+    ig: `Floor-First, the five rules.
+
+1. Bills + tax come first.
+2. Every deposit gets a destination.
+3. Reserve before savings.
+4. Debt drops on schedule.
+5. Free spending is actually free.
+
+That's the method. Five rules. Locked.
+
+Free for 30 days.
+Link in bio.
+
+#floorfirst #variableincome #1099 #budgeting #methodology`,
+    tt: `Floor-First. Five rules.
+
+1. Floor. 2. Destination. 3. Reserve. 4. Debt. 5. Free.
+becomeable.app
+
+#floorfirst #freelancetok #1099`,
+  },
+  '59|Tue': {
+    // R23 split-first-spend-last REUSE
+    ig: `Split first. Spend last.
+
+One pile. Five jobs.
+Tax. Bills. Debt. Reserve. Free.
+
+The order is the rule. The rule is the system.
+
+Free for 30 days.
+Link in bio.
+
+#floorfirst #variableincome #1099 #budgeting #methodology`,
+    tt: `Split first. Spend last.
+
+One pile. Five jobs.
+becomeable.app
+
+#floorfirst #freelancetok #1099`,
+  },
+  '59|Wed': {
+    // C3 five-buckets carousel REUSE 2x
+    ig: `Five buckets, in order, the method.
+
+Tax. Bills. Debt. Reserve. Free.
+
+The order is the system. Skip a step or rearrange them, the math breaks. The rules are locked for a reason.
+
+Swipe →
+Link in bio.
+
+#fivebuckets #floorfirst #variableincome #1099 #methodology`,
+    tt: `Five buckets, in order.
+
+Order is the system. Locked for a reason.
+becomeable.app
+
+#fivebuckets #floorfirst #1099`,
+  },
+  '59|Thu': {
+    // P02 product-deposit-routed REUSE 3x — rules locked
+    ig: `One deposit. Five jobs in order.
+
+Tax. Bills. Debt. Reserve. Free.
+
+The system runs the order. You don't decide. The decision was made the moment you set the percentages.
+
+Free for 30 days.
+Link in bio.
+
+#fivebuckets #floorfirst #variableincome #1099 #methodology`,
+    tt: `One deposit. Five jobs in order.
+
+Decision made when you set the percentages.
+becomeable.app
+
+#floorfirst #fivebuckets #1099`,
+  },
+  '59|Fri': {
+    // C16 feast-or-famine carousel REUSE 2x — rules
+    ig: `Feast or famine, the rule version.
+
+Even on feast: same five splits, bigger numbers.
+Even on famine: same five splits, smaller numbers.
+
+The rules don't bend with the income. That's why they work.
+
+Swipe →
+Link in bio.
+
+#feastorfamine #floorfirst #variableincome #1099 #methodology`,
+    tt: `Feast or famine, rule version.
+
+Same splits. Different numbers. Rules don't bend.
+becomeable.app
+
+#feastorfamine #floorfirst #1099`,
+  },
+  '59|Sat': {
+    // R3 five-buckets reel REUSE 2x
+    ig: `Every deposit. Already split.
+
+1. Taxes. Off the top.
+2. Bills. Reserved early.
+3. Debt. On schedule.
+4. Reserve. For slow months.
+5. Free. Guilt-free.
+
+The five rules, in 20 seconds.
+
+Free for 30 days.
+Link in bio.
+
+#fivebuckets #floorfirst #variableincome #1099 #methodology`,
+    tt: `Every deposit. Already split.
+
+Five rules in 20 seconds.
+becomeable.app
+
+#fivebuckets #floorfirst #1099`,
+  },
+  '59|Sun': {
+    // B22 solution mechanic REUSE 2x — Floor-First spine
+    ig: `Able gives every dollar a job the moment it arrives.
+
+That's the spine. The five rules are the implementation. The architecture is what you actually live with.
+
+Free for 30 days.
+Link in bio.
+
+#floorfirst #variableincome #1099 #methodology #budgeting`,
+    tt: `Every dollar a job the moment it arrives.
+
+The spine. Five rules. The architecture.
+becomeable.app
+
+#floorfirst #freelancetok #1099`,
+  },
+
+  // ─── W60 · Floor-First · vs YNAB / vs Profit First ───
+  '60|Mon': {
+    // 27 reused — comparison
+    ig: `Floor-First vs YNAB. Honestly.
+
+YNAB: zero-based budgeting on a monthly cadence. Best-in-class for steady paychecks.
+Floor-First: per-deposit splits with a floor mechanic. Built for variable income.
+
+Different jobs. Different audiences. Use the right tool.
+
+Free for 30 days.
+Link in bio.
+
+#floorfirst #ynab #budgetingapps #variableincome #1099`,
+    tt: `Floor-First vs YNAB.
+
+YNAB: monthly, paycheck. Floor-First: per-deposit, variable.
+becomeable.app
+
+#floorfirst #ynab #freelancetok`,
+  },
+  '60|Tue': {
+    // R5 why-apps-fail-variable REUSE
+    ig: `Why budgeting apps fail variable income.
+
+They assume a paycheck. Yours isn't.
+They show what happened. Too late.
+They want monthly. Yours is per-deposit.
+
+Three structural mismatches. Floor-First was built around them.
+
+Free for 30 days.
+Link in bio.
+
+#floorfirst #variableincome #1099 #budgeting #budgetingapps`,
+    tt: `Why apps fail variable income.
+
+Assume paycheck. Show too late. Want monthly.
+becomeable.app
+
+#floorfirst #freelancetok #1099`,
+  },
+  '60|Wed': {
+    // C15 comparison carousel REUSE
+    ig: `Floor-First vs Profit First, comparison.
+
+Profit First: built for businesses. Reverse the order. Profit, then ops.
+Floor-First: built for variable-income individuals. Floor first (bills + tax), then everything else.
+
+Same DNA: rearrange the order. Different audiences.
+
+Swipe →
+Link in bio.
+
+#floorfirst #profitfirst #variableincome #1099 #methodology`,
+    tt: `Floor-First vs Profit First.
+
+Same DNA. Different audiences.
+becomeable.app
+
+#floorfirst #profitfirst #1099`,
+  },
+  '60|Thu': {
+    // P28 product-bs-different-clock REUSE 2x — comparison
+    ig: `Same foundation. Different clock.
+
+YNAB, Profit First, Floor-First. Same idea: assign every dollar before you spend it.
+
+The clock changes. Monthly (YNAB). Quarterly (Profit First). Per-deposit (Floor-First).
+
+Yours is per-deposit.
+
+Free for 30 days.
+Link in bio.
+
+#floorfirst #ynab #profitfirst #variableincome #1099`,
+    tt: `Same foundation. Different clock.
+
+Per-deposit is yours.
+becomeable.app
+
+#floorfirst #freelancetok #1099`,
+  },
+  '60|Fri': {
+    // C40 apps-fail-you carousel REUSE
+    ig: `Why apps fail YOU specifically, not just "variable income."
+
+Your bills aren't constant either. Your tax rate changes. Your income shape shifts as your business grows.
+
+The system has to absorb that. Most can't.
+
+Swipe →
+Link in bio.
+
+#floorfirst #variableincome #1099 #budgeting #budgetingapps`,
+    tt: `Why apps fail you specifically.
+
+Bills shift. Tax shifts. Income shifts. System absorbs.
+becomeable.app
+
+#floorfirst #freelancetok #1099`,
+  },
+  '60|Sat': {
+    // R6 wrong-tool REUSE 2x — comparison closer
+    ig: `You're not bad with money. You've been handed the wrong tool.
+
+The whole industry assumes a paycheck. Yours isn't.
+
+Floor-First is the right tool for the shape of your income.
+
+Free for 30 days.
+Link in bio.
+
+#floorfirst #variableincome #1099 #budgeting #methodology`,
+    tt: `Not bad with money. Wrong tool.
+
+Floor-First is the right one.
+becomeable.app
+
+#floorfirst #freelancetok #1099`,
+  },
+  '60|Sun': {
+    // B10 villain · Apps assume steady paycheck REUSE
+    ig: `Most budgeting apps assume a steady paycheck.
+
+That's the villain.
+Not your habits. Not your willpower. The default assumption baked into the entire category.
+
+Free for 30 days.
+Link in bio.
+
+#floorfirst #variableincome #1099 #budgeting #budgetingapps`,
+    tt: `Most apps assume a steady paycheck.
+
+That's the villain.
+becomeable.app
+
+#floorfirst #freelancetok #1099`,
+  },
+
+  // ─── W61 · Floor-First · why now ───
+  '61|Mon': {
+    // 05 reused — money math
+    ig: `The cost of waiting compounds.
+
+Every month without a system is roughly $500-$1,000 in leaks. Twelve months: $6,000-$12,000. Three years: a down payment.
+
+The math doesn't slow down because you're "not ready."
+
+Free for 30 days.
+Link in bio.
+
+#floorfirst #variableincome #1099 #compoundcost #budgeting`,
+    tt: `Cost of waiting compounds.
+
+$500-$1K/mo. $6-12K/yr. 3yr = down payment.
+becomeable.app
+
+#floorfirst #freelancetok #1099`,
+  },
+  '61|Tue': {
+    // R14 cost-of-waiting REUSE 2x — why now
+    ig: `Per month: $2,000 leaks.
+Six months: $12,000.
+One year: $24,000.
+
+Not bad decisions. A missing system. The math doesn't pause for "I'll start next month."
+
+Free for 30 days.
+Link in bio.
+
+#floorfirst #variableincome #1099 #compoundcost #budgeting`,
+    tt: `$2K/mo leaks. $24K/yr.
+
+Math doesn't pause for "next month."
+becomeable.app
+
+#floorfirst #freelancetok #1099`,
+  },
+  '61|Wed': {
+    // C13 compound-cost carousel REUSE 2x
+    ig: `Compound cost, visualized.
+
+Year 1: $12K leaked.
+Year 2: $24K leaked. Plus what you didn't pay down. Plus what you didn't earn from saving.
+Year 3: the down payment you didn't have.
+
+The system saves what would have leaked.
+
+Swipe →
+Link in bio.
+
+#floorfirst #variableincome #1099 #compoundcost #budgeting`,
+    tt: `Compound cost visualized.
+
+Year 1: $12K leaked. Year 3: down payment gone.
+becomeable.app
+
+#floorfirst #freelancetok #1099`,
+  },
+  '61|Thu': {
+    // P32 product-bs-cost-of-waiting
+    ig: `The cost of waiting compounds.
+
+Every month it runs is the leak getting bigger. Not because the leak grew. Because the saved version of "what would have happened" grew faster.
+
+Free for 30 days.
+Link in bio.
+
+#floorfirst #variableincome #1099 #compoundcost #budgeting`,
+    tt: `The cost of waiting compounds.
+
+Saved version grows faster.
+becomeable.app
+
+#floorfirst #freelancetok #1099`,
+  },
+  '61|Fri': {
+    // PC7 product-stop-doing carousel REUSE
+    ig: `Five things you stop doing with Able.
+
+Holding your breath on the 1st. Bracing for bills. Guessing if it'll work out. Dreading April. Pretending the plan worked.
+
+Each one has a cost. Stopping all five is the actual savings.
+
+Swipe →
+Link in bio.
+
+#floorfirst #variableincome #1099 #calmmoney #budgeting`,
+    tt: `5 things you stop doing.
+
+Each has a cost. Stopping is the actual savings.
+becomeable.app
+
+#floorfirst #freelancetok #1099`,
+  },
+  '61|Sat': {
+    // R20 save-more REUSE 2x — why now
+    ig: `"Save more" isn't a plan.
+
+It's a wish. Dressed as advice.
+
+The plan is the architecture. The architecture is the system. The system is on sale for $14.99/mo.
+
+Free for 30 days.
+Link in bio.
+
+#floorfirst #variableincome #1099 #budgeting #budgetingapps`,
+    tt: `"Save more" isn't a plan. It's a wish.
+
+The plan is the architecture.
+becomeable.app
+
+#floorfirst #freelancetok #1099`,
+  },
+  '61|Sun': {
+    // B40 cost of waiting REUSE 2x
+    ig: `Every month is another $500 to $1,000 gone.
+
+The cost of waiting compounds. The cost of starting is $14.99.
+
+Free for 30 days.
+Link in bio.
+
+#floorfirst #variableincome #1099 #compoundcost #budgeting`,
+    tt: `Cost of waiting compounds. Cost of starting is $14.99.
+
+Every month: $500-$1,000 gone.
+becomeable.app
+
+#floorfirst #freelancetok #1099`,
+  },
+
+  // ─── W62 · Pricing · cost of starting ───
+  '62|Mon': {
+    // 08 reused — pricing
+    ig: `$14.99/mo. $129/yr. Save $50 annual.
+
+Card required for the trial. Cancel anytime in two taps.
+
+The cost of starting is less than the leak that compounds for not.
+
+Free for 30 days.
+Link in bio.
+
+#variableincome #1099 #freelancing #pricing #becomeable`,
+    tt: `$14.99/mo. $129/yr. Save $50.
+
+Card required. Cancel in 2 taps.
+becomeable.app
+
+#freelancetok #1099 #becomeable`,
+  },
+  '62|Tue': {
+    // R15 free-trial REUSE
+    ig: `Built for inconsistent.
+
+Every deposit, auto-routed.
+Taxes. Bills. Reserve.
+
+Free for 30 days. Card required. Cancel anytime.
+Link in bio.
+
+#variableincome #1099 #freelancing #becomeable #floorfirst`,
+    tt: `Built for inconsistent.
+
+Free for 30 days.
+becomeable.app
+
+#variableincome #becomeable #1099`,
+  },
+  '62|Wed': {
+    // C2 reused — pricing setup
+    ig: `Pricing, the why.
+
+$14.99/mo covers infrastructure (banks, AI, hosting), product team, and the slow-growth path that keeps the brand sustainable.
+
+Annual saves $50 because you commit longer, we plan further. Mutual.
+
+Swipe →
+Link in bio.
+
+#variableincome #1099 #freelancing #pricing #becomeable`,
+    tt: `Pricing, the why.
+
+$14.99/mo. $129/yr saves $50.
+becomeable.app
+
+#freelancetok #1099 #becomeable`,
+  },
+  '62|Thu': {
+    // P33 product-bs-cost-of-starting
+    ig: `The cost of starting is $14.99.
+
+The cost of waiting compounds.
+
+That's the math. Two numbers. Pick one.
+
+Free for 30 days.
+Link in bio.
+
+#variableincome #1099 #freelancing #pricing #becomeable`,
+    tt: `Cost of starting: $14.99.
+Cost of waiting: compounds.
+
+Pick one.
+becomeable.app
+
+#freelancetok #1099 #becomeable`,
+  },
+  '62|Fri': {
+    // C9 reused 2x
+    ig: `What you get for $14.99.
+
+Five-bucket splits on every deposit. Tax bucket. Reserve mechanic. Bills pre-funded. Debt scheduled. Coach. Tax export.
+
+The whole system. Most users save more than $14.99 in their first month.
+
+Swipe →
+Link in bio.
+
+#variableincome #1099 #pricing #becomeable #floorfirst`,
+    tt: `What $14.99 gets.
+
+Five splits. Bucket. Reserve. Bills. Debt. Coach. Export.
+becomeable.app
+
+#1099 #pricing #becomeable`,
+  },
+  '62|Sat': {
+    // R15 free-trial REUSE 2x
+    ig: `30 days. Card required. Cancel anytime.
+
+The reason it's 30 days: variable income needs at least one income cycle to feel the system. A weekend trial is theater.
+
+Free for 30 days.
+Link in bio.
+
+#variableincome #1099 #freelancing #becomeable #floorfirst`,
+    tt: `30 days. Card required. Cancel anytime.
+
+A weekend trial is theater. Cycle takes 30.
+becomeable.app
+
+#variableincome #becomeable #1099`,
+  },
+  '62|Sun': {
+    // B35 identity · I have a plan (RESERVE)
+    ig: `I have a plan.
+
+Not a hope. Not a vague intention. A plan. Written. Running. Reviewable.
+
+Free for 30 days.
+Link in bio.
+
+#identity #becomeable #variableincome #1099 #floorfirst`,
+    tt: `I have a plan.
+
+Not a hope. Written. Running.
+becomeable.app
+
+#identity #becomeable #1099`,
+  },
+
+  // ─── W63 · CTA · 30 days, card required ───
+  '63|Mon': {
+    // 20 reused — pricing CTA
+    ig: `Test out Able for an entire income cycle.
+
+Start your 30-day free trial. Card required. Cancel anytime.
+
+The cycle is the test. A weekend isn't.
+
+Free for 30 days.
+Link in bio.
+
+#variableincome #1099 #freelancing #becomeable #floorfirst`,
+    tt: `Test Able for an entire income cycle.
+
+Start your 30-day free trial.
+becomeable.app
+
+#variableincome #becomeable #1099`,
+  },
+  '63|Tue': {
+    // R23 split-first-spend-last REUSE 2x — CTA framing
+    ig: `Split first. Spend last.
+
+The whole method, in four words.
+The whole product, in 30 days free.
+
+Free for 30 days.
+Link in bio.
+
+#floorfirst #variableincome #1099 #becomeable #budgeting`,
+    tt: `Split first. Spend last.
+
+Whole method. 4 words.
+becomeable.app
+
+#floorfirst #becomeable #1099`,
+  },
+  '63|Wed': {
+    // PC3 product-built-for-variable carousel REUSE
+    ig: `Built for variable income, the trial-day-by-day.
+
+Day 1: connect. Day 2: first split. Day 7: floor steady. Day 30: ready to keep going.
+
+Free for 30 days. Card required. Cancel anytime.
+
+Swipe →
+Link in bio.
+
+#variableincome #1099 #freelancing #becomeable #floorfirst`,
+    tt: `Built for variable income. Trial day-by-day.
+
+Day 1 connect. Day 30 ready.
+becomeable.app
+
+#variableincome #becomeable #1099`,
+  },
+  '63|Thu': {
+    // P20 product-tax-export-cta
+    ig: `30 days free. Try it before tax season.
+
+If you're starting now, the system has time to fill the bucket before April.
+Starting in March means catching up. Starting now means caught up.
+
+Free for 30 days.
+Link in bio.
+
+#1099 #taxes #variableincome #becomeable #floorfirst`,
+    tt: `30 days free. Try it before tax season.
+
+Starting now = caught up.
+becomeable.app
+
+#1099 #taxes #becomeable`,
+  },
+  '63|Fri': {
+    // PC1 product-first-week carousel REUSE 2x
+    ig: `Your first week with Able.
+
+Day 1: connect bank. Day 2: first deposit, already split. Day 4: first bill reserved. Day 7: floor steady, reserve growing.
+
+The 30-day trial starts here. You'll know by Day 7 whether it's for you.
+
+Swipe →
+Link in bio.
+
+#variableincome #1099 #becomeable #floorfirst #budgeting`,
+    tt: `Your first week with Able.
+
+Know by Day 7 whether it's for you.
+becomeable.app
+
+#variableincome #becomeable #1099`,
+  },
+  '63|Sat': {
+    // R42 home-overview REUSE — CTA close
+    ig: `Your floor.
+
+Bills + tax. Funded first.
+
+That's what the trial gets you to in week one. Free for 30 days. Card required.
+
+Free for 30 days.
+Link in bio.
+
+#floorfirst #variableincome #1099 #becomeable #budgeting`,
+    tt: `Your floor. Bills + tax. Funded first.
+
+Trial gets you there week one.
+becomeable.app
+
+#floorfirst #becomeable #1099`,
+  },
+  '63|Sun': {
+    // B41 transformation · Unable → Able REUSE 2x
+    ig: `From Unable. To Able.
+
+The closing tagline. The 30-day trial is the bridge.
+
+Free for 30 days.
+Link in bio.
+
+#unabletoable #becomeable #variableincome #1099 #floorfirst`,
+    tt: `From Unable. To Able.
+
+30-day trial is the bridge.
+becomeable.app
+
+#unabletoable #becomeable #1099`,
+  },
+
+  // ─── W64 · Sustained · still going ───
+  '64|Mon': {
+    // 25 reused — sustained
+    ig: `Six months in.
+
+The bank app gets opened less. The bills app doesn't get opened at all. The system runs.
+
+That's the long-term success metric. Not a chart. A reduced number of touch points.
+
+Free for 30 days.
+Link in bio.
+
+#sustained #becomeable #variableincome #1099 #floorfirst`,
+    tt: `6 months in. Bank app opened less.
+
+Reduced touch points = success.
+becomeable.app
+
+#sustained #becomeable #1099`,
+  },
+  '64|Tue': {
+    // R10 same-income REUSE 5x
+    ig: `Same income. Different feeling.
+
+Six months later, the line still holds.
+Bills paid. Taxes covered. Debt shrinking. Savings growing. Nothing leaked.
+
+Free for 30 days.
+Link in bio.
+
+#sustained #becomeable #variableincome #1099 #moneymindset`,
+    tt: `Same income. Different feeling. 6 months later.
+
+Line still holds.
+becomeable.app
+
+#sustained #becomeable #1099`,
+  },
+  '64|Wed': {
+    // C44 day-1-to-90 carousel REUSE 3x — sustained
+    ig: `Day 1 to Day 90, then Day 180.
+
+Day 90 was the identity shift. Day 180 is the version that's settled.
+"I am able" became default. Variable income became background.
+
+Swipe →
+Link in bio.
+
+#sustained #becomeable #identity #variableincome #1099`,
+    tt: `Day 1 to 90, then 180.
+
+Identity shifts. Then settles.
+becomeable.app
+
+#sustained #becomeable #1099`,
+  },
+  '64|Thu': {
+    // P35 product-bs-every-dollar
+    ig: `End of the month. Every dollar accounted for.
+
+Not "most of them." Every. The line that becomes literally true once the system catches up.
+
+Free for 30 days.
+Link in bio.
+
+#sustained #becomeable #variableincome #1099 #floorfirst`,
+    tt: `End of month. Every dollar accounted for.
+
+Becomes literally true.
+becomeable.app
+
+#sustained #becomeable #1099`,
+  },
+  '64|Fri': {
+    // PC2 product-how-it-works carousel REUSE 2x
+    ig: `How Able works at month six.
+
+Same five mechanics. The difference: you've stopped checking on them. The system runs while you do other work.
+
+Swipe →
+Link in bio.
+
+#sustained #becomeable #variableincome #1099 #floorfirst`,
+    tt: `How Able works at month 6.
+
+Same mechanics. You've stopped checking.
+becomeable.app
+
+#sustained #becomeable #1099`,
+  },
+  '64|Sat': {
+    // R29 i-am-able REUSE 5x
+    ig: `I am able.
+
+Six months later, still the truest line in the account.
+
+The structure produced the identity. The identity stayed.
+
+Free for 30 days.
+Link in bio.
+
+#sustained #becomeable #identity #variableincome #1099`,
+    tt: `I am able.
+
+6 months later. Still the truest line.
+becomeable.app
+
+#sustained #becomeable #1099`,
+  },
+  '64|Sun': {
+    // B38 manifesto bookend REUSE
+    ig: `Become able.
+
+The four outcomes:
+Pay down debt. Save consistently. Plan for taxes. Breathe again.
+
+Each one earned through the system.
+
+Free for 30 days.
+Link in bio.
+
+#becomeable #variableincome #1099 #floorfirst #manifesto`,
+    tt: `Become able.
+
+Pay debt. Save. Plan taxes. Breathe.
+becomeable.app
+
+#becomeable #freelancetok #1099`,
+  },
+
+  // ─── W65 · Final · become Able (cycle close) ───
+  '65|Mon': {
+    // 54 reused — final post
+    ig: `If you've read this far, you already know.
+
+The system isn't magic. It's architecture. Architecture you've been missing.
+
+Free for 30 days. Card required. Cancel anytime. Become able.
+
+Free for 30 days.
+Link in bio.
+
+#becomeable #variableincome #1099 #floorfirst #methodology`,
+    tt: `If you've read this far, you already know.
+
+Architecture you've been missing.
+becomeable.app
+
+#becomeable #freelancetok #1099`,
+  },
+  '65|Tue': {
+    // R41 edu-floor-first REUSE 2x — capstone
+    ig: `Floor-First Budgeting.
+
+Floor = bills + tax. Fill it first. Then everything else.
+
+The named method. Locked. The cycle closes here. The next deposit is where the system begins.
+
+Free for 30 days.
+Link in bio.
+
+#floorfirst #becomeable #variableincome #1099 #methodology`,
+    tt: `Floor-First. Floor. Fill. Spend.
+
+The cycle closes here.
+becomeable.app
+
+#floorfirst #becomeable #1099`,
+  },
+  '65|Wed': {
+    // PC4 product-from-unable-to-able carousel REUSE 3x
+    ig: `From Unable. To Able. The capstone carousel.
+
+Before, after, the arc, the closing tagline.
+Five slides. The whole brand, in a swipe.
+
+Swipe →
+Link in bio.
+
+#unabletoable #becomeable #identity #variableincome #1099`,
+    tt: `From Unable. To Able. Capstone.
+
+Whole brand in a swipe.
+becomeable.app
+
+#unabletoable #becomeable #1099`,
+  },
+  '65|Thu': {
+    // P40 product-bs-from-unable-to-able
+    ig: `From Unable. To Able.
+
+The closing tagline. The brand seal. The thing earned through the system.
+
+Free for 30 days. Card required. Cancel anytime.
+Link in bio.
+
+#unabletoable #becomeable #identity #variableincome #1099`,
+    tt: `From Unable. To Able.
+
+The brand seal.
+becomeable.app
+
+#unabletoable #becomeable #1099`,
+  },
+  '65|Fri': {
+    // C45 three-steps carousel REUSE 3x
+    ig: `Three steps. The whole product.
+
+Connect your bank. Confirm the plan. Schedule debt.
+
+That's it. Free for 30 days.
+
+Swipe →
+Link in bio.
+
+#becomeable #variableincome #1099 #floorfirst #budgeting`,
+    tt: `Three steps. Whole product.
+
+Connect. Confirm. Schedule.
+becomeable.app
+
+#becomeable #freelancetok #1099`,
+  },
+  '65|Sat': {
+    // R15 free-trial REUSE 3x — final close
+    ig: `Built for inconsistent. Every deposit, auto-routed.
+Taxes. Bills. Reserve.
+
+Free for 30 days. Become able.
+Link in bio.
+
+#becomeable #variableincome #1099 #floorfirst #freetrial`,
+    tt: `Built for inconsistent. Every deposit auto-routed.
+
+Free for 30 days. Become able.
+becomeable.app
+
+#becomeable #variableincome #1099`,
+  },
+  '65|Sun': {
+    // B42 solution · Brand-script close (RESERVE, capstone)
+    ig: `The cycle closes. The next deposit begins.
+
+Floor-First Budgeting. Built for variable income. Free for 30 days.
+
+Become able.
+
+Link in bio.
+
+#becomeable #floorfirst #variableincome #1099 #brandscriptclose`,
+    tt: `The cycle closes. The next deposit begins.
+
+Become able.
+becomeable.app
+
+#becomeable #floorfirst #1099`,
   },
 
 };

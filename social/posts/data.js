@@ -47,7 +47,7 @@ window.POSTS = [
 
   { id: '12', slug: 'where-it-is', theme: 'white', tpl: 'A', eyebrow: 'mixed',
     muted: "If the goal is more money,",
-    punch: "you need to {know\nwhere it is}." },
+    punch: "you need to {know}\nwhere it is." },
 
   { id: '13', slug: 'guessing', theme: 'glass', tpl: 'A', eyebrow: 'mixed',
     muted: "You're not lazy.",
@@ -69,7 +69,7 @@ window.POSTS = [
 
   { id: '18', slug: 'leak-not-dramatic', theme: 'black', tpl: 'A', eyebrow: 'mixed',
     muted: "The leak isn't dramatic.",
-    punch: "That's why you\n{can't see it}." },
+    punch: "That's why you\ncan't {see it}." },
 
   { id: '19', slug: 'nothing-leaked', theme: 'black', tpl: 'B', eyebrow: 'mixed',
     punch: "Bills paid.\nTaxes covered.\n{Nothing leaked.}" },
@@ -89,7 +89,7 @@ window.POSTS = [
     punch: "Is the day you\n{stop bracing}." },
 
   { id: '24', slug: 'isnt-yours', theme: 'glass-dark', tpl: 'B', eyebrow: 'mixed',
-    punch: "If 30% isn't moved,\n{it isn't yours}." },
+    punch: "If 30% isn't moved,\nit {isn't yours}." },
 
   { id: '25', slug: 'freezing', theme: 'white', tpl: 'A', eyebrow: 'mixed',
     muted: "You're not overspending.",
@@ -222,7 +222,7 @@ window.POSTS = [
   // 57 — L1 Sat · PHILOSOPHICAL PROBLEM
   { id: '57', slug: 'wrong-tool-handed', theme: 'green', tpl: 'A', eyebrow: 'mixed',
     muted: "You're not bad with money.",
-    punch: "You've been handed\n{the wrong tool}." },
+    punch: "You've been handed\nthe {wrong tool}." },
 
   // 58 — L2 Mon · PROBLEM PEAK (the loop)
   { id: '58', slug: 'the-loop', theme: 'black', tpl: 'A', eyebrow: 'mixed',
@@ -232,7 +232,7 @@ window.POSTS = [
   // 59 — L2 Thu · PHILOSOPHICAL ("you shouldn't have to")
   { id: '59', slug: 'not-a-cfo', theme: 'white', tpl: 'A', eyebrow: 'mixed',
     muted: "You shouldn't have to be a CFO",
-    punch: "to have\n{a calm month}." },
+    punch: "to have\na {calm month}." },
 
   // 60 — L2 Sat · BRIDGE (boring on purpose)
   { id: '60', slug: 'boring-on-purpose', theme: 'page', tpl: 'A', eyebrow: 'mixed',
@@ -247,7 +247,7 @@ window.POSTS = [
   // 62 — L3 Thu · FAILURE AVOIDED
   { id: '62', slug: 'april-surprise-shame', theme: 'black', tpl: 'A', eyebrow: 'mixed',
     muted: "What you avoid:",
-    punch: "{April. Surprise.\nShame.}" },
+    punch: "April. Surprise.\n{Shame.}" },
 
   // 63 — L3 Sat · CTA CLOSE
   { id: '63', slug: 'free-seven-days', theme: 'green', tpl: 'B', eyebrow: 'mixed', center: true,
@@ -259,7 +259,7 @@ window.POSTS = [
 
   { id: '64', slug: 'fare-tuesday-rent-friday', cat: 'Persona', theme: 'page', tpl: 'A', eyebrow: 'gig',
     muted: "Last fare was Tuesday.",
-    punch: "Rent's Friday.\n{This is what\nAble is for.}" },
+    punch: "Rent's Friday.\nThis is what\n{Able} is for." },
 
   { id: '65', slug: 'surge-ended', cat: 'Persona', theme: 'black', tpl: 'A', eyebrow: 'gig',
     muted: "Surge ended\nat 9 PM.",
@@ -267,7 +267,7 @@ window.POSTS = [
 
   { id: '66', slug: 'algorithm-cut-views', cat: 'Persona', theme: 'green', tpl: 'A', eyebrow: 'creator',
     muted: "Algorithm cut\nyour views in half.",
-    punch: "The bills didn't\n{cut in half.}" },
+    punch: "The bills didn't\n{cut} in half." },
 
   { id: '67', slug: 'sponsor-60-rent-14', cat: 'Persona', theme: 'white', tpl: 'A', eyebrow: 'creator',
     muted: "Sponsor pays in 60.",
@@ -301,7 +301,7 @@ window.POSTS = [
 
   { id: '74', slug: 'refill-the-reserve', cat: 'Tip', theme: 'green', tpl: 'A', eyebrow: 'mixed',
     muted: "Slow week?",
-    punch: "Don't dip in.\n{Refill the reserve}\nnext paycheck." },
+    punch: "Don't dip in.\n{Refill} the reserve\nnext paycheck." },
 
   { id: '75', slug: 'spread-the-big-check', cat: 'Tip', theme: 'page', tpl: 'A', eyebrow: 'mixed',
     muted: "Big check?",
@@ -317,7 +317,7 @@ window.POSTS = [
 
   { id: '78', slug: 'irs-doesnt-care', cat: 'Tip', theme: 'green', tpl: 'A', eyebrow: 'mixed',
     muted: "The IRS doesn't care\nwhat kind of month\nyou had.",
-    punch: "Set aside taxes\n{off the top.}" },
+    punch: "Set aside taxes\noff the {top.}" },
 
   { id: '79', slug: 'if-you-cant-see-it-move-it', cat: 'Tip', theme: 'white', tpl: 'A', eyebrow: 'mixed',
     muted: "If you can't see it,",
@@ -329,7 +329,7 @@ window.POSTS = [
 
   { id: '81', slug: 'one-pile-five-jobs', cat: 'Tip', theme: 'green', tpl: 'A', eyebrow: 'mixed',
     muted: "One pile.\nFive jobs.",
-    punch: "{That's the\nwhole system.}" },
+    punch: "That's the\n{whole system.}" },
 
   { id: '82', slug: 'pay-yourself-first-tip', cat: 'Tip', theme: 'page', tpl: 'A', eyebrow: 'mixed',
     muted: "Don't pay yourself\nlast.",
@@ -357,7 +357,7 @@ window.POSTS = [
 
   { id: '86', slug: 'stat-36-percent-volatility', cat: 'Stat', theme: 'page', tpl: 'A', eyebrow: 'mixed',
     muted: "The median worker's income\nswings 36% month to month.",
-    punch: "Monthly budgets\n{break on that math.}",
+    punch: "Monthly budgets\n{break} on that math.",
     meta: 'JPMorgan Chase Institute, 2015' },
 
   { id: '87', slug: 'stat-58-percent-no-3mo-savings', cat: 'Stat', theme: 'white', tpl: 'A', eyebrow: 'gig', size: 'md',
@@ -367,7 +367,7 @@ window.POSTS = [
 
   { id: '88', slug: 'stat-third-couldnt-make-rent', cat: 'Stat', theme: 'page', tpl: 'A', eyebrow: 'gig',
     muted: "1 in 3 gig workers",
-    punch: "couldn't make rent\n{without their gig.}",
+    punch: "couldn't make rent\nwithout their {gig.}",
     meta: 'Federal Reserve SHED, 2024' },
 
   { id: '89', slug: 'stat-15-percent-no-retirement', cat: 'Stat', theme: 'white', tpl: 'A', eyebrow: 'mixed',
@@ -387,7 +387,7 @@ window.POSTS = [
 
   { id: '92', slug: 'stat-51-percent-uneven-cash-flow', cat: 'Stat', theme: 'white', tpl: 'A', eyebrow: 'business',
     muted: "51% of small employer\nfirms cite",
-    punch: "{uneven cash flow}\nas their biggest\nfinancial challenge.",
+    punch: "uneven {cash flow}\nas their biggest\nfinancial challenge.",
     meta: 'Federal Reserve, 2025' },
 
   { id: '93', slug: 'stat-26-percent-confident-on-taxes', cat: 'Stat', theme: 'glass-dark', tpl: 'A', eyebrow: 'mixed',
@@ -447,7 +447,7 @@ window.CAROUSELS = [
         meta: '3 / 8' },
       { tpl: 'A', eyebrow: 'Day 14', theme: 'black',
         muted: "The leak.",
-        punch: "You feel it.\n{Can't name it.}",
+        punch: "You feel it.\nCan't {name it.}",
         meta: '4 / 8' },
       { tpl: 'A', eyebrow: 'Day 30', theme: 'black',
         muted: "You check the balance.",
@@ -516,7 +516,7 @@ window.CAROUSELS = [
         meta: '4 / 8' },
       { tpl: 'A', eyebrow: 'Food',
         muted: "$400.",
-        punch: "{I'll just grab.}",
+        punch: "I'll just {grab.}",
         meta: '5 / 8' },
       { tpl: 'A', eyebrow: 'Unclassified',
         muted: "$300.",
@@ -576,7 +576,7 @@ window.CAROUSELS = [
         meta: '3 / 7' },
       { tpl: 'A', eyebrow: 'Step 3', theme: 'glass',
         muted: "Cover bills.",
-        punch: "Before you\n{feel like it}.",
+        punch: "Before you\nfeel {like it.}",
         meta: '4 / 7' },
       { tpl: 'A', eyebrow: 'Step 4', theme: 'glass',
         muted: "Spread\nacross months.",
@@ -632,7 +632,7 @@ window.CAROUSELS = [
         meta: '1 / 7' },
       { tpl: 'A', eyebrow: 'Type 1', theme: 'glass-dark',
         muted: "The Freezer.",
-        punch: "Moving it\n{makes it real}.",
+        punch: "Moving it\nmakes it {real.}",
         meta: '2 / 7' },
       { tpl: 'A', eyebrow: 'Type 2', theme: 'black',
         muted: "The Leaker.",
@@ -1105,7 +1105,7 @@ window.CAROUSELS = [
         punch: "Where the rules\n{change} monthly.",
         meta: '2 / 7' },
       { tpl: 'B', eyebrow: 'commission',
-        punch: "If I just had\nthree good months\n{in a row}.",
+        punch: "If I just had\nthree good months\nin a {row.}",
         meta: '3 / 7' },
       { tpl: 'A', eyebrow: 'commission',
         muted: "You're not\nbad with money.",
@@ -1130,15 +1130,15 @@ window.CAROUSELS = [
         meta: '1 / 7' },
       { tpl: 'A', eyebrow: 'business',
         muted: "Standard advice.",
-        punch: "{3 to 6 months.}\nNot for you.",
+        punch: "3 to {6 months.}\nNot for you.",
         meta: '2 / 7' },
       { tpl: 'A', eyebrow: 'business',
         muted: "No unemployment.\nNo severance.",
-        punch: "{No paid leave.}",
+        punch: "No {paid leave.}",
         meta: '3 / 7' },
       { tpl: 'A', eyebrow: 'business',
         muted: "Your baseline.",
-        punch: "{Includes the shocks.}",
+        punch: "Includes the {shocks.}",
         meta: '4 / 7' },
       { tpl: 'A', eyebrow: 'business',
         muted: "Aim for",
@@ -1167,11 +1167,11 @@ window.CAROUSELS = [
         meta: '3 / 7' },
       { tpl: 'A', eyebrow: 'mixed',
         muted: "Most land between.",
-        punch: "{25 and 35%}\nof every deposit.",
+        punch: "25 and {35%}\nof every deposit.",
         meta: '4 / 7' },
       { tpl: 'A', eyebrow: 'mixed',
         muted: "Last year's tax.\nDivided by income.",
-        punch: "Add state.\n{Plus 3 points.}",
+        punch: "Add state.\nPlus {3 points.}",
         meta: '5 / 7' },
       { tpl: 'A', eyebrow: 'mixed',
         muted: "If you guess.",
@@ -1245,7 +1245,7 @@ window.CAROUSELS = [
         punch: "Quarterlies due.\n{Bad month.}",
         meta: '1 / 6' },
       { tpl: 'B', eyebrow: 'mixed',
-        punch: "The IRS\n{does not care}.",
+        punch: "The IRS\ndoes not {care.}",
         meta: '2 / 6' },
       { tpl: 'A', eyebrow: 'mixed',
         muted: "Underpayment penalty.",
@@ -1331,7 +1331,7 @@ window.CAROUSELS = [
         meta: '2 / 7' },
       { tpl: 'A', eyebrow: 'Deduction 2',
         muted: "Self-employment tax.",
-        punch: "{Half of it}\ndeductible.",
+        punch: "{Half} of it\ndeductible.",
         meta: '3 / 7' },
       { tpl: 'A', eyebrow: 'Deduction 3',
         muted: "Vehicle.",
@@ -1357,7 +1357,7 @@ window.CAROUSELS = [
         meta: '1 / 7' },
       { tpl: 'A', eyebrow: 'mixed',
         muted: "The treadmill.",
-        punch: "Pay minimums.\n{Stay the same.}",
+        punch: "Pay minimums.\nStay the {same.}",
         meta: '2 / 7' },
       { tpl: 'A', eyebrow: 'mixed',
         muted: "Every debt book.",
@@ -1399,7 +1399,7 @@ window.CAROUSELS = [
         meta: '4 / 7' },
       { tpl: 'A', eyebrow: 'Quick win',
         muted: "Pay balances down.",
-        punch: "{30 to 60} points.\nIn 30 days.",
+        punch: "30 to {60} points.\nIn 30 days.",
         meta: '5 / 7' },
       { tpl: 'B', eyebrow: 'mixed',
         punch: "Automate everything.\n{Never miss.}",
@@ -1448,7 +1448,7 @@ window.CAROUSELS = [
         punch: "Not your {fault.}\nLet's fix that.",
         meta: '2 / 8' },
       { tpl: 'B', eyebrow: 'mixed',
-        punch: "Meet the\n{Rule of 72.}",
+        punch: "Meet the\nRule of {72.}",
         meta: '3 / 8' },
       { tpl: 'A', eyebrow: 'The math',
         muted: "Divide 72\nby your rate.",
@@ -1532,7 +1532,7 @@ window.CAROUSELS = [
         meta: '7 / 8' },
       { tpl: 'A', eyebrow: 'mixed', theme: 'green',
         muted: "$14.99 a month.",
-        punch: "Or $129 a year.\n{Free for 30.}",
+        punch: "Or $129 a year.\nFree for {30.}",
         meta: 'becomeable.app' },
   ] },
 
@@ -1565,7 +1565,7 @@ window.CAROUSELS = [
         meta: '7 / 8' },
       { tpl: 'A', eyebrow: 'mixed', theme: 'green',
         muted: "$14.99 a month.",
-        punch: "Or $129 a year.\n{Free for 30.}",
+        punch: "Or $129 a year.\nFree for {30.}",
         meta: 'becomeable.app' },
   ] },
 
@@ -1596,7 +1596,7 @@ window.CAROUSELS = [
         punch: "This is\n{calm-specific}.",
         meta: '6 / 8' },
       { tpl: 'B', eyebrow: 'mixed', theme: 'green',
-        punch: "Boring on purpose.\n{Specific by design.}",
+        punch: "Boring on purpose.\nSpecific by {design.}",
         meta: '7 / 8' },
       { tpl: 'A', eyebrow: 'mixed', theme: 'green',
         muted: "Free for 30 days.",
@@ -1623,7 +1623,7 @@ window.CAROUSELS = [
         meta: '4 / 8' },
       { tpl: 'A', eyebrow: 'Step 4', theme: 'page',
         muted: "Log each deposit.",
-        punch: "{Splits 5 ways}\nin seconds.",
+        punch: "{Splits} 5 ways\nin seconds.",
         meta: '5 / 8' },
       { tpl: 'A', eyebrow: 'Step 5', theme: 'page',
         muted: "Coach checks in",
@@ -1634,7 +1634,7 @@ window.CAROUSELS = [
         meta: '7 / 8' },
       { tpl: 'A', eyebrow: 'mixed',
         muted: "$14.99 a month.",
-        punch: "Or $129 a year.\n{Free for 30.}",
+        punch: "Or $129 a year.\nFree for {30.}",
         meta: 'becomeable.app' },
   ] },
 
@@ -1660,7 +1660,7 @@ window.CAROUSELS = [
         meta: '5 / 6' },
       { tpl: 'A', eyebrow: 'mixed', theme: 'green',
         muted: "$14.99 a month.",
-        punch: "Or $129 a year.\n{Free for 30.}",
+        punch: "Or $129 a year.\nFree for {30.}",
         meta: 'becomeable.app' },
   ] },
 
@@ -1690,7 +1690,7 @@ window.CAROUSELS = [
         punch: "No bracing.\n{No leak.}",
         meta: '6 / 8' },
       { tpl: 'B', eyebrow: 'mixed', theme: 'green',
-        punch: "Day 90.\n{You don't recognize}\npast-you.",
+        punch: "Day 90.\nYou don't {recognize}\npast-you.",
         meta: '7 / 8' },
       { tpl: 'A', eyebrow: 'mixed', theme: 'green',
         muted: "Free for 30 days.",
@@ -1724,7 +1724,7 @@ window.CAROUSELS = [
         punch: "{Refilled} every\ndeposit.",
         meta: '5 / 6' },
       { tpl: 'B', eyebrow: 'mixed', theme: 'green',
-        punch: "Build both.\nDifferent jobs.\n{Free for 30 days.}",
+        punch: "Build both.\nDifferent jobs.\nFree for {30 days.}",
         meta: 'becomeable.app' },
   ] },
 
@@ -1743,7 +1743,7 @@ window.CAROUSELS = [
         meta: '3 / 7' },
       { tpl: 'A', eyebrow: 'mixed',
         muted: "How much?",
-        punch: "{25 to 30 percent}\nof net income\neach quarter.",
+        punch: "25 to {30 percent}\nof net income\neach quarter.",
         meta: '4 / 7' },
       { tpl: 'A', eyebrow: 'mixed',
         muted: "Don't have it?",
@@ -1751,10 +1751,10 @@ window.CAROUSELS = [
         meta: '5 / 7' },
       { tpl: 'A', eyebrow: 'mixed',
         muted: "The fix:",
-        punch: "Set aside on every\ndeposit.\n{Not on April 14.}",
+        punch: "Set aside on every\ndeposit.\nNot on {April 14.}",
         meta: '6 / 7' },
       { tpl: 'B', eyebrow: 'mixed', theme: 'green',
-        punch: "Built into Able.\n{Free for 30 days.}",
+        punch: "Built into Able.\nFree for {30 days.}",
         meta: 'becomeable.app' },
   ] },
 
@@ -1777,10 +1777,10 @@ window.CAROUSELS = [
         meta: '4 / 6' },
       { tpl: 'A', eyebrow: 'mixed',
         muted: "Per-deposit budget\nhandles both.",
-        punch: "Each dollar gets a job\n{when it lands.}",
+        punch: "Each dollar gets a job\nwhen it {lands.}",
         meta: '5 / 6' },
       { tpl: 'B', eyebrow: 'mixed', theme: 'green',
-        punch: "That's Floor-First.\n{Free for 30 days.}",
+        punch: "That's Floor-First.\nFree for {30 days.}",
         meta: 'becomeable.app' },
   ] },
 
@@ -1810,7 +1810,7 @@ window.CAROUSELS = [
         punch: "Paying themselves\n{last.}",
         meta: '6 / 7' },
       { tpl: 'B', eyebrow: 'mixed', theme: 'green',
-        punch: "Built for variable income.\n{Free for 30 days.}",
+        punch: "Built for variable income.\nFree for {30 days.}",
         meta: 'becomeable.app' },
   ] },
 ];
@@ -1834,12 +1834,12 @@ window.BRANDSCRIPT = [
 
   { id: 'B03', slug: 'lockup-app-built-for', cat: 'Brand lockup', theme: 'white', tpl: 'A', eyebrow: 'mixed', size: 'sm',
     muted: "An app built for anyone",
-    punch: "who struggles to\n{budget inconsistent income.}" },
+    punch: "who struggles to\nbudget {inconsistent income.}" },
 
   // ── North Star ──
   { id: 'B04', slug: 'north-star', cat: 'North Star', theme: 'glass-dark', tpl: 'A', eyebrow: 'mixed', size: 'sm',
     muted: "We help people with\nmixed or unpredictable income",
-    punch: "{pay down debt}, save,\nand stop living check\nto unpredictable check." },
+    punch: "pay down {debt}, save,\nand stop living check\nto unpredictable check." },
 
   // ── Audience ──
   { id: 'B05', slug: 'audience-struggles-to-budget', cat: 'Audience', theme: 'page', tpl: 'A', eyebrow: 'mixed', size: 'sm',
@@ -1859,7 +1859,7 @@ window.BRANDSCRIPT = [
   // ── Villain / problem ──
   { id: 'B09', slug: 'villain-no-one-taught', cat: 'Villain', theme: 'black', tpl: 'A', eyebrow: 'mixed',
     muted: "No one taught you",
-    punch: "how to budget\n{income like yours.}" },
+    punch: "how to budget\nincome like {yours.}" },
 
   { id: 'B10', slug: 'villain-assume-paycheck', cat: 'Villain', theme: 'white', tpl: 'A', eyebrow: 'mixed',
     muted: "Most budgeting apps",
@@ -1876,7 +1876,7 @@ window.BRANDSCRIPT = [
   // ── Real fear (insight) ──
   { id: 'B13', slug: 'fear-not-knowing', cat: 'Real fear', theme: 'glass-dark', tpl: 'A', eyebrow: 'mixed', size: 'sm',
     muted: "Entrepreneurs don't fail to\npay down debt because\nthey don't want to.",
-    punch: "They fail because they're\n{afraid of not knowing}\nwhen the next check\nis coming in." },
+    punch: "They fail because they're\n{afraid} of not knowing\nwhen the next check\nis coming in." },
 
   // ── Paralysis ──
   { id: 'B14', slug: 'paralysis-you-freeze', cat: 'Paralysis', theme: 'black', tpl: 'B', eyebrow: 'mixed', center: true,
@@ -1887,27 +1887,27 @@ window.BRANDSCRIPT = [
     punch: "{leaks.}" },
 
   { id: 'B16', slug: 'paralysis-doesnt-stay', cat: 'Paralysis', theme: 'page', tpl: 'B', eyebrow: 'mixed',
-    punch: "Money that sits\n{doesn't stay put.}" },
+    punch: "Money that sits\ndoesn't stay {put.}" },
 
   { id: 'B17', slug: 'paralysis-dont-move-it', cat: 'Paralysis', theme: 'glass-dark', tpl: 'A', eyebrow: 'mixed', size: 'sm',
     muted: "You don't move the money",
-    punch: "because you don't know\n{when the next check}\nis coming." },
+    punch: "because you don't know\nwhen the {next check}\nis coming." },
 
   { id: 'B18', slug: 'paralysis-nothing-decision', cat: 'Paralysis', theme: 'page', tpl: 'A', eyebrow: 'mixed', size: 'sm',
     muted: "A little here.\nA little there.",
     punch: "{Nothing} feels\nlike a decision." },
 
   { id: 'B19', slug: 'paralysis-400-gone', cat: 'Paralysis', theme: 'black', tpl: 'A', eyebrow: 'mixed', size: 'sm',
-    muted: "By the end of the month,\n{$400 is gone.}",
+    muted: "By the end of the month,\n{$400} is gone.",
     punch: "Nothing paid down.\nNothing saved.\nNothing to show for it." },
 
   { id: 'B20', slug: 'paralysis-check-to-check', cat: 'Paralysis', theme: 'glass-dark', tpl: 'B', eyebrow: 'mixed',
-    punch: "Living unpredictable\ncheck to {unpredictable\ncheck.}" },
+    punch: "Living unpredictable\ncheck to unpredictable\n{check.}" },
 
   // ── Permission ──
   { id: 'B21', slug: 'permission-not-discipline', cat: 'Permission', theme: 'green', tpl: 'A', eyebrow: 'mixed', size: 'sm',
     muted: "You don't need\nmore discipline.",
-    punch: "You need a plan built\nfor {income like yours.}" },
+    punch: "You need a plan built\nfor income like {yours.}" },
 
   // ── Solution / mechanic ──
   { id: 'B22', slug: 'solution-every-deposit-routed', cat: 'Solution', theme: 'green', tpl: 'A', eyebrow: 'mixed', size: 'sm',
@@ -1915,7 +1915,7 @@ window.BRANDSCRIPT = [
     punch: "to its {destination}\nthe moment\nit arrives." },
 
   { id: 'B23', slug: 'solution-without-paycheck', cat: 'Solution', theme: 'page', tpl: 'B', eyebrow: 'mixed',
-    punch: "A budget that works\nwithout a {predictable\npaycheck.}" },
+    punch: "A budget that works\nwithout a predictable\n{paycheck.}" },
 
   { id: 'B24', slug: 'solution-lumpy-on-purpose', cat: 'Solution', theme: 'glass', tpl: 'A', eyebrow: 'mixed', size: 'sm',
     muted: "Traditional apps assume\na steady paycheck.",
@@ -1934,13 +1934,13 @@ window.BRANDSCRIPT = [
 
   // ── Transformation ──
   { id: 'B28', slug: 'transform-i-am-able', cat: 'Transformation', theme: 'page', tpl: 'B', eyebrow: 'mixed', center: true,
-    punch: "{I am able.}" },
+    punch: "I am {able.}" },
 
   { id: 'B29', slug: 'transform-i-am-capable', cat: 'Transformation', theme: 'white', tpl: 'B', eyebrow: 'mixed', center: true,
-    punch: "{I am capable.}" },
+    punch: "I am {capable.}" },
 
   { id: 'B30', slug: 'transform-it-is-predictable', cat: 'Transformation', theme: 'green', tpl: 'B', eyebrow: 'mixed', center: true,
-    punch: "{It is predictable.}" },
+    punch: "It is {predictable.}" },
 
   { id: 'B31', slug: 'transform-i-know-whats-coming', cat: 'Transformation', theme: 'glass', tpl: 'B', eyebrow: 'mixed', center: true,
     punch: "{I know}\nwhat's coming." },
@@ -1960,7 +1960,7 @@ window.BRANDSCRIPT = [
 
   { id: 'B35', slug: 'identity-predict-whats-coming', cat: 'New identity', theme: 'white', tpl: 'A', eyebrow: 'mixed', size: 'sm',
     muted: "I am able to predict",
-    punch: "{what is coming.}" },
+    punch: "what is {coming.}" },
 
   { id: 'B36', slug: 'identity-budget-inconsistent', cat: 'New identity', theme: 'green', tpl: 'A', eyebrow: 'mixed', size: 'sm',
     muted: "I am able to budget",
