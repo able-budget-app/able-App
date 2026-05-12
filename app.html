@@ -10228,7 +10228,7 @@ async function settingsHandlePostLink(public_token, metadata) {
     // Fire-and-forget sync, but report when it finishes so the user knows
     // it's safe to look at Activity / dashboard for the new data.
     sbGet().functions.invoke('plaid-sync', { body: { plaid_item_row_id: ex.plaid_item_row_id } })
-      .then(({ data, error }) => {
+      .then(async ({ data, error }) => {
         if (error || (data && data.error)) {
           console.warn('post-link plaid-sync failed:', error || data?.error);
           showToast(`Connected ${friendly}, but the first sync hit a snag. We'll retry automatically.`, { duration: 6000 });
@@ -10239,6 +10239,17 @@ async function settingsHandlePostLink(public_token, metadata) {
           ? `${friendly}: ${imported} transaction${imported===1?'':'s'} imported.`
           : `${friendly} sync complete.`;
         showToast(msg, { duration: 6000 });
+        // Detect credit cards/lines of credit so they land in
+        // plaid_credit_debts and surface in the new-bank review modal.
+        // Onboarding pipeline does this; the settings flow used to skip it,
+        // so cards from a settings-added bank were invisible to Option-C.
+        try {
+          await sbGet().functions.invoke('plaid-detect-credit-debts', {
+            body: { plaid_item_row_id: ex.plaid_item_row_id },
+          });
+        } catch (e) {
+          console.warn('post-link plaid-detect-credit-debts failed:', e);
+        }
         // Refresh dashboard + activity if visible.
         try { if (typeof refreshHome === 'function') refreshHome(); } catch (_) {}
         try { if (typeof renderActivityPage === 'function' && document.getElementById('page-activity')?.classList.contains('active')) renderActivityPage(); } catch (_) {}
@@ -10786,11 +10797,12 @@ async function openNewBankReviewModal(itemId, bankName){
         kind: 'bill',
         stream_id: s.stream_id,
         name: s.merchant_name || s.description || 'Recurring charge',
+        _raw: `${s.merchant_name || ''} ${s.description || ''}`.toLowerCase(),
         amount: Math.abs(Number(s.average_amount) || Number(s.last_amount) || 0),
         frequency: String(s.frequency || 'MONTHLY').toLowerCase(),
         due: _streamPickDueDay(s),
       }))
-      .filter(b => b.amount > 0 && b.name && !existingBillNames.has(b.name.toLowerCase()));
+      .filter(b => b.amount > 0 && b.name && !existingBillNames.has(b.name.toLowerCase()) && !_looksLikeInterestCharge(b._raw));
 
     const debtCandidates = (debtsRes.data || [])
       .map(d => ({
@@ -10836,6 +10848,16 @@ function _freqLabel(f){
   if (s === 'monthly') return 'monthly';
   if (s === 'annually' || s === 'yearly' || s === 'annual') return 'yearly';
   return s;
+}
+
+// Match the analyzer's stripInterestCharges() filter so interest accruals
+// (which Plaid detects as recurring streams since they hit monthly) don't
+// surface as candidate bills in the new-bank review modal.
+function _looksLikeInterestCharge(s){
+  const t = String(s || '').toLowerCase();
+  return t.includes('interest charge') ||
+         t.includes('finance charge') ||
+         t.includes('purchase interest');
 }
 
 function _renderNewBankReviewBody(){
