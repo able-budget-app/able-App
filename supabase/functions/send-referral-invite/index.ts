@@ -1,16 +1,28 @@
 import { createClient } from 'npm:@supabase/supabase-js@2'
 
-const corsHeaders = {
-  'Access-Control-Allow-Origin': '*',
+const _ALLOWED_ORIGINS = new Set([
+  'https://becomeable.app',
+  'https://www.becomeable.app',
+]);
+function _allowOrigin(origin: string | null): string {
+  if (!origin) return 'https://becomeable.app';
+  if (_ALLOWED_ORIGINS.has(origin)) return origin;
+  if (/^https:\/\/deploy-preview-\d+--becomeable\.netlify\.app$/.test(origin)) return origin;
+  if (/^http:\/\/(localhost|127\.0\.0\.1)(:\d+)?$/.test(origin)) return origin;
+  return 'https://becomeable.app';
+}
+function corsHeaders(req: Request) {
+  return {
+  'Access-Control-Allow-Origin': _allowOrigin(req.headers.get('Origin')),
   'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type',
   'Access-Control-Allow-Methods': 'POST, OPTIONS',
-}
-
-const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
+  'Vary': 'Origin',
+  };
+}const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
 
 Deno.serve(async (req) => {
-  if (req.method === 'OPTIONS') return new Response('ok', { headers: corsHeaders })
-  if (req.method !== 'POST') return json({ error: 'POST only' }, 405)
+  if (req.method === 'OPTIONS') return new Response('ok', { headers: corsHeaders(req) })
+  if (req.method !== 'POST') return json(req, { error: 'POST only' }, 405)
 
   try {
     const authHeader = req.headers.get('Authorization') ?? ''
@@ -27,7 +39,7 @@ Deno.serve(async (req) => {
       global: { headers: { Authorization: authHeader } },
     })
     const { data: userRes, error: userErr } = await userClient.auth.getUser()
-    if (userErr || !userRes.user) return json({ error: 'Unauthorized' }, 401)
+    if (userErr || !userRes.user) return json(req, { error: 'Unauthorized' }, 401)
     const userId = userRes.user.id
     const userEmail = (userRes.user.email ?? '').toLowerCase()
 
@@ -39,18 +51,18 @@ Deno.serve(async (req) => {
       .eq('id', userId)
       .single()
     if (!profile || !['active', 'lifetime'].includes(profile.subscription_status)) {
-      return json({ error: 'The referral program opens after your trial converts.' }, 403)
+      return json(req, { error: 'The referral program opens after your trial converts.' }, 403)
     }
 
     const body = await req.json()
     const name = (body.name ?? '').toString().trim()
     const email = (body.email ?? '').toString().trim().toLowerCase()
-    if (!name || name.length > 100) return json({ error: 'Please enter a name.' }, 400)
+    if (!name || name.length > 100) return json(req, { error: 'Please enter a name.' }, 400)
     if (!email || !EMAIL_RE.test(email) || email.length > 200) {
-      return json({ error: 'Please enter a valid email address.' }, 400)
+      return json(req, { error: 'Please enter a valid email address.' }, 400)
     }
     if (email === userEmail) {
-      return json({ error: 'You cannot refer yourself.' }, 400)
+      return json(req, { error: 'You cannot refer yourself.' }, 400)
     }
 
     // Daily cap on outbound invites per user. Prevents a paid account from
@@ -66,7 +78,7 @@ Deno.serve(async (req) => {
       .eq('referrer_id', userId)
       .gte('created_at', midnight.toISOString())
     if ((invitesToday ?? 0) >= DAILY_INVITE_CAP) {
-      return json({
+      return json(req, {
         error: `Daily invite cap reached (${DAILY_INVITE_CAP}). Resets at midnight.`,
       }, 429)
     }
@@ -77,7 +89,7 @@ Deno.serve(async (req) => {
       .select('id, ref_token')
       .single()
     if (insertErr || !ref) {
-      return json({ error: 'Could not save referral. Try again.' }, 500)
+      return json(req, { error: 'Could not save referral. Try again.' }, 500)
     }
 
     const inviteUrl = `${APP_URL}/?ref=${ref.ref_token}`
@@ -99,24 +111,24 @@ Deno.serve(async (req) => {
     const resendBody = await resendRes.json().catch(() => ({}))
     if (!resendRes.ok) {
       console.error('Resend send failed:', resendBody)
-      return json({
+      return json(req, {
         ok: true,
         ref_token: ref.ref_token,
         warning: 'Referral saved but invite email failed to send.',
       })
     }
 
-    return json({ ok: true, ref_token: ref.ref_token })
+    return json(req, { ok: true, ref_token: ref.ref_token })
   } catch (e) {
     console.error('send-referral-invite error:', e)
-    return json({ error: (e as Error).message }, 500)
+    return json(req, { error: (e as Error).message }, 500)
   }
 })
 
-function json(body: unknown, status = 200) {
+function json(req: Request, body: unknown, status = 200) {
   return new Response(JSON.stringify(body), {
     status,
-    headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+    headers: { ...corsHeaders(req), 'Content-Type': 'application/json' },
   })
 }
 

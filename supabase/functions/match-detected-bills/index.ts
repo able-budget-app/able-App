@@ -22,11 +22,25 @@ const SERVICE_ROLE = Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')!;
 const MAX_BILLS = 60;
 const MAX_STREAMS = 60;
 
-const corsHeaders = {
-  'Access-Control-Allow-Origin': '*',
+const _ALLOWED_ORIGINS = new Set([
+  'https://becomeable.app',
+  'https://www.becomeable.app',
+]);
+function _allowOrigin(origin: string | null): string {
+  if (!origin) return 'https://becomeable.app';
+  if (_ALLOWED_ORIGINS.has(origin)) return origin;
+  if (/^https:\/\/deploy-preview-\d+--becomeable\.netlify\.app$/.test(origin)) return origin;
+  if (/^http:\/\/(localhost|127\.0\.0\.1)(:\d+)?$/.test(origin)) return origin;
+  return 'https://becomeable.app';
+}
+function corsHeaders(req: Request) {
+  return {
+  'Access-Control-Allow-Origin': _allowOrigin(req.headers.get('Origin')),
   'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type',
   'Access-Control-Allow-Methods': 'POST, OPTIONS',
-};
+  'Vary': 'Origin',
+  };
+}
 
 type BillInput = {
   id: string;
@@ -45,9 +59,33 @@ type StreamInput = {
 };
 type Match = { stream_id: string; bill_id: string };
 
+// Per-user in-memory rate limit. Each Anthropic call costs real money, and a
+// normal user opens the Bills tab maybe 5-10 times a day. 30/day is generous
+// for users + tight enough that a dev-console spam loop hits the cap quickly.
+// Per-isolate (resets on cold start) — not bulletproof against sustained
+// attack but enough to keep the spend bounded for a 20-50-user launch.
+const HOURLY_CAP = 15;
+const DAILY_CAP = 30;
+const _callLog = new Map<string, number[]>(); // userId -> array of call timestamps (ms)
+function _checkRateLimit(userId: string): { ok: true } | { ok: false; reason: string } {
+  const now = Date.now();
+  const hour = 60 * 60 * 1000;
+  const day = 24 * hour;
+  const log = (_callLog.get(userId) || []).filter((t) => now - t < day);
+  if (log.filter((t) => now - t < hour).length >= HOURLY_CAP) {
+    return { ok: false, reason: `Hourly cap reached (${HOURLY_CAP}). Try again later.` };
+  }
+  if (log.length >= DAILY_CAP) {
+    return { ok: false, reason: `Daily cap reached (${DAILY_CAP}). Resets in a few hours.` };
+  }
+  log.push(now);
+  _callLog.set(userId, log);
+  return { ok: true };
+}
+
 Deno.serve(async (req) => {
-  if (req.method === 'OPTIONS') return new Response('ok', { headers: corsHeaders });
-  if (req.method !== 'POST') return json({ error: 'POST only' }, 405);
+  if (req.method === 'OPTIONS') return new Response('ok', { headers: corsHeaders(req) });
+  if (req.method !== 'POST') return json(req, { error: 'POST only' }, 405);
 
   try {
     // Verify caller. Function calls Anthropic on every invocation, so an
@@ -57,16 +95,19 @@ Deno.serve(async (req) => {
       global: { headers: { Authorization: authHeader } },
     });
     const { data: userRes, error: userErr } = await userClient.auth.getUser();
-    if (userErr || !userRes.user) return json({ error: 'Unauthorized' }, 401);
+    if (userErr || !userRes.user) return json(req, { error: 'Unauthorized' }, 401);
+
+    const limit = _checkRateLimit(userRes.user.id);
+    if (!limit.ok) return json(req, { error: limit.reason }, 429);
 
     const body = await req.json();
     const bills: BillInput[] = Array.isArray(body?.bills) ? body.bills : [];
     const streams: StreamInput[] = Array.isArray(body?.streams) ? body.streams : [];
 
-    if (streams.length === 0) return json({ matches: [] });
-    if (bills.length === 0) return json({ matches: [] });
+    if (streams.length === 0) return json(req, { matches: [] });
+    if (bills.length === 0) return json(req, { matches: [] });
     if (bills.length > MAX_BILLS || streams.length > MAX_STREAMS) {
-      return json({ error: `Too many items (max ${MAX_BILLS} bills, ${MAX_STREAMS} streams)` }, 400);
+      return json(req, { error: `Too many items (max ${MAX_BILLS} bills, ${MAX_STREAMS} streams)` }, 400);
     }
 
     const anthropic = new Anthropic({ apiKey: ANTHROPIC_API_KEY });
@@ -93,17 +134,17 @@ Deno.serve(async (req) => {
     );
 
     const matches = parseMatches(text, bills, streams);
-    return json({ matches, usage: response.usage });
+    return json(req, { matches, usage: response.usage });
   } catch (e) {
     console.error('match-detected-bills error:', e);
-    return json({ error: (e as Error).message }, 500);
+    return json(req, { error: (e as Error).message }, 500);
   }
 });
 
-function json(body: unknown, status = 200) {
+function json(req: Request, body: unknown, status = 200) {
   return new Response(JSON.stringify(body), {
     status,
-    headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+    headers: { ...corsHeaders(req), 'Content-Type': 'application/json' },
   });
 }
 

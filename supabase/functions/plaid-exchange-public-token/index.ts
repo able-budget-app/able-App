@@ -22,11 +22,25 @@ import { itemPublicTokenExchange, accountsGet } from '../_shared/plaid.ts';
 const SUPABASE_URL = Deno.env.get('SUPABASE_URL')!;
 const SERVICE_ROLE = Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')!;
 
-const corsHeaders = {
-  'Access-Control-Allow-Origin': '*',
+const _ALLOWED_ORIGINS = new Set([
+  'https://becomeable.app',
+  'https://www.becomeable.app',
+]);
+function _allowOrigin(origin: string | null): string {
+  if (!origin) return 'https://becomeable.app';
+  if (_ALLOWED_ORIGINS.has(origin)) return origin;
+  if (/^https:\/\/deploy-preview-\d+--becomeable\.netlify\.app$/.test(origin)) return origin;
+  if (/^http:\/\/(localhost|127\.0\.0\.1)(:\d+)?$/.test(origin)) return origin;
+  return 'https://becomeable.app';
+}
+function corsHeaders(req: Request) {
+  return {
+  'Access-Control-Allow-Origin': _allowOrigin(req.headers.get('Origin')),
   'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type',
   'Access-Control-Allow-Methods': 'POST, OPTIONS',
-};
+  'Vary': 'Origin',
+  };
+}
 
 type Body = {
   public_token: string;
@@ -35,8 +49,8 @@ type Body = {
 };
 
 Deno.serve(async (req) => {
-  if (req.method === 'OPTIONS') return new Response('ok', { headers: corsHeaders });
-  if (req.method !== 'POST') return json({ error: 'POST only' }, 405);
+  if (req.method === 'OPTIONS') return new Response('ok', { headers: corsHeaders(req) });
+  if (req.method !== 'POST') return json(req, { error: 'POST only' }, 405);
 
   try {
     const authHeader = req.headers.get('Authorization') ?? '';
@@ -44,11 +58,11 @@ Deno.serve(async (req) => {
       global: { headers: { Authorization: authHeader } },
     });
     const { data: userRes, error: userErr } = await userClient.auth.getUser();
-    if (userErr || !userRes.user) return json({ error: 'Unauthorized' }, 401);
+    if (userErr || !userRes.user) return json(req, { error: 'Unauthorized' }, 401);
     const userId = userRes.user.id;
 
     const body: Body = await req.json();
-    if (!body?.public_token) return json({ error: 'public_token required' }, 400);
+    if (!body?.public_token) return json(req, { error: 'public_token required' }, 400);
 
     const lookback: 6 | 12 | 24 = ([6, 12, 24] as const).includes(body.lookback_months as 6 | 12 | 24)
       ? (body.lookback_months as 6 | 12 | 24)
@@ -81,7 +95,7 @@ Deno.serve(async (req) => {
       .single();
     if (itemErr || !item) {
       console.error('plaid_items upsert failed:', itemErr);
-      return json({ error: itemErr?.message ?? 'Could not save Plaid item' }, 500);
+      return json(req, { error: itemErr?.message ?? 'Could not save Plaid item' }, 500);
     }
 
     // Insert each account. Skip accounts the user already has linked.
@@ -105,10 +119,10 @@ Deno.serve(async (req) => {
       .upsert(accountRows, { onConflict: 'plaid_account_id' });
     if (acctErr) {
       console.error('plaid_accounts upsert failed:', acctErr);
-      return json({ error: acctErr.message }, 500);
+      return json(req, { error: acctErr.message }, 500);
     }
 
-    return json({
+    return json(req, {
       plaid_item_row_id: item.id,
       item_id: exchange.item_id,
       lookback_months: lookback,
@@ -123,13 +137,13 @@ Deno.serve(async (req) => {
     });
   } catch (e) {
     console.error('plaid-exchange-public-token error:', e);
-    return json({ error: (e as Error).message }, 500);
+    return json(req, { error: (e as Error).message }, 500);
   }
 });
 
-function json(body: unknown, status = 200) {
+function json(req: Request, body: unknown, status = 200) {
   return new Response(JSON.stringify(body), {
     status,
-    headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+    headers: { ...corsHeaders(req), 'Content-Type': 'application/json' },
   });
 }

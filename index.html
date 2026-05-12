@@ -19,6 +19,8 @@
 <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32.png">
 <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16.png">
 <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+<!-- Address-bar tint on Safari + Chrome. Brand green. -->
+<meta name="theme-color" content="#2a7a4a">
 <!-- Open Graph (Facebook, LinkedIn, iMessage) -->
 <meta property="og:type" content="website">
 <meta property="og:site_name" content="Able">
@@ -60,7 +62,7 @@
 <link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,300;12..96,400;12..96,500;12..96,600;12..96,700;12..96,800;12..96,900&display=swap" rel="stylesheet">
 <style>
 /* ═══════════════════════════════════════
-   TOKENS — mirrored from app
+   TOKENS - mirrored from app
 ═══════════════════════════════════════ */
 :root {
   --ds-page: #f0f7f2;
@@ -68,7 +70,7 @@
   --ds-card2: #f7fbf8;
   --ds-t1: #111c16;
   --ds-t2: #4a5c52;
-  --ds-t3: #8ca898;
+  --ds-t3: #557064;
   --ds-t4: #c4d8cc;
   --ds-green: #2a7a4a;
   --ds-green2: #1f6038;
@@ -498,13 +500,13 @@ a { text-decoration: none; color: inherit; }
   height: calc(100% - 44px);
 }
 
-/* App UI inside phone — dashboard mockup */
+/* App UI inside phone - dashboard mockup */
 .app-section-label {
   font-size: 9px;
   font-weight: 800;
   letter-spacing: .12em;
   text-transform: uppercase;
-  color: #8ca898;
+  color: #557064;
   margin-bottom: 6px;
 }
 .app-hero-card {
@@ -653,7 +655,7 @@ a { text-decoration: none; color: inherit; }
   letter-spacing: -.01em;
   box-shadow: 0 4px 12px rgba(0,0,0,.1);
 }
-/* Unified hero — money rows + secondary CTA, mirrors the real app */
+/* Unified hero - money rows + secondary CTA, mirrors the real app */
 .app-hero-money-row {
   position: relative;
   display: flex;
@@ -722,7 +724,7 @@ a { text-decoration: none; color: inherit; }
   letter-spacing: -.01em;
   margin-top: 8px;
 }
-/* Floor strip — matches the app's Floor-First indicator */
+/* Floor strip - matches the app's Floor-First indicator */
 .app-hero-floor {
   position: relative;
   margin: 9px 0 11px;
@@ -772,7 +774,7 @@ a { text-decoration: none; color: inherit; }
 .app-hero-floor-buffer {
   color: rgba(255,255,255,.7);
 }
-/* Greeting row — sits above the hero card, mirrors actual app */
+/* Greeting row - sits above the hero card, mirrors actual app */
 .app-greeting {
   display: flex;
   justify-content: space-between;
@@ -792,7 +794,7 @@ a { text-decoration: none; color: inherit; }
   color: #4a5c52;
   letter-spacing: -.01em;
 }
-/* Month banner — replaces the small eyebrow inside the hero card */
+/* Month banner - replaces the small eyebrow inside the hero card */
 .app-hero-monthbar {
   position: relative;
   display: flex;
@@ -814,7 +816,7 @@ a { text-decoration: none; color: inherit; }
   color: rgba(255,255,255,.65);
   text-transform: uppercase;
 }
-/* Score card — dark forest green, sits below hero card */
+/* Score card - dark forest green, sits below hero card */
 .app-score-card {
   background: linear-gradient(145deg, #142a1c 0%, #1c3a27 100%);
   border-radius: 18px;
@@ -1000,7 +1002,7 @@ a { text-decoration: none; color: inherit; }
 .app-qa-body { flex: 1; min-width: 0; }
 .app-qa-title { font-size: 11px; font-weight: 800; color: #111c16; letter-spacing: -.01em; }
 .app-qa-sub { font-size: 9px; color: #4a5c52; font-weight: 600; margin-top: 1px; }
-.app-qa-chev { font-size: 14px; color: #8ca898; }
+.app-qa-chev { font-size: 14px; color: #557064; }
 .phone-nav {
   position: absolute;
   bottom: 0; left: 0; right: 0;
@@ -1017,7 +1019,7 @@ a { text-decoration: none; color: inherit; }
   gap: 2px;
   font-size: 7px;
   font-weight: 800;
-  color: #8ca898;
+  color: #557064;
   text-transform: uppercase;
   letter-spacing: .04em;
   padding: 4px 8px;
@@ -1175,7 +1177,7 @@ a { text-decoration: none; color: inherit; }
   position: relative;
 }
 .problem-beat:last-child { padding-bottom: 0; }
-/* Vertical connector line between beats — passes through pill centers */
+/* Vertical connector line between beats - passes through pill centers */
 .problem-beat:not(:last-child)::after {
   content: '';
   position: absolute;
@@ -1233,7 +1235,7 @@ a { text-decoration: none; color: inherit; }
   color: #ff6f8c;
   text-shadow: 0 0 20px rgba(255,111,140,.4);
 }
-/* Active/highlighted state — stage-aware */
+/* Active/highlighted state - stage-aware */
 .problem-beat.highlight .problem-day {
   background: rgba(42,122,74,.4);
   border-color: var(--ds-green-m);
@@ -1411,7 +1413,7 @@ a { text-decoration: none; color: inherit; }
   font-weight: 800;
   letter-spacing: .12em;
   text-transform: uppercase;
-  color: #8ca898;
+  color: #557064;
   margin-bottom: 4px;
 }
 .recap-headline {
@@ -1458,7 +1460,7 @@ a { text-decoration: none; color: inherit; }
 .recap-row-sub {
   font-size: 10px;
   font-weight: 600;
-  color: #8ca898;
+  color: #557064;
   margin-top: 1px;
 }
 .recap-row-value {
@@ -1496,7 +1498,7 @@ a { text-decoration: none; color: inherit; }
   margin-top: 6px;
   font-size: 9px;
   font-weight: 700;
-  color: #8ca898;
+  color: #557064;
   letter-spacing: .02em;
 }
 .shift-phone-nav {
@@ -1515,7 +1517,7 @@ a { text-decoration: none; color: inherit; }
   gap: 2px;
   font-size: 7px;
   font-weight: 800;
-  color: #8ca898;
+  color: #557064;
   text-transform: uppercase;
   letter-spacing: .04em;
   padding: 4px 8px;
@@ -1534,7 +1536,7 @@ a { text-decoration: none; color: inherit; }
 }
 
 /* ═══════════════════════════════════════
-   HOW IT WORKS — animated phone walkthroughs
+   HOW IT WORKS - animated phone walkthroughs
 ═══════════════════════════════════════ */
 .hiw-section {
   background: var(--ds-t1);
@@ -1652,7 +1654,7 @@ a { text-decoration: none; color: inherit; }
   gap: 8px;
 }
 
-/* Step 1 animation — typing income */
+/* Step 1 animation - typing income */
 .anim-input-row {
   display: flex;
   gap: 6px;
@@ -1664,7 +1666,7 @@ a { text-decoration: none; color: inherit; }
   padding: 8px 10px;
   box-shadow: 0 1px 4px rgba(0,0,0,.06);
 }
-.anim-input-lbl { font-size: 7px; font-weight: 800; color: #8ca898; text-transform: uppercase; letter-spacing: .08em; margin-bottom: 2px; }
+.anim-input-lbl { font-size: 7px; font-weight: 800; color: #557064; text-transform: uppercase; letter-spacing: .08em; margin-bottom: 2px; }
 .anim-input-val { font-size: 14px; font-weight: 900; color: #111c16; letter-spacing: -.02em; min-height: 18px; }
 .anim-cursor {
   display: inline-block;
@@ -1699,7 +1701,7 @@ a { text-decoration: none; color: inherit; }
   box-shadow: 0 4px 12px rgba(42,122,74,.3);
 }
 
-/* Step 2 animation — split result with check-off */
+/* Step 2 animation - split result with check-off */
 .anim-result-card {
   background: white;
   border-radius: 12px;
@@ -1765,7 +1767,7 @@ a { text-decoration: none; color: inherit; }
 .anim-result-sub {
   font-size: 8.5px;
   font-weight: 700;
-  color: #8ca898;
+  color: #557064;
   margin-top: 1px;
   letter-spacing: .02em;
 }
@@ -1786,7 +1788,7 @@ a { text-decoration: none; color: inherit; }
   to   { opacity: .62; }
 }
 
-/* Step 3 animation — debt shrinking */
+/* Step 3 animation - debt shrinking */
 .anim-debt-card {
   background: white;
   border-radius: 12px;
@@ -1840,7 +1842,7 @@ a { text-decoration: none; color: inherit; }
   to   { opacity: 1; }
 }
 
-/* ═══ Step 1 — Home + sliding modal animation ═══ */
+/* ═══ Step 1 - Home + sliding modal animation ═══ */
 .hiw-step1-content { padding: 30px 0 0; gap: 0; overflow: hidden; }
 .hiw-step1-home {
   padding: 0 10px;
@@ -1915,7 +1917,7 @@ a { text-decoration: none; color: inherit; }
   margin-top: 7px;
   border: none;
 }
-/* Sliding modal — fixed top so it always covers score card chart + chips
+/* Sliding modal - fixed top so it always covers score card chart + chips
    and goes flush to the screen's bottom corners (no gap). */
 .hiw-step1-modal {
   position: absolute;
@@ -1947,7 +1949,7 @@ a { text-decoration: none; color: inherit; }
   font-weight: 800;
   letter-spacing: .1em;
   text-transform: uppercase;
-  color: #8ca898;
+  color: #557064;
   margin-bottom: 2px;
 }
 .hiw-step1-modal .field-val {
@@ -1976,7 +1978,7 @@ a { text-decoration: none; color: inherit; }
   animation: step1FadeIn .4s 3.5s ease both;
 }
 @keyframes step1FadeIn { to { opacity: 1; } }
-/* Step 1 typing — overrides existing */
+/* Step 1 typing - overrides existing */
 #step1-phone .hiw-step1-typing {
   overflow: hidden;
   display: inline-block;
@@ -2000,7 +2002,7 @@ a { text-decoration: none; color: inherit; }
 }
 #step1-phone .hiw-step1-cursor.show { opacity: 1; }
 
-/* ═══ Step 2 — Allocation plan ═══ */
+/* ═══ Step 2 - Allocation plan ═══ */
 .hiw-step2-content { padding: 30px 10px 8px; gap: 6px; }
 .hiw-step2-title {
   font-size: 13px;
@@ -2014,7 +2016,7 @@ a { text-decoration: none; color: inherit; }
   font-weight: 800;
   letter-spacing: .12em;
   text-transform: uppercase;
-  color: #8ca898;
+  color: #557064;
   margin-bottom: 4px;
 }
 .hiw-alloc-card {
@@ -2072,7 +2074,7 @@ a { text-decoration: none; color: inherit; }
 .hiw-alloc-sub {
   font-size: 7.5px;
   font-weight: 700;
-  color: #8ca898;
+  color: #557064;
   margin-top: 1px;
   letter-spacing: -.01em;
 }
@@ -2102,14 +2104,14 @@ a { text-decoration: none; color: inherit; }
 #step2-phone .hiw-alloc-card:nth-of-type(2) { animation-delay: .35s; }
 #step2-phone .hiw-alloc-card:nth-of-type(3) { animation-delay: .55s; }
 
-/* ═══ Step 3 — Bills covered, debt down, savings up ═══ */
+/* ═══ Step 3 - Bills covered, debt down, savings up ═══ */
 .hiw-step3-content { padding: 30px 12px 8px; gap: 7px; }
 .hiw-step3-eyebrow {
   font-size: 8px;
   font-weight: 800;
   letter-spacing: .12em;
   text-transform: uppercase;
-  color: #8ca898;
+  color: #557064;
   margin-bottom: 0;
 }
 .hiw-step3-headline {
@@ -2150,7 +2152,7 @@ a { text-decoration: none; color: inherit; }
 .hiw-step3-bills-sub {
   font-size: 8px;
   font-weight: 600;
-  color: #8ca898;
+  color: #557064;
   margin-top: 1px;
 }
 .hiw-step3-bills-val {
@@ -2208,7 +2210,7 @@ a { text-decoration: none; color: inherit; }
   font-weight: 800;
   color: var(--ds-t1);
   letter-spacing: -.02em;
-  margin-bottom: .5rem;
+  margin: 0 0 .5rem;
 }
 .feature-body {
   font-size: 14px;
@@ -2648,8 +2650,32 @@ a { text-decoration: none; color: inherit; }
   .footer { padding: 2rem 1.25rem; }
   .footer-inner { flex-direction: column; align-items: flex-start; }
 }
+
+/* Skip-to-content link for keyboard users: visually hidden until focused,
+   then appears top-left so users can jump past the nav directly to <main>. */
+.skip-link {
+  position: absolute; top: -40px; left: 8px;
+  background: var(--ds-t1); color: var(--ds-card);
+  padding: 10px 16px; border-radius: var(--ds-r1);
+  font-family: var(--ds-f); font-size: 14px; font-weight: 700;
+  text-decoration: none; z-index: 9999;
+  transition: top .15s ease;
+}
+.skip-link:focus { top: 8px; outline: 3px solid var(--ds-green); outline-offset: 2px; }
+
+/* Respect OS reduced-motion preference. Scroll-reveal animations, phone-mockup
+   replay loops, and shimmer/pulse effects all collapse to instant-end for
+   users with vestibular sensitivity. */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
 </style>
-<!-- Meta Pixel — page view tracking. To activate: create a pixel in Meta
+<!-- Meta Pixel - page view tracking. To activate: create a pixel in Meta
      Events Manager, copy the numeric ID (15-16 digits), paste it as the
      META_PIXEL_ID value in BOTH index.html and app.html (also update the
      noscript fallback image URL below). Gate uses a numeric regex check
@@ -2671,7 +2697,7 @@ if (/^\d{10,20}$/.test(META_PIXEL_ID)) {
 </script>
 <noscript><img height="1" width="1" style="display:none" src="https://www.facebook.com/tr?id=940091778831653&ev=PageView&noscript=1"/></noscript>
 
-<!-- Google Ads gtag — page view tracking. The Google tag ID is issued
+<!-- Google Ads gtag - page view tracking. The Google tag ID is issued
      by Google Ads (Goals → Conversions → Google tag) and is NOT the
      customer ID with dashes stripped. Gate uses a prefix+digit regex
      so accidental find/replace can't silently break. -->
@@ -2700,6 +2726,8 @@ posthog.init('phc_B6PH36QxpExnyBYhfScFFF6LhDvoyxuFr6PypJuxxky3', {
 </head>
 <body>
 
+<a href="#main" class="skip-link">Skip to content</a>
+
 <!-- NAV -->
 <nav class="nav">
   <div class="nav-inner">
@@ -2722,6 +2750,8 @@ posthog.init('phc_B6PH36QxpExnyBYhfScFFF6LhDvoyxuFr6PypJuxxky3', {
     <a href="/app.html" class="nav-cta">Start your free 30-day trial</a>
   </div>
 </nav>
+
+<main id="main">
 
 <!-- ═══════ HERO ═══════ -->
 <section class="hero">
@@ -2746,8 +2776,8 @@ posthog.init('phc_B6PH36QxpExnyBYhfScFFF6LhDvoyxuFr6PypJuxxky3', {
             <div class="phone-status">
               <span>9:41</span>
               <span style="display:flex;gap:4px;align-items:center;">
-                <svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor"><path d="M1.5 8.5C5.5 4.5 18.5 4.5 22.5 8.5"/><path d="M4.5 11.5C7.5 8.5 16.5 8.5 19.5 11.5"/><path d="M7.5 14.5C9.5 12.5 14.5 12.5 16.5 14.5"/><circle cx="12" cy="18" r="1.5"/></svg>
-                <svg width="20" height="10" viewBox="0 0 20 10"><rect x="0" y="2" width="15" height="6" rx="2" fill="currentColor" opacity=".3"/><rect x="0" y="2" width="11" height="6" rx="2" fill="currentColor"/><rect x="17" y="3.5" width="2" height="3" rx="1" fill="currentColor" opacity=".5"/></svg>
+                <svg aria-hidden="true" width="12" height="12" viewBox="0 0 24 24" fill="currentColor"><path d="M1.5 8.5C5.5 4.5 18.5 4.5 22.5 8.5"/><path d="M4.5 11.5C7.5 8.5 16.5 8.5 19.5 11.5"/><path d="M7.5 14.5C9.5 12.5 14.5 12.5 16.5 14.5"/><circle cx="12" cy="18" r="1.5"/></svg>
+                <svg aria-hidden="true" width="20" height="10" viewBox="0 0 20 10"><rect x="0" y="2" width="15" height="6" rx="2" fill="currentColor" opacity=".3"/><rect x="0" y="2" width="11" height="6" rx="2" fill="currentColor"/><rect x="17" y="3.5" width="2" height="3" rx="1" fill="currentColor" opacity=".5"/></svg>
               </span>
             </div>
             <div class="phone-content">
@@ -2827,7 +2857,7 @@ posthog.init('phc_B6PH36QxpExnyBYhfScFFF6LhDvoyxuFr6PypJuxxky3', {
                   </div>
                   <div class="app-score-chip app-score-chip--complete">
                     <div class="app-score-chip-check">
-                      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+                      <svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
                     </div>
                     <div class="app-score-chip-label">Within</div>
                     <div class="app-score-chip-val">15/15</div>
@@ -2837,19 +2867,19 @@ posthog.init('phc_B6PH36QxpExnyBYhfScFFF6LhDvoyxuFr6PypJuxxky3', {
             </div>
             <div class="phone-nav">
               <div class="phone-nav-item active">
-                <svg class="phone-nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+                <svg aria-hidden="true" class="phone-nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
                 Home
               </div>
               <div class="phone-nav-item">
-                <svg class="phone-nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 11H3v10h6V11z"/><path d="M15 3h6v18h-6V3z"/><path d="M9 3H3v4h6V3z"/></svg>
+                <svg aria-hidden="true" class="phone-nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 11H3v10h6V11z"/><path d="M15 3h6v18h-6V3z"/><path d="M9 3H3v4h6V3z"/></svg>
                 Plan
               </div>
               <div class="phone-nav-item">
-                <svg class="phone-nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+                <svg aria-hidden="true" class="phone-nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
                 Score
               </div>
               <div class="phone-nav-item">
-                <svg class="phone-nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="5" r="1.5"/><circle cx="12" cy="12" r="1.5"/><circle cx="12" cy="19" r="1.5"/></svg>
+                <svg aria-hidden="true" class="phone-nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="5" r="1.5"/><circle cx="12" cy="12" r="1.5"/><circle cx="12" cy="19" r="1.5"/></svg>
                 More
               </div>
             </div>
@@ -3056,7 +3086,7 @@ posthog.init('phc_B6PH36QxpExnyBYhfScFFF6LhDvoyxuFr6PypJuxxky3', {
                     <div class="app-score-chip"><div class="app-score-chip-ring" style="--pct:70%;"></div><div class="app-score-chip-label">Debt</div><div class="app-score-chip-val">14/20</div></div>
                     <div class="app-score-chip"><div class="app-score-chip-ring" style="--pct:60%;"></div><div class="app-score-chip-label">Reserve</div><div class="app-score-chip-val">9/15</div></div>
                     <div class="app-score-chip app-score-chip--complete">
-                      <div class="app-score-chip-check"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></div>
+                      <div class="app-score-chip-check"><svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></div>
                       <div class="app-score-chip-label">Within</div>
                       <div class="app-score-chip-val">15/15</div>
                     </div>
@@ -3139,7 +3169,7 @@ posthog.init('phc_B6PH36QxpExnyBYhfScFFF6LhDvoyxuFr6PypJuxxky3', {
               <div class="hiw-step3-eyebrow">May · Recap</div>
               <div class="hiw-step3-headline">Nothing leaked.</div>
               <div class="hiw-step3-bills">
-                <div class="hiw-step3-bills-check"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></div>
+                <div class="hiw-step3-bills-check"><svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></div>
                 <div class="hiw-step3-bills-text">
                   <div class="hiw-step3-bills-title">Bills paid</div>
                   <div class="hiw-step3-bills-sub">Every bill on time</div>
@@ -3191,38 +3221,38 @@ posthog.init('phc_B6PH36QxpExnyBYhfScFFF6LhDvoyxuFr6PypJuxxky3', {
   <div class="features-grid">
     <div class="feature-card reveal">
       <div class="feature-icon">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="3" y1="20" x2="21" y2="20"/><line x1="7" y1="20" x2="7" y2="14"/><line x1="12" y1="20" x2="12" y2="9"/><line x1="17" y1="20" x2="17" y2="4"/></svg>
+        <svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="3" y1="20" x2="21" y2="20"/><line x1="7" y1="20" x2="7" y2="14"/><line x1="12" y1="20" x2="12" y2="9"/><line x1="17" y1="20" x2="17" y2="4"/></svg>
       </div>
-      <div class="feature-title">The Floor</div>
+      <h3 class="feature-title">The Floor</h3>
       <p class="feature-body">A check lands and you freeze. You don't know what's safe to spend. Able knows your floor (bills, debt, savings) and covers it before anything else. What's above the floor is yours, free to spend.</p>
     </div>
     <div class="feature-card reveal">
       <div class="feature-icon">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+        <svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
       </div>
-      <div class="feature-title">Rolling Bill Window</div>
+      <h3 class="feature-title">Rolling Bill Window</h3>
       <p class="feature-body">Rent was due Thursday. You didn't see it coming. Able looks 14 days ahead and sets money aside for what's due, so you're never blindsided again.</p>
     </div>
     <div class="feature-card reveal">
       <div class="feature-icon">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="23 6 13.5 15.5 8.5 10.5 1 18"/><polyline points="17 6 23 6 23 12"/></svg>
+        <svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="23 6 13.5 15.5 8.5 10.5 1 18"/><polyline points="17 6 23 6 23 12"/></svg>
       </div>
-      <div class="feature-title">Debt Tracker</div>
+      <h3 class="feature-title">Debt Tracker</h3>
       <p class="feature-body">You're paying down debt but not sure which debt to attack first. Able sorts every balance and rate, then targets the highest interest. You pay less over time.</p>
     </div>
     <div class="feature-card reveal">
       <div class="feature-icon">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="19" y1="5" x2="5" y2="19"/><circle cx="6.5" cy="6.5" r="2.5"/><circle cx="17.5" cy="17.5" r="2.5"/></svg>
+        <svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="19" y1="5" x2="5" y2="19"/><circle cx="6.5" cy="6.5" r="2.5"/><circle cx="17.5" cy="17.5" r="2.5"/></svg>
       </div>
-      <div class="feature-title">Tax Bucket</div>
+      <h3 class="feature-title">Tax Bucket</h3>
       <p class="feature-body">April hits and you owe more than you have. Able pulls your tax percentage off the top of every deposit. The money's there when the IRS asks. The export's ready for your accountant.</p>
     </div>
     <div class="feature-card ai-card reveal">
       <div class="feature-icon">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2a2 2 0 0 1 2 2c0 .74-.4 1.39-1 1.73V7h1a7 7 0 0 1 7 7h1a1 1 0 0 1 1 1v3a1 1 0 0 1-1 1h-1v1a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-1H2a1 1 0 0 1-1-1v-3a1 1 0 0 1 1-1h1a7 7 0 0 1 7-7h1V5.73c-.6-.34-1-.99-1-1.73a2 2 0 0 1 2-2z"/></svg>
+        <svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2a2 2 0 0 1 2 2c0 .74-.4 1.39-1 1.73V7h1a7 7 0 0 1 7 7h1a1 1 0 0 1 1 1v3a1 1 0 0 1-1 1h-1v1a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-1H2a1 1 0 0 1-1-1v-3a1 1 0 0 1 1-1h1a7 7 0 0 1 7-7h1V5.73c-.6-.34-1-.99-1-1.73a2 2 0 0 1 2-2z"/></svg>
       </div>
       <div>
-        <div class="feature-title">AI Coach</div>
+        <h3 class="feature-title">AI Coach</h3>
         <p class="feature-body">Generic finance advice doesn't know your situation. Able does. It sees your bills, debt, and income, and gives you answers built on your real numbers.</p>
       </div>
     </div>
@@ -3239,19 +3269,19 @@ posthog.init('phc_B6PH36QxpExnyBYhfScFFF6LhDvoyxuFr6PypJuxxky3', {
     <h2 class="outcomes-headline">Become able.</h2>
     <div class="outcomes-list reveal">
       <div class="outcome-item">
-        <div class="outcome-check"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></div>
+        <div class="outcome-check"><svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></div>
         <span class="outcome-text">Able to pay down debt, even on slow months.</span>
       </div>
       <div class="outcome-item">
-        <div class="outcome-check"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></div>
+        <div class="outcome-check"><svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></div>
         <span class="outcome-text">Able to save without second-guessing.</span>
       </div>
       <div class="outcome-item">
-        <div class="outcome-check"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></div>
+        <div class="outcome-check"><svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></div>
         <span class="outcome-text">Able to predict what is coming.</span>
       </div>
       <div class="outcome-item">
-        <div class="outcome-check"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></div>
+        <div class="outcome-check"><svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></div>
         <span class="outcome-text">Able to budget inconsistent income.</span>
       </div>
     </div>
@@ -3266,7 +3296,7 @@ posthog.init('phc_B6PH36QxpExnyBYhfScFFF6LhDvoyxuFr6PypJuxxky3', {
 <section class="stakes-section section">
   <div class="stakes-inner">
     <span class="eyebrow reveal">The math of waiting.</span>
-    <h2 class="stakes-headline reveal">Every month you wait is another $500–$1,000 gone.</h2>
+    <h2 class="stakes-headline reveal">Every month you wait is another $500 to $1,000 gone.</h2>
     <p class="stakes-body reveal">The leak doesn't pause while you figure it out. It keeps going while you decide whether to start.</p>
     <p class="stakes-body reveal">Six months of waiting = $3,000 to $6,000 you didn't save.</p>
     <p class="stakes-body reveal">A year = up to $12,000 you didn't use to pay down debt, build a cushion, or get ahead of next month.</p>
@@ -3318,6 +3348,8 @@ posthog.init('phc_B6PH36QxpExnyBYhfScFFF6LhDvoyxuFr6PypJuxxky3', {
   </div>
 </section>
 
+</main>
+
 <!-- ═══════ FOOTER ═══════ -->
 <footer class="footer">
   <div class="footer-inner">
@@ -3338,12 +3370,12 @@ posthog.init('phc_B6PH36QxpExnyBYhfScFFF6LhDvoyxuFr6PypJuxxky3', {
       <li><a href="/terms.html">Terms</a></li>
     </ul>
   </div>
-  <div class="footer-copy">&copy; 2026 Able. Built for inconsistent income.</div>
+  <div class="footer-copy">&copy; <span id="footer-year">2026</span> Able. Built for inconsistent income.</div>
 </footer>
 
 <script>
 // ═══════════════════════════════════════
-// ANALYTICS — provider-agnostic track()
+// ANALYTICS - provider-agnostic track()
 // Swap the body of Able.track to forward to PostHog/Plausible/etc.
 // ═══════════════════════════════════════
 window.Able = window.Able || {};
@@ -3463,7 +3495,7 @@ const revealObserver = new IntersectionObserver((entries) => {
 document.querySelectorAll('.reveal').forEach(el => revealObserver.observe(el));
 
 // ═══════════════════════════════════════
-// PROBLEM SECTION — highlight beats progressively on scroll
+// PROBLEM SECTION - highlight beats progressively on scroll
 // ═══════════════════════════════════════
 const beatObserver = new IntersectionObserver((entries) => {
   entries.forEach(entry => {
@@ -3480,7 +3512,7 @@ const problemStory = document.querySelector('.problem-story');
 if (problemStory) beatObserver.observe(problemStory);
 
 // ═══════════════════════════════════════
-// HOW IT WORKS — replay animations when scrolled into view
+// HOW IT WORKS - replay animations when scrolled into view
 // ═══════════════════════════════════════
 function replayAnimations(el) {
   const animated = el.querySelectorAll('[style*="animation"], .anim-typing-text, .anim-result-card, .anim-result-bar-fill, .anim-debt-bal, .anim-debt-fill, .anim-savings-val');
@@ -3502,7 +3534,7 @@ const hiwObserver = new IntersectionObserver((entries) => {
 document.querySelectorAll('.hiw-step').forEach(step => hiwObserver.observe(step));
 
 // ═══════════════════════════════════════
-// NAV — shrink on scroll
+// NAV - shrink on scroll
 // ═══════════════════════════════════════
 const nav = document.querySelector('.nav');
 window.addEventListener('scroll', () => {
@@ -3516,7 +3548,7 @@ window.addEventListener('scroll', () => {
 }, { passive: true });
 
 // ═══════════════════════════════════════
-// MOBILE NAV — toggle open/close
+// MOBILE NAV - toggle open/close
 // ═══════════════════════════════════════
 const navToggle = document.querySelector('.nav-toggle');
 const navMobile = document.querySelector('.nav-mobile');
@@ -3548,7 +3580,7 @@ document.querySelectorAll('a[href^="#"]').forEach(a => {
   });
 });
 
-// Phone-mockup greeting + date — render against the visitor's local clock so
+// Phone-mockup greeting + date - render against the visitor's local clock so
 // the static screenshot feels alive. Name stays as the marketing default.
 (function(){
   const HERO_NAME = 'Sam';
@@ -3558,6 +3590,8 @@ document.querySelectorAll('a[href^="#"]').forEach(a => {
   const dateEl = document.querySelector('.app-greeting-date');
   if (nameEl) nameEl.textContent = greeting + ', ' + HERO_NAME;
   if (dateEl) dateEl.textContent = new Date().toLocaleDateString('en-US', { weekday: 'long', month: 'long', day: 'numeric' });
+  const yr = document.getElementById('footer-year');
+  if (yr) yr.textContent = String(new Date().getFullYear());
 })();
 </script>
 </body>

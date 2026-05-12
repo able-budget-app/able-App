@@ -13,9 +13,18 @@
 <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32.png">
 <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16.png">
 <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+<!-- iOS "Add to Home Screen" - full-screen mode + brand-tinted status bar.
+     Without these, Safari opens the saved icon inside a tab with Safari chrome
+     instead of as a standalone app. theme-color also sets the Chrome address-
+     bar color on Android. --ds-green = #2a7a4a (locked brand). -->
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<meta name="apple-mobile-web-app-title" content="Able">
+<meta name="theme-color" content="#2a7a4a">
 <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;500;600;700;800&family=Lora:ital,wght@0,400;0,600;1,400&family=Bricolage+Grotesque:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
-<script src="https://js.stripe.com/v3/" crossorigin="anonymous"></script>
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.js" crossorigin="anonymous"></script>
+<script src="https://js.stripe.com/v3/" crossorigin="anonymous" defer></script>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.js" crossorigin="anonymous" defer></script>
 <!-- Demo seed (local-only). Runs only when ?demo=1 is in the URL. See SETUP.md. -->
 <script>
   if (new URLSearchParams(location.search).get('demo') === '1' || sessionStorage.getItem('able_demo') === '1') {
@@ -32,9 +41,9 @@
 </script>
 <style>
 :root {
-  /* ═══ LEGACY TOKENS — remapped to new design system ═══ */
-  --bg:#f0f7f2;--bg2:#eaf5ee;--white:#ffffff;--border:#c4d8cc;--border2:#8ca898;
-  --text:#111c16;--text2:#4a5c52;--text3:#8ca898;
+  /* ═══ LEGACY TOKENS - remapped to new design system ═══ */
+  --bg:#f0f7f2;--bg2:#eaf5ee;--white:#ffffff;--border:#c4d8cc;--border2:#557064;
+  --text:#111c16;--text2:#4a5c52;--text3:#557064;
   --sage:#2a7a4a;--sage-light:#eaf5ee;--sage-mid:#b8e0c8;
   --coral:#c04060;--coral-light:#fdeef2;
   --amber:#c97c0a;--amber-light:#fef3e0;
@@ -53,7 +62,9 @@
   /* Text */
   --ds-t1:#111c16;
   --ds-t2:#4a5c52;
-  --ds-t3:#8ca898;
+  /* --ds-t3 was #557064 - failed WCAG AA (2.4:1 on --ds-green-l).
+     #557064 hits 5.3:1 vs white and 4.7:1 vs --ds-green-l. */
+  --ds-t3:#557064;
   --ds-t4:#c4d8cc;
 
   /* Brand */
@@ -70,7 +81,7 @@
   --ds-c5:#3570b8;
 
   /* Lines + borders. These were referenced (37+ uses of --ds-line, 7 of
-     --ds-bd) but never defined — every border using them rendered as
+     --ds-bd) but never defined - every border using them rendered as
      invalid CSS, so persona chips, plan cards, dashed dividers, etc. all
      silently lost their stroke. Aliased to the legacy --border palette
      so the muted gray-green stays consistent with what was already
@@ -104,7 +115,7 @@ input,select,button,textarea{font-family:inherit;}
 .pw-wrap input{padding-right:38px;}
 .pw-eye{position:absolute;right:6px;top:50%;transform:translateY(-50%);background:none;border:none;cursor:pointer;padding:6px;color:var(--ds-t3);display:flex;align-items:center;justify-content:center;border-radius:4px;}
 .pw-eye:hover{color:var(--ds-t1);background:var(--ds-page);}
-/* Canonical Able wordmark — single source of truth for the "Able" logo
+/* Canonical Able wordmark - single source of truth for the "Able" logo
    treatment. Mirrors index.html .nav-logo + .footer-logo: inline-block with
    absolute-positioned underline that matches the text width (via right:-4%).
    Use modifier classes for size + color variants. */
@@ -158,7 +169,7 @@ input,select,button,textarea{font-family:inherit;}
 .ob-input::placeholder{color:var(--ds-t3);font-weight:500;}
 #ob-input-area{margin-bottom:1.25rem;}
 /* Debt-review extra-debts rows. On mobile, four inputs in a flex row
-   shrunk each below 70px wide and clipped placeholder text — felt
+   shrunk each below 70px wide and clipped placeholder text - felt
    visually inconsistent with the wider single-input forms elsewhere
    in onboarding. Switch to a 2-col grid on mobile (Name+Balance row,
    Min+Rate row, X button on its own line), keep 4-in-a-row on desktop. */
@@ -174,7 +185,7 @@ input,select,button,textarea{font-family:inherit;}
 .ob-table-x{width:36px;height:36px;flex-shrink:0;align-self:start;background:transparent;border:none;color:var(--ds-t3);font-size:20px;cursor:pointer;border-radius:50%;transition:all .15s;}
 .ob-table-x:hover{background:#fdeef2;color:var(--ds-c4);}
 /* Desktop ≥980px: keep 2x2 grid (the "wide" 4-in-a-row felt cropped
-   inside the 640px modal — placeholders like "Min payment" got
+   inside the 640px modal - placeholders like "Min payment" got
    clipped). The 2x2 reads cleaner everywhere. */
 .ob-actions{display:flex;justify-content:space-between;align-items:center;gap:.75rem;margin-top:1rem;}
 #onboard-screen .btn-primary{display:inline-flex;align-items:center;justify-content:center;gap:6px;padding:14px 26px;background:linear-gradient(135deg,#2a7a4a,#3d9e78);color:white;border:none;border-radius:var(--ds-r1);font-family:var(--ds-f);font-size:14px;font-weight:800;cursor:pointer;transition:all .2s;box-shadow:0 4px 14px rgba(42,122,74,.3);letter-spacing:-.01em;flex:1;}
@@ -215,7 +226,7 @@ input,select,button,textarea{font-family:inherit;}
 .sync-dot.error{background:var(--ds-c4);}
 @keyframes navPulse{0%,100%{opacity:1;}50%{opacity:.4;}}
 
-/* Mobile — nav becomes bottom tab bar that scrolls horizontally */
+/* Mobile - nav becomes bottom tab bar that scrolls horizontally */
 @media(max-width:800px){
   .nav{position:fixed;bottom:0;left:0;right:0;top:auto;height:auto;border-top:1px solid var(--ds-t4);border-bottom:none;padding:8px 0 calc(14px + env(safe-area-inset-bottom));background:rgba(240,247,242,.96);backdrop-filter:blur(24px);-webkit-backdrop-filter:blur(24px);box-shadow:0 -2px 10px rgba(0,0,0,.04);flex-direction:column;gap:0;touch-action:pan-x;will-change:transform;transform:translate3d(0,0,0);z-index:50;}
   .nav > .logo, .nav > .nav-right{display:none;}
@@ -232,6 +243,9 @@ input,select,button,textarea{font-family:inherit;}
 /* PAGES */
 .page{display:none;max-width:980px;margin:0 auto;padding:1.5rem 1.5rem calc(1.5rem + env(safe-area-inset-bottom,0px));}
 .page.active{display:block;}
+/* Visually-hidden but available to screen readers. Used for per-page <h1>s
+   so VoiceOver/TalkBack can navigate by heading without changing layout. */
+.sr-only{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0;}
 /* On mobile widths the bottom nav is fixed and ~88px tall + safe-area
    inset; without extra bottom padding the last row of content tucks
    under the nav. (P2 #20: Bills tab on iPhone, but this affects every
@@ -362,7 +376,7 @@ input,select,button,textarea{font-family:inherit;}
 .tl-bar-bg{flex:1;height:7px;background:var(--bg2);border-radius:30px;overflow:hidden;}
 .tl-bar{height:7px;border-radius:30px;}
 .tl-date{font-size:12px;font-weight:700;width:80px;text-align:right;}
-/* Forecast row — card-style with three internal rows so mobile lays out
+/* Forecast row - card-style with three internal rows so mobile lays out
    cleanly without children wrapping awkwardly. Left border color carries the
    status (green = expected, coral = overdue, gray = already received). */
 .forecast-item{background:var(--ds-card);border:1px solid var(--ds-line);border-left:3px solid var(--ds-green);border-radius:var(--ds-r2);padding:14px 16px;margin-bottom:10px;box-shadow:var(--ds-sh1);display:flex;flex-direction:column;gap:8px;font-family:var(--ds-f);}
@@ -821,12 +835,12 @@ input,select,button,textarea{font-family:inherit;}
 }
 
 /* ═══════ GUIDED TOUR ═══════ */
-/* Overlay is transparent — it only catches outside-clicks to end the
+/* Overlay is transparent - it only catches outside-clicks to end the
    tour, never dims the page. The user must be able to see what we're
    highlighting (especially page content like Forecast / Bills / Debt). */
 .tour-overlay{position:fixed;inset:0;background:transparent;z-index:9998;animation:fadeIn .25s ease;}
 @keyframes fadeIn{from{opacity:0}to{opacity:1}}
-/* Spotlight is a green ring + outer glow — no dim. The bright ring +
+/* Spotlight is a green ring + outer glow - no dim. The bright ring +
    bubble draw the eye; the rest of the screen stays fully readable.
    - Spotlight: position:absolute, anchored to target document coords so
      it scrolls naturally with the page (no chasing the target).
@@ -867,7 +881,7 @@ body.tour-active #page-home .db-action-card{display:flex!important;}
 
 /* Scroll-hover suppression. Without this, scrolling on desktop with the
    mouse held still triggers :hover on every card the cursor passes over,
-   firing the translateY pop on each one — visually reads as "boxes lighting
+   firing the translateY pop on each one - visually reads as "boxes lighting
    up" as you scroll. body.is-scrolling is toggled by a debounced scroll
    listener (init in DOMContentLoaded). 150ms idle timeout matches typical
    inertial-scroll tail. */
@@ -914,7 +928,7 @@ body.is-scrolling .btn-primary:hover{transform:none!important;box-shadow:inherit
 .coach-title{font-family:var(--ds-f);font-size:1.75rem;font-weight:900;color:var(--ds-t1);letter-spacing:-.03em;}
 .coach-sub{font-size:13px;color:var(--ds-t2);font-weight:600;line-height:1.55;margin-top:.25rem;max-width:540px;}
 .coach-messages{flex:1;display:flex;flex-direction:column;gap:10px;padding:1rem 0;overflow-y:auto;}
-/* Floating scroll-to-top affordance for the Coach panel — appears when the
+/* Floating scroll-to-top affordance for the Coach panel - appears when the
    user has scrolled away from the top of the conversation, so they can
    quickly get back to older messages they want to re-read. */
 .coach-scroll-top{position:absolute;top:6px;right:6px;width:32px;height:32px;border-radius:50%;background:var(--ds-card);border:1px solid var(--ds-t4);color:var(--ds-t2);display:flex;align-items:center;justify-content:center;cursor:pointer;box-shadow:var(--ds-sh1);transition:transform .15s,box-shadow .15s,background .15s,color .15s;z-index:5;}
@@ -923,7 +937,7 @@ body.is-scrolling .btn-primary:hover{transform:none!important;box-shadow:inherit
 .coach-bubble.user{background:var(--ds-green-l);color:var(--ds-t1);align-self:flex-end;border-bottom-right-radius:var(--ds-r1);font-weight:600;}
 .coach-bubble.coach{background:var(--ds-card);color:var(--ds-t1);align-self:flex-start;border-bottom-left-radius:var(--ds-r1);}
 .coach-bubble.loading{background:var(--ds-card);color:var(--ds-t3);align-self:flex-start;border-bottom-left-radius:var(--ds-r1);font-style:italic;display:flex;align-items:center;gap:10px;}
-/* Three-dot typing animation — replaces the single pulsing dot. Reads
+/* Three-dot typing animation - replaces the single pulsing dot. Reads
    universally as "AI is thinking" rather than "something loading." */
 .coach-typing-dots{display:inline-flex;gap:4px;align-items:center;flex-shrink:0;}
 .coach-typing-dots span{width:7px;height:7px;border-radius:50%;background:var(--ds-green);opacity:.35;animation:coachTypingDot 1.1s ease-in-out infinite;}
@@ -941,6 +955,17 @@ body.is-scrolling .btn-primary:hover{transform:none!important;box-shadow:inherit
 @media(max-width:800px){#coach-input{font-size:16px;}}
 #activity-search{font-size:13px;}
 @media(max-width:800px){#activity-search{font-size:16px;}}
+/* These selects + bare inputs aren't inside .field so the generic mobile
+   override below doesn't catch them. Without the bump, iOS Safari focus-zooms
+   on every Activity / Tax-export / Reclassify / Settings interaction. */
+@media(max-width:800px){
+  #activity-range,
+  #activity-business-filter,
+  #activity-filter,
+  #tax-year,
+  #reclassify-business,
+  #new-source{font-size:16px;}
+}
 /* Generic .field input is 14px which triggers iOS focus-zoom (login, signup,
    onboarding text fields, modal forms). Bump to 16px on mobile to suppress.
    Auth screen inputs need a parallel rule because they're matched by the
@@ -968,7 +993,7 @@ body.is-scrolling .btn-primary:hover{transform:none!important;box-shadow:inherit
    DASHBOARD (home page hero + quick actions + allocate sheet)
 ═══════════════════════════════════════ */
 .db-hero{position:relative;background:linear-gradient(145deg,#1f6038 0%,#2a7a4a 55%,#3d9e78 100%);border-radius:var(--ds-r3);padding:1.25rem 1.35rem 1.15rem;color:white;box-shadow:0 12px 32px rgba(31,96,56,.22);margin-bottom:1rem;overflow:hidden;}
-/* Unified hero — money rows on green */
+/* Unified hero - money rows on green */
 .db-hero-money-row{position:relative;display:flex;justify-content:space-between;align-items:baseline;padding:7px 0;font-family:var(--ds-f);}
 .db-hero-money-label{font-size:11px;font-weight:800;letter-spacing:.1em;text-transform:uppercase;color:rgba(255,255,255,.78);}
 .db-hero-money-val{font-size:17px;font-weight:800;color:white;letter-spacing:-.02em;}
@@ -1024,7 +1049,7 @@ body.is-scrolling .btn-primary:hover{transform:none!important;box-shadow:inherit
 .db-hero-eyebrow .db-hero-month{font-size:32px;font-weight:900;color:white;letter-spacing:-.04em;text-transform:none;line-height:1;}
 .db-hero-eyebrow .db-hero-month-tag{font-size:10px;font-weight:800;letter-spacing:.14em;color:rgba(255,255,255,.7);text-transform:uppercase;}
 
-/* Floor coverage strip — Floor-First made visible on home */
+/* Floor coverage strip - Floor-First made visible on home */
 .db-floor-strip{position:relative;margin-top:.75rem;background:rgba(0,0,0,.18);border:1px solid rgba(184,224,200,.22);border-radius:var(--ds-r1);padding:10px 12px 11px;}
 .db-floor-row{display:flex;justify-content:space-between;align-items:baseline;margin-bottom:6px;}
 .db-floor-label{font-size:10px;font-weight:800;text-transform:uppercase;letter-spacing:.12em;color:#b8e0c8;}
@@ -1042,7 +1067,7 @@ body.is-scrolling .btn-primary:hover{transform:none!important;box-shadow:inherit
 .pagehead-ital{font-style:italic;color:var(--ds-green);font-weight:800;}
 .pagehead-sub{font-family:var(--ds-f);font-size:13px;font-weight:600;color:var(--ds-t2);margin-top:6px;line-height:1.45;}
 
-/* Streak card on the Score page — green gradient + run dots. */
+/* Streak card on the Score page - green gradient + run dots. */
 .streak-card{position:relative;background:linear-gradient(135deg,var(--ds-green) 0%,var(--ds-green2) 100%);border-radius:var(--ds-r3);padding:18px 18px 16px;color:white;margin-bottom:1rem;box-shadow:0 14px 28px -10px rgba(31,96,56,.4);overflow:hidden;}
 .streak-card::before{content:'';position:absolute;right:-40px;top:-40px;width:160px;height:160px;background:radial-gradient(circle,rgba(255,255,255,.15),transparent 70%);border-radius:50%;pointer-events:none;}
 .streak-eyebrow{position:relative;font-size:10px;font-weight:800;letter-spacing:.14em;text-transform:uppercase;color:rgba(255,255,255,.7);margin-bottom:6px;}
@@ -1185,7 +1210,7 @@ body.is-scrolling .btn-primary:hover{transform:none!important;box-shadow:inherit
   .db-actions-grid{grid-template-columns:1fr 1fr;}
 }
 
-/* Score card — black-green glass aesthetic mirrored from social/black theme.
+/* Score card - black-green glass aesthetic mirrored from social/black theme.
    Same chip system as the green hero, restyled for dark surface. */
 .db-score-card{position:relative;background:linear-gradient(145deg,#0d2419 0%,#122a1d 55%,#0a1d14 100%);border-radius:var(--ds-r3);padding:1.25rem 1.35rem 1.15rem;color:white;box-shadow:0 12px 32px rgba(13,36,25,.42);overflow:hidden;}
 .db-score-card::before{content:'';position:absolute;inset:0;background:radial-gradient(circle at 85% 15%,rgba(184,224,200,.16),transparent 55%);pointer-events:none;}
@@ -1219,7 +1244,7 @@ body.is-scrolling .btn-primary:hover{transform:none!important;box-shadow:inherit
 .db-score-card-head{position:relative;display:flex;justify-content:space-between;align-items:baseline;margin-bottom:.85rem;}
 .db-score-card-head .db-score-card-num{font-size:1.35rem;}
 .db-score-card-head .db-score-card-num .db-score-card-max{font-size:11px;}
-/* Pace slot — host for loadPaceLine SVG. Dark theme styling lives there. */
+/* Pace slot - host for loadPaceLine SVG. Dark theme styling lives there. */
 .db-score-pace{position:relative;background:rgba(255,255,255,.04);border:1px solid rgba(184,224,200,.1);border-radius:var(--ds-r1);padding:10px 12px 11px;margin-bottom:.75rem;min-height:64px;}
 .db-score-pace:empty{display:none;}
 .db-score-pace--dark .db-pace-label{font-size:11px;font-weight:700;color:rgba(255,255,255,.7);letter-spacing:-.005em;}
@@ -1264,7 +1289,7 @@ body.is-scrolling .btn-primary:hover{transform:none!important;box-shadow:inherit
 .db-next-stat--in{color:var(--ds-green);}
 .db-next-empty{padding:8px 0;font-size:13px;color:var(--ds-t3);font-weight:600;text-align:center;}
 
-/* Tax Export — compact pill year-round; expands to a gradient card during
+/* Tax Export - compact pill year-round; expands to a gradient card during
    tax season (Jan 1 - Apr 15) when it's actually relevant. */
 .tax-export-wrap{margin-bottom:1rem;}
 .tax-export-pill{display:inline-flex;align-items:center;gap:8px;background:white;border:1px solid var(--ds-line);border-radius:999px;padding:7px 12px 7px 10px;cursor:pointer;font-family:var(--ds-f);transition:border-color .15s,background .15s;}
@@ -1320,7 +1345,7 @@ body.is-scrolling .btn-primary:hover{transform:none!important;box-shadow:inherit
 .alloc-balance-note{background:var(--ds-green-l);border-radius:var(--ds-r1);padding:9px 12px;margin:.5rem 0 .85rem;font-size:12px;font-weight:600;color:var(--ds-green);line-height:1.5;display:flex;align-items:center;justify-content:space-between;gap:10px;}
 .alloc-balance-note button{background:transparent;color:var(--ds-green);border:1.5px solid var(--ds-green-m);font-family:var(--ds-f);font-size:11px;font-weight:800;padding:4px 10px;border-radius:100px;cursor:pointer;letter-spacing:-.01em;flex-shrink:0;}
 .alloc-balance-note button:hover{background:rgba(42,122,74,.08);}
-/* Next-14 timeline modal — chronological list of bills + expected income */
+/* Next-14 timeline modal - chronological list of bills + expected income */
 .next14-summary{display:flex;justify-content:space-between;gap:10px;background:var(--ds-page);border-radius:var(--ds-r1);padding:10px 14px;margin-bottom:1rem;font-family:var(--ds-f);}
 .next14-summary-cell{flex:1;text-align:center;}
 .next14-summary-cell + .next14-summary-cell{border-left:1px solid var(--ds-t4);}
@@ -1357,7 +1382,7 @@ body.is-scrolling .btn-primary:hover{transform:none!important;box-shadow:inherit
 .next14-mark:hover{background:#d9ecde;}
 .next14-mark:active{transform:scale(.97);}
 /* Look-ahead: monthly bills due past the rolling window (15-45 days out).
-   Informational only — no reservations until they enter the window. */
+   Informational only - no reservations until they enter the window. */
 .next14-lookahead{margin-top:1.25rem;padding-top:1rem;border-top:1px dashed var(--ds-t4);}
 .next14-lookahead-header{font-size:10px;font-weight:800;letter-spacing:.14em;text-transform:uppercase;color:var(--ds-t3);margin-bottom:4px;}
 .next14-lookahead-sub{font-size:11px;color:var(--ds-t3);font-weight:600;line-height:1.5;margin-bottom:.65rem;}
@@ -1365,7 +1390,7 @@ body.is-scrolling .btn-primary:hover{transform:none!important;box-shadow:inherit
 .next14-lookahead-name{flex:1;min-width:0;font-size:12px;font-weight:700;color:var(--ds-t2);letter-spacing:-.005em;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
 .next14-lookahead-meta{font-size:11px;color:var(--ds-t3);font-weight:600;flex-shrink:0;}
 .next14-lookahead-amt{font-size:12px;font-weight:800;color:var(--ds-t2);letter-spacing:-.01em;flex-shrink:0;}
-/* Past-due banner — sits above the hero when monthly bills missed their due day */
+/* Past-due banner - sits above the hero when monthly bills missed their due day */
 .past-due-banner{display:flex;align-items:center;gap:12px;background:#fdeef2;border-left:4px solid var(--ds-c4);border-radius:var(--ds-r2);padding:12px 14px;margin-bottom:.85rem;box-shadow:var(--ds-sh1);font-family:var(--ds-f);}
 .past-due-banner-icon{width:32px;height:32px;border-radius:50%;background:var(--ds-c4);color:white;display:flex;align-items:center;justify-content:center;font-weight:900;flex-shrink:0;font-size:18px;}
 .past-due-banner-body{flex:1;min-width:0;}
@@ -1373,7 +1398,7 @@ body.is-scrolling .btn-primary:hover{transform:none!important;box-shadow:inherit
 .past-due-banner-sub{font-size:11px;color:var(--ds-t2);font-weight:600;margin-top:2px;line-height:1.4;}
 .past-due-banner-cta{background:var(--ds-c4);color:white;border:none;font-family:var(--ds-f);font-size:12px;font-weight:800;padding:8px 13px;border-radius:100px;cursor:pointer;letter-spacing:-.01em;flex-shrink:0;}
 .past-due-banner-cta:hover{background:#a83a52;}
-/* Due-today card — louder than the inline chip, visible only when unpaid
+/* Due-today card - louder than the inline chip, visible only when unpaid
    monthly bills are due today. Sits above the hero so users see it morning-of. */
 .due-today-card{display:flex;align-items:center;gap:12px;background:linear-gradient(135deg,#fff3d6 0%,#ffe8b3 100%);border-left:4px solid var(--ds-c3);border-radius:var(--ds-r2);padding:14px 16px;margin-bottom:.85rem;box-shadow:var(--ds-sh1);font-family:var(--ds-f);}
 .due-today-icon{flex-shrink:0;width:36px;height:36px;border-radius:50%;background:var(--ds-c3);color:white;display:flex;align-items:center;justify-content:center;}
@@ -1382,7 +1407,7 @@ body.is-scrolling .btn-primary:hover{transform:none!important;box-shadow:inherit
 .due-today-sub{font-size:11px;color:#7a4a05;font-weight:600;margin-top:2px;line-height:1.4;opacity:.85;}
 .due-today-cta{background:var(--ds-c3);color:white;border:none;font-family:var(--ds-f);font-size:12px;font-weight:800;padding:8px 13px;border-radius:100px;cursor:pointer;letter-spacing:-.01em;flex-shrink:0;}
 .due-today-cta:hover{background:#a86205;}
-/* Plan-refresh banner — surfaces when Plaid's RECURRING_TRANSACTIONS_UPDATE
+/* Plan-refresh banner - surfaces when Plaid's RECURRING_TRANSACTIONS_UPDATE
    webhook lands new streams after we already drafted a plan. Quiet sky-blue,
    sits above the hero. Dismissable; we mark recurring_status='applied'. */
 .plan-refresh-banner{display:flex;align-items:center;gap:12px;background:linear-gradient(135deg,#eaf2fc 0%,#d5e6f5 100%);border-left:4px solid var(--ds-c5);border-radius:var(--ds-r2);padding:12px 14px;margin-bottom:.85rem;box-shadow:var(--ds-sh1);font-family:var(--ds-f);}
@@ -1411,7 +1436,7 @@ body.is-scrolling .btn-primary:hover{transform:none!important;box-shadow:inherit
 .qt-card-title{font-size:14px;font-weight:900;color:var(--ds-t1);letter-spacing:-.01em;line-height:1.2;}
 .qt-card-sub{font-size:11px;color:var(--ds-t2);font-weight:600;margin-top:3px;line-height:1.4;}
 .qt-card-amt{font-family:var(--ds-f);font-size:18px;font-weight:900;color:#7a4a05;letter-spacing:-.02em;flex-shrink:0;}
-/* Demo-mode banner — sits above the entire app while demo mode is on,
+/* Demo-mode banner - sits above the entire app while demo mode is on,
    so prospects on App Store screenshots and curious users never confuse
    the curated fixture for their real numbers. */
 #demo-mode-banner.on{display:flex !important;align-items:center;justify-content:center;gap:10px;background:linear-gradient(90deg,#3570b8,#284b78);color:white;padding:8px 14px;font-family:var(--ds-f);font-size:11px;font-weight:800;letter-spacing:.06em;text-transform:uppercase;position:sticky;top:0;z-index:50;box-shadow:0 2px 6px rgba(40,75,120,.25);}
@@ -1456,7 +1481,7 @@ body.is-scrolling .btn-primary:hover{transform:none!important;box-shadow:inherit
 .act-cat-badge.debt_payment{background:#fde0e0;color:#a83434;}
 .act-cat-badge.tax_payment{background:#e3eaf2;color:#3a4f6b;}
 .act-cat-badge.transfer{background:#e6e6e6;color:#555;}
-/* Fresh-deposit "sorting this..." badge — replaces the raw "unclassified"
+/* Fresh-deposit "sorting this..." badge - replaces the raw "unclassified"
    pill while the Edge Function classifier finishes. Subtle pulse signals
    activity without alarming. */
 .act-sorting-badge{display:inline-flex;align-items:center;gap:5px;font-size:10px;font-weight:800;letter-spacing:.04em;text-transform:uppercase;padding:2px 8px 2px 7px;border-radius:100px;background:var(--ds-green-l);color:var(--ds-green2);}
@@ -1467,7 +1492,7 @@ body.is-scrolling .btn-primary:hover{transform:none!important;box-shadow:inherit
 .rc-chip.selected{background:var(--ds-green);color:white;border-color:var(--ds-green);}
 .rc-chip.selected:hover{background:var(--ds-green2);border-color:var(--ds-green2);color:white;}
 .rc-chip[disabled]{opacity:.5;cursor:not-allowed;}
-/* Plaid PFC sub-category — secondary badge next to floor-first category */
+/* Plaid PFC sub-category - secondary badge next to floor-first category */
 .act-pfc-badge{display:inline-block;font-size:10px;font-weight:700;letter-spacing:.02em;color:var(--ds-t3);background:transparent;border:1px solid var(--ds-line);padding:1px 6px;border-radius:100px;margin-left:4px;}
 .act-tax-flag{display:inline-block;font-size:10px;font-weight:800;letter-spacing:.04em;text-transform:uppercase;padding:1px 6px;border-radius:100px;background:#fff3d6;color:#9a6e0c;margin-left:4px;}
 .act-business-badge{display:inline-block;font-size:10px;font-weight:800;letter-spacing:.02em;color:var(--ds-green);background:var(--ds-green-l);padding:1px 6px;border-radius:100px;margin-left:4px;}
@@ -1524,8 +1549,22 @@ body.is-scrolling .btn-primary:hover{transform:none!important;box-shadow:inherit
 
 .alloc-locked-in{animation:lockedInPulse 1.6s ease;}
 @keyframes lockedInPulse{0%,100%{box-shadow:0 0 0 0 rgba(42,122,74,0);}40%{box-shadow:0 0 0 5px rgba(42,122,74,.18);}}
+
+/* Respect the OS-level reduced-motion preference. Vestibular-disorder users
+   (and anyone who turned this on for any reason) get a near-instant version
+   of every animation/transition. 0.01ms keeps the visual end-state but
+   eliminates the motion. Hover/focus pulses still flash; modals open without
+   sliding; coach typing dots stay still. */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
 </style>
-<!-- Meta Pixel — page view tracking. To activate: create a pixel in Meta
+<!-- Meta Pixel - page view tracking. To activate: create a pixel in Meta
      Events Manager, copy the numeric ID (15-16 digits), paste it as the
      META_PIXEL_ID value in BOTH index.html and app.html (also update the
      noscript fallback image URL below). Gate uses a numeric regex check
@@ -1547,7 +1586,7 @@ if (/^\d{10,20}$/.test(META_PIXEL_ID)) {
 </script>
 <noscript><img height="1" width="1" style="display:none" src="https://www.facebook.com/tr?id=940091778831653&ev=PageView&noscript=1"/></noscript>
 
-<!-- Google Ads gtag — page view tracking. The Google tag ID is issued
+<!-- Google Ads gtag - page view tracking. The Google tag ID is issued
      by Google Ads (Goals → Conversions → Google tag) and is NOT the
      customer ID with dashes stripped. Gate uses a prefix+digit regex
      so accidental find/replace can't silently break. -->
@@ -1588,13 +1627,13 @@ posthog.init('phc_B6PH36QxpExnyBYhfScFFF6LhDvoyxuFr6PypJuxxky3', {
     </div>
     <div class="auth-error" id="auth-error"></div>
     <div class="auth-success" id="auth-success"></div>
-    <!-- Resend confirmation email — only shown after a signup that requires
+    <!-- Resend confirmation email - only shown after a signup that requires
          email confirmation. Populated by showSignupResendOption. -->
     <div id="auth-resend-wrap" style="display:none;margin-bottom:1rem;text-align:center;">
       <button type="button" id="auth-resend-btn" onclick="resendSignupConfirmation()" style="background:none;border:none;font-family:var(--ds-f);font-size:13px;font-weight:700;color:var(--ds-green);cursor:pointer;padding:6px 10px;text-decoration:underline;">Didn't get it? Resend confirmation email</button>
       <div id="auth-resend-note" style="font-size:12px;font-weight:600;color:var(--ds-t3);margin-top:4px;display:none;"></div>
     </div>
-    <!-- Google button — works for both sign in and sign up -->
+    <!-- Google button - works for both sign in and sign up -->
     <button onclick="doGoogleAuth()" style="width:100%;padding:13px;border-radius:var(--ds-r1);border:1.5px solid var(--ds-t4);background:var(--ds-card);font-family:var(--ds-f);font-size:14px;font-weight:700;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:10px;transition:all .18s;margin-bottom:1rem;color:var(--ds-t1);" onmouseover="this.style.borderColor='var(--ds-green)';this.style.background='var(--ds-green-l)'" onmouseout="this.style.borderColor='var(--ds-t4)';this.style.background='var(--ds-card)'">
       <svg width="18" height="18" viewBox="0 0 48 48"><path fill="#FFC107" d="M43.6 20H24v8h11.3C33.6 32.6 29.3 36 24 36c-6.6 0-12-5.4-12-12s5.4-12 12-12c3 0 5.8 1.1 7.9 3l5.7-5.7C34.1 6.5 29.3 4 24 4 12.9 4 4 12.9 4 24s8.9 20 20 20c11 0 19.7-8 19.7-20 0-1.3-.1-2.7-.1-4z"/><path fill="#FF3D00" d="M6.3 14.7l6.6 4.8C14.5 16 19 12 24 12c3 0 5.8 1.1 7.9 3l5.7-5.7C34.1 6.5 29.3 4 24 4 16.3 4 9.7 8.3 6.3 14.7z"/><path fill="#4CAF50" d="M24 44c5.2 0 9.9-1.9 13.5-5l-6.2-5.2C29.5 35.6 26.9 36 24 36c-5.2 0-9.6-3.3-11.2-8l-6.6 5.1C9.6 39.6 16.3 44 24 44z"/><path fill="#1976D2" d="M43.6 20H24v8h11.3c-.9 2.6-2.6 4.7-4.8 6.2l6.2 5.2C40.5 36.2 44 30.6 44 24c0-1.3-.1-2.7-.4-4z"/></svg>
       Continue with Google
@@ -1606,8 +1645,8 @@ posthog.init('phc_B6PH36QxpExnyBYhfScFFF6LhDvoyxuFr6PypJuxxky3', {
     </div>
 
     <div id="auth-form-login">
-      <div class="field" style="margin-bottom:10px;"><label>Email</label><input type="email" id="login-email" placeholder="you@example.com"></div>
-      <div class="field" style="margin-bottom:1rem;"><label>Password</label><div class="pw-wrap"><input type="password" id="login-pass" placeholder="••••••••" onkeydown="if(event.key==='Enter')doLogin()"><button type="button" class="pw-eye" aria-label="Show password" onclick="togglePw('login-pass')"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7z"/><circle cx="12" cy="12" r="3"/></svg></button></div></div>
+      <div class="field" style="margin-bottom:10px;"><label>Email</label><input type="email" id="login-email" name="email" autocomplete="email" inputmode="email" autocapitalize="off" autocorrect="off" placeholder="you@example.com"></div>
+      <div class="field" style="margin-bottom:1rem;"><label>Password</label><div class="pw-wrap"><input type="password" id="login-pass" name="current-password" autocomplete="current-password" placeholder="••••••••" onkeydown="if(event.key==='Enter')doLogin()"><button type="button" class="pw-eye" aria-label="Show password" onclick="togglePw('login-pass')"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7z"/><circle cx="12" cy="12" r="3"/></svg></button></div></div>
       <div style="display:flex;align-items:center;gap:8px;margin-bottom:1rem;"><input type="checkbox" id="stay-signed-in" checked style="width:16px;height:16px;cursor:pointer;margin:0;accent-color:var(--ds-green);"><label for="stay-signed-in" style="font-size:12px;font-weight:600;color:var(--ds-t2);cursor:pointer;margin:0;user-select:none;">Stay signed in</label></div>
       <button class="btn btn-primary" style="width:100%;" onclick="doLogin()" id="login-btn">Sign in</button>
       <div style="text-align:center;margin-top:1rem;font-size:12px;color:var(--text3);font-weight:600;">
@@ -1615,9 +1654,9 @@ posthog.init('phc_B6PH36QxpExnyBYhfScFFF6LhDvoyxuFr6PypJuxxky3', {
       </div>
     </div>
     <div id="auth-form-signup" style="display:none;">
-      <div class="field" style="margin-bottom:10px;"><label>Email</label><input type="email" id="signup-email" placeholder="you@example.com"></div>
-      <div class="field" style="margin-bottom:10px;"><label>Password</label><div class="pw-wrap"><input type="password" id="signup-pass" placeholder="At least 6 characters"><button type="button" class="pw-eye" aria-label="Show password" onclick="togglePw('signup-pass')"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7z"/><circle cx="12" cy="12" r="3"/></svg></button></div></div>
-      <div class="field" style="margin-bottom:1rem;"><label>Confirm password</label><div class="pw-wrap"><input type="password" id="signup-pass2" placeholder="••••••••" onkeydown="if(event.key==='Enter')doSignup()"><button type="button" class="pw-eye" aria-label="Show password" onclick="togglePw('signup-pass2')"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7z"/><circle cx="12" cy="12" r="3"/></svg></button></div></div>
+      <div class="field" style="margin-bottom:10px;"><label>Email</label><input type="email" id="signup-email" name="email" autocomplete="email" inputmode="email" autocapitalize="off" autocorrect="off" placeholder="you@example.com"></div>
+      <div class="field" style="margin-bottom:10px;"><label>Password</label><div class="pw-wrap"><input type="password" id="signup-pass" name="new-password" autocomplete="new-password" placeholder="At least 6 characters"><button type="button" class="pw-eye" aria-label="Show password" onclick="togglePw('signup-pass')"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7z"/><circle cx="12" cy="12" r="3"/></svg></button></div></div>
+      <div class="field" style="margin-bottom:1rem;"><label>Confirm password</label><div class="pw-wrap"><input type="password" id="signup-pass2" name="new-password" autocomplete="new-password" placeholder="••••••••" onkeydown="if(event.key==='Enter')doSignup()"><button type="button" class="pw-eye" aria-label="Show password" onclick="togglePw('signup-pass2')"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7z"/><circle cx="12" cy="12" r="3"/></svg></button></div></div>
       <button class="btn btn-primary" style="width:100%;" onclick="doSignup()" id="signup-btn">Create account</button>
       <div style="font-size:11px;color:var(--text3);font-weight:600;text-align:center;margin-top:.75rem;line-height:1.5;">We'll send a confirmation email. Click the link, then return and sign in.</div>
       <div style="font-size:11px;color:var(--text3);font-weight:600;text-align:center;margin-top:.75rem;line-height:1.5;">By creating an account you agree to our <a href="/terms.html" target="_blank" style="color:var(--ds-green);text-decoration:none;font-weight:700;">Terms</a> and <a href="/privacy.html" target="_blank" style="color:var(--ds-green);text-decoration:none;font-weight:700;">Privacy Policy</a>.</div>
@@ -1637,7 +1676,7 @@ posthog.init('phc_B6PH36QxpExnyBYhfScFFF6LhDvoyxuFr6PypJuxxky3', {
     var sc = document.getElementById('auth-screen');
     var box = sc ? sc.querySelector('.auth-box') : null;
     if (window.location.search.indexOf('checkout=success') !== -1) {
-      // Checkout return — hide auth-screen and create the overlay
+      // Checkout return - hide auth-screen and create the overlay
       // synchronously so the user goes straight from blank → "Confirming"
       // pill, with no sign-in flash and no blank gap before window.load
       // runs. The load handler is idempotent and skips re-creation.
@@ -1660,12 +1699,12 @@ posthog.init('phc_B6PH36QxpExnyBYhfScFFF6LhDvoyxuFr6PypJuxxky3', {
       }
     }
     if (hasLsSession && box) {
-      // Returning user — pre-fill auth-box with the same "Loading your account"
+      // Returning user - pre-fill auth-box with the same "Loading your account"
       // pill _onAuthStateChangeImpl writes via showLoading(). First paint
       // matches the post-SIGNED_IN state, no sign-in flash.
       box.innerHTML = '<div style="text-align:center;padding:1rem 0;font-family:var(--ds-f);"><div class="brand-wordmark-wrap" style="margin-bottom:.4rem;"><div class="brand-wordmark">Able</div></div><div style="display:inline-flex;align-items:center;gap:10px;margin-top:1.25rem;padding:10px 18px;background:var(--ds-green-l);border-radius:100px;"><div style="width:10px;height:10px;border-radius:50%;background:var(--ds-green);animation:dsPulse 1.2s ease-in-out infinite;"></div><div style="font-size:13px;color:var(--ds-green);font-weight:700;letter-spacing:.02em;">Loading your account</div></div></div><style>@keyframes dsPulse{0%,100%{opacity:.4;transform:scale(.9)}50%{opacity:1;transform:scale(1.1)}}</style>';
     }
-    // No session, no checkout — default sign-in form is the correct first paint.
+    // No session, no checkout - default sign-in form is the correct first paint.
   } catch (_) { /* localStorage blocked or env issue; sign-in form is safe default */ }
 })();
 </script>
@@ -1808,45 +1847,46 @@ posthog.init('phc_B6PH36QxpExnyBYhfScFFF6LhDvoyxuFr6PypJuxxky3', {
   </div>
 </div>
 
-<!-- Demo-mode banner — visible across all pages while demo mode is on,
+<!-- Demo-mode banner - visible across all pages while demo mode is on,
      so the user (or a prospect on App Store screenshots) is never confused
      about whether numbers are real. Hidden by default. -->
 <div id="demo-mode-banner" style="display:none;"></div>
 
 <!-- ALLOCATE -->
 <div class="page active" id="page-home">
+  <h1 class="sr-only">Home</h1>
   <!-- Home greeting line: time-of-day greeting + name (left), date (right).
-       Replaces the prior "Become Able" wordmark — brand identity already
+       Replaces the prior "Become Able" wordmark - brand identity already
        lives in the top app bar. Home page goes straight to where you stand. -->
   <div id="home-greeting-row" class="home-greet" style="display:flex;align-items:baseline;justify-content:space-between;gap:10px;margin-bottom:1.1rem;">
     <div class="home-greet-hi" id="home-greet-hi"></div>
     <div class="home-greet-date" id="home-greet-date"></div>
   </div>
 
-  <!-- Income Inbox banner — surfaces low-confidence inflows for the user to
+  <!-- Income Inbox banner - surfaces low-confidence inflows for the user to
        label. Each label trains user_classification_overrides so future
        matching txns skip the LLM. Stacked above past-due so review tasks
        cluster together. -->
   <div id="income-inbox-banner"></div>
 
-  <!-- Past-due bills banner — visible only when monthly bills missed their due day -->
+  <!-- Past-due bills banner - visible only when monthly bills missed their due day -->
   <div id="past-due-banner"></div>
 
-  <!-- New-bank banner — fires only when a plaid_item was added after the
+  <!-- New-bank banner - fires only when a plaid_item was added after the
        user already had a plan in place. Filled by renderPlanRefreshBanner. -->
   <div id="plan-refresh-banner"></div>
 
-  <!-- Deep-dive banner — surfaces bills/debts the post-onboarding deep-dive
+  <!-- Deep-dive banner - surfaces bills/debts the post-onboarding deep-dive
        found by analyzing 12 months of history. Tagged review_reason 'new'
        (newly detected) or 'dormant' (existed but looks inactive). Auto-hides
        once all flagged items lose pending_review. Filled by renderDeepDiveBanner. -->
   <div id="deep-dive-banner"></div>
 
-  <!-- Due-today card — louder than the chip, only visible morning-of for
+  <!-- Due-today card - louder than the chip, only visible morning-of for
        unpaid bills due today. Filled by renderDueTodayCard. Empty otherwise. -->
   <div id="due-today-card"></div>
 
-  <!-- HERO GRID — money (left/top) + score (right/bottom on mobile). -->
+  <!-- HERO GRID - money (left/top) + score (right/bottom on mobile). -->
   <div class="db-hero-grid">
     <!-- Money hero: same green gradient, money snapshot + Floor coverage. -->
     <div class="db-hero" id="db-hero">
@@ -1870,12 +1910,12 @@ posthog.init('phc_B6PH36QxpExnyBYhfScFFF6LhDvoyxuFr6PypJuxxky3', {
     </div>
   </div>
 
-  <!-- Quarterly tax card — Tax C workstream (P2 #24). Surfaces the next
+  <!-- Quarterly tax card - Tax C workstream (P2 #24). Surfaces the next
        estimated-tax deadline + projected amount. Hidden when no tax % is
        set, or when there's no income history to project from. -->
   <div id="home-quarterly-tax" style="display:none;"></div>
 
-  <!-- Inline "Next N days" card — shows the next 1-2 events (bills + expected
+  <!-- Inline "Next N days" card - shows the next 1-2 events (bills + expected
        income) with their funded state. Tap opens the full modal for the
        complete list. Promoted out of the action grid so home informs
        instead of dispatching. Hidden when there's nothing in the window. -->
@@ -1888,7 +1928,7 @@ posthog.init('phc_B6PH36QxpExnyBYhfScFFF6LhDvoyxuFr6PypJuxxky3', {
   </div>
 
   <!-- 3 small action chips: Coach · Add expected income · Add bill.
-       "Add expected income" opens the forecast modal — separate from the
+       "Add expected income" opens the forecast modal - separate from the
        green hero's "Log new income" (received money). -->
   <div class="db-action-chips">
     <button class="db-chip-action" onclick="openCoachPanel()" type="button" aria-label="Ask the coach">
@@ -1905,7 +1945,7 @@ posthog.init('phc_B6PH36QxpExnyBYhfScFFF6LhDvoyxuFr6PypJuxxky3', {
     </button>
   </div>
 
-  <!-- Legacy paceline slot — pace strip now lives inside the home Score
+  <!-- Legacy paceline slot - pace strip now lives inside the home Score
        card (#db-score-pace). Kept hidden so older builds that called
        loadPaceLine targeting this id still work without DOM errors. -->
   <div id="home-paceline" style="display:none;"></div>
@@ -1917,6 +1957,7 @@ posthog.init('phc_B6PH36QxpExnyBYhfScFFF6LhDvoyxuFr6PypJuxxky3', {
 
 <!-- FORECAST -->
 <div class="page" id="page-forecast">
+  <h1 class="sr-only">Forecast</h1>
   <div class="two-col">
     <div>
       <div class="sec">Expected income coming in</div>
@@ -1962,15 +2003,16 @@ posthog.init('phc_B6PH36QxpExnyBYhfScFFF6LhDvoyxuFr6PypJuxxky3', {
 
 <!-- DEBT -->
 <div class="page" id="page-debt">
-  <!-- Strategy toggle — Avalanche (rate desc) vs Snowball (balance asc).
+  <h1 class="sr-only">Debt payoff</h1>
+  <!-- Strategy toggle - Avalanche (rate desc) vs Snowball (balance asc).
        Sort and "Pay this first" labels respect the choice. First-time tip
        appears below until dismissed. -->
   <div id="debt-strategy-toggle"></div>
-  <!-- Payoff-date card — leading callout. Uses last-90-day Plaid debt-payment
+  <!-- Payoff-date card - leading callout. Uses last-90-day Plaid debt-payment
        pace (floored at sum of minimums) to project a single "debt-free by"
        date. Renders only when there are debts with a balance. -->
   <div id="debt-payoff-card"></div>
-  <!-- Interest cost card — only renders when Plaid sees actual interest
+  <!-- Interest cost card - only renders when Plaid sees actual interest
        charges in the last 30 days. Helps users see the real annualized
        cost of carrying balances without lecturing them. -->
   <div id="debt-interest-card"></div>
@@ -2009,7 +2051,7 @@ posthog.init('phc_B6PH36QxpExnyBYhfScFFF6LhDvoyxuFr6PypJuxxky3', {
 <!-- BILLS -->
 <div class="page" id="page-bills">
   <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:1rem;gap:10px;flex-wrap:wrap;">
-    <div style="font-family:var(--ds-f);font-size:1.5rem;font-weight:800;letter-spacing:-.02em;color:var(--ds-t1);">Monthly bills</div>
+    <h1 style="font-family:var(--ds-f);font-size:1.5rem;font-weight:800;letter-spacing:-.02em;color:var(--ds-t1);margin:0;">Monthly bills</h1>
     <button class="btn btn-primary btn-sm" onclick="openAddBillModal()">+ Add bill</button>
   </div>
   <!-- Detected-bills banner: surfaces Plaid-found recurring charges that
@@ -2064,12 +2106,13 @@ posthog.init('phc_B6PH36QxpExnyBYhfScFFF6LhDvoyxuFr6PypJuxxky3', {
   </div>
 </div>
 
-<!-- SCORE — your story over time. Streak at top, 6-month chart, achievements,
+<!-- SCORE - your story over time. Streak at top, 6-month chart, achievements,
      and the habit detail. Home shows the now; this page shows the arc. -->
 <div class="page" id="page-score">
+  <h1 class="sr-only">Your story</h1>
   <div class="pagehead-score">
     <div class="pagehead-eyebrow">Volume I</div>
-    <div class="pagehead-title">Your <span class="pagehead-ital">story</span></div>
+    <div class="pagehead-title" aria-hidden="true">Your <span class="pagehead-ital">story</span></div>
     <div class="pagehead-sub" id="score-sub">Streak, six-month chart, and the milestones you've earned.</div>
   </div>
 
@@ -2130,6 +2173,7 @@ posthog.init('phc_B6PH36QxpExnyBYhfScFFF6LhDvoyxuFr6PypJuxxky3', {
 
 <!-- WHAT IF -->
 <div class="page" id="page-whatif">
+  <h1 class="sr-only">What if</h1>
   <div style="background:linear-gradient(135deg,#f3eefa 0%,#ebe2f5 100%);border-radius:var(--ds-r2);padding:1.15rem 1.35rem;margin-bottom:1.25rem;display:flex;align-items:center;gap:14px;box-shadow:var(--ds-sh1);">
     <div style="width:40px;height:40px;border-radius:50%;background:rgba(139,112,184,.15);display:flex;align-items:center;justify-content:center;flex-shrink:0;color:#7a5fb8;">
       <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 18h6M10 22h4M12 2a7 7 0 0 1 7 7c0 3-2 5-3 6.5-.5.8-1 2-1 2.5H9c0-.5-.5-1.7-1-2.5C7 14 5 12 5 9a7 7 0 0 1 7-7z"/></svg>
@@ -2167,14 +2211,14 @@ posthog.init('phc_B6PH36QxpExnyBYhfScFFF6LhDvoyxuFr6PypJuxxky3', {
   </div>
 </div>
 
-<!-- ACTIVITY — flat list of every transaction. Tap a row to reclassify; the
+<!-- ACTIVITY - flat list of every transaction. Tap a row to reclassify; the
      same plaid-classify-override Edge Function the Income Inbox uses writes
      the new category and (optionally) a user_classification_overrides row so
      future matching txns auto-classify the same way. -->
 <div class="page" id="page-activity">
-  <div class="sec">Activity</div>
+  <h1 class="sec" style="margin-top:0;">Activity</h1>
 
-  <!-- Tax Export — a compact pill 9 months of the year, expands to a full
+  <!-- Tax Export - a compact pill 9 months of the year, expands to a full
        gradient card during US tax season (Jan 1 - Apr 15) when it's actually
        useful. Renderer toggles the .tax-season class on the wrapper. -->
   <div id="tax-export-wrap" class="tax-export-wrap"></div>
@@ -2211,13 +2255,13 @@ posthog.init('phc_B6PH36QxpExnyBYhfScFFF6LhDvoyxuFr6PypJuxxky3', {
   </div>
 </div>
 
-<!-- Tax export modal — opened from Activity page header. Filters every
+<!-- Tax export modal - opened from Activity page header. Filters every
      plaid_transactions row marked is_tax_deductible=true for the selected
      year, groups by Plaid PFC, and offers a CSV download. -->
-<div class="modal-bg" id="modal-tax-export" style="display:none;" onclick="if(event.target===this)closeTaxExportModal()">
+<div class="modal-bg" id="modal-tax-export" style="display:none;" role="dialog" aria-modal="true" aria-labelledby="modal-tax-export-title" onclick="if(event.target===this)closeTaxExportModal()">
   <div class="modal" style="max-width:520px;">
     <button class="modal-close" onclick="closeTaxExportModal()" aria-label="Close"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button>
-    <div class="modal-title">Tax export</div>
+    <div class="modal-title" id="modal-tax-export-title">Tax export</div>
     <div style="font-size:12px;color:var(--ds-t2);font-weight:600;margin-bottom:14px;line-height:1.6;">Every transaction you marked tax-deductible, grouped by category. Download as CSV for your accountant or Schedule C.</div>
     <div style="display:flex;align-items:center;gap:10px;margin-bottom:1rem;">
       <label style="font-size:12px;font-weight:700;color:var(--ds-t2);">Year:</label>
@@ -2230,12 +2274,12 @@ posthog.init('phc_B6PH36QxpExnyBYhfScFFF6LhDvoyxuFr6PypJuxxky3', {
   </div>
 </div>
 
-<!-- Reclassify modal — opened from any Activity row. Same backend as the
+<!-- Reclassify modal - opened from any Activity row. Same backend as the
      Income Inbox; chip set differs based on direction (inflow vs outflow). -->
-<div class="modal-bg" id="modal-reclassify" style="display:none;" onclick="if(event.target===this)closeReclassifyModal()">
+<div class="modal-bg" id="modal-reclassify" style="display:none;" role="dialog" aria-modal="true" aria-labelledby="modal-reclassify-title" onclick="if(event.target===this)closeReclassifyModal()">
   <div class="modal" style="max-width:460px;">
     <button class="modal-close" onclick="closeReclassifyModal()" aria-label="Close"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button>
-    <div class="modal-title">Reclassify transaction</div>
+    <div class="modal-title" id="modal-reclassify-title">Reclassify transaction</div>
     <div id="reclassify-summary" style="background:var(--ds-card2);border-radius:var(--ds-r1);padding:14px 16px;margin-bottom:1rem;"></div>
     <div style="font-size:11px;font-weight:800;letter-spacing:.06em;text-transform:uppercase;color:var(--ds-t3);margin-bottom:.5rem;">New category</div>
     <div id="reclassify-chips" style="display:flex;flex-wrap:wrap;gap:8px;margin-bottom:1rem;"></div>
@@ -2246,11 +2290,11 @@ posthog.init('phc_B6PH36QxpExnyBYhfScFFF6LhDvoyxuFr6PypJuxxky3', {
     </div>
     <label style="display:flex;align-items:center;gap:9px;font-size:12px;font-weight:600;color:var(--ds-t2);cursor:pointer;user-select:none;margin-bottom:.65rem;">
       <input type="checkbox" id="reclassify-tax-deductible" style="margin:0;width:16px;height:16px;">
-      <span>Tax-deductible — include in Tax export at year end.</span>
+      <span>Tax-deductible - include in Tax export at year end.</span>
     </label>
     <label style="display:flex;align-items:center;gap:9px;font-size:12px;font-weight:600;color:var(--ds-t2);cursor:pointer;user-select:none;">
       <input type="checkbox" id="reclassify-just-once" onchange="_refreshReclassifyBulkOffer()" style="margin:0;width:16px;height:16px;">
-      <span>Just this transaction — don't teach Able to classify similar ones this way.</span>
+      <span>Just this transaction - don't teach Able to classify similar ones this way.</span>
     </label>
     <!-- Bulk apply offer: rendered when async match-search finds similar
          rows in the last 30 days. Hidden until matches arrive. The label
@@ -2271,6 +2315,7 @@ posthog.init('phc_B6PH36QxpExnyBYhfScFFF6LhDvoyxuFr6PypJuxxky3', {
 
 <!-- SETTINGS -->
 <div class="page" id="page-settings">
+  <h1 class="sr-only">Settings</h1>
   <div class="two-col">
     <div>
       <div class="sec">Fixed allocations</div>
@@ -2322,7 +2367,7 @@ posthog.init('phc_B6PH36QxpExnyBYhfScFFF6LhDvoyxuFr6PypJuxxky3', {
       </div>
       <div class="sec">Connected accounts</div>
       <div class="card">
-        <div style="font-size:13px;color:var(--ds-t2);font-weight:600;margin-bottom:1rem;line-height:1.6;">Banks Able reads transactions from. <strong style="color:var(--ds-t1);">Connect as many as you need</strong> — checking, savings, business, side-account. No cap. Disconnecting stops the sync and removes that bank's data from your account.</div>
+        <div style="font-size:13px;color:var(--ds-t2);font-weight:600;margin-bottom:1rem;line-height:1.6;">Banks Able reads transactions from. <strong style="color:var(--ds-t1);">Connect as many as you need</strong> - checking, savings, business, side-account. No cap. Disconnecting stops the sync and removes that bank's data from your account.</div>
         <div id="connected-accounts-list"><div class="empty-state" style="padding:1.25rem;">Loading…</div></div>
         <button class="btn btn-primary btn-sm" id="connect-another-bank-btn" style="margin-top:.85rem;width:100%;" onclick="settingsConnectBank()">+ Connect another bank</button>
         <div id="connect-bank-error" style="color:var(--ds-c4);font-size:12px;font-weight:600;margin-top:.5rem;display:none;"></div>
@@ -2432,6 +2477,7 @@ posthog.init('phc_B6PH36QxpExnyBYhfScFFF6LhDvoyxuFr6PypJuxxky3', {
 
 <!-- REFER -->
 <div class="page" id="page-refer">
+  <h1 class="sr-only">Refer friends</h1>
   <div style="max-width:780px;margin:0 auto;">
 
     <div id="refer-active" style="display:none;">
@@ -2479,11 +2525,12 @@ posthog.init('phc_B6PH36QxpExnyBYhfScFFF6LhDvoyxuFr6PypJuxxky3', {
 
 <!-- LEARNING CENTER -->
 <div class="page" id="page-learn">
+  <h1 class="sr-only">Learning Center</h1>
   <div id="lc-view"></div>
 </div>
 
 <!-- Learning Center game overlay -->
-<div class="lc-game-bg" id="lc-game-bg" style="display:none;" onclick="if(event.target===this)lcGameClose()">
+<div class="lc-game-bg" id="lc-game-bg" style="display:none;" role="dialog" aria-modal="true" aria-label="Learning course" onclick="if(event.target===this)lcGameClose()">
   <div class="lc-game">
     <button class="lc-game-close" onclick="lcGameClose()" aria-label="Close">✕</button>
     <div id="lc-game-content"></div>
@@ -2496,11 +2543,11 @@ posthog.init('phc_B6PH36QxpExnyBYhfScFFF6LhDvoyxuFr6PypJuxxky3', {
 </button>
 
 <!-- Coach slide-up panel -->
-<div class="coach-panel-bg" id="coach-panel-bg" style="display:none;" onclick="if(event.target===this)closeCoachPanel()">
+<div class="coach-panel-bg" id="coach-panel-bg" style="display:none;" role="dialog" aria-modal="true" aria-labelledby="coach-panel-title" onclick="if(event.target===this)closeCoachPanel()">
   <div class="coach-panel">
     <div class="coach-panel-header">
       <div>
-        <div style="font-family:var(--ds-f);font-size:1.25rem;font-weight:800;color:var(--ds-t1);letter-spacing:-.02em;">Coach</div>
+        <div id="coach-panel-title" style="font-family:var(--ds-f);font-size:1.25rem;font-weight:800;color:var(--ds-t1);letter-spacing:-.02em;">Coach</div>
         <div style="font-size:12px;color:var(--ds-t2);font-weight:600;margin-top:2px;">Ask anything about your money. I see your bills, debts, reserve, and income.</div>
       </div>
       <button class="coach-close" onclick="closeCoachPanel()" aria-label="Close">✕</button>
@@ -2521,10 +2568,10 @@ posthog.init('phc_B6PH36QxpExnyBYhfScFFF6LhDvoyxuFr6PypJuxxky3', {
 </div><!-- end #app -->
 
 <!-- ALLOCATE SHEET -->
-<div class="db-sheet" id="db-allocate-sheet" style="display:none;" onclick="if(event.target===this)closeAllocateSheet()">
+<div class="db-sheet" id="db-allocate-sheet" style="display:none;" role="dialog" aria-modal="true" aria-labelledby="db-allocate-sheet-title" onclick="if(event.target===this)closeAllocateSheet()">
   <div class="db-sheet-panel">
     <div class="db-sheet-header">
-      <div class="db-sheet-title">Money just came in</div>
+      <div class="db-sheet-title" id="db-allocate-sheet-title">Money just came in</div>
       <button class="db-sheet-close" onclick="closeAllocateSheet()" aria-label="Close">✕</button>
     </div>
     <div class="db-sheet-body">
@@ -2553,10 +2600,10 @@ posthog.init('phc_B6PH36QxpExnyBYhfScFFF6LhDvoyxuFr6PypJuxxky3', {
 </div>
 
 <!-- MODALS -->
-<div class="modal-bg" id="modal-mfa-enroll" style="display:none;" onclick="if(event.target===this)closeMfaEnroll()">
+<div class="modal-bg" id="modal-mfa-enroll" style="display:none;" role="dialog" aria-modal="true" aria-labelledby="modal-mfa-enroll-title" onclick="if(event.target===this)closeMfaEnroll()">
   <div class="modal" style="max-width:440px;">
     <button class="modal-close" onclick="closeMfaEnroll()" aria-label="Close"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button>
-    <div class="modal-title">Set up two-factor authentication</div>
+    <div class="modal-title" id="modal-mfa-enroll-title">Set up two-factor authentication</div>
     <div id="mfa-enroll-body">
       <div style="font-size:13px;color:var(--ds-t2);font-weight:600;line-height:1.6;margin-bottom:1rem;">Open your authenticator app (1Password, Google Authenticator, Authy, or similar) and scan this QR code.</div>
       <div style="display:flex;justify-content:center;background:#fff;border:1.5px solid var(--ds-t4);border-radius:var(--ds-r1);padding:18px;margin-bottom:1rem;">
@@ -2576,7 +2623,7 @@ posthog.init('phc_B6PH36QxpExnyBYhfScFFF6LhDvoyxuFr6PypJuxxky3', {
     </div>
   </div>
 </div>
-<div class="modal-bg" id="modal-add-bill" style="display:none;">
+<div class="modal-bg" id="modal-add-bill" style="display:none;" role="dialog" aria-modal="true" aria-labelledby="bill-modal-title">
   <div class="modal">
     <button class="modal-close" onclick="closeModal('modal-add-bill')" aria-label="Close"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button>
     <div class="modal-title" id="bill-modal-title">Add a bill</div>
@@ -2605,23 +2652,23 @@ posthog.init('phc_B6PH36QxpExnyBYhfScFFF6LhDvoyxuFr6PypJuxxky3', {
      recurring streams that aren't already tracked, pre-checking the
      high-confidence ones. Save adds checked → S.bills, marks unchecked
      as not-bills so they stop reappearing. -->
-<div class="modal-bg" id="modal-detected-bills" style="display:none;" onclick="if(event.target===this)closeModal('modal-detected-bills')">
+<div class="modal-bg" id="modal-detected-bills" style="display:none;" role="dialog" aria-modal="true" aria-labelledby="modal-detected-bills-title" onclick="if(event.target===this)closeModal('modal-detected-bills')">
   <div class="modal" style="max-width:560px;">
     <button class="modal-close" onclick="closeModal('modal-detected-bills')" aria-label="Close"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button>
-    <div class="modal-title">Review detected bills</div>
-    <div style="margin-bottom:1.25rem;font-size:13px;color:var(--ds-t2);line-height:1.55;font-weight:600;">We found these recurring charges in your transactions. Pre-selected the ones that look like bills — uncheck anything that isn't.</div>
+    <div class="modal-title" id="modal-detected-bills-title">Review detected bills</div>
+    <div style="margin-bottom:1.25rem;font-size:13px;color:var(--ds-t2);line-height:1.55;font-weight:600;">We found these recurring charges in your transactions. Pre-selected the ones that look like bills - uncheck anything that isn't.</div>
     <div id="detected-bills-list" style="max-height:50vh;overflow-y:auto;-webkit-overflow-scrolling:touch;"></div>
     <div class="modal-actions"><button class="btn" onclick="closeModal('modal-detected-bills')">Cancel</button><button class="btn btn-primary" id="detected-bills-save" onclick="saveDetectedBills()">Save 0 bills</button></div>
   </div>
 </div>
-<!-- New-bank review modal — opens from the home new-bank banner when an
+<!-- New-bank review modal - opens from the home new-bank banner when an
      additional plaid_item was added post-onboarding. Surfaces recurring
      outflow streams (candidate bills) + plaid_credit_debts rows scoped
      to that item, lets the user pick what to include, and appends the
-     accepted rows to S.bills / S.debts. No analyzer call, no LLM —
+     accepted rows to S.bills / S.debts. No analyzer call, no LLM -
      pure deterministic merge on already-detected data. Built by
      openNewBankReviewModal / applied by applyNewBankReview. -->
-<div class="modal-bg" id="modal-new-bank-review" style="display:none;" onclick="if(event.target===this)closeModal('modal-new-bank-review')">
+<div class="modal-bg" id="modal-new-bank-review" style="display:none;" role="dialog" aria-modal="true" aria-labelledby="new-bank-review-title" onclick="if(event.target===this)closeModal('modal-new-bank-review')">
   <div class="modal" style="max-width:560px;max-height:90vh;overflow-y:auto;">
     <button class="modal-close" onclick="closeModal('modal-new-bank-review')" aria-label="Close"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button>
     <div class="modal-title" id="new-bank-review-title">Here's what we found</div>
@@ -2630,13 +2677,13 @@ posthog.init('phc_B6PH36QxpExnyBYhfScFFF6LhDvoyxuFr6PypJuxxky3', {
     <div class="modal-actions"><button class="btn" onclick="closeModal('modal-new-bank-review')">Cancel</button><button class="btn btn-primary" id="new-bank-review-apply" onclick="applyNewBankReview()">Add to plan</button></div>
   </div>
 </div>
-<!-- Add expected income — sibling popup to Add bill, opened from the home
+<!-- Add expected income - sibling popup to Add bill, opened from the home
      "Add income" chip. Quick-capture path that doesn't require navigating
      to the Forecast page. Uses the same forecast fields under the hood. -->
-<div class="modal-bg" id="modal-add-income" style="display:none;" onclick="if(event.target===this)closeModal('modal-add-income')">
+<div class="modal-bg" id="modal-add-income" style="display:none;" role="dialog" aria-modal="true" aria-labelledby="modal-add-income-title" onclick="if(event.target===this)closeModal('modal-add-income')">
   <div class="modal">
     <button class="modal-close" onclick="closeModal('modal-add-income')" aria-label="Close"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button>
-    <div class="modal-title">Add expected income</div>
+    <div class="modal-title" id="modal-add-income-title">Add expected income</div>
     <div style="font-size:12px;color:var(--ds-t2);font-weight:600;margin-bottom:14px;line-height:1.5;">A payment you know is coming. Able will hold a spot for it on your forecast and split it across your buckets the moment it lands.</div>
     <div class="form-row">
       <div class="field"><label>Source</label><select id="qfc-src"></select></div>
@@ -2649,30 +2696,30 @@ posthog.init('phc_B6PH36QxpExnyBYhfScFFF6LhDvoyxuFr6PypJuxxky3', {
     <div class="modal-actions"><button class="btn" onclick="closeModal('modal-add-income')">Cancel</button><button class="btn btn-primary" id="qfc-save-btn" onclick="addForecastFromQuickModal()">Add to forecast</button></div>
   </div>
 </div>
-<!-- Leak summary — opens from the recurring scan when at least one leak is
+<!-- Leak summary - opens from the recurring scan when at least one leak is
      tagged. Shows annual projected waste + per-leak detail with last 6
      charges + Remove leak button. Built by renderLeakSummaryBody. -->
-<div class="modal-bg" id="modal-leak-summary" style="display:none;" onclick="if(event.target===this)closeLeakSummary()">
+<div class="modal-bg" id="modal-leak-summary" style="display:none;" role="dialog" aria-modal="true" aria-labelledby="modal-leak-summary-title" onclick="if(event.target===this)closeLeakSummary()">
   <div class="modal" style="max-height:85vh;overflow-y:auto;">
     <button class="modal-close" onclick="closeLeakSummary()" aria-label="Close"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button>
-    <div class="modal-title">Your tagged leaks</div>
+    <div class="modal-title" id="modal-leak-summary-title">Your tagged leaks</div>
     <div id="leak-summary-head"></div>
     <div id="leak-summary-body"></div>
   </div>
 </div>
-<div class="modal-bg" id="modal-buffer" style="display:none;">
+<div class="modal-bg" id="modal-buffer" style="display:none;" role="dialog" aria-modal="true" aria-labelledby="modal-buffer-title">
   <div class="modal">
     <button class="modal-close" onclick="closeModal('modal-buffer')" aria-label="Close"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button>
-    <div class="modal-title">Update reserve</div>
+    <div class="modal-title" id="modal-buffer-title">Update reserve</div>
     <div class="field"><label>Current balance ($)</label><input type="number" id="buf-inp" placeholder="0" min="0" step="0.01"></div>
     <div style="font-size:12px;color:var(--ds-t2);font-weight:600;margin-top:12px;line-height:1.6;background:#eaf2fc;border-radius:var(--ds-r1);padding:12px 14px;">Money set aside for slow months. Goal is one full month of bills. Update whenever you move money in or out.</div>
     <div class="modal-actions"><button class="btn" onclick="closeModal('modal-buffer')">Cancel</button><button class="btn btn-primary" onclick="saveBuffer()">Save</button></div>
   </div>
 </div>
-<div class="modal-bg" id="modal-past-due" style="display:none;" onclick="if(event.target===this)closeModal('modal-past-due')">
+<div class="modal-bg" id="modal-past-due" style="display:none;" role="dialog" aria-modal="true" aria-labelledby="modal-past-due-title" onclick="if(event.target===this)closeModal('modal-past-due')">
   <div class="modal" style="max-width:520px;max-height:88dvh;overflow-y:auto;">
     <button class="modal-close" onclick="closeModal('modal-past-due')" aria-label="Close"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button>
-    <div class="modal-title">Past due bills</div>
+    <div class="modal-title" id="modal-past-due-title">Past due bills</div>
     <div style="font-size:13px;color:var(--ds-t2);font-weight:600;line-height:1.5;margin-bottom:1rem;">These were due earlier this month and haven't been marked paid yet. Confirm they're handled so reservations stay accurate.</div>
     <div id="past-due-list"></div>
     <div class="modal-actions" style="margin-top:1rem;">
@@ -2681,35 +2728,35 @@ posthog.init('phc_B6PH36QxpExnyBYhfScFFF6LhDvoyxuFr6PypJuxxky3', {
     </div>
   </div>
 </div>
-<div class="modal-bg" id="modal-next-14" style="display:none;" onclick="if(event.target===this)closeModal('modal-next-14')">
+<div class="modal-bg" id="modal-next-14" style="display:none;" role="dialog" aria-modal="true" aria-labelledby="modal-next-14-title" onclick="if(event.target===this)closeModal('modal-next-14')">
   <div class="modal" style="max-width:520px;max-height:88dvh;overflow-y:auto;">
     <button class="modal-close" onclick="closeModal('modal-next-14')" aria-label="Close"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button>
-    <div class="modal-title">Next 14 days</div>
-    <div style="font-size:13px;color:var(--ds-t2);font-weight:600;line-height:1.5;margin-bottom:1rem;">Everything coming up — bills due and income expected, in date order.</div>
+    <div class="modal-title" id="modal-next-14-title">Next 14 days</div>
+    <div style="font-size:13px;color:var(--ds-t2);font-weight:600;line-height:1.5;margin-bottom:1rem;">Everything coming up - bills due and income expected, in date order.</div>
     <div id="next-14-summary"></div>
     <div id="next-14-list"></div>
   </div>
 </div>
-<div class="modal-bg" id="modal-balance" style="display:none;">
+<div class="modal-bg" id="modal-balance" style="display:none;" role="dialog" aria-modal="true" aria-labelledby="modal-balance-title">
   <div class="modal">
     <button class="modal-close" onclick="closeModal('modal-balance')" aria-label="Close"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button>
-    <div class="modal-title">Money in your spending accounts</div>
+    <div class="modal-title" id="modal-balance-title">Money in your spending accounts</div>
     <div class="field"><label>Total ($)</label><input type="number" id="bal-inp" placeholder="0" min="0" step="0.01"></div>
-    <div style="font-size:12px;color:var(--ds-t2);font-weight:600;margin-top:12px;line-height:1.6;background:#eaf2fc;border-radius:var(--ds-r1);padding:12px 14px;">Add up your checking and any account you actively spend from. Skip your reserve/savings — that's tracked separately. Update this whenever your balance changes.</div>
+    <div style="font-size:12px;color:var(--ds-t2);font-weight:600;margin-top:12px;line-height:1.6;background:#eaf2fc;border-radius:var(--ds-r1);padding:12px 14px;">Add up your checking and any account you actively spend from. Skip your reserve/savings - that's tracked separately. Update this whenever your balance changes.</div>
     <div class="modal-actions"><button class="btn" onclick="closeModal('modal-balance')">Cancel</button><button class="btn btn-primary" onclick="saveBalance()">Save</button></div>
   </div>
 </div>
-<div class="modal-bg" id="modal-alloc-preview" style="display:none;">
+<div class="modal-bg" id="modal-alloc-preview" style="display:none;" role="dialog" aria-modal="true" aria-labelledby="modal-alloc-preview-title">
   <div class="modal">
     <button class="modal-close" onclick="cancelAllocPreview()" aria-label="Close"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button>
-    <div class="modal-title">Money received. Here's where it goes</div>
+    <div class="modal-title" id="modal-alloc-preview-title">Money received. Here's where it goes</div>
     <div id="preview-source" style="font-size:13px;color:var(--ds-t3);font-weight:700;margin-bottom:.5rem;letter-spacing:.05em;text-transform:uppercase;"></div>
     <div class="field" style="margin-bottom:1rem;"><label>Amount</label><input type="number" id="preview-amount" min="0" step="0.01" oninput="onPreviewAmountChange()"></div>
     <div id="preview-jobs"></div>
     <div class="modal-actions"><button class="btn" onclick="cancelAllocPreview()">Cancel</button><button class="btn btn-primary" onclick="confirmAlloc()">Confirm &amp; log it</button></div>
   </div>
 </div>
-<div class="modal-bg" id="modal-bank-prompt" style="display:none;">
+<div class="modal-bg" id="modal-bank-prompt" style="display:none;" role="dialog" aria-modal="true" aria-labelledby="modal-bank-prompt-title">
   <div class="modal" style="max-width:440px;">
     <button class="modal-close" onclick="dismissBankPrompt()" aria-label="Close"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button>
     <div style="display:flex;justify-content:center;margin-bottom:1rem;">
@@ -2717,7 +2764,7 @@ posthog.init('phc_B6PH36QxpExnyBYhfScFFF6LhDvoyxuFr6PypJuxxky3', {
         <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="5" width="18" height="14" rx="2"/><line x1="3" y1="10" x2="21" y2="10"/><line x1="7" y1="15" x2="11" y2="15"/></svg>
       </div>
     </div>
-    <div class="modal-title" style="text-align:center;margin-bottom:.5rem;">Connect your bank to finish setup.</div>
+    <div class="modal-title" id="modal-bank-prompt-title" style="text-align:center;margin-bottom:.5rem;">Connect your bank to finish setup.</div>
     <div style="font-size:14px;color:var(--ds-t2);font-weight:500;line-height:1.6;text-align:center;margin-bottom:1.25rem;">Able works best when it can read your transactions and draft a Floor-First plan automatically. Takes about a minute.</div>
     <button class="btn btn-primary" id="bank-prompt-connect-btn" onclick="bankPromptConnect()" style="width:100%;margin-bottom:.5rem;">Connect now</button>
     <button class="btn btn-ghost btn-sm" onclick="dismissBankPrompt()" style="width:100%;">Skip for now</button>
@@ -2725,7 +2772,7 @@ posthog.init('phc_B6PH36QxpExnyBYhfScFFF6LhDvoyxuFr6PypJuxxky3', {
     <div style="font-size:11px;color:var(--ds-t3);font-weight:500;line-height:1.5;margin-top:1rem;text-align:center;">By connecting, you authorize Plaid to share your account data with Able. Read <a href="https://plaid.com/legal/#end-user-privacy-policy" target="_blank" rel="noopener" style="color:var(--ds-green);text-decoration:underline;">Plaid's privacy policy</a>.</div>
   </div>
 </div>
-<div class="modal-bg" id="modal-fixed-alloc" style="display:none;">
+<div class="modal-bg" id="modal-fixed-alloc" style="display:none;" role="dialog" aria-modal="true" aria-labelledby="fa-modal-title">
   <div class="modal">
     <button class="modal-close" onclick="closeModal('modal-fixed-alloc')" aria-label="Close"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button>
     <div class="modal-title" id="fa-modal-title">Add fixed allocation</div>
@@ -2753,10 +2800,10 @@ posthog.init('phc_B6PH36QxpExnyBYhfScFFF6LhDvoyxuFr6PypJuxxky3', {
     </div>
   </div>
 </div>
-<div class="modal-bg" id="modal-edit-income" style="display:none;">
+<div class="modal-bg" id="modal-edit-income" style="display:none;" role="dialog" aria-modal="true" aria-labelledby="modal-edit-income-title">
   <div class="modal">
     <button class="modal-close" onclick="closeModal('modal-edit-income')" aria-label="Close"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button>
-    <div class="modal-title">Edit income</div>
+    <div class="modal-title" id="modal-edit-income-title">Edit income</div>
     <div style="font-size:12px;color:var(--ds-t2);font-weight:600;margin-bottom:14px;line-height:1.6;background:var(--ds-green-l);border-radius:var(--ds-r1);padding:10px 12px;">Saving will reverse the original allocation and re-run it with the new amount. Debt balances and reserve will be adjusted.</div>
     <div class="form-row">
       <div class="field"><label>Amount ($)</label><input type="number" id="ei-amount" placeholder="0" min="0" step="0.01"></div>
@@ -2769,11 +2816,11 @@ posthog.init('phc_B6PH36QxpExnyBYhfScFFF6LhDvoyxuFr6PypJuxxky3', {
 <!-- Income Inbox: surfaces low-confidence inflows so the user can teach Able
      how to classify their money. Each label writes a user_classification_overrides
      row so future matching transactions skip the LLM. -->
-<div class="modal-bg" id="modal-income-inbox" style="display:none;" onclick="if(event.target===this)closeIncomeInbox()">
+<div class="modal-bg" id="modal-income-inbox" style="display:none;" role="dialog" aria-modal="true" aria-labelledby="modal-income-inbox-title" onclick="if(event.target===this)closeIncomeInbox()">
   <div class="modal" style="max-width:520px;">
     <button class="modal-close" onclick="closeIncomeInbox()" aria-label="Close"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button>
-    <div class="modal-title">Review your income</div>
-    <div style="font-size:12px;color:var(--ds-t2);font-weight:600;margin-bottom:14px;line-height:1.6;">We weren't sure how to label these. Tap a button to teach Able for next time — every label trains future syncs.</div>
+    <div class="modal-title" id="modal-income-inbox-title">Review your income</div>
+    <div style="font-size:12px;color:var(--ds-t2);font-weight:600;margin-bottom:14px;line-height:1.6;">We weren't sure how to label these. Tap a button to teach Able for next time - every label trains future syncs.</div>
     <div id="income-inbox-list" style="max-height:60vh;overflow-y:auto;">
       <div class="inbox-loading">Loading…</div>
     </div>
@@ -2797,7 +2844,7 @@ const sbGet = () => window._sb;
 const stripeGet = () => window._stripe;
 
 // ═══════════════════════════════════════
-// ANALYTICS — provider-agnostic track()
+// ANALYTICS - provider-agnostic track()
 // Swap the body of Able.track to forward to PostHog/Plausible/etc.
 // ═══════════════════════════════════════
 window.Able = window.Able || {};
@@ -2845,7 +2892,7 @@ window.Able.track = function(event, props) {
   }
   if (window._ableTrackDebug) console.log('[track]', event, enriched);
 };
-// One-time event helper — fires once per user per browser.
+// One-time event helper - fires once per user per browser.
 window.Able.trackOnce = function(event, props) {
   const uid = window.currentUser?.id || 'anon';
   const key = 'able_tracked_' + event + '_' + uid;
@@ -2920,7 +2967,7 @@ function togglePw(id) {
 // localStorage normally during the tab's lifetime; the handler runs only when
 // the tab is being torn down. The sessionStorage flag persists across reloads
 // in the same tab (so the handler is re-installed on each load), but clears
-// when the tab closes — at which point the flag and the tokens are both gone.
+// when the tab closes - at which point the flag and the tokens are both gone.
 function _installSessionOnlyTabCloseHandler() {
   if (window._sessionOnlyHandlerBound) return;
   window._sessionOnlyHandlerBound = true;
@@ -2952,7 +2999,7 @@ async function doLogin() {
     return;
   }
   // After successful auth, the Supabase client can be wedged from an
-  // earlier post-Stripe load — getSession(), getAuthenticatorAssuranceLevel(),
+  // earlier post-Stripe load - getSession(), getAuthenticatorAssuranceLevel(),
   // and other auth-state-dependent calls hang indefinitely, which silently
   // blocks the in-place auth flow. Verified: signInWithPassword returns 200
   // with a full session, but anything we await inside _onAuthStateChangeImpl
@@ -2995,7 +3042,7 @@ async function doSignup() {
   // email and Google OAuth signups from a single place, after identify()
   // has tied the event to the user id.
   // When Confirm Email is OFF in Supabase, signUp returns a session and onAuthStateChange
-  // fires SIGNED_IN immediately — no message needed. When ON, no session is returned
+  // fires SIGNED_IN immediately - no message needed. When ON, no session is returned
   // and the user must verify before signing in. data.session distinguishes the two.
   if (data?.session) {
     // Auto-signed in. Same wedge-bypass as doLogin: if there's a query
@@ -3053,7 +3100,7 @@ async function resendSignupConfirmation() {
   } catch (e) {
     if (note) { note.textContent = (e && e.message) ? `Couldn't resend: ${e.message}` : `Couldn't resend. Try again in a moment.`; note.style.display = 'block'; }
   }
-  // Cooldown countdown — re-enable after 60s regardless of success/failure
+  // Cooldown countdown - re-enable after 60s regardless of success/failure
   // so users hit by transient errors aren't permanently locked out.
   const tick = () => {
     if (remaining <= 0) {
@@ -3076,6 +3123,9 @@ async function showForgotPassword() {
 }
 
 async function doSignOut() {
+  // Flush any pending debounced save before tearing down the session so a user
+  // who signs out mid-edit doesn't lose the write inside the 800ms window.
+  try { await flushSave(); } catch(e) { /* swallow - sign out anyway */ }
   // Clear everything client-side IMMEDIATELY for instant feedback
   if(currentUser) sessionStorage.removeItem('able_access_'+currentUser.id);
   // Clear Supabase's auth token from localStorage manually for instant sign out
@@ -3276,12 +3326,12 @@ async function ensureMfaForPlaid() {
     if (aal?.currentLevel === 'aal2') return true;
     const factor = await _getVerifiedTotpFactor();
     if (factor) {
-      // Verified factor exists but session is aal1 — this is rare since the
+      // Verified factor exists but session is aal1 - this is rare since the
       // login flow gates on it, but defensive in case the session aged out.
       showMfaChallenge(factor.id);
       return false;
     }
-    // No factor at all — send them to set it up.
+    // No factor at all - send them to set it up.
     alert('Connecting your bank requires two-factor authentication. We\'ll set it up first.');
     if (typeof goTo === 'function') goTo('settings');
     setTimeout(() => openMfaEnroll(), 250);
@@ -3332,7 +3382,7 @@ async function checkSubscription(userId) {
   if (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1') {
     return true;
   }
-  // Check cache first — avoids round trip for returning users
+  // Check cache first - avoids round trip for returning users
   const cached = sessionStorage.getItem('able_access_'+userId);
   if(cached === 'true') {
     // Cache hit, but still fetch the actual status in the background so
@@ -3391,7 +3441,7 @@ async function onAuthStateChange(user) {
     return;
   }
   if(_authFlowRunning){
-    console.debug('onAuthStateChange already running, skipping duplicate for', user.email);
+    console.debug('onAuthStateChange already running, skipping duplicate for', user.id);
     return;
   }
   _authFlowRunning = true;
@@ -3400,12 +3450,15 @@ async function onAuthStateChange(user) {
 }
 async function _onAuthStateChangeImpl(user) {
   currentUser=user;
-  if(window.posthog) posthog.identify(user.id, { email: user.email });
+  // Don't ship raw email to PostHog. The Supabase UUID is the join key for
+  // Stripe (metadata.supabase_uid) and email lookups can happen server-side
+  // via auth.admin when support genuinely needs them.
+  if(window.posthog) posthog.identify(user.id);
 
   // MFA gate: if the user has a verified TOTP factor but the session is still
   // at aal1, halt here and require the 6-digit challenge before any app data
   // is fetched or rendered. submitMfaChallenge() re-enters this function.
-  // Race against a 2s timeout — on the post-Stripe wedged-client path, this
+  // Race against a 2s timeout - on the post-Stripe wedged-client path, this
   // call hangs forever and would block the entire post-auth flow. Failing
   // open on timeout is safe: if MFA is actually required, the user will hit
   // an aal1-rejected query downstream and be re-challenged then.
@@ -3474,7 +3527,7 @@ async function _onAuthStateChangeImpl(user) {
   const showAuthFailure = (errMsg) => {
     cancelLoadingDebounce();
     if(!authBox) return;
-    // Tear down the post-checkout overlay if it's still up — without this the
+    // Tear down the post-checkout overlay if it's still up - without this the
     // user would see the spinner indefinitely (until the 30s safety net) while
     // the failure card sat invisible behind it.
     const coLoader = document.getElementById('checkout-return-loading');
@@ -3489,14 +3542,14 @@ async function _onAuthStateChangeImpl(user) {
       <div style="text-align:center;padding:1rem 0;font-family:var(--ds-f);">
         <div class="brand-wordmark-wrap" style="margin-bottom:.4rem;"><div class="brand-wordmark">Able</div></div>
         <div style="font-size:14px;color:var(--ds-c4);font-weight:800;margin:1.25rem 0 .5rem;letter-spacing:-.01em;">Couldn't finish loading your account</div>
-        <div style="font-size:12px;color:var(--ds-t3);font-weight:600;line-height:1.5;margin:0 auto 1.25rem;max-width:300px;">${safeMsg||"Something went wrong on our end. Try again — if it keeps happening, sign out and back in."}</div>
+        <div style="font-size:12px;color:var(--ds-t3);font-weight:600;line-height:1.5;margin:0 auto 1.25rem;max-width:300px;">${safeMsg||"Something went wrong on our end. Try again - if it keeps happening, sign out and back in."}</div>
         <button class="btn btn-primary" style="margin-bottom:.5rem;width:100%;" onclick="location.reload()">Try again</button>
-        <button class="btn btn-ghost btn-sm" onclick="signOut()">Sign out</button>
+        <button class="btn btn-ghost btn-sm" onclick="doSignOut()">Sign out</button>
       </div>
     `;
   };
   // Reached when the user paid at Stripe but the webhook hasn't updated their
-  // profile within ~28s. The charge succeeded — bouncing them to the paywall
+  // profile within ~28s. The charge succeeded - bouncing them to the paywall
   // would be punishing a paying customer for our internal latency. Show a
   // calm "still confirming" page with a refresh path + support fallback.
   const showCheckoutPending = () => {
@@ -3520,14 +3573,14 @@ async function _onAuthStateChangeImpl(user) {
 
   if(document.getElementById('settings-email')) document.getElementById('settings-email').textContent=user.email;
 
-  // The URL is already clean — we strip ?checkout=success at page load
+  // The URL is already clean - we strip ?checkout=success at page load
   // before Supabase client init (avoids a wedge). The "came from checkout"
   // signal lives in sessionStorage. Clear the flag once we read it so a
   // future reload doesn't re-trigger the post-checkout polling path.
   // Mutable copy of isFromCheckout: verify-checkout-session may flip this
   // off if it rejects the session_id (stale URL, forged flag, ownership
   // mismatch). Downstream "polling failed → safety net" branch then reads
-  // false and falls back to the paywall instead — correct for "user didn't
+  // false and falls back to the paywall instead - correct for "user didn't
   // actually pay in this flow."
   let isFromCheckout = sessionStorage.getItem('able_post_checkout') === '1';
   const checkoutSessionId = sessionStorage.getItem('able_checkout_session_id');
@@ -3543,7 +3596,7 @@ async function _onAuthStateChangeImpl(user) {
   try {
     // Post-checkout flow keeps the full-screen `checkout-return-loading`
     // overlay visible the entire time (created at page load, line ~13369),
-    // so we skip the auth-box "Loading your account" state — rendering both
+    // so we skip the auth-box "Loading your account" state - rendering both
     // back-to-back was the "two confirming pages, different designs" UX.
     if (!isFromCheckout) {
       loadingDebounceTimer = setTimeout(() => {
@@ -3555,7 +3608,7 @@ async function _onAuthStateChangeImpl(user) {
     // Fast path: if Stripe handed us a session_id on the redirect, verify it
     // directly with Stripe's API and skip the webhook-delivery polling loop
     // entirely. verify-checkout-session calls Stripe, validates the session
-    // belongs to this user, and updates profiles.subscription_status — same
+    // belongs to this user, and updates profiles.subscription_status - same
     // write the webhook would have made, but without waiting for delivery.
     let hasAccess = false;
     if (isFromCheckout && checkoutSessionId) {
@@ -3570,7 +3623,7 @@ async function _onAuthStateChangeImpl(user) {
         } else if (vErr || (vData && vData.status !== 'pending' && vData.status !== 'active')) {
           // Verify rejected the session_id (404 not found, 403 ownership
           // mismatch, error from Stripe, etc.). Most likely this is a stale
-          // flag from an earlier visit to a ?checkout=success URL — not an
+          // flag from an earlier visit to a ?checkout=success URL - not an
           // actual checkout in progress. Clear the checkout flag so
           // downstream polling-failure lands on the paywall instead of the
           // "Still confirming your payment" safety net.
@@ -3579,7 +3632,7 @@ async function _onAuthStateChangeImpl(user) {
           Able.track('checkout_verify_rejected', { reason: vData?.error || vErr?.message || 'unknown' });
         }
         // status === 'pending' falls through to polling with isFromCheckout still true
-        // (legit "webhook running, just slow" — keep the safety net path).
+        // (legit "webhook running, just slow" - keep the safety net path).
       } catch (e) {
         console.warn('[Able] verify-checkout-session threw, falling back to polling:', e);
       }
@@ -3595,7 +3648,7 @@ async function _onAuthStateChangeImpl(user) {
 
     // If we have a session_id and the first verify returned 'pending'
     // (Stripe hasn't marked session complete yet), retry verify-checkout-
-    // session with backoff. Asks Stripe directly — does NOT depend on
+    // session with backoff. Asks Stripe directly - does NOT depend on
     // webhook delivery. Typical case resolves in 2-4s; budget ~11s.
     // Replaces the prior `checkSubscription` profile polling, which
     // waited on the webhook and routinely pushed users to the 45s safety
@@ -3622,7 +3675,7 @@ async function _onAuthStateChangeImpl(user) {
     // Legacy fallback for the rare post-checkout return without a session_id
     // (Stripe templates {CHECKOUT_SESSION_ID} into success_url, but this
     // covers manual refresh that drops the param, etc.). Polls profiles
-    // waiting for the webhook — the slow path the verify-retry above replaced.
+    // waiting for the webhook - the slow path the verify-retry above replaced.
     if(!hasAccess && isFromCheckout && !checkoutSessionId) {
       const delays = [500,500,750,1000,1500,2000,2500,3000,3000,3000,3000];
       for (let i = 0; i < delays.length && !hasAccess; i++) {
@@ -3636,7 +3689,7 @@ async function _onAuthStateChangeImpl(user) {
 
     if(!hasAccess){
       // Webhook still hasn't landed after the extended poll window. Don't
-      // bounce paying users back to the paywall — their charge succeeded and
+      // bounce paying users back to the paywall - their charge succeeded and
       // we have no way to "un-charge" them. Show a friendly retry state that
       // makes clear the payment went through. Almost always resolves on the
       // next reload once the webhook catches up.
@@ -3738,7 +3791,7 @@ async function _onAuthStateChangeImpl(user) {
     const coLoader = document.getElementById('checkout-return-loading');
     if(coLoader) coLoader.remove();
 
-    // Check if user needs onboarding — no bills AND no profile means they haven't been through setup
+    // Check if user needs onboarding - no bills AND no profile means they haven't been through setup
     const needsOnboarding = !S.profile && (!S.bills || S.bills.length === 0) && (!S.debts || S.debts.length === 0);
 
     if(needsOnboarding) {
@@ -3783,7 +3836,7 @@ async function _onAuthStateChangeImpl(user) {
     // fire again. Returning users skip straight to coach nudges.
     //
     // Skip the auto-fire when an onboarding pipeline is currently running
-    // (Path A: user clicked "Take the tour →" mid-pipeline — that path fires
+    // (Path A: user clicked "Take the tour →" mid-pipeline - that path fires
     // its own startTour) or when the user is mid-plan-review (Path B: tour
     // fires after Apply in obSubmitPlanReview). Without these guards, the
     // tour spotlights random already-loaded UI on a later page reload while
@@ -3800,7 +3853,7 @@ async function _onAuthStateChangeImpl(user) {
       maybeShowBankPrompt();
     }
   } catch(e) {
-    // Don't auto-reload — that turns any silent JS error post-sign-in into an
+    // Don't auto-reload - that turns any silent JS error post-sign-in into an
     // infinite loop (the reload re-triggers onAuthStateChange which re-throws).
     // Surface the failure with a Try again / Sign out card and let the user act.
     console.error('Auth flow error:', e);
@@ -3893,7 +3946,7 @@ const OB_QUESTIONS = [
     key: 'tax_state',
     type: 'select',
     msg: "What state do you file taxes in?",
-    hint: "Helps me calibrate your tax % to your state's effective rate. No state income tax (FL, TX, NV, etc.) gets a lower number; CA/NY/NJ run higher. Optional — skip if you'd rather not say.",
+    hint: "Helps me calibrate your tax % to your state's effective rate. No state income tax (FL, TX, NV, etc.) gets a lower number; CA/NY/NJ run higher. Optional - skip if you'd rather not say.",
     optional: true,
     placeholder: "Select your state…",
     choices: [
@@ -3966,7 +4019,7 @@ let obResult = null;
 // ─── Intake session persistence ──────────────────────────────────────
 // sessionStorage (not local) so a tab close = fresh start, but a reload
 // or crash recovers in-progress answers. Mirrors what tryResumePlaidOauth
-// already does for the OAuth bounce — we just generalize it to all
+// already does for the OAuth bounce - we just generalize it to all
 // non-OAuth interruptions.
 const _OB_SESSION_KEY = 'able_ob_session_v1';
 const _OB_SESSION_MAX_AGE_MS = 24 * 60 * 60 * 1000;
@@ -3976,7 +4029,7 @@ function obSaveSession() {
     sessionStorage.setItem(_OB_SESSION_KEY, JSON.stringify({
       obAnswers, obStep, savedAt: Date.now(),
     }));
-  } catch (_) { /* quota / private mode — silently skip */ }
+  } catch (_) { /* quota / private mode - silently skip */ }
 }
 
 function obClearSession() {
@@ -4101,7 +4154,7 @@ function renderObStep() {
       document.getElementById('ob-next-btn').style.display = 'inline-flex';
       document.getElementById('ob-next-btn').textContent = 'Continue →';
     } else {
-      // Lookback is fixed at 12 months — picker removed 2026-05-06. Reasoning:
+      // Lookback is fixed at 12 months - picker removed 2026-05-06. Reasoning:
       // (a) the 6/12/24 choice was friction with no real upside (lookback
       // doesn't change time-to-first-plan, that's bounded by Plaid's
       // INITIAL_UPDATE), and (b) we're moving to a two-pass model where the
@@ -4194,7 +4247,7 @@ function renderObStep() {
     document.getElementById('ob-next-btn').textContent = obStep === OB_QUESTIONS.length - 1 ? 'Build my budget →' : 'Continue →';
     document.getElementById('ob-next-btn').disabled = selected.size === 0 && !otherText.trim();
   } else {
-    // text type — render as a typed input when q.inputType is set, otherwise
+    // text type - render as a typed input when q.inputType is set, otherwise
     // a free-text textarea. Number inputs get min/max/step so users can't enter
     // "5%" or other strings that silently coerce to NaN downstream.
     if (q.inputType === 'number') {
@@ -4321,7 +4374,7 @@ function obNext() {
     }
     // Persist intake_channels chips to S.sources so the source picker
     // shows them on the very next screen (Allocate sheet). This logic is
-    // gated to intake_channels only — running it for every multiselect
+    // gated to intake_channels only - running it for every multiselect
     // (e.g. brought_here personas) corrupts S.sources with goal labels
     // like "Dig out of debt without losing my mind". brought_here lands
     // on S.profile.brought_here later in obSubmitPlanReview / obConfirm.
@@ -4396,13 +4449,13 @@ async function obBuildWithAI() {
 
   // Wait for the background pipeline. We show a live status screen
   // while it runs so the user knows progress is happening (no idle
-  // spinner). The wait budget is generous — the pipeline takes 2-4
+  // spinner). The wait budget is generous - the pipeline takes 2-4
   // minutes typically.
   const status = await obWaitForPipelineWithStatus(5 * 60 * 1000);
 
   // User chose to walk the app instead of staring at the spinner.
   // obStartTourWhilePipelineRuns has already swapped us into the
-  // dashboard and mounted the floating status pill — nothing left to
+  // dashboard and mounted the floating status pill - nothing left to
   // do here.
   if (status === 'handed_off') return;
 
@@ -4428,7 +4481,7 @@ async function obBuildWithAI() {
 // step label so the user sees progress, not a frozen spinner.
 //
 // After ~3s the panel grows a "Take the tour" CTA that hands off to
-// obStartTourWhilePipelineRuns — the user lands in the dashboard with
+// obStartTourWhilePipelineRuns - the user lands in the dashboard with
 // a floating status pill while the pipeline finishes in the background.
 async function obWaitForPipelineWithStatus(maxWaitMs) {
   const buildingEl = document.getElementById('ob-building');
@@ -4484,7 +4537,7 @@ async function obWaitForPipelineWithStatus(maxWaitMs) {
         <div style="font-size:20px;font-weight:800;color:var(--ds-t1);letter-spacing:-.015em;margin-bottom:1.25rem;">Building your plan</div>
         <div id="ob-build-checklist" style="text-align:left;min-width:240px;margin-bottom:1.25rem;">${renderRows(0)}</div>
         <div style="font-size:13px;font-weight:500;color:var(--ds-t3);max-width:400px;line-height:1.55;">
-          Reading your bank history. About 3 minutes — sometimes up to 5 if your bank is slow.
+          Reading your bank history. About 3 minutes - sometimes up to 5 if your bank is slow.
         </div>
         <div id="ob-build-cta" style="display:none;margin-top:2rem;padding-top:1.5rem;border-top:1px solid var(--ds-bd);max-width:400px;width:100%;animation:ob-fadein .35s ease;">
           <div style="font-size:14px;font-weight:700;color:var(--ds-t1);margin-bottom:.5rem;">No need to wait around.</div>
@@ -4529,7 +4582,7 @@ async function obWaitForPipelineWithStatus(maxWaitMs) {
 // Pulls the user's first name out of the free-text "name + business"
 // answer. Handles "I'm Paul Johnson" / "my name is Paul" / "Paul Johnson"
 // / "Acme Coffee" → "Acme". Skips leading numeric tokens so "123
-// Consulting" returns "Consulting" instead of "123" — Coach saying
+// Consulting" returns "Consulting" instead of "123" - Coach saying
 // "Hi 123" reads broken.
 function _obParseFirstName(raw){
   const s = (raw || '').trim();
@@ -4541,7 +4594,7 @@ function _obParseFirstName(raw){
 }
 
 // Personalization beat between Plaid pipeline success and plan review.
-// One screen, ~2 seconds, zero questions — the emotional payoff for the
+// One screen, ~2 seconds, zero questions - the emotional payoff for the
 // 2-4 minute wait the user just sat through. Reuses the same first-name
 // parser as obStartTourWhilePipelineRuns so the greeting matches what
 // the dashboard will use.
@@ -4885,7 +4938,7 @@ function ensurePlaidLinkScript() {
 async function obStartPlaidLink() {
   const btn = document.getElementById('ob-plaid-connect');
   const errEl = document.getElementById('ob-plaid-error');
-  // Lookback hardcoded to 12 months — picker removed 2026-05-06. The deep-
+  // Lookback hardcoded to 12 months - picker removed 2026-05-06. The deep-
   // dive pass that runs after onboarding completes processes the full
   // 12-month classified pool; the initial pipeline still uses the 2500-txn
   // classify cap for fast time-to-plan.
@@ -4947,14 +5000,16 @@ async function obStartPlaidLink() {
 // Returns the most recent non-revoked plaid_items row for this user +
 // institution, or null. RLS scopes the query to the current user.
 // Used to prevent duplicate-Item creation when a user re-links the same
-// bank (which would pull every transaction twice — see 2026-04-30 dupe
+// bank (which would pull every transaction twice - see 2026-04-30 dupe
 // incident on item 4a18cecb-…).
 async function findExistingPlaidItemForInstitution(institutionId) {
   if (!institutionId) return null;
+  if (!currentUser) return null;
   try {
     const { data, error } = await sbGet()
       .from('plaid_items')
       .select('id, status, institution_name')
+      .eq('user_id', currentUser.id)
       .eq('institution_id', institutionId)
       .neq('status', 'revoked')
       .order('created_at', { ascending: false })
@@ -4978,7 +5033,7 @@ async function obHandlePlaidSuccess(public_token, metadata, lookback) {
 
   // Guard against same-institution re-link (e.g. user resumed onboarding
   // after a prior link, or signed in with an existing account that has
-  // this bank). Don't exchange — that would create a duplicate Item.
+  // this bank). Don't exchange - that would create a duplicate Item.
   const institutionId = metadata?.institution?.institution_id || null;
   const institutionName = metadata?.institution?.name || null;
   if (institutionId) {
@@ -5005,7 +5060,7 @@ async function obHandlePlaidSuccess(public_token, metadata, lookback) {
 
   try {
     const t0 = performance.now();
-    // 60s timeout — exchange has historically run in <3s, but the
+    // 60s timeout - exchange has historically run in <3s, but the
     // Supabase gateway occasionally hangs and we don't want to leave
     // the user staring at "Linking…" forever.
     const exchangePromise = sbGet().functions.invoke('plaid-exchange-public-token', {
@@ -5064,7 +5119,7 @@ function obSkipPlaidConnect() {
 // review screen (7c) can present it.
 
 // Pull a useful detail string out of a Supabase functions.invoke error.
-// `error.context` is the underlying Response object — its body holds the
+// `error.context` is the underlying Response object - its body holds the
 // actual server error JSON, which is way more useful than the generic
 // "Edge Function returned a non-2xx status code" message.
 // Wrap functions.invoke with a wall-clock timeout. The Supabase client
@@ -5112,7 +5167,7 @@ async function obExtractInvokeError(error) {
 // obAnswers.plaid_pipeline and obAnswers.plaid_plan so obBuildWithAI
 // can decide at the end whether to show the plan review or fall back.
 //
-// We never block the user on this completing — if it fails we still
+// We never block the user on this completing - if it fails we still
 // land them in the dashboard, with a banner that lets them retry.
 async function obRunPlaidPipeline() {
   const itemRowId = obAnswers.plaid_connect?.plaid_item_row_id;
@@ -5121,7 +5176,7 @@ async function obRunPlaidPipeline() {
   obAnswers.plaid_pipeline = { status: 'running', step: 'sync', startedAt: Date.now(), recurringSkipped: false, attempts: 0 };
   // Refresh the connected-bank panel if the user is still looking at it.
   // Guard against re-rendering after the user clicks Continue (which hides
-  // ob-question-area and shows ob-building) — without this guard, a late
+  // ob-question-area and shows ob-building) - without this guard, a late
   // pipeline-progression callback would un-hide the question area and
   // bounce the user back to step 8 (P1 fix 2026-05-08 evening).
   const _stillOnPlaidPanel = () => OB_QUESTIONS[obStep]?.type === 'plaid'
@@ -5174,7 +5229,7 @@ async function obRunPlaidPipeline() {
     if (_stillOnPlaidPanel()) renderObStep();
     // Poll sync while Plaid is doing its initial pull. /transactions/sync
     // returns status:'NOT_READY' (with zero transactions) until INITIAL_UPDATE
-    // or HISTORICAL_UPDATE arrives — typically 15-60s on major banks, can be
+    // or HISTORICAL_UPDATE arrives - typically 15-60s on major banks, can be
     // a few minutes on smaller ones. Without polling, classify+recurring+
     // analyze all run on empty data and analyze 400s with "No classified
     // transactions yet". Cap matches obBuildWithAI's 5-min wait budget.
@@ -5224,7 +5279,7 @@ async function obRunPlaidPipeline() {
 
     // Credit-debt detection: writes plaid_credit_debts (true APR +
     // min_payment from /liabilities/get when supported, balance-only
-    // estimate fallback otherwise). Soft-fails — analyzer reads from
+    // estimate fallback otherwise). Soft-fails - analyzer reads from
     // the table, so an empty result just means "no credit-card debts
     // surfaced," same as a user without cards.
     try {
@@ -5238,7 +5293,7 @@ async function obRunPlaidPipeline() {
     if (_stillOnPlaidPanel()) renderObStep();
     // Poll the analyzer's readiness gate. Server returns HTTP 202 with
     // status:'not_ready' when plaid_recurring_streams is empty AND it's
-    // been less than 3 min since last sync — server fires recurring-
+    // been less than 3 min since last sync - server fires recurring-
     // refresh in the background to populate streams during the wait.
     // Client cap is 5 min (slightly past the 3-min server cap) as a
     // safety net for full disconnects. After the cap fires force_run:
@@ -5252,7 +5307,7 @@ async function obRunPlaidPipeline() {
       if (forceRun) reqBody.force_run = true;
       data = await obPipelineStep('analyze', () => obInvokeWithTimeout(sb, 'plaid-analyze', reqBody, 120000));
       if (!data || data.status !== 'not_ready') break;
-      if (forceRun) break; // shouldn't happen — force_run bypasses the gate — but guard anyway
+      if (forceRun) break; // shouldn't happen - force_run bypasses the gate - but guard anyway
       analyzePolls++;
       console.log(`[Pipeline] analyze waiting for recurring (poll ${analyzePolls}, streams=${data.stream_count}, t_since_sync=${Math.round((data.time_since_sync_ms || 0) / 1000)}s)`);
       const retryAfter = Math.max(5, Math.min(30, Number(data.retry_after_seconds) || 15));
@@ -5468,7 +5523,7 @@ async function obRenderPlanReview(planId) {
   const userExtras = (obAnswers.extra_debts || []).map((d) => ({ ...d, source: 'user_added' }));
   // Filter analyzer-produced bills that look like bank fees ("Bank service
   // fee $15", "Monthly maintenance fee", overdraft etc.). They surface as
-  // recurring outflows but aren't bills the user controls — leak surface
+  // recurring outflows but aren't bills the user controls - leak surface
   // is more appropriate. (P2 #18)
   const _planBillFeeRe = [
     /\bbank\s*service\s*fee\b/i,
@@ -5569,6 +5624,9 @@ async function obAutoApplyPendingReview() {
   if (data && data.error) throw new Error(data.error);
   // Refresh S so dashboards see the saved (pending_review) rows immediately
   // even if the user navigates away before clicking Apply.
+  if (!currentUser) {
+    throw new Error('session expired during onboarding - please sign in again');
+  }
   const { data: ud } = await sb.from('user_data').select('*').eq('id', currentUser.id).single();
   if (ud) {
     S.bills      = ud.bills || [];
@@ -5586,7 +5644,7 @@ async function obAutoApplyPendingReview() {
   // Fire-and-forget the post-onboarding deep-dive. Runs server-side; the
   // user can close the tab the moment the initial plan lands and the
   // deep-dive will still complete. It only ever appends new pending_review
-  // rows or flags existing rows as dormant — never overwrites the user's
+  // rows or flags existing rows as dormant - never overwrites the user's
   // accepted plan. Safe to skip silently on any error; the deep-dive is
   // an enhancement, not a requirement.
   try {
@@ -5886,7 +5944,7 @@ function obRenderPlanReviewUI() {
       .plan-floor-callout-gap b{color:#fff;font-weight:800;}
     </style>`;
 
-  // "Here's your Floor" callout — Floor-First introduced through the user's
+  // "Here's your Floor" callout - Floor-First introduced through the user's
   // own data, the moment after Plaid drafts the plan. Computes the floor as
   // the sum of monthly-equivalent bill amounts the analyzer detected.
   const billItems = (r.sections && r.sections.bills && r.sections.bills.items) || [];
@@ -5899,14 +5957,14 @@ function obRenderPlanReviewUI() {
   }, 0);
   // Average monthly income across detected income sources (analyzer puts a
   // per-source average_amount on each row). Used for the gap-acknowledgement
-  // line when Floor exceeds income — the moment that broke Riley in focus
+  // line when Floor exceeds income - the moment that broke Riley in focus
   // group testing without a "we'll close the gap" sentence on impact.
   const incomeItems = (r.sections && r.sections.income_sources && r.sections.income_sources.items) || [];
   const avgIncome = incomeItems.reduce((sum, s) => sum + (Number(s.average_amount) || 0), 0);
   let gapLine = '';
   if (floorTotal > 0 && avgIncome > 0 && floorTotal > avgIncome + 1) {
     const gap = Math.round(floorTotal - avgIncome);
-    gapLine = `<div class="plan-floor-callout-gap"><b>Heads up:</b> your Floor is about $${gap.toLocaleString()} above your average month. That's normal for Floor-First. We'll close the gap together — deposits fill what's next, and Coach will help on the slow weeks.</div>`;
+    gapLine = `<div class="plan-floor-callout-gap"><b>Heads up:</b> your Floor is about $${gap.toLocaleString()} above your average month. That's normal for Floor-First. We'll close the gap together - deposits fill what's next, and Coach will help on the slow weeks.</div>`;
   }
   if (floorTotal > 0.5 && billItems.length > 0) {
     html += `
@@ -5935,7 +5993,7 @@ function obRenderPlanReviewUI() {
   if (r.autoApplying) {
     html += `<div class="plan-saved-pill" style="background:#fff7e6;border:1px solid #f0d8a8;color:#6b4a1a;">Auto-saving your detected bills + debts…</div>`;
   } else {
-    html += `<div class="plan-saved-pill">Saved. You can close this tab and finish later — your detected bills + debts are waiting in the Bills and Debt tabs.</div>`;
+    html += `<div class="plan-saved-pill">Saved. You can close this tab and finish later - your detected bills + debts are waiting in the Bills and Debt tabs.</div>`;
   }
   if (r.error) {
     html += `<div class="plan-error">${escapeHtml(r.error)}</div>`;
@@ -5969,7 +6027,7 @@ function obRenderPlanReviewUI() {
     const items = r.sections.bills.items || [];
     if (!items.length) return `<div style="font-size:13px;color:var(--ds-t3);">No recurring bills detected.</div>`;
     return `<div class="plan-row-list">${items.map((b) => `
-      <div class="plan-list-row"><span>${escapeHtml(b.name || '—')}</span><span class="meta">$${Math.round(b.amount || 0).toLocaleString()}${b.due_day_of_month ? ` · day ${b.due_day_of_month}` : ''}</span></div>
+      <div class="plan-list-row"><span>${escapeHtml(b.name || '-')}</span><span class="meta">$${Math.round(b.amount || 0).toLocaleString()}${b.due_day_of_month ? ` · day ${b.due_day_of_month}` : ''}</span></div>
     `).join('')}</div>`;
   }, () => {
     const items = r.sections.bills.items || [];
@@ -5999,7 +6057,7 @@ function obRenderPlanReviewUI() {
     return `<div class="plan-row-list">${items.map((d) => {
       const balance = d.balance_estimate != null ? `$${Math.round(d.balance_estimate).toLocaleString()}` : `$${Math.round(d.min_payment || 0)}/mo min`;
       const rate = d.rate_estimate != null ? ` · ${Math.round(d.rate_estimate * 100)}%` : '';
-      return `<div class="plan-list-row"><span>${escapeHtml(d.name || '—')}${rate}</span><span class="meta">${balance}</span></div>`;
+      return `<div class="plan-list-row"><span>${escapeHtml(d.name || '-')}${rate}</span><span class="meta">${balance}</span></div>`;
     }).join('')}</div>`;
   }, () => {
     const items = r.sections.debts.items || [];
@@ -6317,10 +6375,10 @@ async function obSubmitPlanReview() {
       S.settings.freePct  = r.sections.surplus_split.free_pct;
     }
 
-    // Income sources are plain strings — no pending_review tag possible.
+    // Income sources are plain strings - no pending_review tag possible.
     // Honor the editor's list directly when accepted. When the analyzer has
     // detected concrete sources, drop the placeholder defaults
-    // (Salary/Freelance/Side income/Other) that loaded on first signup —
+    // (Salary/Freelance/Side income/Other) that loaded on first signup -
     // they're noise once real data lands. Round 2 surfaced this as
     // P1-2026-05-04 #4: panel showed 9 entries when Plaid detected 5.
     // Anything else in S.sources (user-added chip labels, prior-session
@@ -6604,7 +6662,7 @@ async function startCheckout() {
 
     if(resp.error){
       const msg=typeof resp.error==='string'?resp.error:(resp.error.message||JSON.stringify(resp.error));
-      // Fetch itself failed — session was valid at preflight, so this is a platform/network issue.
+      // Fetch itself failed - session was valid at preflight, so this is a platform/network issue.
       if(/failed to send|failed to fetch|networkerror/i.test(msg)){
         console.error('[Able] create-checkout unreachable:', resp.error);
         Able.track('checkout_unreachable',{plan:selectedPlan,msg});
@@ -6619,6 +6677,7 @@ async function startCheckout() {
 
     // Stripe has the ref_token in session metadata now; clear local copy.
     localStorage.removeItem('able_ref_token');
+    try { await flushSave(); } catch(e) { /* swallow - proceed to checkout */ }
     window.location.href=session_url;
   } catch(e) {
     errEl.textContent=e.message;
@@ -6639,6 +6698,7 @@ async function openManageSubscription() {
     if(resp.error) throw new Error(typeof resp.error==='string'?resp.error:(resp.error.message||JSON.stringify(resp.error)));
     const url=resp.data?.portal_url;
     if(!url) throw new Error(resp.data?.error||'Portal unavailable');
+    try { await flushSave(); } catch(e) { /* swallow - proceed to portal */ }
     window.location.href=url;
   } catch(e) {
     alert('Could not open subscription management: '+e.message);
@@ -6885,6 +6945,10 @@ function flushSave() {
 document.addEventListener('visibilitychange', () => {
   if (document.hidden) flushSave();
 });
+// iOS Safari (and some Android browsers) can fire pagehide without firing
+// visibilitychange when the tab is killed by the task switcher. Cover that
+// path so the last debounced save isn't dropped.
+window.addEventListener('pagehide', () => { flushSave(); });
 
 async function touchLastActive(){
   if(!currentUser || !sbGet()) return;
@@ -6964,7 +7028,7 @@ function monthlyDueDate(year,month,d){
 // "ongoing" bills with no fixed date always count. Weekly/biweekly/custom bills multiply
 // by how many times they'll occur within the window.
 function billOccurrencesInWindow(bill,days){
-  // Returns {count, nextDays} — number of times this bill recurs in the next `days` days,
+  // Returns {count, nextDays} - number of times this bill recurs in the next `days` days,
   // and the number of days until the next occurrence (for sorting).
   if(!bill) return {count:0,nextDays:999};
   const freq=bill.freq||'monthly';
@@ -6996,7 +7060,7 @@ function billOccurrencesInWindow(bill,days){
     if(!anchor||isNaN(+anchor)) return {count:0,nextDays:999};
     anchor.setHours(0,0,0,0);
     // Roll forward to the next occurrence on or after today. Direct date
-    // math instead of a loop — a stale anchor (e.g. due='2022-01-01') used
+    // math instead of a loop - a stale anchor (e.g. due='2022-01-01') used
     // to spin thousands of iterations on every render.
     if(anchor<now){
       const ms=interval*86400000;
@@ -7021,7 +7085,7 @@ function billsInWindow(days){
     if (b.paid) {
       // Paid monthly bills: skip the just-paid (current cycle) occurrence and
       // include the FRESH NEXT one if it falls in the window. Without this,
-      // bills disappear from upcoming-bills the moment they're marked paid —
+      // bills disappear from upcoming-bills the moment they're marked paid -
       // even though next month's occurrence is right around the corner.
       // Paid weekly/biweekly/custom bills are handled by applyOccurrenceReleases
       // (reservations release as occurrences pass), so we don't double-show them.
@@ -7100,7 +7164,7 @@ function billOccurrenceDates(bill,days){
     let anchor=bill.due?new Date(bill.due):null;
     if(!anchor||isNaN(+anchor)) return [];
     anchor.setHours(0,0,0,0);
-    // Direct date math vs. an iteration loop — same perf reason as
+    // Direct date math vs. an iteration loop - same perf reason as
     // billOccurrencesInWindow above.
     if(anchor<now){
       const ms=interval*86400000;
@@ -7173,7 +7237,7 @@ const FA_DEST_LABELS = {
 };
 
 // Normalize legacy S.obligations shape (from AI onboarding) to the new fixed-allocation shape.
-// Idempotent — safe to call repeatedly.
+// Idempotent - safe to call repeatedly.
 function normalizeFixedAllocations() {
   if (!Array.isArray(S.obligations)) S.obligations = [];
   let dirty = false;
@@ -7252,7 +7316,7 @@ function ensureBillIds() {
   return dirty;
 }
 // Number of times a non-monthly bill recurs in (start, end].
-// Monthly and ongoing bills return 0 — they're released by the explicit `paid` flag,
+// Monthly and ongoing bills return 0 - they're released by the explicit `paid` flag,
 // not by the passage of time. Used to auto-release reservations as occurrences pass.
 function _occurrencesBetween(bill, start, end) {
   if (!bill || bill.due === 'ongoing' || bill.paid) return 0;
@@ -7319,7 +7383,7 @@ function applyOccurrenceReleases() {
 // flags, and reset the legacy allocated_to_bills scalar.
 //
 // Reservations are PRESERVED so they roll forward to whichever next-cycle
-// occurrence the bill has — set-aside money doesn't vaporize at midnight
+// occurrence the bill has - set-aside money doesn't vaporize at midnight
 // on the 1st. (This is the deliberate divergence from the old manual
 // resetMonth(): reservations stay, history archives.)
 //
@@ -7328,7 +7392,7 @@ function applyOccurrenceReleases() {
 // paid and disappears from upcoming-bills. Auto-rollover clears that flag.
 //
 // Multi-month gaps collapse into one archive labeled with the most recent
-// uncovered month — rare, since email re-engagement should pull users back
+// uncovered month - rare, since email re-engagement should pull users back
 // before that happens.
 function autoRolloverIfNewMonth() {
   if (!S.settings) S.settings = {};
@@ -7391,7 +7455,7 @@ function autoRolloverIfNewMonth() {
 
 // One-time migration: redistribute the legacy S.allocated_to_bills scalar across
 // per-bill reservations using the same priority+date order the engine used implicitly.
-// Safe to call repeatedly — only does work when reservations is empty and the scalar > 0.
+// Safe to call repeatedly - only does work when reservations is empty and the scalar > 0.
 function migrateScalarToReservations() {
   ensureBillIds();
   const map = _reservations();
@@ -7660,7 +7724,7 @@ function renderJobList(jobs,amount,container,historyId){
         }).join('')}
       </div>` : '';
     // For bills jobs that contributed nothing from this deposit (everything covered from prior),
-    // hide the right-rail amount/percent — the per-item rows tell the story.
+    // hide the right-rail amount/percent - the per-item rows tell the story.
     const rightRail = (isBills && job.amount<=0.01)
       ? `<div class="job-right"><div class="job-amt" style="color:var(--ds-green);font-size:14px;">All covered</div></div>`
       : `<div class="job-right"><div class="job-amt" style="color:${job.color};">${f2(job.amount)}</div><div class="job-pct">${pct}%</div></div>`;
@@ -7704,7 +7768,7 @@ function pickCheerLine(amount,isFirst){
   if(isFirst)return 'Nice start. Here\'s the plan.';
   const big=amount>=1500;
   const small=amount<75;
-  const bigLines=['Solid deposit. Locked in.','Big one — here\'s the plan.'];
+  const bigLines=['Solid deposit. Locked in.','Big one - here\'s the plan.'];
   const smallLines=['Every bit counts.','Small wins stack up.'];
   const mid=['Nice. Here\'s where it goes.','Got it. Here\'s the plan.','Locked in.'];
   const pool=big?bigLines:small?smallLines:mid;
@@ -7772,8 +7836,14 @@ function applyJobs(jobs,amount,source,opts){
     jobs:JSON.parse(JSON.stringify(jobs)),
     jobsDone:{}
   });
-  save();
-  if (wasFirstIncome) Able.trackOnce('first_income_logged', { amount, source });
+  // Income logging is the single most consequential mutation in the app
+  // (mutates history + balance + debt balances + bill reservations). Flush
+  // the debounce immediately so a fast tab-close doesn't lose the write.
+  save(); flushSave();
+  // Don't ship the user-typed `source` string to PostHog - it's a free-text
+  // field that may contain PII ("Mom's check", "settlement payout", etc.).
+  // The fact that they logged at all is the funnel signal we care about.
+  if (wasFirstIncome) Able.trackOnce('first_income_logged', { amount });
   // first_allocation_completed: the moment the user first runs the engine
   // end-to-end. Fires once per user per browser. Conceptually distinct from
   // first_income_logged (input vs end-to-end output) even though they fire
@@ -8261,7 +8331,10 @@ function deleteIncome(id){
   if(!confirm(`Delete ${f2(entry.amount)} from ${entry.source}?\n\nThis will reverse the allocation: money goes back to debt balances and out of your reserve.`))return;
   reverseJobs(entry);
   S.history.splice(idx,1);
-  save();refreshHome();renderDebtPage();
+  // Reversing an allocation rebalances debt + buffer + balance. Force-flush
+  // the debounce so the reversal can't be lost on a fast tab-close.
+  save();flushSave();
+  refreshHome();renderDebtPage();
 }
 
 function editIncome(id){
@@ -8326,7 +8399,7 @@ function saveEditIncome(){
 // ═══════════════════════════════════════
 function renderBillsPage(){
   const el=document.getElementById('bills-body');el.innerHTML='';
-  // Async — surfaces the "Able found N recurring charges" banner when there
+  // Async - surfaces the "Able found N recurring charges" banner when there
   // are Plaid streams not yet matched to bills. No-op when no streams exist.
   loadDetectedBillsBanner().catch(() => {});
   const catDots={housing:'var(--sage)',debt:'var(--coral)',utilities:'var(--amber)',transport:'var(--sky)',insurance:'var(--lavender)',subs:'var(--text3)'};
@@ -8448,7 +8521,7 @@ function toggleBillPaid(i){
   if(!bill)return;
   const nowPaid=!bill.paid;
   bill.paid=nowPaid;
-  // Paying a bill releases its reservation — that money has now left the system.
+  // Paying a bill releases its reservation - that money has now left the system.
   // Un-paying does NOT restore the reservation (we don't know if the money came back).
   if (nowPaid && bill.id) _clearReservation(bill.id);
   save();renderBillsPage();renderUpcoming();refreshHome();
@@ -8588,7 +8661,17 @@ function addBill(){
   let due='ongoing',freqDays=null;
   if(freq==='monthly'){
     const v=document.getElementById('nb-due-monthly').value.trim();
-    due=v?String(parseInt(v)):'ongoing';
+    if(v){
+      const d=parseInt(v);
+      if(!Number.isFinite(d) || d < 1 || d > 31){alert('Pick a day between 1 and 31.');return;}
+      if(d > 28){
+        // Day 29-31 doesn't exist in every month. The engine clamps to last-of-month
+        // but the user deserves to know up front. Confirm before saving.
+        const shortMonth = d === 29 ? 'February (except leap years)' : d === 30 ? 'February' : 'February, April, June, September, November';
+        if(!confirm(`There's no day ${d} in ${shortMonth}. Able will fire this bill on the last day of those months. Save anyway?`))return;
+      }
+      due=String(d);
+    } else due='ongoing';
   } else if(freq==='weekly'){
     due=document.getElementById('nb-due-weekly').value;
   } else if(freq==='biweekly'){
@@ -8681,7 +8764,7 @@ async function dismissStrategyTip(){
 }
 
 function renderDebtPage(){
-  // Async — fires-and-forgets, populates each card when its query returns.
+  // Async - fires-and-forgets, populates each card when its query returns.
   renderPayoffStrategyToggle();
   renderPayoffEstimateCard();
   renderInterestCostCard();
@@ -8767,8 +8850,16 @@ function addDebt(){
   const balance=parseFloat(document.getElementById('nd-bal').value)||0;
   const min=parseFloat(document.getElementById('nd-min').value)||0;
   const rate=parseFloat(document.getElementById('nd-apr').value)||0;
-  const dueDay=parseInt(document.getElementById('nd-due').value)||null;
+  const dueDayRaw=parseInt(document.getElementById('nd-due').value);
   if(!name||!balance)return;
+  let dueDay = Number.isFinite(dueDayRaw) ? dueDayRaw : null;
+  if(dueDay !== null){
+    if(dueDay < 1 || dueDay > 31){alert('Due day must be between 1 and 31.');return;}
+    if(dueDay > 28){
+      const shortMonth = dueDay === 29 ? 'February (except leap years)' : dueDay === 30 ? 'February' : 'February, April, June, September, November';
+      if(!confirm(`There's no day ${dueDay} in ${shortMonth}. The minimum-payment bill will fall on the last day of those months. Save anyway?`))return;
+    }
+  }
   const clrs=['#e07a5f','#c85a5a','#d4956a','#6b9fcf','#9b8ec4','#7aad8a'];
   const debtId='d_'+Date.now()+'_'+Math.random().toString(36).slice(2,7);
   S.debts.push({id:debtId,name,balance,min,rate,dueDay,color:clrs[S.debts.length%clrs.length]});
@@ -8880,7 +8971,7 @@ function renderTimeline(){
       ? `<div style="${sage}">This plan finishes <strong>${saved} ${saved===1?'month':'months'} sooner</strong> than minimums alone.</div>`
       : `<div style="${sage}">Minimums alone already clear within ${baseLast} months. Extra payments don't shift the headline finish, but they save interest.</div>`;
   }else if(extra>0&&baseLast>=MAX){
-    sumEl.innerHTML=`<div style="${sage}">Minimums alone wouldn't clear in 10 years — but this plan finishes in <strong>${last} ${last===1?'month':'months'}</strong>.</div>`;
+    sumEl.innerHTML=`<div style="${sage}">Minimums alone wouldn't clear in 10 years - but this plan finishes in <strong>${last} ${last===1?'month':'months'}</strong>.</div>`;
   }else{
     sumEl.innerHTML=`<div style="${sage}">Minimums-only timeline. Add extra payment above to see how much faster.</div>`;
   }
@@ -8897,7 +8988,7 @@ function renderForecast(){
   el.innerHTML='';
   sorted.forEach((f) => {
     // gotMoney/delForecast index into S.forecast (insertion order), not the sorted view,
-    // so resolve the original index here. indexOf on the object reference is safe — sorted is a shallow copy.
+    // so resolve the original index here. indexOf on the object reference is safe - sorted is a shallow copy.
     const realIdx = S.forecast.indexOf(f);
     const d = new Date(f.date);
     const diff = Math.round((d - today) / 86400000);
@@ -9036,7 +9127,7 @@ function addToAppleCalendar(){
   // newlines become \n. Without this a bill name containing a comma or
   // newline corrupts the .ics file format.
   const icsEscape=(s)=>String(s??'').replace(/\\/g,'\\\\').replace(/,/g,'\\,').replace(/;/g,'\\;').replace(/[\r\n]+/g,'\\n');
-  // UID stays alphanumeric-safe — strip everything but [a-z0-9-]
+  // UID stays alphanumeric-safe - strip everything but [a-z0-9-]
   const icsUid=(s)=>String(s??'').toLowerCase().replace(/[^a-z0-9]+/g,'-').replace(/^-+|-+$/g,'').slice(0,40)||'bill';
   let ics='BEGIN:VCALENDAR\nVERSION:2.0\nPRODID:-//Able//EN\nCALSCALE:GREGORIAN\n';
   bills.forEach(b=>{
@@ -9077,7 +9168,7 @@ function addToGoogleCalendar(){
       const details=encodeURIComponent(`Monthly bill: ${b.name}\nAmount: ${f2(b.amount)}\nDue every month on the ${b.due}`);
       const url=`https://calendar.google.com/calendar/render?action=TEMPLATE&text=${title}&dates=${fmt(date)}/${fmt(next)}&details=${details}&recur=RRULE:FREQ=MONTHLY;BYMONTHDAY=${day}`;
       window.open(url,'_blank');
-      prog.innerHTML+=`✓ Opened: ${b.name}<br>`;
+      prog.innerHTML+=`✓ Opened: ${escapeHtml(b.name)}<br>`;
     },delay);delay+=800;
   });
 }
@@ -9116,7 +9207,7 @@ function renderScore(){
     trendEl.textContent = '';
   }
   if (!score.hasData) {
-    // No data yet — past-month list still renders below.
+    // No data yet - past-month list still renders below.
     const mh = document.getElementById('month-history');
     if (mh) mh.innerHTML = '<div class="empty-state">No completed months yet.<br><span style="font-weight:500;font-size:12px;color:var(--ds-t3);">Your first month will show up here once it ends.</span></div>';
     return;
@@ -9130,7 +9221,7 @@ function renderScore(){
     tabsEl.innerHTML='';
     return;
   }
-  // Rollup period tabs — persist selection on the function itself
+  // Rollup period tabs - persist selection on the function itself
   const periods=[{k:'3',label:'3 mo'},{k:'6',label:'6 mo'},{k:'12',label:'12 mo'},{k:'all',label:'All'}];
   if(!renderScore.rollup)renderScore.rollup='3';
   tabsEl.innerHTML=periods.map(p=>`<button class="btn btn-sm${renderScore.rollup===p.k?' btn-primary':''}" style="padding:4px 10px;font-size:11px;" onclick="setRollup('${p.k}')">${p.label}</button>`).join('');
@@ -9189,7 +9280,7 @@ function setRollup(k){
 
 // Streak = consecutive completed months where bills coverage was ≥ 95%.
 // Returns the current run length (counting from most-recent month back).
-// In-progress month doesn't count yet — we only know once it closes.
+// In-progress month doesn't count yet - we only know once it closes.
 function _floorStreak(){
   const hist = S.month_history || [];
   let n = 0;
@@ -9200,7 +9291,7 @@ function _floorStreak(){
   }
   return n;
 }
-// Best (longest) historical streak — used by "Longest streak" record.
+// Best (longest) historical streak - used by "Longest streak" record.
 function _bestFloorStreak(){
   const hist = S.month_history || [];
   let best = 0, cur = 0;
@@ -9361,7 +9452,7 @@ const ACHIEVEMENTS = [
     distance: () => 'Set tax % in Settings',
   },
   { id:'all_quarters_stashed', cat:'tax', name:'All Quarters Stashed', icon:_ACH_ICON.clock,
-    unlocked: () => false, // Manual flag — needs quarterly tracking; reserved
+    unlocked: () => false, // Manual flag - needs quarterly tracking; reserved
     distance: () => 'In progress',
   },
   // DEBT
@@ -9402,7 +9493,7 @@ const ACHIEVEMENTS = [
     unlocked: () => _floorStreak() >= 12,
     distance: () => { const s = _floorStreak(); return `${Math.max(0,12-s)} to go`; },
   },
-  // SCORE — distances expressed as "N pts to go" against the user's
+  // SCORE - distances expressed as "N pts to go" against the user's
   // best month so far, so the gap is concrete.
   { id:'score_80', cat:'score', name:'First 80+', icon:_ACH_ICON.star,
     unlocked: () => (S.month_history||[]).some(m => (m.score||0) >= 80),
@@ -9432,7 +9523,7 @@ const ACHIEVEMENTS = [
       return `${Math.max(0,3-best)} to go`;
     },
   },
-  // LEARN — sources of truth are the Learn-tab's lcCompleted Set (lessons
+  // LEARN - sources of truth are the Learn-tab's lcCompleted Set (lessons
   // completed) and S.referrals_sent (bumped by sendReferralInvite). The
   // Learn tab already persists lesson_progress to Supabase; we just read it.
   { id:'learn_first_article', cat:'learn', name:'First Lesson Done', icon:_ACH_ICON.book,
@@ -9451,7 +9542,7 @@ const ACHIEVEMENTS = [
     unlocked: () => (typeof lcCompleted !== 'undefined' && lcCompleted instanceof Set && lcCompleted.size >= 10),
     distance: () => { const n = (typeof lcCompleted !== 'undefined' && lcCompleted instanceof Set) ? lcCompleted.size : 0; return `${Math.max(0,10-n)} to go`; },
   },
-  // REFER — referrals_joined tile is locked-by-design until we wire a
+  // REFER - referrals_joined tile is locked-by-design until we wire a
   // backend hook for "an invite turned into a paid signup." For v1, only
   // the "sent" tile reflects user action; "joined" tiles wait on backend.
   { id:'refer_first_sent', cat:'refer', name:'First Referral Sent', icon:_ACH_ICON.user,
@@ -9554,7 +9645,7 @@ let _achCompact = (function(){ try { return localStorage.getItem('able_ach_compa
 const _ACH_COMPACT_LOCKED_PER_GROUP = 2; // closest-to-unlocking shown per category in compact mode
 
 // Numeric "how close to unlocking" 0..1 for sorting locked tiles. Falls back
-// to 0 for tiles where we don't have a clean signal — those sort last among
+// to 0 for tiles where we don't have a clean signal - those sort last among
 // locked, after the user's actually-close ones.
 function _achProgress(id){
   const tb = (typeof totalBills === 'function') ? totalBills() : 0;
@@ -9606,11 +9697,11 @@ function _achToggleCompact(){
 
 // Roadmap cap: until the user unlocks 8 achievements, the grid shows only
 // their closest 8 (mix of already-unlocked + closest-to-unlocking-locked).
-// No category headers, no filters, no "X more locked" affordance — the
+// No category headers, no filters, no "X more locked" affordance - the
 // roadmap is the goal. At unlock #8 we surface a Coach nudge celebrating
 // the moment and flip ach_roadmap_passed=true (one-way), after which the
 // full categorized grid takes over. 4 of 6 round-2 personas independently
-// flagged the 30-tile grid as "a wall" — this trims it.
+// flagged the 30-tile grid as "a wall" - this trims it.
 const _ACH_ROADMAP_CAP = 8;
 
 function renderAchievements(){
@@ -9680,7 +9771,7 @@ function renderAchievements(){
   // FULL MODE (post-roadmap): categorized rendering with the existing toggle.
   if (countEl) countEl.textContent = `${unlockedCount} of ${all.length} unlocked`;
 
-  // Filter chips — show category + count.
+  // Filter chips - show category + count.
   const counts = {};
   ACH_CATEGORIES.forEach(c => counts[c.id] = 0);
   all.forEach(a => { if (counts[a.cat] != null) counts[a.cat]++; });
@@ -9901,6 +9992,7 @@ async function loadConnectedAccounts() {
     const { data: items, error: itemsErr } = await sb
       .from('plaid_items')
       .select('id, institution_name, status, error_message, consent_expiration_at, created_at')
+      .eq('user_id', currentUser.id)
       .order('created_at', { ascending: true });
     if (itemsErr) throw itemsErr;
 
@@ -9919,6 +10011,7 @@ async function loadConnectedAccounts() {
     const { data: accounts } = await sb
       .from('plaid_accounts')
       .select('plaid_item_id, name, mask, type, subtype')
+      .eq('user_id', currentUser.id)
       .in('plaid_item_id', itemIds);
 
     const accountsByItem = {};
@@ -9930,11 +10023,12 @@ async function loadConnectedAccounts() {
     // 'liabilities' Plaid product yet (linked before PR #13 or institution
     // didn't return data). They're still functional but rate_estimate is
     // null instead of carrying a real APR. Surface a one-click "enable
-    // APR tracking" affordance — runs the add_product reconfirmation
+    // APR tracking" affordance - runs the add_product reconfirmation
     // flow without making the user fully re-link.
     const { data: estimateRows } = await sb
       .from('plaid_credit_debts')
       .select('plaid_item_id')
+      .eq('user_id', currentUser.id)
       .in('plaid_item_id', itemIds)
       .eq('source', 'estimate');
     const estimateCountByItem = {};
@@ -9955,7 +10049,7 @@ async function loadConnectedAccounts() {
       const wantsAccountSelect = status === 'pending_disconnect';
       const reconnectBtn = (status === 'error' || status === 'pending_expiration' || status === 'pending_disconnect') ? `
         <button class="btn btn-sm btn-primary" onclick="settingsRunUpdateMode('${item.id}', ${wantsAccountSelect})" style="font-size:12px;">Reconnect</button>` : '';
-      // Only show enable-APR button when the item is otherwise healthy —
+      // Only show enable-APR button when the item is otherwise healthy -
       // a Reconnect on a broken item should win attention; once cleared,
       // the APR enable-row will reappear on the next render.
       const estimateCount = estimateCountByItem[item.id] || 0;
@@ -9981,7 +10075,7 @@ async function loadConnectedAccounts() {
   }
 }
 
-// Loads cached Plaid balances (depository accounts only — checking, savings,
+// Loads cached Plaid balances (depository accounts only - checking, savings,
 // money market, CD, cash management). Sums across all linked banks and
 // caches into S._bankBalances for the hero card to render. Safe to call
 // when no banks are connected; just leaves an empty cache. Refreshes
@@ -9993,7 +10087,8 @@ async function loadBankBalances() {
     const sb = sbGet();
     const { data: items, error: itemsErr } = await sb
       .from('plaid_items')
-      .select('id, institution_name, status');
+      .select('id, institution_name, status')
+      .eq('user_id', currentUser.id);
     if (itemsErr) throw itemsErr;
     if (!items || items.length === 0) {
       S._bankBalances = { sum: 0, accounts: [] };
@@ -10005,6 +10100,7 @@ async function loadBankBalances() {
     const { data: accounts, error: accErr } = await sb
       .from('plaid_accounts')
       .select('plaid_item_id, name, mask, type, subtype, current_balance, available_balance, iso_currency_code')
+      .eq('user_id', currentUser.id)
       .in('plaid_item_id', itemIds)
       .eq('type', 'depository');
     if (accErr) throw accErr;
@@ -10121,7 +10217,8 @@ async function maybeShowBankPrompt() {
   try {
     const { count, error } = await sbGet()
       .from('plaid_items')
-      .select('id', { count: 'exact', head: true });
+      .select('id', { count: 'exact', head: true })
+      .eq('user_id', currentUser.id);
     if (error) throw error;
     if ((count ?? 0) > 0) return;
   } catch (e) {
@@ -10299,7 +10396,7 @@ async function settingsRunAddProduct(plaidItemRowId, productsToAdd) {
     const handler = window.Plaid.create({
       token: data.link_token,
       onSuccess: async () => {
-        // add_product mode doesn't return a new public_token — Plaid
+        // add_product mode doesn't return a new public_token - Plaid
         // updates the existing Item's product list in place. Re-run
         // detect-credit-debts so rows flip from estimate to liabilities.
         clearOauthLink();
@@ -10312,7 +10409,7 @@ async function settingsRunAddProduct(plaidItemRowId, productsToAdd) {
           showToast('APR tracking enabled', { duration: 2500 });
         } catch (e) {
           console.warn('post-add-product detect-credit-debts failed:', e);
-          // Soft-fail — the next pipeline run picks it up.
+          // Soft-fail - the next pipeline run picks it up.
         }
         await loadConnectedAccounts();
       },
@@ -10359,7 +10456,7 @@ async function settingsRunUpdateMode(plaidItemRowId, accountSelectionEnabled) {
     const handler = window.Plaid.create({
       token: data.link_token,
       onSuccess: async () => {
-        // Update mode doesn't return a new public_token to exchange — Plaid
+        // Update mode doesn't return a new public_token to exchange - Plaid
         // resolves the existing Item in place. Just refresh the list so the
         // status badge clears.
         clearOauthLink();
@@ -10494,7 +10591,7 @@ function removeSource(i){
 }
 
 // ═══════════════════════════════════════
-// FIXED ALLOCATIONS — UI
+// FIXED ALLOCATIONS - UI
 // ═══════════════════════════════════════
 function renderFixedAllocList(){
   const el=document.getElementById('fa-list');
@@ -10634,7 +10731,7 @@ function saveBuffer(){S.buffer=parseFloat(document.getElementById('buf-inp').val
 // ═══════════════════════════════════════
 // Returns past-due info for a monthly bill whose due day has passed this month
 // without being marked paid. Returns null otherwise.
-// Non-monthly bills don't apply here — applyOccurrenceReleases handles their
+// Non-monthly bills don't apply here - applyOccurrenceReleases handles their
 // reservation cleanup as occurrences pass.
 function billPastDue(bill){
   if (!bill || bill.paid) return null;
@@ -10642,7 +10739,7 @@ function billPastDue(bill){
   const freq = bill.freq || 'monthly';
   if (freq !== 'monthly') return null;
   const dueDay = parseInt(bill.due);
-  // Reject NaN AND out-of-range — dueDay=0 slips past isNaN and used to make every
+  // Reject NaN AND out-of-range - dueDay=0 slips past isNaN and used to make every
   // day flag past-due (the $3,428 ghost-bill bug from a placeholder analyzer row).
   if (isNaN(dueDay) || dueDay < 1 || dueDay > 31) return null;
   const now = new Date(); now.setHours(0,0,0,0);
@@ -10658,7 +10755,7 @@ function _pastDueBills(){
 }
 // Bills due today (not past-due, not paid). Same filter shape as past-due
 // but matches the current calendar day instead of a strictly-prior day.
-// Weekly/biweekly/custom freqs return false here for now — same caveat as
+// Weekly/biweekly/custom freqs return false here for now - same caveat as
 // billPastDue, which currently only handles monthly.
 function _dueTodayBills(){
   const now = new Date(); now.setHours(0,0,0,0);
@@ -10695,7 +10792,7 @@ function renderDueTodayCard(){
       <button class="due-today-cta" onclick="goTo('bills')">Review</button>
     </div>`;
 }
-// New-bank banner — fires ONLY when a plaid_item was connected after
+// New-bank banner - fires ONLY when a plaid_item was connected after
 // the user already had a plan in place. Plaid's RECURRING_TRANSACTIONS_UPDATE
 // webhook flips recurring_status='fresh' for both newly-added banks AND
 // routine refreshes on the original bank; we suppress the routine case
@@ -10707,10 +10804,12 @@ async function renderPlanRefreshBanner(){
   if (!el) return;
   el.innerHTML = '';
   if (!Array.isArray(S.bills) || S.bills.length === 0) return;
+  if (!currentUser) return;
   try {
     const sb = sbGet();
     const { data: items, error } = await sb.from('plaid_items')
       .select('id, institution_name, recurring_status, created_at')
+      .eq('user_id', currentUser.id)
       .order('created_at', { ascending: true });
     if (error) throw error;
     if (!items || items.length < 2) return;
@@ -10768,22 +10867,25 @@ async function _setPlaidItemStatusApplied(itemId){
 // (candidate debts) scoped to a single newly-added plaid_item. User picks
 // per-row what to include; accepted rows append to S.bills / S.debts with
 // a plaid_item_id annotation so the origin is auditable. No analyzer call,
-// no LLM — pure deterministic merge on data already detected upstream by
+// no LLM - pure deterministic merge on data already detected upstream by
 // plaid-recurring-refresh + plaid-detect-credit-debts.
 let _newBankReviewState = null;
 
 async function openNewBankReviewModal(itemId, bankName){
   const safeName = bankName || 'your new bank';
+  if (!currentUser) return;
   try {
     const sb = sbGet();
     const [streamsRes, debtsRes] = await Promise.all([
       sb.from('plaid_recurring_streams')
         .select('stream_id, merchant_name, description, frequency, average_amount, last_amount, predicted_next_date, last_date, is_active, direction')
+        .eq('user_id', currentUser.id)
         .eq('plaid_item_id', itemId)
         .eq('direction', 'outflow')
         .eq('is_active', true),
       sb.from('plaid_credit_debts')
         .select('id, name, mask, current_balance, purchase_apr, min_payment, last_statement_balance, due_day_of_month, source')
+        .eq('user_id', currentUser.id)
         .eq('plaid_item_id', itemId),
     ]);
     if (streamsRes.error) throw streamsRes.error;
@@ -10865,7 +10967,7 @@ function _renderNewBankReviewBody(){
   const body = document.getElementById('new-bank-review-body');
   if (!st || !body) return;
   if (st.bills.length === 0 && st.debts.length === 0) {
-    body.innerHTML = `<div style="padding:1rem 0;color:var(--ds-t3);font-size:13px;font-weight:600;line-height:1.55;">No new bills or credit cards found in ${escapeHtml(st.bankName)} yet. Plaid may still be processing — check back in a few minutes.</div>`;
+    body.innerHTML = `<div style="padding:1rem 0;color:var(--ds-t3);font-size:13px;font-weight:600;line-height:1.55;">No new bills or credit cards found in ${escapeHtml(st.bankName)} yet. Plaid may still be processing - check back in a few minutes.</div>`;
     const btn = document.getElementById('new-bank-review-apply');
     if (btn) { btn.disabled = false; btn.textContent = 'Got it'; }
     return;
@@ -10915,11 +11017,19 @@ function _toggleNewBankItem(idx, checked){
 async function applyNewBankReview(){
   const st = _newBankReviewState;
   if (!st) return;
+  // Prevent double-submit: a second click before saveUserData resolves would
+  // push duplicate bills/debts (client-generated IDs differ, so no dedupe).
+  const applyBtn = document.getElementById('new-bank-review-apply');
+  if (applyBtn) {
+    if (applyBtn.disabled) return;
+    applyBtn.disabled = true;
+  }
   const totalCount = st.bills.length + st.debts.length;
   if (totalCount === 0) {
-    // Nothing was ever detected — just close + flip status.
+    // Nothing was ever detected - just close + flip status.
     await _setPlaidItemStatusApplied(st.itemId);
     closeModal('modal-new-bank-review');
+    if (applyBtn) applyBtn.disabled = false;
     return;
   }
   try {
@@ -11000,6 +11110,7 @@ async function applyNewBankReview(){
   } catch (e) {
     console.error('applyNewBankReview failed:', e);
     showToast('Could not apply changes: ' + (e.message || 'unknown error'));
+    if (applyBtn) applyBtn.disabled = false;
   }
 }
 
@@ -11061,14 +11172,14 @@ async function refreshPushUI(){
   if (!reg) { status.textContent = 'Could not register service worker.'; return; }
   const sub = await reg.pushManager.getSubscription();
   if (sub) {
-    status.textContent = 'On — this browser will receive Able push notifications.';
+    status.textContent = 'On - this browser will receive Able push notifications.';
     enableBtn.style.display = 'none';
     disableBtn.style.display = 'block';
   } else {
     const perm = (typeof Notification !== 'undefined') ? Notification.permission : 'default';
     status.textContent = perm === 'denied'
       ? 'Push is blocked in your browser settings. Re-enable for becomeable.app to subscribe.'
-      : 'Off — enable to get a nudge when a bill is due or a deposit lands.';
+      : 'Off - enable to get a nudge when a bill is due or a deposit lands.';
     enableBtn.style.display = perm === 'denied' ? 'none' : 'block';
     disableBtn.style.display = 'none';
   }
@@ -11177,7 +11288,7 @@ function _nextQuarterlyDueDate(now){
     const candidate = new Date(y, d.month, d.day);
     if (candidate >= now) return candidate;
   }
-  // Past Sep 15 — next is Jan 15 of next year.
+  // Past Sep 15 - next is Jan 15 of next year.
   return new Date(y + 1, 0, 15);
 }
 function _avgMonthlyIncomeLast90(){
@@ -11206,7 +11317,7 @@ function renderQuarterlyTaxCard(){
   if (!wrap) return;
   const taxPct = _userTaxPct();
   const avgMonthly = _avgMonthlyIncomeLast90();
-  // Hide when we don't have enough signal — no tax obligation set, or no
+  // Hide when we don't have enough signal - no tax obligation set, or no
   // recent income history. Keeps brand-new users from seeing an irrelevant
   // card before they've earned the context for it.
   if (taxPct <= 0 || avgMonthly <= 0) { wrap.innerHTML = ''; wrap.style.display = 'none'; return; }
@@ -11272,8 +11383,8 @@ const INBOX_PAGE_LIMIT = 100;
 let _inboxRows = [];
 
 // Inflows worth labeling. Two cases land in the inbox:
-//   1. Truly low-conf rows (any category, confidence < 0.7) — the LLM was unsure.
-//   2. Transfer-classified inflows with confidence < 0.85 — the LLM said
+//   1. Truly low-conf rows (any category, confidence < 0.7) - the LLM was unsure.
+//   2. Transfer-classified inflows with confidence < 0.85 - the LLM said
 //      "transfer" but wasn't sure; these are the most common false-negative
 //      income (e.g. a Venmo from a client classified as P2P transfer).
 // High-confidence transfers (>= 0.85) are trusted and stay out of the inbox.
@@ -11283,7 +11394,9 @@ let _inboxRows = [];
 // count and list queries each build their own chain from sbGet() rather than
 // sharing a base.
 function _inboxFiltered(builder) {
-  return builder
+  let b = builder;
+  if (currentUser) b = b.eq('user_id', currentUser.id);
+  return b
     .lt('amount', 0)
     .not('able_classified_at', 'is', null)
     .or(
@@ -11434,7 +11547,7 @@ function _deriveOverride(row){
     .trim();
   // If stripping consumed everything, the name was JUST the processor.
   // Use the processor token itself as the substring (e.g. bare "Venmo")
-  // — that's the right behavior for the user's first label of a
+  // - that's the right behavior for the user's first label of a
   // stripped-description deposit.
   const value = (stripped.length >= 3 ? stripped : raw).toLowerCase();
   return { kind: 'name_substring', value };
@@ -11479,7 +11592,7 @@ async function inboxClassify(txnRowId, category, labelOverride){
 async function inboxSkip(txnRowId){
   // Skip = exclude permanently. Bumps the row's confidence to 1.0 with its
   // existing category so it falls out of the inbox filter for good. No
-  // override row is written — the user's "skip" intent is a per-row decision,
+  // override row is written - the user's "skip" intent is a per-row decision,
   // not a pattern to teach. If the LLM was wrong about the category, the user
   // can fix it later from the activity page.
   const row = _inboxRows.find((r) => r.id === txnRowId);
@@ -11556,7 +11669,7 @@ const ACTIVITY_CAT_LABELS = {
   unclassified: 'unclassified',
 };
 function _catLabel(cat){ return ACTIVITY_CAT_LABELS[cat] || (cat || 'unclassified').replace('_',' '); }
-// Plaid PFC strings come back as ALL_CAPS_WITH_UNDERSCORES — render as
+// Plaid PFC strings come back as ALL_CAPS_WITH_UNDERSCORES - render as
 // lowercase, spaces, no _detailed prefix duplication. Strip the primary
 // when it's a prefix of detailed (e.g. FOOD_AND_DRINK_FAST_FOOD → fast food).
 function _formatPfc(detailed, primary){
@@ -11574,7 +11687,7 @@ let _activeReclassifyCat = null;
 // baseline (last 60 days of 'spending' outflows / 2 = monthly avg), and
 // renders a 7-day strip showing where the user is pacing vs. plan.
 // Hidden when there's no Plaid history yet or no bills/baseline to
-// anchor against — the line would be meaningless.
+// anchor against - the line would be meaningless.
 async function loadPaceLine(){
   // Pace line now lives inside the home Score card (#db-score-pace).
   // Falls back to the legacy #home-paceline slot for backwards-compat
@@ -11593,7 +11706,7 @@ async function loadPaceLine(){
       wrap.style.display = 'block';
       wrap.innerHTML = `
         <div class="db-pace-label" style="margin-bottom:4px;">Floor pace</div>
-        <div style="font-size:12px;font-weight:600;color:rgba(255,255,255,.55);line-height:1.45;">Demo data — your real pace lights up after a few weeks of activity.</div>`;
+        <div style="font-size:12px;font-weight:600;color:rgba(255,255,255,.55);line-height:1.45;">Demo data - your real pace lights up after a few weeks of activity.</div>`;
     } else {
       wrap.style.display = 'none';
     }
@@ -11605,18 +11718,20 @@ async function loadPaceLine(){
     const monthStart = new Date(today.getFullYear(), today.getMonth(), 1);
     const lookbackStart = new Date(today.getTime() - 60 * 86400000);
     const dayCount = Math.floor((today - monthStart) / 86400000) + 1; // 1..31
-    // Local YYYY-MM-DD — toISOString() shifts the date for users east of
+    // Local YYYY-MM-DD - toISOString() shifts the date for users east of
     // UTC (local-midnight becomes the previous calendar day in UTC).
     const fmt = (d) => `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`;
 
+    if (!currentUser) return;
     const { data, error } = await sb
       .from('plaid_transactions')
       .select('date, amount, able_category')
+      .eq('user_id', currentUser.id)
       .gte('date', fmt(lookbackStart));
     if (error) throw error;
 
     // Discretionary baseline = last-60-day 'discretionary' outflows / 2.
-    // Excludes bills and debt because Able pre-reserves those — they
+    // Excludes bills and debt because Able pre-reserves those - they
     // aren't part of the variable daily-burn the user is pacing against.
     const spendOutflows = (data || []).filter((t) => t.able_category === 'discretionary' && (t.amount ?? 0) > 0);
     const monthlyDiscretionary = spendOutflows.reduce((s, t) => s + t.amount, 0) / 2;
@@ -11630,7 +11745,8 @@ async function loadPaceLine(){
     if (monthlyFloor < 1) {
       const { count: itemCount } = await sb
         .from('plaid_items')
-        .select('id', { count: 'exact', head: true });
+        .select('id', { count: 'exact', head: true })
+        .eq('user_id', currentUser.id);
       if ((itemCount ?? 0) > 0) {
         wrap.style.display = 'block';
         if (isInScoreCard) {
@@ -11652,7 +11768,7 @@ async function loadPaceLine(){
     }
     const dailyFloor = monthlyFloor / daysInMonth;
 
-    // MTD actual cumulative — outflows that match what monthlyFloor covers.
+    // MTD actual cumulative - outflows that match what monthlyFloor covers.
     const mtdByDate = new Map();
     for (const t of data) {
       if (!t.date || !t.able_category) continue;
@@ -11679,7 +11795,7 @@ async function loadPaceLine(){
       }
     }
 
-    // No actual MTD activity yet — without this guard the chart renders a
+    // No actual MTD activity yet - without this guard the chart renders a
     // flat-zero "actual" line and a "$N under floor" gap that looks like
     // signal but is just the absence of data. (P3 #23)
     if (mtdByDate.size === 0 || runningActual < 0.01) {
@@ -11760,7 +11876,7 @@ async function loadPaceLine(){
 // from plaid_recurring_streams (already populated by plaid-recurring-refresh
 // during the onboarding pipeline and on every Plaid sync). The "Mark as
 // leak" toggle stores stream_ids in S.settings.leak_streams (browser-only,
-// persisted via saveUserData) — Coach picks them up via buildCoachState
+// persisted via saveUserData) - Coach picks them up via buildCoachState
 // and can reason about cuts. No backend changes; no cancel-for-me CTA.
 // ─── Detected bills review (Plaid recurring → S.bills) ────────────────
 // Surfaces a banner on the Bills tab listing Plaid-found recurring outflows
@@ -11801,7 +11917,7 @@ function _streamCadenceToBill(stream) {
   if (f === 'ANNUALLY') {
     return { freq: 'custom', due: last ? last.toISOString() : new Date().toISOString(), freqDays: 365 };
   }
-  // MONTHLY or UNKNOWN — default to monthly with day-of-month from last_date
+  // MONTHLY or UNKNOWN - default to monthly with day-of-month from last_date
   const dom = last ? String(last.getDate()) : 'ongoing';
   return { freq: 'monthly', due: dom };
 }
@@ -11844,7 +11960,7 @@ function _streamFreqLabel(freq) {
   }
 }
 // Bank-fee streams (service fee, monthly maintenance, overdraft, etc.)
-// shouldn't surface in the detected-bills review — they're institutional
+// shouldn't surface in the detected-bills review - they're institutional
 // charges the user can't really treat as a recurring obligation. (P2 #18)
 // Future iteration: route these to a leak-candidate surface instead.
 const _BANK_FEE_PATTERNS = [
@@ -11868,17 +11984,19 @@ function _looksLikeBankFee(stream) {
 }
 
 async function _fetchDetectedBillsCandidates() {
+  if (!currentUser) return [];
   const sb = sbGet();
   const { data, error } = await sb
     .from('plaid_recurring_streams')
     .select('id, stream_id, merchant_name, description, frequency, status, is_active, average_amount, last_amount, last_date, predicted_next_date, personal_finance_category_detailed')
+    .eq('user_id', currentUser.id)
     .eq('direction', 'outflow')
     .eq('is_active', true)
     .neq('status', 'TOMBSTONED')
     .order('last_amount', { ascending: false, nullsFirst: false });
   if (error) throw error;
   const ignore = new Set((S.settings && S.settings.not_bills_streams) || []);
-  // Pass 1: cheap local filtering — amount, ignore-list, bank fees,
+  // Pass 1: cheap local filtering - amount, ignore-list, bank fees,
   // substring fuzzy match against existing bills.
   const afterLocal = (data || []).filter((s) => {
     if (Math.abs(s.last_amount ?? s.average_amount ?? 0) < 0.5) return false;
@@ -11974,7 +12092,7 @@ async function openDetectedBillsModal() {
     html += `<div class="detected-bill-group-label">Confident matches (${high.length})</div>${high.map((s) => renderRow(s, true)).join('')}`;
   }
   if (low.length) {
-    html += `<div class="detected-bill-group-label" style="margin-top:14px;">Less certain (${low.length}) — check the ones that are bills</div>${low.map((s) => renderRow(s, false)).join('')}`;
+    html += `<div class="detected-bill-group-label" style="margin-top:14px;">Less certain (${low.length}) - check the ones that are bills</div>${low.map((s) => renderRow(s, false)).join('')}`;
   }
   if (!html) html = `<div style="padding:1rem 0;color:var(--ds-t3);">Nothing to review.</div>`;
   document.getElementById('detected-bills-list').innerHTML = html;
@@ -11985,9 +12103,14 @@ function updateDetectedSaveBtn() {
   const btn = document.getElementById('detected-bills-save');
   if (!btn) return;
   const checked = document.querySelectorAll('#detected-bills-list input[type="checkbox"]:checked').length;
-  btn.textContent = checked === 0 ? "These aren't bills — skip all" : `Save ${checked} bill${checked === 1 ? '' : 's'}`;
+  btn.textContent = checked === 0 ? "These aren't bills - skip all" : `Save ${checked} bill${checked === 1 ? '' : 's'}`;
 }
 async function saveDetectedBills() {
+  const saveBtn = document.getElementById('detected-bills-save');
+  if (saveBtn) {
+    if (saveBtn.disabled) return;
+    saveBtn.disabled = true;
+  }
   const candidates = S._detectedBillsCache || [];
   const checks = document.querySelectorAll('#detected-bills-list input[type="checkbox"]');
   const checkedIds = new Set();
@@ -12008,7 +12131,9 @@ async function saveDetectedBills() {
   uncheckedIds.forEach((id) => notBillsSet.add(id));
   S.settings.not_bills_streams = Array.from(notBillsSet);
   S._detectedBillsCache = null;
-  save();
+  // Force the write to flush before we close the modal - otherwise the 800ms
+  // debounce window can swallow the new bills if the user backgrounds the tab.
+  await saveUserData();
   closeModal('modal-detected-bills');
   try { Able.track?.('detected_bills_saved', { added, dismissed: uncheckedIds.size }); } catch (_) {}
   renderBillsPage();
@@ -12020,11 +12145,13 @@ async function saveDetectedBills() {
 async function loadRecurringScan(){
   const wrap = document.getElementById('recurring-section');
   if (!wrap) return;
+  if (!currentUser) return;
   try {
     const sb = sbGet();
     const { data, error } = await sb
       .from('plaid_recurring_streams')
       .select('id, stream_id, merchant_name, description, frequency, status, is_active, average_amount, last_amount, last_date, predicted_next_date')
+      .eq('user_id', currentUser.id)
       .eq('direction', 'outflow')
       .eq('is_active', true)
       .neq('status', 'TOMBSTONED')
@@ -12046,11 +12173,12 @@ async function loadRecurringScan(){
     S.recurring_outflow_streams = streams;
     if (streams.length === 0) {
       // Distinguish "Plaid still computing recurring streams" (show skeleton)
-      // from "no Plaid connected" (hide entirely). Cheap count query — only
+      // from "no Plaid connected" (hide entirely). Cheap count query - only
       // fires when the streams table is empty.
       const { count: itemCount } = await sb
         .from('plaid_items')
-        .select('id', { count: 'exact', head: true });
+        .select('id', { count: 'exact', head: true })
+        .eq('user_id', currentUser.id);
       if ((itemCount ?? 0) > 0) {
         wrap.style.display = 'block';
         wrap.innerHTML = `
@@ -12086,7 +12214,7 @@ async function loadRecurringScan(){
             <div style="font-size:12px;font-weight:600;color:var(--ds-t3);margin-top:2px;">${amtStr} ${freqStr} · last ${escapeHtml(lastStr)}</div>
           </div>
           <button type="button" onclick="toggleLeakFlag('${escapeHtml(s.stream_id)}')" class="recurring-leak-btn" style="${_leakBtnStyle(false)}">Mark as leak</button>
-          <button type="button" onclick="dismissRecurringStream('${escapeHtml(s.stream_id)}')" title="Normal bill — hide from this list" style="background:transparent;border:none;color:var(--ds-t3);font-family:var(--ds-f);font-size:18px;font-weight:600;padding:4px 8px;cursor:pointer;line-height:1;flex-shrink:0;">×</button>
+          <button type="button" onclick="dismissRecurringStream('${escapeHtml(s.stream_id)}')" title="Normal bill - hide from this list" style="background:transparent;border:none;color:var(--ds-t3);font-family:var(--ds-f);font-size:18px;font-weight:600;padding:4px 8px;cursor:pointer;line-height:1;flex-shrink:0;">×</button>
         </div>`;
     }).join('');
 
@@ -12094,7 +12222,7 @@ async function loadRecurringScan(){
     const annualStr = annualLeak.toLocaleString(undefined, { style: 'currency', currency: 'USD', maximumFractionDigits: 0 });
     const monthlyLeakStr = monthlyLeak.toLocaleString(undefined, { style: 'currency', currency: 'USD', maximumFractionDigits: 0 });
 
-    // First-time primer — explains what a leak is. Shown once, dismissible.
+    // First-time primer - explains what a leak is. Shown once, dismissible.
     const primerSeen = !!S.settings.leak_primer_seen;
     const primerHtml = primerSeen ? '' : `
       <div style="background:#fdf3e3;border:1px solid #f4dca5;border-radius:var(--ds-r1);padding:.75rem .9rem;margin-bottom:.85rem;display:flex;align-items:flex-start;gap:.65rem;">
@@ -12104,7 +12232,7 @@ async function loadRecurringScan(){
         <button type="button" onclick="dismissLeakPrimer()" aria-label="Dismiss" style="background:transparent;border:0;color:#a8721b;font-family:var(--ds-f);font-size:16px;font-weight:700;padding:0 4px;cursor:pointer;line-height:1;flex-shrink:0;">×</button>
       </div>`;
 
-    // Leak summary line — tappable, opens the leak detail modal. Only shown
+    // Leak summary line - tappable, opens the leak detail modal. Only shown
     // when at least one leak is tagged.
     const summaryHtml = leakCount > 0 ? `
       <button type="button" onclick="openLeakSummary()" style="width:100%;text-align:left;background:#fdeef2;border:1px solid #f4cdd6;border-radius:var(--ds-r1);padding:.7rem .9rem;margin-bottom:.65rem;cursor:pointer;display:flex;align-items:center;gap:.65rem;font-family:var(--ds-f);">
@@ -12141,7 +12269,7 @@ function _recurringMonthly(s){
     case 'SEMI_MONTHLY': return amt * 2;
     case 'MONTHLY':      return amt;
     case 'ANNUALLY':     return amt / 12;
-    default:             return amt; // UNKNOWN — best-guess monthly
+    default:             return amt; // UNKNOWN - best-guess monthly
   }
 }
 
@@ -12186,7 +12314,7 @@ async function dismissLeakPrimer(){
   loadRecurringScan().catch(() => {});
 }
 
-// Opens the leak summary modal — full annual projection + per-leak history
+// Opens the leak summary modal - full annual projection + per-leak history
 // + Remove leak action. Reads recurring streams from cache; pulls last 6
 // charges for each leak from plaid_transactions.
 async function openLeakSummary(){
@@ -12226,15 +12354,16 @@ async function renderLeakSummaryBody(){
   body.innerHTML = `<div class="empty-state" style="padding:.5rem 0;">Loading recent charges…</div>`;
 
   // Pull recent transactions matching each leak's merchant. One query, then
-  // group client-side. Last 90 days is enough — same window as the detector.
+  // group client-side. Last 90 days is enough - same window as the detector.
   const merchants = streams.map((s) => s.merchant_name).filter(Boolean);
   let txByMerchant = {};
   try {
-    if (merchants.length > 0) {
+    if (merchants.length > 0 && currentUser) {
       const since = new Date(Date.now() - 90 * 86400000).toISOString().slice(0, 10);
       const { data, error } = await sbGet()
         .from('plaid_transactions')
         .select('merchant_name, amount, date')
+        .eq('user_id', currentUser.id)
         .in('merchant_name', merchants)
         .gte('date', since)
         .order('date', { ascending: false })
@@ -12279,7 +12408,7 @@ async function renderLeakSummaryBody(){
   }).join('');
 }
 
-// "Normal bill — dismiss" path on the Activity recurring scan. Adds the
+// "Normal bill - dismiss" path on the Activity recurring scan. Adds the
 // stream to S.settings.dismissed_recurring_streams so it stops appearing
 // in the list. Distinct from leak_streams (Coach context) and
 // not_bills_streams (used by the detected-bills review banner). (P2 #15)
@@ -12295,7 +12424,7 @@ async function dismissRecurringStream(streamId){
   loadRecurringScan().catch(() => {});
 }
 
-// Tax Export — compact pill year-round; full gradient card during US tax
+// Tax Export - compact pill year-round; full gradient card during US tax
 // season (Jan 1 - Apr 15) when filers actually need it. Lower noise the
 // other 9 months of the year.
 function renderTaxExportSurface(){
@@ -12340,10 +12469,12 @@ async function renderActivityPage(opts){
   const lookbackDays = rangeEl ? parseInt(rangeEl.value, 10) : ACTIVITY_LOOKBACK_DAYS;
   const searchEl = document.getElementById('activity-search');
   const searchRaw = (searchEl ? searchEl.value : '').trim();
+  if (!currentUser) { list.innerHTML = `<div class="empty-state">Sign in to view activity.</div>`; return; }
   try {
     let q = sbGet()
       .from('plaid_transactions')
       .select('id, plaid_transaction_id, name, merchant_name, amount, date, able_category, able_label, able_confidence, personal_finance_category_primary, personal_finance_category_detailed, is_tax_deductible, business_label')
+      .eq('user_id', currentUser.id)
       .order('date', { ascending: false })
       .limit(_activityCurrentLimit);
     if (lookbackDays > 0) {
@@ -12531,7 +12662,7 @@ function openReclassifyModal(txnRowId){
 
   const cats = isInflow ? ACTIVITY_INFLOW_CATS : ACTIVITY_OUTFLOW_CATS;
   // Pre-select the row's current category if it appears in the chip set
-  // (it always should — both chip sets cover the full DB enum minus 'income'
+  // (it always should - both chip sets cover the full DB enum minus 'income'
   // for outflows and bill/debt/tax for inflows). If not, leave none selected.
   _activeReclassifyCat = cats.some((c) => c.value === row.able_category)
     ? row.able_category
@@ -12567,7 +12698,7 @@ async function _refreshReclassifyBulkOffer(){
   _reclassifyBulkCandidates = [];
   if (!row || !cat) { section.style.display = 'none'; return; }
   const justOnce = document.getElementById('reclassify-just-once');
-  // "Just this transaction" disables the bulk pathway — no override = no
+  // "Just this transaction" disables the bulk pathway - no override = no
   // pattern. Hide section so the user knows their pick is honored.
   if (justOnce && justOnce.checked) { section.style.display = 'none'; return; }
   const override = (typeof _deriveOverride === 'function') ? _deriveOverride(row) : null;
@@ -12591,8 +12722,10 @@ async function _refreshReclassifyBulkOffer(){
     if (!v) throw new Error('empty override value');
     const pat = `%${v}%`;
     const orFilter = `merchant_name.ilike.${pat},name.ilike.${pat}`;
+    if (!currentUser) return;
     const { data, error } = await sb.from('plaid_transactions')
       .select('id, name, merchant_name, able_category')
+      .eq('user_id', currentUser.id)
       .gte('date', sinceStr)
       .neq('id', row.id)
       .or(orFilter)
@@ -12705,7 +12838,9 @@ async function applyReclassify(){
     // without a hard reload. Fires on any createOverride since we don't
     // know the pre-reclassify category from the client side; cheap query.
     if (createOverride) {
-      try {
+      if (!currentUser) {
+        console.warn('reclassify refresh skipped: no current user');
+      } else try {
         const beforeCount = (S.bills || []).length;
         const { data: ud, error: udErr } = await sbGet()
           .from('user_data')
@@ -12790,10 +12925,12 @@ async function renderTaxExport(){
   const end = `${year}-12-31`;
   summary.innerHTML = `<div class="empty-state">Loading…</div>`;
   if (dlBtn) dlBtn.disabled = true;
+  if (!currentUser) { summary.innerHTML = `<div class="empty-state">Sign in to view tax export.</div>`; return; }
   try {
     const { data, error } = await sbGet()
       .from('plaid_transactions')
       .select('date, name, merchant_name, amount, able_category, able_label, personal_finance_category_primary, personal_finance_category_detailed, business_label')
+      .eq('user_id', currentUser.id)
       .eq('is_tax_deductible', true)
       .gte('date', start)
       .lte('date', end)
@@ -12863,23 +13000,25 @@ async function renderTaxExport(){
 // `mergedWithPlaidTxnId` + `deposited_amount` so the row can render
 // "matched bank deposit $X" without changing allocation breakdowns.
 //
-// Runs on every refreshHome — idempotent: already-merged entries are skipped.
+// Runs on every refreshHome - idempotent: already-merged entries are skipped.
 // Returns merged count for callers that want to re-render after.
 async function dedupPlaidWithHistory(){
   if (!Array.isArray(S.history) || S.history.length === 0) return 0;
+  if (!currentUser) return 0;
   const since = new Date();
   since.setDate(since.getDate() - 30);
   const sinceIso = since.toISOString().slice(0,10);
   const { data: plaidIncome, error } = await sbGet()
     .from('plaid_transactions')
     .select('plaid_transaction_id, amount, date')
+    .eq('user_id', currentUser.id)
     .eq('able_category', 'income')
     .lt('amount', 0)
     .gte('date', sinceIso)
     .limit(500);
   if (error) { console.warn('dedupPlaidWithHistory query failed:', error); return 0; }
   if (!plaidIncome || plaidIncome.length === 0) return 0;
-  // Set of Plaid IDs already linked to a history entry — skip those so a
+  // Set of Plaid IDs already linked to a history entry - skip those so a
   // re-run doesn't re-match a deposit to a different manual entry.
   const linkedPlaidIds = new Set(
     S.history.filter((h) => h.mergedWithPlaidTxnId).map((h) => h.mergedWithPlaidTxnId),
@@ -12911,7 +13050,7 @@ async function dedupPlaidWithHistory(){
     // Preserve the original gross amount (user's invoiced/intended figure)
     // and replace `amount` with the actual deposited net so totalIn() and
     // every downstream sum reflects real money in the bank. The allocation
-    // breakdown in winner.jobs stays based on gross — that was the user's
+    // breakdown in winner.jobs stays based on gross - that was the user's
     // distribution intent at log time. The history row shows both.
     if (winner.gross_amount === undefined) winner.gross_amount = winner.amount;
     winner.amount = plaidAmt;
@@ -12952,6 +13091,7 @@ async function renderPayoffEstimateCard(){
   let monthlyPace = sumMins;
   let paceSource = 'minimums';
   try {
+    if (!currentUser) throw new Error('no user');
     const sb = sbGet();
     const since = new Date();
     since.setDate(since.getDate() - 90);
@@ -12959,6 +13099,7 @@ async function renderPayoffEstimateCard(){
     const { data, error } = await sb
       .from('plaid_transactions')
       .select('amount')
+      .eq('user_id', currentUser.id)
       .gte('date', sinceIso)
       .gt('amount', 0)
       .eq('able_category', 'debt_payment')
@@ -13027,12 +13168,13 @@ async function renderPayoffEstimateCard(){
 // CC INTEREST COST CARD (Debt page)
 // ═══════════════════════════════════════
 // Surfaces real interest paid in the last 30 days plus an annualized
-// projection — visibility nudge without lecturing. Only renders when
+// projection - visibility nudge without lecturing. Only renders when
 // Plaid sees actual interest charges (so users without revolving balances
 // don't see an empty card).
 async function renderInterestCostCard() {
   const card = document.getElementById('debt-interest-card');
   if (!card) return;
+  if (!currentUser) { card.innerHTML = ''; return; }
   const since = new Date();
   since.setDate(since.getDate() - 30);
   const sinceIso = since.toISOString().slice(0, 10);
@@ -13040,6 +13182,7 @@ async function renderInterestCostCard() {
     const { data, error } = await sbGet()
       .from('plaid_transactions')
       .select('amount, name, personal_finance_category_detailed')
+      .eq('user_id', currentUser.id)
       .gte('date', sinceIso)
       .gt('amount', 0)
       .eq('personal_finance_category_detailed', 'BANK_FEES_INTEREST_CHARGE')
@@ -13178,7 +13321,7 @@ function buildNext14Events(days){
   const win = days || allocWindow();
   const events = [];
   const now = new Date(); now.setHours(0,0,0,0);
-  // Bills — expand each into per-occurrence dates within the window.
+  // Bills - expand each into per-occurrence dates within the window.
   (S.bills||[]).forEach((b, billIndex) => {
     const dates = billOccurrenceDates(b, win);
     for (const date of dates) {
@@ -13193,7 +13336,7 @@ function buildNext14Events(days){
       });
     }
   });
-  // Forecasted income — only entries that haven't been marked received yet.
+  // Forecasted income - only entries that haven't been marked received yet.
   (S.forecast||[]).forEach((f, forecastIndex) => {
     if (f.status === 'received') return;
     const d = new Date(f.date);
@@ -13214,7 +13357,7 @@ function buildNext14Events(days){
   events.sort((a, b) => a.date - b.date || (a.type === 'income' ? -1 : 1));
   return events;
 }
-// Inline Next-N card on home — shows the next 2 events (mix of bills +
+// Inline Next-N card on home - shows the next 2 events (mix of bills +
 // expected income) with their funded state. Tap routes to the full modal.
 // Hides itself when there's nothing scheduled in the window.
 function renderNextNCard(days){
@@ -13304,7 +13447,7 @@ function renderNext14(){
   let html = '';
   let lastDayKey = '';
   if (!events.length) {
-    // Empty primary list still lets the look-ahead render below — if the user
+    // Empty primary list still lets the look-ahead render below - if the user
     // paid all this month's bills, "next 14 days" can be empty while next
     // month's rent is still coming.
     html += `<div class="next14-empty">Nothing on the calendar for the next ${win} days. Either it's a quiet stretch or you haven't added bills + expected income yet.</div>`;
@@ -13358,8 +13501,8 @@ function renderNext14(){
   });
   // Look-ahead: monthly bills whose next occurrence falls outside the rolling
   // window but within ~45 days. Without this, paid monthly bills disappear
-  // from view the moment they're checked off — even though next month's
-  // occurrence is right around the corner. Informational only — reservations
+  // from view the moment they're checked off - even though next month's
+  // occurrence is right around the corner. Informational only - reservations
   // still don't extend out (the rolling window is the active planning horizon).
   const today = new Date(); today.setHours(0,0,0,0);
   const lookAheadDays = 45;
@@ -13515,7 +13658,7 @@ function allocateAvailable(){
   const source = 'Unallocated balance';
   const jobs = computeJobs(avail, source);
   _pendingAlloc = { type: 'direct', amount: avail, source, jobs, balanceNeutral: true };
-  // Skip the "Money just came in" sheet — this isn't new money. Go straight
+  // Skip the "Money just came in" sheet - this isn't new money. Go straight
   // to the preview modal. After confirm, both layers close and the user
   // lands back on the dashboard.
   openAllocPreview(avail, source, jobs);
@@ -13543,7 +13686,7 @@ function renderHeroMoney(){
               <div class="db-hero-breakdown-name">${escapeHtml(a.institution_name)}</div>
               <div class="db-hero-breakdown-meta">${escapeHtml(a.name)}${a.mask ? ' ····' + escapeHtml(a.mask) : ''}</div>
             </div>
-            <div class="db-hero-breakdown-amt">${a.current_balance != null ? f2(a.current_balance) : '—'}</div>
+            <div class="db-hero-breakdown-amt">${a.current_balance != null ? f2(a.current_balance) : '-'}</div>
           </div>
         `).join('')}
       </div>`;
@@ -13595,12 +13738,12 @@ function renderHeroMoney(){
     : '';
   const editBtn = `<button class="db-hero-edit" onclick="openBalanceModal()" aria-label="Edit balance">Edit</button>`;
 
-  // Bank-balance dropdown — informational layer below the manual In-your-
+  // Bank-balance dropdown - informational layer below the manual In-your-
   // accounts row. Sum across linked depository accounts, with a per-bank
   // breakdown on tap. Drift indicator surfaces when Plaid sum and S.balance
   // disagree by more than $50 (most often: cash/Venmo deposit user logged
   // before Plaid saw it, or stale manual balance). Never overrides the
-  // working balance — that stays Option B per Paul's decision 2026-05-03.
+  // working balance - that stays Option B per Paul's decision 2026-05-03.
   const bankBalances = S._bankBalances;
   let bankLine = '';
   let bankBreakdown = '';
@@ -13622,7 +13765,7 @@ function renderHeroMoney(){
               <div class="db-hero-breakdown-name">${escapeHtml(a.institution_name)}</div>
               <div class="db-hero-breakdown-meta">${escapeHtml(a.name)}${a.mask ? ' ····' + escapeHtml(a.mask) : ''}</div>
             </div>
-            <div class="db-hero-breakdown-amt">${a.current_balance != null ? f2(a.current_balance) : '—'}</div>
+            <div class="db-hero-breakdown-amt">${a.current_balance != null ? f2(a.current_balance) : '-'}</div>
           </div>
         `).join('')}
       </div>`;
@@ -13634,7 +13777,7 @@ function renderHeroMoney(){
       <span class="db-hero-money-val">${f2(reserved)}</span>
     </div>`;
 
-  // Floor coverage strip — Floor-First made visible on home.
+  // Floor coverage strip - Floor-First made visible on home.
   // Floor = total monthly bills. Funded = paid + reserved (paid bills
   // are still "covered" this month even though the cash already left).
   const floorTotal = (typeof totalBills === 'function') ? totalBills() : 0;
@@ -13643,7 +13786,7 @@ function renderHeroMoney(){
   const floorPct = floorTotal > 0 ? Math.max(0, Math.min(100, Math.round((floorFunded / floorTotal) * 100))) : 0;
   let floorCap = '';
   if (floorTotal <= 0.01) {
-    floorCap = ''; // nothing to render — handled by hiding strip below
+    floorCap = ''; // nothing to render - handled by hiding strip below
   } else if (floorFunded >= floorTotal - 0.01) {
     floorCap = `<b>Floor covered.</b> Surplus is going to the rest of your plan.`;
   } else {
@@ -13661,7 +13804,7 @@ function renderHeroMoney(){
     </div>` : '';
 
   // CTA hierarchy: primary action is always "Log new income" (Floor-First's
-  // core moment — every deposit gets allocated). When there's unallocated
+  // core moment - every deposit gets allocated). When there's unallocated
   // available, surface "allocate the $X" as a quiet secondary text link.
   const primaryCta = `<button class="db-hero-cta-primary" onclick="openAllocateSheet()">Log new income →</button>`;
   const allocateLink = (available > 0.01)
@@ -13784,7 +13927,7 @@ function dismissFloorIntro(e){
     pop.remove();
   }
 }
-// Backward-compat shim — older callers used renderBalanceCard.
+// Backward-compat shim - older callers used renderBalanceCard.
 function renderBalanceCard(){ renderHeroMoney(); }
 
 // ═══════════════════════════════════════
@@ -13894,7 +14037,7 @@ function _renderDemoBanner(on){
     el.innerHTML = `
       <span style="display:inline-flex;align-items:center;gap:6px;">
         <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><circle cx="12" cy="16" r=".6" fill="currentColor"/></svg>
-        Demo mode — these numbers aren't real
+        Demo mode - these numbers aren't real
       </span>
       <button onclick="exitDemoMode()">Exit demo</button>`;
     el.classList.add('on');
@@ -14123,7 +14266,7 @@ const TOUR_STEPS = [
   // ── Score tab ─────────────────────────────────────────────────
   {
     tab: 'score',
-    // Was #page-score (the entire page) — the 3px green box-shadow ring
+    // Was #page-score (the entire page) - the 3px green box-shadow ring
     // wrapped the whole viewport and bled into the top nav (P1 #8 fix).
     // Spotlight a specific element at the top of the score page instead.
     spotlight: '#streak-card',
@@ -14218,7 +14361,7 @@ function renderTourStep() {
       try { targetEl.scrollIntoView({ behavior: 'instant', block: 'center' }); } catch(_) {}
     }
 
-    // Overlay — transparent click-catcher. Visually invisible (no
+    // Overlay - transparent click-catcher. Visually invisible (no
     // dim), but it still swallows page clicks so the user can't
     // accidentally navigate away mid-tour. Skip / Next on the bubble
     // (higher z-index) are the only exits.
@@ -14263,7 +14406,7 @@ function renderTourStep() {
 
     // Spotlight + bubble are position:absolute now (anchored to document
     // coords via rect + scrollY in positionTourUI), so they scroll
-    // naturally with the page — no per-scroll recompute needed. Just
+    // naturally with the page - no per-scroll recompute needed. Just
     // re-measure on resize since viewport-width changes can reflow the
     // target's position.
     const reposition = () => positionTourUI(targetEl);
@@ -14336,7 +14479,7 @@ function positionTourUI(targetEl) {
   } else {
     // Desktop: prefer below, flip above if no room there. When the target
     // fills enough of the viewport that neither above nor below fits
-    // (e.g. .db-score-card on the home tab — tall right-column card),
+    // (e.g. .db-score-card on the home tab - tall right-column card),
     // place the bubble adjacent to the side instead so it doesn't end up
     // clamped to top:16 overlapping the spotlight (P1 #6 fix).
     const fitsBelow = window.innerHeight - rect.bottom >= bRect.height + margin;
@@ -14355,7 +14498,7 @@ function positionTourUI(targetEl) {
         vTop = rect.top - bRect.height - margin;
       }
     } else {
-      // Side placement — pick the side with more room. Vertically center
+      // Side placement - pick the side with more room. Vertically center
       // on the target. No arrow class (CSS only supports up/down arrows;
       // the arrow stays invisible without one, which is fine here).
       const roomLeft = rect.left;
@@ -14439,7 +14582,7 @@ if (window.matchMedia && window.matchMedia('(max-width:800px)').matches) {
 
 // Numeric input polish: iOS decimal keyboard via inputmode="decimal" and
 // min="0" to reject negatives. Day-of-month fields (id matches /due/ or
-// placeholder mentions "1-31") are skipped — they need min="1". MutationObserver
+// placeholder mentions "1-31") are skipped - they need min="1". MutationObserver
 // catches dynamically-rendered inputs (Bills table, Debt table, plan review).
 function _polishNumericInput(el) {
   if (!el.hasAttribute('inputmode')) el.setAttribute('inputmode', 'decimal');
@@ -14464,7 +14607,7 @@ new MutationObserver((muts) => {
 }).observe(document.body, { childList: true, subtree: true });
 // Escape key closes the topmost open surface. Coach panel takes precedence
 // (z-index 250 > modal 200); falls through to the topmost open .modal-bg.
-// Auth/paywall/onboarding screens are deliberately not caught — those are
+// Auth/paywall/onboarding screens are deliberately not caught - those are
 // full-screen states, not dismissible overlays.
 document.addEventListener('keydown', (e) => {
   if (e.key !== 'Escape') return;
@@ -14479,8 +14622,58 @@ document.addEventListener('keydown', (e) => {
   openModals[openModals.length - 1].style.display = 'none';
 });
 
+// Modal focus trap: when a dialog opens (style.display flips non-none), capture
+// the previously-focused element, focus the dialog's first input/focusable, and
+// trap Tab/Shift+Tab inside until close. Restores focus on close. Watches every
+// [role="dialog"] container via a single MutationObserver - no caller changes.
+(() => {
+  const SEL = '[role="dialog"]';
+  const FOCUSABLE_SEL = 'a[href], button:not([disabled]), input:not([disabled]):not([type=hidden]), textarea:not([disabled]), select:not([disabled]), [tabindex]:not([tabindex="-1"])';
+  const traps = new WeakMap();
+  const isVisible = (el) => el.style.display && el.style.display !== 'none';
+  const focusables = (root) => Array.from(root.querySelectorAll(FOCUSABLE_SEL)).filter((el) => el.offsetParent !== null);
+  function install(dialog) {
+    if (traps.has(dialog)) return;
+    const lastFocused = document.activeElement instanceof HTMLElement ? document.activeElement : null;
+    const list = focusables(dialog);
+    if (list.length > 0) {
+      const preferred = list.find((el) => el.tagName === 'INPUT' || el.tagName === 'TEXTAREA') || list[0];
+      setTimeout(() => { try { preferred.focus(); } catch (_) { /* nothing focusable */ } }, 30);
+    }
+    const onKey = (e) => {
+      if (e.key !== 'Tab') return;
+      const live = focusables(dialog);
+      if (live.length === 0) { e.preventDefault(); return; }
+      const first = live[0], last = live[live.length - 1];
+      if (e.shiftKey && document.activeElement === first) { e.preventDefault(); last.focus(); }
+      else if (!e.shiftKey && document.activeElement === last) { e.preventDefault(); first.focus(); }
+    };
+    dialog.addEventListener('keydown', onKey);
+    traps.set(dialog, { lastFocused, onKey });
+  }
+  function teardown(dialog) {
+    const t = traps.get(dialog);
+    if (!t) return;
+    dialog.removeEventListener('keydown', t.onKey);
+    if (t.lastFocused && document.contains(t.lastFocused)) {
+      setTimeout(() => { try { t.lastFocused.focus(); } catch (_) {} }, 0);
+    }
+    traps.delete(dialog);
+  }
+  const check = (d) => { if (isVisible(d)) install(d); else teardown(d); };
+  document.querySelectorAll(SEL).forEach(check);
+  const obs = new MutationObserver((muts) => {
+    for (const m of muts) {
+      if (m.type === 'attributes' && m.attributeName === 'style' && m.target.matches && m.target.matches(SEL)) {
+        check(m.target);
+      }
+    }
+  });
+  document.querySelectorAll(SEL).forEach((d) => obs.observe(d, { attributes: true, attributeFilter: ['style'] }));
+})();
+
 // ═══════════════════════════════════════
-// INIT — listen for auth state
+// INIT - listen for auth state
 // ═══════════════════════════════════════
 
 window.addEventListener('load', async () => {
@@ -14494,7 +14687,7 @@ window.addEventListener('load', async () => {
   // Strip ?checkout=success from the URL BEFORE Supabase client init.
   // Verified 2026-05-01 in fresh incognito: when supabase.createClient runs
   // with `detectSessionInUrl: true` + `flowType: 'pkce'` against a URL with
-  // a non-auth query string (?checkout=success), the client wedges —
+  // a non-auth query string (?checkout=success), the client wedges -
   // getSession(), getAuthenticatorAssuranceLevel(), and other auth-state
   // calls hang indefinitely. The bounce-to-sign-in escape-hatch fires and
   // the user gets stuck. Replacing the URL to a clean pathname before
@@ -14513,7 +14706,7 @@ window.addEventListener('load', async () => {
     } catch (_) { /* noop */ }
     try { history.replaceState({}, '', window.location.pathname); } catch (_) { /* noop */ }
     // Pull the access_token from localStorage NOW, before createClient/auth
-    // listener can fire. The Supabase client wedges on this URL — getSession()
+    // listener can fire. The Supabase client wedges on this URL - getSession()
     // and functions.invoke() both hang. The auth listener's SIGNED_IN event
     // beats our 3s escape-hatch, so by the time the escape-hatch runs the
     // hung onAuthStateChange call has already started and the manual retry
@@ -14583,7 +14776,7 @@ window.addEventListener('load', async () => {
     // dismisses this loader will never run. Fall back to the auth screen so the
     // user isn't stuck on an indefinite loading state.
     // Escape hatch v2: getSession() can hang on bad sessions, so race it against
-    // a 1s timeout. After 6s, nuke the loader regardless — at that point the
+    // a 1s timeout. After 6s, nuke the loader regardless - at that point the
     // post-auth flow has clearly failed and any visible state beats indefinite spin.
     setTimeout(async () => {
       console.log('[Able v2] escape-hatch fired');
@@ -14600,7 +14793,7 @@ window.addEventListener('load', async () => {
       console.log('[Able v2] hasSession=', hasSession, 'url=', window.location.href);
       if(hasSession) return;
 
-      // getSession() is wedged. Peek at localStorage directly — if a
+      // getSession() is wedged. Peek at localStorage directly - if a
       // session token is sitting there, the user IS authenticated and the
       // Supabase client is just stuck. Drive the post-auth flow ourselves
       // using the user object parsed straight from localStorage. This
@@ -14618,7 +14811,7 @@ window.addEventListener('load', async () => {
               if (parsed?.access_token && parsed?.user?.id) {
                 lsUser = parsed.user;
                 // Stash JWT for downstream Edge Function calls. functions.invoke()
-                // re-enters auth.getSession() internally, which is wedged here —
+                // re-enters auth.getSession() internally, which is wedged here -
                 // direct fetch with this token bypasses the wedge.
                 window._wedgedJwt = parsed.access_token;
               }
@@ -14629,7 +14822,7 @@ window.addEventListener('load', async () => {
       } catch (e) { console.log('[Able v2] localStorage peek threw:', e); }
       if (lsUser && typeof onAuthStateChange === 'function') {
         console.log('[Able v2] localStorage has session; manually driving auth flow');
-        // Don't remove the loader — onAuthStateChange owns the post-checkout
+        // Don't remove the loader - onAuthStateChange owns the post-checkout
         // flow now. The overlay stays visible until the explicit transition
         // to paywall / app / onboarding / pending screen tears it down.
         try { await onAuthStateChange(lsUser); }
@@ -14645,7 +14838,7 @@ window.addEventListener('load', async () => {
     // hasn't resolved (typically because one or more checkSubscription calls
     // hit their 5s timeout, pushing total polling past the budget). Render
     // the same "Still confirming your payment" card that polling-exit would
-    // have shown — never bump a paying user back to the sign-in form.
+    // have shown - never bump a paying user back to the sign-in form.
     setTimeout(() => {
       const nukeStuck = document.getElementById('checkout-return-loading');
       if (!nukeStuck) return;
@@ -14673,7 +14866,7 @@ window.addEventListener('load', async () => {
     document.getElementById('app').style.display = 'none';
   }
 
-  // Handle OAuth redirect — Supabase puts tokens in the URL hash, or a PKCE
+  // Handle OAuth redirect - Supabase puts tokens in the URL hash, or a PKCE
   // code in the search params. detectSessionInUrl handles the exchange in the
   // client constructor; this getSession() call surfaces a result we can verify.
   if(window.location.hash.includes('access_token') || window.location.search.includes('code=')) {
@@ -14720,7 +14913,7 @@ window.addEventListener('load', async () => {
       document.getElementById('auth-screen').style.display = 'flex';
       return;
     }
-    // INITIAL_SESSION fires once when auth is fully initialized — queries work reliably from this point
+    // INITIAL_SESSION fires once when auth is fully initialized - queries work reliably from this point
     if(event === 'INITIAL_SESSION') {
       initialSessionHandled = true;
       if(session?.user) {
@@ -14739,7 +14932,7 @@ window.addEventListener('load', async () => {
   });
 });
 // ═══════════════════════════════════════════════════
-// LEARNING CENTER — content + logic
+// LEARNING CENTER - content + logic
 // ═══════════════════════════════════════════════════
 const LC_ICONS = {
   check: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>',
@@ -16240,7 +16433,7 @@ function lcSurviveSet(bucket, val) {
   if (!lcGameState) return;
   if (!lcGameState.pendingAlloc) lcGameState.pendingAlloc = { debt: 0, buffer: 0, owner: 0, keep: 0 };
   lcGameState.pendingAlloc[bucket] = Math.max(0, Math.min(100, parseFloat(val) || 0));
-  // Targeted DOM update — see lcGameSet for why a full re-render breaks slider drag.
+  // Targeted DOM update - see lcGameSet for why a full re-render breaks slider drag.
   const event = SURVIVE_MONTH_EVENTS[lcGameState.eventIdx];
   if (!event || event.type !== 'income') return;
   const pend = lcGameState.pendingAlloc;
@@ -17717,7 +17910,7 @@ function buildCoachState() {
   // Promote intake_channels (multi-select from onboarding step 3) and the
   // free-text "Other" write-in to top-level fields so Coach reasons about
   // them by name. Previously they sat nested inside settings and the Coach
-  // prompt didn't reliably surface them — Devon's diary called out that
+  // prompt didn't reliably surface them - Devon's diary called out that
   // his "YouTube ad rev (Adsense)" write-in was never referenced.
   const intakeChannels = (S.settings && Array.isArray(S.settings.intake_channels)) ? S.settings.intake_channels : [];
   const intakeOther    = (S.settings && S.settings.intake_channels_other) ? String(S.settings.intake_channels_other) : '';
@@ -17732,7 +17925,7 @@ function buildCoachState() {
     income_channels_other: intakeOther,
     obligations: S.obligations,
     profile: S.profile,
-    // New, dashboard-aligned numbers — prefer these when answering questions.
+    // New, dashboard-aligned numbers - prefer these when answering questions.
     balance,
     reserved_total: reservedTotal,
     available_to_spend: available,
@@ -17928,7 +18121,7 @@ async function coachSend() {
   try {
     // Retry-with-backoff for transient errors (rate-limit, overload, network).
     // Auth + daily-cap errors fall through immediately to the user-facing
-    // error path below — retrying those is wasted work.
+    // error path below - retrying those is wasted work.
     const RETRY_PATTERNS = [/rate.?limit|429|too many requests/i, /overloaded|529|503/i, /network|fetch|failed to fetch|timeout|offline/i];
     const BACKOFF_MS = [0, 1000, 3000];
     const RETRY_TEXT = ['Coach is thinking', 'Coach is taking a moment', 'One more try'];
@@ -17976,7 +18169,7 @@ async function coachSend() {
       errMsg = raw;
     } else if (/credit.?balance|credits.*low|quota.*exceeded|insufficient.*credit/i.test(raw)) {
       // Anthropic 4xx when our API balance is depleted. Don't leak raw API text.
-      errMsg = "Coach is temporarily offline. We're working on it — try again in a few minutes.";
+      errMsg = "Coach is temporarily offline. We're working on it - try again in a few minutes.";
     } else if (/rate.?limit|429|too many requests/i.test(raw)) {
       errMsg = "Coach is briefly overwhelmed. Try again in a moment.";
     } else if (/overloaded|529|503/i.test(raw)) {
@@ -18007,9 +18200,9 @@ async function coachSend() {
 // fire a Coach pill acknowledging the weight before the user has to keep
 // going alone. Closes the round-2 focus-group gap (Daniel: $42K reveal with
 // no app acknowledgment). Two surfaces share state via S.settings.high_debt_revealed:
-// (1) plan-review screen — analyzer-detected total
-// (2) Debt tab render — manual entry, catches users where the analyzer underdetected
-// Sticky until dismissed by design — auto-fade would feel like the app rescinded
+// (1) plan-review screen - analyzer-detected total
+// (2) Debt tab render - manual entry, catches users where the analyzer underdetected
+// Sticky until dismissed by design - auto-fade would feel like the app rescinded
 // the offer. Permanent once-per-user suppression (not 24h cooldown) since the
 // emotional beat only happens once.
 function _maybeFireHighDebtRevealNudge(totalDebt, surface, delayMs) {
@@ -18078,10 +18271,10 @@ function evalCoachNudges() {
   }
 
   // Show the first one that hasn't been dismissed recently. Two-layer guard:
-  // (1) sessionStorage — once dismissed, don't re-show in the same browser
+  // (1) sessionStorage - once dismissed, don't re-show in the same browser
   //     session even if cooldown has elapsed (covers the case where eval fires
   //     repeatedly from navigation in a long session).
-  // (2) localStorage cooldown — 24h between repeats across sessions.
+  // (2) localStorage cooldown - 24h between repeats across sessions.
   for (const nudge of nudges) {
     const key = 'able_coach_nudge_' + nudge.id;
     const seenKey = key + '_seen_session';

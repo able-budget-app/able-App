@@ -1,5 +1,17 @@
-const corsHeaders = {
-  "Access-Control-Allow-Origin": "*",
+const _ALLOWED_ORIGINS = new Set([
+  'https://becomeable.app',
+  'https://www.becomeable.app',
+]);
+function _allowOrigin(origin: string | null): string {
+  if (!origin) return 'https://becomeable.app';
+  if (_ALLOWED_ORIGINS.has(origin)) return origin;
+  if (/^https:\/\/deploy-preview-\d+--becomeable\.netlify\.app$/.test(origin)) return origin;
+  if (/^http:\/\/(localhost|127\.0\.0\.1)(:\d+)?$/.test(origin)) return origin;
+  return 'https://becomeable.app';
+}
+function corsHeaders(req: Request) {
+  return {
+  'Access-Control-Allow-Origin': _allowOrigin(req.headers.get('Origin')),
   "Access-Control-Allow-Headers": [
     "authorization",
     "x-client-info",
@@ -7,7 +19,9 @@ const corsHeaders = {
     "content-type",
     "stripe-signature",
   ].join(", "),
-};
+  'Vary': 'Origin',
+  };
+}
 
 const TIMESTAMP_TOLERANCE_SECONDS = 300;
 
@@ -140,7 +154,7 @@ function calculateDaysInTrial(
 }
 
 Deno.serve(async (req) => {
-  if (req.method === "OPTIONS") return new Response("ok", { headers: corsHeaders });
+  if (req.method === "OPTIONS") return new Response("ok", { headers: corsHeaders(req) });
 
   try {
     const signature = req.headers.get("stripe-signature");
@@ -155,17 +169,17 @@ Deno.serve(async (req) => {
     const SUPABASE_URL = Deno.env.get("SUPABASE_URL")!;
     const SERVICE_KEY = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!;
 
-    if (!signature) return respond({ error: "Missing signature" }, 400);
+    if (!signature) return respond(req, { error: "Missing signature" }, 400);
 
     const parts = signature.split(",");
     const timestamp = parts.find((p) => p.startsWith("t="))?.split("=")[1];
     const sig = parts.find((p) => p.startsWith("v1="))?.split("=")[1];
-    if (!timestamp || !sig) return respond({ error: "Malformed signature" }, 400);
+    if (!timestamp || !sig) return respond(req, { error: "Malformed signature" }, 400);
 
     const ts = parseInt(timestamp, 10);
     const now = Math.floor(Date.now() / 1000);
     if (!Number.isFinite(ts) || Math.abs(now - ts) > TIMESTAMP_TOLERANCE_SECONDS) {
-      return respond({ error: "Timestamp outside tolerance" }, 400);
+      return respond(req, { error: "Timestamp outside tolerance" }, 400);
     }
 
     const encoder = new TextEncoder();
@@ -187,7 +201,7 @@ Deno.serve(async (req) => {
     const verifiedLive = await verifyWithSecret(WEBHOOK_SECRET_LIVE);
     const verifiedTest = verifiedLive ? false : await verifyWithSecret(WEBHOOK_SECRET_TEST);
     if (!verifiedLive && !verifiedTest) {
-      return respond({ error: "Invalid signature" }, 400);
+      return respond(req, { error: "Invalid signature" }, 400);
     }
 
     const event = JSON.parse(body);
@@ -617,16 +631,16 @@ Deno.serve(async (req) => {
     }
 
     console.log("WEBHOOK RESULT:", JSON.stringify(log));
-    return respond({ received: true, log });
+    return respond(req, { received: true, log });
   } catch (error) {
     console.error("WEBHOOK ERROR:", (error as Error).message, (error as Error).stack);
-    return respond({ error: (error as Error).message }, 400);
+    return respond(req, { error: (error as Error).message }, 400);
   }
 });
 
-function respond(body: unknown, status = 200) {
+function respond(req: Request, body: unknown, status = 200) {
   return new Response(JSON.stringify(body), {
-    status, headers: { ...corsHeaders, "Content-Type": "application/json" },
+    status, headers: { ...corsHeaders(req), "Content-Type": "application/json" },
   });
 }
 

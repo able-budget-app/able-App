@@ -54,22 +54,36 @@ async function plaidApi<TReq extends Record<string, unknown>, TRes>(
   return parsed as TRes;
 }
 
-const corsHeaders = {
-  'Access-Control-Allow-Origin': '*',
+const _ALLOWED_ORIGINS = new Set([
+  'https://becomeable.app',
+  'https://www.becomeable.app',
+]);
+function _allowOrigin(origin: string | null): string {
+  if (!origin) return 'https://becomeable.app';
+  if (_ALLOWED_ORIGINS.has(origin)) return origin;
+  if (/^https:\/\/deploy-preview-\d+--becomeable\.netlify\.app$/.test(origin)) return origin;
+  if (/^http:\/\/(localhost|127\.0\.0\.1)(:\d+)?$/.test(origin)) return origin;
+  return 'https://becomeable.app';
+}
+function corsHeaders(req: Request) {
+  return {
+  'Access-Control-Allow-Origin': _allowOrigin(req.headers.get('Origin')),
   'Access-Control-Allow-Headers': 'plaid-verification, content-type',
   'Access-Control-Allow-Methods': 'POST, OPTIONS',
-};
+  'Vary': 'Origin',
+  };
+}
 
 // In-memory JWK cache. Edge function cold starts re-fetch.
 const jwkCache = new Map<string, CryptoKey>();
 
 Deno.serve(async (req) => {
-  if (req.method === 'OPTIONS') return new Response('ok', { headers: corsHeaders });
-  if (req.method !== 'POST') return json({ error: 'POST only' }, 405);
+  if (req.method === 'OPTIONS') return new Response('ok', { headers: corsHeaders(req) });
+  if (req.method !== 'POST') return json(req, { error: 'POST only' }, 405);
 
   try {
     const verification = req.headers.get('Plaid-Verification') ?? '';
-    if (!verification) return json({ error: 'missing Plaid-Verification' }, 401);
+    if (!verification) return json(req, { error: 'missing Plaid-Verification' }, 401);
 
     // Read body as raw text (whitespace-sensitive for SHA256 comparison).
     const rawBody = await req.text();
@@ -81,10 +95,10 @@ Deno.serve(async (req) => {
 
     await dispatch(admin, event);
 
-    return json({ ok: true });
+    return json(req, { ok: true });
   } catch (e) {
     console.error('plaid-webhook error:', e);
-    return json({ error: (e as Error).message }, e instanceof VerifyError ? 401 : 500);
+    return json(req, { error: (e as Error).message }, e instanceof VerifyError ? 401 : 500);
   }
 });
 
@@ -342,9 +356,9 @@ function scheduleRecurringRefresh(plaidItemRowId: string): void {
 
 // ─── Helpers ──────────────────────────────────────────────────────────
 
-function json(body: unknown, status = 200) {
+function json(req: Request, body: unknown, status = 200) {
   return new Response(JSON.stringify(body), {
     status,
-    headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+    headers: { ...corsHeaders(req), 'Content-Type': 'application/json' },
   });
 }

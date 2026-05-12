@@ -51,11 +51,25 @@ async function plaidApi<TReq extends Record<string, unknown>, TRes>(
   return parsed as TRes;
 }
 
-const corsHeaders = {
-  'Access-Control-Allow-Origin': '*',
+const _ALLOWED_ORIGINS = new Set([
+  'https://becomeable.app',
+  'https://www.becomeable.app',
+]);
+function _allowOrigin(origin: string | null): string {
+  if (!origin) return 'https://becomeable.app';
+  if (_ALLOWED_ORIGINS.has(origin)) return origin;
+  if (/^https:\/\/deploy-preview-\d+--becomeable\.netlify\.app$/.test(origin)) return origin;
+  if (/^http:\/\/(localhost|127\.0\.0\.1)(:\d+)?$/.test(origin)) return origin;
+  return 'https://becomeable.app';
+}
+function corsHeaders(req: Request) {
+  return {
+  'Access-Control-Allow-Origin': _allowOrigin(req.headers.get('Origin')),
   'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type',
   'Access-Control-Allow-Methods': 'POST, OPTIONS',
-};
+  'Vary': 'Origin',
+  };
+}
 
 type Body = {
   mode?: 'new' | 'update' | 'add_product';
@@ -74,8 +88,8 @@ type Body = {
 };
 
 Deno.serve(async (req) => {
-  if (req.method === 'OPTIONS') return new Response('ok', { headers: corsHeaders });
-  if (req.method !== 'POST') return json({ error: 'POST only' }, 405);
+  if (req.method === 'OPTIONS') return new Response('ok', { headers: corsHeaders(req) });
+  if (req.method !== 'POST') return json(req, { error: 'POST only' }, 405);
 
   try {
     const authHeader = req.headers.get('Authorization') ?? '';
@@ -83,7 +97,7 @@ Deno.serve(async (req) => {
       global: { headers: { Authorization: authHeader } },
     });
     const { data: userRes, error: userErr } = await userClient.auth.getUser();
-    if (userErr || !userRes.user) return json({ error: 'Unauthorized' }, 401);
+    if (userErr || !userRes.user) return json(req, { error: 'Unauthorized' }, 401);
     const userId = userRes.user.id;
 
     const body: Body = await req.json().catch(() => ({}));
@@ -96,7 +110,7 @@ Deno.serve(async (req) => {
     let accessToken: string | undefined;
     if (mode === 'update' || mode === 'add_product') {
       if (!body.plaid_item_row_id) {
-        return json({ error: `plaid_item_row_id required for ${mode} mode` }, 400);
+        return json(req, { error: `plaid_item_row_id required for ${mode} mode` }, 400);
       }
       const admin = createClient(SUPABASE_URL, SERVICE_ROLE);
       const { data: item, error } = await admin
@@ -104,8 +118,8 @@ Deno.serve(async (req) => {
         .select('access_token, user_id')
         .eq('id', body.plaid_item_row_id)
         .single();
-      if (error || !item) return json({ error: 'Item not found' }, 404);
-      if (item.user_id !== userId) return json({ error: 'Forbidden' }, 403);
+      if (error || !item) return json(req, { error: 'Item not found' }, 404);
+      if (item.user_id !== userId) return json(req, { error: 'Forbidden' }, 403);
       accessToken = item.access_token;
     }
 
@@ -117,7 +131,7 @@ Deno.serve(async (req) => {
       const allowed = new Set(['liabilities']);
       const requested = (body.products_to_add ?? ['liabilities']).filter((p) => allowed.has(p));
       if (requested.length === 0) {
-        return json({ error: 'products_to_add must contain at least one allowed product' }, 400);
+        return json(req, { error: 'products_to_add must contain at least one allowed product' }, 400);
       }
       productsToAdd = requested;
     }
@@ -156,7 +170,7 @@ Deno.serve(async (req) => {
       reqBody,
     );
 
-    return json({
+    return json(req, {
       link_token: link.link_token,
       expiration: link.expiration,
       mode,
@@ -164,13 +178,13 @@ Deno.serve(async (req) => {
     });
   } catch (e) {
     console.error('plaid-link-token error:', e);
-    return json({ error: (e as Error).message }, 500);
+    return json(req, { error: (e as Error).message }, 500);
   }
 });
 
-function json(body: unknown, status = 200) {
+function json(req: Request, body: unknown, status = 200) {
   return new Response(JSON.stringify(body), {
     status,
-    headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+    headers: { ...corsHeaders(req), 'Content-Type': 'application/json' },
   });
 }

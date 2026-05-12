@@ -20,20 +20,34 @@ const INTERNAL_SECRET = Deno.env.get('INTERNAL_FUNCTION_SECRET') ?? '';
 const STALE_AFTER_MIN = 60;     // items quieter than this get a re-sync
 const MAX_ITEMS_PER_RUN = 50;   // sanity cap so a backlog can't fanout-bomb
 
-const corsHeaders = {
-  'Access-Control-Allow-Origin': '*',
+const _ALLOWED_ORIGINS = new Set([
+  'https://becomeable.app',
+  'https://www.becomeable.app',
+]);
+function _allowOrigin(origin: string | null): string {
+  if (!origin) return 'https://becomeable.app';
+  if (_ALLOWED_ORIGINS.has(origin)) return origin;
+  if (/^https:\/\/deploy-preview-\d+--becomeable\.netlify\.app$/.test(origin)) return origin;
+  if (/^http:\/\/(localhost|127\.0\.0\.1)(:\d+)?$/.test(origin)) return origin;
+  return 'https://becomeable.app';
+}
+function corsHeaders(req: Request) {
+  return {
+  'Access-Control-Allow-Origin': _allowOrigin(req.headers.get('Origin')),
   'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type',
   'Access-Control-Allow-Methods': 'POST, OPTIONS',
-};
+  'Vary': 'Origin',
+  };
+}
 
 Deno.serve(async (req) => {
-  if (req.method === 'OPTIONS') return new Response('ok', { headers: corsHeaders });
-  if (req.method !== 'POST') return json({ error: 'POST only' }, 405);
+  if (req.method === 'OPTIONS') return new Response('ok', { headers: corsHeaders(req) });
+  if (req.method !== 'POST') return json(req, { error: 'POST only' }, 405);
 
   const authHeader = req.headers.get('Authorization') ?? '';
   const bearerToken = authHeader.replace(/^Bearer\s+/i, '');
   if (!bearerToken || bearerToken !== SERVICE_ROLE) {
-    return json({ error: 'Unauthorized' }, 401);
+    return json(req, { error: 'Unauthorized' }, 401);
   }
 
   try {
@@ -53,14 +67,14 @@ Deno.serve(async (req) => {
 
     if (queryErr) {
       console.error('plaid-sync-sweep: query failed:', queryErr);
-      return json({ error: queryErr.message }, 500);
+      return json(req, { error: queryErr.message }, 500);
     }
 
     const itemIds = (items ?? []).map((i) => i.id as string);
     console.log(`plaid-sync-sweep: ${itemIds.length} item(s) need sync`);
 
     if (itemIds.length === 0) {
-      return json({ scanned: 0, triggered: 0 });
+      return json(req, { scanned: 0, triggered: 0 });
     }
 
     // Fire all plaid-sync calls in parallel; defer via EdgeRuntime.waitUntil
@@ -80,10 +94,10 @@ Deno.serve(async (req) => {
     }).EdgeRuntime;
     if (er?.waitUntil) er.waitUntil(work);
 
-    return json({ scanned: itemIds.length, triggered: itemIds.length });
+    return json(req, { scanned: itemIds.length, triggered: itemIds.length });
   } catch (e) {
     console.error('plaid-sync-sweep error:', e);
-    return json({ error: (e as Error).message }, 500);
+    return json(req, { error: (e as Error).message }, 500);
   }
 });
 
@@ -104,9 +118,9 @@ async function triggerSyncFor(plaidItemRowId: string): Promise<void> {
   }
 }
 
-function json(body: unknown, status = 200) {
+function json(req: Request, body: unknown, status = 200) {
   return new Response(JSON.stringify(body), {
     status,
-    headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+    headers: { ...corsHeaders(req), 'Content-Type': 'application/json' },
   });
 }

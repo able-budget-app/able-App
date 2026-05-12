@@ -35,17 +35,31 @@ const SERVICE_ROLE = Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')!;
 const INTERNAL_SECRET = Deno.env.get('INTERNAL_FUNCTION_SECRET') ?? '';
 const MAX_PAGES = 50; // hard cap. Each page is up to 500 txns. 25k limit.
 
-const corsHeaders = {
-  'Access-Control-Allow-Origin': '*',
+const _ALLOWED_ORIGINS = new Set([
+  'https://becomeable.app',
+  'https://www.becomeable.app',
+]);
+function _allowOrigin(origin: string | null): string {
+  if (!origin) return 'https://becomeable.app';
+  if (_ALLOWED_ORIGINS.has(origin)) return origin;
+  if (/^https:\/\/deploy-preview-\d+--becomeable\.netlify\.app$/.test(origin)) return origin;
+  if (/^http:\/\/(localhost|127\.0\.0\.1)(:\d+)?$/.test(origin)) return origin;
+  return 'https://becomeable.app';
+}
+function corsHeaders(req: Request) {
+  return {
+  'Access-Control-Allow-Origin': _allowOrigin(req.headers.get('Origin')),
   'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type',
   'Access-Control-Allow-Methods': 'POST, OPTIONS',
-};
+  'Vary': 'Origin',
+  };
+}
 
 type Body = { plaid_item_row_id: string };
 
 Deno.serve(async (req) => {
-  if (req.method === 'OPTIONS') return new Response('ok', { headers: corsHeaders });
-  if (req.method !== 'POST') return json({ error: 'POST only' }, 405);
+  if (req.method === 'OPTIONS') return new Response('ok', { headers: corsHeaders(req) });
+  if (req.method !== 'POST') return json(req, { error: 'POST only' }, 405);
 
   try {
     // Three callers:
@@ -67,7 +81,7 @@ Deno.serve(async (req) => {
 
     const body: Body = await req.json();
     if (!body?.plaid_item_row_id) {
-      return json({ error: 'plaid_item_row_id required' }, 400);
+      return json(req, { error: 'plaid_item_row_id required' }, 400);
     }
 
     const admin = createClient(SUPABASE_URL, SERVICE_ROLE);
@@ -77,15 +91,15 @@ Deno.serve(async (req) => {
       .select('id, user_id, access_token, transactions_cursor, lookback_months')
       .eq('id', body.plaid_item_row_id)
       .single();
-    if (itemErr || !item) return json({ error: 'Item not found' }, 404);
+    if (itemErr || !item) return json(req, { error: 'Item not found' }, 404);
 
     if (!isServiceCall) {
       const userClient = createClient(SUPABASE_URL, SERVICE_ROLE, {
         global: { headers: { Authorization: authHeader } },
       });
       const { data: userRes, error: userErr } = await userClient.auth.getUser();
-      if (userErr || !userRes.user) return json({ error: 'Unauthorized' }, 401);
-      if (item.user_id !== userRes.user.id) return json({ error: 'Forbidden' }, 403);
+      if (userErr || !userRes.user) return json(req, { error: 'Unauthorized' }, 401);
+      if (item.user_id !== userRes.user.id) return json(req, { error: 'Forbidden' }, 403);
     }
     const userId = item.user_id;
 
@@ -201,7 +215,7 @@ Deno.serve(async (req) => {
       scheduleBackgroundClassify(item.id);
     }
 
-    return json({
+    return json(req, {
       added: totalAdded,
       modified: totalModified,
       removed: totalRemoved,
@@ -211,14 +225,14 @@ Deno.serve(async (req) => {
     });
   } catch (e) {
     console.error('plaid-sync error:', e);
-    return json({ error: (e as Error).message }, 500);
+    return json(req, { error: (e as Error).message }, 500);
   }
 });
 
-function json(body: unknown, status = 200) {
+function json(req: Request, body: unknown, status = 200) {
   return new Response(JSON.stringify(body), {
     status,
-    headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+    headers: { ...corsHeaders(req), 'Content-Type': 'application/json' },
   });
 }
 

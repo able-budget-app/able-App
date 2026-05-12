@@ -73,17 +73,31 @@ async function plaidApi<TReq extends Record<string, unknown>, TRes>(
 const itemRemove = (access_token: string) =>
   plaidApi<{ access_token: string }, { request_id: string }>('/item/remove', { access_token });
 
-const corsHeaders = {
-  'Access-Control-Allow-Origin': '*',
+const _ALLOWED_ORIGINS = new Set([
+  'https://becomeable.app',
+  'https://www.becomeable.app',
+]);
+function _allowOrigin(origin: string | null): string {
+  if (!origin) return 'https://becomeable.app';
+  if (_ALLOWED_ORIGINS.has(origin)) return origin;
+  if (/^https:\/\/deploy-preview-\d+--becomeable\.netlify\.app$/.test(origin)) return origin;
+  if (/^http:\/\/(localhost|127\.0\.0\.1)(:\d+)?$/.test(origin)) return origin;
+  return 'https://becomeable.app';
+}
+function corsHeaders(req: Request) {
+  return {
+  'Access-Control-Allow-Origin': _allowOrigin(req.headers.get('Origin')),
   'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type',
   'Access-Control-Allow-Methods': 'POST, OPTIONS',
-};
+  'Vary': 'Origin',
+  };
+}
 
 type Body = { plaid_item_row_id?: string };
 
 Deno.serve(async (req) => {
-  if (req.method === 'OPTIONS') return new Response('ok', { headers: corsHeaders });
-  if (req.method !== 'POST') return json({ error: 'POST only' }, 405);
+  if (req.method === 'OPTIONS') return new Response('ok', { headers: corsHeaders(req) });
+  if (req.method !== 'POST') return json(req, { error: 'POST only' }, 405);
 
   try {
     const authHeader = req.headers.get('Authorization') ?? '';
@@ -91,11 +105,11 @@ Deno.serve(async (req) => {
       global: { headers: { Authorization: authHeader } },
     });
     const { data: userRes, error: userErr } = await userClient.auth.getUser();
-    if (userErr || !userRes.user) return json({ error: 'Unauthorized' }, 401);
+    if (userErr || !userRes.user) return json(req, { error: 'Unauthorized' }, 401);
     const userId = userRes.user.id;
 
     const body: Body = await req.json().catch(() => ({}));
-    if (!body.plaid_item_row_id) return json({ error: 'plaid_item_row_id required' }, 400);
+    if (!body.plaid_item_row_id) return json(req, { error: 'plaid_item_row_id required' }, 400);
 
     const admin = createClient(SUPABASE_URL, SERVICE_ROLE);
     const { data: item, error: fetchErr } = await admin
@@ -103,8 +117,8 @@ Deno.serve(async (req) => {
       .select('id, user_id, access_token, institution_name')
       .eq('id', body.plaid_item_row_id)
       .single();
-    if (fetchErr || !item) return json({ error: 'Item not found' }, 404);
-    if (item.user_id !== userId) return json({ error: 'Forbidden' }, 403);
+    if (fetchErr || !item) return json(req, { error: 'Item not found' }, 404);
+    if (item.user_id !== userId) return json(req, { error: 'Forbidden' }, 403);
 
     // Tell Plaid first. If the call succeeds, the access_token is
     // invalidated and we should drop the row regardless. If Plaid
@@ -117,7 +131,7 @@ Deno.serve(async (req) => {
         console.warn(`item ${item.id} already removed at Plaid; proceeding with local delete`);
       } else {
         console.error('plaid /item/remove failed:', e);
-        return json({ error: (e as Error).message }, 502);
+        return json(req, { error: (e as Error).message }, 502);
       }
     }
 
@@ -127,19 +141,19 @@ Deno.serve(async (req) => {
       .eq('id', item.id);
     if (delErr) {
       console.error('plaid_items delete failed:', delErr);
-      return json({ error: delErr.message }, 500);
+      return json(req, { error: delErr.message }, 500);
     }
 
-    return json({ ok: true, institution_name: item.institution_name });
+    return json(req, { ok: true, institution_name: item.institution_name });
   } catch (e) {
     console.error('plaid-item-remove error:', e);
-    return json({ error: (e as Error).message }, 500);
+    return json(req, { error: (e as Error).message }, 500);
   }
 });
 
-function json(body: unknown, status = 200) {
+function json(req: Request, body: unknown, status = 200) {
   return new Response(JSON.stringify(body), {
     status,
-    headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+    headers: { ...corsHeaders(req), 'Content-Type': 'application/json' },
   });
 }

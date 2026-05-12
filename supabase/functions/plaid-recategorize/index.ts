@@ -8,11 +8,25 @@ const ANTHROPIC_API_KEY = Deno.env.get('ANTHROPIC_API_KEY')!;
 const INTERNAL_SECRET = Deno.env.get('INTERNAL_FUNCTION_SECRET') ?? '';
 const MAX_BATCH = 50;
 
-const corsHeaders = {
-  'Access-Control-Allow-Origin': '*',
+const _ALLOWED_ORIGINS = new Set([
+  'https://becomeable.app',
+  'https://www.becomeable.app',
+]);
+function _allowOrigin(origin: string | null): string {
+  if (!origin) return 'https://becomeable.app';
+  if (_ALLOWED_ORIGINS.has(origin)) return origin;
+  if (/^https:\/\/deploy-preview-\d+--becomeable\.netlify\.app$/.test(origin)) return origin;
+  if (/^http:\/\/(localhost|127\.0\.0\.1)(:\d+)?$/.test(origin)) return origin;
+  return 'https://becomeable.app';
+}
+function corsHeaders(req: Request) {
+  return {
+  'Access-Control-Allow-Origin': _allowOrigin(req.headers.get('Origin')),
   'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type',
   'Access-Control-Allow-Methods': 'POST, OPTIONS',
-};
+  'Vary': 'Origin',
+  };
+}
 
 type PlaidTxnInput = {
   transaction_id: string;
@@ -36,8 +50,8 @@ type Classification = {
 };
 
 Deno.serve(async (req) => {
-  if (req.method === 'OPTIONS') return new Response('ok', { headers: corsHeaders });
-  if (req.method !== 'POST') return json({ error: 'POST only' }, 405);
+  if (req.method === 'OPTIONS') return new Response('ok', { headers: corsHeaders(req) });
+  if (req.method !== 'POST') return json(req, { error: 'POST only' }, 405);
 
   try {
     // Internal-only gate. Invoked by plaid-classify-batch and
@@ -47,21 +61,21 @@ Deno.serve(async (req) => {
     // which made the service-role bearer compare unreliable.
     if (!INTERNAL_SECRET) {
       console.error('plaid-recategorize: INTERNAL_FUNCTION_SECRET unset');
-      return json({ error: 'not configured' }, 503);
+      return json(req, { error: 'not configured' }, 503);
     }
     const got = req.headers.get('x-internal-auth') ?? '';
     if (got !== INTERNAL_SECRET) {
-      return json({ error: 'Forbidden' }, 403);
+      return json(req, { error: 'Forbidden' }, 403);
     }
 
     const body = await req.json();
     const transactions: PlaidTxnInput[] = body?.transactions;
 
     if (!Array.isArray(transactions) || transactions.length === 0) {
-      return json({ error: 'Missing or empty transactions array' }, 400);
+      return json(req, { error: 'Missing or empty transactions array' }, 400);
     }
     if (transactions.length > MAX_BATCH) {
-      return json({ error: `Max ${MAX_BATCH} transactions per call. Batch on the caller.` }, 400);
+      return json(req, { error: `Max ${MAX_BATCH} transactions per call. Batch on the caller.` }, 400);
     }
 
     const anthropic = new Anthropic({ apiKey: ANTHROPIC_API_KEY });
@@ -91,20 +105,20 @@ Deno.serve(async (req) => {
 
     const classifications = parseClassifications(text, transactions);
 
-    return json({
+    return json(req, {
       classifications,
       usage: response.usage,
     });
   } catch (e) {
     console.error('plaid-recategorize error:', e);
-    return json({ error: (e as Error).message }, 500);
+    return json(req, { error: (e as Error).message }, 500);
   }
 });
 
-function json(body: unknown, status = 200) {
+function json(req: Request, body: unknown, status = 200) {
   return new Response(JSON.stringify(body), {
     status,
-    headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+    headers: { ...corsHeaders(req), 'Content-Type': 'application/json' },
   });
 }
 

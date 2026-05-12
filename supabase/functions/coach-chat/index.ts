@@ -6,15 +6,29 @@ const SUPABASE_URL = Deno.env.get('SUPABASE_URL')!;
 const SERVICE_ROLE = Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')!;
 const DAILY_CAP = 15;
 
-const corsHeaders = {
-  'Access-Control-Allow-Origin': '*',
+const _ALLOWED_ORIGINS = new Set([
+  'https://becomeable.app',
+  'https://www.becomeable.app',
+]);
+function _allowOrigin(origin: string | null): string {
+  if (!origin) return 'https://becomeable.app';
+  if (_ALLOWED_ORIGINS.has(origin)) return origin;
+  if (/^https:\/\/deploy-preview-\d+--becomeable\.netlify\.app$/.test(origin)) return origin;
+  if (/^http:\/\/(localhost|127\.0\.0\.1)(:\d+)?$/.test(origin)) return origin;
+  return 'https://becomeable.app';
+}
+function corsHeaders(req: Request) {
+  return {
+  'Access-Control-Allow-Origin': _allowOrigin(req.headers.get('Origin')),
   'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type',
   'Access-Control-Allow-Methods': 'POST, OPTIONS',
-};
+  'Vary': 'Origin',
+  };
+}
 
 Deno.serve(async (req) => {
-  if (req.method === 'OPTIONS') return new Response('ok', { headers: corsHeaders });
-  if (req.method !== 'POST') return json({ error: 'POST only' }, 405);
+  if (req.method === 'OPTIONS') return new Response('ok', { headers: corsHeaders(req) });
+  if (req.method !== 'POST') return json(req, { error: 'POST only' }, 405);
 
   try {
     const authHeader = req.headers.get('Authorization') ?? '';
@@ -22,15 +36,15 @@ Deno.serve(async (req) => {
       global: { headers: { Authorization: authHeader } },
     });
     const { data: userRes, error: userErr } = await userClient.auth.getUser();
-    if (userErr || !userRes.user) return json({ error: 'Unauthorized' }, 401);
+    if (userErr || !userRes.user) return json(req, { error: 'Unauthorized' }, 401);
     const userId = userRes.user.id;
 
     const { message, state } = await req.json();
     if (typeof message !== 'string' || !message.trim()) {
-      return json({ error: 'Missing message' }, 400);
+      return json(req, { error: 'Missing message' }, 400);
     }
     if (message.length > 2000) {
-      return json({ error: 'Message too long. Keep it under 2000 characters.' }, 400);
+      return json(req, { error: 'Message too long. Keep it under 2000 characters.' }, 400);
     }
 
     const admin = createClient(SUPABASE_URL, SERVICE_ROLE);
@@ -44,7 +58,7 @@ Deno.serve(async (req) => {
       .gte('created_at', midnight.toISOString());
 
     if ((count ?? 0) >= DAILY_CAP) {
-      return json({
+      return json(req, {
         error: `Daily cap reached (${DAILY_CAP}). Resets at midnight.`,
         remainingToday: 0,
       }, 429);
@@ -86,21 +100,21 @@ Deno.serve(async (req) => {
       { user_id: userId, role: 'assistant', content: reply },
     ]);
 
-    return json({
+    return json(req, {
       reply,
       usage: response.usage,
       remainingToday: DAILY_CAP - (count ?? 0) - 1,
     });
   } catch (e) {
     console.error('coach-chat error:', e);
-    return json({ error: (e as Error).message }, 500);
+    return json(req, { error: (e as Error).message }, 500);
   }
 });
 
-function json(body: unknown, status = 200) {
+function json(req: Request, body: unknown, status = 200) {
   return new Response(JSON.stringify(body), {
     status,
-    headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+    headers: { ...corsHeaders(req), 'Content-Type': 'application/json' },
   });
 }
 

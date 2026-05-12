@@ -40,11 +40,25 @@ const VAPID_PUBLIC_KEY = Deno.env.get('VAPID_PUBLIC_KEY') || '';
 const VAPID_PRIVATE_KEY = Deno.env.get('VAPID_PRIVATE_KEY') || '';
 const VAPID_SUBJECT = Deno.env.get('VAPID_SUBJECT') || 'mailto:hello@becomeable.app';
 
-const corsHeaders = {
-  'Access-Control-Allow-Origin': '*',
+const _ALLOWED_ORIGINS = new Set([
+  'https://becomeable.app',
+  'https://www.becomeable.app',
+]);
+function _allowOrigin(origin: string | null): string {
+  if (!origin) return 'https://becomeable.app';
+  if (_ALLOWED_ORIGINS.has(origin)) return origin;
+  if (/^https:\/\/deploy-preview-\d+--becomeable\.netlify\.app$/.test(origin)) return origin;
+  if (/^http:\/\/(localhost|127\.0\.0\.1)(:\d+)?$/.test(origin)) return origin;
+  return 'https://becomeable.app';
+}
+function corsHeaders(req: Request) {
+  return {
+  'Access-Control-Allow-Origin': _allowOrigin(req.headers.get('Origin')),
   'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type',
   'Access-Control-Allow-Methods': 'POST, OPTIONS',
-};
+  'Vary': 'Origin',
+  };
+}
 
 type PushPayload = {
   title: string;
@@ -55,11 +69,11 @@ type PushPayload = {
 };
 
 Deno.serve(async (req) => {
-  if (req.method === 'OPTIONS') return new Response('ok', { headers: corsHeaders });
-  if (req.method !== 'POST') return json({ error: 'POST only' }, 405);
+  if (req.method === 'OPTIONS') return new Response('ok', { headers: corsHeaders(req) });
+  if (req.method !== 'POST') return json(req, { error: 'POST only' }, 405);
 
   if (!VAPID_PUBLIC_KEY || !VAPID_PRIVATE_KEY) {
-    return json({ error: 'VAPID keys not configured. Run npx web-push generate-vapid-keys and set VAPID_PUBLIC_KEY + VAPID_PRIVATE_KEY env vars.' }, 500);
+    return json(req, { error: 'VAPID keys not configured. Run npx web-push generate-vapid-keys and set VAPID_PUBLIC_KEY + VAPID_PRIVATE_KEY env vars.' }, 500);
   }
 
   // Internal-only gate. Invoked by email-cron-daily (bills-due-tomorrow
@@ -69,19 +83,19 @@ Deno.serve(async (req) => {
   // backstory.
   if (!INTERNAL_SECRET) {
     console.error('send-push: INTERNAL_FUNCTION_SECRET unset');
-    return json({ error: 'not configured' }, 503);
+    return json(req, { error: 'not configured' }, 503);
   }
   const got = req.headers.get('x-internal-auth') ?? '';
-  if (got !== INTERNAL_SECRET) return json({ error: 'Unauthorized' }, 401);
+  if (got !== INTERNAL_SECRET) return json(req, { error: 'Unauthorized' }, 401);
 
   let body: { user_id?: string; payload?: PushPayload };
   try {
     body = await req.json();
   } catch {
-    return json({ error: 'invalid json' }, 400);
+    return json(req, { error: 'invalid json' }, 400);
   }
   if (!body.user_id || !body.payload || !body.payload.title) {
-    return json({ error: 'user_id and payload.title required' }, 400);
+    return json(req, { error: 'user_id and payload.title required' }, 400);
   }
 
   const admin = createClient(SUPABASE_URL, SERVICE_ROLE);
@@ -89,8 +103,8 @@ Deno.serve(async (req) => {
     .from('push_subscriptions')
     .select('id, endpoint, p256dh, auth')
     .eq('user_id', body.user_id);
-  if (error) return json({ error: error.message }, 500);
-  if (!subs || subs.length === 0) return json({ sent: 0, removed: 0, errors: 0, note: 'no subscriptions' });
+  if (error) return json(req, { error: error.message }, 500);
+  if (!subs || subs.length === 0) return json(req, { sent: 0, removed: 0, errors: 0, note: 'no subscriptions' });
 
   let sent = 0, removed = 0, errors = 0;
   const payloadStr = JSON.stringify(body.payload);
@@ -115,12 +129,12 @@ Deno.serve(async (req) => {
     }
   }
 
-  return json({ sent, removed, errors });
+  return json(req, { sent, removed, errors });
 });
 
-function json(b: unknown, status = 200) {
+function json(req: Request, b: unknown, status = 200) {
   return new Response(JSON.stringify(b), {
-    status, headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+    status, headers: { ...corsHeaders(req), 'Content-Type': 'application/json' },
   });
 }
 

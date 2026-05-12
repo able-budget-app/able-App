@@ -27,11 +27,25 @@ const PARALLELISM = 4;                  // batches in flight concurrently
 const DEFAULT_MAX_BATCHES = 1;          // 50 txns per invocation by default
 const HARD_MAX_BATCHES = 10;            // 500 txns; safely under 150s gateway
 
-const corsHeaders = {
-  'Access-Control-Allow-Origin': '*',
+const _ALLOWED_ORIGINS = new Set([
+  'https://becomeable.app',
+  'https://www.becomeable.app',
+]);
+function _allowOrigin(origin: string | null): string {
+  if (!origin) return 'https://becomeable.app';
+  if (_ALLOWED_ORIGINS.has(origin)) return origin;
+  if (/^https:\/\/deploy-preview-\d+--becomeable\.netlify\.app$/.test(origin)) return origin;
+  if (/^http:\/\/(localhost|127\.0\.0\.1)(:\d+)?$/.test(origin)) return origin;
+  return 'https://becomeable.app';
+}
+function corsHeaders(req: Request) {
+  return {
+  'Access-Control-Allow-Origin': _allowOrigin(req.headers.get('Origin')),
   'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type',
   'Access-Control-Allow-Methods': 'POST, OPTIONS',
-};
+  'Vary': 'Origin',
+  };
+}
 
 type Body = {
   max_batches?: number;
@@ -57,8 +71,8 @@ type Classification = {
 };
 
 Deno.serve(async (req) => {
-  if (req.method === 'OPTIONS') return new Response('ok', { headers: corsHeaders });
-  if (req.method !== 'POST') return json({ error: 'POST only' }, 405);
+  if (req.method === 'OPTIONS') return new Response('ok', { headers: corsHeaders(req) });
+  if (req.method !== 'POST') return json(req, { error: 'POST only' }, 405);
 
   try {
     const authHeader = req.headers.get('Authorization') ?? '';
@@ -66,7 +80,7 @@ Deno.serve(async (req) => {
       global: { headers: { Authorization: authHeader } },
     });
     const { data: userRes, error: userErr } = await userClient.auth.getUser();
-    if (userErr || !userRes.user) return json({ error: 'Unauthorized' }, 401);
+    if (userErr || !userRes.user) return json(req, { error: 'Unauthorized' }, 401);
     const userId = userRes.user.id;
 
     const body = (await req.json().catch(() => ({}))) as Body;
@@ -91,7 +105,7 @@ Deno.serve(async (req) => {
       .eq('user_id', userId)
       .gte('able_classified_at', midnight.toISOString());
     if ((classifiedToday ?? 0) >= DAILY_CLASSIFY_CAP) {
-      return json({
+      return json(req, {
         error: `Daily classify cap reached (${DAILY_CLASSIFY_CAP}). Resets at midnight.`,
         classified: 0,
         remaining: 0,
@@ -109,10 +123,10 @@ Deno.serve(async (req) => {
       .order('date', { ascending: false })
       .limit(limit);
 
-    if (pendErr) return json({ error: pendErr.message }, 500);
+    if (pendErr) return json(req, { error: pendErr.message }, 500);
     const rows = (pending ?? []) as PendingTxn[];
     if (rows.length === 0) {
-      return json({
+      return json(req, {
         classified: 0,
         batches: 0,
         total_unclassified_before: 0,
@@ -185,7 +199,7 @@ Deno.serve(async (req) => {
     const remaining = Math.max(0, (pendCount ?? rows.length) - classified);
     console.log(`plaid-classify-pending: done in ${Date.now() - t0}ms, classified=${classified}, batches=${batches}, remaining=${remaining}`);
 
-    return json({
+    return json(req, {
       classified,
       batches,
       total_unclassified_before: pendCount ?? rows.length,
@@ -193,7 +207,7 @@ Deno.serve(async (req) => {
     });
   } catch (e) {
     console.error('plaid-classify-pending error:', e);
-    return json({ error: (e as Error).message }, 500);
+    return json(req, { error: (e as Error).message }, 500);
   }
 });
 
@@ -231,9 +245,9 @@ async function classifyBatch(batch: PendingTxn[]): Promise<Classification[]> {
   return body.classifications as Classification[];
 }
 
-function json(body: unknown, status = 200) {
+function json(req: Request, body: unknown, status = 200) {
   return new Response(JSON.stringify(body), {
     status,
-    headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+    headers: { ...corsHeaders(req), 'Content-Type': 'application/json' },
   });
 }

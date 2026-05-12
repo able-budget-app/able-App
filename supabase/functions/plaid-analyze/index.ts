@@ -35,11 +35,25 @@ const ANTHROPIC_API_KEY = Deno.env.get('ANTHROPIC_API_KEY')!;
 const READY_STREAM_FLOOR = 1;
 const READY_TIME_CAP_MS = 3 * 60 * 1000;
 
-const corsHeaders = {
-  'Access-Control-Allow-Origin': '*',
+const _ALLOWED_ORIGINS = new Set([
+  'https://becomeable.app',
+  'https://www.becomeable.app',
+]);
+function _allowOrigin(origin: string | null): string {
+  if (!origin) return 'https://becomeable.app';
+  if (_ALLOWED_ORIGINS.has(origin)) return origin;
+  if (/^https:\/\/deploy-preview-\d+--becomeable\.netlify\.app$/.test(origin)) return origin;
+  if (/^http:\/\/(localhost|127\.0\.0\.1)(:\d+)?$/.test(origin)) return origin;
+  return 'https://becomeable.app';
+}
+function corsHeaders(req: Request) {
+  return {
+  'Access-Control-Allow-Origin': _allowOrigin(req.headers.get('Origin')),
   'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type',
   'Access-Control-Allow-Methods': 'POST, OPTIONS',
-};
+  'Vary': 'Origin',
+  };
+}
 
 type Category = 'income' | 'bill' | 'debt_payment' | 'tax_payment' | 'transfer' | 'discretionary';
 
@@ -141,8 +155,8 @@ type Body = {
 };
 
 Deno.serve(async (req) => {
-  if (req.method === 'OPTIONS') return new Response('ok', { headers: corsHeaders });
-  if (req.method !== 'POST') return json({ error: 'POST only' }, 405);
+  if (req.method === 'OPTIONS') return new Response('ok', { headers: corsHeaders(req) });
+  if (req.method !== 'POST') return json(req, { error: 'POST only' }, 405);
 
   try {
     const authHeader = req.headers.get('Authorization') ?? '';
@@ -150,12 +164,12 @@ Deno.serve(async (req) => {
       global: { headers: { Authorization: authHeader } },
     });
     const { data: userRes, error: userErr } = await userClient.auth.getUser();
-    if (userErr || !userRes.user) return json({ error: 'Unauthorized' }, 401);
+    if (userErr || !userRes.user) return json(req, { error: 'Unauthorized' }, 401);
     const userId = userRes.user.id;
 
     const body = (await req.json()) as Body;
     if (!body?.plaid_item_row_id) {
-      return json({ error: 'plaid_item_row_id required' }, 400);
+      return json(req, { error: 'plaid_item_row_id required' }, 400);
     }
 
     const admin = createClient(SUPABASE_URL, SERVICE_ROLE);
@@ -172,7 +186,7 @@ Deno.serve(async (req) => {
       .eq('user_id', userId)
       .gte('created_at', midnight.toISOString());
     if ((plansToday ?? 0) >= DAILY_PLAN_CAP) {
-      return json({
+      return json(req, {
         error: `Daily plan cap reached (${DAILY_PLAN_CAP}). Resets at midnight.`,
       }, 429);
     }
@@ -182,8 +196,8 @@ Deno.serve(async (req) => {
       .select('id, user_id, lookback_months, last_sync_at')
       .eq('id', body.plaid_item_row_id)
       .single();
-    if (itemErr || !item) return json({ error: 'Item not found' }, 404);
-    if (item.user_id !== userId) return json({ error: 'Forbidden' }, 403);
+    if (itemErr || !item) return json(req, { error: 'Item not found' }, 404);
+    if (item.user_id !== userId) return json(req, { error: 'Forbidden' }, 403);
 
     const lookback = item.lookback_months as 6 | 12 | 24;
 
@@ -204,7 +218,7 @@ Deno.serve(async (req) => {
         // Use HTTP 200 (not 202) so supabase-js's functions.invoke treats
         // this as a success and returns the body via the `data` field.
         // Mirrors plaid-sync's NOT_READY pattern — status is in the body.
-        return json({
+        return json(req, {
           status: 'not_ready',
           reason: 'awaiting_recurring',
           stream_count: streamCount ?? 0,
@@ -222,10 +236,10 @@ Deno.serve(async (req) => {
       .from('plaid_accounts')
       .select('id, name, official_name, mask, type, subtype, current_balance')
       .eq('plaid_item_id', item.id);
-    if (acctErr) return json({ error: 'Failed to load accounts: ' + acctErr.message }, 500);
+    if (acctErr) return json(req, { error: 'Failed to load accounts: ' + acctErr.message }, 500);
     const accountIds = (accounts ?? []).map((a) => a.id);
     if (accountIds.length === 0) {
-      return json({ error: 'No accounts found for this item' }, 400);
+      return json(req, { error: 'No accounts found for this item' }, 400);
     }
     const credit_accounts: CreditAccount[] = (accounts ?? [])
       .filter((a) => a.subtype === 'credit card' || a.subtype === 'line of credit')
@@ -248,7 +262,7 @@ Deno.serve(async (req) => {
       .in('plaid_account_id', accountIds)
       .not('able_category', 'is', null)
       .order('date', { ascending: false });
-    if (txnErr) return json({ error: 'Failed to load transactions: ' + txnErr.message }, 500);
+    if (txnErr) return json(req, { error: 'Failed to load transactions: ' + txnErr.message }, 500);
 
     const categorized_transactions: CategorizedTxn[] = (txnRows ?? []).map((r) => ({
       transaction_id: r.plaid_transaction_id,
@@ -266,7 +280,7 @@ Deno.serve(async (req) => {
     }));
 
     if (categorized_transactions.length === 0) {
-      return json({ error: 'No classified transactions yet — run plaid-classify-pending first' }, 400);
+      return json(req, { error: 'No classified transactions yet — run plaid-classify-pending first' }, 400);
     }
 
     // Recurring streams for this item.
@@ -276,7 +290,7 @@ Deno.serve(async (req) => {
         'stream_id, direction, merchant_name, description, personal_finance_category_detailed, frequency, status, is_active, average_amount, last_amount, iso_currency_code, predicted_next_date, first_date, last_date, transaction_ids',
       )
       .eq('plaid_item_id', item.id);
-    if (streamErr) return json({ error: 'Failed to load recurring streams: ' + streamErr.message }, 500);
+    if (streamErr) return json(req, { error: 'Failed to load recurring streams: ' + streamErr.message }, 500);
 
     const inflow_streams: RecurringStream[] = [];
     const outflow_streams: RecurringStream[] = [];
@@ -388,9 +402,9 @@ Deno.serve(async (req) => {
       })
       .select('id')
       .single();
-    if (planErr) return json({ error: 'Failed to persist plan: ' + planErr.message }, 500);
+    if (planErr) return json(req, { error: 'Failed to persist plan: ' + planErr.message }, 500);
 
-    return json({
+    return json(req, {
       plan_id: planRow.id,
       plan,
       summary_for_coach: summaryForCoach,
@@ -404,14 +418,14 @@ Deno.serve(async (req) => {
     });
   } catch (e) {
     console.error('plaid-analyze error:', e);
-    return json({ error: (e as Error).message }, 500);
+    return json(req, { error: (e as Error).message }, 500);
   }
 });
 
-function json(body: unknown, status = 200) {
+function json(req: Request, body: unknown, status = 200) {
   return new Response(JSON.stringify(body), {
     status,
-    headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+    headers: { ...corsHeaders(req), 'Content-Type': 'application/json' },
   });
 }
 

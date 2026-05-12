@@ -26,11 +26,25 @@ const PARALLELISM = 4;                  // batches in flight concurrently
 const DEFAULT_MAX_BATCHES = 4;          // 200 txns per invocation, ~10s wall-clock
 const HARD_MAX_BATCHES = 10;            // 500 txns; safely under Supabase's 150s gateway timeout
 
-const corsHeaders = {
-  'Access-Control-Allow-Origin': '*',
+const _ALLOWED_ORIGINS = new Set([
+  'https://becomeable.app',
+  'https://www.becomeable.app',
+]);
+function _allowOrigin(origin: string | null): string {
+  if (!origin) return 'https://becomeable.app';
+  if (_ALLOWED_ORIGINS.has(origin)) return origin;
+  if (/^https:\/\/deploy-preview-\d+--becomeable\.netlify\.app$/.test(origin)) return origin;
+  if (/^http:\/\/(localhost|127\.0\.0\.1)(:\d+)?$/.test(origin)) return origin;
+  return 'https://becomeable.app';
+}
+function corsHeaders(req: Request) {
+  return {
+  'Access-Control-Allow-Origin': _allowOrigin(req.headers.get('Origin')),
   'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type',
   'Access-Control-Allow-Methods': 'POST, OPTIONS',
-};
+  'Vary': 'Origin',
+  };
+}
 
 type Body = {
   plaid_item_row_id?: string;
@@ -68,8 +82,8 @@ type Override = {
 };
 
 Deno.serve(async (req) => {
-  if (req.method === 'OPTIONS') return new Response('ok', { headers: corsHeaders });
-  if (req.method !== 'POST') return json({ error: 'POST only' }, 405);
+  if (req.method === 'OPTIONS') return new Response('ok', { headers: corsHeaders(req) });
+  if (req.method !== 'POST') return json(req, { error: 'POST only' }, 405);
 
   // Internal-only gate. Invoked by plaid-sync (post-sync auto-classify) and
   // by direct service-role curl (manual backfills). Uses a custom shared
@@ -78,11 +92,11 @@ Deno.serve(async (req) => {
   // commit ac94d34 for the full backstory.
   if (!INTERNAL_SECRET) {
     console.error('plaid-classify-batch: INTERNAL_FUNCTION_SECRET unset');
-    return json({ error: 'not configured' }, 503);
+    return json(req, { error: 'not configured' }, 503);
   }
   const got = req.headers.get('x-internal-auth') ?? '';
   if (got !== INTERNAL_SECRET) {
-    return json({ error: 'Unauthorized' }, 401);
+    return json(req, { error: 'Unauthorized' }, 401);
   }
 
   try {
@@ -111,10 +125,10 @@ Deno.serve(async (req) => {
         .from('plaid_accounts')
         .select('id')
         .eq('plaid_item_id', body.plaid_item_row_id);
-      if (accErr) return json({ error: accErr.message }, 500);
+      if (accErr) return json(req, { error: accErr.message }, 500);
       const accountIds = (accts ?? []).map((a) => a.id as string);
       if (accountIds.length === 0) {
-        return json({ classified: 0, batches: 0, scanned: 0 });
+        return json(req, { classified: 0, batches: 0, scanned: 0 });
       }
       query = query.in('plaid_account_id', accountIds);
     } else if (body.user_id) {
@@ -124,13 +138,13 @@ Deno.serve(async (req) => {
     const { data: txns, error: txnErr } = await query
       .order('date', { ascending: false })
       .limit(limit);
-    if (txnErr) return json({ error: txnErr.message }, 500);
+    if (txnErr) return json(req, { error: txnErr.message }, 500);
 
     const rows = (txns ?? []) as unknown as TxnRow[];
     console.log(`plaid-classify-batch: ${rows.length} unclassified row(s) to process (max ${limit})`);
 
     if (rows.length === 0) {
-      return json({ classified: 0, batches: 0, scanned: 0 });
+      return json(req, { classified: 0, batches: 0, scanned: 0 });
     }
 
     // Pull every override for the users whose rows we're about to classify,
@@ -240,7 +254,7 @@ Deno.serve(async (req) => {
         `(via_override=${classifiedViaOverride}, via_heuristic=${classifiedViaHeuristic}, via_llm=0), ` +
         `batches=0, failures=${failures.length}`,
       );
-      return json({
+      return json(req, {
         classified,
         classified_via_override: classifiedViaOverride,
         classified_via_heuristic: classifiedViaHeuristic,
@@ -317,7 +331,7 @@ Deno.serve(async (req) => {
       `batches=${batches}, failures=${failures.length}`,
     );
 
-    return json({
+    return json(req, {
       classified,
       classified_via_override: classifiedViaOverride,
       classified_via_heuristic: classifiedViaHeuristic,
@@ -328,7 +342,7 @@ Deno.serve(async (req) => {
     });
   } catch (e) {
     console.error('plaid-classify-batch error:', e);
-    return json({ error: (e as Error).message }, 500);
+    return json(req, { error: (e as Error).message }, 500);
   }
 });
 
@@ -458,10 +472,10 @@ function pickOverride(row: TxnRow, overrides: Override[]): Override | null {
   return candidates[0];
 }
 
-function json(body: unknown, status = 200) {
+function json(req: Request, body: unknown, status = 200) {
   return new Response(JSON.stringify(body), {
     status,
-    headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+    headers: { ...corsHeaders(req), 'Content-Type': 'application/json' },
   });
 }
 

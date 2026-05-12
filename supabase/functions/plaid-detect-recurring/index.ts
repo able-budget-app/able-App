@@ -43,11 +43,25 @@ import { createClient } from 'npm:@supabase/supabase-js@2';
 const SUPABASE_URL = Deno.env.get('SUPABASE_URL')!;
 const SERVICE_ROLE = Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')!;
 
-const corsHeaders = {
-  'Access-Control-Allow-Origin': '*',
+const _ALLOWED_ORIGINS = new Set([
+  'https://becomeable.app',
+  'https://www.becomeable.app',
+]);
+function _allowOrigin(origin: string | null): string {
+  if (!origin) return 'https://becomeable.app';
+  if (_ALLOWED_ORIGINS.has(origin)) return origin;
+  if (/^https:\/\/deploy-preview-\d+--becomeable\.netlify\.app$/.test(origin)) return origin;
+  if (/^http:\/\/(localhost|127\.0\.0\.1)(:\d+)?$/.test(origin)) return origin;
+  return 'https://becomeable.app';
+}
+function corsHeaders(req: Request) {
+  return {
+  'Access-Control-Allow-Origin': _allowOrigin(req.headers.get('Origin')),
   'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type',
   'Access-Control-Allow-Methods': 'POST, OPTIONS',
-};
+  'Vary': 'Origin',
+  };
+}
 
 // Detection knobs — kept as constants so they're easy to find + tune.
 const LOOKBACK_DAYS = 90;
@@ -168,13 +182,13 @@ type DetectedStream = {
 };
 
 Deno.serve(async (req) => {
-  if (req.method === 'OPTIONS') return new Response('ok', { headers: corsHeaders });
-  if (req.method !== 'POST') return json({ error: 'POST only' }, 405);
+  if (req.method === 'OPTIONS') return new Response('ok', { headers: corsHeaders(req) });
+  if (req.method !== 'POST') return json(req, { error: 'POST only' }, 405);
 
   try {
     const body: Body = await req.json();
     if (!body?.plaid_item_row_id) {
-      return json({ error: 'plaid_item_row_id required' }, 400);
+      return json(req, { error: 'plaid_item_row_id required' }, 400);
     }
 
     const admin = createClient(SUPABASE_URL, SERVICE_ROLE);
@@ -184,7 +198,7 @@ Deno.serve(async (req) => {
       .select('id, user_id')
       .eq('id', body.plaid_item_row_id)
       .single();
-    if (itemErr || !item) return json({ error: 'Item not found' }, 404);
+    if (itemErr || !item) return json(req, { error: 'Item not found' }, 404);
     const userId = item.user_id as string;
     const itemId = item.id as string;
 
@@ -198,18 +212,18 @@ Deno.serve(async (req) => {
         global: { headers: { Authorization: authHeader } },
       });
       const { data: userRes, error: userErr } = await userClient.auth.getUser();
-      if (userErr || !userRes.user) return json({ error: 'Unauthorized' }, 401);
-      if (userRes.user.id !== userId) return json({ error: 'Forbidden' }, 403);
+      if (userErr || !userRes.user) return json(req, { error: 'Unauthorized' }, 401);
+      if (userRes.user.id !== userId) return json(req, { error: 'Forbidden' }, 403);
     }
 
     const { data: accounts, error: accErr } = await admin
       .from('plaid_accounts')
       .select('id')
       .eq('plaid_item_id', itemId);
-    if (accErr) return json({ error: accErr.message }, 500);
+    if (accErr) return json(req, { error: accErr.message }, 500);
     const accountIds = (accounts ?? []).map((a) => a.id as string);
     if (accountIds.length === 0) {
-      return json({ inflow_count: 0, outflow_count: 0, last_refreshed_at: new Date().toISOString() });
+      return json(req, { inflow_count: 0, outflow_count: 0, last_refreshed_at: new Date().toISOString() });
     }
 
     const since = new Date();
@@ -230,14 +244,14 @@ Deno.serve(async (req) => {
       .in('plaid_account_id', accountIds)
       .gte('date', sinceIso)
       .not('able_category', 'is', null);
-    if (txnErr) return json({ error: txnErr.message }, 500);
+    if (txnErr) return json(req, { error: txnErr.message }, 500);
 
     const rows = (txns ?? []) as TxnRow[];
     if (rows.length === 0) {
       // Nothing classified yet (or no recurring categories present). Still
       // tombstone any stale streams so the table reflects current state.
       await tombstoneStaleStreams(admin, itemId, new Set<string>());
-      return json({ inflow_count: 0, outflow_count: 0, last_refreshed_at: new Date().toISOString() });
+      return json(req, { inflow_count: 0, outflow_count: 0, last_refreshed_at: new Date().toISOString() });
     }
 
     const groups = groupTransactions(rows);
@@ -295,7 +309,7 @@ Deno.serve(async (req) => {
         .upsert(rowsToUpsert, { onConflict: 'plaid_item_id,stream_id' });
       if (upErr) {
         console.error('upsert failed:', upErr);
-        return json({ error: upErr.message }, 500);
+        return json(req, { error: upErr.message }, 500);
       }
     }
 
@@ -316,7 +330,7 @@ Deno.serve(async (req) => {
       `plaid-detect-recurring: item=${itemId} txns=${rows.length} groups=${groups.length} detected=${detected.length} (inflow=${inflow_count}, outflow=${outflow_count})`,
     );
 
-    return json({
+    return json(req, {
       inflow_count,
       outflow_count,
       last_refreshed_at: new Date().toISOString(),
@@ -331,14 +345,14 @@ Deno.serve(async (req) => {
     });
   } catch (e) {
     console.error('plaid-detect-recurring error:', e);
-    return json({ error: (e as Error).message }, 500);
+    return json(req, { error: (e as Error).message }, 500);
   }
 });
 
-function json(body: unknown, status = 200) {
+function json(req: Request, body: unknown, status = 200) {
   return new Response(JSON.stringify(body), {
     status,
-    headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+    headers: { ...corsHeaders(req), 'Content-Type': 'application/json' },
   });
 }
 

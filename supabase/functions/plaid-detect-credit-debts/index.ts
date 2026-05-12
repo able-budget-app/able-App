@@ -115,11 +115,25 @@ const liabilitiesGet = (access_token: string) =>
 
 // ─── End inlined Plaid client ─────────────────────────────────────────
 
-const corsHeaders = {
-  'Access-Control-Allow-Origin': '*',
+const _ALLOWED_ORIGINS = new Set([
+  'https://becomeable.app',
+  'https://www.becomeable.app',
+]);
+function _allowOrigin(origin: string | null): string {
+  if (!origin) return 'https://becomeable.app';
+  if (_ALLOWED_ORIGINS.has(origin)) return origin;
+  if (/^https:\/\/deploy-preview-\d+--becomeable\.netlify\.app$/.test(origin)) return origin;
+  if (/^http:\/\/(localhost|127\.0\.0\.1)(:\d+)?$/.test(origin)) return origin;
+  return 'https://becomeable.app';
+}
+function corsHeaders(req: Request) {
+  return {
+  'Access-Control-Allow-Origin': _allowOrigin(req.headers.get('Origin')),
   'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type',
   'Access-Control-Allow-Methods': 'POST, OPTIONS',
-};
+  'Vary': 'Origin',
+  };
+}
 
 type Body = { plaid_item_row_id?: string; debug?: boolean };
 
@@ -144,8 +158,8 @@ type OutflowStreamRow = {
 };
 
 Deno.serve(async (req) => {
-  if (req.method === 'OPTIONS') return new Response('ok', { headers: corsHeaders });
-  if (req.method !== 'POST') return json({ error: 'POST only' }, 405);
+  if (req.method === 'OPTIONS') return new Response('ok', { headers: corsHeaders(req) });
+  if (req.method !== 'POST') return json(req, { error: 'POST only' }, 405);
 
   try {
     const authHeader = req.headers.get('Authorization') ?? '';
@@ -161,21 +175,21 @@ Deno.serve(async (req) => {
     let userId: string;
     if (isServiceCall) {
       if (!body.plaid_item_row_id) {
-        return json({ error: 'plaid_item_row_id required for service calls' }, 400);
+        return json(req, { error: 'plaid_item_row_id required for service calls' }, 400);
       }
       const { data: row, error } = await admin
         .from('plaid_items')
         .select('user_id')
         .eq('id', body.plaid_item_row_id)
         .single();
-      if (error || !row) return json({ error: 'Item not found' }, 404);
+      if (error || !row) return json(req, { error: 'Item not found' }, 404);
       userId = row.user_id as string;
     } else {
       const userClient = createClient(SUPABASE_URL, SERVICE_ROLE, {
         global: { headers: { Authorization: authHeader } },
       });
       const { data: userRes, error: userErr } = await userClient.auth.getUser();
-      if (userErr || !userRes.user) return json({ error: 'Unauthorized' }, 401);
+      if (userErr || !userRes.user) return json(req, { error: 'Unauthorized' }, 401);
       userId = userRes.user.id;
       // If the user passed an item_row_id, verify they own it.
       if (body.plaid_item_row_id) {
@@ -184,7 +198,7 @@ Deno.serve(async (req) => {
           .select('user_id')
           .eq('id', body.plaid_item_row_id)
           .single();
-        if (!row || row.user_id !== userId) return json({ error: 'Forbidden' }, 403);
+        if (!row || row.user_id !== userId) return json(req, { error: 'Forbidden' }, 403);
       }
     }
 
@@ -195,9 +209,9 @@ Deno.serve(async (req) => {
       .eq('user_id', userId);
     if (body.plaid_item_row_id) itemsQuery = itemsQuery.eq('id', body.plaid_item_row_id);
     const { data: items, error: itemsErr } = await itemsQuery;
-    if (itemsErr) return json({ error: itemsErr.message }, 500);
+    if (itemsErr) return json(req, { error: itemsErr.message }, 500);
     if (!items || items.length === 0) {
-      return json({ rows_written: 0, items_processed: 0 });
+      return json(req, { rows_written: 0, items_processed: 0 });
     }
 
     let rowsWritten = 0;
@@ -214,10 +228,10 @@ Deno.serve(async (req) => {
       items_processed: items.length,
     };
     if (body.debug) resp.debug = debugItems;
-    return json(resp);
+    return json(req, resp);
   } catch (err) {
     console.error('plaid-detect-credit-debts error:', err);
-    return json({ error: err instanceof Error ? err.message : String(err) }, 500);
+    return json(req, { error: err instanceof Error ? err.message : String(err) }, 500);
   }
 });
 
@@ -420,9 +434,9 @@ function estimateMinPayment(
   return Math.max(25, Math.round(onePercent + interest));
 }
 
-function json(payload: unknown, status = 200): Response {
+function json(req: Request, payload: unknown, status = 200): Response {
   return new Response(JSON.stringify(payload), {
     status,
-    headers: { ...corsHeaders, 'content-type': 'application/json' },
+    headers: { ...corsHeaders(req), 'content-type': 'application/json' },
   });
 }

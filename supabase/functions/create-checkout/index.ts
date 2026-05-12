@@ -1,12 +1,24 @@
 import { createClient } from 'npm:@supabase/supabase-js@2'
 
-const corsHeaders = {
-  'Access-Control-Allow-Origin': '*',
+const _ALLOWED_ORIGINS = new Set([
+  'https://becomeable.app',
+  'https://www.becomeable.app',
+]);
+function _allowOrigin(origin: string | null): string {
+  if (!origin) return 'https://becomeable.app';
+  if (_ALLOWED_ORIGINS.has(origin)) return origin;
+  if (/^https:\/\/deploy-preview-\d+--becomeable\.netlify\.app$/.test(origin)) return origin;
+  if (/^http:\/\/(localhost|127\.0\.0\.1)(:\d+)?$/.test(origin)) return origin;
+  return 'https://becomeable.app';
+}
+function corsHeaders(req: Request) {
+  return {
+  'Access-Control-Allow-Origin': _allowOrigin(req.headers.get('Origin')),
   'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type',
   'Access-Control-Allow-Methods': 'POST, OPTIONS',
-}
-
-const ALLOWED_ORIGINS = [
+  'Vary': 'Origin',
+  };
+}const ALLOWED_ORIGINS = [
   'https://becomeable.app',
   'https://www.becomeable.app',
   'https://becomeable.netlify.app',
@@ -15,7 +27,7 @@ const ALLOWED_ORIGINS = [
 ]
 
 Deno.serve(async (req) => {
-  if (req.method === 'OPTIONS') return new Response('ok', { headers: corsHeaders })
+  if (req.method === 'OPTIONS') return new Response('ok', { headers: corsHeaders(req) })
 
   try {
     // 1. Authenticate the caller
@@ -29,7 +41,7 @@ Deno.serve(async (req) => {
     })
     const { data: userRes, error: userErr } = await userClient.auth.getUser()
     if (userErr || !userRes.user) {
-      return json({ error: 'Unauthorized' }, 401)
+      return json(req, { error: 'Unauthorized' }, 401)
     }
     const userId = userRes.user.id
     const email = userRes.user.email ?? ''
@@ -37,14 +49,14 @@ Deno.serve(async (req) => {
     // 2. Only trust priceId + return/cancel URLs from the body
     const { priceId, returnUrl, cancelUrl, ref_token } = await req.json()
     if (typeof priceId !== 'string' || !priceId.startsWith('price_')) {
-      return json({ error: 'Invalid priceId' }, 400)
+      return json(req, { error: 'Invalid priceId' }, 400)
     }
 
     // Constrain redirect URLs to known origins (open redirect guard)
     const urlOk = (u: unknown) =>
       typeof u === 'string' && ALLOWED_ORIGINS.some((o) => u.startsWith(o))
     if (!urlOk(returnUrl) || !urlOk(cancelUrl)) {
-      return json({ error: 'Invalid redirect URL' }, 400)
+      return json(req, { error: 'Invalid redirect URL' }, 400)
     }
 
     // 3. Look up the price to decide subscription vs payment
@@ -52,7 +64,7 @@ Deno.serve(async (req) => {
       headers: { Authorization: `Bearer ${STRIPE_SECRET}` },
     })
     const price = await priceRes.json()
-    if (price.error) return json({ error: price.error.message }, 400)
+    if (price.error) return json(req, { error: price.error.message }, 400)
     const mode = price.type === 'recurring' ? 'subscription' : 'payment'
 
     // 4. Build the Checkout session.
@@ -84,7 +96,11 @@ Deno.serve(async (req) => {
       params.set('invoice_creation[enabled]', 'true')
     }
 
-    if (typeof ref_token === 'string' && ref_token.length > 0 && ref_token.length < 50) {
+    // Charset-validate ref_token. The Stripe webhook hands this back to
+    // PostgREST as `eq.<value>` — invalid chars (&, ,, /) could append spurious
+    // query params. Restricting to URL-safe alphanumerics + underscore/hyphen
+    // matches how `crypto.randomUUID().slice()` style tokens look in practice.
+    if (typeof ref_token === 'string' && /^[A-Za-z0-9_-]{1,50}$/.test(ref_token)) {
       params.set('metadata[ref_token]', ref_token)
       if (mode === 'subscription') {
         params.set('subscription_data[metadata][ref_token]', ref_token)
@@ -104,15 +120,15 @@ Deno.serve(async (req) => {
       throw new Error(session.error?.message || 'No session URL')
     }
 
-    return json({ session_url: session.url })
+    return json(req, { session_url: session.url })
   } catch (error) {
-    return json({ error: (error as Error).message }, 400)
+    return json(req, { error: (error as Error).message }, 400)
   }
 })
 
-function json(body: unknown, status = 200) {
+function json(req: Request, body: unknown, status = 200) {
   return new Response(JSON.stringify(body), {
     status,
-    headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+    headers: { ...corsHeaders(req), 'Content-Type': 'application/json' },
   })
 }

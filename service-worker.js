@@ -49,7 +49,10 @@ self.addEventListener('notificationclick', (event) => {
     const all = await self.clients.matchAll({ type: 'window', includeUncontrolled: true });
     // Reuse an existing tab if one is open; otherwise spawn a new one.
     for (const client of all) {
-      if (client.url.includes('becomeable.app') && 'focus' in client) {
+      // Use exact hostname match — .includes() would match becomeable.app.evil.com.
+      let host = '';
+      try { host = new URL(client.url).hostname; } catch (_) { /* skip non-URL clients */ }
+      if ((host === 'becomeable.app' || host === 'www.becomeable.app' || host === 'localhost' || host === '127.0.0.1') && 'focus' in client) {
         client.navigate(target);
         return client.focus();
       }

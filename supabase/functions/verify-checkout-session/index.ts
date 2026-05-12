@@ -16,16 +16,28 @@
 
 import { createClient } from 'npm:@supabase/supabase-js@2'
 
-const corsHeaders = {
-  'Access-Control-Allow-Origin': '*',
+const _ALLOWED_ORIGINS = new Set([
+  'https://becomeable.app',
+  'https://www.becomeable.app',
+]);
+function _allowOrigin(origin: string | null): string {
+  if (!origin) return 'https://becomeable.app';
+  if (_ALLOWED_ORIGINS.has(origin)) return origin;
+  if (/^https:\/\/deploy-preview-\d+--becomeable\.netlify\.app$/.test(origin)) return origin;
+  if (/^http:\/\/(localhost|127\.0\.0\.1)(:\d+)?$/.test(origin)) return origin;
+  return 'https://becomeable.app';
+}
+function corsHeaders(req: Request) {
+  return {
+  'Access-Control-Allow-Origin': _allowOrigin(req.headers.get('Origin')),
   'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type',
   'Access-Control-Allow-Methods': 'POST, OPTIONS',
-}
-
-function json(body: unknown, status = 200) {
+  'Vary': 'Origin',
+  };
+}function json(req: Request, body: unknown, status = 200) {
   return new Response(JSON.stringify(body), {
     status,
-    headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+    headers: { ...corsHeaders(req), 'Content-Type': 'application/json' },
   })
 }
 
@@ -43,7 +55,7 @@ function mapSubStatus(s: string): string {
 }
 
 Deno.serve(async (req) => {
-  if (req.method === 'OPTIONS') return new Response('ok', { headers: corsHeaders })
+  if (req.method === 'OPTIONS') return new Response('ok', { headers: corsHeaders(req) })
 
   try {
     const SUPABASE_URL = Deno.env.get('SUPABASE_URL')!
@@ -57,14 +69,14 @@ Deno.serve(async (req) => {
       global: { headers: { Authorization: authHeader } },
     })
     const { data: userRes, error: userErr } = await userClient.auth.getUser()
-    if (userErr || !userRes.user) return json({ error: 'Unauthorized' }, 401)
+    if (userErr || !userRes.user) return json(req, { error: 'Unauthorized' }, 401)
     const userId = userRes.user.id
     const email = userRes.user.email ?? ''
 
     // Parse + validate session_id.
     const { session_id } = await req.json().catch(() => ({}))
     if (typeof session_id !== 'string' || !session_id.startsWith('cs_')) {
-      return json({ error: 'Invalid session_id' }, 400)
+      return json(req, { error: 'Invalid session_id' }, 400)
     }
 
     // Try live key first, fall back to test. Mirrors stripe-webhook's
@@ -81,17 +93,17 @@ Deno.serve(async (req) => {
     }
     let session = await fetchSession(STRIPE_SECRET_LIVE)
     if (!session) session = await fetchSession(STRIPE_SECRET_TEST)
-    if (!session) return json({ error: 'Session not found' }, 404)
+    if (!session) return json(req, { error: 'Session not found' }, 404)
 
     // Ownership check: the session must belong to the calling user.
     const sessionUid = session.metadata?.supabase_uid
     if (sessionUid && sessionUid !== userId) {
-      return json({ error: 'Session does not belong to caller' }, 403)
+      return json(req, { error: 'Session does not belong to caller' }, 403)
     }
 
     // Status check: the session must actually be complete.
     if (session.status !== 'complete') {
-      return json({ status: 'pending', session_status: session.status }, 200)
+      return json(req, { status: 'pending', session_status: session.status }, 200)
     }
 
     // Determine the subscription_status to write. Subscription mode → use the
@@ -105,7 +117,7 @@ Deno.serve(async (req) => {
     }
 
     if (newStatus === 'inactive') {
-      return json({ status: 'pending', mode: session.mode, payment_status: session.payment_status }, 200)
+      return json(req, { status: 'pending', mode: session.mode, payment_status: session.payment_status }, 200)
     }
 
     // Upsert the profile. Same shape as stripe-webhook's checkout.session.completed
@@ -131,7 +143,7 @@ Deno.serve(async (req) => {
     if (!upsertRes.ok) {
       const errText = await upsertRes.text().catch(() => '')
       console.error('upsert profile failed:', upsertRes.status, errText)
-      return json({ error: 'Profile update failed' }, 500)
+      return json(req, { error: 'Profile update failed' }, 500)
     }
 
     // Best-effort user_data row insert (the rest of the app expects it). Same
@@ -142,9 +154,9 @@ Deno.serve(async (req) => {
       body: JSON.stringify({ id: userId }),
     }).catch(() => { /* non-blocking */ })
 
-    return json({ status: 'active', subscription_status: newStatus })
+    return json(req, { status: 'active', subscription_status: newStatus })
   } catch (err) {
     console.error('verify-checkout-session error:', err)
-    return json({ error: (err as Error).message || 'Internal error' }, 500)
+    return json(req, { error: (err as Error).message || 'Internal error' }, 500)
   }
 })

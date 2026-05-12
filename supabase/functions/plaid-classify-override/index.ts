@@ -24,11 +24,25 @@ import { createClient, type SupabaseClient } from 'npm:@supabase/supabase-js@2';
 const SUPABASE_URL = Deno.env.get('SUPABASE_URL')!;
 const SERVICE_ROLE = Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')!;
 
-const corsHeaders = {
-  'Access-Control-Allow-Origin': '*',
+const _ALLOWED_ORIGINS = new Set([
+  'https://becomeable.app',
+  'https://www.becomeable.app',
+]);
+function _allowOrigin(origin: string | null): string {
+  if (!origin) return 'https://becomeable.app';
+  if (_ALLOWED_ORIGINS.has(origin)) return origin;
+  if (/^https:\/\/deploy-preview-\d+--becomeable\.netlify\.app$/.test(origin)) return origin;
+  if (/^http:\/\/(localhost|127\.0\.0\.1)(:\d+)?$/.test(origin)) return origin;
+  return 'https://becomeable.app';
+}
+function corsHeaders(req: Request) {
+  return {
+  'Access-Control-Allow-Origin': _allowOrigin(req.headers.get('Origin')),
   'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type',
   'Access-Control-Allow-Methods': 'POST, OPTIONS',
-};
+  'Vary': 'Origin',
+  };
+}
 
 const VALID_CATEGORIES = new Set([
   'income', 'bill', 'debt_payment', 'tax_payment', 'transfer', 'discretionary',
@@ -53,8 +67,8 @@ type Body = {
 };
 
 Deno.serve(async (req) => {
-  if (req.method === 'OPTIONS') return new Response('ok', { headers: corsHeaders });
-  if (req.method !== 'POST') return json({ error: 'POST only' }, 405);
+  if (req.method === 'OPTIONS') return new Response('ok', { headers: corsHeaders(req) });
+  if (req.method !== 'POST') return json(req, { error: 'POST only' }, 405);
 
   try {
     const authHeader = req.headers.get('Authorization') ?? '';
@@ -62,26 +76,26 @@ Deno.serve(async (req) => {
       global: { headers: { Authorization: authHeader } },
     });
     const { data: userRes, error: userErr } = await userClient.auth.getUser();
-    if (userErr || !userRes.user) return json({ error: 'Unauthorized' }, 401);
+    if (userErr || !userRes.user) return json(req, { error: 'Unauthorized' }, 401);
     const userId = userRes.user.id;
 
     const body: Body = await req.json().catch(() => ({} as Body));
 
-    if (!body.txn_row_id) return json({ error: 'txn_row_id required' }, 400);
+    if (!body.txn_row_id) return json(req, { error: 'txn_row_id required' }, 400);
     if (!body.able_category || !VALID_CATEGORIES.has(body.able_category)) {
-      return json({ error: 'invalid able_category' }, 400);
+      return json(req, { error: 'invalid able_category' }, 400);
     }
 
     const createOverride = body.create_override !== false; // default true
     if (createOverride) {
       if (!body.override_kind || !VALID_OVERRIDE_KINDS.has(body.override_kind)) {
-        return json({ error: 'invalid override_kind' }, 400);
+        return json(req, { error: 'invalid override_kind' }, 400);
       }
       if (!body.override_value || typeof body.override_value !== 'string') {
-        return json({ error: 'override_value required' }, 400);
+        return json(req, { error: 'override_value required' }, 400);
       }
       if (body.override_direction && !VALID_DIRECTIONS.has(body.override_direction)) {
-        return json({ error: 'invalid override_direction' }, 400);
+        return json(req, { error: 'invalid override_direction' }, 400);
       }
     }
 
@@ -97,10 +111,10 @@ Deno.serve(async (req) => {
       .single();
     if (txnErr || !txn) {
       console.error('classify-override: txn lookup failed', txnErr);
-      return json({ error: 'Transaction not found' }, 404);
+      return json(req, { error: 'Transaction not found' }, 404);
     }
     if (txn.user_id !== userId) {
-      return json({ error: 'Forbidden' }, 403);
+      return json(req, { error: 'Forbidden' }, 403);
     }
 
     const label = (body.able_label && body.able_label.trim().length > 0)
@@ -130,7 +144,7 @@ Deno.serve(async (req) => {
       .eq('id', txn.id);
     if (updErr) {
       console.error('classify-override: update failed', updErr);
-      return json({ error: updErr.message }, 500);
+      return json(req, { error: updErr.message }, 500);
     }
 
     let overrideId: string | null = null;
@@ -159,7 +173,7 @@ Deno.serve(async (req) => {
         // The txn update already succeeded; surface the override failure
         // but don't roll back the user-visible action.
         console.error('classify-override: override upsert failed', ovErr);
-        return json({
+        return json(req, {
           ok: true,
           txn_updated: true,
           override_created: false,
@@ -188,7 +202,7 @@ Deno.serve(async (req) => {
       }
     }
 
-    return json({
+    return json(req, {
       ok: true,
       txn_updated: true,
       override_created: createOverride,
@@ -196,14 +210,14 @@ Deno.serve(async (req) => {
     });
   } catch (e) {
     console.error('plaid-classify-override error:', e);
-    return json({ error: (e as Error).message }, 500);
+    return json(req, { error: (e as Error).message }, 500);
   }
 });
 
-function json(body: unknown, status = 200) {
+function json(req: Request, body: unknown, status = 200) {
   return new Response(JSON.stringify(body), {
     status,
-    headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+    headers: { ...corsHeaders(req), 'Content-Type': 'application/json' },
   });
 }
 

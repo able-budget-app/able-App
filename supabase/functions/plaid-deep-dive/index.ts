@@ -27,11 +27,25 @@ import { createClient, type SupabaseClient } from 'npm:@supabase/supabase-js@2';
 const SUPABASE_URL = Deno.env.get('SUPABASE_URL')!;
 const SERVICE_ROLE = Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')!;
 
-const corsHeaders = {
-  'Access-Control-Allow-Origin': '*',
+const _ALLOWED_ORIGINS = new Set([
+  'https://becomeable.app',
+  'https://www.becomeable.app',
+]);
+function _allowOrigin(origin: string | null): string {
+  if (!origin) return 'https://becomeable.app';
+  if (_ALLOWED_ORIGINS.has(origin)) return origin;
+  if (/^https:\/\/deploy-preview-\d+--becomeable\.netlify\.app$/.test(origin)) return origin;
+  if (/^http:\/\/(localhost|127\.0\.0\.1)(:\d+)?$/.test(origin)) return origin;
+  return 'https://becomeable.app';
+}
+function corsHeaders(req: Request) {
+  return {
+  'Access-Control-Allow-Origin': _allowOrigin(req.headers.get('Origin')),
   'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type',
   'Access-Control-Allow-Methods': 'POST, OPTIONS',
-};
+  'Vary': 'Origin',
+  };
+}
 
 type Body = { plaid_item_row_id: string };
 
@@ -76,8 +90,8 @@ type CreditDebt = {
 };
 
 Deno.serve(async (req) => {
-  if (req.method === 'OPTIONS') return new Response('ok', { headers: corsHeaders });
-  if (req.method !== 'POST') return json({ error: 'POST only' }, 405);
+  if (req.method === 'OPTIONS') return new Response('ok', { headers: corsHeaders(req) });
+  if (req.method !== 'POST') return json(req, { error: 'POST only' }, 405);
 
   try {
     const authHeader = req.headers.get('Authorization') ?? '';
@@ -86,7 +100,7 @@ Deno.serve(async (req) => {
 
     const body = (await req.json().catch(() => ({}))) as Body;
     if (!body?.plaid_item_row_id) {
-      return json({ error: 'plaid_item_row_id required' }, 400);
+      return json(req, { error: 'plaid_item_row_id required' }, 400);
     }
 
     const admin = createClient(SUPABASE_URL, SERVICE_ROLE);
@@ -97,7 +111,7 @@ Deno.serve(async (req) => {
       .select('id, user_id, deep_dive_completed_at')
       .eq('id', body.plaid_item_row_id)
       .single();
-    if (itemErr || !item) return json({ error: 'Item not found' }, 404);
+    if (itemErr || !item) return json(req, { error: 'Item not found' }, 404);
     const userId: string = item.user_id;
 
     if (!isServiceCall) {
@@ -105,13 +119,13 @@ Deno.serve(async (req) => {
         global: { headers: { Authorization: authHeader } },
       });
       const { data: userRes, error: userErr } = await userClient.auth.getUser();
-      if (userErr || !userRes.user) return json({ error: 'Unauthorized' }, 401);
-      if (userRes.user.id !== userId) return json({ error: 'Forbidden' }, 403);
+      if (userErr || !userRes.user) return json(req, { error: 'Unauthorized' }, 401);
+      if (userRes.user.id !== userId) return json(req, { error: 'Forbidden' }, 403);
     }
 
     // Idempotency guard.
     if (item.deep_dive_completed_at) {
-      return json({
+      return json(req, {
         status: 'already_completed',
         completed_at: item.deep_dive_completed_at,
       });
@@ -341,7 +355,7 @@ Deno.serve(async (req) => {
       .eq('id', userId);
     if (writeErr) {
       console.error(`plaid-deep-dive write failed for user ${userId}:`, writeErr);
-      return json({ error: writeErr.message }, 500);
+      return json(req, { error: writeErr.message }, 500);
     }
 
     // ─── 10. Mark complete ───────────────────────────────────────────
@@ -354,10 +368,10 @@ Deno.serve(async (req) => {
       .eq('id', item.id);
 
     console.log(`plaid-deep-dive: item ${item.id} done in ${Date.now() - t0}ms`, summary);
-    return json({ status: 'completed', summary });
+    return json(req, { status: 'completed', summary });
   } catch (err) {
     console.error('plaid-deep-dive error:', err);
-    return json({ error: err instanceof Error ? err.message : String(err) }, 500);
+    return json(req, { error: err instanceof Error ? err.message : String(err) }, 500);
   }
 });
 
@@ -417,9 +431,9 @@ function stale(lastDate: string, _amount: number | undefined, frequency: string 
   return ageDays > cycleDays * 2;
 }
 
-function json(payload: unknown, status = 200): Response {
+function json(req: Request, payload: unknown, status = 200): Response {
   return new Response(JSON.stringify(payload), {
     status,
-    headers: { ...corsHeaders, 'content-type': 'application/json' },
+    headers: { ...corsHeaders(req), 'content-type': 'application/json' },
   });
 }

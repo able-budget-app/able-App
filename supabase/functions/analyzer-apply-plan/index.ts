@@ -41,11 +41,25 @@ import { createClient } from 'npm:@supabase/supabase-js@2';
 const SUPABASE_URL = Deno.env.get('SUPABASE_URL')!;
 const SERVICE_ROLE = Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')!;
 
-const corsHeaders = {
-  'Access-Control-Allow-Origin': '*',
+const _ALLOWED_ORIGINS = new Set([
+  'https://becomeable.app',
+  'https://www.becomeable.app',
+]);
+function _allowOrigin(origin: string | null): string {
+  if (!origin) return 'https://becomeable.app';
+  if (_ALLOWED_ORIGINS.has(origin)) return origin;
+  if (/^https:\/\/deploy-preview-\d+--becomeable\.netlify\.app$/.test(origin)) return origin;
+  if (/^http:\/\/(localhost|127\.0\.0\.1)(:\d+)?$/.test(origin)) return origin;
+  return 'https://becomeable.app';
+}
+function corsHeaders(req: Request) {
+  return {
+  'Access-Control-Allow-Origin': _allowOrigin(req.headers.get('Origin')),
   'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type',
   'Access-Control-Allow-Methods': 'POST, OPTIONS',
-};
+  'Vary': 'Origin',
+  };
+}
 
 type SectionFlags = {
   income_sources?: boolean;
@@ -95,8 +109,8 @@ type Body = {
 type AnalyzerPlan = AnalyzerPlanShape;
 
 Deno.serve(async (req) => {
-  if (req.method === 'OPTIONS') return new Response('ok', { headers: corsHeaders });
-  if (req.method !== 'POST') return json({ error: 'POST only' }, 405);
+  if (req.method === 'OPTIONS') return new Response('ok', { headers: corsHeaders(req) });
+  if (req.method !== 'POST') return json(req, { error: 'POST only' }, 405);
 
   try {
     const authHeader = req.headers.get('Authorization') ?? '';
@@ -104,11 +118,11 @@ Deno.serve(async (req) => {
       global: { headers: { Authorization: authHeader } },
     });
     const { data: userRes, error: userErr } = await userClient.auth.getUser();
-    if (userErr || !userRes.user) return json({ error: 'Unauthorized' }, 401);
+    if (userErr || !userRes.user) return json(req, { error: 'Unauthorized' }, 401);
     const userId = userRes.user.id;
 
     const body: Body = await req.json();
-    if (!body?.plan_id) return json({ error: 'plan_id required' }, 400);
+    if (!body?.plan_id) return json(req, { error: 'plan_id required' }, 400);
 
     const flags: Required<SectionFlags> = {
       income_sources: body.sections?.income_sources ?? true,
@@ -125,10 +139,10 @@ Deno.serve(async (req) => {
       .select('id, user_id, plan_json, status')
       .eq('id', body.plan_id)
       .single();
-    if (planErr || !planRow) return json({ error: 'Plan not found' }, 404);
-    if (planRow.user_id !== userId) return json({ error: 'Forbidden' }, 403);
+    if (planErr || !planRow) return json(req, { error: 'Plan not found' }, 404);
+    if (planRow.user_id !== userId) return json(req, { error: 'Forbidden' }, 403);
     if (planRow.status === 'fully_applied') {
-      return json({ error: 'Plan already fully applied' }, 409);
+      return json(req, { error: 'Plan already fully applied' }, 409);
     }
 
     const pendingReview = body.pending_review === true;
@@ -154,7 +168,7 @@ Deno.serve(async (req) => {
       .single();
     if (udErr && udErr.code !== 'PGRST116') {
       // PGRST116 = no rows; that's fine, we'll create one.
-      return json({ error: udErr.message }, 500);
+      return json(req, { error: udErr.message }, 500);
     }
 
     const next = mergePlan(ud ?? { id: userId }, effective, flags, {
@@ -166,7 +180,7 @@ Deno.serve(async (req) => {
     const { error: writeErr } = await admin
       .from('user_data')
       .upsert({ ...next, id: userId, updated_at: new Date().toISOString() });
-    if (writeErr) return json({ error: writeErr.message }, 500);
+    if (writeErr) return json(req, { error: writeErr.message }, 500);
 
     const allOn = flags.income_sources && flags.bills && flags.debts && flags.tax_allocation && flags.surplus_split;
     const newStatus = pendingReview
@@ -189,16 +203,16 @@ Deno.serve(async (req) => {
       .eq('id', planRow.id);
     if (statusErr) {
       console.error('analyzer-apply-plan: plan status update failed:', statusErr);
-      return json({ error: `plan status update failed: ${statusErr.message}` }, 500);
+      return json(req, { error: `plan status update failed: ${statusErr.message}` }, 500);
     }
 
-    return json({
+    return json(req, {
       applied_sections: Object.entries(flags).filter(([, v]) => v).map(([k]) => k),
       plan_status: newStatus,
     });
   } catch (e) {
     console.error('analyzer-apply-plan error:', e);
-    return json({ error: (e as Error).message }, 500);
+    return json(req, { error: (e as Error).message }, 500);
   }
 });
 
@@ -347,9 +361,9 @@ function mergePlan(
   return next;
 }
 
-function json(body: unknown, status = 200) {
+function json(req: Request, body: unknown, status = 200) {
   return new Response(JSON.stringify(body), {
     status,
-    headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+    headers: { ...corsHeaders(req), 'Content-Type': 'application/json' },
   });
 }
