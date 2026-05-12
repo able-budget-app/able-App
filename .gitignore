@@ -79,3 +79,7 @@ experiments/
 # Article-video working folders (audio renders, screenshots, intermediate output)
 # Regenerable via article-video/scripts/* — heavy artifacts shouldn't be tracked.
 article-video/videos/
+
+# Legal/policy PDFs moved out of repo root — keep untracked.
+# Regenerable from docs/*.md via the headless-Chrome script.
+/docs/legal/*.pdf
