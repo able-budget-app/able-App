@@ -12098,7 +12098,7 @@ async function openDetectedBillsModal() {
   if (!html) html = `<div style="padding:1rem 0;color:var(--ds-t3);">Nothing to review.</div>`;
   document.getElementById('detected-bills-list').innerHTML = html;
   updateDetectedSaveBtn();
-  openModal('modal-detected-bills');
+  document.getElementById('modal-detected-bills').style.display = 'flex';
 }
 function updateDetectedSaveBtn() {
   const btn = document.getElementById('detected-bills-save');
@@ -12214,6 +12214,7 @@ async function loadRecurringScan(){
             <div style="font-size:14px;font-weight:800;color:var(--ds-t1);letter-spacing:-.005em;text-overflow:ellipsis;overflow:hidden;white-space:nowrap;">${escapeHtml(name)}</div>
             <div style="font-size:12px;font-weight:600;color:var(--ds-t3);margin-top:2px;">${amtStr} ${freqStr} · last ${escapeHtml(lastStr)}</div>
           </div>
+          <button type="button" onclick="markRecurringAsBill('${escapeHtml(s.stream_id)}')" title="Add this to your bills" style="background:var(--ds-green-l);border:1px solid var(--ds-green-m);color:var(--ds-green);font-family:var(--ds-f);font-size:12px;font-weight:700;padding:7px 12px;border-radius:100px;cursor:pointer;flex-shrink:0;">+ Bill</button>
           <button type="button" onclick="toggleLeakFlag('${escapeHtml(s.stream_id)}')" class="recurring-leak-btn" style="${_leakBtnStyle(false)}">Mark as leak</button>
           <button type="button" onclick="dismissRecurringStream('${escapeHtml(s.stream_id)}')" title="Normal bill - hide from this list" style="background:transparent;border:none;color:var(--ds-t3);font-family:var(--ds-f);font-size:18px;font-weight:600;padding:4px 8px;cursor:pointer;line-height:1;flex-shrink:0;">×</button>
         </div>`;
@@ -12422,6 +12423,35 @@ async function dismissRecurringStream(streamId){
   S.settings.dismissed_recurring_streams = list;
   try { await saveUserData(); } catch (e) { console.warn('saveUserData (dismiss recurring) failed:', e); }
   Able.track?.('recurring_dismissed', { total_dismissed: list.length });
+  loadRecurringScan().catch(() => {});
+}
+
+// Promote a detected recurring outflow to a tracked bill. Failsafe path for
+// when the analyzer missed an obvious bill — user sees it in "Recurring charges
+// Able spotted" and one-taps it onto their Bills page. Mirrors how detected
+// bills fold in via the modal, but scoped to a single stream.
+async function markRecurringAsBill(streamId){
+  if (!streamId) return;
+  const streams = Array.isArray(S.recurring_outflow_streams) ? S.recurring_outflow_streams : [];
+  const stream = streams.find((s) => s.stream_id === streamId);
+  if (!stream) { showToast?.('Could not find that charge.'); return; }
+  // Don't double-add if a bill with this stream id already exists.
+  S.bills = S.bills || [];
+  const already = S.bills.some((b) => b && b.stream_id === streamId);
+  if (already) { showToast?.('That charge is already in your bills.'); return; }
+  S.bills.push(_streamToBill(stream));
+  // Mark dismissed so it disappears from the recurring list (it's now tracked).
+  S.settings = S.settings || {};
+  const dismissed = Array.isArray(S.settings.dismissed_recurring_streams) ? S.settings.dismissed_recurring_streams.slice() : [];
+  if (!dismissed.includes(streamId)) {
+    dismissed.push(streamId);
+    S.settings.dismissed_recurring_streams = dismissed;
+  }
+  try { await saveUserData(); } catch (e) { console.warn('saveUserData (markRecurringAsBill) failed:', e); }
+  Able.track?.('recurring_marked_as_bill', { stream_id: streamId });
+  showToast?.(`Added ${stream.merchant_name || stream.description || 'this charge'} to your bills.`);
+  try { if (typeof refreshHome === 'function') refreshHome(); } catch (_) {}
+  try { if (typeof renderBillsPage === 'function') renderBillsPage(); } catch (_) {}
   loadRecurringScan().catch(() => {});
 }
 
@@ -13885,6 +13915,14 @@ function renderHeroMoney(){
 function maybeShowFloorIntro(){
   const strip = document.getElementById('db-floor-strip');
   if (!strip) return;
+  // Bail if the strip isn't actually on screen yet (auth screen still
+  // covering #app, page-home not active, etc). offsetParent === null means
+  // the element or one of its ancestors is display:none; getBoundingClientRect
+  // would return 0/0/0/0 and the popover would land in the top-left corner.
+  // refreshHome fires again once the dashboard renders, so we'll catch it then.
+  if (strip.offsetParent === null) return;
+  const stripRect = strip.getBoundingClientRect();
+  if (stripRect.width === 0 || stripRect.height === 0) return;
   if (document.querySelector('.db-floor-pop')) return;
   const pop = document.createElement('div');
   pop.className = 'db-floor-pop';
