@@ -31,7 +31,7 @@ window.REELS = [
       { text: "$400.\n{Just grabbed.}", durationSec: 2.5 },
       { text: "$300.\n{The leak.}", durationSec: 2.5 },
       { text: "Feels small.\n{The compound is huge.}", durationSec: 3 },
-      { text: "becomeable.app", durationSec: 4 },
+      { text: "becomeable.app/get-able", durationSec: 4 },
     ] },
 
   // R3 — The 5 buckets in order (brand green) — order locked to app: tax→bills→debt→reserve→free
@@ -55,7 +55,7 @@ window.REELS = [
       { text: "Not April.\n{The second} it clears.", durationSec: 3 },
       { text: "Move it.\nOr {lose it}.", durationSec: 2.5 },
       { text: "{Free} for 30 days.", durationSec: 2.5 },
-      { text: "becomeable.app", durationSec: 2.5 },
+      { text: "becomeable.app/get-able", durationSec: 2.5 },
     ] },
 
   // R5 — Why budgeting apps fail (white)
@@ -68,7 +68,7 @@ window.REELS = [
       { text: "Too {late}.", durationSec: 2.5 },
       { text: "You need a system\nfor {variable}.", durationSec: 3 },
       { text: "{Free} for 30 days.", durationSec: 2 },
-      { text: "becomeable.app", durationSec: 2 },
+      { text: "becomeable.app/get-able", durationSec: 2 },
     ] },
 
   // R6 — You were handed the wrong tool (page)
@@ -78,7 +78,7 @@ window.REELS = [
       { text: "You were handed\nthe {wrong tool}.", durationSec: 3 },
       { text: "Every app assumes\na {paycheck}.", durationSec: 3 },
       { text: "Your income\nis {variable}.", durationSec: 2.5 },
-      { text: "becomeable.app", durationSec: 2.5 },
+      { text: "becomeable.app/get-able", durationSec: 2.5 },
     ] },
 
   // R7 — The freezing metaphor (page → green)
@@ -90,7 +90,7 @@ window.REELS = [
       { text: "Direct it.\nOr {it leaks}.", durationSec: 3, theme: 'green' },
       { text: "Same income.\n{Different month.}", durationSec: 3, theme: 'green' },
       { text: "{Free} for 30 days.", durationSec: 2, theme: 'green' },
-      { text: "becomeable.app", durationSec: 2.5, theme: 'green' },
+      { text: "becomeable.app/get-able", durationSec: 2.5, theme: 'green' },
     ] },
 
   // R8 — Quarterly taxes during a bad month (glass-dark)
@@ -101,7 +101,7 @@ window.REELS = [
       { text: "Penalty:\nabout {8%}.", durationSec: 2.5 },
       { text: "Pay what you can.\nBeats {nothing}.", durationSec: 3 },
       { text: "Prevention?\n{A reserve.}", durationSec: 3 },
-      { text: "becomeable.app", durationSec: 4 },
+      { text: "becomeable.app/get-able", durationSec: 4 },
     ] },
 
   // R9 — The insight: not laziness, fear (page) — replaces founder-POV reel
@@ -113,7 +113,7 @@ window.REELS = [
       { text: "Afraid of when\nthe {next check} comes.", durationSec: 3.5 },
       { text: "A {plan}\nremoves the fear.", durationSec: 3 },
       { text: "{Free} for 30 days.", durationSec: 3 },
-      { text: "becomeable.app", durationSec: 3 },
+      { text: "becomeable.app/get-able", durationSec: 3 },
     ] },
 
   // R10 — Same income. Different feeling. (green)
@@ -124,7 +124,7 @@ window.REELS = [
       { text: "Bills paid.\nTaxes covered.", durationSec: 3 },
       { text: "Debt {shrinking}.\nSavings {growing}.", durationSec: 3 },
       { text: "Nothing\n{leaked}.", durationSec: 2.5 },
-      { text: "becomeable.app", durationSec: 3 },
+      { text: "becomeable.app/get-able", durationSec: 3 },
     ] },
 
   // R11 — Pay yourself a steady paycheck (green)
@@ -136,7 +136,7 @@ window.REELS = [
       { text: "{A dam}\non a river.", durationSec: 2.5 },
       { text: "Same paycheck.\n{Same day.}", durationSec: 3 },
       { text: "{Boring} is\nthe feature.", durationSec: 3 },
-      { text: "becomeable.app", durationSec: 4 },
+      { text: "becomeable.app/get-able", durationSec: 4 },
     ] },
 
   // R12 — Three days, one cycle (multi: page → dark → green) — persona labels removed
@@ -147,7 +147,7 @@ window.REELS = [
       { text: "Day 14.\nGone before you\n{noticed}.", durationSec: 3, theme: 'black' },
       { text: "Day 31.\nRelief, then {panic}.", durationSec: 3.5, theme: 'glass-dark' },
       { text: "Same person.\n{Different week.}", durationSec: 3, theme: 'green' },
-      { text: "becomeable.app", durationSec: 3, theme: 'green' },
+      { text: "becomeable.app/get-able", durationSec: 3, theme: 'green' },
     ] },
 
   // R13 — April without the panic (glass-dark)
@@ -157,7 +157,7 @@ window.REELS = [
       { text: "Moved 30%\nsince {January}.", durationSec: 3 },
       { text: "The {bill}\nis paid.", durationSec: 3 },
       { text: "Just {paperwork}.\nNot an event.", durationSec: 3.5 },
-      { text: "becomeable.app", durationSec: 3.5 },
+      { text: "becomeable.app/get-able", durationSec: 3.5 },
     ] },
 
   // R14 — The compound cost of waiting (multi)
@@ -168,7 +168,7 @@ window.REELS = [
       { text: "Six months.\n{$12,000} gone.", durationSec: 3, theme: 'glass-dark' },
       { text: "One year.\n{$24,000} gone.", durationSec: 3, theme: 'black' },
       { text: "Not bad.\nA {missing system}.", durationSec: 3, theme: 'black' },
-      { text: "becomeable.app", durationSec: 3.5, theme: 'green' },
+      { text: "becomeable.app/get-able", durationSec: 3.5, theme: 'green' },
     ] },
 
   // R15 — Free 30-day trial CTA reel (green, 12s)
@@ -188,7 +188,7 @@ window.REELS = [
       { text: "Big check?\n{Fills up.}", durationSec: 3 },
       { text: "Slow week?\n{You draw down.}", durationSec: 3 },
       { text: "Bills funded.\n{Always.}", durationSec: 3 },
-      { text: "becomeable.app", durationSec: 4 },
+      { text: "becomeable.app/get-able", durationSec: 4 },
     ] },
 
   // R17 — Set up your tax bucket (text-reel, fast actionable steps)
@@ -201,7 +201,7 @@ window.REELS = [
       { text: "Same day.\nBefore {spending}.", durationSec: 3 },
       { text: "April becomes\n{paperwork}.", durationSec: 3 },
       { text: "Not an {event}.", durationSec: 3 },
-      { text: "becomeable.app", durationSec: 3 },
+      { text: "becomeable.app/get-able", durationSec: 3 },
     ] },
 
   // R18 — Your first week with Able (page)
@@ -213,7 +213,7 @@ window.REELS = [
       { text: "Day 3.\n{Schedule} debt.", durationSec: 2.5 },
       { text: "Day 4.\n{Reserve} target.", durationSec: 2.5 },
       { text: "Day 5.\nWhat's left is {free}.", durationSec: 3 },
-      { text: "becomeable.app", durationSec: 2.5 },
+      { text: "becomeable.app/get-able", durationSec: 2.5 },
     ] },
 
   // R19 — From spreadsheet to system (white → green)
@@ -234,7 +234,7 @@ window.REELS = [
       { text: "Saving needs\n{left over}.", durationSec: 3 },
       { text: "Variable income\nrarely {has it}.", durationSec: 3 },
       { text: "Reverse the {order}.", durationSec: 3 },
-      { text: "becomeable.app", durationSec: 3 },
+      { text: "becomeable.app/get-able", durationSec: 3 },
     ] },
 
   // ── LAUNCH REELS (StoryBrand sequence — R21–R23) ──
@@ -249,7 +249,7 @@ window.REELS = [
       { text: "Same person.\n{Different week.}", durationSec: 3 },
       { text: "Not a {discipline}\nproblem.", durationSec: 2.5 },
       { text: "A {system}\nproblem.", durationSec: 2.5 },
-      { text: "becomeable.app", durationSec: 3.5 },
+      { text: "becomeable.app/get-able", durationSec: 3.5 },
     ] },
 
   // R22 — REMOVED 2026-04-26 (how-i-lost-40k founder reel; per user feedback)
@@ -280,7 +280,7 @@ window.REELS = [
       { text: "Or {dreaded}\nApril.", durationSec: 2.5 },
       { text: "You're not\n{bad with money}.", durationSec: 2.5, theme: 'green' },
       { text: "Wrong {tool}.\nNot wrong you.", durationSec: 2, theme: 'green' },
-      { text: "becomeable.app", durationSec: 2, theme: 'green' },
+      { text: "becomeable.app/get-able", durationSec: 2, theme: 'green' },
     ] },
 
   // R28 — Permission reel (page → green)
@@ -291,7 +291,7 @@ window.REELS = [
       { text: "Not {trying harder}.", durationSec: 2 },
       { text: "A {system}.\nBuilt for variable.", durationSec: 3, theme: 'green' },
       { text: "{Free} for 30 days.", durationSec: 1.5, theme: 'green' },
-      { text: "becomeable.app", durationSec: 1.5, theme: 'green' },
+      { text: "becomeable.app/get-able", durationSec: 1.5, theme: 'green' },
     ] },
 
   // R29 — New identity stack (green)
@@ -302,7 +302,7 @@ window.REELS = [
       { text: "I am able\nto {save}.", durationSec: 2.5 },
       { text: "Without\n{second-guessing}.", durationSec: 2.5 },
       { text: "I am\n{able}.", durationSec: 3 },
-      { text: "becomeable.app", durationSec: 3 },
+      { text: "becomeable.app/get-able", durationSec: 3 },
     ] },
 
   // R30 — Anti-hustle positioning (cloud black)
@@ -313,7 +313,7 @@ window.REELS = [
       { text: "No streaks.\nNo {confetti}.", durationSec: 2.5 },
       { text: "No {AI insights}\nyou won't read.", durationSec: 2.5 },
       { text: "{Boring}\nis the feature.", durationSec: 2.5 },
-      { text: "becomeable.app", durationSec: 2.5 },
+      { text: "becomeable.app/get-able", durationSec: 2.5 },
     ] },
 
   // R31 — Specific paralysis anchor: $400 gone (cloud black)
@@ -324,7 +324,7 @@ window.REELS = [
       { text: "$48 there.\n{$12} again.", durationSec: 2.5 },
       { text: "Day 30.\n{$400 gone}.", durationSec: 3 },
       { text: "Nothing\nto {show for it}.", durationSec: 2 },
-      { text: "becomeable.app", durationSec: 1.5 },
+      { text: "becomeable.app/get-able", durationSec: 1.5 },
     ] },
 
   // ── PERSONA REELS (R32-R35) — 4 audience moments ──
@@ -337,7 +337,7 @@ window.REELS = [
       { text: "Gas. Phone.\n{Tax owed.}", durationSec: 3 },
       { text: "Reserve {30%}\nthe second it lands.", durationSec: 3, theme: 'green' },
       { text: "The rest is\n{actually yours}.", durationSec: 2.5, theme: 'green' },
-      { text: "becomeable.app", durationSec: 2, theme: 'green' },
+      { text: "becomeable.app/get-able", durationSec: 2, theme: 'green' },
     ] },
 
   // R33 — Creator moment (page → green)
@@ -348,7 +348,7 @@ window.REELS = [
       { text: "Until tax day.\n{Then it isn't.}", durationSec: 3 },
       { text: "Every payout\nsplits {five ways}.", durationSec: 3, theme: 'green' },
       { text: "Tax. Bills.\nDebt. {Reserve.} Free.", durationSec: 3.5, theme: 'green' },
-      { text: "becomeable.app", durationSec: 2.5, theme: 'green' },
+      { text: "becomeable.app/get-able", durationSec: 2.5, theme: 'green' },
     ] },
 
   // R34 — Commission moment (glass-dark → green)
@@ -359,7 +359,7 @@ window.REELS = [
       { text: "Lumpy income.\n{Steady bills.}", durationSec: 3 },
       { text: "The {reserve}\nis the bridge.", durationSec: 3, theme: 'green' },
       { text: "Same paycheck.\n{Same day.}", durationSec: 3, theme: 'green' },
-      { text: "becomeable.app", durationSec: 2.5, theme: 'green' },
+      { text: "becomeable.app/get-able", durationSec: 2.5, theme: 'green' },
     ] },
 
   // R35 — Business owner moment (white → green)
@@ -370,7 +370,7 @@ window.REELS = [
       { text: "Set an\n{owner pay} percent.", durationSec: 3, theme: 'green' },
       { text: "Every deposit\n{honors it}.", durationSec: 3, theme: 'green' },
       { text: "Pay yourself first.\n{Boring is right.}", durationSec: 3, theme: 'green' },
-      { text: "becomeable.app", durationSec: 2.5, theme: 'green' },
+      { text: "becomeable.app/get-able", durationSec: 2.5, theme: 'green' },
     ] },
 
   // ── TIP REELS (R36-R38) — single-idea quick reels ──
@@ -381,7 +381,7 @@ window.REELS = [
       { text: "One tip.\nFor {1099 income}.", durationSec: 2.5 },
       { text: "Move {30%}\nthe second it clears.", durationSec: 3 },
       { text: "Not April.\n{Day of.}", durationSec: 2 },
-      { text: "becomeable.app", durationSec: 1.5 },
+      { text: "becomeable.app/get-able", durationSec: 1.5 },
     ] },
 
   // R37 — Tip: name every deposit (page)
@@ -390,7 +390,7 @@ window.REELS = [
       { text: "One rule.\n{For variable income.}", durationSec: 2.5 },
       { text: "Every deposit\ngets {a destination}.", durationSec: 3 },
       { text: "Before it\n{leaves your hand}.", durationSec: 2 },
-      { text: "becomeable.app", durationSec: 1.5 },
+      { text: "becomeable.app/get-able", durationSec: 1.5 },
     ] },
 
   // R38 — Tip: floor first (green)
@@ -399,7 +399,7 @@ window.REELS = [
       { text: "Bills + tax\n= the {floor}.", durationSec: 2.5 },
       { text: "Fill it\n{first}.", durationSec: 2 },
       { text: "Then {everything else}\nis a real choice.", durationSec: 3 },
-      { text: "becomeable.app", durationSec: 1.5 },
+      { text: "becomeable.app/get-able", durationSec: 1.5 },
     ] },
 
   // ── STAT-FACT REELS (R39-R40) ──
@@ -412,7 +412,7 @@ window.REELS = [
       { text: "Have {variable}\nmonthly income.", durationSec: 3 },
       { text: "Yet {every} app\nassumes a paycheck.", durationSec: 3 },
       { text: "Built for the {76%}.", durationSec: 2 },
-      { text: "becomeable.app", durationSec: 1 },
+      { text: "becomeable.app/get-able", durationSec: 1 },
     ] },
 
   // R40 — Stat: 36% of US workers freelance (page → green)
@@ -422,7 +422,7 @@ window.REELS = [
       { text: "of US workers\nfreelance now.", durationSec: 2.5 },
       { text: "Most budgeting tools\n{don't fit them}.", durationSec: 3 },
       { text: "Built for the\n{paycheck} that doesn't\ncome every two weeks.", durationSec: 3.5, theme: 'green' },
-      { text: "becomeable.app", durationSec: 2.5, theme: 'green' },
+      { text: "becomeable.app/get-able", durationSec: 2.5, theme: 'green' },
     ] },
 
   // ── EDU MICRO-REELS (R41) — 3-slide concept teardowns ──

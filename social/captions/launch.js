@@ -6,7 +6,7 @@
 //   tt    — TikTok caption. URL inlined (TikTok allows it).
 //   li    — LinkedIn caption body. Do NOT include the trailing URL —
 //           build-master-sheet.js appends `\n\n{relevant_links}` automatically.
-//   links — (optional) override for the relevant_links column. Defaults to "becomeable.app".
+//   links — (optional) override for the relevant_links column. Defaults to "becomeable.app/get-able".
 //
 // Voice rules: short sentences, no em dashes, no emojis, permission-not-blame,
 // no founder name, $14.99/mo + $129/yr (NOT $9.99/$79), 30-day free trial (card required).
@@ -38,7 +38,7 @@ Not a paycheck. A wave.
 Most apps assume you have a tide table.
 You don't.
 
-Built for variable. becomeable.app
+Built for variable. becomeable.app/get-able
 
 #freelancetok #1099 #variableincome`,
 
@@ -73,7 +73,7 @@ Free for 30 days. Link in bio.
 Freezer. Leaker. Shame cycler.
 Same you, different week.
 
-becomeable.app
+becomeable.app/get-able
 
 #freelancetok #moneytok #1099`,
 
@@ -111,7 +111,7 @@ Freezer. Leaker. Shame cycler.
 Same person. Different week.
 Wrong tool. Not wrong you.
 
-becomeable.app
+becomeable.app/get-able
 
 #freelancetok #1099 #variableincome`,
 
@@ -149,7 +149,7 @@ Link in bio.
 
 It's not a discipline thing. It's a tool thing.
 
-becomeable.app
+becomeable.app/get-able
 
 #freelancetok #moneytok #1099`,
 
@@ -187,7 +187,7 @@ They want envelopes for next month. You don't know yet.
 They expect a fixed surplus. You have variable.
 They tell you to save more. That's a wish.
 
-becomeable.app
+becomeable.app/get-able
 
 #freelancetok #1099 #budgeting`,
 
@@ -225,7 +225,7 @@ Link in bio.
     tt: `Your floor. Bills + tax. Funded first.
 
 That's what Day 1 should look like.
-becomeable.app
+becomeable.app/get-able
 
 #freelancetok #moneytok #1099`,
   },
@@ -245,7 +245,7 @@ Link in bio.
 
 The whole app assumes your paycheck doesn't exist.
 
-becomeable.app
+becomeable.app/get-able
 
 #variableincome #freelancetok #1099`,
 
@@ -291,7 +291,7 @@ Day 1: forget you ever blamed.
 
 Built a system to break it.
 
-becomeable.app
+becomeable.app/get-able
 
 #freelancetok #1099 #moneytok`,
 
@@ -326,7 +326,7 @@ Free for 30 days. Link in bio.
 
     tt: `Not more discipline. A system.
 
-becomeable.app
+becomeable.app/get-able
 
 #freelancetok #moneytok #1099`,
 
@@ -354,7 +354,7 @@ Link in bio.
 
     tt: `You don't need more discipline. You need a plan built for income like yours.
 
-becomeable.app
+becomeable.app/get-able
 
 #freelancetok #1099 #moneytok`,
 
@@ -393,7 +393,7 @@ Link in bio.
 
 But every other app is asking you to be one.
 
-becomeable.app
+becomeable.app/get-able
 
 #freelancetok #1099 #moneytok`,
 
@@ -427,7 +427,7 @@ Day 7: first bill auto-pays. You don't think about it.
 Day 14: you open the app, smile, close it.
 Day 30: no surprises. April-proof.
 
-becomeable.app
+becomeable.app/get-able
 
 #freelancetok #1099 #moneytok`,
 
@@ -466,7 +466,7 @@ Link in bio.
     tt: `Ask the scary question. Get an honest answer.
 
 A coach that knows your real numbers.
-becomeable.app
+becomeable.app/get-able
 
 #freelancetok #1099 #moneytok`,
   },
@@ -485,7 +485,7 @@ Free for 30 days. Link in bio.
 
 That's the whole product.
 
-becomeable.app
+becomeable.app/get-able
 
 #freelancetok #1099 #moneytok`,
 
@@ -523,7 +523,7 @@ Free for 30 days. Link in bio.
 
 That's it. That's the whole model.
 
-becomeable.app
+becomeable.app/get-able
 
 #freelancetok #1099 #moneytok`,
 
@@ -564,7 +564,7 @@ Free for 30 days. Link in bio.
 
     tt: `One pile. Five jobs. Split first. Spend last.
 
-becomeable.app
+becomeable.app/get-able
 
 #freelancetok #1099 #moneytok`,
 
@@ -603,7 +603,7 @@ Free for 30 days. Link in bio.
 
 Debt drops. Savings grow. The fear fades.
 
-becomeable.app
+becomeable.app/get-able
 
 #freelancetok #1099 #moneytok`,
 
@@ -637,7 +637,7 @@ Link in bio.
     tt: `One deposit. Five jobs in order.
 
 Tax. Bills. Debt. Reserve. Free. Already split.
-becomeable.app
+becomeable.app/get-able
 
 #freelancetok #moneytok #1099`,
   },
@@ -663,7 +663,7 @@ Day 30: didn't open it for 3 days. That's the win.
 Day 60: first calm month. No bracing.
 Day 90: you don't recognize past-you.
 
-becomeable.app
+becomeable.app/get-able
 
 #freelancetok #1099 #moneytok`,
 
@@ -700,7 +700,7 @@ Link in bio.
 
 If you've watched this far, you already know.
 
-becomeable.app
+becomeable.app/get-able
 
 #freelancetok #1099 #moneytok`,
 
@@ -729,7 +729,7 @@ Free for 30 days. Link in bio.
 
 That's the whole point.
 
-becomeable.app
+becomeable.app/get-able
 
 #freelancetok #1099 #moneytok`,
 
@@ -764,7 +764,7 @@ Free for 30 days. Link in bio.
 
     tt: `Free to try. Built for inconsistent income.
 
-becomeable.app
+becomeable.app/get-able
 
 #freelancetok #1099 #variableincome`,
 
@@ -790,7 +790,7 @@ Free for 30 days. Link in bio.
 
     tt: `Built for inconsistent income. Every deposit auto-routed.
 
-becomeable.app
+becomeable.app/get-able
 
 #freelancetok #1099 #moneytok`,
 
@@ -823,7 +823,7 @@ Freezer. Leaker. Shame Cycler.
 
 All three are structural. Not personal.
 
-becomeable.app
+becomeable.app/get-able
 
 #freelancetok #1099 #moneytok`,
 
@@ -856,7 +856,7 @@ Built for the freeze. Free for 30 days. Link in bio.
 
 Different diagnosis. Different fix.
 
-becomeable.app
+becomeable.app/get-able
 
 #freelancetok #1099 #moneytok`,
 
@@ -891,7 +891,7 @@ Day 14: the leak. You feel it. Can't name it.
 Day 30: where did $4,000 go?
 Day 31: shame, guilt, repeat.
 
-becomeable.app
+becomeable.app/get-able
 
 #freelancetok #1099 #moneytok`,
 
@@ -928,7 +928,7 @@ Built as a system. Free for 30 days. Link in bio.
 
 Apps measure. Systems decide.
 
-becomeable.app
+becomeable.app/get-able
 
 #freelancetok #1099 #moneytok`,
 
@@ -957,7 +957,7 @@ Free for 30 days. Link in bio.
 
     tt: `Built for inconsistent income.
 
-becomeable.app
+becomeable.app/get-able
 
 #freelancetok #1099 #moneytok`,
 
@@ -990,7 +990,7 @@ Built for the structure. Free for 30 days. Link in bio.
 
     tt: `You don't have a willpower problem. You have a structure problem.
 
-becomeable.app
+becomeable.app/get-able
 
 #freelancetok #1099 #moneytok`,
 
@@ -1028,7 +1028,7 @@ They assume a paycheck. They show what already happened.
 
 You need a system for variable.
 
-becomeable.app
+becomeable.app/get-able
 
 #freelancetok #1099 #moneytok`,
 
@@ -1065,7 +1065,7 @@ They want you to be an accountant.
 
 You need a system that starts the second money hits.
 
-becomeable.app
+becomeable.app/get-able
 
 #freelancetok #1099 #moneytok`,
 
@@ -1102,7 +1102,7 @@ Free for 30 days. Link in bio.
 
     tt: `The leak isn't dramatic. That's why you can't see it.
 
-becomeable.app
+becomeable.app/get-able
 
 #freelancetok #1099 #moneytok`,
 
@@ -1137,7 +1137,7 @@ Free for 30 days. Link in bio.
 4. Spend the free bucket without guilt.
 5. Year-end. Not panic. Just Tuesday.
 
-becomeable.app
+becomeable.app/get-able
 
 #freelancetok #1099 #moneytok`,
 
@@ -1175,7 +1175,7 @@ Link in bio.
     tt: `Score the month. Reality. Not the plan.
 
 See the leaks before they compound.
-becomeable.app
+becomeable.app/get-able
 
 #freelancetok #1099 #moneytok`,
   },
@@ -1194,7 +1194,7 @@ Free for 30 days. Link in bio.
 
     tt: `Money that sits, leaks.
 
-becomeable.app
+becomeable.app/get-able
 
 #freelancetok #1099 #moneytok`,
 
@@ -1239,7 +1239,7 @@ Taxes. Bills. Reserve. Debt. Free.
 
 Order matters.
 
-becomeable.app
+becomeable.app/get-able
 
 #freelancetok #1099 #moneytok`,
 
@@ -1280,7 +1280,7 @@ $14.99/mo or $129/yr (save $50). Free for 30 days. Link in bio.
 
 Taxes. Bills. Reserve. Debt. Free.
 
-becomeable.app
+becomeable.app/get-able
 
 #freelancetok #1099 #moneytok`,
 
@@ -1321,7 +1321,7 @@ $14.99/mo or $129/yr. Free for 30 days. Link in bio.
 4. Debt. Killed on schedule.
 5. Free. Spend without flinching.
 
-becomeable.app
+becomeable.app/get-able
 
 #freelancetok #1099 #moneytok`,
 
@@ -1354,7 +1354,7 @@ Free for 30 days. Link in bio.
 
     tt: `Every deposit, already sorted.
 
-becomeable.app
+becomeable.app/get-able
 
 #freelancetok #1099 #moneytok`,
 
@@ -1432,7 +1432,7 @@ Link in bio.
     tt: `Every bill on the page. Funded before it's due.
 
 The 1st stops being a cliff.
-becomeable.app
+becomeable.app/get-able
 
 #freelancetok #1099 #moneytok`,
   },
@@ -1449,7 +1449,7 @@ Free for 30 days. Link in bio.
 
     tt: `A budget that works without a predictable paycheck.
 
-becomeable.app
+becomeable.app/get-able
 
 #freelancetok #1099 #moneytok`,
 
@@ -1486,7 +1486,7 @@ We built ours for you. Free for 30 days. Link in bio.
 
 That's why nothing's worked.
 
-becomeable.app
+becomeable.app/get-able
 
 #freelancetok #1099 #moneytok`,
 
@@ -1682,7 +1682,7 @@ Link in bio.
     tt: `Expecting a deposit? Plan for it now.
 
 Not when it lands. Before.
-becomeable.app
+becomeable.app/get-able
 
 #freelancetok #1099 #taxes #moneytok`,
   },
@@ -1702,7 +1702,7 @@ Free for 30 days. Link in bio.
 Slow months are why most plans die.
 A reserve fixes that.
 
-becomeable.app
+becomeable.app/get-able
 
 #freelancetok #1099 #debtfreejourney`,
 
@@ -1739,7 +1739,7 @@ Free for 30 days. Link in bio.
 
 Loud advice never moved a dollar.
 
-becomeable.app
+becomeable.app/get-able
 
 #freelancetok #1099 #moneytok`,
 
@@ -1817,7 +1817,7 @@ No unemployment. No severance. No paid leave.
 
 Aim for 9 months.
 
-becomeable.app
+becomeable.app/get-able
 
 #freelancetok #1099 #moneytok`,
 
@@ -1848,7 +1848,7 @@ Free for 30 days. Link in bio.
 
     tt: `If the goal is more money, you need to know where it is.
 
-becomeable.app
+becomeable.app/get-able
 
 #freelancetok #1099 #moneytok`,
 
@@ -1925,7 +1925,7 @@ Link in bio.
     tt: `Stress-test next month. Before it happens.
 
 Type a slow month. See if your floor holds.
-becomeable.app
+becomeable.app/get-able
 
 #freelancetok #moneytok #1099`,
   },
@@ -1944,7 +1944,7 @@ Free for 30 days. Link in bio.
 
 Just confidence. Every day.
 
-becomeable.app
+becomeable.app/get-able
 
 #freelancetok #1099 #moneytok`,
 
@@ -1984,7 +1984,7 @@ Day 30: you brace.
 
 Not willpower. A missing system.
 
-becomeable.app
+becomeable.app/get-able
 
 #freelancetok #1099 #variableincome`,
 
@@ -2021,7 +2021,7 @@ Day 30: where did it go?
 
 It's a Day 1 problem.
 
-becomeable.app
+becomeable.app/get-able
 
 #freelancetok #1099 #variableincome`,
 
@@ -2060,7 +2060,7 @@ Step 1: stop treating it as money. Treat it as energy.
 Step 2: move taxes first.
 Step 3: cover bills before you feel like it.
 
-becomeable.app
+becomeable.app/get-able
 
 #freelancetok #1099 #variableincome`,
 
@@ -2099,7 +2099,7 @@ It's a Day 14 problem.
 
 Deposit lands. Bills were going to be fine. Day 14: somehow smaller.
 
-becomeable.app
+becomeable.app/get-able
 
 #freelancetok #1099 #variableincome`,
 
@@ -2138,7 +2138,7 @@ Day 3: schedule debt.
 Day 4: set reserve.
 Day 5: what's left is free.
 
-becomeable.app
+becomeable.app/get-able
 
 #freelancetok #1099 #variableincome`,
 
@@ -2176,7 +2176,7 @@ Link in bio.
     tt: `Log what came in. Ten seconds.
 
 Already split. Tax, bills, debt, reserve, free.
-becomeable.app
+becomeable.app/get-able
 
 #freelancetok #moneytok #1099`,
   },
@@ -2199,7 +2199,7 @@ Not because you're lazy.
 
 Because you don't know when the next check is coming.
 
-becomeable.app
+becomeable.app/get-able
 
 #freelancetok #1099 #moneymindset`,
 
@@ -2238,7 +2238,7 @@ Money would land. I wouldn't move it.
 
 Not lazy. Just didn't know when the next check was coming.
 
-becomeable.app
+becomeable.app/get-able
 
 #freelancetok #1099 #variableincome`,
 
@@ -2276,7 +2276,7 @@ Not bad with money.
 Every tool assumed a paycheck.
 Mine wasn't.
 
-becomeable.app
+becomeable.app/get-able
 
 #freelancetok #1099 #variableincome`,
 
@@ -2312,7 +2312,7 @@ Step 2: tell it expected income.
 Step 3: pick buckets.
 Step 4: each deposit auto-allocates.
 
-becomeable.app
+becomeable.app/get-able
 
 #freelancetok #1099 #variableincome`,
 
@@ -2355,7 +2355,7 @@ Open the bank app: bracing.
 
 The bracing was the actual problem.
 
-becomeable.app
+becomeable.app/get-able
 
 #freelancetok #1099 #moneymindset`,
 
@@ -2394,7 +2394,7 @@ One year: ~$24,000.
 
 Not bad with money. A missing system.
 
-becomeable.app
+becomeable.app/get-able
 
 #freelancetok #1099 #variableincome`,
 
@@ -2430,7 +2430,7 @@ Link in bio.
     tt: `One tip for 1099 income.
 
 Move 30% the second it clears. Day of. Not April.
-becomeable.app
+becomeable.app/get-able
 
 #freelancetok #1099 #taxes`,
   },
@@ -2455,7 +2455,7 @@ Not because they don't want to.
 
 Afraid of not knowing when the next check is coming.
 
-becomeable.app
+becomeable.app/get-able
 
 #freelancetok #1099 #moneymindset`,
 
@@ -2498,7 +2498,7 @@ Under-instructed.
 
 The tools assume a paycheck. Yours isn't one.
 
-becomeable.app
+becomeable.app/get-able
 
 #freelancetok #1099 #variableincome`,
 
@@ -2537,7 +2537,7 @@ Handed the wrong tool.
 
 Every other tool assumes a paycheck. Yours is variable.
 
-becomeable.app
+becomeable.app/get-able
 
 #freelancetok #1099 #variableincome`,
 
@@ -2575,7 +2575,7 @@ Not a lecture about coffee.
 
 One thing: split every deposit.
 
-becomeable.app
+becomeable.app/get-able
 
 #freelancetok #1099 #variableincome`,
 
@@ -2614,7 +2614,7 @@ Using the wrong app.
 
 The app was built for a paycheck. Yours isn't one.
 
-becomeable.app
+becomeable.app/get-able
 
 #freelancetok #1099 #variableincome`,
 
@@ -2653,7 +2653,7 @@ $129/yr. Save $50.
 
 Free for 30 days. Pick either after.
 
-becomeable.app
+becomeable.app/get-able
 
 #freelancetok #1099 #variableincome`,
 
@@ -2690,7 +2690,7 @@ Able wants the math right.
 
 No streaks. No confetti. Boring is the feature.
 
-becomeable.app
+becomeable.app/get-able
 
 #freelancetok #1099 #variableincome`,
 
@@ -2725,7 +2725,7 @@ Yours isn't.
 
 That's the mismatch.
 
-becomeable.app
+becomeable.app/get-able
 
 #freelancetok #1099 #variableincome`,
 
@@ -2766,7 +2766,7 @@ By Day 30: $1,000-$2,000 gone.
 
 Money without a job leaks.
 
-becomeable.app
+becomeable.app/get-able
 
 #freelancetok #1099 #variableincome`,
 
@@ -2805,7 +2805,7 @@ $300 subscriptions.
 $400 just grabbed.
 $300 leak.
 
-becomeable.app
+becomeable.app/get-able
 
 #freelancetok #1099 #variableincome`,
 
@@ -2848,7 +2848,7 @@ $300 leak.
 
 The compound is huge.
 
-becomeable.app
+becomeable.app/get-able
 
 #freelancetok #1099 #variableincome`,
 
@@ -2887,7 +2887,7 @@ Guessing.
 
 Decision after decision with no information.
 
-becomeable.app
+becomeable.app/get-able
 
 #freelancetok #1099 #variableincome`,
 
@@ -2960,7 +2960,7 @@ Day 30: $400 gone.
 
 Nothing to show for it.
 
-becomeable.app
+becomeable.app/get-able
 
 #freelancetok #1099 #variableincome`,
 
@@ -2999,7 +2999,7 @@ Nothing paid down.
 Nothing saved.
 Nothing to show for it.
 
-becomeable.app
+becomeable.app/get-able
 
 #freelancetok #1099 #moneymindset`,
 
@@ -3038,7 +3038,7 @@ They protect themselves from it.
 
 No system underneath = decisions with no info.
 
-becomeable.app
+becomeable.app/get-able
 
 #creatortok #creatoreconomy #variableincome`,
 
@@ -3075,7 +3075,7 @@ Debt shrinking. Savings growing.
 
 Nothing leaked.
 
-becomeable.app
+becomeable.app/get-able
 
 #creatortok #creatoreconomy #variableincome`,
 
@@ -3144,7 +3144,7 @@ It's variable income.
 
 Different category. Different rules.
 
-becomeable.app
+becomeable.app/get-able
 
 #creatortok #creatoreconomy #variableincome`,
 
@@ -3212,7 +3212,7 @@ Link in bio.
     tt: `Sponsorship hits. Feels like a windfall.
 
 Until tax day. Five-way split, day of.
-becomeable.app
+becomeable.app/get-able
 
 #creatortok #1099 #moneytok`,
   },
@@ -3231,7 +3231,7 @@ Free for 30 days. Link in bio.
 
 Not generic advice. A system for the income you have.
 
-becomeable.app
+becomeable.app/get-able
 
 #freelancetok #1099 #variableincome`,
 
@@ -3267,7 +3267,7 @@ Different feeling.
 
 Project gaps don't break the system.
 
-becomeable.app
+becomeable.app/get-able
 
 #freelancetok #1099 #variableincome`,
 
@@ -3382,7 +3382,7 @@ You're playing on hard mode.
 
 Same game. Different rules.
 
-becomeable.app
+becomeable.app/get-able
 
 #freelancetok #1099 #variableincome`,
 
@@ -3453,7 +3453,7 @@ Link in bio.
     tt: `New bill? Reserved the second you add it.
 
 No spreadsheet. No "I'll get to it."
-becomeable.app
+becomeable.app/get-able
 
 #freelancetok #1099 #moneytok`,
   },
@@ -3474,7 +3474,7 @@ Not a discipline problem.
 
 The tools were built for paychecks.
 
-becomeable.app
+becomeable.app/get-able
 
 #freelancetok #1099 #variableincome`,
 
@@ -3511,7 +3511,7 @@ Nothing leaked.
 
 That's the whole sentence.
 
-becomeable.app
+becomeable.app/get-able
 
 #gigtok #1099 #rideshare`,
 
@@ -3552,7 +3552,7 @@ The Shame Cycle.
 
 All structural. Not personal.
 
-becomeable.app
+becomeable.app/get-able
 
 #gigtok #1099 #moneymindset`,
 
@@ -3627,7 +3627,7 @@ Money you don't have yet.
 
 That assumes a paycheck. Yours isn't one.
 
-becomeable.app
+becomeable.app/get-able
 
 #gigtok #1099 #variableincome`,
 
@@ -3700,7 +3700,7 @@ Link in bio.
     tt: `End of a long shift. Earnings hit. Already gone.
 
 Reserve 30% the second it lands.
-becomeable.app
+becomeable.app/get-able
 
 #rideshare #gigwork #1099 #moneytok`,
   },
@@ -3722,7 +3722,7 @@ Free for 30 days. Link in bio.
 Income arrives in waves.
 Tools assume tides.
 
-becomeable.app
+becomeable.app/get-able
 
 #variableincome #1099 #freelancetok`,
 
@@ -3762,7 +3762,7 @@ Refund pending.
 
 The white-knuckling is the symptom.
 
-becomeable.app
+becomeable.app/get-able
 
 #etsyseller #ecommerce #1099`,
 
@@ -3875,7 +3875,7 @@ By then it's too late.
 
 You can't prevent what already occurred.
 
-becomeable.app
+becomeable.app/get-able
 
 #etsyseller #ecommerce #1099`,
 
@@ -3950,7 +3950,7 @@ Link in bio.
     tt: `Big commission lands. Then crickets for weeks.
 
 The reserve is the bridge.
-becomeable.app
+becomeable.app/get-able
 
 #realestate #commission #1099 #moneytok`,
   },
@@ -3973,7 +3973,7 @@ The "feels" is doing work.
 
 The tools were wrong.
 
-becomeable.app
+becomeable.app/get-able
 
 #variableincome #1099 #budgeting`,
 
@@ -4050,7 +4050,7 @@ Freezing.
 
 Money sits. Money leaks.
 
-becomeable.app
+becomeable.app/get-able
 
 #freelancetok #1099 #moneymindset`,
 
@@ -4123,7 +4123,7 @@ Free for 30 days. Link in bio.
 
 It isn't yours.
 
-becomeable.app
+becomeable.app/get-able
 
 #freelancetok #1099 #taxtok`,
 
@@ -4196,7 +4196,7 @@ Link in bio.
     tt: `Every dollar traced. Tax-ready in one tap.
 
 Schedule C in a CSV.
-becomeable.app
+becomeable.app/get-able
 
 #1099 #taxes #freelancetok`,
   },
@@ -4217,7 +4217,7 @@ Free for 30 days. Link in bio.
 
 Not your fault.
 
-becomeable.app
+becomeable.app/get-able
 
 #freelancetok #1099 #moneymindset`,
 
@@ -4254,7 +4254,7 @@ Free for 30 days. Link in bio.
 
 You need fewer leaks.
 
-becomeable.app
+becomeable.app/get-able
 
 #freelancetok #1099 #variableincome`,
 
@@ -4289,7 +4289,7 @@ Per month: $2,000.
 Six months: $12,000.
 One year: $24,000.
 
-becomeable.app
+becomeable.app/get-able
 
 #freelancetok #1099 #variableincome`,
 
@@ -4328,7 +4328,7 @@ It's a wish dressed as advice.
 
 Move savings first. Spend what's left.
 
-becomeable.app
+becomeable.app/get-able
 
 #freelancetok #1099 #saving`,
 
@@ -4361,7 +4361,7 @@ Free for 30 days. Link in bio.
 
 Moved before you see it.
 
-becomeable.app
+becomeable.app/get-able
 
 #freelancetok #1099 #taxtok`,
 
@@ -4396,7 +4396,7 @@ You're running a job that pays others.
 
 Start with 5%.
 
-becomeable.app
+becomeable.app/get-able
 
 #smallbusiness #1099 #freelancetok`,
 
@@ -4431,7 +4431,7 @@ Link in bio.
     tt: `Every deposit gets a destination. Before it leaves your hand.
 
 The whole habit, in one rule.
-becomeable.app
+becomeable.app/get-able
 
 #freelancetok #moneytok #1099`,
   },
@@ -4450,7 +4450,7 @@ Free for 30 days. Link in bio.
 
     tt: `Stop living unpredictable check to unpredictable check.
 
-becomeable.app
+becomeable.app/get-able
 
 #freelancetok #1099 #moneymindset`,
 
@@ -4603,7 +4603,7 @@ Free for 30 days. Link in bio.
 
 You need a different starting point.
 
-becomeable.app
+becomeable.app/get-able
 
 #freelancetok #1099 #moneymindset`,
 
@@ -4680,7 +4680,7 @@ Link in bio.
     tt: `What lands. What's owed. Already lined up.
 
 Both sides on one page.
-becomeable.app
+becomeable.app/get-able
 
 #freelancetok #1099 #moneytok`,
   },
@@ -4701,7 +4701,7 @@ Free for 30 days. Link in bio.
 
 Even on slow months.
 
-becomeable.app
+becomeable.app/get-able
 
 #freelancetok #1099 #moneymindset`,
 
@@ -4740,7 +4740,7 @@ Free for 30 days. Link in bio.
 
 What does that actually cost?
 
-becomeable.app
+becomeable.app/get-able
 
 #freelancetok #1099 #variableincome`,
 
@@ -4779,7 +4779,7 @@ Day 3: debt.
 Day 4: reserve.
 Day 5: what's left is free.
 
-becomeable.app
+becomeable.app/get-able
 
 #freelancetok #1099 #variableincome`,
 
@@ -4857,7 +4857,7 @@ Free for 30 days. Link in bio.
 
 Bigger than the cost of starting.
 
-becomeable.app
+becomeable.app/get-able
 
 #freelancetok #1099 #moneymindset`,
 
@@ -4894,7 +4894,7 @@ Rule of 72: divide 72 by rate.
 1% savings: 72 yrs to double.
 8% market: 9 yrs to double.
 
-becomeable.app
+becomeable.app/get-able
 
 #freelancetok #1099 #moneymindset`,
 
@@ -4928,7 +4928,7 @@ Link in bio.
     tt: `Built-in lessons. For variable income.
 
 The stuff a steady-paycheck guide never covers.
-becomeable.app
+becomeable.app/get-able
 
 #freelancetok #1099 #moneytok`,
   },
@@ -4949,7 +4949,7 @@ Free for 30 days. Link in bio.
 
 Able assumes lumpy, unpredictable, rarely on schedule.
 
-becomeable.app
+becomeable.app/get-able
 
 #freelancetok #1099 #variableincome`,
 
@@ -4986,7 +4986,7 @@ Free for 30 days. Link in bio.
 
 Budgeting is failing you.
 
-becomeable.app
+becomeable.app/get-able
 
 #freelancetok #1099 #budgeting`,
 
@@ -5022,7 +5022,7 @@ Big check: flows in.
 Slow week: flows out.
 Bills funded. Always.
 
-becomeable.app
+becomeable.app/get-able
 
 #freelancetok #1099 #variableincome`,
 
@@ -5099,7 +5099,7 @@ Free for 30 days. Link in bio.
 
 Is the day you stop bracing.
 
-becomeable.app
+becomeable.app/get-able
 
 #freelancetok #1099 #moneymindset`,
 
@@ -5138,7 +5138,7 @@ Yours isn't.
 Reserve covers minimums.
 Good months attack principal.
 
-becomeable.app
+becomeable.app/get-able
 
 #freelancetok #1099 #debtfree`,
 
@@ -5174,7 +5174,7 @@ Link in bio.
     tt: `Highest APR first. Watch it drop.
 
 A schedule that bends with variable income.
-becomeable.app
+becomeable.app/get-able
 
 #debtfreejourney #freelancetok #moneytok`,
   },
@@ -5195,7 +5195,7 @@ Free for 30 days. Link in bio.
 
 Without second-guessing.
 
-becomeable.app
+becomeable.app/get-able
 
 #freelancetok #1099 #moneymindset`,
 
@@ -5232,7 +5232,7 @@ Free for 30 days. Link in bio.
 
 The replacement still assumes a paycheck.
 
-becomeable.app
+becomeable.app/get-able
 
 #freelancetok #1099 #variableincome`,
 
@@ -5267,7 +5267,7 @@ Opened 3 times this quarter.
 
 You don't need a better spreadsheet.
 
-becomeable.app
+becomeable.app/get-able
 
 #freelancetok #1099 #variableincome`,
 
@@ -5303,7 +5303,7 @@ Utilization: 30%, keep below 10%.
 
 Pay balances down: 30-60 pts in 30 days.
 
-becomeable.app
+becomeable.app/get-able
 
 #freelancetok #1099 #creditscore`,
 
@@ -5336,7 +5336,7 @@ Free for 30 days. Link in bio.
 
 Direct it. Or it leaks.
 
-becomeable.app
+becomeable.app/get-able
 
 #freelancetok #1099 #moneymindset`,
 
@@ -5367,7 +5367,7 @@ Free for 30 days. Link in bio.
 Reasons are fixable.
 Personal vs business credit = 2 systems.
 
-becomeable.app
+becomeable.app/get-able
 
 #smallbusiness #variableincome #1099`,
 
@@ -5403,7 +5403,7 @@ Link in bio.
     tt: `Revenue up. Owner pay flat.
 
 Set an owner-pay percent. Every deposit honors it.
-becomeable.app
+becomeable.app/get-able
 
 #smallbusinesstok #ownerpay #moneytok`,
   },
@@ -5422,7 +5422,7 @@ Free for 30 days. Link in bio.
 
     tt: `Actually build your savings.
 
-becomeable.app
+becomeable.app/get-able
 
 #freelancetok #1099 #saving`,
 
@@ -5459,7 +5459,7 @@ Free for 30 days. Link in bio.
 
 You shouldn't have to be.
 
-becomeable.app
+becomeable.app/get-able
 
 #freelancetok #1099 #variableincome`,
 
@@ -5492,7 +5492,7 @@ It's a wish dressed as advice.
 
 Reverse the order.
 
-becomeable.app
+becomeable.app/get-able
 
 #freelancetok #1099 #saving`,
 
@@ -5525,7 +5525,7 @@ Free for 30 days. Link in bio.
 
 Asks you for nothing.
 
-becomeable.app
+becomeable.app/get-able
 
 #freelancetok #1099 #moneymindset`,
 
@@ -5560,7 +5560,7 @@ Free for 30 days. Link in bio.
 
 Another $2,000 gone.
 
-becomeable.app
+becomeable.app/get-able
 
 #freelancetok #1099 #variableincome`,
 
@@ -5595,7 +5595,7 @@ Free for 30 days. Link in bio.
 
 Doesn't fix the leak.
 
-becomeable.app
+becomeable.app/get-able
 
 #freelancetok #1099 #variableincome`,
 
@@ -5630,7 +5630,7 @@ Or dreaded April.
 
 Wrong tool. Not wrong you.
 
-becomeable.app
+becomeable.app/get-able
 
 #freelancetok #1099 #moneymindset`,
 
@@ -5663,7 +5663,7 @@ Free for 30 days. Link in bio.
 
     tt: `I am able to budget inconsistent income.
 
-becomeable.app
+becomeable.app/get-able
 
 #freelancetok #1099 #budgeting`,
 
@@ -5698,7 +5698,7 @@ Free for 30 days. Link in bio.
 
 Handed the wrong tool.
 
-becomeable.app
+becomeable.app/get-able
 
 #freelancetok #1099 #moneymindset`,
 
@@ -5731,7 +5731,7 @@ Free for 30 days. Link in bio.
 
 It belongs to the tool.
 
-becomeable.app
+becomeable.app/get-able
 
 #freelancetok #1099 #moneymindset`,
 
@@ -5764,7 +5764,7 @@ Free for 30 days. Link in bio.
 
 I wanted to be done thinking about money.
 
-becomeable.app
+becomeable.app/get-able
 
 #freelancetok #1099 #moneymindset`,
 
@@ -5797,7 +5797,7 @@ Free for 30 days. Link in bio.
 
 Missing a system.
 
-becomeable.app
+becomeable.app/get-able
 
 #freelancetok #1099 #variableincome`,
 
@@ -5830,7 +5830,7 @@ Free for 30 days. Link in bio.
 
 Stop bracing.
 
-becomeable.app
+becomeable.app/get-able
 
 #freelancetok #1099 #variableincome`,
 
@@ -5867,7 +5867,7 @@ I am able to save.
 
 I am able.
 
-becomeable.app
+becomeable.app/get-able
 
 #freelancetok #1099 #moneymindset`,
 
@@ -5900,7 +5900,7 @@ Free for 30 days. Link in bio.
 
 Another $500-$1,000 gone.
 
-becomeable.app
+becomeable.app/get-able
 
 #freelancetok #1099 #variableincome`,
 
@@ -5937,7 +5937,7 @@ Free for 30 days. Link in bio.
 
 Not a side effect.
 
-becomeable.app
+becomeable.app/get-able
 
 #freelancetok #1099 #moneymindset`,
 
@@ -5971,7 +5971,7 @@ $129 a year. Save $50.
 
 Free for 30 days.
 
-becomeable.app
+becomeable.app/get-able
 
 #freelancetok #1099 #variableincome`,
 
@@ -6006,7 +6006,7 @@ Free for 30 days. Link in bio.
 
 Yours isn't one.
 
-becomeable.app
+becomeable.app/get-able
 
 #freelancetok #1099 #variableincome`,
 
@@ -6039,7 +6039,7 @@ Free for 30 days. Link in bio.
 
 Pay yourself wrong.
 
-becomeable.app
+becomeable.app/get-able
 
 #freelancetok #1099 #smallbusiness`,
 
@@ -6111,7 +6111,7 @@ Free for 30 days. Link in bio.
 
 That number is your Floor.
 
-becomeable.app
+becomeable.app/get-able
 
 #freelancetok #1099 #variableincome`,
 
@@ -6144,7 +6144,7 @@ Free for 30 days. Link in bio.
 
     tt: `Become able.
 
-becomeable.app
+becomeable.app/get-able
 
 #freelancetok #1099 #moneymindset`,
 
@@ -6186,7 +6186,7 @@ Link in bio.
     tt: `1099-NEC vs 1099-K. Two forms. Different jobs.
 
 NEC = clients. K = platforms. Same income.
-becomeable.app
+becomeable.app/get-able
 
 #1099 #taxes #freelancetok`,
   },
@@ -6203,7 +6203,7 @@ Link in bio.
     tt: `76% of self-employed have variable income.
 
 Every app still assumes the 24%.
-becomeable.app
+becomeable.app/get-able
 
 #freelancetok #1099 #moneytok`,
   },
@@ -6223,7 +6223,7 @@ Link in bio.
     tt: `Emergency fund vs reserve. Two different jobs.
 
 One for surprises. One for the lumpy weeks.
-becomeable.app
+becomeable.app/get-able
 
 #freelancetok #moneytok #1099`,
   },
@@ -6242,7 +6242,7 @@ Link in bio.
     tt: `Off the top. Every deposit.
 
 April becomes paperwork. Not an event.
-becomeable.app
+becomeable.app/get-able
 
 #1099 #taxes #freelancetok`,
   },
@@ -6261,7 +6261,7 @@ Link in bio.
     tt: `Tax season simplified. Four mechanics.
 
 Off the top. Tag once. Find more. Export.
-becomeable.app
+becomeable.app/get-able
 
 #1099 #taxes #freelancetok`,
   },
@@ -6279,7 +6279,7 @@ Link in bio.
     tt: `36% of US workers freelance now.
 
 Most budgeting tools still don't fit them.
-becomeable.app
+becomeable.app/get-able
 
 #freelancetok #1099 #moneytok`,
   },
@@ -6296,7 +6296,7 @@ Link in bio.
     tt: `Day 1. Money lands. You freeze.
 
 Not lazy. Untaught.
-becomeable.app
+becomeable.app/get-able
 
 #freelancetok #1099 #moneymindset`,
   },
@@ -6317,7 +6317,7 @@ Link in bio.
     tt: `Quarterlies due on a bad month.
 
 The IRS doesn't care. Fix is months earlier.
-becomeable.app
+becomeable.app/get-able
 
 #1099 #taxes #freelancetok`,
   },
@@ -6336,7 +6336,7 @@ Link in bio.
     tt: `Bad month + quarterlies due.
 
 Pay what you can. Then build the bucket.
-becomeable.app
+becomeable.app/get-able
 
 #1099 #taxes #freelancetok`,
   },
@@ -6355,7 +6355,7 @@ Link in bio.
     tt: `Quarterly taxes. Short version.
 
 Who. When. How much. What if you skip.
-becomeable.app
+becomeable.app/get-able
 
 #1099 #taxes #freelancetok`,
   },
@@ -6374,7 +6374,7 @@ Link in bio.
     tt: `April morning. One CSV.
 
 That's it. Already tagged.
-becomeable.app
+becomeable.app/get-able
 
 #1099 #taxes #freelancetok`,
   },
@@ -6393,7 +6393,7 @@ Link in bio.
     tt: `Skip a quarterly = ~8% penalty + interest.
 
 The bucket prevents the conversation.
-becomeable.app
+becomeable.app/get-able
 
 #1099 #taxes #freelancetok`,
   },
@@ -6412,7 +6412,7 @@ Link in bio.
     tt: `Big invoice clearing? Plan for it now.
 
 Tax piece reserved before it lands.
-becomeable.app
+becomeable.app/get-able
 
 #1099 #taxes #freelancetok`,
   },
@@ -6431,7 +6431,7 @@ Link in bio.
     tt: `The IRS doesn't care about your bad month.
 
 The bucket is the only protection.
-becomeable.app
+becomeable.app/get-able
 
 #1099 #taxes #freelancetok`,
   },
@@ -6452,7 +6452,7 @@ Link in bio.
     tt: `Schedule C in plain language.
 
 Income minus expenses = what you owe on.
-becomeable.app
+becomeable.app/get-able
 
 #scheduleC #1099 #freelancetok`,
   },
@@ -6471,7 +6471,7 @@ Link in bio.
     tt: `Tax bucket setup. Three steps.
 
 Percent. Destination. Move it day-of.
-becomeable.app
+becomeable.app/get-able
 
 #scheduleC #1099 #freelancetok`,
   },
@@ -6491,7 +6491,7 @@ Link in bio.
     tt: `What goes on Schedule C, what doesn't.
 
 "Ordinary and necessary for the business."
-becomeable.app
+becomeable.app/get-able
 
 #scheduleC #1099 #freelancetok`,
   },
@@ -6510,7 +6510,7 @@ Link in bio.
     tt: `Tag once. Able remembers forever.
 
 Real-time beats year-end every time.
-becomeable.app
+becomeable.app/get-able
 
 #scheduleC #1099 #freelancetok`,
   },
@@ -6529,7 +6529,7 @@ Link in bio.
     tt: `SE deductions you almost missed.
 
 QBI. Health premiums. Half of SE tax. Solo 401(k).
-becomeable.app
+becomeable.app/get-able
 
 #1099 #taxes #freelancetok`,
   },
@@ -6548,7 +6548,7 @@ Link in bio.
     tt: `Every dollar traced. Schedule C in a tap.
 
 The March panic stops being a weekend.
-becomeable.app
+becomeable.app/get-able
 
 #scheduleC #1099 #freelancetok`,
   },
@@ -6567,7 +6567,7 @@ Link in bio.
     tt: `Schedule C, no W-2 to balance it out.
 
 Built for you.
-becomeable.app
+becomeable.app/get-able
 
 #scheduleC #1099 #freelancetok`,
   },
@@ -6589,7 +6589,7 @@ Link in bio.
     tt: `Home office deduction myth: triggers an audit.
 
 Truth: been standard for decades. Simplified = $5/sqft.
-becomeable.app
+becomeable.app/get-able
 
 #scheduleC #homeoffice #1099 #freelancetok`,
   },
@@ -6608,7 +6608,7 @@ Link in bio.
     tt: `30% off the top. Every deposit.
 
 The rule is the rule.
-becomeable.app
+becomeable.app/get-able
 
 #1099 #taxes #freelancetok`,
   },
@@ -6627,7 +6627,7 @@ Link in bio.
     tt: `Home office, simplified.
 
 $5/sqft. Up to 300 sqft. Up to $1,500.
-becomeable.app
+becomeable.app/get-able
 
 #scheduleC #homeoffice #1099 #freelancetok`,
   },
@@ -6646,7 +6646,7 @@ Link in bio.
     tt: `Off the top. Every deposit.
 
 The bucket is the foundation.
-becomeable.app
+becomeable.app/get-able
 
 #1099 #taxes #freelancetok`,
   },
@@ -6665,7 +6665,7 @@ Link in bio.
     tt: `How money actually works on a 1099.
 
 Most people only see the gross.
-becomeable.app
+becomeable.app/get-able
 
 #1099 #taxes #freelancetok`,
   },
@@ -6686,7 +6686,7 @@ Link in bio.
     tt: `Ask the scary tax question. Honest answer.
 
 From a coach that knows your real numbers.
-becomeable.app
+becomeable.app/get-able
 
 #aicoach #1099 #taxes #freelancetok`,
   },
@@ -6706,7 +6706,7 @@ Link in bio.
     tt: `Floor-First Budgeting.
 
 Bills + tax = the floor. Fill it first.
-becomeable.app
+becomeable.app/get-able
 
 #floorfirst #1099 #freelancetok`,
   },
@@ -6728,7 +6728,7 @@ Link in bio.
     tt: `Snowball vs avalanche.
 
 Smallest balance vs highest APR.
-becomeable.app
+becomeable.app/get-able
 
 #debtfreejourney #freelancetok #1099`,
   },
@@ -6747,7 +6747,7 @@ Link in bio.
     tt: `Highest APR first. Watch it drop.
 
 Bends with how you actually get paid.
-becomeable.app
+becomeable.app/get-able
 
 #debtfreejourney #avalanche #freelancetok`,
   },
@@ -6766,7 +6766,7 @@ Link in bio.
     tt: `Out of debt on variable income. Honest version.
 
 Floor. Reserve. Then extra principal.
-becomeable.app
+becomeable.app/get-able
 
 #debtfreejourney #freelancetok #1099`,
   },
@@ -6785,7 +6785,7 @@ Link in bio.
     tt: `Highest APR first. Watch it drop.
 
 The schedule writes itself.
-becomeable.app
+becomeable.app/get-able
 
 #debtfreejourney #avalanche #freelancetok`,
   },
@@ -6804,7 +6804,7 @@ Link in bio.
     tt: `A freelancer's budget. Actual shape.
 
 Floor. Reserve. Debt. Free.
-becomeable.app
+becomeable.app/get-able
 
 #freelancetok #1099 #floorfirst`,
   },
@@ -6825,7 +6825,7 @@ Link in bio.
     tt: `I am able to pay down debt, even on slow months.
 
 Not "if it's a good month."
-becomeable.app
+becomeable.app/get-able
 
 #debtfreejourney #1099 #moneymindset`,
   },
@@ -6844,7 +6844,7 @@ Link in bio.
     tt: `Finally pay down your debt.
 
 On the income you actually have.
-becomeable.app
+becomeable.app/get-able
 
 #debtfreejourney #1099 #freelancetok`,
   },
@@ -6865,7 +6865,7 @@ Link in bio.
     tt: `DTI on variable income.
 
 12-month average. Minus 20% for safety.
-becomeable.app
+becomeable.app/get-able
 
 #dti #1099 #freelancetok`,
   },
@@ -6884,7 +6884,7 @@ Link in bio.
     tt: `"Save more" isn't a plan. It's a wish.
 
 The fix isn't willpower. It's a floor.
-becomeable.app
+becomeable.app/get-able
 
 #debtfreejourney #1099 #moneytok`,
   },
@@ -6903,7 +6903,7 @@ Link in bio.
     tt: `5 mistakes most freelancers make year one.
 
 Each one compounds into the debt pile.
-becomeable.app
+becomeable.app/get-able
 
 #1099 #freelancetok #yearone`,
   },
@@ -6922,7 +6922,7 @@ Link in bio.
     tt: `I am able to pay down debt.
 
 The identity shifts when the schedule runs.
-becomeable.app
+becomeable.app/get-able
 
 #debtfreejourney #1099 #moneymindset`,
   },
@@ -6941,7 +6941,7 @@ Link in bio.
     tt: `Business funding when DTI is rough.
 
 Clean 12 months of separation first.
-becomeable.app
+becomeable.app/get-able
 
 #businessfunding #1099 #smallbusinesstok`,
   },
@@ -6960,7 +6960,7 @@ Link in bio.
     tt: `Fastest DTI fix: highest-APR balance down.
 
 Avalanche runs in the background.
-becomeable.app
+becomeable.app/get-able
 
 #dti #debtfreejourney #freelancetok`,
   },
@@ -6977,7 +6977,7 @@ Link in bio.
     tt: `I am able to pay down debt, even on slow months.
 
 One true line. The rest follow.
-becomeable.app
+becomeable.app/get-able
 
 #debtfreejourney #identity #freelancetok`,
   },
@@ -6998,7 +6998,7 @@ Link in bio.
     tt: `Consolidation: the narrow case it helps.
 
 Lower rate. Behavior change. Math beats current.
-becomeable.app
+becomeable.app/get-able
 
 #debtconsolidation #debtfreejourney #freelancetok`,
   },
@@ -7017,7 +7017,7 @@ Link in bio.
     tt: `Your spreadsheet is dying.
 
 You don't need a better one. You need a system.
-becomeable.app
+becomeable.app/get-able
 
 #freelancetok #1099 #moneytok`,
   },
@@ -7036,7 +7036,7 @@ Link in bio.
     tt: `Why monthly budgets fail variable income.
 
 Wrong on Day 1, not "broken this month."
-becomeable.app
+becomeable.app/get-able
 
 #freelancetok #1099 #moneytok`,
   },
@@ -7055,7 +7055,7 @@ Link in bio.
     tt: `Consolidation isn't a fresh start. It's a refinance.
 
 The fresh start is the floor underneath.
-becomeable.app
+becomeable.app/get-able
 
 #debtconsolidation #debtfreejourney #freelancetok`,
   },
@@ -7074,7 +7074,7 @@ Link in bio.
     tt: `What actually moves your credit score.
 
 Utilization is the biggest lever.
-becomeable.app
+becomeable.app/get-able
 
 #creditscore #1099 #freelancetok`,
   },
@@ -7093,7 +7093,7 @@ Link in bio.
     tt: `Same income. Different feeling.
 
 Debt shrinking. Savings growing.
-becomeable.app
+becomeable.app/get-able
 
 #freelancetok #1099 #moneytok`,
   },
@@ -7112,7 +7112,7 @@ Link in bio.
     tt: `Day 14. $400 already gone.
 
 Receipt by receipt. Nothing memorable.
-becomeable.app
+becomeable.app/get-able
 
 #freelancetok #1099 #moneytok`,
   },
@@ -7133,7 +7133,7 @@ Link in bio.
     tt: `Pay down debt on variable income.
 
 Every deposit gives debt the next slot.
-becomeable.app
+becomeable.app/get-able
 
 #debtfreejourney #1099 #freelancetok`,
   },
@@ -7152,7 +7152,7 @@ Link in bio.
     tt: `Reserve keeps the debt schedule running.
 
 Slow month doesn't pause it.
-becomeable.app
+becomeable.app/get-able
 
 #debtfreejourney #1099 #freelancetok`,
   },
@@ -7172,7 +7172,7 @@ Link in bio.
     tt: `Out of debt without a paycheck.
 
 Floor. Reserve. Then schedule.
-becomeable.app
+becomeable.app/get-able
 
 #debtfreejourney #1099 #freelancetok`,
   },
@@ -7191,7 +7191,7 @@ Link in bio.
     tt: `Debt drops. Savings grow.
 
 Same income. Both happen.
-becomeable.app
+becomeable.app/get-able
 
 #debtfreejourney #1099 #freelancetok`,
   },
@@ -7208,7 +7208,7 @@ Link in bio.
     tt: `5 things you stop doing.
 
 The whole list is the calm.
-becomeable.app
+becomeable.app/get-able
 
 #freelancetok #1099 #moneymindset`,
   },
@@ -7227,7 +7227,7 @@ Link in bio.
     tt: `Six weeks in. Highest balance 11% smaller.
 
 The schedule didn't lecture. It moved.
-becomeable.app
+becomeable.app/get-able
 
 #debtfreejourney #avalanche #freelancetok`,
   },
@@ -7246,7 +7246,7 @@ Link in bio.
     tt: `You don't overspend. You under-direct.
 
 The fix isn't restraint. It's direction.
-becomeable.app
+becomeable.app/get-able
 
 #freelancetok #1099 #moneytok`,
   },
@@ -7269,7 +7269,7 @@ Link in bio.
     tt: `Reserve = dam on a river.
 
 Bills funded either way.
-becomeable.app
+becomeable.app/get-able
 
 #reserve #freelancetok #1099`,
   },
@@ -7288,7 +7288,7 @@ Link in bio.
     tt: `Your reserve is a dam.
 
 Lumpy income → steady paycheck.
-becomeable.app
+becomeable.app/get-able
 
 #reserve #freelancetok #1099`,
   },
@@ -7309,7 +7309,7 @@ Link in bio.
     tt: `When the slow month hits.
 
 Income drops. Bills don't. Reserve covers it.
-becomeable.app
+becomeable.app/get-able
 
 #reserve #freelancetok #1099`,
   },
@@ -7328,7 +7328,7 @@ Link in bio.
     tt: `How much reserve? 1.5x your floor.
 
 Below = vulnerable. Above = you can run growth.
-becomeable.app
+becomeable.app/get-able
 
 #reserve #freelancetok #1099`,
   },
@@ -7347,7 +7347,7 @@ Link in bio.
     tt: `Emergency fund vs reserve.
 
 Different jobs. Reserve is the bigger lift.
-becomeable.app
+becomeable.app/get-able
 
 #reserve #emergencyfund #freelancetok`,
   },
@@ -7367,7 +7367,7 @@ Link in bio.
     tt: `Pay yourself a steady paycheck.
 
 Lumpy income → boring rhythm.
-becomeable.app
+becomeable.app/get-able
 
 #payyourselffirst #freelancetok #1099`,
   },
@@ -7386,7 +7386,7 @@ Link in bio.
     tt: `Built for variable income.
 
 Not adapted for. Built for.
-becomeable.app
+becomeable.app/get-able
 
 #variableincome #freelancetok #1099`,
   },
@@ -7407,7 +7407,7 @@ Link in bio.
     tt: `Feast or famine = math problem.
 
 Variable income. Constant bills.
-becomeable.app
+becomeable.app/get-able
 
 #feastorfamine #freelancetok #1099`,
   },
@@ -7426,7 +7426,7 @@ Link in bio.
     tt: `You're not overspending. You're freezing.
 
 Direct it or it leaves.
-becomeable.app
+becomeable.app/get-able
 
 #freelancetok #1099 #moneymindset`,
   },
@@ -7445,7 +7445,7 @@ Link in bio.
     tt: `Feast or famine. Six months a year.
 
 Reserve makes flush useful and rough survivable.
-becomeable.app
+becomeable.app/get-able
 
 #feastorfamine #freelancetok #1099`,
   },
@@ -7464,7 +7464,7 @@ Link in bio.
     tt: `The fear of the next check fades.
 
 Not income smoothing. System catching up.
-becomeable.app
+becomeable.app/get-able
 
 #freelancetok #1099 #moneymindset`,
   },
@@ -7484,7 +7484,7 @@ Link in bio.
     tt: `Slow month. Five-tap night.
 
 Reserve absorbs. Floor holds.
-becomeable.app
+becomeable.app/get-able
 
 #slowmonth #freelancetok #1099`,
   },
@@ -7503,7 +7503,7 @@ Link in bio.
     tt: `Stress-test the bad month.
 
 Watch the reserve absorb the difference.
-becomeable.app
+becomeable.app/get-able
 
 #freelancetok #1099 #calmmoney`,
   },
@@ -7522,7 +7522,7 @@ Link in bio.
     tt: `A budget without a predictable paycheck.
 
 Doesn't require knowing next month.
-becomeable.app
+becomeable.app/get-able
 
 #variableincome #freelancetok #1099`,
   },
@@ -7543,7 +7543,7 @@ Link in bio.
     tt: `Pay yourself a steady paycheck.
 
 Set amount. Set day. Variable in, steady out.
-becomeable.app
+becomeable.app/get-able
 
 #payyourselffirst #freelancetok #1099`,
   },
@@ -7562,7 +7562,7 @@ Link in bio.
     tt: `Income lumpy. Bills not.
 
 Same paycheck, same day. Boring is the feature.
-becomeable.app
+becomeable.app/get-able
 
 #payyourselffirst #freelancetok #1099`,
   },
@@ -7581,7 +7581,7 @@ Link in bio.
     tt: `Steady-paycheck mechanic.
 
 Reserve buffers. Bills run on schedule.
-becomeable.app
+becomeable.app/get-able
 
 #payyourselffirst #freelancetok #1099`,
   },
@@ -7600,7 +7600,7 @@ Link in bio.
     tt: `Same foundation. Different clock.
 
 Theirs monthly. Yours per-deposit.
-becomeable.app
+becomeable.app/get-able
 
 #variableincome #freelancetok #1099`,
   },
@@ -7617,7 +7617,7 @@ Link in bio.
     tt: `Pay yourself first. Actual mechanic.
 
 Not save-what's-left. Move it before splits.
-becomeable.app
+becomeable.app/get-able
 
 #payyourselffirst #freelancetok #1099`,
   },
@@ -7635,7 +7635,7 @@ Link in bio.
     tt: `What lands. What's owed. What you pay yourself.
 
 One page. Whole forecast.
-becomeable.app
+becomeable.app/get-able
 
 #forecast #payyourselffirst #freelancetok`,
   },
@@ -7654,7 +7654,7 @@ Link in bio.
     tt: `It is predictable.
 
 The income isn't. The system is.
-becomeable.app
+becomeable.app/get-able
 
 #calmmoney #freelancetok #1099`,
   },
@@ -7675,7 +7675,7 @@ Link in bio.
     tt: `Same income. Different month.
 
 Same dollars. 4x the work.
-becomeable.app
+becomeable.app/get-able
 
 #calmmoney #freelancetok #1099`,
   },
@@ -7694,7 +7694,7 @@ Link in bio.
     tt: `Same income. Different feeling.
 
 The income didn't move. The architecture did.
-becomeable.app
+becomeable.app/get-able
 
 #calmmoney #freelancetok #1099`,
   },
@@ -7713,7 +7713,7 @@ Link in bio.
     tt: `Calm month feel. Open twice. Log. Close.
 
 Whole interaction.
-becomeable.app
+becomeable.app/get-able
 
 #calmmoney #freelancetok #1099`,
   },
@@ -7732,7 +7732,7 @@ Link in bio.
     tt: `From holding your breath. To breathing.
 
 The transition takes about a quarter.
-becomeable.app
+becomeable.app/get-able
 
 #calmmoney #freelancetok #1099`,
   },
@@ -7753,7 +7753,7 @@ Link in bio.
     tt: `From Unable. To Able.
 
 Same income. Different month.
-becomeable.app
+becomeable.app/get-able
 
 #unabletoable #freelancetok #1099`,
   },
@@ -7772,7 +7772,7 @@ Link in bio.
     tt: `Bills + tax = the floor.
 
 Fill it first. Everything else is a real choice.
-becomeable.app
+becomeable.app/get-able
 
 #floorfirst #freelancetok #1099`,
   },
@@ -7791,7 +7791,7 @@ Link in bio.
     tt: `Breathe again.
 
 The phrase you didn't realize you needed.
-becomeable.app
+becomeable.app/get-able
 
 #calmmoney #freelancetok #1099`,
   },
@@ -7812,7 +7812,7 @@ Link in bio.
     tt: `Sponsorships feel like windfalls. Until tax day.
 
 Split the second they clear.
-becomeable.app
+becomeable.app/get-able
 
 #creator #1099 #freelancetok`,
   },
@@ -7830,7 +7830,7 @@ Link in bio.
     tt: `Sponsorship hits. Already split.
 
 Five smaller jobs. Always was.
-becomeable.app
+becomeable.app/get-able
 
 #creator #1099 #moneytok`,
   },
@@ -7849,7 +7849,7 @@ Link in bio.
     tt: `Creator's budget. Actual shape.
 
 Five streams, five timings. Same split.
-becomeable.app
+becomeable.app/get-able
 
 #creator #creatoreconomy #moneytok`,
   },
@@ -7868,7 +7868,7 @@ Link in bio.
     tt: `One deposit. Five jobs.
 
 $200 ad-rev or $20K sponsorship. Same split.
-becomeable.app
+becomeable.app/get-able
 
 #creator #1099 #moneytok`,
   },
@@ -7887,7 +7887,7 @@ Link in bio.
     tt: `How Able works. Five steps.
 
 Log. Split. Fund. Drop. Check.
-becomeable.app
+becomeable.app/get-able
 
 #freelancetok #1099 #moneytok`,
   },
@@ -7906,7 +7906,7 @@ Link in bio.
     tt: `New brand deal. Log it. Ten seconds.
 
 Already split.
-becomeable.app
+becomeable.app/get-able
 
 #creator #creatoreconomy #moneytok`,
   },
@@ -7925,7 +7925,7 @@ Link in bio.
     tt: `Built for inconsistent income. Creators included.
 
 The whole tool assumes the wave.
-becomeable.app
+becomeable.app/get-able
 
 #creator #variableincome #freelancetok`,
   },
@@ -7946,7 +7946,7 @@ Link in bio.
     tt: `Bursty income tax math.
 
 30% off every deposit. Skip the per-quarter math.
-becomeable.app
+becomeable.app/get-able
 
 #creator #1099 #taxes`,
   },
@@ -7965,7 +7965,7 @@ Link in bio.
     tt: `30% off every deposit.
 
 Bursty year stops being a surprise.
-becomeable.app
+becomeable.app/get-able
 
 #creator #1099 #taxes`,
   },
@@ -7984,7 +7984,7 @@ Link in bio.
     tt: `1099-NEC for creators.
 
 Brand deals, sponsorships, services > $600.
-becomeable.app
+becomeable.app/get-able
 
 #creator #1099 #freelancetok`,
   },
@@ -8001,7 +8001,7 @@ Link in bio.
     tt: `Off the top. Every payout.
 
 The "I'll save for taxes" promise stops being a promise.
-becomeable.app
+becomeable.app/get-able
 
 #creator #1099 #taxes`,
   },
@@ -8020,7 +8020,7 @@ Link in bio.
     tt: `1099-K for creators.
 
 Stripe, PayPal, Patreon, Substack, Etsy.
-becomeable.app
+becomeable.app/get-able
 
 #creator #1099 #freelancetok`,
   },
@@ -8039,7 +8039,7 @@ Link in bio.
     tt: `Sponsorship invoice clearing? Plan for it now.
 
 Windfall vs surprise = timing of the split.
-becomeable.app
+becomeable.app/get-able
 
 #creator #1099 #taxes`,
   },
@@ -8058,7 +8058,7 @@ Link in bio.
     tt: `Finally pay down your debt.
 
 Even on the bursty year.
-becomeable.app
+becomeable.app/get-able
 
 #debtfreejourney #creator #1099`,
   },
@@ -8079,7 +8079,7 @@ Link in bio.
     tt: `Etsy gross ≠ net.
 
 Listing, transaction, processing, ads, shipping.
-becomeable.app
+becomeable.app/get-able
 
 #etsy #ecommerce #1099`,
   },
@@ -8098,7 +8098,7 @@ Link in bio.
     tt: `April without the panic.
 
 30% since January. Paperwork, not event.
-becomeable.app
+becomeable.app/get-able
 
 #etsy #1099 #taxes`,
   },
@@ -8117,7 +8117,7 @@ Link in bio.
     tt: `Etsy seller's P&L.
 
 Gross. Fees. Shipping. Materials. Tax. Net.
-becomeable.app
+becomeable.app/get-able
 
 #etsy #ecommerce #1099`,
   },
@@ -8136,7 +8136,7 @@ Link in bio.
     tt: `Every bill on the page. Funded before due.
 
 Same architecture, your platform.
-becomeable.app
+becomeable.app/get-able
 
 #etsy #ecommerce #1099`,
   },
@@ -8155,7 +8155,7 @@ Link in bio.
     tt: `Coach + consultant budget.
 
 Four income shapes. Same split.
-becomeable.app
+becomeable.app/get-able
 
 #coach #consultant #1099`,
   },
@@ -8174,7 +8174,7 @@ Link in bio.
     tt: `Marketplace bills on the page.
 
 Funded before due. Reserve covers slow weeks.
-becomeable.app
+becomeable.app/get-able
 
 #etsy #ecommerce #1099`,
   },
@@ -8193,7 +8193,7 @@ Link in bio.
     tt: `Every dollar gets a job the moment it arrives.
 
 Whole architecture.
-becomeable.app
+becomeable.app/get-able
 
 #variableincome #freelancetok #1099`,
   },
@@ -8214,7 +8214,7 @@ Link in bio.
     tt: `Creator burnout has a money component.
 
 Closing the questions unloads the cognitive cost.
-becomeable.app
+becomeable.app/get-able
 
 #creatorburnout #creator #1099`,
   },
@@ -8233,7 +8233,7 @@ Link in bio.
     tt: `Other apps want attention. Boring is the feature.
 
 The tool you forget about is the one working.
-becomeable.app
+becomeable.app/get-able
 
 #creator #freelancetok #1099`,
   },
@@ -8252,7 +8252,7 @@ Link in bio.
     tt: `Why apps fail variable income.
 
 Assume paycheck. Want monthly. Show too late.
-becomeable.app
+becomeable.app/get-able
 
 #variableincome #freelancetok #1099`,
   },
@@ -8271,7 +8271,7 @@ Link in bio.
     tt: `A coach that knows your real numbers.
 
 Answers about your actual month.
-becomeable.app
+becomeable.app/get-able
 
 #aicoach #creator #freelancetok`,
   },
@@ -8290,7 +8290,7 @@ Link in bio.
     tt: `Calm month, creator edition.
 
 Spent the month creating. Not balance-checking.
-becomeable.app
+becomeable.app/get-able
 
 #calmmoney #creator #freelancetok`,
   },
@@ -8309,7 +8309,7 @@ Link in bio.
     tt: `Not discipline. Not stricter budget. Not trying harder.
 
 A system. Built for variable.
-becomeable.app
+becomeable.app/get-able
 
 #variableincome #freelancetok #1099`,
   },
@@ -8326,7 +8326,7 @@ Link in bio.
     tt: `No more paralysis. Just confidence.
 
 Numbers do what they're supposed to.
-becomeable.app
+becomeable.app/get-able
 
 #calmmoney #freelancetok #1099`,
   },
@@ -8347,7 +8347,7 @@ Link in bio.
     tt: `Rideshare gross ≠ what you keep.
 
 Real number ~50-60% of what the app shows.
-becomeable.app
+becomeable.app/get-able
 
 #rideshare #gigwork #1099`,
   },
@@ -8366,7 +8366,7 @@ Link in bio.
     tt: `End of a long shift. Already gone.
 
 Reserve 30%. The rest is actually yours.
-becomeable.app
+becomeable.app/get-able
 
 #rideshare #gigwork #1099`,
   },
@@ -8385,7 +8385,7 @@ Link in bio.
     tt: `Rideshare P&L.
 
 Gross. Gas. Mileage. Phone. SE tax. Net.
-becomeable.app
+becomeable.app/get-able
 
 #rideshare #gigwork #1099`,
   },
@@ -8405,7 +8405,7 @@ Link in bio.
     tt: `Log what came in. Ten seconds.
 
 End of shift. Tap. Done.
-becomeable.app
+becomeable.app/get-able
 
 #rideshare #gigwork #1099`,
   },
@@ -8424,7 +8424,7 @@ Link in bio.
     tt: `Your first week with Able. Gig edition.
 
 Day 1 connect. Day 7 floor steady.
-becomeable.app
+becomeable.app/get-able
 
 #rideshare #gigwork #1099`,
   },
@@ -8444,7 +8444,7 @@ Link in bio.
     tt: `Earnings hit. Log. Ten seconds. Already split.
 
 Day 30 stops being a mystery.
-becomeable.app
+becomeable.app/get-able
 
 #rideshare #gigwork #1099`,
   },
@@ -8461,7 +8461,7 @@ Link in bio.
     tt: `For the entrepreneur struggling with inconsistent income.
 
 Built for you specifically.
-becomeable.app
+becomeable.app/get-able
 
 #variableincome #freelancetok #1099`,
   },
@@ -8482,7 +8482,7 @@ Link in bio.
     tt: `Mileage deduction. 70¢/mi (2026).
 
 15K miles = $10,500 off taxable income.
-becomeable.app
+becomeable.app/get-able
 
 #mileage #gigwork #1099`,
   },
@@ -8501,7 +8501,7 @@ Link in bio.
     tt: `Tax bucket, gig setup.
 
 30% per fare. Mileage tagged. Phone share allocated.
-becomeable.app
+becomeable.app/get-able
 
 #gigwork #mileage #1099`,
   },
@@ -8520,7 +8520,7 @@ Link in bio.
     tt: `Schedule C, gig edition.
 
 Mileage, phone, apps, insurance share, maintenance.
-becomeable.app
+becomeable.app/get-able
 
 #scheduleC #gigwork #1099`,
   },
@@ -8539,7 +8539,7 @@ Link in bio.
     tt: `Tag once. Able remembers forever.
 
 Real-time beats February reconstruction.
-becomeable.app
+becomeable.app/get-able
 
 #gigwork #1099 #taxes`,
   },
@@ -8558,7 +8558,7 @@ Link in bio.
     tt: `SE deductions, gig edition.
 
 Mileage. Phone. Apps. Half SE tax. QBI.
-becomeable.app
+becomeable.app/get-able
 
 #gigwork #1099 #taxes`,
   },
@@ -8577,7 +8577,7 @@ Link in bio.
     tt: `One tip for gig income.
 
 30% off. Day of.
-becomeable.app
+becomeable.app/get-able
 
 #gigwork #rideshare #1099`,
   },
@@ -8594,7 +8594,7 @@ Link in bio.
     tt: `Inconsistent income makes budgeting feel impossible.
 
 The "impossible" was a tool problem.
-becomeable.app
+becomeable.app/get-able
 
 #variableincome #freelancetok #1099`,
   },
@@ -8613,7 +8613,7 @@ Link in bio.
     tt: `Peak vs slow. Same job, different income.
 
 Use 12-week trailing average. Peak fuels reserve.
-becomeable.app
+becomeable.app/get-able
 
 #gigwork #rideshare #1099`,
   },
@@ -8634,7 +8634,7 @@ Link in bio.
     tt: `Same person. Three days.
 
 Day 3 frozen. Day 14 gone. Day 31 panic.
-becomeable.app
+becomeable.app/get-able
 
 #gigwork #freelancetok #1099`,
   },
@@ -8655,7 +8655,7 @@ Link in bio.
     tt: `Day 1 to Day 30, gig edition.
 
 Architecture changes the month, not income.
-becomeable.app
+becomeable.app/get-able
 
 #gigwork #freelancetok #1099`,
   },
@@ -8674,7 +8674,7 @@ Link in bio.
     tt: `Available to spend. Not your balance.
 
 Two numbers. One honest.
-becomeable.app
+becomeable.app/get-able
 
 #variableincome #freelancetok #1099`,
   },
@@ -8693,7 +8693,7 @@ Link in bio.
     tt: `Slow week, gig edition.
 
 Reserve absorbs. Bills covered.
-becomeable.app
+becomeable.app/get-able
 
 #gigwork #reserve #1099`,
   },
@@ -8712,7 +8712,7 @@ Link in bio.
     tt: `Score the week. Reality.
 
 The week earned its score.
-becomeable.app
+becomeable.app/get-able
 
 #gigwork #freelancetok #1099`,
   },
@@ -8731,7 +8731,7 @@ Link in bio.
     tt: `Day 30. $400 gone. Nothing to show.
 
 Not a flaw. A structural leak.
-becomeable.app
+becomeable.app/get-able
 
 #freelancetok #1099 #moneytok`,
   },
@@ -8752,7 +8752,7 @@ Link in bio.
     tt: `Real estate. Deal-to-deal.
 
 $14K. $0. $9K. Reserve = steady paycheck.
-becomeable.app
+becomeable.app/get-able
 
 #realestate #commission #1099`,
   },
@@ -8773,7 +8773,7 @@ Link in bio.
     tt: `Cost of waiting.
 
 $2K/mo → $24K/yr. Not bad decisions. Missing system.
-becomeable.app
+becomeable.app/get-able
 
 #realestate #commission #1099`,
   },
@@ -8791,7 +8791,7 @@ Link in bio.
     tt: `Real estate agent budget.
 
 Commission. Brokerage. Tax. Bills. Reserve. Free.
-becomeable.app
+becomeable.app/get-able
 
 #realestate #commission #1099`,
   },
@@ -8810,7 +8810,7 @@ Link in bio.
     tt: `Same foundation. Different clock.
 
 Per-deal vs monthly. Same architecture.
-becomeable.app
+becomeable.app/get-able
 
 #realestate #commission #1099`,
   },
@@ -8829,7 +8829,7 @@ Link in bio.
     tt: `Commission income architecture.
 
 Five splits per check.
-becomeable.app
+becomeable.app/get-able
 
 #commission #realestate #1099`,
   },
@@ -8849,7 +8849,7 @@ Link in bio.
     tt: `Big commission lands. Then crickets.
 
 Reserve is the bridge.
-becomeable.app
+becomeable.app/get-able
 
 #commission #realestate #1099`,
   },
@@ -8868,7 +8868,7 @@ Link in bio.
     tt: `The fear is the not-knowing.
 
 Forecast replaces fear with a number.
-becomeable.app
+becomeable.app/get-able
 
 #variableincome #freelancetok #1099`,
   },
@@ -8895,7 +8895,7 @@ Link in bio.
     tt: `Big commission. Then nothing for three weeks.
 
 Reserve = bridge between checks.
-becomeable.app
+becomeable.app/get-able
 
 #commission #realestate #1099`,
   },
@@ -8913,7 +8913,7 @@ Link in bio.
     tt: `Big commission. Then crickets.
 
 Reserve is the bridge.
-becomeable.app
+becomeable.app/get-able
 
 #commission #realestate #1099`,
   },
@@ -8932,7 +8932,7 @@ Link in bio.
     tt: `Commission income architecture.
 
 Five splits per check. Always was.
-becomeable.app
+becomeable.app/get-able
 
 #commission #realestate #1099`,
   },
@@ -8951,7 +8951,7 @@ Link in bio.
     tt: `You don't move it. You freeze.
 
 Decide once. System handles every check after.
-becomeable.app
+becomeable.app/get-able
 
 #commission #freelancetok #1099`,
   },
@@ -8970,7 +8970,7 @@ Link in bio.
     tt: `Slow month, commission edition.
 
 Reserve absorbs. Floor holds.
-becomeable.app
+becomeable.app/get-able
 
 #commission #realestate #1099`,
   },
@@ -8989,7 +8989,7 @@ Link in bio.
     tt: `Stress-test the dry stretch.
 
 Watch the reserve absorb. Floor still holds.
-becomeable.app
+becomeable.app/get-able
 
 #commission #realestate #1099`,
   },
@@ -9008,7 +9008,7 @@ Link in bio.
     tt: `You don't move the money because you don't know when the next check is coming.
 
 Forecast replaces uncertainty.
-becomeable.app
+becomeable.app/get-able
 
 #commission #freelancetok #1099`,
   },
@@ -9030,7 +9030,7 @@ Link in bio.
     tt: `Reserve isn't savings. It's a bridge.
 
 Different jobs. Bridge before savings.
-becomeable.app
+becomeable.app/get-able
 
 #reserve #commission #1099`,
   },
@@ -9049,7 +9049,7 @@ Link in bio.
     tt: `Reserve is a dam.
 
 Big check fills. Slow week draws. Bills stay funded.
-becomeable.app
+becomeable.app/get-able
 
 #reserve #commission #1099`,
   },
@@ -9069,7 +9069,7 @@ Link in bio.
     tt: `Emergency fund vs reserve.
 
 Reserve runs more often. Build it first.
-becomeable.app
+becomeable.app/get-able
 
 #reserve #emergencyfund #1099`,
   },
@@ -9088,7 +9088,7 @@ Link in bio.
     tt: `Bills paid. Nothing leaked.
 
 Sealing the leak is the whole game.
-becomeable.app
+becomeable.app/get-able
 
 #variableincome #freelancetok #1099`,
   },
@@ -9107,7 +9107,7 @@ Link in bio.
     tt: `Calm month, commission edition.
 
 The not-knowing stopped being scary.
-becomeable.app
+becomeable.app/get-able
 
 #calmmoney #commission #1099`,
   },
@@ -9126,7 +9126,7 @@ Link in bio.
     tt: `Every bill on the page. Funded before due.
 
 Reserve funds the gap.
-becomeable.app
+becomeable.app/get-able
 
 #commission #realestate #1099`,
   },
@@ -9144,7 +9144,7 @@ Link in bio.
     tt: `Actually build your savings.
 
 Not save-what's-left. Move it before splits.
-becomeable.app
+becomeable.app/get-able
 
 #savings #commission #1099`,
   },
@@ -9164,7 +9164,7 @@ Link in bio.
     tt: `Sales pros and lumpy income.
 
 Big check or small. Same five jobs.
-becomeable.app
+becomeable.app/get-able
 
 #sales #commission #1099`,
   },
@@ -9184,7 +9184,7 @@ Link in bio.
     tt: `Pay yourself a steady paycheck.
 
 Lumpy income → boring rhythm.
-becomeable.app
+becomeable.app/get-able
 
 #payyourselffirst #commission #1099`,
   },
@@ -9203,7 +9203,7 @@ Link in bio.
     tt: `Steady-paycheck mechanic, sales edition.
 
 Quotas don't break the rhythm.
-becomeable.app
+becomeable.app/get-able
 
 #payyourselffirst #commission #1099`,
   },
@@ -9221,7 +9221,7 @@ Link in bio.
     tt: `Available to spend. Not your balance.
 
 After $30K commission: balance huge. Free is ~10%.
-becomeable.app
+becomeable.app/get-able
 
 #commission #sales #1099`,
   },
@@ -9240,7 +9240,7 @@ Link in bio.
     tt: `First week with Able, sales edition.
 
 Day 1 connect. Day 7 floor steady.
-becomeable.app
+becomeable.app/get-able
 
 #sales #commission #1099`,
   },
@@ -9259,7 +9259,7 @@ Link in bio.
     tt: `Same income. Different feeling.
 
 Same dollars, different architecture.
-becomeable.app
+becomeable.app/get-able
 
 #commission #sales #1099`,
   },
@@ -9276,7 +9276,7 @@ Link in bio.
     tt: `Able assumes your income is lumpy.
 
 Every mechanic builds from there.
-becomeable.app
+becomeable.app/get-able
 
 #variableincome #commission #1099`,
   },
@@ -9297,7 +9297,7 @@ Link in bio.
     tt: `Feast/famine math.
 
 Bills don't care about the average.
-becomeable.app
+becomeable.app/get-able
 
 #feastorfamine #commission #1099`,
   },
@@ -9316,7 +9316,7 @@ Link in bio.
     tt: `Where $4,000 actually goes.
 
 The $300 leak feels small. The compound is huge.
-becomeable.app
+becomeable.app/get-able
 
 #commission #freelancetok #1099`,
   },
@@ -9335,7 +9335,7 @@ Link in bio.
     tt: `Money math, variable income version.
 
 Six numbers. System runs them every deposit.
-becomeable.app
+becomeable.app/get-able
 
 #variableincome #freelancetok #1099`,
   },
@@ -9352,7 +9352,7 @@ Link in bio.
     tt: `Day 30. Where did it go?
 
 The phrase you stopped saying.
-becomeable.app
+becomeable.app/get-able
 
 #variableincome #freelancetok #1099`,
   },
@@ -9373,7 +9373,7 @@ Link in bio.
     tt: `Compound cost of waiting.
 
 $2K/mo. $12K/6mo. $24K/yr.
-becomeable.app
+becomeable.app/get-able
 
 #commission #freelancetok #1099`,
   },
@@ -9392,7 +9392,7 @@ Link in bio.
     tt: `Day 1 lands. Day 30, $400 gone. Nothing to show.
 
 Receipt by receipt. The leak that compounds.
-becomeable.app
+becomeable.app/get-able
 
 #commission #freelancetok #1099`,
   },
@@ -9411,7 +9411,7 @@ Link in bio.
     tt: `Every month, another $500-$1,000 gone.
 
 Cost of waiting compounds. Cost of starting is $14.99.
-becomeable.app
+becomeable.app/get-able
 
 #variableincome #commission #1099`,
   },
@@ -9432,7 +9432,7 @@ Link in bio.
     tt: `Owner pay as % of revenue.
 
 Pick it. Stick. There's never anything "left."
-becomeable.app
+becomeable.app/get-able
 
 #ownerpay #smallbusinesstok #1099`,
   },
@@ -9451,7 +9451,7 @@ Link in bio.
     tt: `Revenue up. Owner pay flat.
 
 Set the percent. Every deposit honors it.
-becomeable.app
+becomeable.app/get-able
 
 #ownerpay #smallbusinesstok #1099`,
   },
@@ -9470,7 +9470,7 @@ Link in bio.
     tt: `Pay yourself first, owner edition.
 
 Reverse the order most owners use.
-becomeable.app
+becomeable.app/get-able
 
 #ownerpay #smallbusinesstok #1099`,
   },
@@ -9489,7 +9489,7 @@ Link in bio.
     tt: `I am able to save.
 
 The word changes when the structure does the work.
-becomeable.app
+becomeable.app/get-able
 
 #savings #identity #1099`,
   },
@@ -9508,7 +9508,7 @@ Link in bio.
     tt: `How Able works for owners.
 
 Log. Split. Fund. Pay yourself. Reserve.
-becomeable.app
+becomeable.app/get-able
 
 #smallbusinesstok #ownerpay #1099`,
   },
@@ -9527,7 +9527,7 @@ Link in bio.
     tt: `No tricks. Just the math.
 
 Settings visible. Change anything.
-becomeable.app
+becomeable.app/get-able
 
 #smallbusinesstok #freelancetok #1099`,
   },
@@ -9544,7 +9544,7 @@ Link in bio.
     tt: `Built for the business without a payroll department.
 
 You are the payroll department.
-becomeable.app
+becomeable.app/get-able
 
 #smallbusinesstok #ownerpay #1099`,
   },
@@ -9565,7 +9565,7 @@ Link in bio.
     tt: `Paydex. Business credit score 0-100.
 
 Lenders check it before personal credit.
-becomeable.app
+becomeable.app/get-able
 
 #paydex #businesscredit #smallbusinesstok`,
   },
@@ -9582,7 +9582,7 @@ Link in bio.
     tt: `Spreadsheet won't build business credit.
 
 System talks to vendors. Spreadsheet talks to itself.
-becomeable.app
+becomeable.app/get-able
 
 #businesscredit #smallbusinesstok #1099`,
   },
@@ -9601,7 +9601,7 @@ Link in bio.
     tt: `Business credit. Order matters.
 
 EIN → address → phone → bank → cards → tradelines → Paydex.
-becomeable.app
+becomeable.app/get-able
 
 #businesscredit #smallbusinesstok #paydex`,
   },
@@ -9621,7 +9621,7 @@ Link in bio.
     tt: `No tricks. Just the math.
 
 Settings page = whole system, naked.
-becomeable.app
+becomeable.app/get-able
 
 #smallbusinesstok #freelancetok #1099`,
   },
@@ -9641,7 +9641,7 @@ Link in bio.
     tt: `Personal vs business credit.
 
 FICO 300-850. Paydex 0-100. Both matter.
-becomeable.app
+becomeable.app/get-able
 
 #creditscore #paydex #smallbusinesstok`,
   },
@@ -9658,7 +9658,7 @@ Link in bio.
     tt: `3 friends start a trial. You get a free month.
 
 That's the whole referral.
-becomeable.app
+becomeable.app/get-able
 
 #freelancetok #1099 #moneytok`,
   },
@@ -9677,7 +9677,7 @@ Link in bio.
     tt: `I am capable.
 
 Structure produces the identity.
-becomeable.app
+becomeable.app/get-able
 
 #identity #smallbusinesstok #1099`,
   },
@@ -9698,7 +9698,7 @@ Link in bio.
     tt: `SBA loan readiness, honest checklist.
 
 2yr clean books. 680+. Plan. 10-30% down.
-becomeable.app
+becomeable.app/get-able
 
 #sba #businessfunding #smallbusinesstok`,
   },
@@ -9717,7 +9717,7 @@ Link in bio.
     tt: `You've been handed the wrong tool.
 
 Hammer ≠ screw. Personal-budgeting ≠ small-business.
-becomeable.app
+becomeable.app/get-able
 
 #smallbusinesstok #freelancetok #1099`,
   },
@@ -9736,7 +9736,7 @@ Link in bio.
     tt: `Business funding, SBA path.
 
 7(a). 504. Micro. Bookkeeping is the bottleneck.
-becomeable.app
+becomeable.app/get-able
 
 #sba #businessfunding #smallbusinesstok`,
   },
@@ -9755,7 +9755,7 @@ Link in bio.
     tt: `Built for the way you actually get paid.
 
 Lumpy revenue, draws when supported.
-becomeable.app
+becomeable.app/get-able
 
 #smallbusinesstok #ownerpay #1099`,
   },
@@ -9774,7 +9774,7 @@ Link in bio.
     tt: `Why business-budgeting apps fail.
 
 Assume payroll, monthly, predictable revenue.
-becomeable.app
+becomeable.app/get-able
 
 #smallbusinesstok #1099 #moneytok`,
   },
@@ -9793,7 +9793,7 @@ Link in bio.
     tt: `Revenue up. Owner pay flat.
 
 Owner always last. Set the percent.
-becomeable.app
+becomeable.app/get-able
 
 #ownerpay #smallbusinesstok #1099`,
   },
@@ -9812,7 +9812,7 @@ Link in bio.
     tt: `I am able.
 
 The transition from trying to being.
-becomeable.app
+becomeable.app/get-able
 
 #identity #becomeable #1099`,
   },
@@ -9833,7 +9833,7 @@ Link in bio.
     tt: `Most variable-income owners run 2-4 accounts.
 
 Connect them all. Treat as one system.
-becomeable.app
+becomeable.app/get-able
 
 #smallbusinesstok #freelancetok #1099`,
   },
@@ -9856,7 +9856,7 @@ Link in bio.
     tt: `Every deposit. Already split.
 
 Tax. Bills. Debt. Reserve. Free.
-becomeable.app
+becomeable.app/get-able
 
 #fivebuckets #freelancetok #1099`,
   },
@@ -9875,7 +9875,7 @@ Link in bio.
     tt: `Five buckets, in order.
 
 Tax can't be last. Reserve can't be skipped.
-becomeable.app
+becomeable.app/get-able
 
 #fivebuckets #freelancetok #1099`,
   },
@@ -9894,7 +9894,7 @@ Link in bio.
     tt: `Able tells you where it goes.
 
 Stop guessing. Stop reconstructing. Read.
-becomeable.app
+becomeable.app/get-able
 
 #variableincome #freelancetok #1099`,
   },
@@ -9913,7 +9913,7 @@ Link in bio.
     tt: `Built for variable income. Feature tour.
 
 Floor. Splits. Score. Coach. Export.
-becomeable.app
+becomeable.app/get-able
 
 #variableincome #freelancetok #1099`,
   },
@@ -9932,7 +9932,7 @@ Link in bio.
     tt: `Every dollar traced. Across accounts.
 
 "Where did that go" stops being a question.
-becomeable.app
+becomeable.app/get-able
 
 #smallbusinesstok #scheduleC #1099`,
   },
@@ -9952,7 +9952,7 @@ Link in bio.
     tt: `I know what's coming.
 
 The forecast replaced the dread.
-becomeable.app
+becomeable.app/get-able
 
 #calmmoney #freelancetok #1099`,
   },
@@ -9971,7 +9971,7 @@ Link in bio.
     tt: `I am able.
 
 Two words. Everything else is a dependent clause.
-becomeable.app
+becomeable.app/get-able
 
 #identity #becomeable #1099`,
   },
@@ -9991,7 +9991,7 @@ Link in bio.
 I am able to save.
 I am able.
 
-becomeable.app
+becomeable.app/get-able
 
 #identity #becomeable #1099`,
   },
@@ -10010,7 +10010,7 @@ Link in bio.
     tt: `Day 1 to Day 90. Transformation arc.
 
 Three months. System does the lifting.
-becomeable.app
+becomeable.app/get-able
 
 #becomeable #freelancetok #1099`,
   },
@@ -10029,7 +10029,7 @@ Link in bio.
     tt: `I am able to pay down debt.
 
 The schedule is on the page.
-becomeable.app
+becomeable.app/get-able
 
 #debtfreejourney #identity #1099`,
   },
@@ -10050,7 +10050,7 @@ Link in bio.
     tt: `Three steps. Connect. Confirm. Schedule.
 
 Product in three taps. Identity in 90 days.
-becomeable.app
+becomeable.app/get-able
 
 #becomeable #freelancetok #1099`,
   },
@@ -10068,7 +10068,7 @@ Link in bio.
     tt: `I am able.
 
 Read them out loud. Inherited, not earned.
-becomeable.app
+becomeable.app/get-able
 
 #identity #becomeable #1099`,
   },
@@ -10085,7 +10085,7 @@ Link in bio.
     tt: `I am able to pay down debt, even on slow months.
 
 The identity stack starts with one true line.
-becomeable.app
+becomeable.app/get-able
 
 #debtfreejourney #identity #1099`,
   },
@@ -10106,7 +10106,7 @@ Link in bio.
     tt: `The fear of the next check fades.
 
 Same income. Different chest.
-becomeable.app
+becomeable.app/get-able
 
 #calmmoney #becomeable #1099`,
   },
@@ -10125,7 +10125,7 @@ Link in bio.
     tt: `Same income. Different feeling.
 
 The income didn't move. The architecture did.
-becomeable.app
+becomeable.app/get-able
 
 #calmmoney #becomeable #1099`,
   },
@@ -10145,7 +10145,7 @@ Link in bio.
     tt: `From Unable. To Able.
 
 The arc.
-becomeable.app
+becomeable.app/get-able
 
 #unabletoable #becomeable #1099`,
   },
@@ -10164,7 +10164,7 @@ Link in bio.
     tt: `From holding your breath. To breathing.
 
 The system unwinds it.
-becomeable.app
+becomeable.app/get-able
 
 #calmmoney #becomeable #1099`,
   },
@@ -10183,7 +10183,7 @@ Link in bio.
     tt: `Calm month feel. Open twice. Close.
 
 Whole interaction.
-becomeable.app
+becomeable.app/get-able
 
 #calmmoney #becomeable #1099`,
   },
@@ -10204,7 +10204,7 @@ Link in bio.
     tt: `Floor-First Budgeting in 3 beats.
 
 Floor. Fill. Spend.
-becomeable.app
+becomeable.app/get-able
 
 #floorfirst #freelancetok #1099`,
   },
@@ -10221,7 +10221,7 @@ Link in bio.
     tt: `I am able to save without second-guessing.
 
 Unassigned dollars were the cause.
-becomeable.app
+becomeable.app/get-able
 
 #savings #identity #1099`,
   },
@@ -10242,7 +10242,7 @@ Link in bio.
     tt: `Calm doesn't come from earning more.
 
 Run the numbers before they run you.
-becomeable.app
+becomeable.app/get-able
 
 #calmmoney #freelancetok #1099`,
   },
@@ -10260,7 +10260,7 @@ Link in bio.
     tt: `Bad month, quarterly due. Calm version.
 
 Bucket caring for you.
-becomeable.app
+becomeable.app/get-able
 
 #calmmoney #1099 #taxes`,
   },
@@ -10279,7 +10279,7 @@ Link in bio.
     tt: `8% penalty math, calm version.
 
 Bucket prevents penalty + interest + stress.
-becomeable.app
+becomeable.app/get-able
 
 #calmmoney #1099 #taxes`,
   },
@@ -10298,7 +10298,7 @@ Link in bio.
     tt: `The fear of the next check fades.
 
 Different sentence. Different month.
-becomeable.app
+becomeable.app/get-able
 
 #calmmoney #becomeable #1099`,
   },
@@ -10316,7 +10316,7 @@ Link in bio.
     tt: `Emergency fund + reserve = removing fear.
 
 Different timescales, same job.
-becomeable.app
+becomeable.app/get-able
 
 #calmmoney #reserve #1099`,
   },
@@ -10335,7 +10335,7 @@ Link in bio.
     tt: `Stress-test the worst.
 
 Knowing > hoping.
-becomeable.app
+becomeable.app/get-able
 
 #calmmoney #freelancetok #1099`,
   },
@@ -10353,7 +10353,7 @@ Link in bio.
     tt: `I am able to budget inconsistent income.
 
 Architecture changed. Not willpower.
-becomeable.app
+becomeable.app/get-able
 
 #identity #becomeable #1099`,
   },
@@ -10377,7 +10377,7 @@ Link in bio.
     tt: `Identity stack.
 
 Pay down debt. Save. Budget. Be able.
-becomeable.app
+becomeable.app/get-able
 
 #identity #becomeable #1099`,
   },
@@ -10396,7 +10396,7 @@ Link in bio.
     tt: `I am able.
 
 Identity didn't require effort.
-becomeable.app
+becomeable.app/get-able
 
 #identity #becomeable #1099`,
   },
@@ -10418,7 +10418,7 @@ Link in bio.
     tt: `Day 1 to 90 identity arc.
 
 Trying → doing → consistent → being.
-becomeable.app
+becomeable.app/get-able
 
 #identity #becomeable #1099`,
   },
@@ -10437,7 +10437,7 @@ Link in bio.
     tt: `I am able to save.
 
 Watching savings move without forcing it.
-becomeable.app
+becomeable.app/get-able
 
 #savings #identity #1099`,
   },
@@ -10457,7 +10457,7 @@ Link in bio.
     tt: `From Unable. To Able. Seven slides.
 
 Whole transformation.
-becomeable.app
+becomeable.app/get-able
 
 #unabletoable #becomeable #1099`,
   },
@@ -10478,7 +10478,7 @@ Link in bio.
     tt: `Not discipline. Not stricter. Not trying harder.
 
 A system. Identity follows.
-becomeable.app
+becomeable.app/get-able
 
 #identity #becomeable #1099`,
   },
@@ -10496,7 +10496,7 @@ Link in bio.
     tt: `From Unable. To Able.
 
 Earned through the system.
-becomeable.app
+becomeable.app/get-able
 
 #unabletoable #becomeable #1099`,
   },
@@ -10517,7 +10517,7 @@ Link in bio.
     tt: `Floor-First Budgeting.
 
 Named method. Five rules. Variable income.
-becomeable.app
+becomeable.app/get-able
 
 #floorfirst #freelancetok #1099`,
   },
@@ -10538,7 +10538,7 @@ Link in bio.
     tt: `Floor-First. Three beats.
 
 Floor. Fill. Spend.
-becomeable.app
+becomeable.app/get-able
 
 #floorfirst #freelancetok #1099`,
   },
@@ -10559,7 +10559,7 @@ Link in bio.
     tt: `Floor-First. Three steps.
 
 Connect. Confirm floor. Schedule debt.
-becomeable.app
+becomeable.app/get-able
 
 #floorfirst #freelancetok #1099`,
   },
@@ -10578,7 +10578,7 @@ Link in bio.
     tt: `Your floor. Bills + tax. Funded first.
 
 The dashboard's first card.
-becomeable.app
+becomeable.app/get-able
 
 #floorfirst #freelancetok #1099`,
   },
@@ -10601,7 +10601,7 @@ Link in bio.
     tt: `Floor-First in practice.
 
 Bills pre-funded. Save first. Tax day-of.
-becomeable.app
+becomeable.app/get-able
 
 #floorfirst #freelancetok #1099`,
   },
@@ -10620,7 +10620,7 @@ Link in bio.
     tt: `Bills + tax = the floor. Fill first.
 
 Then everything downstream is honest.
-becomeable.app
+becomeable.app/get-able
 
 #floorfirst #freelancetok #1099`,
   },
@@ -10637,7 +10637,7 @@ Link in bio.
     tt: `Money with intention.
 
 Built into the architecture. Not invented monthly.
-becomeable.app
+becomeable.app/get-able
 
 #floorfirst #freelancetok #1099`,
   },
@@ -10662,7 +10662,7 @@ Link in bio.
     tt: `Floor-First. Five rules.
 
 1. Floor. 2. Destination. 3. Reserve. 4. Debt. 5. Free.
-becomeable.app
+becomeable.app/get-able
 
 #floorfirst #freelancetok #1099`,
   },
@@ -10682,7 +10682,7 @@ Link in bio.
     tt: `Split first. Spend last.
 
 One pile. Five jobs.
-becomeable.app
+becomeable.app/get-able
 
 #floorfirst #freelancetok #1099`,
   },
@@ -10701,7 +10701,7 @@ Link in bio.
     tt: `Five buckets, in order.
 
 Order is the system. Locked for a reason.
-becomeable.app
+becomeable.app/get-able
 
 #fivebuckets #floorfirst #1099`,
   },
@@ -10720,7 +10720,7 @@ Link in bio.
     tt: `One deposit. Five jobs in order.
 
 Decision made when you set the percentages.
-becomeable.app
+becomeable.app/get-able
 
 #floorfirst #fivebuckets #1099`,
   },
@@ -10740,7 +10740,7 @@ Link in bio.
     tt: `Feast or famine, rule version.
 
 Same splits. Different numbers. Rules don't bend.
-becomeable.app
+becomeable.app/get-able
 
 #feastorfamine #floorfirst #1099`,
   },
@@ -10763,7 +10763,7 @@ Link in bio.
     tt: `Every deposit. Already split.
 
 Five rules in 20 seconds.
-becomeable.app
+becomeable.app/get-able
 
 #fivebuckets #floorfirst #1099`,
   },
@@ -10780,7 +10780,7 @@ Link in bio.
     tt: `Every dollar a job the moment it arrives.
 
 The spine. Five rules. The architecture.
-becomeable.app
+becomeable.app/get-able
 
 #floorfirst #freelancetok #1099`,
   },
@@ -10802,7 +10802,7 @@ Link in bio.
     tt: `Floor-First vs YNAB.
 
 YNAB: monthly, paycheck. Floor-First: per-deposit, variable.
-becomeable.app
+becomeable.app/get-able
 
 #floorfirst #ynab #freelancetok`,
   },
@@ -10823,7 +10823,7 @@ Link in bio.
     tt: `Why apps fail variable income.
 
 Assume paycheck. Show too late. Want monthly.
-becomeable.app
+becomeable.app/get-able
 
 #floorfirst #freelancetok #1099`,
   },
@@ -10843,7 +10843,7 @@ Link in bio.
     tt: `Floor-First vs Profit First.
 
 Same DNA. Different audiences.
-becomeable.app
+becomeable.app/get-able
 
 #floorfirst #profitfirst #1099`,
   },
@@ -10864,7 +10864,7 @@ Link in bio.
     tt: `Same foundation. Different clock.
 
 Per-deposit is yours.
-becomeable.app
+becomeable.app/get-able
 
 #floorfirst #freelancetok #1099`,
   },
@@ -10883,7 +10883,7 @@ Link in bio.
     tt: `Why apps fail you specifically.
 
 Bills shift. Tax shifts. Income shifts. System absorbs.
-becomeable.app
+becomeable.app/get-able
 
 #floorfirst #freelancetok #1099`,
   },
@@ -10902,7 +10902,7 @@ Link in bio.
     tt: `Not bad with money. Wrong tool.
 
 Floor-First is the right one.
-becomeable.app
+becomeable.app/get-able
 
 #floorfirst #freelancetok #1099`,
   },
@@ -10920,7 +10920,7 @@ Link in bio.
     tt: `Most apps assume a steady paycheck.
 
 That's the villain.
-becomeable.app
+becomeable.app/get-able
 
 #floorfirst #freelancetok #1099`,
   },
@@ -10941,7 +10941,7 @@ Link in bio.
     tt: `Cost of waiting compounds.
 
 $500-$1K/mo. $6-12K/yr. 3yr = down payment.
-becomeable.app
+becomeable.app/get-able
 
 #floorfirst #freelancetok #1099`,
   },
@@ -10960,7 +10960,7 @@ Link in bio.
     tt: `$2K/mo leaks. $24K/yr.
 
 Math doesn't pause for "next month."
-becomeable.app
+becomeable.app/get-able
 
 #floorfirst #freelancetok #1099`,
   },
@@ -10981,7 +10981,7 @@ Link in bio.
     tt: `Compound cost visualized.
 
 Year 1: $12K leaked. Year 3: down payment gone.
-becomeable.app
+becomeable.app/get-able
 
 #floorfirst #freelancetok #1099`,
   },
@@ -10998,7 +10998,7 @@ Link in bio.
     tt: `The cost of waiting compounds.
 
 Saved version grows faster.
-becomeable.app
+becomeable.app/get-able
 
 #floorfirst #freelancetok #1099`,
   },
@@ -11017,7 +11017,7 @@ Link in bio.
     tt: `5 things you stop doing.
 
 Each has a cost. Stopping is the actual savings.
-becomeable.app
+becomeable.app/get-able
 
 #floorfirst #freelancetok #1099`,
   },
@@ -11036,7 +11036,7 @@ Link in bio.
     tt: `"Save more" isn't a plan. It's a wish.
 
 The plan is the architecture.
-becomeable.app
+becomeable.app/get-able
 
 #floorfirst #freelancetok #1099`,
   },
@@ -11053,7 +11053,7 @@ Link in bio.
     tt: `Cost of waiting compounds. Cost of starting is $14.99.
 
 Every month: $500-$1,000 gone.
-becomeable.app
+becomeable.app/get-able
 
 #floorfirst #freelancetok #1099`,
   },
@@ -11074,7 +11074,7 @@ Link in bio.
     tt: `$14.99/mo. $129/yr. Save $50.
 
 Card required. Cancel in 2 taps.
-becomeable.app
+becomeable.app/get-able
 
 #freelancetok #1099 #becomeable`,
   },
@@ -11092,7 +11092,7 @@ Link in bio.
     tt: `Built for inconsistent.
 
 Free for 30 days.
-becomeable.app
+becomeable.app/get-able
 
 #variableincome #becomeable #1099`,
   },
@@ -11111,7 +11111,7 @@ Link in bio.
     tt: `Pricing, the why.
 
 $14.99/mo. $129/yr saves $50.
-becomeable.app
+becomeable.app/get-able
 
 #freelancetok #1099 #becomeable`,
   },
@@ -11131,7 +11131,7 @@ Link in bio.
 Cost of waiting: compounds.
 
 Pick one.
-becomeable.app
+becomeable.app/get-able
 
 #freelancetok #1099 #becomeable`,
   },
@@ -11150,7 +11150,7 @@ Link in bio.
     tt: `What $14.99 gets.
 
 Five splits. Bucket. Reserve. Bills. Debt. Coach. Export.
-becomeable.app
+becomeable.app/get-able
 
 #1099 #pricing #becomeable`,
   },
@@ -11167,7 +11167,7 @@ Link in bio.
     tt: `30 days. Card required. Cancel anytime.
 
 A weekend trial is theater. Cycle takes 30.
-becomeable.app
+becomeable.app/get-able
 
 #variableincome #becomeable #1099`,
   },
@@ -11184,7 +11184,7 @@ Link in bio.
     tt: `I have a plan.
 
 Not a hope. Written. Running.
-becomeable.app
+becomeable.app/get-able
 
 #identity #becomeable #1099`,
   },
@@ -11205,7 +11205,7 @@ Link in bio.
     tt: `Test Able for an entire income cycle.
 
 Start your 30-day free trial.
-becomeable.app
+becomeable.app/get-able
 
 #variableincome #becomeable #1099`,
   },
@@ -11223,7 +11223,7 @@ Link in bio.
     tt: `Split first. Spend last.
 
 Whole method. 4 words.
-becomeable.app
+becomeable.app/get-able
 
 #floorfirst #becomeable #1099`,
   },
@@ -11242,7 +11242,7 @@ Link in bio.
     tt: `Built for variable income. Trial day-by-day.
 
 Day 1 connect. Day 30 ready.
-becomeable.app
+becomeable.app/get-able
 
 #variableincome #becomeable #1099`,
   },
@@ -11260,7 +11260,7 @@ Link in bio.
     tt: `30 days free. Try it before tax season.
 
 Starting now = caught up.
-becomeable.app
+becomeable.app/get-able
 
 #1099 #taxes #becomeable`,
   },
@@ -11279,7 +11279,7 @@ Link in bio.
     tt: `Your first week with Able.
 
 Know by Day 7 whether it's for you.
-becomeable.app
+becomeable.app/get-able
 
 #variableincome #becomeable #1099`,
   },
@@ -11298,7 +11298,7 @@ Link in bio.
     tt: `Your floor. Bills + tax. Funded first.
 
 Trial gets you there week one.
-becomeable.app
+becomeable.app/get-able
 
 #floorfirst #becomeable #1099`,
   },
@@ -11315,7 +11315,7 @@ Link in bio.
     tt: `From Unable. To Able.
 
 30-day trial is the bridge.
-becomeable.app
+becomeable.app/get-able
 
 #unabletoable #becomeable #1099`,
   },
@@ -11336,7 +11336,7 @@ Link in bio.
     tt: `6 months in. Bank app opened less.
 
 Reduced touch points = success.
-becomeable.app
+becomeable.app/get-able
 
 #sustained #becomeable #1099`,
   },
@@ -11354,7 +11354,7 @@ Link in bio.
     tt: `Same income. Different feeling. 6 months later.
 
 Line still holds.
-becomeable.app
+becomeable.app/get-able
 
 #sustained #becomeable #1099`,
   },
@@ -11372,7 +11372,7 @@ Link in bio.
     tt: `Day 1 to 90, then 180.
 
 Identity shifts. Then settles.
-becomeable.app
+becomeable.app/get-able
 
 #sustained #becomeable #1099`,
   },
@@ -11389,7 +11389,7 @@ Link in bio.
     tt: `End of month. Every dollar accounted for.
 
 Becomes literally true.
-becomeable.app
+becomeable.app/get-able
 
 #sustained #becomeable #1099`,
   },
@@ -11406,7 +11406,7 @@ Link in bio.
     tt: `How Able works at month 6.
 
 Same mechanics. You've stopped checking.
-becomeable.app
+becomeable.app/get-able
 
 #sustained #becomeable #1099`,
   },
@@ -11425,7 +11425,7 @@ Link in bio.
     tt: `I am able.
 
 6 months later. Still the truest line.
-becomeable.app
+becomeable.app/get-able
 
 #sustained #becomeable #1099`,
   },
@@ -11445,7 +11445,7 @@ Link in bio.
     tt: `Become able.
 
 Pay debt. Save. Plan taxes. Breathe.
-becomeable.app
+becomeable.app/get-able
 
 #becomeable #freelancetok #1099`,
   },
@@ -11466,7 +11466,7 @@ Link in bio.
     tt: `If you've read this far, you already know.
 
 Architecture you've been missing.
-becomeable.app
+becomeable.app/get-able
 
 #becomeable #freelancetok #1099`,
   },
@@ -11485,7 +11485,7 @@ Link in bio.
     tt: `Floor-First. Floor. Fill. Spend.
 
 The cycle closes here.
-becomeable.app
+becomeable.app/get-able
 
 #floorfirst #becomeable #1099`,
   },
@@ -11503,7 +11503,7 @@ Link in bio.
     tt: `From Unable. To Able. Capstone.
 
 Whole brand in a swipe.
-becomeable.app
+becomeable.app/get-able
 
 #unabletoable #becomeable #1099`,
   },
@@ -11520,7 +11520,7 @@ Link in bio.
     tt: `From Unable. To Able.
 
 The brand seal.
-becomeable.app
+becomeable.app/get-able
 
 #unabletoable #becomeable #1099`,
   },
@@ -11539,7 +11539,7 @@ Link in bio.
     tt: `Three steps. Whole product.
 
 Connect. Confirm. Schedule.
-becomeable.app
+becomeable.app/get-able
 
 #becomeable #freelancetok #1099`,
   },
@@ -11555,7 +11555,7 @@ Link in bio.
     tt: `Built for inconsistent. Every deposit auto-routed.
 
 Free for 30 days. Become able.
-becomeable.app
+becomeable.app/get-able
 
 #becomeable #variableincome #1099`,
   },
@@ -11573,7 +11573,7 @@ Link in bio.
     tt: `The cycle closes. The next deposit begins.
 
 Become able.
-becomeable.app
+becomeable.app/get-able
 
 #becomeable #floorfirst #1099`,
   },

@@ -24,7 +24,7 @@ function renderSlideInto(root, post) {
     post.eyebrow === 'fcb'        ? 'For anyone with mixed or unpredictable income.' :
     (post.eyebrow || '');
 
-  const meta = post.meta || 'becomeable.app';
+  const meta = post.meta || 'becomeable.app/get-able';
 
   // Split multi-line {...} chunks into one underline span per line so the
   // squiggle tracks each line's actual width. Without this, a {a\nb} where

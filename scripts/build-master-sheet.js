@@ -225,7 +225,7 @@ for (const week of WEEKS) {
     if (item && item._kind === 'brandscript') usedBrandscriptIds.add(item.id);
 
     const cap = CAPTIONS[`${week.n}|${d.day}`] || {};
-    const links = cap.links || 'becomeable.app';
+    const links = cap.links || 'becomeable.app/get-able';
     const captionLi = cap.li ? `${cap.li}\n\n${links}` : '';
     // Facebook caption: same body as IG, but Facebook allows clickable URLs in
     // posts (unlike Instagram), so swap "Link in bio." for the relevant URL.
@@ -244,7 +244,7 @@ for (const week of WEEKS) {
       cleanPunch(item),
       filenameFor(item),
       driveFolderFor(item),
-      links,                               // relevant_links — default "becomeable.app", overridable per slot
+      links,                               // relevant_links — default "becomeable.app/get-able", overridable per slot
       cap.ig || '',                        // caption_ig
       cap.tt || '',                        // caption_tt
       captionLi,                           // caption_li — body + appended links
@@ -273,7 +273,7 @@ for (const b of BRANDSCRIPT) {
     cleanPunch(item),
     filenameFor(item),
     driveFolderFor(item),
-    'becomeable.app',  // relevant_links
+    'becomeable.app/get-able',  // relevant_links
     '', '', '', '',    // caption_ig, caption_tt, caption_li, caption_fb
     '', '', '', '', '', // repurpose pipeline
     'Reserve',

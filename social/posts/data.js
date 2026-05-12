@@ -251,7 +251,7 @@ window.POSTS = [
 
   // 63 — L3 Sat · CTA CLOSE
   { id: '63', slug: 'free-seven-days', theme: 'green', tpl: 'B', eyebrow: 'mixed', center: true,
-    punch: "Free for {30 days}.\n{becomeable.app}" },
+    punch: "Free for {30 days}.\n{becomeable.app/get-able}" },
 
   // ─── Persona-targeted posts (added 2026-05-08, layer "Persona") ───
   // 4 personas × 2 posts each. Each speaks the persona's own moment in
@@ -341,7 +341,7 @@ window.POSTS = [
 
   // ─── Stat-fact posts (added 2026-05-08, layer "Stat") ───
   // Each stat is real + cited via the meta footer (replaces the default
-  // "becomeable.app" line on these specific pieces). Sources verified
+  // "becomeable.app/get-able" line on these specific pieces). Sources verified
   // via GAO, Federal Reserve SHED, JPMorgan Chase Institute,
   // Transamerica, Kabbage, Bluevine, FreshBooks 2024-2026 reports.
 
@@ -429,7 +429,7 @@ window.CAROUSELS = [
         meta: '6 / 7' },
       { tpl: 'B', eyebrow: 'freelance',
         punch: "Built for\ninconsistent\n{income}.",
-        meta: 'becomeable.app' },
+        meta: 'becomeable.app/get-able' },
   ] },
 
   // C2 — Day 1-31 arc (multi: page → black → green · free-trial CTA)
@@ -463,7 +463,7 @@ window.CAROUSELS = [
         meta: '7 / 8' },
       { tpl: 'B', eyebrow: 'freelance', theme: 'green',
         punch: "{Free} for 30 days.\nBuilt for\nvariable income.",
-        meta: 'becomeable.app' },
+        meta: 'becomeable.app/get-able' },
   ] },
 
   // C3 — Five buckets (brand green · pricing CTA)
@@ -494,7 +494,7 @@ window.CAROUSELS = [
       { tpl: 'A', eyebrow: 'mixed',
         muted: "$14.99 a month.",
         punch: "Or $129 a year.\n{Save $50.}",
-        meta: 'becomeable.app' },
+        meta: 'becomeable.app/get-able' },
   ] },
 
   // C4 — Where $4,000 goes (cloud black · website CTA)
@@ -528,7 +528,7 @@ window.CAROUSELS = [
         meta: '7 / 8' },
       { tpl: 'B', eyebrow: 'mixed',
         punch: "Built for\ninconsistent\n{income}.",
-        meta: 'becomeable.app' },
+        meta: 'becomeable.app/get-able' },
   ] },
 
   // C5 — Tax math 1099 (white · free-trial CTA)
@@ -558,7 +558,7 @@ window.CAROUSELS = [
         meta: '6 / 7' },
       { tpl: 'B', eyebrow: 'mixed',
         punch: "{Free} for 30 days.\nBuilt for\nvariable income.",
-        meta: 'becomeable.app' },
+        meta: 'becomeable.app/get-able' },
   ] },
 
   // C6 — Freezing to flowing (multi: page → glass → green · pricing CTA)
@@ -589,7 +589,7 @@ window.CAROUSELS = [
       { tpl: 'A', eyebrow: 'mixed', theme: 'green',
         muted: "$14.99 a month.",
         punch: "Or $129 a year.\n{Save $50.}",
-        meta: 'becomeable.app' },
+        meta: 'becomeable.app/get-able' },
   ] },
 
   // C7 — Founder story (page · website CTA)
@@ -622,7 +622,7 @@ window.CAROUSELS = [
         meta: '6 / 7' },
       { tpl: 'B', eyebrow: 'mixed',
         punch: "{Free} for 30 days.\nBuilt for\nvariable income.",
-        meta: 'becomeable.app' },
+        meta: 'becomeable.app/get-able' },
   ] },
 
   // C9 — Three personas (multi: page → dark → green · pricing CTA)
@@ -652,7 +652,7 @@ window.CAROUSELS = [
       { tpl: 'A', eyebrow: 'mixed', theme: 'green',
         muted: "$14.99 a month.",
         punch: "Or $129 a year.\n{Save $50.}",
-        meta: 'becomeable.app' },
+        meta: 'becomeable.app/get-able' },
   ] },
 
   // C10 — "Save more" reframe (cloud black · website CTA)
@@ -680,7 +680,7 @@ window.CAROUSELS = [
         meta: '6 / 7' },
       { tpl: 'B', eyebrow: 'mixed',
         punch: "Built for\ninconsistent\n{income}.",
-        meta: 'becomeable.app' },
+        meta: 'becomeable.app/get-able' },
   ] },
 
   // C11 — Math of waiting (multi: page → dark → green · free-trial CTA)
@@ -709,7 +709,7 @@ window.CAROUSELS = [
         meta: '6 / 7' },
       { tpl: 'B', eyebrow: 'mixed', theme: 'green',
         punch: "{Free} for 30 days.\nBuilt for\nvariable income.",
-        meta: 'becomeable.app' },
+        meta: 'becomeable.app/get-able' },
   ] },
 
   // C12 — First week with Able (page · pricing CTA)
@@ -740,7 +740,7 @@ window.CAROUSELS = [
       { tpl: 'A', eyebrow: 'mixed',
         muted: "$14.99 a month.",
         punch: "Or $129 a year.\n{Save $50.}",
-        meta: 'becomeable.app' },
+        meta: 'becomeable.app/get-able' },
   ] },
 
   // C13 — April without panic (glass-dark · website CTA)
@@ -764,7 +764,7 @@ window.CAROUSELS = [
         meta: '5 / 6' },
       { tpl: 'B', eyebrow: 'mixed',
         punch: "Built for\ninconsistent\n{income}.",
-        meta: 'becomeable.app' },
+        meta: 'becomeable.app/get-able' },
   ] },
 
   // C14 — Monthly or annual? (glass · free-trial CTA)
@@ -790,7 +790,7 @@ window.CAROUSELS = [
         meta: '5 / 6' },
       { tpl: 'B', eyebrow: 'mixed',
         punch: "{Free} for 30 days.\nThen pick\neither one.",
-        meta: 'becomeable.app' },
+        meta: 'becomeable.app/get-able' },
   ] },
 
   // C15 — What Able is NOT (white · pricing CTA)
@@ -820,7 +820,7 @@ window.CAROUSELS = [
       { tpl: 'A', eyebrow: 'mixed',
         muted: "$14.99 a month.",
         punch: "Or $129 a year.\n{Save $50.}",
-        meta: 'becomeable.app' },
+        meta: 'becomeable.app/get-able' },
   ] },
 
   // C16 — Feast or famine cycle (multi: page → black → green · free trial)
@@ -853,7 +853,7 @@ window.CAROUSELS = [
         meta: '7 / 8' },
       { tpl: 'B', eyebrow: 'mixed', theme: 'green',
         punch: "{Free} for 30 days.\nBuilt for\nvariable income.",
-        meta: 'becomeable.app' },
+        meta: 'becomeable.app/get-able' },
   ] },
 
   // C17 — How to budget as a freelancer (white · website)
@@ -883,7 +883,7 @@ window.CAROUSELS = [
         meta: '6 / 7' },
       { tpl: 'B', eyebrow: 'freelance',
         punch: "Built for\ninconsistent\n{income}.",
-        meta: 'becomeable.app' },
+        meta: 'becomeable.app/get-able' },
   ] },
 
   // C18 — Pay yourself a steady paycheck (green · pricing)
@@ -914,7 +914,7 @@ window.CAROUSELS = [
       { tpl: 'A', eyebrow: 'mixed',
         muted: "$14.99 a month.",
         punch: "Or $129 a year.\n{Save $50.}",
-        meta: 'becomeable.app' },
+        meta: 'becomeable.app/get-able' },
   ] },
 
   // C19 — Creator's budget (glass · free trial)
@@ -944,7 +944,7 @@ window.CAROUSELS = [
         meta: '6 / 7' },
       { tpl: 'B', eyebrow: 'creator',
         punch: "{Free} for 30 days.\nBuilt for\nvariable income.",
-        meta: 'becomeable.app' },
+        meta: 'becomeable.app/get-able' },
   ] },
 
   // C20 — Designer / developer income system (white · pricing)
@@ -975,7 +975,7 @@ window.CAROUSELS = [
       { tpl: 'A', eyebrow: 'mixed',
         muted: "$14.99 a month.",
         punch: "Or $129 a year.\n{Save $50.}",
-        meta: 'becomeable.app' },
+        meta: 'becomeable.app/get-able' },
   ] },
 
   // C21 — Real estate agent commission system (black · website)
@@ -1004,7 +1004,7 @@ window.CAROUSELS = [
         meta: '6 / 7' },
       { tpl: 'B', eyebrow: 'commission',
         punch: "Built for\ninconsistent\n{income}.",
-        meta: 'becomeable.app' },
+        meta: 'becomeable.app/get-able' },
   ] },
 
   // C22 — Rideshare driver income system (page · free trial)
@@ -1033,7 +1033,7 @@ window.CAROUSELS = [
         meta: '6 / 7' },
       { tpl: 'B', eyebrow: 'gig',
         punch: "{Free} for 30 days.\nBuilt for\nvariable income.",
-        meta: 'becomeable.app' },
+        meta: 'becomeable.app/get-able' },
   ] },
 
   // C23 — Etsy seller income system (glass-dark · pricing)
@@ -1063,7 +1063,7 @@ window.CAROUSELS = [
       { tpl: 'A', eyebrow: 'mixed',
         muted: "$14.99 a month.",
         punch: "Or $129 a year.\n{Save $50.}",
-        meta: 'becomeable.app' },
+        meta: 'becomeable.app/get-able' },
   ] },
 
   // C24 — Coach / consultant (green · website)
@@ -1092,7 +1092,7 @@ window.CAROUSELS = [
         meta: '6 / 7' },
       { tpl: 'B', eyebrow: 'mixed',
         punch: "Built for\ninconsistent\n{income}.",
-        meta: 'becomeable.app' },
+        meta: 'becomeable.app/get-able' },
   ] },
 
   // C25 — Commission income survival (black · free trial)
@@ -1120,7 +1120,7 @@ window.CAROUSELS = [
         meta: '6 / 7' },
       { tpl: 'B', eyebrow: 'commission',
         punch: "{Free} for 30 days.\nBuilt for\nvariable income.",
-        meta: 'becomeable.app' },
+        meta: 'becomeable.app/get-able' },
   ] },
 
   // C26 — The self-employed emergency fund (glass-dark · pricing)
@@ -1150,7 +1150,7 @@ window.CAROUSELS = [
       { tpl: 'A', eyebrow: 'business',
         muted: "$14.99 a month.",
         punch: "Or $129 a year.\n{Save $50.}",
-        meta: 'becomeable.app' },
+        meta: 'becomeable.app/get-able' },
   ] },
 
   // C27 — How much to set aside for taxes (white · website)
@@ -1179,7 +1179,7 @@ window.CAROUSELS = [
         meta: '6 / 7' },
       { tpl: 'B', eyebrow: 'mixed',
         punch: "Built for\ninconsistent\n{income}.",
-        meta: 'becomeable.app' },
+        meta: 'becomeable.app/get-able' },
   ] },
 
   // C28 — What is a 1099-NEC? (white · free trial)
@@ -1205,7 +1205,7 @@ window.CAROUSELS = [
         meta: '5 / 6' },
       { tpl: 'B', eyebrow: 'mixed',
         punch: "{Free} for 30 days.\nBuilt for\nvariable income.",
-        meta: 'becomeable.app' },
+        meta: 'becomeable.app/get-able' },
   ] },
 
   // C29 — What is a 1099-K? (white · pricing)
@@ -1236,7 +1236,7 @@ window.CAROUSELS = [
       { tpl: 'A', eyebrow: 'mixed',
         muted: "$14.99 a month.",
         punch: "Or $129 a year.\n{Save $50.}",
-        meta: 'becomeable.app' },
+        meta: 'becomeable.app/get-able' },
   ] },
 
   // C30 — Quarterly taxes during a bad month (glass-dark · website)
@@ -1261,7 +1261,7 @@ window.CAROUSELS = [
         meta: '5 / 6' },
       { tpl: 'B', eyebrow: 'mixed',
         punch: "Built for\ninconsistent\n{income}.",
-        meta: 'becomeable.app' },
+        meta: 'becomeable.app/get-able' },
   ] },
 
   // C31 — The home office deduction (page · free trial)
@@ -1287,7 +1287,7 @@ window.CAROUSELS = [
         meta: '5 / 6' },
       { tpl: 'B', eyebrow: 'mixed',
         punch: "{Free} for 30 days.\nBuilt for\nvariable income.",
-        meta: 'becomeable.app' },
+        meta: 'becomeable.app/get-able' },
   ] },
 
   // C32 — Schedule C walkthrough (white · pricing)
@@ -1317,7 +1317,7 @@ window.CAROUSELS = [
       { tpl: 'A', eyebrow: 'mixed',
         muted: "$14.99 a month.",
         punch: "Or $129 a year.\n{Save $50.}",
-        meta: 'becomeable.app' },
+        meta: 'becomeable.app/get-able' },
   ] },
 
   // C33 — Self-employment tax deductions (glass · website)
@@ -1347,7 +1347,7 @@ window.CAROUSELS = [
         meta: '6 / 7' },
       { tpl: 'B', eyebrow: 'mixed',
         punch: "Built for\ninconsistent\n{income}.",
-        meta: 'becomeable.app' },
+        meta: 'becomeable.app/get-able' },
   ] },
 
   // C34 — Get out of debt on inconsistent income (multi: black → green · free trial)
@@ -1377,7 +1377,7 @@ window.CAROUSELS = [
         meta: '6 / 7' },
       { tpl: 'B', eyebrow: 'mixed', theme: 'green',
         punch: "{Free} for 30 days.\nBuilt for\nvariable income.",
-        meta: 'becomeable.app' },
+        meta: 'becomeable.app/get-able' },
   ] },
 
   // C35 — Improve your credit score (page · pricing)
@@ -1407,7 +1407,7 @@ window.CAROUSELS = [
       { tpl: 'A', eyebrow: 'mixed',
         muted: "$14.99 a month.",
         punch: "Or $129 a year.\n{Save $50.}",
-        meta: 'becomeable.app' },
+        meta: 'becomeable.app/get-able' },
   ] },
 
   // C36 — Pay yourself first (the variable-income version) (green · website)
@@ -1435,7 +1435,7 @@ window.CAROUSELS = [
         meta: '6 / 7' },
       { tpl: 'B', eyebrow: 'mixed',
         punch: "Built for\ninconsistent\n{income}.",
-        meta: 'becomeable.app' },
+        meta: 'becomeable.app/get-able' },
   ] },
 
   // C37 — How money actually works (glass · free trial)
@@ -1467,7 +1467,7 @@ window.CAROUSELS = [
         meta: '7 / 8' },
       { tpl: 'B', eyebrow: 'mixed',
         punch: "{Free} for 30 days.\nBuilt for\nvariable income.",
-        meta: 'becomeable.app' },
+        meta: 'becomeable.app/get-able' },
   ] },
 
   // C38 — Get business funding without losing it (black · pricing)
@@ -1497,7 +1497,7 @@ window.CAROUSELS = [
       { tpl: 'A', eyebrow: 'mixed',
         muted: "$14.99 a month.",
         punch: "Or $129 a year.\n{Save $50.}",
-        meta: 'becomeable.app' },
+        meta: 'becomeable.app/get-able' },
   ] },
 
   // ── LAUNCH CAROUSELS (StoryBrand sequence — C39–C44) ──
@@ -1533,7 +1533,7 @@ window.CAROUSELS = [
       { tpl: 'A', eyebrow: 'mixed', theme: 'green',
         muted: "$14.99 a month.",
         punch: "Or $129 a year.\nFree for {30.}",
-        meta: 'becomeable.app' },
+        meta: 'becomeable.app/get-able' },
   ] },
 
   // C40 — L1 Fri · WHY APPS FAIL YOU (philosophical pain)
@@ -1566,7 +1566,7 @@ window.CAROUSELS = [
       { tpl: 'A', eyebrow: 'mixed', theme: 'green',
         muted: "$14.99 a month.",
         punch: "Or $129 a year.\nFree for {30.}",
-        meta: 'becomeable.app' },
+        meta: 'becomeable.app/get-able' },
   ] },
 
   // C41 — REMOVED 2026-04-26 (how-i-lost-40k founder carousel; per user feedback)
@@ -1601,7 +1601,7 @@ window.CAROUSELS = [
       { tpl: 'A', eyebrow: 'mixed', theme: 'green',
         muted: "Free for 30 days.",
         punch: "$14.99/mo.\n{Or $129/yr.}",
-        meta: 'becomeable.app' },
+        meta: 'becomeable.app/get-able' },
   ] },
 
   // C43 — L3 Wed · THE PLAN (how Able works in 8 slides)
@@ -1635,7 +1635,7 @@ window.CAROUSELS = [
       { tpl: 'A', eyebrow: 'mixed',
         muted: "$14.99 a month.",
         punch: "Or $129 a year.\nFree for {30.}",
-        meta: 'becomeable.app' },
+        meta: 'becomeable.app/get-able' },
   ] },
 
   // C45 — Brand-script · HOW BREATHING AGAIN WORKS (homepage feature walkthrough)
@@ -1661,7 +1661,7 @@ window.CAROUSELS = [
       { tpl: 'A', eyebrow: 'mixed', theme: 'green',
         muted: "$14.99 a month.",
         punch: "Or $129 a year.\nFree for {30.}",
-        meta: 'becomeable.app' },
+        meta: 'becomeable.app/get-able' },
   ] },
 
   // C44 — L3 Fri · TRANSFORMATION (Day 1 → Day 90)
@@ -1694,8 +1694,8 @@ window.CAROUSELS = [
         meta: '7 / 8' },
       { tpl: 'A', eyebrow: 'mixed', theme: 'green',
         muted: "Free for 30 days.",
-        punch: "{becomeable.app}",
-        meta: 'becomeable.app' },
+        punch: "{becomeable.app/get-able}",
+        meta: 'becomeable.app/get-able' },
   ] },
 
   // ─── Education carousels (added 2026-05-08, layer "Edu") ───
@@ -1725,7 +1725,7 @@ window.CAROUSELS = [
         meta: '5 / 6' },
       { tpl: 'B', eyebrow: 'mixed', theme: 'green',
         punch: "Build both.\nDifferent jobs.\nFree for {30 days.}",
-        meta: 'becomeable.app' },
+        meta: 'becomeable.app/get-able' },
   ] },
 
   // C47 — Quarterly taxes 5-min primer (white · website CTA)
@@ -1755,7 +1755,7 @@ window.CAROUSELS = [
         meta: '6 / 7' },
       { tpl: 'B', eyebrow: 'mixed', theme: 'green',
         punch: "Built into Able.\nFree for {30 days.}",
-        meta: 'becomeable.app' },
+        meta: 'becomeable.app/get-able' },
   ] },
 
   // C48 — Why monthly budgets fail with variable income (page · website)
@@ -1781,7 +1781,7 @@ window.CAROUSELS = [
         meta: '5 / 6' },
       { tpl: 'B', eyebrow: 'mixed', theme: 'green',
         punch: "That's Floor-First.\nFree for {30 days.}",
-        meta: 'becomeable.app' },
+        meta: 'becomeable.app/get-able' },
   ] },
 
   // C49 — 5 mistakes 1099 workers make in year one (black · website)
@@ -1811,7 +1811,7 @@ window.CAROUSELS = [
         meta: '6 / 7' },
       { tpl: 'B', eyebrow: 'mixed', theme: 'green',
         punch: "Built for variable income.\nFree for {30 days.}",
-        meta: 'becomeable.app' },
+        meta: 'becomeable.app/get-able' },
   ] },
 ];
 

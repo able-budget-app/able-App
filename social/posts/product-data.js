@@ -304,7 +304,7 @@ window.PRODUCT_CAROUSELS = [
       { tpl: 'A', theme: 'green', eyebrow: 'mixed',
         muted: "$14.99 a month.",
         punch: "Or $129 a year.\n{Save $50.}",
-        meta: 'becomeable.app' },
+        meta: 'becomeable.app/get-able' },
   ] },
 
   // PC2 — How Able works (5-step product tour)
@@ -335,7 +335,7 @@ window.PRODUCT_CAROUSELS = [
       { tpl: 'A', theme: 'green', eyebrow: 'mixed',
         muted: "$14.99 a month.",
         punch: "Or $129 a year.\nFree for {30.}",
-        meta: 'becomeable.app' },
+        meta: 'becomeable.app/get-able' },
   ] },
 
   // PC3 — Built for variable income (5 features)
@@ -366,7 +366,7 @@ window.PRODUCT_CAROUSELS = [
       { tpl: 'A', theme: 'green', eyebrow: 'mixed',
         muted: "30 days free.",
         punch: "Card required.\n{Cancel anytime.}",
-        meta: 'becomeable.app' },
+        meta: 'becomeable.app/get-able' },
   ] },
 
   // PC4 — From Unable → Able (transformation arc)
@@ -396,7 +396,7 @@ window.PRODUCT_CAROUSELS = [
       { tpl: 'A', theme: 'glass-dark', eyebrow: 'mixed',
         muted: "30 days free.",
         punch: "{Become Able.}",
-        meta: 'becomeable.app' },
+        meta: 'becomeable.app/get-able' },
   ] },
 
   // PC5 — Tax season, simplified (4 tax features)
@@ -423,7 +423,7 @@ window.PRODUCT_CAROUSELS = [
       { tpl: 'A', theme: 'green', eyebrow: 'mixed',
         muted: "30 days free.",
         punch: "Card required.\n{Cancel anytime.}",
-        meta: 'becomeable.app' },
+        meta: 'becomeable.app/get-able' },
   ] },
 
   // PC6 — The slow month (reserve mechanic walkthrough)
@@ -453,7 +453,7 @@ window.PRODUCT_CAROUSELS = [
       { tpl: 'A', theme: 'green', eyebrow: 'mixed',
         muted: "$14.99 a month.",
         punch: "Or $129 a year.\n{Save $50.}",
-        meta: 'becomeable.app' },
+        meta: 'becomeable.app/get-able' },
   ] },
 
   // PC7 — 5 things you stop doing (anti-pattern reframe)
@@ -484,7 +484,7 @@ window.PRODUCT_CAROUSELS = [
       { tpl: 'A', theme: 'green', eyebrow: 'mixed',
         muted: "30 days free.",
         punch: "{Try it} once.",
-        meta: 'becomeable.app' },
+        meta: 'becomeable.app/get-able' },
   ] },
 
   // PC8 — Why apps fail variable income (problem → solution)
@@ -515,7 +515,7 @@ window.PRODUCT_CAROUSELS = [
       { tpl: 'A', theme: 'green', eyebrow: 'mixed',
         muted: "Built for",
         punch: "{inconsistent}\nincome.",
-        meta: 'becomeable.app' },
+        meta: 'becomeable.app/get-able' },
   ] },
 
 ];
