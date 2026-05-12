@@ -50,7 +50,7 @@ Work this for three months and you'll be in a fundamentally different place.
 
 ## Start setting up today
 
-Able routes every deposit automatically. Taxes, bills, smoothing reserve, debt, and your own pay. Seven days free. Cancel anytime.
+Able routes every deposit automatically. Taxes, bills, smoothing reserve, debt, and your own pay. 30 days free. Cancel anytime.
 
 **[Start Free Trial](https://becomeable.app/signup)**
 

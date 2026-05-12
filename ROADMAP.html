@@ -839,11 +839,11 @@
       <p>The order matters: <strong>build the product, lock the brand, update the reference doc, then rewrite the marketing.</strong> Skip a step and you redo the work.</p>
     </section>
 
-    <section class="tldr" id="status-2026-05-07" style="background: var(--green-soft); border-left: 4px solid var(--green); margin-top: 14px;">
-      <h2>Where things stand — May 7</h2>
-      <p><strong>The first four phases are basically done.</strong> Bank sync is live (multiple banks, debts and APRs detected, recurring charges spotted, deep-dive runs on first link). The analyzer ships AI-built plans the user can review. The tax bucket has quarterly projections and a state-aware calculator. The Floor-First method is named and written. The brand is locked.</p>
-      <p><strong>Marketing is mid-rewrite.</strong> Landing page got an overhaul today. Email templates were rebuilt — 14 redesigned plus two new ones (the deep-dive summary and the achievement unlock). Blog cluster sat paused at 2 of 11 articles; safe to resume now that the product isn't moving.</p>
-      <p><strong>What's next:</strong> a launch-hardening pass (security audit, error tracking, daily watchdog) before paid ads or App Store. Then the App Store submission. Plaid-driven money in/out is parked until real customers tell us what they expect.</p>
+    <section class="tldr" id="status-2026-05-12" style="background: var(--green-soft); border-left: 4px solid var(--green); margin-top: 14px;">
+      <h2>Where things stand — May 12</h2>
+      <p><strong>Phases 1, 2, and 3 are done. Phase 4 is mostly done.</strong> The product is feature-complete: bank sync, analyzer, tax bucket with quarterly projections, MFA, web push, deep-dive on first connect, in-app monthly-to-annual upgrade, multi-bank with newly-added-bank review modal (shipped May 11). Floor-First method is named, written, in-app. Brand is locked. Reference doc is up to date.</p>
+      <p><strong>Marketing is most of the way there.</strong> Landing page redone (May 7). Method explainer page live. All 14 email templates redesigned plus 2 new ones (May 7). PYF blog cluster (10 articles) is published, pending a small voice sweep (the trial-day CTA card needs 7d → 30d). Business blog cluster shipped per the original scoped plan (pillar + 1 supporting). 175 social posts ready and the cross-poster is wired. YouTube auto-upload pipeline live (May 10). LinkedIn pipeline ready with 13 drafts in the sheet pending review. <strong>Open marketing gaps:</strong> ad copy (not started), video script refresh (not verified), email cron auto-fire status (cron exists, schedule may need enabling).</p>
+      <p><strong>What's next:</strong> launch hardening (security defense-in-depth, error tracking, daily digest). Then SEO engine and full social-cadence go-live. Then App Store. Plaid-driven money in/out (B6) is parked until real customers tell us what they expect.</p>
     </section>
 
     <h2 id="status"><span class="num">01</span>Where things stand</h2>
@@ -854,27 +854,29 @@
         <h4>Product (becomeable.app)</h4>
         <ul>
           <li><span class="pill pill-done">Live</span> Per-deposit allocator, the five buckets, bill reservations, the planning window, the AI Coach, Stripe billing, the email cron, the referral system, the in-app tour</li>
-          <li><span class="pill pill-done">Live</span> Bank sync (multiple banks, debts &amp; APRs detected, recurring charges spotted, full deep-dive on first link), the analyzer that builds your plan, two-factor auth, web push, in-app upgrade from monthly to annual, state-aware tax math</li>
-          <li><span class="pill pill-progress">Open</span> Streaming responses for the Coach</li>
+          <li><span class="pill pill-done">Live</span> Bank sync (multiple banks, debts &amp; APRs detected, recurring charges spotted, full deep-dive on first link, newly-added-bank review modal shipped May 11), the analyzer that builds your plan, two-factor auth, web push, in-app upgrade from monthly to annual, state-aware tax math</li>
+          <li><span class="pill pill-progress">Open</span> Streaming responses for the Coach; rotate service_role JWT (key exposed in transcript May 11)</li>
         </ul>
       </div>
       <div class="stat-card">
         <h4>Marketing</h4>
         <ul>
-          <li><span class="pill pill-done">Live</span> Landing site (re-done May 7), the brand system, all 14 email templates redesigned (May 7), 175 social posts ready to go, the cross-poster wired up, a 60-second cinematic reel, 10 phone-frame video clips</li>
-          <li><span class="pill pill-progress">Paused</span> Pay-Yourself-First blog series (2 of 11 written) — safe to resume now</li>
-          <li><span class="pill pill-pending">Not started</span> SEO at scale, the always-on social cadence</li>
+          <li><span class="pill pill-done">Live</span> Landing site (re-done May 7), the brand system, all 14 email templates redesigned (May 7), Method explainer page, PYF blog cluster (10 articles), business blog cluster (pillar + 1 supporting), 175 social posts ready, cross-poster wired, YouTube auto-upload pipeline live (May 10), LinkedIn pipeline ready (13 drafts), 60-second cinematic reel, 10 phone-frame video clips</li>
+          <li><span class="pill pill-progress">Needs sweep</span> PYF blog trial-day CTA (7d → 30d global find-replace), email cron auto-fire schedule (unverified)</li>
+          <li><span class="pill pill-pending">Not started</span> Ad copy (Meta/Google/YouTube/TikTok), video script refresh, SEO at scale, full always-on social cadence</li>
         </ul>
       </div>
       <div class="stat-card">
         <h4>What changed in the last week</h4>
         <ul>
-          <li>The "what Able does" reference doc was rewritten (it had been wrong)</li>
-          <li>Tax calculator now adjusts for state income tax</li>
-          <li>All emails redesigned — 14 templates plus a deep-dive summary and an achievement unlock</li>
-          <li>Analyzer made deterministic — same inputs always produce the same plan</li>
-          <li>Post-checkout sign-in fixed; users can upgrade from monthly to annual without leaving the app</li>
-          <li><strong>Up next:</strong> launch hardening (security and monitoring), then the App Store</li>
+          <li>Analyzer-readiness gate added — blocks plan-build until Plaid recurring streams populate (May 8)</li>
+          <li>Mark-as-bill from Activity / Leaks now propagates to Bills page (May 8)</li>
+          <li>YouTube auto-upload pipeline went live (May 10)</li>
+          <li>Social pipeline shipped: 65-week cadence + 598 captions + cross-poster live-ready (May 10)</li>
+          <li>OG share card refreshed (May 11)</li>
+          <li>New-bank review modal — banner only fires when an additional bank is added; opens a candidate-bills + cards modal with Option-C (unselected → pending_review on Bills/Debt) (May 11)</li>
+          <li>Repo cleanup: 2.8GB → 1.6GB, root reorganized, stale drafts dropped (May 11)</li>
+          <li><strong>Up next:</strong> launch hardening (security defense-in-depth, error tracking, daily digest), then ad copy + SEO at scale, then App Store</li>
         </ul>
       </div>
     </div>
@@ -1054,10 +1056,10 @@
     <div class="phase phase-3" id="phase-3">
       <div class="phase-header">
         <div>
-          <div class="phase-num">Phase 3 <span class="pill pill-progress" style="margin-left: 6px;">🟡 PARTIAL</span></div>
+          <div class="phase-num">Phase 3 <span class="pill pill-done" style="margin-left: 6px;">✅ DONE</span></div>
           <h3>Capture assets, update the reference doc</h3>
         </div>
-        <span class="duration">3-5 days · reference doc done May 7; product shots still to do</span>
+        <span class="duration">3-5 days · reference doc done May 7; phone-frame stills + video clips library shipped</span>
       </div>
       <div class="goal">Refresh the source-of-truth reference doc and capture all the screenshots and clips marketing will pull from.</div>
       <ul>
@@ -1072,24 +1074,24 @@
     <div class="phase phase-4" id="phase-4">
       <div class="phase-header">
         <div>
-          <div class="phase-num">Phase 4 <span class="pill pill-progress" style="margin-left: 6px;">🟡 IN FLIGHT</span></div>
+          <div class="phase-num">Phase 4 <span class="pill pill-progress" style="margin-left: 6px;">🟡 MOSTLY DONE</span></div>
           <h3>Rewrite the marketing — all at once</h3>
         </div>
-        <span class="duration">2-3 weeks · landing &amp; email shipped May 7; blog and social next</span>
+        <span class="duration">2-3 weeks · landing, method, emails, PYF, business, social all shipped; ad copy + video scripts remain</span>
       </div>
       <div class="goal">Every piece of marketing now matches the real product. Done as one sprint, not piece-by-piece, so the messaging stays consistent.</div>
 
       <h4 style="margin-top: 22px;">The order within this phase matters too:</h4>
       <ol>
-        <li><strong>Landing page</strong> — sets the tone everything else inherits</li>
-        <li><strong>The method explainer page</strong> — a new dedicated page, linked from landing and the footer</li>
-        <li><strong>Pricing page</strong> — reconfirm or update</li>
-        <li><strong>Pay-Yourself-First blog series</strong> — resume from where it paused</li>
-        <li><strong>Business-side blog series</strong> — continue</li>
-        <li><strong>Email sequences</strong> — onboarding emails plus the behavioral ones, updated for the new vocabulary</li>
-        <li><strong>175 social posts</strong> — sweep for anything that referenced manual-only entry; rewrite as needed</li>
-        <li><strong>Ad copy</strong> — Meta, Google, YouTube, TikTok — keyed to the new capabilities</li>
-        <li><strong>Video scripts</strong> — refresh the Day 1-31 series and product demos to reference bank sync</li>
+        <li><span class="pill pill-done">✅</span> <strong>Landing page</strong> — sets the tone everything else inherits <em>(redone May 7)</em></li>
+        <li><span class="pill pill-done">✅</span> <strong>The method explainer page</strong> — <code>/method/</code> live</li>
+        <li><span class="pill pill-done">✅</span> <strong>Pricing page</strong> — $14.99/mo + $129/yr locked</li>
+        <li><span class="pill pill-progress">🟡</span> <strong>Pay-Yourself-First blog series</strong> — 10 articles shipped at <code>/learn/pay-yourself-first/</code>; small voice sweep pending (trial-day CTA 7d → 30d, 2 bucket-name fixes)</li>
+        <li><span class="pill pill-done">✅</span> <strong>Business-side blog series</strong> — pillar + 1 supporting per the scoped plan (could expand later if desired)</li>
+        <li><span class="pill pill-progress">🟡</span> <strong>Email sequences</strong> — 14 templates redesigned May 7 + 2 new (deep-dive summary, achievement unlock). Auto-send cron schedule needs verification in Supabase dashboard.</li>
+        <li><span class="pill pill-done">✅</span> <strong>175 social posts</strong> — sweep done, captions written (598 total across 65-week cadence), cross-poster wired</li>
+        <li><span class="pill pill-pending">🔴</span> <strong>Ad copy</strong> — Meta, Google, YouTube, TikTok — not started</li>
+        <li><span class="pill pill-pending">🔴</span> <strong>Video scripts</strong> — Day 1-31 series refresh status not verified; YouTube/LinkedIn pipelines exist, scripts may still reference old product framing</li>
       </ol>
       <div class="exit"><strong>Done when</strong>Every public surface says the same thing about what Able is. No stale claims anywhere.</div>
     </div>
@@ -1117,18 +1119,19 @@
     <div class="phase phase-5" id="phase-5">
       <div class="phase-header">
         <div>
-          <div class="phase-num">Phase 5 <span class="pill pill-pending" style="margin-left: 6px;">🔴 NOT STARTED</span></div>
+          <div class="phase-num">Phase 5 <span class="pill pill-progress" style="margin-left: 6px;">🟡 PARTIALLY READY</span></div>
           <h3>Always-on engines</h3>
         </div>
-        <span class="duration">Kicks off after Phase 4</span>
+        <span class="duration">Engines are built but not all live</span>
       </div>
       <div class="goal">A steady cadence, not one-time bursts.</div>
       <ul>
-        <li><strong>Social engine</strong> — turn on the cross-poster, set the cadence, refill the post library each month</li>
-        <li><strong>SEO engine</strong> — pillar and cluster plan, weekly publish schedule, backlink and technical baseline</li>
-        <li><strong>Email cadence</strong> — broadcasts beyond the trigger emails (a newsletter, a method drip)</li>
-        <li><strong>Video cadence</strong> — short-form for Reels/TikTok/Shorts plus long-form for YouTube</li>
-        <li><strong>Repurposing</strong> — blog post → narrated audio → YouTube video, on a loop</li>
+        <li><span class="pill pill-progress">🟢 Ready to go live</span> <strong>Social engine</strong> — cross-poster scenario <code>4869011</code> built (IG + FB + LinkedIn), Sunday TikTok digest <code>5021586</code> paused-ready, comment-watcher <code>5022585</code> parked on Make IG app scope limit. Cadence + 598 captions queued.</li>
+        <li><span class="pill pill-done">✅ Live</span> <strong>YouTube engine</strong> — auto-upload pipeline live as of May 10 (<code>scripts/youtube-upload.py</code>); quota increase form submitted.</li>
+        <li><span class="pill pill-progress">🟢 Ready to go live</span> <strong>LinkedIn engine</strong> — 13 drafts in the sheet pending review; Tue/Thu 9am ET locked; Make poster spec'd (~45 min build).</li>
+        <li><span class="pill pill-pending">🔴 Not started</span> <strong>SEO engine</strong> — pillar and cluster plan, weekly publish schedule, backlink and technical baseline</li>
+        <li><span class="pill pill-pending">🔴 Not started</span> <strong>Email cadence</strong> — broadcasts beyond trigger emails (newsletter, method drip)</li>
+        <li><span class="pill pill-pending">🔴 Not started</span> <strong>Repurposing loop</strong> — blog post → narrated audio → YouTube video, on a loop</li>
       </ul>
     </div>
 

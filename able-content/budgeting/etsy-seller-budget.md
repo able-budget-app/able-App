@@ -181,7 +181,7 @@ You are able to budget inconsistent income.
 
 Able routes every platform deposit as it clears. COGS replaced. Taxes off the top. Smoothing reserve absorbing Q4 so Q1 is livable. Your seller paycheck on a schedule that doesn't change with the season.
 
-Seven days free. Cancel anytime.
+30 days free. Cancel anytime.
 
 **[Start Free Trial](https://becomeable.app/signup)**
 

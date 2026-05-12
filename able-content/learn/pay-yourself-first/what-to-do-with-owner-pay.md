@@ -122,7 +122,7 @@ They will take a while. That is not a problem with the priority stack. That is i
 
 ## Run the system that funds the stack
 
-Able routes the owner pay percentage to your personal account on every deposit. The priority stack lives in your head; the discipline of getting the money there lives in the app. Seven days free. Cancel anytime.
+Able routes the owner pay percentage to your personal account on every deposit. The priority stack lives in your head; the discipline of getting the money there lives in the app. 30 days free. Cancel anytime.
 
 **[Start Free Trial](https://becomeable.app/signup)**
 

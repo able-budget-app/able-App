@@ -206,7 +206,7 @@ You are able to budget inconsistent income.
 
 Able is built for this. Every deposit gets routed automatically. Taxes come off the top. Your Floor gets funded. Your smoothing reserve grows. You stop guessing.
 
-Seven days free. Cancel anytime.
+30 days free. Cancel anytime.
 
 **[Start Free Trial](https://becomeable.app/signup)**
 

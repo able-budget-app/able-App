@@ -201,7 +201,7 @@ You are able to budget inconsistent income.
 
 Able routes every commission the moment it arrives. Taxes off the top. Floor funded. Smoothing reserve growing. Debt and savings moving forward.
 
-Seven days free. Cancel anytime.
+30 days free. Cancel anytime.
 
 **[Start Free Trial](https://becomeable.app/signup)**
 

@@ -244,7 +244,7 @@ You are able to budget inconsistent income.
 
 Every business deposit gets split automatically. Tax account fills in the background. Deductions reduce what you owe; the setaside handles what you owe after deductions.
 
-Seven days free. Cancel anytime.
+30 days free. Cancel anytime.
 
 **[Start Free Trial](https://becomeable.app/signup)**
 

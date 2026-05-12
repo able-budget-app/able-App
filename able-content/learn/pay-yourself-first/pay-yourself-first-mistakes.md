@@ -119,7 +119,7 @@ Mistake 1 (separate account) and mistake 6 (tax bucket) before any of the others
 
 ## Run a system designed to prevent these mistakes
 
-Able's surplus split runs every deposit through the right buckets in the right order. Taxes off the top, bills, smoothing, debt, owner pay. The structure prevents most of these mistakes by default. Seven days free. Cancel anytime.
+Able's surplus split runs every deposit through the right buckets in the right order. Taxes off the top, bills, smoothing, debt, owner pay. The structure prevents most of these mistakes by default. 30 days free. Cancel anytime.
 
 **[Start Free Trial](https://becomeable.app/signup)**
 

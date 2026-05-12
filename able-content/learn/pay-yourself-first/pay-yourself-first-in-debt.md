@@ -119,7 +119,7 @@ Show them the failure modes above. The all-or-nothing approach feels disciplined
 
 ## Start a system that pays you and pays the debt
 
-Able routes every deposit automatically. Five percent to you, the rest of the surplus to debt, the smoothing reserve catching the slow weeks. You are not choosing between the two anymore. Seven days free. Cancel anytime.
+Able routes every deposit automatically. Five percent to you, the rest of the surplus to debt, the smoothing reserve catching the slow weeks. You are not choosing between the two anymore. 30 days free. Cancel anytime.
 
 **[Start Free Trial](https://becomeable.app/signup)**
 

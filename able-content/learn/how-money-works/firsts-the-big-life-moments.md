@@ -45,7 +45,7 @@ You don't need the whole plan today. You need the next right decision. Learn the
 
 ## Start setting up today
 
-Able routes every deposit automatically. Taxes, bills, smoothing reserve, debt, and your own pay. Seven days free. Cancel anytime.
+Able routes every deposit automatically. Taxes, bills, smoothing reserve, debt, and your own pay. 30 days free. Cancel anytime.
 
 **[Start Free Trial](https://becomeable.app/signup)**
 

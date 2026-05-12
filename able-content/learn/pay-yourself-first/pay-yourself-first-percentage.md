@@ -125,7 +125,7 @@ Each partner picks their own percentage on their share of distributions. The per
 
 ## Run the right percentage on every deposit
 
-Pick your number. Set it once in Able. Every deposit honors it without you thinking about it again. When the decision tree tells you to change it, you change it in 30 seconds. Seven days free. Cancel anytime.
+Pick your number. Set it once in Able. Every deposit honors it without you thinking about it again. When the decision tree tells you to change it, you change it in 30 seconds. 30 days free. Cancel anytime.
 
 **[Start Free Trial](https://becomeable.app/signup)**
 

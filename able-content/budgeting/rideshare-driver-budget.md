@@ -163,7 +163,7 @@ You are able to budget inconsistent income.
 
 Able handles the split automatically. Every payout gets routed. Tax account, vehicle fund, bills account, smoothing reserve. You drive. The money lands in the right places.
 
-Seven days free. Cancel anytime.
+30 days free. Cancel anytime.
 
 **[Start Free Trial](https://becomeable.app/signup)**
 

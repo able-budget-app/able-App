@@ -243,7 +243,7 @@ You are able to budget inconsistent income.
 
 Able routes a tax percentage off every business deposit automatically. Your tax account fills up in the background while you work. Quarterly payments become a non-event.
 
-Seven days free. Cancel anytime.
+30 days free. Cancel anytime.
 
 **[Start Free Trial](https://becomeable.app/signup)**
 

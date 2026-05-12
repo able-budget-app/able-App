@@ -159,7 +159,7 @@ You are able to budget inconsistent income.
 
 Able is the system. Every deposit, routed automatically, the moment it arrives. Tax account. Floor funded. Smoothing reserve. Debt and savings moving forward. The feast never leaks. The famine never threatens you.
 
-Seven days free. Cancel anytime.
+30 days free. Cancel anytime.
 
 **[Start Free Trial](https://becomeable.app/signup)**
 

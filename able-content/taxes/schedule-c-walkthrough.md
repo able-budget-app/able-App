@@ -292,7 +292,7 @@ You are able to budget inconsistent income.
 
 Every deposit routed automatically. Tax account full when it matters.
 
-Seven days free. Cancel anytime.
+30 days free. Cancel anytime.
 
 **[Start Free Trial](https://becomeable.app/signup)**
 

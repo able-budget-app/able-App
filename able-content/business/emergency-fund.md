@@ -248,7 +248,7 @@ You are able to budget inconsistent income.
 
 Able automates the allocation. Every deposit gets split. A percentage goes to the emergency fund on every single one. The fund grows in the background while you focus on work.
 
-Seven days free. Cancel anytime.
+30 days free. Cancel anytime.
 
 **[Start Free Trial](https://becomeable.app/signup)**
 

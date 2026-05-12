@@ -196,7 +196,7 @@ You are able to budget inconsistent income.
 
 Every 1099 deposit gets split automatically. Tax account fills in the background. Quarterly payments become a non-event.
 
-Seven days free. Cancel anytime.
+30 days free. Cancel anytime.
 
 **[Start Free Trial](https://becomeable.app/signup)**
 

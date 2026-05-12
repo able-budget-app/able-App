@@ -220,7 +220,7 @@ You are able to budget inconsistent income.
 
 Platform deposit lands. Tax moves off the top. Quarterlies become a non-event.
 
-Seven days free. Cancel anytime.
+30 days free. Cancel anytime.
 
 **[Start Free Trial](https://becomeable.app/signup)**
 

@@ -1,6 +1,6 @@
 # Welcome 02 — Trial started
 
-**Trigger:** Right after `trial_started` (Stripe checkout completed, 7-day trial active).
+**Trigger:** Right after `trial_started` (Stripe checkout completed, 30-day trial active).
 **From:** Paul at Able <paul@becomeable.app>
 **Subject:** You're in. Here's the one thing to do first.
 **Preview text:** Two minutes. Real numbers. Real plan.
@@ -9,7 +9,7 @@
 
 Hey,
 
-Your 7-day trial just started. No charge until day 8. You can cancel any time from Settings.
+Your 30-day trial just started. No charge until day 31. You can cancel any time from Settings.
 
 Here is the one thing that turns Able from a nice idea into something useful:
 

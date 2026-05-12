@@ -141,7 +141,7 @@ Not wrong, but the twice-monthly cadence is a real weakness for variable income.
 
 ## Start the simpler version today
 
-Able runs the per-deposit owner pay split, plus taxes, bills, smoothing, and debt, in one app. No five accounts. No bookkeeper required. Set the percentages once, every deposit honors them. Seven days free. Cancel anytime.
+Able runs the per-deposit owner pay split, plus taxes, bills, smoothing, and debt, in one app. No five accounts. No bookkeeper required. Set the percentages once, every deposit honors them. 30 days free. Cancel anytime.
 
 **[Start Free Trial](https://becomeable.app/signup)**
 

@@ -43,7 +43,7 @@ Common goal: 15% of gross income once debt is under control. Can't hit that? Sta
 
 ## Start setting up today
 
-Able routes every deposit automatically. Taxes, bills, smoothing reserve, debt, and your own pay. Seven days free. Cancel anytime.
+Able routes every deposit automatically. Taxes, bills, smoothing reserve, debt, and your own pay. 30 days free. Cancel anytime.
 
 **[Start Free Trial](https://becomeable.app/signup)**
 

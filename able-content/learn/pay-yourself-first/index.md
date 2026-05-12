@@ -31,6 +31,6 @@ The one thing most entrepreneurs skip. Learn why it matters and the simplest way
 
 ## Start practicing today
 
-Able is the app where the lessons in this course turn into a running system. Every deposit routed. Tax off the top. Smoothing reserve absorbing the swings. Seven days free. Cancel anytime.
+Able is the app where the lessons in this course turn into a running system. Every deposit routed. Tax off the top. Smoothing reserve absorbing the swings. 30 days free. Cancel anytime.
 
 **[Start Free Trial](https://becomeable.app/signup)**

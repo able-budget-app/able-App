@@ -43,7 +43,7 @@ Three to five vendor accounts paid early for a few months gets you to 80+.
 
 ## Start setting up today
 
-Able routes every deposit automatically. Taxes, bills, smoothing reserve, debt, and your own pay. Seven days free. Cancel anytime.
+Able routes every deposit automatically. Taxes, bills, smoothing reserve, debt, and your own pay. 30 days free. Cancel anytime.
 
 **[Start Free Trial](https://becomeable.app/signup)**
 

@@ -157,7 +157,7 @@ For deeper context on the business owner's perspective generally, see [How to Pa
 
 ## Start at rung 1, climb every quarter
 
-Able runs the same per-deposit owner pay split at every rung from 1 through 4. Set the percentage. Climb when the trigger fires. The system is the same; the percentage is the lever. Seven days free. Cancel anytime.
+Able runs the same per-deposit owner pay split at every rung from 1 through 4. Set the percentage. Climb when the trigger fires. The system is the same; the percentage is the lever. 30 days free. Cancel anytime.
 
 **[Start Free Trial](https://becomeable.app/signup)**
 

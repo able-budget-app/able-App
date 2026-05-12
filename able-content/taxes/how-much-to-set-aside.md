@@ -210,7 +210,7 @@ You are able to budget inconsistent income.
 
 Able handles the set-aside automatically. You pick your percentage. Every deposit gets split. Your tax account stays funded. Quarterly payments come out of money that was always there.
 
-Seven days free. Cancel anytime.
+30 days free. Cancel anytime.
 
 **[Start Free Trial](https://becomeable.app/signup)**
 

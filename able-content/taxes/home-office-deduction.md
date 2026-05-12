@@ -219,7 +219,7 @@ You are able to budget inconsistent income.
 
 Every business deposit gets routed automatically. A tax percentage moves off the top. When quarterlies or April hits, the money is already there.
 
-Seven days free. Cancel anytime.
+30 days free. Cancel anytime.
 
 **[Start Free Trial](https://becomeable.app/signup)**
 

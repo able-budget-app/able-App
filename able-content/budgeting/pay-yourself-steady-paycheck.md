@@ -191,7 +191,7 @@ You are able to budget inconsistent income.
 
 Able automates the five-bucket system. Client payments land. Taxes come off. Your Floor stays funded. The smoothing reserve grows. You get paid a steady amount on a schedule you set.
 
-Seven days free. Cancel anytime.
+30 days free. Cancel anytime.
 
 **[Start Free Trial](https://becomeable.app/signup)**
 

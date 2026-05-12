@@ -112,7 +112,7 @@ Pay yourself first fires when the deposit clears, not when the invoice goes out.
 
 ## Start a system that works for variable income
 
-Able is built for income that does not come on the same day each month. Set your Pay Yourself percentage once. Every deposit splits the right way. The smoothing reserve covers the slow weeks. Seven days free. Cancel anytime.
+Able is built for income that does not come on the same day each month. Set your Pay Yourself percentage once. Every deposit splits the right way. The smoothing reserve covers the slow weeks. 30 days free. Cancel anytime.
 
 **[Start Free Trial](https://becomeable.app/signup)**
 

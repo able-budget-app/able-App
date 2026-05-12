@@ -174,7 +174,7 @@ You are able to budget inconsistent income.
 
 Able routes every closing check the day it hits. Brokerage and TC costs accounted for. Taxes off the top. Chargeback reserve funded. Smoothing reserve growing. Your realtor paycheck landing on schedule.
 
-Seven days free. Cancel anytime.
+30 days free. Cancel anytime.
 
 **[Start Free Trial](https://becomeable.app/signup)**
 

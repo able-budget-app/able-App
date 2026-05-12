@@ -128,7 +128,7 @@ Able tracks the owner pay accrual in-app, but the money still needs a real desti
 
 ## Start with the right plumbing
 
-Able runs the per-deposit owner pay calculation. You provide the destination account. Together, the system pays you on every deposit, automatically. Seven days free. Cancel anytime.
+Able runs the per-deposit owner pay calculation. You provide the destination account. Together, the system pays you on every deposit, automatically. 30 days free. Cancel anytime.
 
 **[Start Free Trial](https://becomeable.app/signup)**
 

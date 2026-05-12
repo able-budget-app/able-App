@@ -250,7 +250,7 @@ You are able to budget inconsistent income.
 
 Able handles the four-account structure automatically. Client money lands, taxes come off, the smoothing reserve grows, and your paycheck hits personal checking on the schedule you pick.
 
-Seven days free. Cancel anytime.
+30 days free. Cancel anytime.
 
 **[Start Free Trial](https://becomeable.app/signup)**
 

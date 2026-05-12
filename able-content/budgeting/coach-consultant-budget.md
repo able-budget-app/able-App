@@ -172,7 +172,7 @@ You are able to budget inconsistent income.
 
 Able routes every session fee, every package deposit, every insurance reimbursement the moment it lands. Taxes off the top. Floor funded. Smoothing reserve growing. Your paycheck to personal checking on the schedule you set.
 
-Seven days free. Cancel anytime.
+30 days free. Cancel anytime.
 
 **[Start Free Trial](https://becomeable.app/signup)**
 

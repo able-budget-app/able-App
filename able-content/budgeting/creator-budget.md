@@ -164,7 +164,7 @@ You are able to budget inconsistent income.
 
 Able routes every platform payout, every brand deal, every merch deposit. Taxes off the top. Floor funded. Smoothing reserve absorbing the spikes. A creator salary to your personal checking on the schedule you pick.
 
-Seven days free. Cancel anytime.
+30 days free. Cancel anytime.
 
 **[Start Free Trial](https://becomeable.app/signup)**
 

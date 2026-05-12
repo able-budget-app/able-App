@@ -281,7 +281,7 @@ Your paycheck does not follow a schedule. Your budget can.
 
 Able is the only budgeting app built from the ground up for entrepreneurs with inconsistent income. Every dollar gets a job the moment it arrives. Taxes, bills, smoothing reserve, debt, savings. Automatic. In the right order.
 
-Seven days free. Cancel anytime.
+30 days free. Cancel anytime.
 
 **[Start Free Trial](https://becomeable.app/signup)**
 

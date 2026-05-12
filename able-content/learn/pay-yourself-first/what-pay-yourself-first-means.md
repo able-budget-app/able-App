@@ -103,7 +103,7 @@ Stop the draws. Pick a percentage. Set up the separate account. Start on the nex
 
 ## Start paying yourself today
 
-Able routes every deposit automatically. Taxes, bills, smoothing reserve, debt, and your own pay, in that order. You set the Pay Yourself percentage once. Every deposit honors it. Seven days free. Cancel anytime.
+Able routes every deposit automatically. Taxes, bills, smoothing reserve, debt, and your own pay, in that order. You set the Pay Yourself percentage once. Every deposit honors it. 30 days free. Cancel anytime.
 
 **[Start Free Trial](https://becomeable.app/signup)**
 
