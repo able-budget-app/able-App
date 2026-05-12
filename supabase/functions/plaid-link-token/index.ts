@@ -163,7 +163,17 @@ Deno.serve(async (req) => {
     if (mode === 'update' && body.account_selection_enabled) {
       reqBody.update = { account_selection_enabled: true };
     }
-    if (body.redirect_uri) reqBody.redirect_uri = body.redirect_uri;
+    // redirect_uri is an OAuth callback URL. Plaid's dashboard allow-list is
+    // the real gate (must be pre-registered), but we also pin it here so a
+    // hostile caller can't forward the flow to an unregistered origin. Allow
+    // becomeable.app + www + deploy-preview + localhost only.
+    if (body.redirect_uri) {
+      const uri = String(body.redirect_uri);
+      const allowed = /^https:\/\/(?:www\.)?becomeable\.app(?:\/.*)?$/.test(uri)
+        || /^https:\/\/deploy-preview-\d+--becomeable\.netlify\.app(?:\/.*)?$/.test(uri)
+        || /^http:\/\/(?:localhost|127\.0\.0\.1)(?::\d+)?(?:\/.*)?$/.test(uri);
+      if (allowed) reqBody.redirect_uri = uri;
+    }
 
     const link = await plaidApi<typeof reqBody, { link_token: string; expiration: string; request_id: string }>(
       '/link/token/create',

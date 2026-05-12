@@ -58,6 +58,10 @@ Caveat carried forward: the `refer_*_joined` achievement tiles still need a back
 - ~~**Landing page updates pass**~~ ✅ Done 2026-05-09.
 - ~~**Refresh the OG share-card graphic (`brand/og-image.png`).**~~ ✅ Shipped 2026-05-11 in commit `271970b`. Tagline updated from "An app built for entrepreneurs who struggle to manage inconsistent income." → "An app built for people who struggle to budget inconsistent income." Synced across og-image, cover-linkedin, cover-facebook.
 
+- **P2-2026-05-11 #1 — Drop CSP `'unsafe-inline'` + `'unsafe-eval'` from script-src.** Current `_headers` allows both; every other XSS mitigation in place but inline-script remains the largest unaddressed surface. Scope: extract 11 inline `<script>` blocks in `app.html` to sourced files (or hash/nonce them), migrate ~299 inline event handlers (`onclick=`, `onchange=`, etc.) to `addEventListener`, verify Plaid Link still works after dropping `'unsafe-eval'`. Multi-day refactor — needs its own session, not bundled with other fixes. Defensible to defer because every audit-flagged XSS site is already escaped via `escapeHtml()` and CSP `frame-ancestors 'none'` + HSTS + Permissions-Policy ship 2026-05-11. Estimated 2-4 dedicated hours; lots of small edits with shared risk surface. When tackling: do it on a branch with deploy-preview testing for each batch (inline scripts first, then handlers in groups), not main.
+
+- **P2-2026-05-11 #2 — GDPR/CCPA consent banner.** Currently US-only audience; Meta Pixel + Google Ads + PostHog all fire on page load without consent. Defensible now because (a) no EU/UK marketing campaigns running, (b) CCPA only requires opt-out (which the privacy policy disclosure satisfies). **Becomes required the moment any EU/UK ad campaign launches** — GDPR Art. 7 requires opt-in before tracker fire. Implementation: ~80 lines (banner UI, localStorage gate, init trackers behind `if (consent === 'yes')`). Trade-off: known 5-15% conversion-rate hit on landing pages. Build when first EU/UK ad set is being prepared, not before.
+
 ---
 
 ## Polish — when it's the highest-value thing left (P3)
