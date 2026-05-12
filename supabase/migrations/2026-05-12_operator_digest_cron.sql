@@ -1,0 +1,58 @@
+-- Operator digest daily cron schedule.
+--
+-- Clones the pattern of the existing email-cron-daily entry in cron.job
+-- (the one we fixed 2026-05-12 to use CRON_SECRET). Paste the function
+-- itself to the dashboard first, then run this.
+--
+-- 14:00 UTC = 7am PDT / 6am PST. Adjust the cron expression if you want
+-- a different delivery time.
+--
+-- Heads-up: the Supabase SQL editor has a newline-injection bug where
+-- long string literals pasted in get \n chars inserted at visual wrap
+-- points (see memory: supabase_sql_editor_newline_bug.md). For the
+-- function URL + the Bearer secret, prefer ONE of these approaches:
+--
+--   (a) Use vault.decrypted_secrets and concatenate at execution time
+--       (no long literals in the editor at all). Recommended.
+--
+--   (b) Type the secret value into the editor by hand in short chunks
+--       and concatenate via the SQL || operator.
+--
+-- ─── Option A: vault-driven (recommended) ─────────────────────────────
+--
+-- Prereq: vault has secrets named 'project_ref' and 'cron_secret'.
+-- If not, create them via Supabase Dashboard -> Settings -> Vault.
+--
+-- select cron.schedule(
+--   'operator-digest-daily',
+--   '0 14 * * *',
+--   $$
+--   select net.http_post(
+--     url := 'https://' ||
+--            (select decrypted_secret from vault.decrypted_secrets where name = 'project_ref') ||
+--            '.supabase.co/functions/v1/operator-digest-daily',
+--     headers := jsonb_build_object(
+--       'Authorization', 'Bearer ' || (select decrypted_secret from vault.decrypted_secrets where name = 'cron_secret'),
+--       'Content-Type', 'application/json'
+--     ),
+--     body := '{}'::jsonb
+--   );
+--   $$
+-- );
+--
+-- ─── Option B: clone an existing cron.job row ─────────────────────────
+--
+-- The cleanest move is to view the working email-cron-daily row, copy
+-- the `command` field verbatim, change the function name from
+-- email-cron-daily to operator-digest-daily, and re-insert:
+--
+--   select jobid, jobname, schedule, command from cron.job
+--   where jobname = 'email-cron-daily';
+--
+-- ─── Inspect / unschedule ─────────────────────────────────────────────
+--
+-- select * from cron.job where jobname = 'operator-digest-daily';
+-- select * from cron.job_run_details
+--   where jobid = (select jobid from cron.job where jobname = 'operator-digest-daily')
+--   order by start_time desc limit 5;
+-- select cron.unschedule('operator-digest-daily');

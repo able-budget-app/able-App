@@ -2723,6 +2723,53 @@ posthog.init('phc_B6PH36QxpExnyBYhfScFFF6LhDvoyxuFr6PypJuxxky3', {
   defaults: '2026-01-30'
 });
 </script>
+
+<!-- Global error capture -> PostHog. Mirrors app.html. -->
+<script>
+(function () {
+  var IGNORE = [
+    /ResizeObserver loop/i,
+    /Script error\.?$/i,
+    /Non-Error promise rejection/i
+  ];
+  var sending = false;
+  function shouldSkip(msg) {
+    msg = String(msg || '');
+    for (var i = 0; i < IGNORE.length; i++) if (IGNORE[i].test(msg)) return true;
+    return false;
+  }
+  function capture(err, extra) {
+    if (sending) return;
+    if (!window.posthog || typeof window.posthog.captureException !== 'function') return;
+    var props = {
+      url: location.pathname + location.search,
+      viewport: window.innerWidth + 'x' + window.innerHeight,
+      surface: 'landing'
+    };
+    if (extra) for (var k in extra) if (Object.prototype.hasOwnProperty.call(extra, k)) props[k] = extra[k];
+    try {
+      sending = true;
+      window.posthog.captureException(err, props);
+    } catch (_) {
+      // swallow
+    } finally {
+      sending = false;
+    }
+  }
+  window.addEventListener('error', function (e) {
+    if (shouldSkip(e.message)) return;
+    var err = e.error || new Error(e.message || 'unknown error');
+    capture(err, { source: 'window.error', filename: e.filename, lineno: e.lineno, colno: e.colno });
+  });
+  window.addEventListener('unhandledrejection', function (e) {
+    var reason = e.reason;
+    var msg = reason && reason.message ? reason.message : String(reason);
+    if (shouldSkip(msg)) return;
+    var err = reason instanceof Error ? reason : new Error(msg);
+    capture(err, { source: 'unhandledrejection' });
+  });
+})();
+</script>
 </head>
 <body>
 

@@ -1612,9 +1612,69 @@ posthog.init('phc_B6PH36QxpExnyBYhfScFFF6LhDvoyxuFr6PypJuxxky3', {
   defaults: '2026-01-30'
 });
 </script>
+
+<!-- Global error capture -> PostHog. Sentry isn't free; this gives Paul an
+     inbox-feedable error stream via PostHog's $exception event. -->
+<script>
+(function () {
+  var IGNORE = [
+    /ResizeObserver loop/i,        // benign browser quirk
+    /Script error\.?$/i,           // cross-origin scripts, no useful info
+    /Non-Error promise rejection/i // PostHog stub stringifies pre-load rejections
+  ];
+  var sending = false;
+  function shouldSkip(msg) {
+    msg = String(msg || '');
+    for (var i = 0; i < IGNORE.length; i++) if (IGNORE[i].test(msg)) return true;
+    return false;
+  }
+  function capture(err, extra) {
+    if (sending) return;
+    if (!window.posthog || typeof window.posthog.captureException !== 'function') return;
+    var props = {
+      url: location.pathname + location.search,
+      viewport: window.innerWidth + 'x' + window.innerHeight,
+      user_id: (window.currentUser && window.currentUser.id) || null
+    };
+    if (extra) for (var k in extra) if (Object.prototype.hasOwnProperty.call(extra, k)) props[k] = extra[k];
+    try {
+      sending = true;
+      window.posthog.captureException(err, props);
+    } catch (_) {
+      // swallow - never let the error handler throw
+    } finally {
+      sending = false;
+    }
+  }
+  window.addEventListener('error', function (e) {
+    if (shouldSkip(e.message)) return;
+    var err = e.error || new Error(e.message || 'unknown error');
+    capture(err, { source: 'window.error', filename: e.filename, lineno: e.lineno, colno: e.colno });
+  });
+  window.addEventListener('unhandledrejection', function (e) {
+    var reason = e.reason;
+    var msg = reason && reason.message ? reason.message : String(reason);
+    if (shouldSkip(msg)) return;
+    var err = reason instanceof Error ? reason : new Error(msg);
+    capture(err, { source: 'unhandledrejection' });
+  });
+  // Public helper for try/catch sites that want explicit capture with context.
+  window.Able = window.Able || {};
+  window.Able.captureError = function (err, ctx) {
+    if (!err) return;
+    var e = err instanceof Error ? err : new Error(typeof err === 'string' ? err : JSON.stringify(err));
+    capture(e, Object.assign({ source: 'manual' }, ctx || {}));
+  };
+})();
+</script>
 </head>
 <body>
 <div id="app-toast" class="app-toast" role="status" aria-live="polite"></div>
+<!-- System status banner. Toggled via public.system_status (single-row).
+     Hidden by default; renderSystemStatus() shows it when is_active=true.
+     Fixed at top with z-index above the auth/paywall overlays so an outage
+     message is visible even before sign-in. -->
+<div id="system-status-banner" role="status" aria-live="polite" style="display:none;position:fixed;top:0;left:0;right:0;z-index:10000;font-family:var(--ds-f);font-size:13px;font-weight:700;padding:10px 16px;text-align:center;line-height:1.4;box-shadow:0 2px 8px rgba(0,0,0,.08);"></div>
 
 <!-- ═══════ AUTH SCREEN ═══════ -->
 <div id="auth-screen">
@@ -2459,9 +2519,13 @@ posthog.init('phc_B6PH36QxpExnyBYhfScFFF6LhDvoyxuFr6PypJuxxky3', {
           <div style="font-weight:800;display:flex;align-items:center;gap:10px;color:var(--ds-t1);"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink:0;color:var(--ds-c5);"><circle cx="12" cy="12" r="10"/><path d="M9 9h.01M15 9h.01"/><path d="M8 14s1.5 2 4 2 4-2 4-2"/></svg><span id="demo-mode-label">Try demo mode</span></div>
           <div style="font-size:11px;color:var(--ds-t3);font-weight:600;margin-top:5px;margin-left:28px;" id="demo-mode-sub">See Able with curated sample data. Your real data is preserved.</div>
         </button>
+        <button class="btn" onclick="openFeedbackModal()" style="text-align:left;padding:14px 16px;">
+          <div style="font-weight:800;display:flex;align-items:center;gap:10px;color:var(--ds-t1);"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink:0;color:var(--ds-green);"><path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"/></svg>Report a bug or share feedback</div>
+          <div style="font-size:11px;color:var(--ds-t3);font-weight:600;margin-top:5px;margin-left:28px;">Tell us what broke or what'd make Able better. Goes straight to Paul.</div>
+        </button>
         <button class="btn" onclick="contactSupport()" style="text-align:left;padding:14px 16px;">
           <div style="font-weight:800;display:flex;align-items:center;gap:10px;color:var(--ds-t1);"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink:0;color:var(--ds-green);"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>Contact support</div>
-          <div style="font-size:11px;color:var(--ds-t3);font-weight:600;margin-top:5px;margin-left:28px;">Opens your email app with a pre-filled message to us.</div>
+          <div style="font-size:11px;color:var(--ds-t3);font-weight:600;margin-top:5px;margin-left:28px;">Billing or account issues. Opens your email app.</div>
         </button>
         <button class="btn" onclick="clearAllData()" style="text-align:left;padding:14px 16px;border-color:rgba(192,64,96,.25);">
           <div style="font-weight:800;display:flex;align-items:center;gap:10px;color:var(--ds-c4);"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink:0;"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/><path d="M10 11v6M14 11v6"/><path d="M9 6V4a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v2"/></svg>Clear all data</div>
@@ -2705,6 +2769,17 @@ posthog.init('phc_B6PH36QxpExnyBYhfScFFF6LhDvoyxuFr6PypJuxxky3', {
     <div class="modal-title" id="modal-leak-summary-title">Your tagged leaks</div>
     <div id="leak-summary-head"></div>
     <div id="leak-summary-body"></div>
+  </div>
+</div>
+<!-- Feedback modal - submits to submit-feedback Edge Function. Emails Paul. -->
+<div class="modal-bg" id="modal-feedback" style="display:none;" role="dialog" aria-modal="true" aria-labelledby="modal-feedback-title" onclick="if(event.target===this)closeModal('modal-feedback')">
+  <div class="modal" style="max-width:520px;">
+    <button class="modal-close" onclick="closeModal('modal-feedback')" aria-label="Close"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button>
+    <div class="modal-title" id="modal-feedback-title">What's on your mind?</div>
+    <div style="font-size:12px;color:var(--ds-t2);font-weight:600;margin-bottom:14px;line-height:1.5;">A bug, an idea, something confusing. Anything that'd make Able better. Goes straight to Paul.</div>
+    <div class="field"><label for="feedback-message" class="sr-only">Your feedback</label><textarea id="feedback-message" rows="6" placeholder="What happened, or what'd you change?" style="width:100%;min-height:120px;resize:vertical;background:var(--ds-page);border:1.5px solid var(--ds-t4);border-radius:var(--ds-r1);padding:12px 14px;font-size:14px;font-weight:500;font-family:var(--ds-f);color:var(--ds-t1);line-height:1.5;outline:none;"></textarea></div>
+    <div id="feedback-error" style="color:var(--ds-c4);font-size:12px;font-weight:600;margin-top:6px;display:none;"></div>
+    <div class="modal-actions"><button class="btn" onclick="closeModal('modal-feedback')">Cancel</button><button class="btn btn-primary" id="feedback-send-btn" onclick="submitFeedback()">Send</button></div>
   </div>
 </div>
 <div class="modal-bg" id="modal-buffer" style="display:none;" role="dialog" aria-modal="true" aria-labelledby="modal-buffer-title">
@@ -4989,6 +5064,7 @@ async function obStartPlaidLink() {
     handler.open();
   } catch (e) {
     console.error('plaid-link-token failed:', e);
+    Able.captureError?.(e, { context: 'plaid-link-token', surface: 'connect-bank' });
     if (btn) { btn.disabled = false; btn.textContent = 'Connect bank'; }
     if (errEl) {
       errEl.textContent = 'Could not start the bank connection: ' + (e.message || 'unknown error');
@@ -5086,6 +5162,12 @@ async function obHandlePlaidSuccess(public_token, metadata, lookback) {
       institution_name: metadata?.institution?.name || null,
       account_count: Array.isArray(data.accounts) ? data.accounts.length : 0,
     };
+    // Funnel marker - fires once per user (first bank connect).
+    Able.trackOnce('bank_connected', {
+      institution_name: metadata?.institution?.name || null,
+      lookback_months: data.lookback_months,
+      surface: 'onboarding',
+    });
     // Fire the pipeline in the background. The user keeps moving through
     // onboarding; obBuildWithAI checks status at the end. We never block
     // signup on this completing.
@@ -5323,6 +5405,11 @@ async function obRunPlaidPipeline() {
     obAnswers.plaid_pipeline.status = 'success';
     obAnswers.plaid_pipeline.finishedAt = Date.now();
     Able.track?.('onboarding_plaid_pipeline_success', {
+      plan_id: data.plan_id,
+      duration_ms: obAnswers.plaid_pipeline.finishedAt - obAnswers.plaid_pipeline.startedAt,
+    });
+    // Funnel marker - fires once per user (first analyzer plan delivered).
+    Able.trackOnce('plan_built', {
       plan_id: data.plan_id,
       duration_ms: obAnswers.plaid_pipeline.finishedAt - obAnswers.plaid_pipeline.startedAt,
     });
@@ -6666,6 +6753,7 @@ async function startCheckout() {
       if(/failed to send|failed to fetch|networkerror/i.test(msg)){
         console.error('[Able] create-checkout unreachable:', resp.error);
         Able.track('checkout_unreachable',{plan:selectedPlan,msg});
+        Able.captureError?.(new Error(msg), { context: 'create-checkout', plan: selectedPlan });
         showUnreachable();
         return;
       }
@@ -6770,6 +6858,89 @@ function contactSupport() {
   const subject=encodeURIComponent('Able support request');
   const body=encodeURIComponent('\n\n---\nAccount: '+(currentUser?.email||'')+'\nUser ID: '+(currentUser?.id||''));
   window.location.href=`mailto:${SUPPORT_EMAIL}?subject=${subject}&body=${body}`;
+}
+
+async function renderSystemStatus() {
+  const el = document.getElementById('system-status-banner');
+  if (!el) return;
+  const hide = () => {
+    el.style.display = 'none';
+    el.innerHTML = '';
+    document.body.style.paddingTop = '';
+  };
+  try {
+    const sb = sbGet();
+    if (!sb) return;
+    const { data, error } = await sb.from('system_status').select('is_active, severity, message').limit(1).maybeSingle();
+    if (error) { hide(); return; }
+    if (!data || !data.is_active || !data.message) { hide(); return; }
+    const palette = {
+      info: { bg: '#eaf2fc', fg: '#1f4d8f' },
+      warn: { bg: '#fff4d6', fg: '#7a5510' },
+      down: { bg: '#fde2e6', fg: '#8a1c2e' },
+    };
+    const tone = palette[data.severity] || palette.info;
+    el.style.background = tone.bg;
+    el.style.color = tone.fg;
+    el.innerHTML = escapeHtml(data.message);
+    el.style.display = 'block';
+    document.body.style.paddingTop = (el.offsetHeight || 40) + 'px';
+  } catch (e) {
+    console.warn('renderSystemStatus failed:', e);
+  }
+}
+
+function openFeedbackModal() {
+  const modal = document.getElementById('modal-feedback');
+  const ta = document.getElementById('feedback-message');
+  const err = document.getElementById('feedback-error');
+  if (!modal || !ta) return;
+  ta.value = '';
+  if (err) { err.style.display = 'none'; err.textContent = ''; }
+  modal.style.display = 'flex';
+  setTimeout(() => ta.focus(), 50);
+  Able.track?.('feedback_modal_opened');
+}
+
+async function submitFeedback() {
+  const ta = document.getElementById('feedback-message');
+  const btn = document.getElementById('feedback-send-btn');
+  const err = document.getElementById('feedback-error');
+  if (!ta || !btn) return;
+  const message = (ta.value || '').trim();
+  if (err) { err.style.display = 'none'; err.textContent = ''; }
+  if (message.length < 5) {
+    if (err) { err.textContent = 'Please tell us a bit more.'; err.style.display = 'block'; }
+    return;
+  }
+  const originalLabel = btn.textContent;
+  btn.disabled = true;
+  btn.textContent = 'Sending…';
+  try {
+    const { data, error } = await sbGet().functions.invoke('submit-feedback', {
+      body: {
+        message,
+        page_url: location.pathname + location.search,
+        viewport: window.innerWidth + 'x' + window.innerHeight,
+        user_agent: navigator.userAgent,
+      },
+    });
+    if (error || (data && data.error)) {
+      const msg = (data && data.error) || error?.message || 'Could not send right now.';
+      if (err) { err.textContent = msg; err.style.display = 'block'; }
+      Able.track?.('feedback_submit_failed', { msg });
+      return;
+    }
+    closeModal('modal-feedback');
+    if (typeof showToast === 'function') showToast('Thanks. Paul will read this.', { duration: 4000 });
+    Able.track?.('feedback_submitted');
+  } catch (e) {
+    Able.captureError?.(e, { context: 'submit-feedback' });
+    if (err) { err.textContent = 'Could not send right now. Please email hello@becomeable.app.'; err.style.display = 'block'; }
+  } finally {
+    btn.disabled = false;
+    btn.textContent = originalLabel;
+  }
 }
 
 function renderSubscriptionPlan(status) {
@@ -10322,12 +10493,19 @@ async function settingsHandlePostLink(public_token, metadata) {
   if (ex && ex.error) throw new Error(ex.error);
   if (ex?.plaid_item_row_id) {
     showToast(`Connected ${friendly}. Pulling transactions…`, { duration: 5000 });
+    // Funnel marker - fires once per user (first bank connect).
+    Able.trackOnce('bank_connected', {
+      institution_name: metadata?.institution?.name || null,
+      surface: 'settings',
+    });
     // Fire-and-forget sync, but report when it finishes so the user knows
     // it's safe to look at Activity / dashboard for the new data.
     sbGet().functions.invoke('plaid-sync', { body: { plaid_item_row_id: ex.plaid_item_row_id } })
       .then(async ({ data, error }) => {
         if (error || (data && data.error)) {
-          console.warn('post-link plaid-sync failed:', error || data?.error);
+          const reason = error || data?.error;
+          console.warn('post-link plaid-sync failed:', reason);
+          Able.captureError?.(reason instanceof Error ? reason : new Error(String(reason?.message || reason)), { context: 'plaid-sync', surface: 'post-link' });
           showToast(`Connected ${friendly}, but the first sync hit a snag. We'll retry automatically.`, { duration: 6000 });
           return;
         }
@@ -10353,6 +10531,7 @@ async function settingsHandlePostLink(public_token, metadata) {
       })
       .catch((e) => {
         console.warn('post-link plaid-sync failed:', e);
+        Able.captureError?.(e, { context: 'plaid-sync', surface: 'post-link-catch' });
         showToast(`Connected ${friendly}, but the first sync hit a snag. We'll retry automatically.`, { duration: 6000 });
       });
   }
@@ -14787,6 +14966,14 @@ window.addEventListener('load', async () => {
     }
   });
 
+  // Kick off system-status polling. Banner is invisible until is_active=true
+  // is flipped on public.system_status. Polls every 5 min + on tab focus.
+  renderSystemStatus();
+  setInterval(renderSystemStatus, 5 * 60 * 1000);
+  document.addEventListener('visibilitychange', () => {
+    if (document.visibilityState === 'visible') renderSystemStatus();
+  });
+
   // Re-install the session-only tab-close handler on every page load if the
   // user signed in with "Stay signed in" unchecked. sessionStorage flag
   // survives reload-within-same-tab but clears on tab close.
@@ -18033,6 +18220,7 @@ async function coachLoadHistory() {
     coachHistory = data || [];
   } catch (e) {
     console.error('coach history load failed:', e);
+    Able.captureError?.(e, { context: 'coach-history-load' });
     coachHistory = [];
   }
   return coachHistory;
