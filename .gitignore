@@ -63,10 +63,6 @@ Other App Screenshots /
 
 # Icon animation experiment — source PNG, render script, and rendered
 # outputs. One-off; not used by the app or build.
-/icon-1024.png
-/icon-animation.html
-/icon-animation.gif
-/icon-animation.mp4
 /scripts/render-icon-animation.py
 
 # OAuth tokens / API credentials — never commit
@@ -83,3 +79,6 @@ article-video/videos/
 # Legal/policy PDFs moved out of repo root — keep untracked.
 # Regenerable from docs/*.md via the headless-Chrome script.
 /docs/legal/*.pdf
+
+# Generated business-plan PDF (regenerable from docs/BUSINESS_PLAN.md)
+/docs/BUSINESS_PLAN.pdf
