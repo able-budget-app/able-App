@@ -862,7 +862,7 @@
         <h4>Marketing</h4>
         <ul>
           <li><span class="pill pill-done">Live</span> Landing site (re-done May 7), the brand system, all 14 email templates redesigned (May 7), Method explainer page, PYF blog cluster (10 articles), business blog cluster (pillar + 1 supporting), 175 social posts ready, cross-poster wired, YouTube auto-upload pipeline live (May 10), LinkedIn pipeline ready (13 drafts), 60-second cinematic reel, 10 phone-frame video clips</li>
-          <li><span class="pill pill-progress">Needs sweep</span> PYF blog trial-day CTA (7d → 30d global find-replace), email cron auto-fire schedule (unverified)</li>
+          <li><span class="pill pill-done">Live</span> Email cron firing daily at 16:00 UTC (verified May 12 — fixed silent CRON_SECRET auth bug)</li>
           <li><span class="pill pill-pending">Not started</span> Ad copy (Meta/Google/YouTube/TikTok), video script refresh, SEO at scale, full always-on social cadence</li>
         </ul>
       </div>
@@ -876,6 +876,8 @@
           <li>OG share card refreshed (May 11)</li>
           <li>New-bank review modal — banner only fires when an additional bank is added; opens a candidate-bills + cards modal with Option-C (unselected → pending_review on Bills/Debt) (May 11)</li>
           <li>Repo cleanup: 2.8GB → 1.6GB, root reorganized, stale drafts dropped (May 11)</li>
+          <li>Email cron debugged + fixed — was silently 401'ing for weeks due to CRON_SECRET mismatch; daily pipeline now firing real emails (May 12)</li>
+          <li>Content sweep across 143 article CTA cards: stale 7-day trial copy → 30-day (May 12)</li>
           <li><strong>Up next:</strong> launch hardening (security defense-in-depth, error tracking, daily digest), then ad copy + SEO at scale, then App Store</li>
         </ul>
       </div>
@@ -1088,7 +1090,7 @@
         <li><span class="pill pill-done">✅</span> <strong>Pricing page</strong> — $14.99/mo + $129/yr locked</li>
         <li><span class="pill pill-progress">🟡</span> <strong>Pay-Yourself-First blog series</strong> — 10 articles shipped at <code>/learn/pay-yourself-first/</code>; small voice sweep pending (trial-day CTA 7d → 30d, 2 bucket-name fixes)</li>
         <li><span class="pill pill-done">✅</span> <strong>Business-side blog series</strong> — pillar + 1 supporting per the scoped plan (could expand later if desired)</li>
-        <li><span class="pill pill-progress">🟡</span> <strong>Email sequences</strong> — 14 templates redesigned May 7 + 2 new (deep-dive summary, achievement unlock). Auto-send cron schedule needs verification in Supabase dashboard.</li>
+        <li><span class="pill pill-done">✅</span> <strong>Email sequences</strong> — 14 templates redesigned May 7 + 2 new (deep-dive summary, achievement unlock). Daily pg_cron firing at 16:00 UTC verified working May 12 (was silently 401'ing due to CRON_SECRET mismatch — fixed in same session).</li>
         <li><span class="pill pill-done">✅</span> <strong>175 social posts</strong> — sweep done, captions written (598 total across 65-week cadence), cross-poster wired</li>
         <li><span class="pill pill-pending">🔴</span> <strong>Ad copy</strong> — Meta, Google, YouTube, TikTok — not started</li>
         <li><span class="pill pill-pending">🔴</span> <strong>Video scripts</strong> — Day 1-31 series refresh status not verified; YouTube/LinkedIn pipelines exist, scripts may still reference old product framing</li>
