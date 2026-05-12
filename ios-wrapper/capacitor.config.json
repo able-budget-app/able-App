@@ -1,0 +1,13 @@
+{
+  "appId": "com.becomeable.app",
+  "appName": "Able",
+  "webDir": "www",
+  "ios": {
+    "contentInset": "always",
+    "scheme": "Able",
+    "limitsNavigationsToAppBoundDomains": false
+  },
+  "server": {
+    "iosScheme": "able"
+  }
+}

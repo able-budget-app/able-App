@@ -1,0 +1,21 @@
+{
+  "name": "able-ios-wrapper",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Capacitor iOS shell for Able. Bundles ../app.html + assets into www/, then wraps as a native iOS app.",
+  "scripts": {
+    "sync:www": "node scripts/sync-www.mjs",
+    "cap:sync": "npm run sync:www && npx cap sync ios",
+    "cap:open": "npx cap open ios",
+    "cap:doctor": "npx cap doctor"
+  },
+  "dependencies": {
+    "@capacitor/app": "^8.0.0",
+    "@capacitor/browser": "^8.0.0",
+    "@capacitor/core": "^8.3.4",
+    "@capacitor/ios": "^8.3.4"
+  },
+  "devDependencies": {
+    "@capacitor/cli": "^8.3.4"
+  }
+}
