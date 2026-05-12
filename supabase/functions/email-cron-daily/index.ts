@@ -359,14 +359,14 @@ if (!IS_PREVIEW) Deno.serve(async (req) => {
       }
     }
 
-    return json(results);
+    return json(req, results);
   } catch (e) {
     console.error('email-cron-daily error:', e);
-    return json({ error: (e as Error).message }, 500);
+    return json(req, { error: (e as Error).message }, 500);
   }
 });
 
-function json(body: unknown, status = 200) {
+function json(req: Request, body: unknown, status = 200) {
   return new Response(JSON.stringify(body), { status, headers: { 'Content-Type': 'application/json' } });
 }
 
@@ -415,7 +415,7 @@ async function sendViaResend(admin: any, to: string, subject: string, html: stri
   }
 }
 
-const unsubUrl = (token: string) => `${SUPABASE_URL}/functions/v1/unsubscribe?token=${encodeURIComponent(token)}`;
+const unsubUrl = (token: string) => `${APP_URL}/u?token=${encodeURIComponent(token)}`;
 
 // ============================================================
 // Design tokens
@@ -1080,7 +1080,7 @@ async function sendDeepDiveSummary(admin: any, email: string, user: any, item: a
 // ============================================================
 
 async function renderPreview(): Promise<void> {
-  const fakeUnsub = 'https://example.com/unsubscribe?token=preview';
+  const fakeUnsub = 'https://becomeable.app/u?token=preview';
   const dayMs = 86_400_000;
   const today = Date.now();
 
