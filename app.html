@@ -10733,13 +10733,24 @@ async function renderPlanRefreshBanner(){
   }
 }
 async function dismissNewBankBanner(itemId){
-  try {
-    await sbGet().from('plaid_items')
-      .update({ recurring_status: 'applied' })
-      .eq('id', itemId);
-  } catch (_) {}
+  await _setPlaidItemStatusApplied(itemId);
   const el = document.getElementById('plan-refresh-banner');
   if (el) el.innerHTML = '';
+}
+
+// Server-side flip of plaid_items.recurring_status to 'applied'. RLS on
+// plaid_items is SELECT-only for users, so client-side .update() silently
+// fails. The plaid-set-item-status Edge Function verifies ownership and
+// performs the UPDATE with service role.
+async function _setPlaidItemStatusApplied(itemId){
+  try {
+    const { error } = await sbGet().functions.invoke('plaid-set-item-status', {
+      body: { plaid_item_row_id: itemId, status: 'applied' },
+    });
+    if (error) console.warn('plaid-set-item-status failed:', error);
+  } catch (e) {
+    console.warn('plaid-set-item-status threw:', e);
+  }
 }
 // ─── New-bank review modal ────────────────────────────────────────────
 // Surfaces recurring outflow streams (candidate bills) + plaid_credit_debts
@@ -10834,7 +10845,7 @@ function _renderNewBankReviewBody(){
   if (st.bills.length === 0 && st.debts.length === 0) {
     body.innerHTML = `<div style="padding:1rem 0;color:var(--ds-t3);font-size:13px;font-weight:600;line-height:1.55;">No new bills or credit cards found in ${escapeHtml(st.bankName)} yet. Plaid may still be processing — check back in a few minutes.</div>`;
     const btn = document.getElementById('new-bank-review-apply');
-    if (btn) { btn.disabled = true; btn.textContent = 'Nothing to add'; }
+    if (btn) { btn.disabled = false; btn.textContent = 'Got it'; }
     return;
   }
   let html = '';
@@ -10855,11 +10866,19 @@ function _renderNewBankReviewBody(){
     html += `</div>`;
   }
   body.innerHTML = html;
-  const total = st.bills.filter(x => x.selected).length + st.debts.filter(x => x.selected).length;
+  const totalCount = st.bills.length + st.debts.length;
+  const selectedCount = st.bills.filter(x => x.selected).length + st.debts.filter(x => x.selected).length;
+  const pendingCount = totalCount - selectedCount;
   const btn = document.getElementById('new-bank-review-apply');
   if (btn) {
-    btn.disabled = total === 0;
-    btn.textContent = total === 0 ? 'Nothing selected' : `Add ${total} to plan`;
+    btn.disabled = false;
+    if (selectedCount === 0) {
+      btn.textContent = `Save ${pendingCount} to review later`;
+    } else if (pendingCount === 0) {
+      btn.textContent = `Add ${selectedCount} to plan`;
+    } else {
+      btn.textContent = `Add ${selectedCount}, save ${pendingCount} for later`;
+    }
   }
 }
 
@@ -10874,17 +10893,24 @@ function _toggleNewBankItem(idx, checked){
 async function applyNewBankReview(){
   const st = _newBankReviewState;
   if (!st) return;
-  const acceptedBills = st.bills.filter(b => b.selected);
-  const acceptedDebts = st.debts.filter(d => d.selected);
-  if (acceptedBills.length === 0 && acceptedDebts.length === 0) {
+  const totalCount = st.bills.length + st.debts.length;
+  if (totalCount === 0) {
+    // Nothing was ever detected — just close + flip status.
+    await _setPlaidItemStatusApplied(st.itemId);
     closeModal('modal-new-bank-review');
     return;
   }
   try {
     const tag = 'delta:' + st.itemId;
-    if (acceptedBills.length > 0) {
+    // Option C: ALL items go into S.bills / S.debts. Unselected ones land
+    // with pending_review=true so they surface as REVIEW pills on Bills +
+    // Debt (matching the onboarding plan-review pattern). Selected ones
+    // land cleanly with pending_review=false.
+    let selectedBills = 0, pendingBills = 0;
+    let selectedDebts = 0, pendingDebts = 0;
+    if (st.bills.length > 0) {
       S.bills = S.bills || [];
-      for (const b of acceptedBills) {
+      for (const b of st.bills) {
         const freq = String(b.frequency || 'monthly').toLowerCase();
         const freqOut = freq === 'semi_monthly' || freq === 'semimonthly' ? 'biweekly'
           : (freq === 'annually' || freq === 'yearly' ? 'annual' : freq);
@@ -10898,15 +10924,17 @@ async function applyNewBankReview(){
           paid: false,
           plaid_item_id: st.itemId,
           source_plan_id: tag,
+          pending_review: !b.selected,
         };
         if (freqOut !== 'monthly') row.freq = freqOut;
         S.bills.push(row);
+        if (b.selected) selectedBills++; else pendingBills++;
       }
     }
-    if (acceptedDebts.length > 0) {
+    if (st.debts.length > 0) {
       S.debts = S.debts || [];
       const colors = ['#e07a5f', '#c85a5a', '#d4956a', '#6b9fcf', '#9b8ec4', '#7aad8a'];
-      for (const d of acceptedDebts) {
+      for (const d of st.debts) {
         const bal = Number(d.balance) || 0;
         S.debts.push({
           id: 'd_' + Date.now().toString(36) + '_' + Math.random().toString(36).slice(2, 7),
@@ -10919,22 +10947,30 @@ async function applyNewBankReview(){
           orig: bal,
           plaid_item_id: st.itemId,
           source_plan_id: tag,
+          pending_review: !d.selected,
         });
+        if (d.selected) selectedDebts++; else pendingDebts++;
       }
     }
     await saveUserData();
-    try {
-      await sbGet().from('plaid_items')
-        .update({ recurring_status: 'applied' })
-        .eq('id', st.itemId);
-    } catch (_) {}
+    await _setPlaidItemStatusApplied(st.itemId);
     const banner = document.getElementById('plan-refresh-banner');
     if (banner) banner.innerHTML = '';
     closeModal('modal-new-bank-review');
-    const total = acceptedBills.length + acceptedDebts.length;
-    showToast(`Added ${total} ${total === 1 ? 'item' : 'items'} from ${st.bankName} to your plan.`);
+    const selectedTotal = selectedBills + selectedDebts;
+    const pendingTotal = pendingBills + pendingDebts;
+    const msg = pendingTotal === 0
+      ? `Added ${selectedTotal} ${selectedTotal === 1 ? 'item' : 'items'} from ${st.bankName} to your plan.`
+      : selectedTotal === 0
+        ? `Saved ${pendingTotal} ${pendingTotal === 1 ? 'item' : 'items'} from ${st.bankName} to review later on Bills + Debt.`
+        : `Added ${selectedTotal} from ${st.bankName}. ${pendingTotal} more saved to review on Bills + Debt.`;
+    showToast(msg);
     if (typeof Able !== 'undefined' && Able.track) {
-      Able.track('new_bank_review_applied', { item_id: st.itemId, bills: acceptedBills.length, debts: acceptedDebts.length });
+      Able.track('new_bank_review_applied', {
+        item_id: st.itemId,
+        bills_added: selectedBills, bills_pending: pendingBills,
+        debts_added: selectedDebts, debts_pending: pendingDebts,
+      });
     }
     try { if (typeof refreshHome === 'function') refreshHome(); } catch (_) {}
     try { if (typeof renderBillsPage === 'function') renderBillsPage(); } catch (_) {}
