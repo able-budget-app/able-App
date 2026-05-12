@@ -2614,6 +2614,22 @@ posthog.init('phc_B6PH36QxpExnyBYhfScFFF6LhDvoyxuFr6PypJuxxky3', {
     <div class="modal-actions"><button class="btn" onclick="closeModal('modal-detected-bills')">Cancel</button><button class="btn btn-primary" id="detected-bills-save" onclick="saveDetectedBills()">Save 0 bills</button></div>
   </div>
 </div>
+<!-- New-bank review modal — opens from the home new-bank banner when an
+     additional plaid_item was added post-onboarding. Surfaces recurring
+     outflow streams (candidate bills) + plaid_credit_debts rows scoped
+     to that item, lets the user pick what to include, and appends the
+     accepted rows to S.bills / S.debts. No analyzer call, no LLM —
+     pure deterministic merge on already-detected data. Built by
+     openNewBankReviewModal / applied by applyNewBankReview. -->
+<div class="modal-bg" id="modal-new-bank-review" style="display:none;" onclick="if(event.target===this)closeModal('modal-new-bank-review')">
+  <div class="modal" style="max-width:560px;max-height:90vh;overflow-y:auto;">
+    <button class="modal-close" onclick="closeModal('modal-new-bank-review')" aria-label="Close"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button>
+    <div class="modal-title" id="new-bank-review-title">Here's what we found</div>
+    <div style="margin-bottom:.75rem;font-size:13px;color:var(--ds-t2);line-height:1.55;font-weight:600;">Pre-selected the bills and cards we detected. Uncheck anything that isn't yours, or close to handle later from Bills + Debt.</div>
+    <div id="new-bank-review-body"></div>
+    <div class="modal-actions"><button class="btn" onclick="closeModal('modal-new-bank-review')">Cancel</button><button class="btn btn-primary" id="new-bank-review-apply" onclick="applyNewBankReview()">Add to plan</button></div>
+  </div>
+</div>
 <!-- Add expected income — sibling popup to Add bill, opened from the home
      "Add income" chip. Quick-capture path that doesn't require navigating
      to the Forecast page. Uses the same forecast fields under the hood. -->
@@ -10709,7 +10725,7 @@ async function renderPlanRefreshBanner(){
           <div class="plan-refresh-banner-title">${bankName} connected</div>
           <div class="plan-refresh-banner-sub">Check Bills + Income for new entries to fold into your plan.</div>
         </div>
-        <button class="plan-refresh-banner-cta" onclick="reviewNewBankFromBanner('${newBank.id}')">Review</button>
+        <button class="plan-refresh-banner-cta" onclick="openNewBankReviewModal('${newBank.id}', ${JSON.stringify(newBank.institution_name || 'your new bank').replace(/"/g, '&quot;')})">Review</button>
         <button class="plan-refresh-banner-x" onclick="dismissNewBankBanner('${newBank.id}')" aria-label="Dismiss">✕</button>
       </div>`;
   } catch (e) {
@@ -10725,15 +10741,208 @@ async function dismissNewBankBanner(itemId){
   const el = document.getElementById('plan-refresh-banner');
   if (el) el.innerHTML = '';
 }
-async function reviewNewBankFromBanner(itemId){
+// ─── New-bank review modal ────────────────────────────────────────────
+// Surfaces recurring outflow streams (candidate bills) + plaid_credit_debts
+// (candidate debts) scoped to a single newly-added plaid_item. User picks
+// per-row what to include; accepted rows append to S.bills / S.debts with
+// a plaid_item_id annotation so the origin is auditable. No analyzer call,
+// no LLM — pure deterministic merge on data already detected upstream by
+// plaid-recurring-refresh + plaid-detect-credit-debts.
+let _newBankReviewState = null;
+
+async function openNewBankReviewModal(itemId, bankName){
+  const safeName = bankName || 'your new bank';
   try {
-    await sbGet().from('plaid_items')
-      .update({ recurring_status: 'applied' })
-      .eq('id', itemId);
-  } catch (_) {}
-  const el = document.getElementById('plan-refresh-banner');
-  if (el) el.innerHTML = '';
-  goTo('bills');
+    const sb = sbGet();
+    const [streamsRes, debtsRes] = await Promise.all([
+      sb.from('plaid_recurring_streams')
+        .select('stream_id, merchant_name, description, frequency, average_amount, last_amount, predicted_next_date, last_date, is_active, direction')
+        .eq('plaid_item_id', itemId)
+        .eq('direction', 'outflow')
+        .eq('is_active', true),
+      sb.from('plaid_credit_debts')
+        .select('id, name, mask, current_balance, purchase_apr, min_payment, last_statement_balance, due_day_of_month, source')
+        .eq('plaid_item_id', itemId),
+    ]);
+    if (streamsRes.error) throw streamsRes.error;
+    if (debtsRes.error) throw debtsRes.error;
+
+    const existingBillNames = new Set((S.bills || []).map(b => String(b.name || '').toLowerCase()));
+    const existingDebtNames = new Set((S.debts || []).map(d => String(d.name || '').toLowerCase()));
+
+    const billCandidates = (streamsRes.data || [])
+      .map(s => ({
+        kind: 'bill',
+        stream_id: s.stream_id,
+        name: s.merchant_name || s.description || 'Recurring charge',
+        amount: Math.abs(Number(s.average_amount) || Number(s.last_amount) || 0),
+        frequency: String(s.frequency || 'MONTHLY').toLowerCase(),
+        due: _streamPickDueDay(s),
+      }))
+      .filter(b => b.amount > 0 && b.name && !existingBillNames.has(b.name.toLowerCase()));
+
+    const debtCandidates = (debtsRes.data || [])
+      .map(d => ({
+        kind: 'debt',
+        row_id: d.id,
+        name: d.name || (d.mask ? `Card ····${d.mask}` : 'Credit card'),
+        balance: Number(d.current_balance) || 0,
+        min: Number(d.min_payment) || 0,
+        rate_decimal: d.purchase_apr != null ? Number(d.purchase_apr) : null,
+        due_day: d.due_day_of_month || null,
+      }))
+      .filter(d => d.balance > 0 && !existingDebtNames.has(d.name.toLowerCase()));
+
+    _newBankReviewState = {
+      itemId,
+      bankName: safeName,
+      bills: billCandidates.map((b, i) => ({ ...b, idx: 'b' + i, selected: true })),
+      debts: debtCandidates.map((d, i) => ({ ...d, idx: 'd' + i, selected: true })),
+    };
+
+    document.getElementById('new-bank-review-title').textContent = `What we found in ${safeName}`;
+    _renderNewBankReviewBody();
+    const modal = document.getElementById('modal-new-bank-review');
+    if (modal) modal.style.display = 'flex';
+  } catch (e) {
+    console.error('openNewBankReviewModal failed:', e);
+    showToast('Could not load new-bank data: ' + (e.message || 'unknown error'));
+  }
+}
+
+function _streamPickDueDay(s){
+  const d = s.predicted_next_date || s.last_date;
+  if (!d) return '1';
+  try { return String(new Date(d + 'T00:00:00').getUTCDate()); }
+  catch (_) { return '1'; }
+}
+
+function _freqLabel(f){
+  const s = String(f).toLowerCase();
+  if (s === 'weekly') return 'weekly';
+  if (s === 'biweekly') return 'biweekly';
+  if (s === 'semi_monthly' || s === 'semimonthly') return 'twice a month';
+  if (s === 'monthly') return 'monthly';
+  if (s === 'annually' || s === 'yearly' || s === 'annual') return 'yearly';
+  return s;
+}
+
+function _renderNewBankReviewBody(){
+  const st = _newBankReviewState;
+  const body = document.getElementById('new-bank-review-body');
+  if (!st || !body) return;
+  if (st.bills.length === 0 && st.debts.length === 0) {
+    body.innerHTML = `<div style="padding:1rem 0;color:var(--ds-t3);font-size:13px;font-weight:600;line-height:1.55;">No new bills or credit cards found in ${escapeHtml(st.bankName)} yet. Plaid may still be processing — check back in a few minutes.</div>`;
+    const btn = document.getElementById('new-bank-review-apply');
+    if (btn) { btn.disabled = true; btn.textContent = 'Nothing to add'; }
+    return;
+  }
+  let html = '';
+  if (st.bills.length > 0) {
+    html += `<div style="margin:6px 0 8px;font-size:11px;font-weight:800;color:var(--ds-t3);letter-spacing:.06em;text-transform:uppercase;">Recurring bills · ${st.bills.length}</div><div style="display:flex;flex-direction:column;gap:6px;">`;
+    st.bills.forEach((b) => {
+      html += `<label style="display:flex;align-items:center;gap:10px;padding:10px 12px;border:1px solid var(--ds-line);border-radius:8px;cursor:pointer;background:${b.selected ? '#ecf5ee' : '#fff'};"><input type="checkbox" ${b.selected ? 'checked' : ''} onchange="_toggleNewBankItem('${b.idx}', this.checked)" style="width:18px;height:18px;flex-shrink:0;"><div style="flex:1;min-width:0;"><div style="font-size:13px;font-weight:700;color:var(--ds-t1);">${escapeHtml(b.name)}</div><div style="font-size:11px;font-weight:600;color:var(--ds-t3);margin-top:1px;">${fr(b.amount)} · ${escapeHtml(_freqLabel(b.frequency))} · due day ${escapeHtml(b.due)}</div></div></label>`;
+    });
+    html += `</div>`;
+  }
+  if (st.debts.length > 0) {
+    html += `<div style="margin:18px 0 8px;font-size:11px;font-weight:800;color:var(--ds-t3);letter-spacing:.06em;text-transform:uppercase;">Credit cards · ${st.debts.length}</div><div style="display:flex;flex-direction:column;gap:6px;">`;
+    st.debts.forEach((d) => {
+      const rateLabel = d.rate_decimal != null ? `${(Number(d.rate_decimal) * 100).toFixed(2)}% APR` : 'APR pending';
+      const dueLabel = d.due_day ? `due day ${d.due_day}` : 'no due day';
+      html += `<label style="display:flex;align-items:center;gap:10px;padding:10px 12px;border:1px solid var(--ds-line);border-radius:8px;cursor:pointer;background:${d.selected ? '#ecf5ee' : '#fff'};"><input type="checkbox" ${d.selected ? 'checked' : ''} onchange="_toggleNewBankItem('${d.idx}', this.checked)" style="width:18px;height:18px;flex-shrink:0;"><div style="flex:1;min-width:0;"><div style="font-size:13px;font-weight:700;color:var(--ds-t1);">${escapeHtml(d.name)}</div><div style="font-size:11px;font-weight:600;color:var(--ds-t3);margin-top:1px;">${fr(d.balance)} balance · ${escapeHtml(rateLabel)} · min ${fr(d.min)} · ${escapeHtml(dueLabel)}</div></div></label>`;
+    });
+    html += `</div>`;
+  }
+  body.innerHTML = html;
+  const total = st.bills.filter(x => x.selected).length + st.debts.filter(x => x.selected).length;
+  const btn = document.getElementById('new-bank-review-apply');
+  if (btn) {
+    btn.disabled = total === 0;
+    btn.textContent = total === 0 ? 'Nothing selected' : `Add ${total} to plan`;
+  }
+}
+
+function _toggleNewBankItem(idx, checked){
+  const st = _newBankReviewState;
+  if (!st) return;
+  const row = st.bills.find(b => b.idx === idx) || st.debts.find(d => d.idx === idx);
+  if (row) row.selected = !!checked;
+  _renderNewBankReviewBody();
+}
+
+async function applyNewBankReview(){
+  const st = _newBankReviewState;
+  if (!st) return;
+  const acceptedBills = st.bills.filter(b => b.selected);
+  const acceptedDebts = st.debts.filter(d => d.selected);
+  if (acceptedBills.length === 0 && acceptedDebts.length === 0) {
+    closeModal('modal-new-bank-review');
+    return;
+  }
+  try {
+    const tag = 'delta:' + st.itemId;
+    if (acceptedBills.length > 0) {
+      S.bills = S.bills || [];
+      for (const b of acceptedBills) {
+        const freq = String(b.frequency || 'monthly').toLowerCase();
+        const freqOut = freq === 'semi_monthly' || freq === 'semimonthly' ? 'biweekly'
+          : (freq === 'annually' || freq === 'yearly' ? 'annual' : freq);
+        const row = {
+          id: 'b_' + Date.now().toString(36) + '_' + Math.random().toString(36).slice(2, 7),
+          name: b.name,
+          amount: Number(b.amount) || 0,
+          due: String(b.due || '1'),
+          cat: 'utility',
+          priority: 2,
+          paid: false,
+          plaid_item_id: st.itemId,
+          source_plan_id: tag,
+        };
+        if (freqOut !== 'monthly') row.freq = freqOut;
+        S.bills.push(row);
+      }
+    }
+    if (acceptedDebts.length > 0) {
+      S.debts = S.debts || [];
+      const colors = ['#e07a5f', '#c85a5a', '#d4956a', '#6b9fcf', '#9b8ec4', '#7aad8a'];
+      for (const d of acceptedDebts) {
+        const bal = Number(d.balance) || 0;
+        S.debts.push({
+          id: 'd_' + Date.now().toString(36) + '_' + Math.random().toString(36).slice(2, 7),
+          name: d.name,
+          balance: bal,
+          min: Number(d.min) || 0,
+          rate: d.rate_decimal != null ? Number(d.rate_decimal) * 100 : 0,
+          dueDay: d.due_day || null,
+          color: colors[(S.debts || []).length % colors.length],
+          orig: bal,
+          plaid_item_id: st.itemId,
+          source_plan_id: tag,
+        });
+      }
+    }
+    await saveUserData();
+    try {
+      await sbGet().from('plaid_items')
+        .update({ recurring_status: 'applied' })
+        .eq('id', st.itemId);
+    } catch (_) {}
+    const banner = document.getElementById('plan-refresh-banner');
+    if (banner) banner.innerHTML = '';
+    closeModal('modal-new-bank-review');
+    const total = acceptedBills.length + acceptedDebts.length;
+    showToast(`Added ${total} ${total === 1 ? 'item' : 'items'} from ${st.bankName} to your plan.`);
+    if (typeof Able !== 'undefined' && Able.track) {
+      Able.track('new_bank_review_applied', { item_id: st.itemId, bills: acceptedBills.length, debts: acceptedDebts.length });
+    }
+    try { if (typeof refreshHome === 'function') refreshHome(); } catch (_) {}
+    try { if (typeof renderBillsPage === 'function') renderBillsPage(); } catch (_) {}
+    try { if (typeof renderDebtPage === 'function') renderDebtPage(); } catch (_) {}
+  } catch (e) {
+    console.error('applyNewBankReview failed:', e);
+    showToast('Could not apply changes: ' + (e.message || 'unknown error'));
+  }
 }
 
 // ─── Web Push (P2 #14) ────────────────────────────────────────────────
