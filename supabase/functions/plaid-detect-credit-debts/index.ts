@@ -21,7 +21,23 @@
 import { createClient, type SupabaseClient } from 'npm:@supabase/supabase-js@2';
 
 const SUPABASE_URL = Deno.env.get('SUPABASE_URL')!;
-const SERVICE_ROLE = Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')!;
+// Resolve the Supabase service-role-equivalent secret. Prefer the new
+// SUPABASE_SECRET_KEYS env (sb_secret_* format) over the deprecated legacy
+// SUPABASE_SERVICE_ROLE_KEY JWT. Falls back to the legacy env during
+// migration so functions keep working until the dashboard
+// "Disable JWT-based API keys" button is pressed.
+function _getServiceKey(): string {
+  const newKeys = Deno.env.get('SUPABASE_SECRET_KEYS');
+  if (newKeys) {
+    try {
+      const parsed = JSON.parse(newKeys);
+      if (parsed && typeof parsed.default === 'string') return parsed.default;
+    } catch { /* fall through to legacy */ }
+  }
+  return Deno.env.get('SUPABASE_SERVICE_ROLE_KEY') ?? '';
+}
+
+const SERVICE_ROLE = _getServiceKey();
 
 // ─── Plaid HTTP client (inlined from _shared/plaid.ts so this file
 // deploys self-contained from the Supabase dashboard — relative imports
@@ -231,7 +247,7 @@ Deno.serve(async (req) => {
     return json(req, resp);
   } catch (err) {
     console.error('plaid-detect-credit-debts error:', err);
-    return json(req, { error: err instanceof Error ? err.message : String(err) }, 500);
+    return json(req, { error: 'Internal server error' }, 500);
   }
 });
 

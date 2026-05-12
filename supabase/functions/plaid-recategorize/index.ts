@@ -111,7 +111,7 @@ Deno.serve(async (req) => {
     });
   } catch (e) {
     console.error('plaid-recategorize error:', e);
-    return json(req, { error: (e as Error).message }, 500);
+    return json(req, { error: 'Internal server error' }, 500);
   }
 });
 

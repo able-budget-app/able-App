@@ -14,7 +14,23 @@
 import { createClient } from 'npm:@supabase/supabase-js@2';
 
 const SUPABASE_URL = Deno.env.get('SUPABASE_URL')!;
-const SERVICE_ROLE = Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')!;
+// Resolve the Supabase service-role-equivalent secret. Prefer the new
+// SUPABASE_SECRET_KEYS env (sb_secret_* format) over the deprecated legacy
+// SUPABASE_SERVICE_ROLE_KEY JWT. Falls back to the legacy env during
+// migration so functions keep working until the dashboard
+// "Disable JWT-based API keys" button is pressed.
+function _getServiceKey(): string {
+  const newKeys = Deno.env.get('SUPABASE_SECRET_KEYS');
+  if (newKeys) {
+    try {
+      const parsed = JSON.parse(newKeys);
+      if (parsed && typeof parsed.default === 'string') return parsed.default;
+    } catch { /* fall through to legacy */ }
+  }
+  return Deno.env.get('SUPABASE_SERVICE_ROLE_KEY') ?? '';
+}
+
+const SERVICE_ROLE = _getServiceKey();
 
 const _ALLOWED_ORIGINS = new Set([
   'https://becomeable.app',
@@ -86,7 +102,7 @@ Deno.serve(async (req) => {
     return json(req, { ok: true, plaid_item_row_id: itemId, recurring_status: status });
   } catch (e) {
     console.error('plaid-set-item-status error:', e);
-    return json(req, { error: (e as Error).message }, 500);
+    return json(req, { error: 'Internal server error' }, 500);
   }
 });
 

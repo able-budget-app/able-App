@@ -11727,7 +11727,8 @@ async function loadPaceLine(){
       .from('plaid_transactions')
       .select('date, amount, able_category')
       .eq('user_id', currentUser.id)
-      .gte('date', fmt(lookbackStart));
+      .gte('date', fmt(lookbackStart))
+      .limit(2000);
     if (error) throw error;
 
     // Discretionary baseline = last-60-day 'discretionary' outflows / 2.
