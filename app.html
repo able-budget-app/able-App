@@ -3135,6 +3135,12 @@ async function doGoogleAuth() {
 //   - Web / Android / other: signInWithOAuth web flow → redirect → callback
 // Apple guideline 4.8 requires Sign in with Apple as a peer option whenever
 // any other 3p sign-in is offered (we ship Google).
+async function _sha256Hex(input) {
+  const buf = new TextEncoder().encode(input);
+  const hash = await crypto.subtle.digest('SHA-256', buf);
+  return Array.from(new Uint8Array(hash)).map((b) => b.toString(16).padStart(2, '0')).join('');
+}
+
 async function doAppleAuth() {
   hideAuthMessages();
   try {
@@ -3146,16 +3152,26 @@ async function doAppleAuth() {
       }
       // Native sheet: returns identityToken + authorizationCode. Supabase
       // verifies the JWT against Apple's public keys and creates/signs in.
+      // Nonce flow per Supabase docs for Apple native sign-in:
+      //   1. Generate raw nonce
+      //   2. SHA256-hash it; pass the HASH to Apple (Apple stores as-is in id_token)
+      //   3. Pass the RAW nonce to Supabase — server hashes it and compares to
+      //      the id_token's nonce claim.
+      // Mismatch like "passed nonce and nonce in id_token should either both
+      // exist or not" or "nonces mismatch" come from sending the wrong form
+      // to either side.
+      const rawNonce = Math.random().toString(36).slice(2) + Math.random().toString(36).slice(2);
+      const hashedNonce = await _sha256Hex(rawNonce);
       const result = await SignInWithApple.authorize({
         clientId: 'com.becomeable.app',
         redirectURI: 'https://becomeable.app/app.html',
         scopes: 'email name',
         state: '',
-        nonce: Math.random().toString(36).slice(2),
+        nonce: hashedNonce,
       });
       const idToken = result?.response?.identityToken;
       if (!idToken) { showAuthError('Apple did not return an identity token.'); return; }
-      const { error } = await sbGet().auth.signInWithIdToken({ provider: 'apple', token: idToken });
+      const { error } = await sbGet().auth.signInWithIdToken({ provider: 'apple', token: idToken, nonce: rawNonce });
       if (error) showAuthError(error.message);
     } else {
       const { error } = await sbGet().auth.signInWithOAuth({
