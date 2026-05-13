@@ -5440,6 +5440,294 @@ window.CAROUSELS = [
         punch: "Free for\n{30 days.}",
         meta: 'becomeable.app/get-able' },
   ] },
+
+  // ── MASSIVE LISTICLE BATCH (C212-C240) — all safe topics ──
+  // Per feedback_no_tax_credit_overclaim.md: no tax beyond bucket/classify/export,
+  // no credit-score content. Pure Able-mechanic + variable-income framing.
+
+  { id: 'C212', slug: 'list-save-10-doesnt-stick', theme: 'black', format: 'tiktok', slides: [
+      { tpl: 'A', eyebrow: '5 reasons', size: 'md', muted: "5 reasons \"save 10%\"", punch: "never {sticks.}", meta: '1 / 7' },
+      { tpl: 'A', eyebrow: 'reason 1', size: 'md', muted: "1.", punch: "You don't know {10%}\nof what until month-end.", meta: '2 / 7' },
+      { tpl: 'A', eyebrow: 'reason 2', size: 'md', muted: "2.", punch: "Slow months tempt\n{skipping.}", meta: '3 / 7' },
+      { tpl: 'A', eyebrow: 'reason 3', size: 'md', muted: "3.", punch: "Skipping {breaks}\nthe rule.", meta: '4 / 7' },
+      { tpl: 'A', eyebrow: 'reason 4', size: 'md', muted: "4.", punch: "Discretionary {comes}\nfirst.", meta: '5 / 7' },
+      { tpl: 'A', eyebrow: 'reason 5', size: 'md', muted: "5.", punch: "\"Save what's left\"\n= {nothing.}", meta: '6 / 7' },
+      { tpl: 'A', eyebrow: '5 reasons', size: 'md', punch: "Free for\n{30 days.}", meta: 'becomeable.app/get-able' },
+  ] },
+
+  { id: 'C213', slug: 'list-emergency-fund-zero-reasons', theme: 'glass-dark', format: 'tiktok', slides: [
+      { tpl: 'A', eyebrow: '5 reasons', size: 'md', muted: "5 reasons your emergency fund", punch: "stays at\n{zero.}", meta: '1 / 7' },
+      { tpl: 'A', eyebrow: 'reason 1', size: 'md', muted: "1.", punch: "Raided for {normal}\nexpenses.", meta: '2 / 7' },
+      { tpl: 'A', eyebrow: 'reason 2', size: 'md', muted: "2.", punch: "No automation =\n{willpower} only.", meta: '3 / 7' },
+      { tpl: 'A', eyebrow: 'reason 3', size: 'md', muted: "3.", punch: "\"Next month.\" {Twelve}\ntimes in a row.", meta: '4 / 7' },
+      { tpl: 'A', eyebrow: 'reason 4', size: 'md', muted: "4.", punch: "One {big bill}\nwipes it.", meta: '5 / 7' },
+      { tpl: 'A', eyebrow: 'reason 5', size: 'md', muted: "5.", punch: "Same account as checking\n= {no friction.}", meta: '6 / 7' },
+      { tpl: 'A', eyebrow: '5 reasons', size: 'md', punch: "Free for\n{30 days.}", meta: 'becomeable.app/get-able' },
+  ] },
+
+  { id: 'C214', slug: 'list-tracking-doesnt-fix-leak', theme: 'black', format: 'tiktok', slides: [
+      { tpl: 'A', eyebrow: '5 reasons', size: 'md', muted: "5 reasons \"track everything\"", punch: "doesn't {fix}\nthe leak.", meta: '1 / 7' },
+      { tpl: 'A', eyebrow: 'reason 1', size: 'md', muted: "1.", punch: "Tracking shows\nthe {past.}", meta: '2 / 7' },
+      { tpl: 'A', eyebrow: 'reason 2', size: 'md', muted: "2.", punch: "The leak\n{already left.}", meta: '3 / 7' },
+      { tpl: 'A', eyebrow: 'reason 3', size: 'md', muted: "3.", punch: "No system underneath\nto change {behavior.}", meta: '4 / 7' },
+      { tpl: 'A', eyebrow: 'reason 4', size: 'md', muted: "4.", punch: "Categorizing isn't\n{deciding.}", meta: '5 / 7' },
+      { tpl: 'A', eyebrow: 'reason 5', size: 'md', muted: "5.", punch: "You need {upstream}\nrouting.", meta: '6 / 7' },
+      { tpl: 'A', eyebrow: '5 reasons', size: 'md', punch: "Free for\n{30 days.}", meta: 'becomeable.app/get-able' },
+  ] },
+
+  { id: 'C215', slug: 'list-zero-day-30-reasons', theme: 'glass-dark', format: 'tiktok', slides: [
+      { tpl: 'A', eyebrow: '5 reasons', size: 'md', muted: "5 reasons you end up", punch: "at {$0}\non Day 30.", meta: '1 / 7' },
+      { tpl: 'A', eyebrow: 'reason 1', size: 'md', muted: "1.", punch: "No floor.\nBills compete with {spending.}", meta: '2 / 7' },
+      { tpl: 'A', eyebrow: 'reason 2', size: 'md', muted: "2.", punch: "The leak {runs}\nall month.", meta: '3 / 7' },
+      { tpl: 'A', eyebrow: 'reason 3', size: 'md', muted: "3.", punch: "Variance hides\nyour {real} position.", meta: '4 / 7' },
+      { tpl: 'A', eyebrow: 'reason 4', size: 'md', muted: "4.", punch: "\"$400 left\" but bills\naren't paid {yet.}", meta: '5 / 7' },
+      { tpl: 'A', eyebrow: 'reason 5', size: 'md', muted: "5.", punch: "Same system =\n{same Day 30.}", meta: '6 / 7' },
+      { tpl: 'A', eyebrow: '5 reasons', size: 'md', punch: "Free for\n{30 days.}", meta: 'becomeable.app/get-able' },
+  ] },
+
+  { id: 'C216', slug: 'list-debt-payoff-stalled', theme: 'black', format: 'tiktok', slides: [
+      { tpl: 'A', eyebrow: '5 reasons', size: 'md', muted: "5 reasons your debt", punch: "payoff {stalled.}", meta: '1 / 7' },
+      { tpl: 'A', eyebrow: 'reason 1', size: 'md', muted: "1.", punch: "No floor = debt {skips}\non slow months.", meta: '2 / 7' },
+      { tpl: 'A', eyebrow: 'reason 2', size: 'md', muted: "2.", punch: "Minimums-only =\n{15-30} years.", meta: '3 / 7' },
+      { tpl: 'A', eyebrow: 'reason 3', size: 'md', muted: "3.", punch: "All-against-debt\n{collapses} on one bad week.", meta: '4 / 7' },
+      { tpl: 'A', eyebrow: 'reason 4', size: 'md', muted: "4.", punch: "No reserve =\nback on the {card.}", meta: '5 / 7' },
+      { tpl: 'A', eyebrow: 'reason 5', size: 'md', muted: "5.", punch: "The plan doesn't\n{flex.}", meta: '6 / 7' },
+      { tpl: 'A', eyebrow: '5 reasons', size: 'md', punch: "Free for\n{30 days.}", meta: 'becomeable.app/get-able' },
+  ] },
+
+  { id: 'C217', slug: 'list-traditional-advice-fails', theme: 'glass-dark', format: 'tiktok', slides: [
+      { tpl: 'A', eyebrow: '5 reasons', size: 'md', muted: "5 reasons traditional advice", punch: "fails {freelancers.}", meta: '1 / 7' },
+      { tpl: 'A', eyebrow: 'reason 1', size: 'md', muted: "1.", punch: "Assumes a {fixed}\npaycheck.", meta: '2 / 7' },
+      { tpl: 'A', eyebrow: 'reason 2', size: 'md', muted: "2.", punch: "Monthly cadence,\n{lumpy} income.", meta: '3 / 7' },
+      { tpl: 'A', eyebrow: 'reason 3', size: 'md', muted: "3.", punch: "Generic % ignores\nyour {real} shape.", meta: '4 / 7' },
+      { tpl: 'A', eyebrow: 'reason 4', size: 'md', muted: "4.", punch: "No reserve mechanic\nfor {slow months.}", meta: '5 / 7' },
+      { tpl: 'A', eyebrow: 'reason 5', size: 'md', muted: "5.", punch: "\"Save what's left\"\n= {nothing left.}", meta: '6 / 7' },
+      { tpl: 'A', eyebrow: '5 reasons', size: 'md', punch: "Free for\n{30 days.}", meta: 'becomeable.app/get-able' },
+  ] },
+
+  { id: 'C218', slug: 'list-reserve-never-grew', theme: 'black', format: 'tiktok', slides: [
+      { tpl: 'A', eyebrow: '5 reasons', size: 'md', muted: "5 reasons your reserve", punch: "{never} grew.", meta: '1 / 7' },
+      { tpl: 'A', eyebrow: 'reason 1', size: 'md', muted: "1.", punch: "You {skipped} it\non slow months.", meta: '2 / 7' },
+      { tpl: 'A', eyebrow: 'reason 2', size: 'md', muted: "2.", punch: "Big months felt like\n{windfalls.}", meta: '3 / 7' },
+      { tpl: 'A', eyebrow: 'reason 3', size: 'md', muted: "3.", punch: "Same account =\n{spent} by Day 15.", meta: '4 / 7' },
+      { tpl: 'A', eyebrow: 'reason 4', size: 'md', muted: "4.", punch: "No automatic\n{per-deposit} routing.", meta: '5 / 7' },
+      { tpl: 'A', eyebrow: 'reason 5', size: 'md', muted: "5.", punch: "You waited until\n{end-of-month.}", meta: '6 / 7' },
+      { tpl: 'A', eyebrow: '5 reasons', size: 'md', punch: "Free for\n{30 days.}", meta: 'becomeable.app/get-able' },
+  ] },
+
+  { id: 'C219', slug: 'list-spend-less-not-a-plan', theme: 'glass-dark', format: 'tiktok', slides: [
+      { tpl: 'A', eyebrow: '4 reasons', size: 'md', muted: "4 reasons \"spend less\"", punch: "isn't a {plan.}", meta: '1 / 6' },
+      { tpl: 'A', eyebrow: 'reason 1', size: 'md', muted: "1.", punch: "It's a {vibe.}\nNot a system.", meta: '2 / 6' },
+      { tpl: 'A', eyebrow: 'reason 2', size: 'md', muted: "2.", punch: "Doesn't tell you\nwhat to spend {where.}", meta: '3 / 6' },
+      { tpl: 'A', eyebrow: 'reason 3', size: 'md', muted: "3.", punch: "Doesn't handle\n{slow months.}", meta: '4 / 6' },
+      { tpl: 'A', eyebrow: 'reason 4', size: 'md', muted: "4.", punch: "Doesn't route money\nto {obligations.}", meta: '5 / 6' },
+      { tpl: 'A', eyebrow: '4 reasons', size: 'md', punch: "Free for\n{30 days.}", meta: 'becomeable.app/get-able' },
+  ] },
+
+  { id: 'C220', slug: 'list-reserve-beats-willpower', theme: 'green', format: 'tiktok', slides: [
+      { tpl: 'A', eyebrow: '4 reasons', size: 'md', muted: "4 reasons a reserve", punch: "beats {willpower.}", meta: '1 / 6' },
+      { tpl: 'A', eyebrow: 'reason 1', size: 'md', muted: "1.", punch: "Reserve doesn't need\na {mood.}", meta: '2 / 6' },
+      { tpl: 'A', eyebrow: 'reason 2', size: 'md', muted: "2.", punch: "It works on\n{bad days.}", meta: '3 / 6' },
+      { tpl: 'A', eyebrow: 'reason 3', size: 'md', muted: "3.", punch: "It {scales} with\ndeposits, not effort.", meta: '4 / 6' },
+      { tpl: 'A', eyebrow: 'reason 4', size: 'md', muted: "4.", punch: "Removes the\n{daily decision.}", meta: '5 / 6' },
+      { tpl: 'A', eyebrow: '4 reasons', size: 'md', punch: "Free for\n{30 days.}", meta: 'becomeable.app/get-able' },
+  ] },
+
+  { id: 'C221', slug: 'list-bills-tax-first-reasons', theme: 'glass', format: 'tiktok', slides: [
+      { tpl: 'A', eyebrow: '4 reasons', size: 'md', muted: "4 reasons \"bills + tax", punch: "first\" makes {sense.}", meta: '1 / 6' },
+      { tpl: 'A', eyebrow: 'reason 1', size: 'md', muted: "1.", punch: "Bills don't\n{wait.}", meta: '2 / 6' },
+      { tpl: 'A', eyebrow: 'reason 2', size: 'md', muted: "2.", punch: "Tax doesn't\n{negotiate.}", meta: '3 / 6' },
+      { tpl: 'A', eyebrow: 'reason 3', size: 'md', muted: "3.", punch: "Both are predictable\n{obligations.}", meta: '4 / 6' },
+      { tpl: 'A', eyebrow: 'reason 4', size: 'md', muted: "4.", punch: "Everything else needs\n{flexibility.}", meta: '5 / 6' },
+      { tpl: 'A', eyebrow: '4 reasons', size: 'md', punch: "Free for\n{30 days.}", meta: 'becomeable.app/get-able' },
+  ] },
+
+  { id: 'C222', slug: 'list-routing-beats-discipline', theme: 'green', format: 'tiktok', slides: [
+      { tpl: 'A', eyebrow: '5 reasons', size: 'md', muted: "5 reasons routing", punch: "beats {discipline.}", meta: '1 / 7' },
+      { tpl: 'A', eyebrow: 'reason 1', size: 'md', muted: "1.", punch: "Discipline {runs out.}", meta: '2 / 7' },
+      { tpl: 'A', eyebrow: 'reason 2', size: 'md', muted: "2.", punch: "Routing doesn't\nget {tired.}", meta: '3 / 7' },
+      { tpl: 'A', eyebrow: 'reason 3', size: 'md', muted: "3.", punch: "Handles {3 AM} you.", meta: '4 / 7' },
+      { tpl: 'A', eyebrow: 'reason 4', size: 'md', muted: "4.", punch: "Handles\n{slow months.}", meta: '5 / 7' },
+      { tpl: 'A', eyebrow: 'reason 5', size: 'md', muted: "5.", punch: "Handles\n{success.}", meta: '6 / 7' },
+      { tpl: 'A', eyebrow: '5 reasons', size: 'md', punch: "Free for\n{30 days.}", meta: 'becomeable.app/get-able' },
+  ] },
+
+  { id: 'C223', slug: 'list-30-day-trial-reasons', theme: 'glass', format: 'tiktok', slides: [
+      { tpl: 'A', eyebrow: '4 reasons', size: 'md', muted: "4 reasons the 30-day", punch: "trial {works.}", meta: '1 / 6' },
+      { tpl: 'A', eyebrow: 'reason 1', size: 'md', muted: "1.", punch: "Long enough to receive\na {deposit.}", meta: '2 / 6' },
+      { tpl: 'A', eyebrow: 'reason 2', size: 'md', muted: "2.", punch: "Long enough to see\n{one full} month.", meta: '3 / 6' },
+      { tpl: 'A', eyebrow: 'reason 3', size: 'md', muted: "3.", punch: "Long enough to {feel}\nthe difference.", meta: '4 / 6' },
+      { tpl: 'A', eyebrow: 'reason 4', size: 'md', muted: "4.", punch: "Boring = {the win.}", meta: '5 / 6' },
+      { tpl: 'A', eyebrow: '4 reasons', size: 'md', punch: "Free for\n{30 days.}", meta: 'becomeable.app/get-able' },
+  ] },
+
+  { id: 'C224', slug: 'list-automate-floor-reasons', theme: 'green', format: 'tiktok', slides: [
+      { tpl: 'A', eyebrow: '4 reasons', size: 'md', muted: "4 reasons \"automate the floor\"", punch: "is your only {job.}", meta: '1 / 6' },
+      { tpl: 'A', eyebrow: 'reason 1', size: 'md', muted: "1.", punch: "Bills + tax\n{always} covered.", meta: '2 / 6' },
+      { tpl: 'A', eyebrow: 'reason 2', size: 'md', muted: "2.", punch: "Removes the daily\n{worry.}", meta: '3 / 6' },
+      { tpl: 'A', eyebrow: 'reason 3', size: 'md', muted: "3.", punch: "Frees brain for\n{actual} work.", meta: '4 / 6' },
+      { tpl: 'A', eyebrow: 'reason 4', size: 'md', muted: "4.", punch: "The system handles\n{the rest.}", meta: '5 / 6' },
+      { tpl: 'A', eyebrow: '4 reasons', size: 'md', punch: "Free for\n{30 days.}", meta: 'becomeable.app/get-able' },
+  ] },
+
+  { id: 'C225', slug: 'list-first-30-days-tips', theme: 'white', format: 'tiktok', slides: [
+      { tpl: 'A', eyebrow: '5 tips', size: 'md', muted: "5 tips for your", punch: "{first 30 days}\nwith Able.", meta: '1 / 7' },
+      { tpl: 'A', eyebrow: 'tip 1', size: 'md', muted: "1.", punch: "Connect your bank.\n{Day 1.}", meta: '2 / 7' },
+      { tpl: 'A', eyebrow: 'tip 2', size: 'md', muted: "2.", punch: "Approve the {analyzer's}\nplan.", meta: '3 / 7' },
+      { tpl: 'A', eyebrow: 'tip 3', size: 'md', muted: "3.", punch: "Set your {tax %.}", meta: '4 / 7' },
+      { tpl: 'A', eyebrow: 'tip 4', size: 'md', muted: "4.", punch: "Let one deposit\n{cycle.}", meta: '5 / 7' },
+      { tpl: 'A', eyebrow: 'tip 5', size: 'md', muted: "5.", punch: "Check your {score}\non Day 30.", meta: '6 / 7' },
+      { tpl: 'A', eyebrow: '5 tips', size: 'md', punch: "Free for\n{30 days.}", meta: 'becomeable.app/get-able' },
+  ] },
+
+  { id: 'C226', slug: 'list-irregular-paycheck-tips', theme: 'page', format: 'tiktok', slides: [
+      { tpl: 'A', eyebrow: '5 tips', size: 'md', muted: "5 tips for irregular", punch: "{paycheck} timing.", meta: '1 / 7' },
+      { tpl: 'A', eyebrow: 'tip 1', size: 'md', muted: "1.", punch: "Don't budget by\n{expected} dates.", meta: '2 / 7' },
+      { tpl: 'A', eyebrow: 'tip 2', size: 'md', muted: "2.", punch: "Budget by {actual}\ndeposits.", meta: '3 / 7' },
+      { tpl: 'A', eyebrow: 'tip 3', size: 'md', muted: "3.", punch: "Reserve smooths\nthe {timing gap.}", meta: '4 / 7' },
+      { tpl: 'A', eyebrow: 'tip 4', size: 'md', muted: "4.", punch: "Bills auto-pay from\na {reservation.}", meta: '5 / 7' },
+      { tpl: 'A', eyebrow: 'tip 5', size: 'md', muted: "5.", punch: "Floor's funded\n{ahead of} due date.", meta: '6 / 7' },
+      { tpl: 'A', eyebrow: '5 tips', size: 'md', punch: "Free for\n{30 days.}", meta: 'becomeable.app/get-able' },
+  ] },
+
+  { id: 'C227', slug: 'list-set-floor-amount-tips', theme: 'white', format: 'tiktok', slides: [
+      { tpl: 'A', eyebrow: '5 tips', size: 'md', muted: "5 tips for setting", punch: "your {floor}\namount.", meta: '1 / 7' },
+      { tpl: 'A', eyebrow: 'tip 1', size: 'md', muted: "1.", punch: "List every\n{monthly bill.}", meta: '2 / 7' },
+      { tpl: 'A', eyebrow: 'tip 2', size: 'md', muted: "2.", punch: "Add the {tax}\nyou owe.", meta: '3 / 7' },
+      { tpl: 'A', eyebrow: 'tip 3', size: 'md', muted: "3.", punch: "Divide by your\n{average} deposit count.", meta: '4 / 7' },
+      { tpl: 'A', eyebrow: 'tip 4', size: 'md', muted: "4.", punch: "That % per deposit =\n{your floor.}", meta: '5 / 7' },
+      { tpl: 'A', eyebrow: 'tip 5', size: 'md', muted: "5.", punch: "Adjust {upward}\nas obligations grow.", meta: '6 / 7' },
+      { tpl: 'A', eyebrow: '5 tips', size: 'md', punch: "Free for\n{30 days.}", meta: 'becomeable.app/get-able' },
+  ] },
+
+  { id: 'C228', slug: 'list-stick-budget-stress-tips', theme: 'page', format: 'tiktok', slides: [
+      { tpl: 'A', eyebrow: '5 tips', size: 'md', muted: "5 tips for sticking", punch: "with a budget through\n{stress.}", meta: '1 / 7' },
+      { tpl: 'A', eyebrow: 'tip 1', size: 'md', muted: "1.", punch: "Smaller is more\n{sustainable.}", meta: '2 / 7' },
+      { tpl: 'A', eyebrow: 'tip 2', size: 'md', muted: "2.", punch: "Automate what\nyou'd {skip.}", meta: '3 / 7' },
+      { tpl: 'A', eyebrow: 'tip 3', size: 'md', muted: "3.", punch: "Reserve removes the\n{panic} decisions.", meta: '4 / 7' },
+      { tpl: 'A', eyebrow: 'tip 4', size: 'md', muted: "4.", punch: "Coach helps when\nyou {spiral.}", meta: '5 / 7' },
+      { tpl: 'A', eyebrow: 'tip 5', size: 'md', muted: "5.", punch: "Don't restart.\n{Adjust.}", meta: '6 / 7' },
+      { tpl: 'A', eyebrow: '5 tips', size: 'md', punch: "Free for\n{30 days.}", meta: 'becomeable.app/get-able' },
+  ] },
+
+  { id: 'C229', slug: 'list-gap-between-deposits-tips', theme: 'white', format: 'tiktok', slides: [
+      { tpl: 'A', eyebrow: '5 tips', size: 'md', muted: "5 tips for the", punch: "{gap} between deposits.", meta: '1 / 7' },
+      { tpl: 'A', eyebrow: 'tip 1', size: 'md', muted: "1.", punch: "Reserve is\n{exactly for this.}", meta: '2 / 7' },
+      { tpl: 'A', eyebrow: 'tip 2', size: 'md', muted: "2.", punch: "Floor stays\n{covered.}", meta: '3 / 7' },
+      { tpl: 'A', eyebrow: 'tip 3', size: 'md', muted: "3.", punch: "Don't {borrow}\nfrom bills.", meta: '4 / 7' },
+      { tpl: 'A', eyebrow: 'tip 4', size: 'md', muted: "4.", punch: "Free spending → $0.\n{That's OK.}", meta: '5 / 7' },
+      { tpl: 'A', eyebrow: 'tip 5', size: 'md', muted: "5.", punch: "The next deposit\nis {already} routed.", meta: '6 / 7' },
+      { tpl: 'A', eyebrow: '5 tips', size: 'md', punch: "Free for\n{30 days.}", meta: 'becomeable.app/get-able' },
+  ] },
+
+  { id: 'C230', slug: 'list-partner-on-board-tips', theme: 'page', format: 'tiktok', slides: [
+      { tpl: 'A', eyebrow: '5 tips', size: 'md', muted: "5 tips for getting your", punch: "{partner} on board.", meta: '1 / 7' },
+      { tpl: 'A', eyebrow: 'tip 1', size: 'md', muted: "1.", punch: "Show the {dashboard.}\nNot the spreadsheet.", meta: '2 / 7' },
+      { tpl: 'A', eyebrow: 'tip 2', size: 'md', muted: "2.", punch: "Lead with {Sunday-night}\ndread vs calm.", meta: '3 / 7' },
+      { tpl: 'A', eyebrow: 'tip 3', size: 'md', muted: "3.", punch: "Share the {Coach.}", meta: '4 / 7' },
+      { tpl: 'A', eyebrow: 'tip 4', size: 'md', muted: "4.", punch: "Pick {one bucket}\nthey own.", meta: '5 / 7' },
+      { tpl: 'A', eyebrow: 'tip 5', size: 'md', muted: "5.", punch: "Weekly {10-min}\ncheck-in.", meta: '6 / 7' },
+      { tpl: 'A', eyebrow: '5 tips', size: 'md', punch: "Free for\n{30 days.}", meta: 'becomeable.app/get-able' },
+  ] },
+
+  { id: 'C231', slug: 'list-cash-income-tips', theme: 'white', format: 'tiktok', slides: [
+      { tpl: 'A', eyebrow: '5 tips', size: 'md', muted: "5 tips for budgeting", punch: "with {cash} income.", meta: '1 / 7' },
+      { tpl: 'A', eyebrow: 'tip 1', size: 'md', muted: "1.", punch: "Log it {within}\nthe day.", meta: '2 / 7' },
+      { tpl: 'A', eyebrow: 'tip 2', size: 'md', muted: "2.", punch: "Same split rules\nas {bank} deposits.", meta: '3 / 7' },
+      { tpl: 'A', eyebrow: 'tip 3', size: 'md', muted: "3.", punch: "Cash to bank\nwithin {24h.}", meta: '4 / 7' },
+      { tpl: 'A', eyebrow: 'tip 4', size: 'md', muted: "4.", punch: "Tax bucket is\n{non-negotiable} on cash.", meta: '5 / 7' },
+      { tpl: 'A', eyebrow: 'tip 5', size: 'md', muted: "5.", punch: "Don't treat cash\nas {\"extra.\"}", meta: '6 / 7' },
+      { tpl: 'A', eyebrow: '5 tips', size: 'md', punch: "Free for\n{30 days.}", meta: 'becomeable.app/get-able' },
+  ] },
+
+  { id: 'C232', slug: 'list-starting-variable-mistakes', theme: 'glass-dark', format: 'tiktok', slides: [
+      { tpl: 'A', eyebrow: '5 mistakes', size: 'md', muted: "5 mistakes when starting", punch: "{variable-income}\nbudgeting.", meta: '1 / 7' },
+      { tpl: 'A', eyebrow: 'mistake 1', size: 'md', muted: "1.", punch: "Setting % {aspirationally.}", meta: '2 / 7' },
+      { tpl: 'A', eyebrow: 'mistake 2', size: 'md', muted: "2.", punch: "No reserve before\n{aggressive} savings.", meta: '3 / 7' },
+      { tpl: 'A', eyebrow: 'mistake 3', size: 'md', muted: "3.", punch: "Same account as\n{personal} spending.", meta: '4 / 7' },
+      { tpl: 'A', eyebrow: 'mistake 4', size: 'md', muted: "4.", punch: "Skipping on {slow}\nweeks.", meta: '5 / 7' },
+      { tpl: 'A', eyebrow: 'mistake 5', size: 'md', muted: "5.", punch: "Not labeling\n{categories.}", meta: '6 / 7' },
+      { tpl: 'A', eyebrow: '5 mistakes', size: 'md', punch: "Free for\n{30 days.}", meta: 'becomeable.app/get-able' },
+  ] },
+
+  { id: 'C233', slug: 'list-empty-reserve-mistakes', theme: 'black', format: 'tiktok', slides: [
+      { tpl: 'A', eyebrow: '6 mistakes', size: 'md', muted: "6 mistakes that", punch: "empty your\n{reserve.}", meta: '1 / 8' },
+      { tpl: 'A', eyebrow: 'mistake 1', size: 'md', muted: "1.", punch: "Treating it like {savings.}", meta: '2 / 8' },
+      { tpl: 'A', eyebrow: 'mistake 2', size: 'md', muted: "2.", punch: "Raiding for\n{non-emergencies.}", meta: '3 / 8' },
+      { tpl: 'A', eyebrow: 'mistake 3', size: 'md', muted: "3.", punch: "Same account =\n{no friction.}", meta: '4 / 8' },
+      { tpl: 'A', eyebrow: 'mistake 4', size: 'md', muted: "4.", punch: "Forgetting to\n{refill} after use.", meta: '5 / 8' },
+      { tpl: 'A', eyebrow: 'mistake 5', size: 'md', muted: "5.", punch: "Setting it\n{too small.}", meta: '6 / 8' },
+      { tpl: 'A', eyebrow: 'mistake 6', size: 'md', muted: "6.", punch: "Letting it become\n{\"extra\"} on good months.", meta: '7 / 8' },
+      { tpl: 'A', eyebrow: '6 mistakes', size: 'md', punch: "Free for\n{30 days.}", meta: 'becomeable.app/get-able' },
+  ] },
+
+  { id: 'C234', slug: 'list-first-week-mistakes', theme: 'glass-dark', format: 'tiktok', slides: [
+      { tpl: 'A', eyebrow: '5 mistakes', size: 'md', muted: "5 mistakes new app users", punch: "make in the\n{first week.}", meta: '1 / 7' },
+      { tpl: 'A', eyebrow: 'mistake 1', size: 'md', muted: "1.", punch: "Skipping the\n{analyzer} flow.", meta: '2 / 7' },
+      { tpl: 'A', eyebrow: 'mistake 2', size: 'md', muted: "2.", punch: "Not connecting\n{all} banks.", meta: '3 / 7' },
+      { tpl: 'A', eyebrow: 'mistake 3', size: 'md', muted: "3.", punch: "Unrealistic\n{floor amount.}", meta: '4 / 7' },
+      { tpl: 'A', eyebrow: 'mistake 4', size: 'md', muted: "4.", punch: "Ignoring {bill}\ndue dates.", meta: '5 / 7' },
+      { tpl: 'A', eyebrow: 'mistake 5', size: 'md', muted: "5.", punch: "Quitting before\n{Day 7.}", meta: '6 / 7' },
+      { tpl: 'A', eyebrow: '5 mistakes', size: 'md', punch: "Free for\n{30 days.}", meta: 'becomeable.app/get-able' },
+  ] },
+
+  { id: 'C235', slug: 'list-windfall-mistakes', theme: 'black', format: 'tiktok', slides: [
+      { tpl: 'A', eyebrow: '5 mistakes', size: 'md', muted: "5 mistakes when", punch: "handling a\n{windfall.}", meta: '1 / 7' },
+      { tpl: 'A', eyebrow: 'mistake 1', size: 'md', muted: "1.", punch: "Spending {before}\nsplitting.", meta: '2 / 7' },
+      { tpl: 'A', eyebrow: 'mistake 2', size: 'md', muted: "2.", punch: "Not topping up\nthe {reserve.}", meta: '3 / 7' },
+      { tpl: 'A', eyebrow: 'mistake 3', size: 'md', muted: "3.", punch: "Bumping {lifestyle}\non one-time money.", meta: '4 / 7' },
+      { tpl: 'A', eyebrow: 'mistake 4', size: 'md', muted: "4.", punch: "Treating it as\n{bonus.} It's revenue.", meta: '5 / 7' },
+      { tpl: 'A', eyebrow: 'mistake 5', size: 'md', muted: "5.", punch: "Forgetting the\n{tax bucket.}", meta: '6 / 7' },
+      { tpl: 'A', eyebrow: '5 mistakes', size: 'md', punch: "Free for\n{30 days.}", meta: 'becomeable.app/get-able' },
+  ] },
+
+  { id: 'C236', slug: 'list-slow-streak-mistakes', theme: 'glass-dark', format: 'tiktok', slides: [
+      { tpl: 'A', eyebrow: '5 mistakes', size: 'md', muted: "5 mistakes during a", punch: "{slow streak.}", meta: '1 / 7' },
+      { tpl: 'A', eyebrow: 'mistake 1', size: 'md', muted: "1.", punch: "Cutting {essential}\nbills first.", meta: '2 / 7' },
+      { tpl: 'A', eyebrow: 'mistake 2', size: 'md', muted: "2.", punch: "Borrowing from the\n{tax bucket.}", meta: '3 / 7' },
+      { tpl: 'A', eyebrow: 'mistake 3', size: 'md', muted: "3.", punch: "Treating reserve\nas {off-limits.}", meta: '4 / 7' },
+      { tpl: 'A', eyebrow: 'mistake 4', size: 'md', muted: "4.", punch: "Skipping the\n{floor} routing.", meta: '5 / 7' },
+      { tpl: 'A', eyebrow: 'mistake 5', size: 'md', muted: "5.", punch: "Stopping the system\n{entirely.}", meta: '6 / 7' },
+      { tpl: 'A', eyebrow: '5 mistakes', size: 'md', punch: "Free for\n{30 days.}", meta: 'becomeable.app/get-able' },
+  ] },
+
+  { id: 'C237', slug: 'list-free-spending-leak-mistakes', theme: 'black', format: 'tiktok', slides: [
+      { tpl: 'A', eyebrow: '5 mistakes', size: 'md', muted: "5 mistakes that leak", punch: "{free spending.}", meta: '1 / 7' },
+      { tpl: 'A', eyebrow: 'mistake 1', size: 'md', muted: "1.", punch: "Subscription {drift.}", meta: '2 / 7' },
+      { tpl: 'A', eyebrow: 'mistake 2', size: 'md', muted: "2.", punch: "\"I have it in {checking}\"\nthinking.", meta: '3 / 7' },
+      { tpl: 'A', eyebrow: 'mistake 3', size: 'md', muted: "3.", punch: "{Lifestyle} bump\nafter one big check.", meta: '4 / 7' },
+      { tpl: 'A', eyebrow: 'mistake 4', size: 'md', muted: "4.", punch: "No {bounded} bucket\nfor spending.", meta: '5 / 7' },
+      { tpl: 'A', eyebrow: 'mistake 5', size: 'md', muted: "5.", punch: "Spending without\nseeing the {score.}", meta: '6 / 7' },
+      { tpl: 'A', eyebrow: '5 mistakes', size: 'md', punch: "Free for\n{30 days.}", meta: 'becomeable.app/get-able' },
+  ] },
+
+  { id: 'C238', slug: 'list-routing-every-deposit-benefits', theme: 'glass', format: 'tiktok', slides: [
+      { tpl: 'A', eyebrow: '5 benefits', size: 'md', muted: "5 benefits of routing", punch: "on {every deposit.}", meta: '1 / 7' },
+      { tpl: 'A', eyebrow: 'benefit 1', size: 'md', muted: "1.", punch: "Bills funded before\n{due date.}", meta: '2 / 7' },
+      { tpl: 'A', eyebrow: 'benefit 2', size: 'md', muted: "2.", punch: "Tax bucket fills\n{automatically.}", meta: '3 / 7' },
+      { tpl: 'A', eyebrow: 'benefit 3', size: 'md', muted: "3.", punch: "Reserve grows\n{passively.}", meta: '4 / 7' },
+      { tpl: 'A', eyebrow: 'benefit 4', size: 'md', muted: "4.", punch: "Free spending is {real.}", meta: '5 / 7' },
+      { tpl: 'A', eyebrow: 'benefit 5', size: 'md', muted: "5.", punch: "The score reflects\n{reality.}", meta: '6 / 7' },
+      { tpl: 'A', eyebrow: '5 benefits', size: 'md', punch: "Free for\n{30 days.}", meta: 'becomeable.app/get-able' },
+  ] },
+
+  { id: 'C239', slug: 'list-forecast-30-day-benefits', theme: 'green', format: 'tiktok', slides: [
+      { tpl: 'A', eyebrow: '4 benefits', size: 'md', muted: "4 benefits of seeing your", punch: "{forecast}\n30 days out.", meta: '1 / 6' },
+      { tpl: 'A', eyebrow: 'benefit 1', size: 'md', muted: "1.", punch: "Slow stretch coming?\n{You know early.}", meta: '2 / 6' },
+      { tpl: 'A', eyebrow: 'benefit 2', size: 'md', muted: "2.", punch: "Big bill on Day 28?\n{Already reserved.}", meta: '3 / 6' },
+      { tpl: 'A', eyebrow: 'benefit 3', size: 'md', muted: "3.", punch: "No more {\"will I have}\nenough?\"", meta: '4 / 6' },
+      { tpl: 'A', eyebrow: 'benefit 4', size: 'md', muted: "4.", punch: "You {plan.}\nYou don't react.", meta: '5 / 6' },
+      { tpl: 'A', eyebrow: '4 benefits', size: 'md', punch: "Free for\n{30 days.}", meta: 'becomeable.app/get-able' },
+  ] },
+
+  { id: 'C240', slug: 'list-own-payroll-benefits', theme: 'glass', format: 'tiktok', slides: [
+      { tpl: 'A', eyebrow: '4 benefits', size: 'md', muted: "4 benefits of being your own", punch: "{payroll dept.}", meta: '1 / 6' },
+      { tpl: 'A', eyebrow: 'benefit 1', size: 'md', muted: "1.", punch: "You don't depend on\n{revenue} timing.", meta: '2 / 6' },
+      { tpl: 'A', eyebrow: 'benefit 2', size: 'md', muted: "2.", punch: "Pay scales with\n{reality.}", meta: '3 / 6' },
+      { tpl: 'A', eyebrow: 'benefit 3', size: 'md', muted: "3.", punch: "Variable income,\n{consistent} take-home.", meta: '4 / 6' },
+      { tpl: 'A', eyebrow: 'benefit 4', size: 'md', muted: "4.", punch: "Business pays you\nlike a {real job.}", meta: '5 / 6' },
+      { tpl: 'A', eyebrow: '4 benefits', size: 'md', punch: "Free for\n{30 days.}", meta: 'becomeable.app/get-able' },
+  ] },
 ];
 
 
