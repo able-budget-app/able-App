@@ -7,13 +7,28 @@ and youtube_video_id is empty. After a successful upload, status flips to
 Public manually in YouTube Studio.
 
 Run:
-  python3 scripts/youtube-upload.py                  # default --batch=5
+  python3 scripts/youtube-upload.py                          # long-form (default), batch=5
   python3 scripts/youtube-upload.py --batch=3
-  python3 scripts/youtube-upload.py --slug=taxes     # one specific video
+  python3 scripts/youtube-upload.py --slug=taxes             # one specific video
+  python3 scripts/youtube-upload.py --shorts                 # carousel MP4s as Shorts
+  python3 scripts/youtube-upload.py --shorts --batch=3
+
+Long-form mode reads from a sheet with column `slug` and expects the MP4 at
+  article-video/videos/{slug}/out.mp4 (+ thumbnail.png).
+
+Shorts mode reads from a sheet with column `file_slug` (= {ID}_{carousel-slug})
+and expects the MP4 at
+  marketing-footage/social-export/youtube-shorts/{file_slug}.mp4
+Thumbnail is skipped — YouTube auto-generates from the first frame.
+
+Build the shorts sheet via: node scripts/build-shorts-sheet.js
+That writes docs/youtube-shorts-tracker.csv. Import the CSV into a Google
+Sheet, flip statuses to 'ready-to-upload', then run this script with --shorts.
 
 Requires (one-time setup, see docs/youtube-api-setup.md):
   - secrets/google-oauth-credentials.json    (Desktop OAuth credentials)
-  - SHEET_ID env var                          (Google Sheet ID)
+  - SHEET_ID env var                          (Google Sheet ID, long-form)
+  - SHORTS_SHEET_ID env var                   (Google Sheet ID, shorts)
 
 First run kicks off the OAuth browser flow; saves token at
 secrets/google-oauth-token.json for subsequent headless runs.
@@ -164,14 +179,25 @@ def set_thumbnail(youtube, video_id: str, thumb_path: Path):
 def main():
     p = argparse.ArgumentParser()
     p.add_argument("--batch", type=int, default=5, help="Max uploads this run (default 5; YouTube quota allows ~5/day)")
-    p.add_argument("--slug", help="Upload only this slug (overrides --batch)")
-    p.add_argument("--sheet-id", help="Google Sheet ID (or set SHEET_ID env)")
+    p.add_argument("--slug", help="Upload only this slug/file_slug (overrides --batch)")
+    p.add_argument("--sheet-id", help="Google Sheet ID (or set SHEET_ID / SHORTS_SHEET_ID env)")
     p.add_argument("--dry-run", action="store_true", help="Show what would be uploaded; don't actually upload")
+    p.add_argument("--shorts", action="store_true",
+                   help="Upload carousel MP4s as YouTube Shorts (file_slug column, no thumbnail)")
     args = p.parse_args()
 
-    sheet_id = args.sheet_id or os.environ.get("SHEET_ID")
+    # --shorts mode swaps: sheet env var, file lookup column, mp4 path, and skips thumbnail.
+    is_shorts = args.shorts
+    if is_shorts:
+        sheet_id = args.sheet_id or os.environ.get("SHORTS_SHEET_ID") or os.environ.get("SHEET_ID")
+        slug_col = "file_slug"
+    else:
+        sheet_id = args.sheet_id or os.environ.get("SHEET_ID")
+        slug_col = "slug"
+
     if not sheet_id:
-        sys.exit("error: pass --sheet-id or set SHEET_ID env var (the long string from the sheet's URL)")
+        env_var = "SHORTS_SHEET_ID" if is_shorts else "SHEET_ID"
+        sys.exit(f"error: pass --sheet-id or set {env_var} env var (the long string from the sheet's URL)")
 
     creds = get_credentials()
     sheets = build("sheets", "v4", credentials=creds, cache_discovery=False)
@@ -182,7 +208,7 @@ def main():
         sys.exit("error: sheet is empty")
 
     cols = {h.strip(): i for i, h in enumerate(header)}
-    required = ["slug", "status", "yt_title", "yt_description", "yt_tags", "youtube_video_id"]
+    required = [slug_col, "status", "yt_title", "yt_description", "yt_tags", "youtube_video_id"]
     missing = [c for c in required if c not in cols]
     if missing:
         sys.exit(f"error: sheet is missing columns: {missing}")
@@ -192,7 +218,7 @@ def main():
     for i, row in enumerate(rows):
         # Pad row so cols.get works
         row = row + [""] * (len(header) - len(row))
-        slug = row[cols["slug"]].strip()
+        slug = row[cols[slug_col]].strip()
         status = row[cols["status"]].strip().lower()
         existing_id = row[cols["youtube_video_id"]].strip()
         if not slug or existing_id:
@@ -214,25 +240,30 @@ def main():
     if not args.slug:
         queue = queue[: args.batch]
 
-    print(f"[upload] {len(queue)} video(s) queued")
+    mode = "shorts" if is_shorts else "long-form"
+    print(f"[upload · {mode}] {len(queue)} video(s) queued")
 
     ok, fail = 0, 0
     for n, (i, row) in enumerate(queue, start=1):
-        slug = row[cols["slug"]].strip()
+        slug = row[cols[slug_col]].strip()
         title = row[cols["yt_title"]].strip()
         description = row[cols["yt_description"]]
         tags = row[cols["yt_tags"]].strip()
         sheet_row_1based = i + 2  # 1-based, plus header
 
-        mp4 = ROOT / f"article-video/videos/{slug}/out.mp4"
-        thumb = ROOT / f"article-video/videos/{slug}/thumbnail.png"
+        if is_shorts:
+            mp4 = ROOT / f"marketing-footage/social-export/youtube-shorts/{slug}.mp4"
+            thumb = None
+        else:
+            mp4 = ROOT / f"article-video/videos/{slug}/out.mp4"
+            thumb = ROOT / f"article-video/videos/{slug}/thumbnail.png"
 
         print(f"\n[{n}/{len(queue)}] {slug}")
         if not mp4.exists():
             print(f"  [skip] no mp4 at {mp4.relative_to(ROOT)}")
             fail += 1
             continue
-        if not thumb.exists():
+        if thumb is not None and not thumb.exists():
             print(f"  [skip] no thumbnail at {thumb.relative_to(ROOT)}")
             fail += 1
             continue
@@ -245,8 +276,11 @@ def main():
         try:
             video_id = upload_video(youtube, mp4, title, description, tags)
             print(f"  [video] {video_id}")
-            set_thumbnail(youtube, video_id, thumb)
-            print(f"  [thumb] set")
+            if thumb is not None:
+                set_thumbnail(youtube, video_id, thumb)
+                print(f"  [thumb] set")
+            else:
+                print(f"  [thumb] skipped (Shorts auto-thumbnail)")
             update_cell(sheets, sheet_id, sheet_row_1based, cols["youtube_video_id"], video_id)
             url = f"https://youtu.be/{video_id}"
             if "youtube_url" in cols:
@@ -267,7 +301,7 @@ def main():
             print(f"  [pace] sleeping {SLEEP_BETWEEN}s before next upload")
             time.sleep(SLEEP_BETWEEN)
 
-    print(f"\n[upload] done — ok:{ok} fail:{fail}")
+    print(f"\n[upload · {mode}] done — ok:{ok} fail:{fail}")
     print(f"  next: review the {ok} uploaded video(s) in YouTube Studio,")
     print(f"  then flip Visibility from Unlisted → Public via Studio's bulk action.")
 
