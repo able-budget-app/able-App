@@ -3733,6 +3733,17 @@ async function _onAuthStateChangeImpl(user) {
       }, 600);
     }
 
+    // Kick off user_data fetch in parallel with the subscription/verify checks
+    // below. The user_data row exists from sign-up regardless of subscription
+    // status, so prefetching is safe — if hasAccess turns out false later, we
+    // just discard the result. Cuts ~200-500ms off typical returning-user
+    // sign-in latency by overlapping two server roundtrips.
+    const userDataTimeout = new Promise((_, reject) => setTimeout(() => reject(new Error('user_data timeout')), 5000));
+    const userDataPromise = Promise.race([
+      sbGet().from('user_data').select('*').eq('id', user.id).single(),
+      userDataTimeout
+    ]).catch(e => ({ data: null, error: e }));
+
     // Fast path: if Stripe handed us a session_id on the redirect, verify it
     // directly with Stripe's API and skip the webhook-delivery polling loop
     // entirely. verify-checkout-session calls Stripe, validates the session
@@ -3837,10 +3848,8 @@ async function _onAuthStateChangeImpl(user) {
       return;
     }
 
-    // Now load user data (only after we know they have access)
-    const userDataTimeout = new Promise((_, reject) => setTimeout(() => reject(new Error('user_data timeout')), 5000));
-    const userDataQuery = sbGet().from('user_data').select('*').eq('id', user.id).single();
-    const userData = await Promise.race([userDataQuery, userDataTimeout]).catch(e => ({data: null, error: e}));
+    // user_data was kicked off in parallel above — await the prefetched result.
+    const userData = await userDataPromise;
 
     // Apply user data
     const d = userData.data;
