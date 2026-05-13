@@ -31,7 +31,7 @@ Phrases Michalowicz coined or anchored that became sticky:
 - **"The 10th and 25th."** — two dates as a brand. Calendar-as-product.
 - **"Profit-generating machine."** — end state.
 
-**Public-domain enough to riff on:** Parkinson's Law, small plates, primacy effect, debt snowball, envelope budgeting (predates him by a century), "every dollar gets a job" (YNAB).
+**Public-domain enough to riff on:** Parkinson's Law, small plates, primacy effect, debt snowball, envelope budgeting (predates him by a century). NOT YNAB's "every dollar gets a job" — that one is off-limits as of 2026-05-12, see #9 below.
 
 **Avoid copying:** "Sales − Profit = Expenses," "the survival trap," "cash-eating monster," "TAPs/CAPs."
 
@@ -111,9 +111,9 @@ Specific drafts, not directions. Steal verbatim or remix.
 
 7. **"Triage" reframe (use critics' words against PF).** Critics call Profit First *"the pre-wedding crash diet of business finance."* Able's positioning: **"Floor-First isn't a diet. It's how you eat now."** Permanent operating system, not crisis intervention. Differentiates without naming PF.
 
-8. **Five buckets, named like a person not a CFO.** PF's accounts read like a balance sheet: *Profit, Owner's Pay, Tax, OpEx, Income.* Able's already read like a life: *Taxes, Bills, Smoothing, Debt, Free.* Lean in. Tagline candidate: **"Five buckets. One question per dollar: what job does this have?"**
+8. **Five buckets, named like a person not a CFO.** PF's accounts read like a balance sheet: *Profit, Owner's Pay, Tax, OpEx, Income.* Able's already read like a life: *Taxes, Bills, Smoothing, Debt, Free.* Lean in. Tagline candidate: **"Five buckets. Every deposit, split."**
 
-9. **The "every dollar gets a job" lineage.** YNAB's phrase, broadly used. Safe to riff on. Able's version: **"Every dollar gets a job the moment it lands."** "The moment it lands" is the Floor-First differentiator vs YNAB's monthly assignment cycle.
+9. **The "every dollar gets a job" lineage — OFF-LIMITS as of 2026-05-12.** YNAB's phrase. Earlier guidance here said "safe to riff on" — Paul reversed that. Hard ban in customer-facing copy: the exact phrase and close paraphrases ("every deposit has a purpose", "money has a job", "what job does this dollar have"). Use Floor-First language instead: **"Every deposit is split the moment it lands."** "Split" + "deposit" + "the moment it lands" carries the same operational meaning without the YNAB lineage.
 
 10. **One-line method spine (for landing/about/podcast intro):** *"Floor-First is the budgeting method built for income that doesn't show up on the 1st. Every deposit is split into five jobs the second it lands — taxes, bills, smoothing, debt, free spending — so the floor under your life is set before you've had a chance to spend it."*
 

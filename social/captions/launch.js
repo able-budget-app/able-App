@@ -258,7 +258,7 @@ Able is built the other direction. The whole product assumes:
 · Your income doesn't follow a schedule.
 · You owe taxes nobody is withholding for you.
 · Some months are up. Some months are nothing. Both are normal.
-· You need every dollar to have a job the moment it arrives, because if it sits, it leaks.
+· You need every deposit to have a purpose the moment it arrives, because if it sits, it leaks.
 
 If your income is variable, freelance, contract, creator, commission, gig, one-person business, the tool was built for the actual shape of your money.
 
@@ -334,7 +334,7 @@ becomeable.app/get-able
 
 Every time you hit "where did the money go?" at the end of a month, the dominant story is that you should have tried harder. Been more disciplined. Resisted more. The next month, you try harder. The result is the same.
 
-The reason the result is the same is that effort isn't the missing variable. The missing variable is a system that decides — at the moment money arrives — what each dollar's job is. Taxes, off the top. Bills, set aside. A reserve for slow months. Debt, on schedule. What's left, yours to spend, guilt-free.
+The reason the result is the same is that effort isn't the missing variable. The missing variable is a system that decides — at the moment money arrives — what each deposit's purpose is. Taxes, off the top. Bills, set aside. A reserve for slow months. Debt, on schedule. What's left, yours to spend, guilt-free.
 
 When that system runs, "discipline" becomes irrelevant. The decisions are already made. There's nothing to white-knuckle.
 
@@ -473,7 +473,7 @@ becomeable.app/get-able
 
   '2|Sun': {
     // B22 solution-every-dollar-job · brandscript
-    ig: `Able gives every dollar a job the moment it arrives.
+    ig: `Able gives every deposit a purpose the moment it arrives.
 
 No leftover money. No "we'll figure it out later." Every deposit, sorted into taxes, bills, reserve, debt, free spending — before you even see it.
 
@@ -489,13 +489,13 @@ becomeable.app/get-able
 
 #freelancetok #1099 #moneytok`,
 
-    li: `Able gives every dollar a job the moment it arrives.
+    li: `Able gives every deposit a purpose the moment it arrives.
 
 The reason money "disappears" between Day 1 and Day 30 is that it sits idle. Idle money is not idle for long — it leaks. $14 here. A subscription. A weekend. The leak isn't dramatic, which is why you can't see it. By Day 30, $400-$1,000 is gone, and there's nothing to point to.
 
 The fix is to never let money be idle in the first place. Every deposit gets a destination — taxes off the top, bills covered, a slice to a reserve for slow months, debt killed down, what's left yours to spend, guilt-free — at the exact moment the deposit hits.
 
-When the money has a job, it stops drifting. The leak closes.
+When every deposit is routed the moment it lands, the money stops drifting. The leak closes.
 
 That's the entire mechanic Able runs on.
 
@@ -798,7 +798,7 @@ becomeable.app/get-able
 
 The whole product is built around one moment: the moment a deposit hits. Most people in variable-income work do nothing in that moment except feel temporarily relieved. The deposit goes into a single checking account where it sits, drifts, and starts to leak.
 
-Able runs a different sequence. The moment the deposit lands, it's split — taxes off the top, bills set aside before they're due, a slice into a reserve for the slow months ahead, debt on schedule, what's left yours to spend without guilt. By the end of the same day the money arrived, every dollar already has a job.
+Able runs a different sequence. The moment the deposit lands, it's split — taxes off the top, bills set aside before they're due, a slice into a reserve for the slow months ahead, debt on schedule, what's left yours to spend without guilt. By the end of the same day the money arrived, the floor under your life is already set.
 
 The "auto" in auto-routed isn't magic. It's a set of rules you set up once at the start. After that, the system runs without you.
 
@@ -907,7 +907,7 @@ Day 30. You finally check the balance. "Where did $4,000 go?" Nothing big. A hun
 
 Day 31. Shame. Guilt. The promise that next month will be different. Repeat.
 
-The whole pattern is downstream of one missing decision: what every dollar's job was, the moment it arrived. Without that decision, the freeze and the leak and the shame run on schedule. With that decision, the cycle ends.
+The whole pattern is downstream of one missing decision: what every deposit's purpose was, the moment it arrived. Without that decision, the freeze and the leak and the shame run on schedule. With that decision, the cycle ends.
 
 This is not a willpower problem. It's a Day 1 problem. Built Able for Day 1.
 
@@ -1038,7 +1038,7 @@ One. They assume a paycheck. The whole math underneath — envelopes, target spe
 
 Two. They show what already happened. The dashboard shows last month's spending. The pie chart shows yesterday's leak. By the time the data arrives in front of you, the leak has already happened. There is no decision left to make.
 
-What you actually need is the inverse: a system that decides what each dollar's job is the moment it arrives, before any spending can happen. No retrospective dashboards. No pie charts of regret. Just decisions made automatically, ahead of the leak.
+What you actually need is the inverse: a system that decides what each deposit's purpose is the moment it arrives, before any spending can happen. No retrospective dashboards. No pie charts of regret. Just decisions made automatically, ahead of the leak.
 
 That's the gap Able is built to close.
 
@@ -1206,7 +1206,7 @@ Idle money in a variable-income setup behaves differently than idle money in a s
 
 In that environment, idle money has nowhere safe to be. It's always on deck for the next "I'll just grab" decision. The leak isn't an event. It's a steady-state property of money sitting in one undifferentiated pool.
 
-The fix is to never let it sit. Each dollar gets a specific job — taxes, bills, reserve, debt, free spending — the moment it arrives. Once a dollar has a job, it's no longer competing in the general pool. The leak closes.
+The fix is to never let it sit. Each deposit is split — taxes, bills, reserve, debt, free spending — the moment it arrives. Once a dollar is committed to a bucket, it's no longer competing in the general pool. The leak closes.
 
 That's the entire mechanic Able runs on.
 
@@ -1307,7 +1307,7 @@ $14.99/mo or $129/yr (save $50 with annual). Free for 30 days first.`,
 
 Five buckets. Specific jobs. (Swipe.)
 
-When the money has a job, it stops drifting. The leak closes.
+When every deposit is routed the moment it lands, the money stops drifting. The leak closes.
 
 $14.99/mo or $129/yr. Free for 30 days. Link in bio.
 
@@ -1337,7 +1337,7 @@ Bucket four: debt. Killed on a schedule. Every month, including slow ones. Bucke
 
 Bucket five: free. What's left after the first four jobs are done. Spend without flinching. The flinch comes from not knowing whether the other jobs got done. Once they're done, the flinch goes away.
 
-When every dollar has a job, the money stops drifting. The leak closes. The "where did it all go" question doesn't have anywhere to come from.
+When every deposit is split the moment it lands, the money stops drifting. The leak closes. The "where did it all go" question doesn't have anywhere to come from.
 
 $14.99/mo or $129/yr (save $50 on annual). Free for 30 days first.`,
   },
@@ -1992,7 +1992,7 @@ becomeable.app/get-able
 
 That two-sentence loop is what variable income actually feels like. Not constant stress, not perpetual scarcity. A repeating wave that resets every time a deposit lands and crashes again as the month wears on.
 
-The interesting part is that the loop has very little to do with how much money came in. A $4,000 deposit and a $7,000 deposit produce the same Day-30 brace if the system underneath them is the same. Money that arrives without a job gets reabsorbed into general spending the same way regardless of size.
+The interesting part is that the loop has very little to do with how much money came in. A $4,000 deposit and a $7,000 deposit produce the same Day-30 brace if the system underneath them is the same. A deposit that arrives without a purpose gets reabsorbed into general spending the same way regardless of size.
 
 What changes the loop is structure, not income. The moment a deposit arrives, the tax money goes to a tax bucket, the bills are funded, the reserve gets topped off, and what's left is genuinely free. Day 30 stops being a brace because there's nothing to brace against. The bills are paid. The tax money is sitting where it's supposed to sit. There's no surprise number to discover.
 
@@ -2066,7 +2066,7 @@ becomeable.app/get-able
 
     li: `How variable-income earners stop freezing on Day 1, in five concrete steps.
 
-Step 1: Stop treating a deposit as money. Treat it as energy that's about to do work. Money in a checking account with no job assigned is functionally identical to money waiting to leak. Energy with a destination behaves differently than money sitting still.
+Step 1: Stop treating a deposit as money. Treat it as energy that's about to do work. A deposit sitting in checking with no purpose assigned is functionally identical to money waiting to leak. Energy with a destination behaves differently than money sitting still.
 
 Step 2: Move tax money first, before anything else. Roughly 30% of a 1099 deposit is not yours. It belongs to the IRS. Moving it the second the deposit clears is the difference between a tax bucket that funds itself and an April panic.
 
@@ -2113,7 +2113,7 @@ Day 14 is the killer. The bills are still days away. The deposit hasn't been mov
 
 Day 30 arrives, the bills come due, and the math doesn't add up the way it did on Day 1. It feels like the money disappeared, but it didn't. It got reabsorbed into general spending across the fourteen days when it had no job assigned to it.
 
-The fix isn't "be more careful for those 14 days." That's been tried. The fix is to make those 14 days impossible — by routing every dollar to a specific bucket the second the deposit clears, before any spending decisions start happening.
+The fix isn't "be more careful for those 14 days." That's been tried. The fix is to make those 14 days impossible — by routing every deposit to a specific set of buckets the second it clears, before any spending decisions start happening.
 
 Free for 30 days. $14.99/mo or $129/yr after.`,
   },
@@ -2408,7 +2408,7 @@ The waiting math isn't punishment. It isn't moral failure. It's the compound eff
 
 What forces the fix is reading the compound number written out. Per month: small. One year: an asset. Three years: a business. Once you see the compound number, the cost of the waiting becomes obvious. The waiting was never free. It just looked free in any single month.
 
-The interesting detail is that closing the leak doesn't require earning more or spending less. It requires assigning every dollar a job the moment the deposit clears. The leak only exists in the gap between when money arrives and when it gets a job. Close the gap, the leak closes.
+The interesting detail is that closing the leak doesn't require earning more or spending less. It requires splitting every deposit the moment it clears. The leak only exists in the gap between when money arrives and when it's committed. Close the gap, the leak closes.
 
 Free for 30 days. $14.99/mo or $129/yr after.`,
   },
@@ -2587,7 +2587,7 @@ Not a credit card. Not a bank. Not a money-movement product. Able sits on top of
 
 Not another spreadsheet. The maintenance overhead of a spreadsheet is the reason most people abandon them by March. Able does not require maintenance. The split happens automatically on every deposit. There's nothing to update.
 
-Not a lecture about discretionary spending. The "cancel your subscriptions, stop buying coffee" framing assumes the leak is luxuries. For variable-income earners, the leak is structural — money sitting in checking with no job. Cutting subscriptions doesn't fix it. Routing every dollar to a specific job does.
+Not a lecture about discretionary spending. The "cancel your subscriptions, stop buying coffee" framing assumes the leak is luxuries. For variable-income earners, the leak is structural — deposits sitting in checking with no purpose. Cutting subscriptions doesn't fix it. Routing every deposit to a specific purpose does.
 
 Just one thing: split every deposit. That's the entire scope. Tax bucket. Bills. Reserve. Debt. Free spending. Five jobs assigned the moment the money lands.
 
@@ -2754,7 +2754,7 @@ $7 here. A snack. A subscription.
 
 By Day 30: $1,000 to $2,000 gone.
 
-Not a discipline issue. Money without a job leaks. Every time.
+Not a discipline issue. A deposit without a purpose leaks. Every time.
 
 Free for 30 days. Link in bio.
 
@@ -2764,7 +2764,7 @@ Free for 30 days. Link in bio.
 
 By Day 30: $1,000-$2,000 gone.
 
-Money without a job leaks.
+A deposit without a purpose leaks.
 
 becomeable.app/get-able
 
@@ -2776,7 +2776,7 @@ $7 here. A drive-through snack on the way home. $14 there. A subscription you fo
 
 Multiply by 30 days. The number lands somewhere between $1,000 and $2,000 for most variable-income earners. Confirmed by user data, by industry research on small-purchase aggregation, and by the experience of anyone who's added it up retrospectively.
 
-The leak is not a discipline issue. The individual purchases aren't bad. Most of them aren't even regrets. What makes them a leak is that the money funding them was undifferentiated. Sitting in checking with no job assigned. Money without a job gets reabsorbed into general spending the same way water without a container goes wherever gravity sends it.
+The leak is not a discipline issue. The individual purchases aren't bad. Most of them aren't even regrets. What makes them a leak is that the money funding them was undifferentiated. Sitting in checking with no purpose assigned. A deposit without a purpose gets reabsorbed into general spending the same way water without a container goes wherever gravity sends it.
 
 The fix is not to police individual purchases. That's been tried. It doesn't scale. The fix is to remove the undifferentiated pool the purchases draw from. If $4,000 lands and immediately gets split into tax bucket, bills, reserve, debt, and a clearly-labeled free-spending number, the free-spending number is the only pool small purchases can draw from. Once that pool is empty, small purchases stop. Not because of willpower. Because there's no money left in the relevant bucket.
 
@@ -3085,7 +3085,7 @@ The income amount doesn't change. The deposits land at the same lumpy schedule. 
 
 Bills paid: every cycle, on time, without scrambling. Taxes covered: the tax bucket is funded as a percentage of every deposit, so April becomes paperwork. Debt shrinking: scheduled payments hit on schedule, including during slow months, because the reserve covers them. Savings growing: what's left after the four jobs above gets routed to a savings bucket on a defined schedule, not as the leftover after spending.
 
-Nothing leaked. That last one is the felt difference. The leak is the thing that makes the same income feel different in a bad system vs. a good one. Close the leak by giving every dollar a job at deposit, and the same income feels measurably different.
+Nothing leaked. That last one is the felt difference. The leak is the thing that makes the same income feel different in a bad system vs. a good one. Close the leak by giving every deposit a purpose at arrival, and the same income feels measurably different.
 
 Free for 30 days. $14.99/mo or $129/yr after.`,
   },
@@ -3523,7 +3523,7 @@ Bills paid: every cycle, on time, without scrambling, without bridging from a cr
 
 Taxes covered: the tax bucket is funded as a percentage of every deposit. April becomes paperwork because the math was done in real time, not annually.
 
-Nothing leaked: the small undifferentiated spending that aggregates to $1,000-$2,000 a month for most variable-income earners didn't happen. Every dollar had a job. Free spending was bounded to a specific bucket. When that bucket emptied, small spending stopped.
+Nothing leaked: the small undifferentiated spending that aggregates to $1,000-$2,000 a month for most variable-income earners didn't happen. Every deposit had a purpose. Free spending was bounded to a specific bucket. When that bucket emptied, small spending stopped.
 
 The compound of those three sentences across twelve months is the difference between "I earn enough" and "I'm not making it." Same income. Different result.
 
@@ -3639,7 +3639,7 @@ The reconciliation is the problem. If you assigned $4,000 to monthly categories 
 
 The variable-income alternative is split-first. Money gets categories the moment it arrives, as percentages of what actually landed. No projection. No commitment to amounts not yet earned. No reconciliation. Each deposit gets split into tax bucket, bills, reserve, debt, free — proportional to the deposit's actual size.
 
-Same outcome (every dollar has a job). Different timing (allocation at deposit, not at month-start). Materially less friction for variable income.
+Same outcome (the floor under your life is set). Different timing (allocation at deposit, not at month-start). Materially less friction for variable income.
 
 Free for 30 days. $14.99/mo or $129/yr after.`,
   },
@@ -3883,7 +3883,7 @@ becomeable.app/get-able
 
 The standard budgeting interface is a retrospective dashboard. Categories, spending against budget, this month vs. last month, drilldowns into where the money went. Useful for diagnosis. Useless for prevention.
 
-The leak doesn't get closed by knowing where it went. It gets closed by giving every dollar a job before it has a chance to leak. That's an upstream decision — at the moment of deposit — not a downstream review.
+The leak doesn't get closed by knowing where it went. It gets closed by giving every deposit a purpose before it has a chance to leak. That's an upstream decision — at the moment of deposit — not a downstream review.
 
 Variable-income earners specifically don't benefit from retrospective dashboards. The income isn't predictable enough for budget-vs-actual to be a clean comparison. The categories don't apply consistently because the income source varies. The "this month vs. last month" view is misleading because the months aren't comparable.
 
@@ -4060,7 +4060,7 @@ The freezing metaphor is the most useful diagnostic for variable-income earners.
 
 The pile doesn't stay full. It leaks. Subscriptions renew. Small purchases happen. A nice meal here, a small impulse there. By Day 30, the pile is materially smaller, and the user can't fully account for where it went.
 
-The diagnosis is precise: not overspending, freezing. The leak isn't from spending too much. It's from money sitting undirected. Energy without a destination flows wherever gravity sends it. Money without a job behaves the same way.
+The diagnosis is precise: not overspending, freezing. The leak isn't from spending too much. It's from money sitting undirected. Energy without a destination flows wherever gravity sends it. A deposit without a purpose behaves the same way.
 
 The fix is direction. Every deposit gets a destination the moment it lands. Tax bucket. Bills. Reserve. Debt. Free spending. Five jobs, assigned at deposit, before any spending decisions can pull from the pool.
 
@@ -4305,7 +4305,7 @@ Three years is $72,000. The price of a down payment on a house in most US market
 
 The waiting math is compound, not punitive. The leak feels small in any single month — that's why it persists. Nothing dramatic forces a fix. Reading the compound number is what forces it.
 
-The fix doesn't require earning more. It requires routing every dollar to a job the moment a deposit clears.
+The fix doesn't require earning more. It requires routing every deposit to a purpose the moment it clears.
 
 Free for 30 days. $14.99/mo or $129/yr after.`,
   },
@@ -4336,9 +4336,9 @@ becomeable.app/get-able
 
 The reason it doesn't work for variable-income earners specifically: saving requires money left over. Variable income rarely has reliable left-over because the income amount and timing are unpredictable. Some months feel adequate, some don't. By the time "what's left" is calculated, it's often nothing.
 
-The fix is reversing the order. Save first, spend what's left. The standard finance industry call this "pay yourself first," and it's the right idea applied wrong. For variable income, "save first" can't mean a fixed monthly amount, because the income to support a fixed amount isn't guaranteed.
+The fix isn't "save more." It's where saving sits in the order. Bills + tax fill the floor first. Then a percentage of every deposit routes to savings, debt, owner pay, free spending — automatically, the moment the deposit clears.
 
-The variable-income version: route a percentage of every deposit to a savings bucket the moment the deposit clears. Not a fixed dollar amount. A percentage. 5% to start. The bucket fills proportional to income. Big months contribute more. Slow months contribute less. The discipline doesn't depend on knowing the month in advance.
+Not a fixed monthly amount. A percentage of each deposit. 5% to start. The bucket fills proportional to income. Big months contribute more. Slow months contribute less. The discipline doesn't depend on knowing the month in advance.
 
 Same money. Different order. The order is the entire fix.
 
@@ -4400,13 +4400,13 @@ becomeable.app/get-able
 
 #smallbusiness #1099 #freelancetok`,
 
-    li: `Pay yourself first. The variable-income version.
+    li: `Owner pay, automated. The variable-income version.
 
 Most owners are their own last priority. The work pays clients, contractors, software vendors, the brokerage, the platform, the IRS. Whatever's left at the end is what the owner takes home. Some months "what's left" is fine. Some months it isn't.
 
-The fix is structural. Pay yourself first means: a personal paycheck routes from the business to the owner before discretionary business spending happens. The amount can be small. 5% of every deposit beats 0% by infinity. The percentage is less important than the routing.
+The fix is structural. An owner-pay percent routes from every deposit, alongside the floor (bills + tax), before discretionary business spending happens. The amount can be small. 5% of every deposit beats 0% by infinity. The percentage is less important than the routing.
 
-The reason this works specifically for variable income: it removes the "wait until the end of the month and see what's left" pattern. By the end of the month, what's left is shaped by every other decision made. Pulling owner pay first means the owner pay is funded against gross income, not net. The other decisions get made against what's left after the owner is paid.
+The reason this works specifically for variable income: it removes the "wait until the end of the month and see what's left" pattern. By the end of the month, what's left is shaped by every other decision made. Routing owner pay on every deposit means it's funded against gross income, not net. The other decisions get made against what's left after the floor and the owner are paid.
 
 A different account is critical. Owner pay sitting in the operating account is owner pay about to be spent on operating expenses. Different account, different mental category, different actual outcome.
 
@@ -5342,7 +5342,7 @@ becomeable.app/get-able
 
     li: `Money is energy. Direct it, or it leaks.
 
-The energy metaphor maps cleanly to how money behaves in undifferentiated pools. Energy without a destination dissipates — it spreads out, follows the path of least resistance, ends up doing low-value work or no work at all. Money behaves the same way. Money sitting in checking with no job assigned drifts toward the path of least resistance. Small purchases. Subscription drift. "I'll just grab it" decisions. By Day 30, the energy has dispersed.
+The energy metaphor maps cleanly to how money behaves in undifferentiated pools. Energy without a destination dissipates — it spreads out, follows the path of least resistance, ends up doing low-value work or no work at all. Money behaves the same way. A deposit sitting in checking with no purpose assigned drifts toward the path of least resistance. Small purchases. Subscription drift. "I'll just grab it" decisions. By Day 30, the energy has dispersed.
 
 Energy with a destination produces work. Money with a job produces specific outcomes. Tax dollars routed to a tax bucket fund the IRS bill. Bill dollars routed to bills produce paid bills. Reserve dollars routed to reserve produce a reserve. Same dollars. Different outcomes. The destination is the entire variable.
 
@@ -5390,10 +5390,10 @@ Free for 30 days. $14.99/mo or $129/yr after.`,
     // R35 reel-business-moment · IG+TT only
     ig: `Revenue up. Owner pay flat.
 
-Because every dollar had someone else's job.
+Because every deposit had someone else's purpose.
 
 Set an owner-pay percent. Every deposit honors it.
-Pay yourself first. Boring is right.
+Pay yourself automatically. Boring is right.
 
 Free for 30 days.
 Link in bio.
@@ -5500,11 +5500,11 @@ becomeable.app/get-able
 
 Saving requires money left over. Variable income rarely produces reliable left-over because the income amount and timing are unpredictable. By the time "what's left" gets calculated, it's often nothing — every month, despite intent.
 
-The fix is reversing the order. Save first, spend what's left. The standard finance industry calls this "pay yourself first," and they're right about the principle. Variable income just needs the implementation adjusted.
+The fix is per-deposit allocation. Every deposit, the moment it clears: bills + tax fill the floor first, then a percentage routes to savings, debt, owner pay, free spending. Not "what's left." A reservation, the second the money lands.
 
-Implementation: route a percentage of every deposit to savings at the moment the deposit clears. Not a fixed dollar amount. A percentage. 5% to start. Big deposits contribute more. Slow deposits contribute less. The system never asks the user to decide.
+The standard "pay yourself first" advice has the right intuition — order matters — but the wrong implementation for variable income. A fixed monthly save amount can't work when the income isn't fixed. Per-deposit percentages do.
 
-Same money. Different order. Same income produces materially more savings across a year, because the percentage-based mechanism runs without willpower or ongoing decision-making. Reverse the order, the saving happens.
+5% to start. Big deposits contribute more. Slow deposits contribute less. The system never asks the user to decide. Same income produces materially more savings across a year, because the percentage-based mechanism runs without willpower or ongoing decision-making.
 
 Free for 30 days. $14.99/mo or $129/yr after.`,
   },
@@ -5570,7 +5570,7 @@ That's the average leak rate for variable-income earners running without structu
 
 $2,000 a month is $24,000 a year. Three years is $72,000. Five years is $120,000. The compound math is brutal because the leak never stops on its own. Nothing dramatic forces a fix. It's small in any single week, which is why it persists.
 
-The fix doesn't require earning more. It requires giving every dollar a job at the moment of deposit. Tax bucket. Bills. Reserve. Debt. Free spending. Five jobs, assigned at deposit, before any spending decisions can pull from the pool.
+The fix doesn't require earning more. It requires giving every deposit a purpose the moment it arrives. Tax bucket. Bills. Reserve. Debt. Free spending. Five jobs, assigned at deposit, before any spending decisions can pull from the pool.
 
 Once the routing is in place, the leak closes. Not because the user got more disciplined. Because the leak's source — undifferentiated dollars sitting in checking — stopped existing.
 
@@ -5607,7 +5607,7 @@ But the leak isn't subscriptions specifically. The leak is undifferentiated doll
 
 Cancelling subscriptions trims one symptom. The other symptoms persist. The dollars that were going to subscriptions get reabsorbed into other small drift. Net leak is barely changed.
 
-The cause is structural. Money without a job leaks. The fix is structural too. Give every dollar a job at the moment of deposit. The leak closes at the source, not at the symptom.
+The cause is structural. A deposit without a purpose leaks. The fix is structural too. Give every deposit a purpose the moment it arrives. The leak closes at the source, not at the symptom.
 
 Free for 30 days. $14.99/mo or $129/yr after.`,
   },
@@ -6049,11 +6049,11 @@ That's the trap most variable-income owners fall into. The work pays clients, co
 
 The "pay yourself last" pattern feels responsible. It feels like the right priority — business obligations first, personal extraction second. In practice, it means the business never pays the owner reliably. The owner becomes the unfunded line item.
 
-The fix is structural. Pay yourself first means: a personal paycheck routes from the business to the owner before discretionary business spending happens. The amount can be small. 5% of every deposit beats 0% by infinity. The percentage matters less than the routing.
+The fix is structural. An owner-pay percent routes from every deposit, alongside the floor (bills + tax), before discretionary business spending happens. The amount can be small. 5% of every deposit beats 0% by infinity. The percentage matters less than the routing.
 
 A different account is critical. Owner pay sitting in the operating account is owner pay about to be spent on operating expenses. Different account, different mental category, different actual outcome.
 
-Pay yourself first. Pay yourself right.
+Owner pay, automated. Boring is right.
 
 Free for 30 days. $14.99/mo or $129/yr after.`,
   },
@@ -7606,17 +7606,17 @@ becomeable.app/get-able
   },
   '36|Fri': {
     // C36 pay-yourself-first carousel REUSE
-    ig: `Pay yourself first. The actual mechanic.
+    ig: `Owner pay, automated. The actual mechanic.
 
-Not "save what's left." Move it before the rest of the splits run. Your salary is the first job, not the leftover.
+Not "save what's left." A percent routes from every deposit, alongside the floor (bills + tax). Your salary is automatic, not the leftover.
 
 Swipe →
 Link in bio.
 
 #payyourselffirst #variableincome #1099 #freelancing #savings`,
-    tt: `Pay yourself first. Actual mechanic.
+    tt: `Owner pay, automated. Actual mechanic.
 
-Not save-what's-left. Move it before splits.
+Not save-what's-left. A percent routes with every deposit.
 becomeable.app/get-able
 
 #payyourselffirst #freelancetok #1099`,
@@ -8179,10 +8179,10 @@ becomeable.app/get-able
 #etsy #ecommerce #1099`,
   },
   '40|Sun': {
-    // B22 solution mechanic (reused) — every dollar a job
-    ig: `Every dollar gets a job the moment it arrives.
+    // B22 solution mechanic (reused) — every deposit a purpose
+    ig: `Every deposit is split the moment it arrives.
 
-Etsy sale. Sponsorship. Affiliate. Doesn't matter which one. Each dollar is split before you can spend it.
+Etsy sale. Sponsorship. Affiliate. Doesn't matter which one. Each dollar is routed before you can spend it.
 
 That's the whole architecture.
 
@@ -8190,7 +8190,7 @@ Free for 30 days.
 Link in bio.
 
 #variableincome #1099 #creator #etsy #floorfirst`,
-    tt: `Every dollar gets a job the moment it arrives.
+    tt: `Every deposit is split the moment it arrives.
 
 Whole architecture.
 becomeable.app/get-able
@@ -8720,7 +8720,7 @@ becomeable.app/get-able
     // B19 paralysis · $400 gone, nothing to show (reused)
     ig: `Day 30. $400 gone. Nothing to show for it.
 
-Not a personality flaw. The leak that happens when no dollar had a job on the way in.
+Not a personality flaw. The leak that happens when no deposit had a purpose on the way in.
 
 The fix is structural.
 
@@ -9440,9 +9440,9 @@ becomeable.app/get-able
     // R35 business-moment REUSE
     ig: `Revenue up. Owner pay flat.
 
-Because every dollar had someone else's job.
+Because every deposit had someone else's purpose.
 
-Set an owner-pay percent. Every deposit honors it. Pay yourself first. Boring is right.
+Set an owner-pay percent. Every deposit honors it. Pay yourself automatically. Boring is right.
 
 Free for 30 days.
 Link in bio.
@@ -9457,19 +9457,19 @@ becomeable.app/get-able
   },
   '50|Wed': {
     // C36 pay-yourself-first carousel REUSE 2x — business
-    ig: `Pay yourself first, business owner edition.
+    ig: `Owner pay, automated. Business owner edition.
 
-Revenue lands. Owner-pay percent runs. Tax runs. Bills run. What's left is the business reinvestment, not your salary.
+Revenue lands. The floor runs (bills + tax). Owner-pay percent runs alongside. What's left is business reinvestment, not your salary.
 
-Reverse the order most owners use.
+Make owner pay automatic, not optional.
 
 Swipe →
 Link in bio.
 
 #smallbusiness #ownerpay #payyourselffirst #1099 #budgeting`,
-    tt: `Pay yourself first, owner edition.
+    tt: `Owner pay, automated. Owner edition.
 
-Reverse the order most owners use.
+Make owner pay automatic, not optional.
 becomeable.app/get-able
 
 #ownerpay #smallbusinesstok #1099`,
@@ -9782,7 +9782,7 @@ becomeable.app/get-able
     // R35 business-moment REUSE 2x
     ig: `Revenue up. Owner pay still flat.
 
-Because every dollar had someone else's job. Marketing. Payroll. Reinvestment. Vendors. The owner is always last.
+Because every deposit had someone else's purpose. Marketing. Payroll. Reinvestment. Vendors. The owner is always last.
 
 Set the percent. Make yourself part of the math.
 
@@ -10769,7 +10769,7 @@ becomeable.app/get-able
   },
   '59|Sun': {
     // B22 solution mechanic REUSE 2x — Floor-First spine
-    ig: `Able gives every dollar a job the moment it arrives.
+    ig: `Able gives every deposit a purpose the moment it arrives.
 
 That's the spine. The five rules are the implementation. The architecture is what you actually live with.
 
@@ -10851,7 +10851,7 @@ becomeable.app/get-able
     // P28 product-bs-different-clock REUSE 2x — comparison
     ig: `Same foundation. Different clock.
 
-YNAB, Profit First, Floor-First. Same idea: assign every dollar before you spend it.
+YNAB, Profit First, Floor-First. Same idea: give every deposit a purpose before you spend it.
 
 The clock changes. Monthly (YNAB). Quarterly (Profit First). Per-deposit (Floor-First).
 

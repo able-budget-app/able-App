@@ -5,6 +5,7 @@ function renderSlideInto(root, post) {
   root.classList.add('tpl-' + post.tpl);
   if (post.center) root.classList.add('centered');
   if (post.size)   root.classList.add('size-' + post.size);
+  if (post.format) root.classList.add('format-' + post.format);
   if (post.tpl === 'C' && post.pos) root.classList.add('pos-' + post.pos);
 
   // Eyebrow vocabulary (locked 2026-05-08).
@@ -50,7 +51,9 @@ function renderSlideInto(root, post) {
   // The shot is a CSS background pulled from /marketing-footage/product-shots/<shot>/9x16.png.
   let stackHtml;
   if (post.tpl === 'C') {
-    const shotUrl = `/marketing-footage/product-shots/${post.shot}/9x16-bare.png`;
+    // Relative path so it works both via file:// (when reviewing locally)
+    // and via http:// (when served from any /social/posts/ URL).
+    const shotUrl = `../../marketing-footage/product-shots/${post.shot}/9x16-bare.png`;
     stackHtml = `
       <div class="product-row">
         <div class="product-text">${mutedHtml}${punchHtml}</div>
@@ -61,11 +64,16 @@ function renderSlideInto(root, post) {
     stackHtml = `<div class="stack">${mutedHtml}${punchHtml}</div>`;
   }
 
+  // Optional: suppress the "Able" wordmark when the copy itself already
+  // surfaces the word (avoids double-stamping). The footer keeps the URL,
+  // pushed to the right via justify-content override in CSS.
+  const footerClass = post.noWordmark ? 'footer no-wordmark' : 'footer';
+  const wordmarkHtml = post.noWordmark ? '' : '<div class="wordmark">Able</div>';
   const inner = `
     <div class="eyebrow">${eyebrowText}</div>
     ${stackHtml}
-    <div class="footer">
-      <div class="wordmark">Able</div>
+    <div class="${footerClass}">
+      ${wordmarkHtml}
       <div class="url">${meta}</div>
     </div>
   `;

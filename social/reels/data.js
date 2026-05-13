@@ -366,10 +366,10 @@ window.REELS = [
   { id: 'R35', slug: 'business-moment', theme: 'white', format: 'text-reel', durationSec: 18, eyebrow: 'business',
     beats: [
       { text: "Revenue {up}.\nOwner pay {flat}.", durationSec: 3 },
-      { text: "Because every dollar\nhad {someone else's} job.", durationSec: 3.5 },
+      { text: "Because every deposit\nhad {someone else's} purpose.", durationSec: 3.5 },
       { text: "Set an\n{owner pay} percent.", durationSec: 3, theme: 'green' },
       { text: "Every deposit\n{honors it}.", durationSec: 3, theme: 'green' },
-      { text: "Pay yourself first.\n{Boring is right.}", durationSec: 3, theme: 'green' },
+      { text: "Pay yourself automatically.\n{Boring is right.}", durationSec: 3, theme: 'green' },
       { text: "becomeable.app/get-able", durationSec: 2.5, theme: 'green' },
     ] },
 

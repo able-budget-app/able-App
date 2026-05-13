@@ -175,6 +175,28 @@ html, body {
 .size-md .punch { font-size: 84px; line-height: 1.04; letter-spacing: -.025em; }
 .size-md .muted { font-size: 52px; line-height: 1.10; margin-bottom: 32px; }
 
+/* format-tiktok — 9:16 vertical (1080x1920) for TikTok slideshow carousels.
+   Same data + same horizontal scale as the square carousels (so line-break
+   conventions transfer cleanly). The taller canvas just adds vertical
+   breathing room around the centered stack and the footer. */
+.post.format-tiktok {
+  height: 1920px;
+  padding: 180px 96px 160px;
+}
+.post.format-tiktok .punch  { font-size: 116px; line-height: 1.02; }
+.post.format-tiktok .muted  { font-size: 72px;  line-height: 1.08; margin-bottom: 40px; }
+.post.format-tiktok .eyebrow{ font-size: 26px;  letter-spacing: .24em; }
+.post.format-tiktok .wordmark { font-size: 52px; }
+.post.format-tiktok .url      { font-size: 26px; }
+.post.format-tiktok.size-sm .punch { font-size: 68px; line-height: 1.14; }
+.post.format-tiktok.size-sm .muted { font-size: 44px; margin-bottom: 32px; }
+.post.format-tiktok.size-md .punch { font-size: 96px; }
+.post.format-tiktok.size-md .muted { font-size: 60px; margin-bottom: 36px; }
+/* size-xs — for one-line equations or 20+ char single-line punches that
+   need to read on one row (e.g. "One month ahead = Able."). */
+.post.format-tiktok.size-xs .punch { font-size: 56px; line-height: 1.12; }
+.post.format-tiktok.size-xs .muted { font-size: 38px; margin-bottom: 26px; }
+
 /* tpl-C — product-shot template. Phone shot embedded in the post canvas
    alongside copy. Three positions: pos-right (phone right, copy left),
    pos-left (mirror), pos-center (phone centered, copy below). Phone is
@@ -213,6 +235,49 @@ html, body {
   background-position: center;
   background-repeat: no-repeat;
 }
+
+/* tpl-C in tiktok format — vertical stack: phone TOP, copy BOTTOM.
+   column-reverse flips the HTML order (text first, then shot) so the phone
+   reads as the visual hook above the copy explanation — the TikTok-native
+   pattern. Phone is constrained to 540×960 so copy has clear vertical real
+   estate. Typography matches the size-md rule used by every text-only
+   TikTok slide, so a product slide reads at the same scale as the slide
+   before/after it. */
+.post.format-tiktok.tpl-C .product-row {
+  display: flex;
+  flex-direction: column-reverse;
+  align-items: stretch;
+  margin-top: 0;
+  gap: 48px;
+}
+.post.format-tiktok.tpl-C .product-shot {
+  width: 540px;
+  height: 960px;
+  aspect-ratio: auto;
+  margin: 0 auto;
+  flex-shrink: 0;
+}
+.post.format-tiktok.tpl-C .product-text {
+  align-items: flex-start;
+  justify-content: flex-start;
+}
+.post.format-tiktok.tpl-C .punch { font-size: 96px; line-height: 1.02; letter-spacing: -.025em; }
+.post.format-tiktok.tpl-C .muted { font-size: 60px; line-height: 1.10; margin-bottom: 36px; }
+/* Size variants within tpl-C tiktok (extra specificity needed to beat
+   the tpl-C punch/muted defaults above). */
+.post.format-tiktok.tpl-C.size-sm .punch { font-size: 68px; line-height: 1.14; }
+.post.format-tiktok.tpl-C.size-sm .muted { font-size: 44px; margin-bottom: 32px; }
+.post.format-tiktok.tpl-C.size-xs .punch { font-size: 56px; line-height: 1.10; }
+.post.format-tiktok.tpl-C.size-xs .muted { font-size: 38px; margin-bottom: 26px; }
+/* Force a visible gap between the copy block and the footer wordmark/URL.
+   With a tall product-row, .stack's auto-margin centering shrinks toward 0
+   and the copy butts against "Able". 64px keeps clear visual separation. */
+.post.format-tiktok.tpl-C .footer { margin-top: 64px; }
+/* pos-left / pos-right are square-format constructs; ignore in tiktok */
+.post.format-tiktok.tpl-C.pos-right .product-row,
+.post.format-tiktok.tpl-C.pos-left  .product-row { grid-template-columns: none; }
+.post.format-tiktok.tpl-C.pos-left  .product-text,
+.post.format-tiktok.tpl-C.pos-left  .product-shot { grid-column: auto; grid-row: auto; }
 
 .muted {
   font-size: 64px;
@@ -264,6 +329,9 @@ html, body {
   position: relative;
   z-index: 2;
 }
+/* When the wordmark is suppressed (the copy already contains "Able"),
+   align the lone URL to the right so it still hugs the same edge. */
+.footer.no-wordmark { justify-content: flex-end; }
 .wordmark {
   font-size: 44px;
   font-weight: 900;

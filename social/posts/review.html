@@ -1,0 +1,528 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Able · Carousel Review</title>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400;12..96,500;12..96,600;12..96,700;12..96,800;12..96,900&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="_styles.css">
+<style>
+  html, body {
+    background: #e8efe9;
+    color: #111c16;
+    font-family: 'Bricolage Grotesque', -apple-system, sans-serif;
+    min-height: 100vh;
+    margin: 0;
+    padding: 0;
+  }
+  .app {
+    display: grid;
+    grid-template-columns: 280px 1fr;
+    min-height: 100vh;
+  }
+
+  /* Sidebar */
+  .sidebar {
+    background: #111c16;
+    color: #fff;
+    padding: 24px 18px 24px 24px;
+    position: sticky;
+    top: 0;
+    height: 100vh;
+    overflow-y: auto;
+    box-sizing: border-box;
+  }
+  .sidebar h1 {
+    font-size: 20px;
+    font-weight: 800;
+    letter-spacing: -.01em;
+    margin: 0 0 4px 0;
+  }
+  .sidebar .sub {
+    font-size: 12px;
+    color: rgba(255,255,255,.55);
+    margin-bottom: 20px;
+  }
+  .section-label {
+    font-size: 10px;
+    font-weight: 800;
+    letter-spacing: .18em;
+    text-transform: uppercase;
+    color: rgba(255,255,255,.45);
+    margin: 18px 0 6px 0;
+  }
+  .nav-list { list-style: none; padding: 0; margin: 0; }
+  .nav-list li {
+    padding: 7px 10px;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 13px;
+    color: rgba(255,255,255,.82);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 8px;
+    line-height: 1.25;
+  }
+  .nav-list li:hover { background: rgba(255,255,255,.06); }
+  .nav-list li.active {
+    background: #2a7a4a;
+    color: #fff;
+  }
+  .nav-list .id {
+    font-weight: 800;
+    font-size: 12px;
+    letter-spacing: .04em;
+    flex-shrink: 0;
+  }
+  .nav-list .slug {
+    flex: 1;
+    color: rgba(255,255,255,.62);
+    font-size: 12px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+  .nav-list li.active .slug { color: rgba(255,255,255,.85); }
+  .nav-list .badge {
+    background: #f0c84a;
+    color: #111c16;
+    font-size: 10px;
+    font-weight: 800;
+    padding: 2px 6px;
+    border-radius: 999px;
+    min-width: 16px;
+    text-align: center;
+  }
+  .tools {
+    margin-top: 24px;
+    padding-top: 18px;
+    border-top: 1px solid rgba(255,255,255,.12);
+  }
+  .tools button {
+    display: block;
+    width: 100%;
+    background: rgba(255,255,255,.08);
+    color: #fff;
+    border: 1px solid rgba(255,255,255,.14);
+    border-radius: 6px;
+    padding: 9px 12px;
+    font-size: 12px;
+    font-weight: 600;
+    cursor: pointer;
+    margin-bottom: 8px;
+    font-family: inherit;
+  }
+  .tools button:hover { background: rgba(255,255,255,.14); }
+  .tools button.danger:hover { background: rgba(220,80,80,.25); border-color: rgba(220,80,80,.5); }
+
+  /* Main */
+  .main {
+    padding: 32px 40px;
+    overflow-x: hidden;
+  }
+  .carousel-header {
+    margin-bottom: 24px;
+  }
+  .carousel-header .id {
+    font-size: 11px;
+    font-weight: 800;
+    letter-spacing: .18em;
+    text-transform: uppercase;
+    color: #4a5c52;
+    margin-bottom: 6px;
+  }
+  .carousel-header .title {
+    font-size: 28px;
+    font-weight: 800;
+    letter-spacing: -.02em;
+    color: #111c16;
+    margin-bottom: 4px;
+  }
+  .carousel-header .meta {
+    font-size: 13px;
+    color: #4a5c52;
+  }
+
+  .slide-grid {
+    display: flex;
+    flex-direction: column;
+    gap: 32px;
+  }
+  .slide-row {
+    display: grid;
+    grid-template-columns: 540px 1fr;
+    gap: 24px;
+    align-items: start;
+  }
+  /* Square format renders shorter — keep grid the same but cap height */
+  .slide-frame {
+    width: 540px;
+    overflow: hidden;
+    border-radius: 8px;
+    background: #fff;
+    box-shadow: 0 8px 24px rgba(0,0,0,.10);
+    position: relative;
+  }
+  .slide-frame.tiktok { height: 960px; }
+  .slide-frame.square { height: 540px; }
+  .slide-frame .post {
+    transform: scale(.5);
+    transform-origin: top left;
+    box-shadow: none;
+    flex-shrink: 0;
+  }
+  .slide-frame .slide-number {
+    position: absolute;
+    top: 8px;
+    left: 8px;
+    background: rgba(0,0,0,.65);
+    color: #fff;
+    font-size: 11px;
+    font-weight: 800;
+    letter-spacing: .14em;
+    text-transform: uppercase;
+    padding: 4px 8px;
+    border-radius: 4px;
+    z-index: 20;
+  }
+
+  .comment-col {
+    padding-top: 4px;
+  }
+  .comment-col label {
+    display: block;
+    font-size: 11px;
+    font-weight: 800;
+    letter-spacing: .14em;
+    text-transform: uppercase;
+    color: #4a5c52;
+    margin-bottom: 8px;
+  }
+  .comment-col textarea {
+    width: 100%;
+    min-height: 120px;
+    background: #fff;
+    border: 1px solid #d2dad4;
+    border-radius: 8px;
+    padding: 12px 14px;
+    font-size: 14px;
+    font-family: inherit;
+    line-height: 1.4;
+    color: #111c16;
+    resize: vertical;
+    box-sizing: border-box;
+  }
+  .comment-col textarea:focus {
+    outline: none;
+    border-color: #2a7a4a;
+    box-shadow: 0 0 0 3px rgba(42,122,74,.18);
+  }
+  .comment-col textarea.has-content {
+    background: #fffceb;
+    border-color: #f0c84a;
+  }
+  .comment-col .saved {
+    font-size: 11px;
+    color: #2a7a4a;
+    margin-top: 6px;
+    opacity: 0;
+    transition: opacity .2s;
+  }
+  .comment-col .saved.show { opacity: 1; }
+
+  .empty {
+    padding: 80px 40px;
+    text-align: center;
+    color: #4a5c52;
+  }
+  .empty h2 { font-weight: 800; font-size: 22px; margin-bottom: 8px; }
+
+  .toast {
+    position: fixed;
+    bottom: 24px;
+    right: 24px;
+    background: #2a7a4a;
+    color: #fff;
+    padding: 12px 18px;
+    border-radius: 8px;
+    font-size: 13px;
+    font-weight: 700;
+    opacity: 0;
+    transform: translateY(8px);
+    transition: opacity .2s, transform .2s;
+    pointer-events: none;
+    z-index: 100;
+  }
+  .toast.show { opacity: 1; transform: translateY(0); }
+</style>
+</head>
+<body>
+<div class="app">
+  <aside class="sidebar">
+    <h1>Carousel Review</h1>
+    <div class="sub" id="totalSub">— loading —</div>
+    <div id="sections"></div>
+    <div class="tools">
+      <button id="copyMd">Copy comments as markdown</button>
+      <button id="exportJson">Export JSON</button>
+      <button id="clearAll" class="danger">Clear all comments</button>
+    </div>
+  </aside>
+  <main class="main" id="main">
+    <div class="empty">
+      <h2>Pick a carousel</h2>
+      <div>Pick one from the left to start reviewing.</div>
+    </div>
+  </main>
+</div>
+<div class="toast" id="toast"></div>
+
+<script src="data.js"></script>
+<script src="product-data.js"></script>
+<script src="_render.js"></script>
+<script>
+(() => {
+  const LS_KEY = 'ableReview.comments';
+
+  // ── Data assembly ──
+  const tiktokCarousels = (window.CAROUSELS || []).filter(c => c.format === 'tiktok');
+  const squareCarousels = (window.CAROUSELS || []).filter(c => c.format !== 'tiktok');
+  const productCarousels = window.PRODUCT_CAROUSELS || [];
+
+  const ALL = [...tiktokCarousels, ...squareCarousels, ...productCarousels];
+  const byId = Object.fromEntries(ALL.map(c => [c.id, c]));
+
+  // ── Comments persistence ──
+  const loadComments = () => {
+    try { return JSON.parse(localStorage.getItem(LS_KEY) || '{}'); }
+    catch { return {}; }
+  };
+  let comments = loadComments();
+  const saveComments = () => localStorage.setItem(LS_KEY, JSON.stringify(comments));
+  const getComment = (cid, sIdx) => (comments[cid] && comments[cid][sIdx]) || '';
+  const setComment = (cid, sIdx, text) => {
+    if (!text.trim()) {
+      if (comments[cid]) {
+        delete comments[cid][sIdx];
+        if (!Object.keys(comments[cid]).length) delete comments[cid];
+      }
+    } else {
+      if (!comments[cid]) comments[cid] = {};
+      comments[cid][sIdx] = text;
+    }
+    saveComments();
+  };
+  const countCommentsFor = (cid) =>
+    comments[cid] ? Object.keys(comments[cid]).length : 0;
+  const totalComments = () =>
+    Object.values(comments).reduce((sum, c) => sum + Object.keys(c).length, 0);
+
+  // ── Sidebar render ──
+  const sectionsEl = document.getElementById('sections');
+  const totalSubEl = document.getElementById('totalSub');
+
+  const renderSections = () => {
+    const sections = [
+      { label: 'TikTok · 9:16', items: tiktokCarousels },
+      { label: 'Square · 1:1', items: squareCarousels },
+      { label: 'Product', items: productCarousels },
+    ].filter(s => s.items.length > 0);
+
+    sectionsEl.innerHTML = sections.map(section => `
+      <div class="section-label">${section.label} (${section.items.length})</div>
+      <ul class="nav-list">
+        ${section.items.map(c => {
+          const cnt = countCommentsFor(c.id);
+          return `<li data-id="${c.id}">
+            <span class="id">${c.id}</span>
+            <span class="slug">${c.slug || ''}</span>
+            ${cnt ? `<span class="badge">${cnt}</span>` : ''}
+          </li>`;
+        }).join('')}
+      </ul>
+    `).join('');
+
+    sectionsEl.querySelectorAll('li[data-id]').forEach(li => {
+      li.addEventListener('click', () => selectCarousel(li.dataset.id));
+    });
+
+    const total = totalComments();
+    totalSubEl.textContent =
+      `${ALL.length} carousels · ${total} comment${total === 1 ? '' : 's'}`;
+  };
+
+  const updateBadge = (cid) => {
+    const li = sectionsEl.querySelector(`li[data-id="${cid}"]`);
+    if (!li) return;
+    const existing = li.querySelector('.badge');
+    const cnt = countCommentsFor(cid);
+    if (cnt) {
+      if (existing) existing.textContent = cnt;
+      else {
+        const b = document.createElement('span');
+        b.className = 'badge';
+        b.textContent = cnt;
+        li.appendChild(b);
+      }
+    } else if (existing) {
+      existing.remove();
+    }
+    const total = totalComments();
+    totalSubEl.textContent =
+      `${ALL.length} carousels · ${total} comment${total === 1 ? '' : 's'}`;
+  };
+
+  // ── Main render ──
+  const mainEl = document.getElementById('main');
+  let activeId = null;
+
+  const selectCarousel = (id) => {
+    activeId = id;
+    sectionsEl.querySelectorAll('li').forEach(li => {
+      li.classList.toggle('active', li.dataset.id === id);
+    });
+
+    const carousel = byId[id];
+    if (!carousel) {
+      mainEl.innerHTML = `<div class="empty"><h2>Not found</h2><div>No carousel with id ${id}.</div></div>`;
+      return;
+    }
+
+    const fmt = carousel.format === 'tiktok' ? 'tiktok' : 'square';
+    const themeLabel = carousel.theme || 'page';
+
+    mainEl.innerHTML = `
+      <div class="carousel-header">
+        <div class="id">${carousel.id} · ${themeLabel} · ${carousel.format || 'square'}</div>
+        <div class="title">${carousel.slug || '(no slug)'}</div>
+        <div class="meta">${carousel.slides.length} slide${carousel.slides.length === 1 ? '' : 's'}</div>
+      </div>
+      <div class="slide-grid" id="slideGrid"></div>
+    `;
+
+    const grid = document.getElementById('slideGrid');
+    carousel.slides.forEach((slide, i) => {
+      const slideData = Object.assign(
+        { theme: carousel.theme, format: carousel.format },
+        slide
+      );
+      const row = document.createElement('div');
+      row.className = 'slide-row';
+
+      const frame = document.createElement('div');
+      frame.className = `slide-frame ${fmt}`;
+      const tag = document.createElement('div');
+      tag.className = 'slide-number';
+      tag.textContent = `Slide ${i + 1}`;
+      frame.appendChild(tag);
+      const post = document.createElement('div');
+      post.className = 'post';
+      frame.appendChild(post);
+      renderSlideInto(post, slideData);
+
+      const col = document.createElement('div');
+      col.className = 'comment-col';
+      const slotKey = String(i + 1);
+      const initial = getComment(id, slotKey);
+      col.innerHTML = `
+        <label>Comment · Slide ${i + 1}</label>
+        <textarea data-cid="${id}" data-slide="${slotKey}"
+          placeholder="Notes for this slide…">${initial.replace(/</g, '&lt;')}</textarea>
+        <div class="saved">Saved.</div>
+      `;
+      const ta = col.querySelector('textarea');
+      if (initial.trim()) ta.classList.add('has-content');
+      const savedEl = col.querySelector('.saved');
+
+      let debounce;
+      ta.addEventListener('input', () => {
+        clearTimeout(debounce);
+        debounce = setTimeout(() => {
+          setComment(id, slotKey, ta.value);
+          ta.classList.toggle('has-content', !!ta.value.trim());
+          updateBadge(id);
+          savedEl.classList.add('show');
+          setTimeout(() => savedEl.classList.remove('show'), 900);
+        }, 250);
+      });
+      ta.addEventListener('blur', () => {
+        setComment(id, slotKey, ta.value);
+        updateBadge(id);
+      });
+
+      row.appendChild(frame);
+      row.appendChild(col);
+      grid.appendChild(row);
+    });
+
+    document.title = `Review · ${carousel.id} · ${carousel.slug || ''}`;
+    history.replaceState(null, '', '?id=' + id);
+  };
+
+  // ── Tools ──
+  const toast = (msg) => {
+    const t = document.getElementById('toast');
+    t.textContent = msg;
+    t.classList.add('show');
+    setTimeout(() => t.classList.remove('show'), 1400);
+  };
+
+  const commentsAsMarkdown = () => {
+    const lines = [];
+    ALL.forEach(c => {
+      const cs = comments[c.id];
+      if (!cs || !Object.keys(cs).length) return;
+      lines.push(`## ${c.id} · ${c.slug || ''}`);
+      Object.keys(cs)
+        .sort((a, b) => Number(a) - Number(b))
+        .forEach(sIdx => {
+          lines.push(`- Slide ${sIdx}: ${cs[sIdx]}`);
+        });
+      lines.push('');
+    });
+    return lines.join('\n').trim() || '(no comments yet)';
+  };
+
+  document.getElementById('copyMd').addEventListener('click', async () => {
+    const md = commentsAsMarkdown();
+    try {
+      await navigator.clipboard.writeText(md);
+      toast('Markdown copied.');
+    } catch {
+      // fallback: show in a textarea-prompt-like alert
+      window.prompt('Copy this:', md);
+    }
+  });
+
+  document.getElementById('exportJson').addEventListener('click', () => {
+    const blob = new Blob([JSON.stringify(comments, null, 2)], { type: 'application/json' });
+    const ts = new Date().toISOString().slice(0, 19).replace(/[:T]/g, '-');
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `carousel-comments-${ts}.json`;
+    a.click();
+    URL.revokeObjectURL(url);
+  });
+
+  document.getElementById('clearAll').addEventListener('click', () => {
+    if (!confirm('Clear ALL comments? This cannot be undone.')) return;
+    comments = {};
+    saveComments();
+    renderSections();
+    if (activeId) selectCarousel(activeId);
+    toast('All comments cleared.');
+  });
+
+  // ── Boot ──
+  renderSections();
+  const initialId = new URLSearchParams(location.search).get('id');
+  if (initialId && byId[initialId]) {
+    selectCarousel(initialId);
+  } else if (tiktokCarousels.length) {
+    selectCarousel(tiktokCarousels[0].id);
+  }
+})();
+</script>
+</body>
+</html>

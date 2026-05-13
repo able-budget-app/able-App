@@ -110,7 +110,7 @@ Every dollar that lands in your account gets routed into one of five places, in 
 
 The order matters. Taxes first, because they are not yours. Bills second, because they don't wait. Smoothing third, because next month's baseline depends on it. Debt or savings fourth, because this is how you actually move forward. Everything else last.
 
-Notice what changed. You are no longer asking, "What do I spend this month?" You are asking, "What job does this dollar have, right now?"
+Notice what changed. You are no longer asking, "What do I spend this month?" You are asking, "Where does this deposit go, right now?"
 
 The freezing stops. The leaking stops. Every deposit becomes a decision, not a question mark.
 
@@ -221,7 +221,7 @@ You have probably heard of these. They are the foundation most Americans still u
 
 Able does not replace them. Able carries them forward for people whose income does not arrive on a schedule.
 
-**Zero-based budgeting** says every dollar gets a job. That principle is right. Able does exactly that. The cadence shifts from per-month to per-deposit, because you cannot give a dollar a job until the dollar actually arrives.
+**Zero-based budgeting** says no dollar sits unassigned. That principle is right. Able does exactly that. The cadence shifts from per-month to per-deposit, because you cannot route a dollar until the dollar actually arrives.
 
 **The 50/30/20 rule** is a great sanity check. Fifty percent on needs, thirty on wants, twenty on savings and debt. It works cleanly when the top number is steady. When your top number swings between two thousand and twelve thousand, the percentages still teach you something, but you need a system underneath them that handles the swing.
 
@@ -287,7 +287,7 @@ You do not need to read ten more articles. You do not need to buy another book. 
 
 Your paycheck does not follow a schedule. Your budget can.
 
-Able is the only budgeting app built from the ground up for entrepreneurs with inconsistent income. Every dollar gets a job the moment it arrives. Taxes, bills, smoothing reserve, debt, savings. Automatic. In the right order.
+Able is the only budgeting app built from the ground up for entrepreneurs with inconsistent income. Every deposit is split the moment it arrives. Taxes, bills, smoothing reserve, debt, savings. Automatic. In the right order.
 
 Seven days free. Cancel anytime.
 

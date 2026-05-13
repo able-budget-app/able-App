@@ -79,8 +79,8 @@
       document.title = `Able · ${carousel.id} · ${carousel.slug}`;
 
       carousel.slides.forEach((slide, i) => {
-        // Each slide inherits the carousel's theme unless overridden
-        const slideData = Object.assign({ theme: carousel.theme }, slide);
+        // Each slide inherits the carousel's theme + format unless overridden
+        const slideData = Object.assign({ theme: carousel.theme, format: carousel.format }, slide);
         const wrap = document.createElement('div');
         wrap.className = 'slide-wrap';
         wrap.innerHTML = `<div class="slide-tag">Slide ${i + 1}</div><div class="post"></div>`;

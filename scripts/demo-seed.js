@@ -343,7 +343,32 @@
     },
     removeChannel: function () {},
   };
-  window.supabase = { createClient: function () { return stubClient; } };
+  // Lock the stub against the deferred Supabase CDN script that loads after
+  // document parsing. Without this, the CDN script's `window.supabase = ...`
+  // assignment clobbers our stub, the app calls the REAL createClient inside
+  // its window.load handler, hits the live Supabase, and the auth flow exits
+  // with INITIAL_SESSION undefined → the auth screen stays up.
+  var _stubSupabase = { createClient: function () { return stubClient; } };
+  try {
+    Object.defineProperty(window, 'supabase', {
+      value: _stubSupabase,
+      writable: false,
+      configurable: true,
+    });
+  } catch (_) {
+    window.supabase = _stubSupabase;
+  }
+  // Belt-and-suspenders: if anything still overwrites the stub before the
+  // app's load handler runs, re-install it at the very start of the load
+  // event. demo-seed's listener was registered first (via document.write
+  // during parse), so it runs before the app's load listener.
+  window.addEventListener('load', function () {
+    if (window.supabase !== _stubSupabase) {
+      try {
+        Object.defineProperty(window, 'supabase', { value: _stubSupabase, writable: false, configurable: true });
+      } catch (_) { window.supabase = _stubSupabase; }
+    }
+  }, true);
 
   // Stripe is a hard dep at boot. Stub it just in case the CDN script
   // fails (offline recordings).
