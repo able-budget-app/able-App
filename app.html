@@ -108,6 +108,13 @@ html{background:var(--ds-page);min-height:100vh;min-height:100dvh;}
 body{background:var(--ds-page);color:var(--ds-t1);font-family:var(--ds-f);min-height:100vh;min-height:100dvh;overscroll-behavior-x:none;overscroll-behavior-y:contain;padding-top:env(safe-area-inset-top,0px);}
 h1,h2,h3{font-family:var(--ds-f);}
 input,select,button,textarea{font-family:inherit;}
+/* iOS auto-zooms when an input's font-size is below 16px. Force 16px on mobile
+   for text-entry fields so focusing them doesn't snap the page in. */
+@media (max-width:800px){
+  input[type="text"],input[type="number"],input[type="email"],input[type="password"],
+  input[type="tel"],input[type="search"],input[type="url"],input:not([type]),
+  select,textarea{font-size:16px;}
+}
 
 /* AUTH SCREEN */
 #auth-screen{position:fixed;inset:0;background:var(--ds-page);z-index:1000;display:flex;align-items:center;justify-content:center;padding:1rem;font-family:var(--ds-f);}
@@ -403,28 +410,26 @@ input,select,button,textarea{font-family:inherit;}
 .score-bar-bg{width:100px;height:7px;background:var(--bg2);border-radius:30px;overflow:hidden;}
 .score-bar{height:7px;border-radius:30px;}
 .score-pts{font-size:12px;font-weight:800;width:32px;text-align:right;}
-.bills-row{display:flex;align-items:center;gap:10px;padding:13px 16px;border-bottom:1px solid var(--ds-t4);font-size:13px;transition:background .15s;}
+.bills-row{display:flex;align-items:flex-start;gap:12px;padding:14px 16px;border-bottom:1px solid var(--ds-t4);font-size:13px;transition:background .15s;}
 .bills-row:last-child{border-bottom:none;}
 .bills-row:hover{background:var(--ds-card2);}
-.bills-name{flex:1;font-weight:700;color:var(--ds-t1);min-width:0;}
+.bills-row > .checkbtn{margin-top:2px;}
+.bills-mid{flex:1;min-width:0;}
+.bills-name{font-weight:700;color:var(--ds-t1);font-size:14px;line-height:1.3;}
+.bills-meta{font-size:11px;font-weight:600;color:var(--ds-t3);margin-top:3px;}
+.bills-right{display:flex;flex-direction:column;align-items:flex-end;gap:6px;flex-shrink:0;}
+.bills-amt-line{display:flex;align-items:center;gap:8px;}
 .bills-amt-input{background:var(--ds-card2);border:1px solid var(--ds-t4);border-radius:var(--ds-r1);color:var(--ds-t1);font-family:var(--ds-f);font-size:14px;font-weight:800;width:95px;text-align:right;outline:none;transition:all .15s;padding:6px 10px;letter-spacing:-.01em;cursor:text;-webkit-appearance:none;appearance:none;}
 .bills-amt-input:hover{border-color:var(--ds-green);background:var(--ds-card);}
 .bills-amt-input:focus{border-color:var(--ds-green);background:var(--ds-card);box-shadow:0 0 0 3px rgba(42,122,74,.15);}
-.bills-due{font-size:11px;font-weight:700;color:var(--ds-t3);width:50px;flex-shrink:0;}
-.bills-actions{display:flex;align-items:center;gap:4px;flex-shrink:0;}
+.bills-amt-static{font-weight:800;text-align:right;font-family:var(--ds-f);font-size:14px;letter-spacing:-.01em;color:var(--ds-t3);padding:6px 8px;}
+.bills-x{background:transparent;border:0;color:var(--ds-t3);font-family:var(--ds-f);font-size:14px;font-weight:700;line-height:1;padding:2px 4px;cursor:pointer;transition:color .15s;}
+.bills-x:hover{color:var(--ds-c4);}
+.bills-edit{padding:3px 12px;font-size:11px;}
 @media(max-width:540px){
-  /* Header columns (BILL/DUE/AMOUNT) don't align with the 2-row mobile grid
-     where due drops under name, so hide them — the row itself is self-labeling. */
+  /* Header columns (BILL/DUE/AMOUNT) hidden — row is self-labeling. */
   .bills-header{display:none !important;}
-  .bills-row{display:grid;grid-template-columns:auto 1fr auto;grid-template-areas:"check name amount" "check due actions";column-gap:12px;row-gap:4px;padding:14px 14px;align-items:center;}
-  .bills-row > .checkbtn{grid-area:check;align-self:center;}
-  .bills-name{grid-area:name;font-size:14px;line-height:1.3;padding-left:0 !important;}
-  .bills-name .freq-tag, .bills-name .link-tag{display:inline-block;margin-top:2px;}
-  .bills-due{grid-area:due;width:auto;text-align:left;font-size:10px;}
-  .bills-amt-wrap{grid-area:amount;justify-self:end;}
-  .bills-amt-input{width:100px;font-size:16px;padding:8px 12px;min-height:36px;}
-  .bills-actions{grid-area:actions;justify-self:end;}
-  .bills-actions .btn-sm{padding:4px 10px;font-size:11px;}
+  .bills-amt-input{font-size:16px;padding:8px 12px;min-height:36px;width:110px;}
 }
 .modal-bg{position:fixed;inset:0;background:rgba(17,28,22,.45);z-index:200;display:flex;align-items:center;justify-content:center;padding:1rem;backdrop-filter:blur(6px);animation:modalFadeIn .2s ease;overscroll-behavior:contain;}
 /* Allocation preview is launched FROM the allocate sheet (z-index 220), so it
@@ -2450,6 +2455,16 @@ posthog.init('phc_B6PH36QxpExnyBYhfScFFF6LhDvoyxuFr6PypJuxxky3', {
         <div id="push-error" style="color:var(--ds-c4);font-size:12px;font-weight:600;margin-top:.5rem;display:none;"></div>
       </div>
 
+      <div class="sec">Quarterly tax reminder</div>
+      <div class="card">
+        <label style="display:flex;align-items:flex-start;gap:12px;cursor:pointer;">
+          <input type="checkbox" id="set-hide-quarterly-tax" onchange="toggleHideQuarterlyTax(this.checked)" style="width:20px;height:20px;accent-color:var(--ds-green);margin-top:1px;flex-shrink:0;">
+          <div style="flex:1;">
+            <div style="font-weight:700;font-size:14px;color:var(--ds-t1);">Hide quarterly tax card</div>
+            <div style="font-size:12px;color:var(--ds-t3);font-weight:600;margin-top:3px;line-height:1.5;">Removes the "Next quarterly tax" banner from your home screen. Your tax % stays set — only the reminder is hidden.</div>
+          </div>
+        </label>
+      </div>
       <div class="sec">Email reminders</div>
       <div class="card">
         <div style="font-size:13px;color:var(--ds-t2);font-weight:600;line-height:1.6;margin-bottom:1rem;">We'll send these to the email on file. Unsubscribe anytime.</div>
@@ -8157,7 +8172,7 @@ function openAllocateSheet(){
   sheet.style.display='flex';
   document.body.style.overflow='hidden';
   populateSources();
-  setTimeout(()=>{const input=document.getElementById('inc-amount');if(input)input.focus();},150);
+  _modalFocus('inc-amount',150);
 }
 
 function closeAllocateSheet(){
@@ -8550,7 +8565,7 @@ function editIncome(id){
   document.getElementById('ei-amount').value=entry.amount;
   modal.dataset.editId=id;
   modal.style.display='flex';
-  setTimeout(()=>document.getElementById('ei-amount').focus(),50);
+  _modalFocus('ei-amount');
 }
 function saveEditIncome(){
   const modal=document.getElementById('modal-edit-income');
@@ -8633,16 +8648,20 @@ function renderBillsPage(){
       fundedTag = ` <span title="${tip}" style="display:inline-flex;align-items:center;font-size:9px;font-weight:800;color:var(--ds-green);background:var(--ds-green-l);padding:2px 6px;border-radius:100px;letter-spacing:.04em;vertical-align:middle;margin-left:4px;">${label}</span>`;
     }
     const amtInput=b.fromDebtId
-      ?`<div style="font-weight:800;text-align:right;font-family:var(--ds-f);font-size:14px;letter-spacing:-.01em;color:var(--ds-t3);padding:0 4px;" title="Edit in the Debt tab">${b.amount.toFixed(2)}</div>`
+      ?`<div class="bills-amt-static" title="Edit in the Debt tab">${b.amount.toFixed(2)}</div>`
       :`<input class="bills-amt-input" type="number" value="${b.amount.toFixed(2)}" onchange="updateBill(${i},this.value)">`;
-    const delBtn=b.fromDebtId
-      ?`<button class="btn btn-danger-ghost btn-sm" style="opacity:.4;" onclick="delBill(${i})" title="Remove from Debt tab">✕</button>`
-      :`<button class="btn btn-sm btn-ghost" onclick="openAddBillModal(${i})" style="padding:4px 8px;font-size:11px;" title="Edit">Edit</button> <button class="btn btn-danger-ghost btn-sm" onclick="delBill(${i})">✕</button>`;
+    const editBtn=b.fromDebtId
+      ?''
+      :`<button class="btn btn-sm btn-ghost bills-edit" onclick="openAddBillModal(${i})" title="Edit">Edit</button>`;
     d.innerHTML=`<button class="checkbtn${b.paid?' checked':''}" onclick="toggleBillPaid(${i})">${b.paid?'✓':''}</button>
-      <div class="bills-name" style="padding-left:8px;">${escapeHtml(b.name)} <span style="display:inline-block;width:7px;height:7px;border-radius:50%;background:${catDots[b.cat]||'var(--text3)'};margin-left:3px;vertical-align:middle;"></span>${linkTag}${freqTag}${reviewTag}${fundedTag}</div>
-      <div class="bills-due">${billDueLabel(b)}</div>
-      <div class="bills-amt-wrap">${amtInput}</div>
-      <div class="bills-actions">${delBtn}</div>`;
+      <div class="bills-mid">
+        <div class="bills-name">${escapeHtml(b.name)} <span style="display:inline-block;width:7px;height:7px;border-radius:50%;background:${catDots[b.cat]||'var(--text3)'};margin-left:3px;vertical-align:middle;"></span>${linkTag}${freqTag}${reviewTag}${fundedTag}</div>
+        <div class="bills-meta">${billDueLabel(b)}</div>
+      </div>
+      <div class="bills-right">
+        <div class="bills-amt-line">${amtInput}<button class="bills-x" onclick="delBill(${i})" title="${b.fromDebtId?'Remove from Debt tab':'Remove'}" aria-label="Remove">✕</button></div>
+        ${editBtn}
+      </div>`;
     el.appendChild(d);
   });
   document.getElementById('bills-total').textContent=f2(totalBills());
@@ -9017,7 +9036,7 @@ function editDebt(i){
   document.getElementById('ed-rate').value=d.rate||'';
   document.getElementById('ed-due').value=d.dueDay||'';
   document.getElementById('modal-edit-debt').style.display='flex';
-  setTimeout(()=>document.getElementById('ed-min').focus(),50);
+  _modalFocus('ed-min');
 }
 function saveEditDebt(){
   if(_editingDebtIdx===null)return;
@@ -10181,8 +10200,16 @@ function loadSettingsPage(){
     const el = document.getElementById('ep-'+key);
     if (el) el.checked = ep[key] !== false;
   });
+  const hideQtEl = document.getElementById('set-hide-quarterly-tax');
+  if (hideQtEl) hideQtEl.checked = !!(S.settings && S.settings.hideQuarterlyTax);
   refreshMfaStatus();
   loadSubscriptionPlanInfo();
+}
+function toggleHideQuarterlyTax(on){
+  if (!S.settings) S.settings = {};
+  S.settings.hideQuarterlyTax = !!on;
+  save();
+  renderQuarterlyTaxCard();
 }
 
 // ─── Connected accounts (Plaid items) ────────────────────────────────
@@ -10879,7 +10906,7 @@ function openFixedAllocModal(idx){
     document.getElementById('fa-dest').value='external_transfer';
   }
   modal.style.display='flex';
-  setTimeout(()=>document.getElementById('fa-label').focus(),50);
+  _modalFocus('fa-label');
 }
 
 function saveFixedAlloc(){
@@ -11536,6 +11563,8 @@ function _userTaxPct(){
 function renderQuarterlyTaxCard(){
   const wrap = document.getElementById('home-quarterly-tax');
   if (!wrap) return;
+  // User-controlled hide (Settings → Quarterly tax reminder). Off by default.
+  if (S.settings && S.settings.hideQuarterlyTax) { wrap.innerHTML = ''; wrap.style.display = 'none'; return; }
   const taxPct = _userTaxPct();
   const avgMonthly = _avgMonthlyIncomeLast90();
   // Hide when we don't have enough signal - no tax obligation set, or no
@@ -13865,10 +13894,22 @@ function hideToast(){
   if (el) el.classList.remove('show');
   if (_toastTimer) { clearTimeout(_toastTimer); _toastTimer = null; }
 }
+// On iOS WKWebView, auto-focusing an input pops the keyboard and the system
+// scrolls the focused element into view, which yanks position:fixed modal-bg
+// elements off-screen. Skip auto-focus inside Capacitor so the user controls
+// when the keyboard appears (by tapping the field themselves).
+function _isCapacitor(){
+  return !!(window.Capacitor && (window.Capacitor.isNativePlatform?.() ||
+    document.querySelector('meta[name="able-runtime"]')?.content==='ios-capacitor'));
+}
+function _modalFocus(id, delay){
+  if (_isCapacitor()) return;
+  setTimeout(()=>{const el=document.getElementById(id);if(el)el.focus();}, delay||50);
+}
 function openBalanceModal(){
   document.getElementById('bal-inp').value = _hasBalance() ? S.settings.balance.toFixed(2) : '';
   document.getElementById('modal-balance').style.display='flex';
-  setTimeout(()=>document.getElementById('bal-inp').focus(),50);
+  _modalFocus('bal-inp');
 }
 function saveBalance(){
   const v = parseFloat(document.getElementById('bal-inp').value);
