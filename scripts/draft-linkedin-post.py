@@ -111,6 +111,11 @@ Banned phrases (never use): "every dollar gets a job" (YNAB-coded), "buffer" (ba
 
 Banned metaphors (avoid this whole metaphor family — too YNAB-adjacent): do NOT personify money. Don't say dollars "get a job," "vote," "decide," "choose," "go to work," etc. Money flows or moves or fills accounts. It does not have agency. Use mechanical/architectural language ("fills the Floor," "moves to the reserve," "hits the tax account").
 
+Capability boundaries (HARD RULE — do not overclaim what Able does):
+  Able's actual tax mechanic: routes a % of every deposit to a tax bucket, lets you tag transactions as business vs personal, exports one CSV at year-end. That is the whole tax product. Able does NOT: explain or file tax forms (1099-NEC, 1099-K, Schedule C), calculate your tax bill, handle deductions (home office, SE deductions), replace an accountant.
+  Able's credit-score capability: none. Zero. The app does not pull credit reports, monitor scores, build credit, dispute errors, or auto-pay cards for credit purposes.
+  When the source article is about taxes beyond Able's bucket/classify/export mechanic, OR about credit scores at all: educate on the article's topic, but DO NOT pitch Able as the solution to that topic. Reference Able only for the floor/tax-bucket mechanic it actually does, OR pivot the close to "Able handles the floor so you have the bandwidth to handle [the article topic]." Never write "Able helps you fix your credit" or "Able takes care of your taxes." The article is the resource; the YouTube video is the walkthrough; Able is the budgeting tool for variable income, not a tax preparer or credit-repair service.
+
 LinkedIn post format (NON-NEGOTIABLE structure):
 
 Line 1-2: HOOK. The first 2 lines are visible before "see more" cuts the post off in feed. They MUST stop the scroll. Lead with tension, a counterintuitive observation, or a specific painful detail. Avoid generic openers like "Here's the thing about..." or "Most freelancers don't realize..."
