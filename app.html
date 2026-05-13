@@ -253,12 +253,28 @@ input,select,button,textarea{font-family:inherit;}
 @media(max-width:800px){
   .nav{position:fixed;bottom:0;left:0;right:0;top:auto;height:auto;border-top:1px solid var(--ds-t4);border-bottom:none;padding:8px 0 calc(14px + env(safe-area-inset-bottom));background:rgba(240,247,242,.96);backdrop-filter:blur(24px);-webkit-backdrop-filter:blur(24px);box-shadow:0 -2px 10px rgba(0,0,0,.04);flex-direction:column;gap:0;touch-action:pan-x;will-change:transform;transform:translate3d(0,0,0);z-index:50;transition:transform .15s ease-out;}
   body.kb-open .nav{transform:translate3d(0,150%,0);pointer-events:none;}
-  /* iOS WKWebView keeps position:fixed anchored to the original viewport, so
-     bottom-sheet overlays (coach panel, modals, action sheets) end above the
-     keyboard with empty space below. Shift them up by the keyboard height. */
+  /* Keyboard plugin runs in resize:"none" — WebView frame stays full-screen
+     and we manually shift overlays when the keyboard opens. iOS keyboard easing
+     curve cubic-bezier(.32,.72,0,1) matches the OS animation so the slide-up
+     is synchronized.
+
+     Coach panel + LC game: shift overlay bottom up by kb-h. Their input/action
+     row sits at the very bottom of the panel; behind-the-keyboard would hide
+     the controls the user needs.
+
+     Modal-bg: keep at full viewport (extends behind keyboard so no visible
+     bottom edge floats above the keys). Add modal padding-bottom equal to
+     kb-h so internal content (sticky-now-static actions + scrolled input)
+     stays above the keyboard top. */
+  .coach-panel-bg, .lc-game-bg{transition:bottom .28s cubic-bezier(.32,.72,0,1);}
   body.kb-open .coach-panel-bg,
-  body.kb-open .modal-bg,
   body.kb-open .lc-game-bg{bottom:var(--kb-h,0px);}
+  .modal{transition:padding-bottom .28s cubic-bezier(.32,.72,0,1);}
+  body.kb-open .modal{padding-bottom:var(--kb-h,0px);}
+  /* Auth-screen (login/signup) doesn't use the overlay pattern — pad its bottom
+     so the focused input has room to scroll above the keyboard. */
+  #auth-screen{transition:padding-bottom .28s cubic-bezier(.32,.72,0,1);}
+  body.kb-open #auth-screen{padding-bottom:calc(1rem + var(--kb-h,0px));}
   .nav > .logo, .nav > .nav-right{display:none;}
   .nav-tabs{background:transparent;padding:4px 8px;gap:4px;width:100%;justify-content:space-around;border-radius:0;}
   .nav-tab{flex-direction:column;align-items:center;justify-content:center;gap:4px;padding:10px 8px;border-radius:16px;font-size:11px;font-weight:800;letter-spacing:.03em;text-transform:uppercase;flex:1 1 0;min-width:0;min-height:58px;touch-action:manipulation;}
@@ -486,6 +502,15 @@ input,select,button,textarea{font-family:inherit;}
   .modal-close{top:18px;right:14px;}
   .modal-actions{position:sticky;bottom:0;background:var(--ds-card);margin:1rem -1.25rem 0;padding:12px 1.25rem calc(1rem + env(safe-area-inset-bottom,0px));border-top:1px solid var(--ds-t4);flex-direction:column-reverse;gap:8px;}
   .modal-actions .btn{width:100%;}
+  /* Drop the sticky pin while the keyboard is open so the focused input scrolls
+     into view with nothing covering it. Also zero the safe-area padding —
+     the keyboard already occupies the home-indicator zone, so the extra bottom
+     padding would leave empty space between Cancel and the keyboard top. */
+  body.kb-open .modal-actions {
+    position: static;
+    border-top-color: transparent;
+    padding-bottom: 12px;
+  }
 }
 .empty-state{text-align:center;padding:2.5rem 1.5rem;color:var(--ds-t3);font-size:13px;font-weight:600;background:var(--ds-card);border-radius:var(--ds-r2);box-shadow:var(--ds-sh1);}
 .divider{height:1px;background:var(--ds-t4);margin:1.25rem 0;}
@@ -2957,10 +2982,10 @@ posthog.init('phc_B6PH36QxpExnyBYhfScFFF6LhDvoyxuFr6PypJuxxky3', {
     <button class="modal-close" onclick="closeIncomeInbox()" aria-label="Close"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button>
     <div class="modal-title" id="modal-income-inbox-title">Review your income</div>
     <div style="font-size:12px;color:var(--ds-t2);font-weight:600;margin-bottom:14px;line-height:1.6;">We weren't sure how to label these. Tap a button to teach Able for next time - every label trains future syncs.</div>
-    <div id="income-inbox-list" style="max-height:60vh;overflow-y:auto;">
+    <div id="income-inbox-list" style="max-height:60vh;overflow-y:auto;padding-bottom:calc(1rem + env(safe-area-inset-bottom,0px));">
       <div class="inbox-loading">Loading…</div>
     </div>
-    <div id="income-inbox-error" style="color:var(--ds-c4);font-size:12px;font-weight:600;margin-top:.75rem;display:none;"></div>
+    <div id="income-inbox-error" style="color:var(--ds-c4);font-size:12px;font-weight:600;margin-top:.75rem;display:none;padding-bottom:env(safe-area-inset-bottom,0px);"></div>
   </div>
 </div>
 
@@ -13150,10 +13175,14 @@ function openReclassifyModal(txnRowId){
     for (const r of _activityRows) { if (r.business_label) seen.add(r.business_label); }
     bizDatalist.innerHTML = [...seen].sort().map((v) => `<option value="${escapeHtml(v)}"></option>`).join('');
   }
-  // Reset save-button state. applyReclassify disables it during the API call;
-  // on success we close the modal but never re-enable, so subsequent opens
-  // would land on a permanently-disabled button until the next page reload.
-  if (saveBtn) saveBtn.removeAttribute('disabled');
+  // Reset save-button state. applyReclassify disables it + flips the label to
+  // "Saving..." during the API call; on success we close the modal but never
+  // restore, so subsequent opens would land on a permanently-stuck "Saving..."
+  // button until the next page reload.
+  if (saveBtn) {
+    saveBtn.removeAttribute('disabled');
+    saveBtn.textContent = 'Save changes';
+  }
 
   const isInflow = (row.amount ?? 0) < 0;
   const display = Math.abs(row.amount ?? 0).toLocaleString(undefined, { style: 'currency', currency: 'USD' });
@@ -14655,6 +14684,13 @@ function goTo(target){
   const redirect = GROUP_DEFAULT[target];
   const page = redirect || target;
   const group = PAGE_TO_GROUP[page] || page;
+
+  // Pause Learning Center narration when navigating anywhere — audio kept
+  // playing after leaving the lesson otherwise, with no way to stop it short
+  // of going back. lcAudio is the only persistent media element in the app.
+  if (typeof lcAudio !== 'undefined' && lcAudio?.audioEl) {
+    try { lcAudio.audioEl.pause(); } catch (_) {}
+  }
 
   // Swap active page
   document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
