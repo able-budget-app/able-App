@@ -5886,6 +5886,95 @@ window.CAROUSELS = [
       { tpl: 'A', eyebrow: 'identity', size: 'md', punch: "Free for\n{30 days.}", meta: 'becomeable.app/get-able' },
   ] },
 
+  // ── PERSONA × DAY-1-31 (C259-C263) — for C100-C104 personas ──
+
+  { id: 'C259', slug: 'designer-day-1-31', theme: 'white', format: 'tiktok', slides: [
+      { tpl: 'A', eyebrow: 'design', size: 'md', muted: "Designer/developer.", punch: "{Day 1.}\nNew project\n{kicked off.}", meta: '1 / 5' },
+      { tpl: 'C', eyebrow: 'design', size: 'md', shot: '01-dashboard', noWordmark: true, muted: "Day 7.", punch: "Deposit {cleared.}\nFloor funded.", meta: '2 / 5' },
+      { tpl: 'C', eyebrow: 'design', size: 'md', shot: '02-allocation-flow', noWordmark: true, muted: "Day 14.", punch: "Mid-project.\nTax bucket {growing.}", meta: '3 / 5' },
+      { tpl: 'C', eyebrow: 'design', size: 'md', shot: '04-score', noWordmark: true, muted: "Day 31.", punch: "Project ended.\nReserve {holding.}", meta: '4 / 5' },
+      { tpl: 'A', eyebrow: 'design', size: 'md', punch: "Free for\n{30 days.}", meta: 'becomeable.app/get-able' },
+  ] },
+
+  { id: 'C260', slug: 'real-estate-day-1-31', theme: 'green', format: 'tiktok', slides: [
+      { tpl: 'A', eyebrow: 'real estate', size: 'md', muted: "Real estate agent.", punch: "{Day 1.}\nClosing\n{commission lands.}", meta: '1 / 5' },
+      { tpl: 'C', eyebrow: 'real estate', size: 'md', shot: '02-allocation-flow', noWordmark: true, muted: "Day 7.", punch: "Floor + tax routed.\nMarketing fund {topped.}", meta: '2 / 5' },
+      { tpl: 'C', eyebrow: 'real estate', size: 'md', shot: '01-dashboard', noWordmark: true, muted: "Day 18.", punch: "No new closings.\n{Reserve covers.}", meta: '3 / 5' },
+      { tpl: 'C', eyebrow: 'real estate', size: 'md', shot: '04-score', noWordmark: true, muted: "Day 31.", punch: "Slow month.\n{Floor held.}", meta: '4 / 5' },
+      { tpl: 'A', eyebrow: 'real estate', size: 'md', punch: "Free for\n{30 days.}", meta: 'becomeable.app/get-able' },
+  ] },
+
+  { id: 'C261', slug: 'etsy-day-1-31', theme: 'glass', format: 'tiktok', slides: [
+      { tpl: 'A', eyebrow: 'seller', size: 'md', muted: "Etsy/Shopify seller.", punch: "{Day 1.}\nHoliday spike\n{payouts.}", meta: '1 / 5' },
+      { tpl: 'C', eyebrow: 'seller', size: 'md', shot: '02-allocation-flow', noWordmark: true, muted: "Each payout splits", punch: "the moment\n{Shopify clears.}", meta: '2 / 5' },
+      { tpl: 'C', eyebrow: 'seller', size: 'md', shot: '01-dashboard', noWordmark: true, muted: "Day 15.", punch: "Inventory + refunds.\n{System absorbs.}", meta: '3 / 5' },
+      { tpl: 'C', eyebrow: 'seller', size: 'md', shot: '04-score', noWordmark: true, muted: "Day 31.", punch: "Q4 closes.\nJanuary {reserve ready.}", meta: '4 / 5' },
+      { tpl: 'A', eyebrow: 'seller', size: 'md', punch: "Free for\n{30 days.}", meta: 'becomeable.app/get-able' },
+  ] },
+
+  { id: 'C262', slug: 'tipped-day-1-31', theme: 'black', format: 'tiktok', slides: [
+      { tpl: 'A', eyebrow: 'tips', size: 'md', muted: "Tipped server.", punch: "{Day 1.}\nFriday shift.\nCash + cards.", meta: '1 / 5' },
+      { tpl: 'C', eyebrow: 'tips', size: 'md', shot: '06-log-income', noWordmark: true, muted: "Log both.", punch: "Tax + reserve\n{auto-routed.}", meta: '2 / 5' },
+      { tpl: 'C', eyebrow: 'tips', size: 'md', shot: '01-dashboard', noWordmark: true, muted: "Day 14.", punch: "Slow Tuesday.\n{Reserve covered.}", meta: '3 / 5' },
+      { tpl: 'C', eyebrow: 'tips', size: 'md', shot: '04-score', noWordmark: true, muted: "Day 31.", punch: "Variable tips.\n{Floor held.}", meta: '4 / 5' },
+      { tpl: 'A', eyebrow: 'tips', size: 'md', punch: "Free for\n{30 days.}", meta: 'becomeable.app/get-able' },
+  ] },
+
+  { id: 'C263', slug: 'nurse-day-1-31', theme: 'page', format: 'tiktok', slides: [
+      { tpl: 'A', eyebrow: 'nurse', size: 'md', muted: "Nurse, PRN.", punch: "{Day 1.}\nPaycheck from\n{this week's contract.}", meta: '1 / 5' },
+      { tpl: 'C', eyebrow: 'nurse', size: 'md', shot: '02-allocation-flow', noWordmark: true, muted: "Each paycheck", punch: "splits the\n{same way.}", meta: '2 / 5' },
+      { tpl: 'C', eyebrow: 'nurse', size: 'md', shot: '01-dashboard', noWordmark: true, muted: "Day 18.", punch: "Between contracts.\n{Reserve holds.}", meta: '3 / 5' },
+      { tpl: 'C', eyebrow: 'nurse', size: 'md', shot: '04-score', noWordmark: true, muted: "Day 31.", punch: "Variable schedule.\n{Consistent} take-home.", meta: '4 / 5' },
+      { tpl: 'A', eyebrow: 'nurse', size: 'md', punch: "Free for\n{30 days.}", meta: 'becomeable.app/get-able' },
+  ] },
+
+  // ── BRAND-SCRIPT FOR NEW PERSONAS (C264-C268) ──
+
+  { id: 'C264', slug: 'brandscript-designer', theme: 'white', format: 'tiktok', slides: [
+      { tpl: 'A', eyebrow: 'design', size: 'md', muted: "You want to", punch: "stop the\n{Net-60 panic.}", meta: '1 / 6' },
+      { tpl: 'A', eyebrow: 'design', size: 'md', muted: "Bills are due", punch: "{net-zero.}", meta: '2 / 6' },
+      { tpl: 'A', eyebrow: 'design', size: 'md', noWordmark: true, muted: "Meet Able.", punch: "Built for the way\nyou {actually}\nget paid.", meta: '3 / 6' },
+      { tpl: 'C', eyebrow: 'design', size: 'md', shot: '02-allocation-flow', noWordmark: true, muted: "Every deposit", punch: "splits the moment\n{it arrives.}", meta: '4 / 6' },
+      { tpl: 'A', eyebrow: 'design', size: 'md', muted: "Pipeline gaps?", punch: "Floor {doesn't notice.}", meta: '5 / 6' },
+      { tpl: 'A', eyebrow: 'design', size: 'md', punch: "Start your\n{30-day}\nfree trial.", meta: 'becomeable.app/get-able' },
+  ] },
+
+  { id: 'C265', slug: 'brandscript-real-estate', theme: 'green', format: 'tiktok', slides: [
+      { tpl: 'A', eyebrow: 'real estate', size: 'md', muted: "You want to pay yourself", punch: "{between} closings.", meta: '1 / 6' },
+      { tpl: 'A', eyebrow: 'real estate', size: 'md', muted: "30 to 90 days", punch: "between {commissions.}", meta: '2 / 6' },
+      { tpl: 'A', eyebrow: 'real estate', size: 'md', noWordmark: true, muted: "Meet Able.", punch: "Built for the way\nyou {actually}\nget paid.", meta: '3 / 6' },
+      { tpl: 'C', eyebrow: 'real estate', size: 'md', shot: '02-allocation-flow', noWordmark: true, muted: "Commission lands.", punch: "Floor + tax.\nReserve {fills.}", meta: '4 / 6' },
+      { tpl: 'A', eyebrow: 'real estate', size: 'md', muted: "Smooth pay", punch: "across {deal cycles.}", meta: '5 / 6' },
+      { tpl: 'A', eyebrow: 'real estate', size: 'md', punch: "Start your\n{30-day}\nfree trial.", meta: 'becomeable.app/get-able' },
+  ] },
+
+  { id: 'C266', slug: 'brandscript-etsy', theme: 'glass', format: 'tiktok', slides: [
+      { tpl: 'A', eyebrow: 'seller', size: 'md', muted: "You want to weather", punch: "the post-holiday\n{cliff.}", meta: '1 / 6' },
+      { tpl: 'A', eyebrow: 'seller', size: 'md', muted: "November-December.", punch: "Then a {cliff.}", meta: '2 / 6' },
+      { tpl: 'A', eyebrow: 'seller', size: 'md', noWordmark: true, muted: "Meet Able.", punch: "Built for the way\nyou {actually}\nget paid.", meta: '3 / 6' },
+      { tpl: 'C', eyebrow: 'seller', size: 'md', shot: '02-allocation-flow', noWordmark: true, muted: "Every payout splits", punch: "the moment\n{Shopify clears.}", meta: '4 / 6' },
+      { tpl: 'A', eyebrow: 'seller', size: 'md', muted: "January slows.", punch: "The {reserve}\ndoesn't.", meta: '5 / 6' },
+      { tpl: 'A', eyebrow: 'seller', size: 'md', punch: "Start your\n{30-day}\nfree trial.", meta: 'becomeable.app/get-able' },
+  ] },
+
+  { id: 'C267', slug: 'brandscript-tipped', theme: 'black', format: 'tiktok', slides: [
+      { tpl: 'A', eyebrow: 'tips', size: 'md', muted: "You want to stop", punch: "the Tuesday-vs-Saturday\n{whiplash.}", meta: '1 / 6' },
+      { tpl: 'A', eyebrow: 'tips', size: 'md', muted: "$84 Tuesday.", punch: "$340 {Saturday.}\nSame week.", meta: '2 / 6' },
+      { tpl: 'A', eyebrow: 'tips', size: 'md', noWordmark: true, muted: "Meet Able.", punch: "Built for the way\nyou {actually}\nget paid.", meta: '3 / 6' },
+      { tpl: 'C', eyebrow: 'tips', size: 'md', shot: '06-log-income', noWordmark: true, muted: "Log cash + cards.", punch: "Tax + reserve\n{auto-routed.}", meta: '4 / 6' },
+      { tpl: 'A', eyebrow: 'tips', size: 'md', muted: "Slow shifts", punch: "{don't break}\nthe floor.", meta: '5 / 6' },
+      { tpl: 'A', eyebrow: 'tips', size: 'md', punch: "Start your\n{30-day}\nfree trial.", meta: 'becomeable.app/get-able' },
+  ] },
+
+  { id: 'C268', slug: 'brandscript-nurse', theme: 'page', format: 'tiktok', slides: [
+      { tpl: 'A', eyebrow: 'nurse', size: 'md', muted: "You want", punch: "variable schedule,\n{consistent} pay.", meta: '1 / 6' },
+      { tpl: 'A', eyebrow: 'nurse', size: 'md', muted: "PRN.", punch: "Per-diem.\n{Travel} contracts.", meta: '2 / 6' },
+      { tpl: 'A', eyebrow: 'nurse', size: 'md', noWordmark: true, muted: "Meet Able.", punch: "Built for the way\nyou {actually}\nget paid.", meta: '3 / 6' },
+      { tpl: 'C', eyebrow: 'nurse', size: 'md', shot: '02-allocation-flow', noWordmark: true, muted: "Each paycheck", punch: "splits the\n{same way.}", meta: '4 / 6' },
+      { tpl: 'A', eyebrow: 'nurse', size: 'md', muted: "Contract gap?", punch: "Reserve {covers} it.", meta: '5 / 6' },
+      { tpl: 'A', eyebrow: 'nurse', size: 'md', punch: "Start your\n{30-day}\nfree trial.", meta: 'becomeable.app/get-able' },
+  ] },
+
 ];
 
 
