@@ -24,6 +24,7 @@ https://support.google.com/youtube/contact/yt_api_form to lift the cap.
 """
 import argparse
 import os
+import random
 import sys
 import time
 from pathlib import Path
@@ -51,6 +52,21 @@ PRIVACY = "unlisted" # Default — review in Studio before flipping to public
 SLEEP_BETWEEN = 90   # seconds, throttles uploads to look human
 
 
+def _execute_with_retry(req, attempts=4, base_delay=2.0):
+    """Run a googleapiclient request with exponential backoff on transient errors.
+    Retries on 429/500/502/503/504; re-raises on auth, quota, or other 4xx."""
+    for n in range(attempts):
+        try:
+            return req.execute()
+        except HttpError as e:
+            status = getattr(e.resp, "status", 0)
+            if status not in (429, 500, 502, 503, 504) or n == attempts - 1:
+                raise
+            delay = base_delay * (2 ** n) + random.uniform(0, 1)
+            print(f"  [retry] Google API {status}, sleeping {delay:.1f}s ({n + 1}/{attempts - 1})", file=sys.stderr)
+            time.sleep(delay)
+
+
 def get_credentials():
     if not CREDS_FILE.exists():
         sys.exit(
@@ -73,10 +89,11 @@ def get_credentials():
 
 def get_sheet_rows(sheets_svc, sheet_id):
     """Return the header row + data rows of the first tab of the sheet."""
-    res = sheets_svc.spreadsheets().values().get(
+    req = sheets_svc.spreadsheets().values().get(
         spreadsheetId=sheet_id,
         range="A1:ZZ",
-    ).execute()
+    )
+    res = _execute_with_retry(req)
     values = res.get("values", [])
     if not values:
         return [], []
@@ -95,12 +112,13 @@ def col_letter(idx: int) -> str:
 
 def update_cell(sheets_svc, sheet_id, row_idx_1based, col_idx, value):
     cell = f"{col_letter(col_idx)}{row_idx_1based}"
-    sheets_svc.spreadsheets().values().update(
+    req = sheets_svc.spreadsheets().values().update(
         spreadsheetId=sheet_id,
         range=cell,
         valueInputOption="RAW",
         body={"values": [[value]]},
-    ).execute()
+    )
+    _execute_with_retry(req)
 
 
 def upload_video(youtube, mp4_path: Path, title: str, description: str, tags_str: str):
@@ -124,7 +142,7 @@ def upload_video(youtube, mp4_path: Path, title: str, description: str, tags_str
     response = None
     last_pct = -1
     while response is None:
-        status, response = req.next_chunk()
+        status, response = req.next_chunk(num_retries=3)
         if status:
             pct = int(status.progress() * 100)
             if pct != last_pct:
@@ -136,10 +154,11 @@ def upload_video(youtube, mp4_path: Path, title: str, description: str, tags_str
 
 
 def set_thumbnail(youtube, video_id: str, thumb_path: Path):
-    youtube.thumbnails().set(
+    req = youtube.thumbnails().set(
         videoId=video_id,
         media_body=MediaFileUpload(str(thumb_path), mimetype="image/png"),
-    ).execute()
+    )
+    _execute_with_retry(req)
 
 
 def main():

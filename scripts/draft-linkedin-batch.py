@@ -26,8 +26,10 @@ Requires:
 """
 import argparse
 import os
+import random
 import re
 import sys
+import time
 from datetime import date, timedelta
 from pathlib import Path
 
@@ -35,6 +37,7 @@ import anthropic
 from google.auth.transport.requests import Request
 from google.oauth2.credentials import Credentials
 from googleapiclient.discovery import build
+from googleapiclient.errors import HttpError
 
 ROOT = Path(__file__).resolve().parent.parent
 CONTENT = ROOT / "able-content"
@@ -187,10 +190,26 @@ def load_creds():
     return creds
 
 
+def _execute_with_retry(req, attempts=4, base_delay=2.0):
+    """Run a googleapiclient request with exponential backoff on transient errors.
+    Retries on 429/500/502/503/504; re-raises on auth, quota, or other 4xx."""
+    for n in range(attempts):
+        try:
+            return req.execute()
+        except HttpError as e:
+            status = getattr(e.resp, "status", 0)
+            if status not in (429, 500, 502, 503, 504) or n == attempts - 1:
+                raise
+            delay = base_delay * (2 ** n) + random.uniform(0, 1)
+            print(f"  [retry] Google API {status}, sleeping {delay:.1f}s ({n + 1}/{attempts - 1})", file=sys.stderr)
+            time.sleep(delay)
+
+
 def get_sheet(sheets_svc, sheet_id):
-    res = sheets_svc.spreadsheets().values().get(
+    req = sheets_svc.spreadsheets().values().get(
         spreadsheetId=sheet_id, range="A1:ZZ"
-    ).execute()
+    )
+    res = _execute_with_retry(req)
     values = res.get("values", [])
     if not values:
         sys.exit("error: sheet empty")
@@ -199,10 +218,11 @@ def get_sheet(sheets_svc, sheet_id):
 
 def update_cell(sheets_svc, sheet_id, row_1based, col_idx, value):
     cell = f"{col_letter(col_idx)}{row_1based}"
-    sheets_svc.spreadsheets().values().update(
+    req = sheets_svc.spreadsheets().values().update(
         spreadsheetId=sheet_id, range=cell, valueInputOption="RAW",
         body={"values": [[value]]},
-    ).execute()
+    )
+    _execute_with_retry(req)
 
 
 # ─── Schedule helper ───────────────────────────────────────────────────
