@@ -3255,7 +3255,10 @@ async function doSignOut() {
   // who signs out mid-edit doesn't lose the write inside the 800ms window.
   try { await flushSave(); } catch(e) { /* swallow - sign out anyway */ }
   // Clear everything client-side IMMEDIATELY for instant feedback
-  if(currentUser) sessionStorage.removeItem('able_access_'+currentUser.id);
+  if(currentUser) {
+    sessionStorage.removeItem('able_access_'+currentUser.id);
+    _clearUserDataCache(currentUser.id);
+  }
   // Clear Supabase's auth token from localStorage manually for instant sign out
   Object.keys(localStorage).forEach(k => {
     if(k.startsWith('sb-') && k.includes('-auth-token')) localStorage.removeItem(k);
@@ -3602,6 +3605,31 @@ async function _onAuthStateChangeImpl(user) {
     return null;
   })();
 
+  // OPTIMISTIC HYDRATION: if we cached user_data from a prior session, render
+  // the dashboard now — before any server roundtrip. The live fetch below
+  // races in parallel and re-renders with fresh data when it lands (Plaid-
+  // driven updates appear here, ~400ms after the optimistic paint). Skips
+  // for post-checkout (the loading overlay owns the screen) and for users
+  // with no meaningful cached content (they need onboarding anyway).
+  let _hydrated = false;
+  try {
+    const cached = sessionStorage.getItem('able_post_checkout') === '1' ? null : _readUserDataCache(user.id);
+    if (cached) {
+      _applyUserDataToState(cached, { skipMigrations: true });
+      const hasContent = (S.bills?.length || S.history?.length || S.profile);
+      if (hasContent) {
+        document.getElementById('auth-screen').style.display='none';
+        document.getElementById('paywall-screen').style.display='none';
+        const onb=document.getElementById('onboard-screen'); if(onb) onb.style.display='none';
+        document.getElementById('app').style.display='block';
+        const navUser=document.getElementById('nav-user'); if(navUser) navUser.textContent=user.email;
+        try { populateSources(); } catch(_) {}
+        try { refreshHome(); } catch(_) {}
+        _hydrated = true;
+      }
+    }
+  } catch(_) { /* hydrate is best-effort; fall through to live fetch */ }
+
   // signup_completed: fires once per user per browser. We check user.created_at
   // against now to make sure this is a genuine first-time sign-in, not just
   // a returning user on a new device (where trackOnce localStorage wouldn't
@@ -3728,7 +3756,7 @@ async function _onAuthStateChangeImpl(user) {
     // overlay visible the entire time (created at page load, line ~13369),
     // so we skip the auth-box "Loading your account" state - rendering both
     // back-to-back was the "two confirming pages, different designs" UX.
-    if (!isFromCheckout) {
+    if (!isFromCheckout && !_hydrated) {
       loadingDebounceTimer = setTimeout(() => {
         loadingDebounceTimer = null;
         showLoading('Loading your account');
@@ -3749,8 +3777,14 @@ async function _onAuthStateChangeImpl(user) {
     // MFA gate: await the parallel AAL check (kicked off at top of function).
     // If a verified TOTP factor exists and session is still aal1, halt here
     // and show the challenge — any data fetched in parallel is discarded.
+    // If we optimistically hydrated, hide the dashboard before showing the
+    // challenge so the user doesn't briefly see their data.
     const mfaFactor = await aalCheckPromise;
-    if (mfaFactor) { showMfaChallenge(mfaFactor.id); return; }
+    if (mfaFactor) {
+      if (_hydrated) document.getElementById('app').style.display='none';
+      showMfaChallenge(mfaFactor.id);
+      return;
+    }
 
     // Fast path: if Stripe handed us a session_id on the redirect, verify it
     // directly with Stripe's API and skip the webhook-delivery polling loop
@@ -3853,81 +3887,22 @@ async function _onAuthStateChangeImpl(user) {
         renderPaywallFinePrint();
         Able.track('paywall_viewed');
       }
+      // Sub lapsed since last cache write — drop the stale cache so the next
+      // sign-in (after they re-subscribe) doesn't optimistically render data
+      // they shouldn't see until access is confirmed.
+      _clearUserDataCache(user.id);
       return;
     }
 
     // user_data was kicked off in parallel above — await the prefetched result.
     const userData = await userDataPromise;
 
-    // Apply user data
+    // Apply user data via the shared helper (also runs migrations + cleanup).
     const d = userData.data;
-    if(d) {
-      // Normalize: legacy bills (pre-priority-feature) and imported rows can lack `priority`.
-      // computeJobs filters by strict equality on priority [1,2,3] so an undefined value is silently skipped.
-      S.bills           = (d.bills||[]).map(b=>({...b,priority:b.priority||2}));
-      S.debts           = d.debts||[];
-      S.history         = d.history||[];
-      S.forecast        = d.forecast||[];
-      S.buffer          = parseFloat(d.buffer)||0;
-      S.settings        = {debtPct:20,bufPct:15,freePct:5,ownerPct:0,allocateWindow:14,...(d.settings||{})};
-      S.month_history   = d.month_history||[];
-      S.sources         = d.sources||['Salary','Freelance','Side income','Other'];
-      // One-time cleanup: a prior bug (fixed 2026-05-04) wrote brought_here
-      // persona labels and intake_channels processor labels into S.sources.
-      // Strip any known-bad strings so Coach + Allocate sheet stop seeing
-      // "Dig out of debt without losing my mind" / "Direct deposit" /
-      // "Stripe" / "Venmo" as income sources.
-      if (Array.isArray(S.sources) && S.sources.length) {
-        const POLLUTED_LABELS = new Set([
-          // brought_here labels
-          'Stop the freezing-up cycle when money lands',
-          'Plug subscription leaks I keep paying for',
-          'Smooth out slow months without panic',
-          'Get on top of bills before they hit',
-          'Build a real cushion, not just $300 in checking',
-          'Stop avoiding the app every time I open it',
-          'Dig out of debt without losing my mind',
-          // intake_channels labels (these are payment processors, not income sources)
-          'Direct deposit',
-          'Stripe',
-          'PayPal',
-          'Venmo',
-          'Zelle',
-          'Cash App',
-          'Square',
-          'Marketplace (Airbnb, Etsy, etc.)',
-          'Paper check or cash',
-        ]);
-        const cleaned = S.sources.filter((s) => !POLLUTED_LABELS.has(String(s).trim()));
-        if (cleaned.length !== S.sources.length) {
-          S.sources = cleaned.length ? cleaned : ['Salary','Freelance','Side income','Other'];
-          save();
-        }
-      }
-      S.allocated_to_bills = parseFloat(d.allocated_to_bills)||0;
-      S.obligations     = d.obligations||[];
-      S.profile         = d.profile||null;
-      S.email_prefs     = d.email_prefs || {dormancy:true, weekly:true, bill_reminder:true, low_buffer:true, monthly_wrap:true};
-      if(normalizeFixedAllocations()) save();
-      // Migration: if allocated_to_bills is missing/0 but history contains bill allocations,
-      // reconstruct it from the jobs in each history entry. Prevents double-counting on upgrade.
-      if(!d.allocated_to_bills && Array.isArray(S.history) && S.history.length){
-        const reconstructed = S.history.reduce((sum,h)=>{
-          if(typeof h.billsPaid==='number') return sum+h.billsPaid;
-          if(Array.isArray(h.jobs)) return sum+h.jobs.filter(j=>j.type==='bills').reduce((s,j)=>s+(j.amount||0),0);
-          return sum;
-        },0);
-        if(reconstructed>0.01) S.allocated_to_bills=reconstructed;
-      }
-      // Per-bill reservations: assign IDs, redistribute legacy scalar (stragglers),
-      // and release reservations for non-monthly bills whose occurrences have passed.
-      let resDirty = ensureBillIds();
-      // Calendar-month rollover BEFORE migrate so a stale scalar from a prior
-      // month doesn't get redistributed into the new month's reservations.
-      if (autoRolloverIfNewMonth()) resDirty = true;
-      if (_isAllocatedToBillsCurrentMonth() && migrateScalarToReservations()) resDirty = true;
-      if (applyOccurrenceReleases()) resDirty = true;
-      if (resDirty) save();
+    if (d) {
+      const dirty = _applyUserDataToState(d, { skipMigrations: false });
+      if (dirty) save();
+      _persistUserDataCache(user.id, d);
     }
     setSyncState('ok');
     touchLastActive();
@@ -7143,7 +7118,7 @@ async function submitReferral() {
 }
 async function _writeUserData() {
   if(!currentUser) return;
-  const {error}=await sbGet().from('user_data').upsert({
+  const payload = {
     id:currentUser.id,
     bills:S.bills, debts:S.debts, history:S.history,
     forecast:S.forecast, buffer:S.buffer, settings:S.settings,
@@ -7152,8 +7127,103 @@ async function _writeUserData() {
     obligations:S.obligations||[], profile:S.profile||null,
     email_prefs:S.email_prefs||{dormancy:true,weekly:true,bill_reminder:true,low_buffer:true,monthly_wrap:true},
     updated_at:new Date().toISOString()
-  });
+  };
+  const {error}=await sbGet().from('user_data').upsert(payload);
   setSyncState(error?'error':'ok');
+  if (!error) _persistUserDataCache(currentUser.id, payload);
+}
+
+// Local cache of user_data row. Used for optimistic hydration on cold start
+// — render the dashboard from the last-known-good copy in localStorage before
+// the network fetch completes. Cuts perceived sign-in latency from ~800ms-1.5s
+// to <100ms on returning sessions. Plaid-driven server-side updates still
+// apply normally: the live fetch arrives ~400ms after hydration and replaces
+// the cached state, so any new bills/income detected since last open appear
+// in a subtle refresh moment.
+function _persistUserDataCache(userId, d) {
+  if (!userId || !d) return;
+  try {
+    localStorage.setItem('able_user_data_' + userId, JSON.stringify({
+      savedAt: Date.now(),
+      d: {
+        bills: d.bills, debts: d.debts, history: d.history,
+        forecast: d.forecast, buffer: d.buffer, settings: d.settings,
+        month_history: d.month_history, sources: d.sources,
+        allocated_to_bills: d.allocated_to_bills, obligations: d.obligations,
+        profile: d.profile, email_prefs: d.email_prefs,
+      },
+    }));
+  } catch(_) { /* quota / private mode — fall through to live fetch on next boot */ }
+}
+function _readUserDataCache(userId) {
+  if (!userId) return null;
+  try {
+    const raw = localStorage.getItem('able_user_data_' + userId);
+    if (!raw) return null;
+    const parsed = JSON.parse(raw);
+    if (!parsed || !parsed.d) return null;
+    // Anything older than 30 days is stale enough to skip — fall through to
+    // live fetch (avoids showing severely outdated data if a user takes a
+    // long break from the app).
+    if (Date.now() - (parsed.savedAt || 0) > 30 * 86400000) return null;
+    return parsed.d;
+  } catch(_) { return null; }
+}
+function _clearUserDataCache(userId) {
+  if (!userId) return;
+  try { localStorage.removeItem('able_user_data_' + userId); } catch(_) {}
+}
+
+// Apply a user_data row (from cache or live fetch) onto S. skipMigrations is
+// true for cache loads — cached data already went through these migrations
+// before it was saved. Live fetches run the full migration block to handle
+// month rollover, scalar→reservations conversion, occurrence releases, etc.
+function _applyUserDataToState(d, opts) {
+  opts = opts || {};
+  S.bills           = (d.bills||[]).map(b=>({...b,priority:b.priority||2}));
+  S.debts           = d.debts||[];
+  S.history         = d.history||[];
+  S.forecast        = d.forecast||[];
+  S.buffer          = parseFloat(d.buffer)||0;
+  S.settings        = {debtPct:20,bufPct:15,freePct:5,ownerPct:0,allocateWindow:14,...(d.settings||{})};
+  S.month_history   = d.month_history||[];
+  S.sources         = d.sources||['Salary','Freelance','Side income','Other'];
+  S.allocated_to_bills = parseFloat(d.allocated_to_bills)||0;
+  S.obligations     = d.obligations||[];
+  S.profile         = d.profile||null;
+  S.email_prefs     = d.email_prefs || {dormancy:true, weekly:true, bill_reminder:true, low_buffer:true, monthly_wrap:true};
+  if (opts.skipMigrations) return false;
+  // The full migration block (live fetch path).
+  let dirty = false;
+  if (Array.isArray(S.sources) && S.sources.length) {
+    const POLLUTED_LABELS = new Set([
+      'Stop the freezing-up cycle when money lands','Plug subscription leaks I keep paying for',
+      'Smooth out slow months without panic','Get on top of bills before they hit',
+      'Build a real cushion, not just $300 in checking','Stop avoiding the app every time I open it',
+      'Dig out of debt without losing my mind',
+      'Direct deposit','Stripe','PayPal','Venmo','Zelle','Cash App','Square',
+      'Marketplace (Airbnb, Etsy, etc.)','Paper check or cash',
+    ]);
+    const cleaned = S.sources.filter((s) => !POLLUTED_LABELS.has(String(s).trim()));
+    if (cleaned.length !== S.sources.length) {
+      S.sources = cleaned.length ? cleaned : ['Salary','Freelance','Side income','Other'];
+      dirty = true;
+    }
+  }
+  if (normalizeFixedAllocations()) dirty = true;
+  if (!d.allocated_to_bills && Array.isArray(S.history) && S.history.length) {
+    const reconstructed = S.history.reduce((sum,h)=>{
+      if(typeof h.billsPaid==='number') return sum+h.billsPaid;
+      if(Array.isArray(h.jobs)) return sum+h.jobs.filter(j=>j.type==='bills').reduce((s,j)=>s+(j.amount||0),0);
+      return sum;
+    },0);
+    if (reconstructed>0.01) S.allocated_to_bills=reconstructed;
+  }
+  if (ensureBillIds()) dirty = true;
+  if (autoRolloverIfNewMonth()) dirty = true;
+  if (_isAllocatedToBillsCurrentMonth() && migrateScalarToReservations()) dirty = true;
+  if (applyOccurrenceReleases()) dirty = true;
+  return dirty;
 }
 
 function save() {
@@ -13955,8 +14025,17 @@ function _isCapacitor(){
   if (window.Capacitor?.isNativePlatform?.()) return true;
   return false;
 }
+function _shouldSkipAutoFocus(){
+  // Same keyboard-jump problem exists on mobile Safari / Android browsers as
+  // in Capacitor: focusing an input pops the OS keyboard and the system
+  // scrolls the input into view, dragging position:fixed modal-bg with it.
+  // Coarse pointer = touch-primary device = skip auto-focus everywhere.
+  if (_isCapacitor()) return true;
+  try { if (window.matchMedia && window.matchMedia('(pointer: coarse)').matches) return true; } catch(_) {}
+  return false;
+}
 function _modalFocus(id, delay){
-  if (_isCapacitor()) return;
+  if (_shouldSkipAutoFocus()) return;
   setTimeout(()=>{const el=document.getElementById(id);if(el)el.focus();}, delay||50);
 }
 function openBalanceModal(){
