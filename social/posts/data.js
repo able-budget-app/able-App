@@ -5728,6 +5728,98 @@ window.CAROUSELS = [
       { tpl: 'A', eyebrow: 'benefit 4', size: 'md', muted: "4.", punch: "Business pays you\nlike a {real job.}", meta: '5 / 6' },
       { tpl: 'A', eyebrow: '4 benefits', size: 'md', punch: "Free for\n{30 days.}", meta: 'becomeable.app/get-able' },
   ] },
+  // ── MORE BRAND-SCRIPT VARIANTS (C241-C250) ──
+
+  { id: 'C241', slug: 'brandscript-calm-sunday', theme: 'glass-dark', format: 'tiktok', slides: [
+      { tpl: 'A', eyebrow: 'brandscript', size: 'md', muted: "You want to", punch: "stop the\n{Sunday-night dread.}", meta: '1 / 6' },
+      { tpl: 'A', eyebrow: 'brandscript', size: 'md', muted: "Tomorrow's invoices.", punch: "Wednesday's {bills.}\nThe gap.", meta: '2 / 6' },
+      { tpl: 'A', eyebrow: 'brandscript', size: 'md', noWordmark: true, muted: "Meet Able.", punch: "Built for the way\nyou {actually}\nget paid.", meta: '3 / 6' },
+      { tpl: 'C', eyebrow: 'brandscript', size: 'md', shot: '02-allocation-flow', noWordmark: true, muted: "Floor + tax", punch: "{pre-funded}\nbefore Sunday.", meta: '4 / 6' },
+      { tpl: 'A', eyebrow: 'brandscript', size: 'md', muted: "Sunday is just", punch: "{Sunday.}", meta: '5 / 6' },
+      { tpl: 'A', eyebrow: 'brandscript', size: 'md', punch: "Start your\n{30-day}\nfree trial.", meta: 'becomeable.app/get-able' },
+  ] },
+
+  { id: 'C242', slug: 'brandscript-nothing-leaked', theme: 'green', format: 'tiktok', slides: [
+      { tpl: 'A', eyebrow: 'brandscript', size: 'md', muted: "You want a Day 31", punch: "that doesn't end in\n{shame.}", meta: '1 / 6' },
+      { tpl: 'A', eyebrow: 'brandscript', size: 'md', muted: "\"Where did", punch: "the {$1,000} go?\"", meta: '2 / 6' },
+      { tpl: 'A', eyebrow: 'brandscript', size: 'md', noWordmark: true, muted: "Meet Able.", punch: "Built for\n{inconsistent}\nincome.", meta: '3 / 6' },
+      { tpl: 'C', eyebrow: 'brandscript', size: 'md', shot: '02-allocation-flow', noWordmark: true, muted: "Every deposit splits.", punch: "{Nothing} leaks.", meta: '4 / 6' },
+      { tpl: 'A', eyebrow: 'brandscript', size: 'md', muted: "Day 31:", punch: "you know exactly\n{where every dollar went.}", meta: '5 / 6' },
+      { tpl: 'A', eyebrow: 'brandscript', size: 'md', punch: "Start your\n{30-day}\nfree trial.", meta: 'becomeable.app/get-able' },
+  ] },
+
+  { id: 'C243', slug: 'brandscript-stop-checking', theme: 'black', format: 'tiktok', slides: [
+      { tpl: 'A', eyebrow: 'brandscript', size: 'md', muted: "You want to", punch: "stop {refreshing}\nyour bank.", meta: '1 / 6' },
+      { tpl: 'A', eyebrow: 'brandscript', size: 'md', muted: "You check because", punch: "you don't {trust}\nyour position.", meta: '2 / 6' },
+      { tpl: 'A', eyebrow: 'brandscript', size: 'md', noWordmark: true, muted: "Meet Able.", punch: "Built for the way\nyou {actually}\nget paid.", meta: '3 / 6' },
+      { tpl: 'C', eyebrow: 'brandscript', size: 'md', shot: '01-dashboard', noWordmark: true, muted: "Floor + tax routed.", punch: "What you see\n{is yours.}", meta: '4 / 6' },
+      { tpl: 'A', eyebrow: 'brandscript', size: 'md', muted: "You stop checking.", punch: "{First time}\nin years.", meta: '5 / 6' },
+      { tpl: 'A', eyebrow: 'brandscript', size: 'md', punch: "Start your\n{30-day}\nfree trial.", meta: 'becomeable.app/get-able' },
+  ] },
+
+  { id: 'C244', slug: 'brandscript-i-am-able-to-budget', theme: 'page', format: 'tiktok', slides: [
+      { tpl: 'A', eyebrow: 'brandscript', size: 'md', muted: "You want to say:", punch: "\"I'm {able to}\nbudget.\"", meta: '1 / 6' },
+      { tpl: 'A', eyebrow: 'brandscript', size: 'md', muted: "Variable income makes", punch: "that feel\n{impossible.}", meta: '2 / 6' },
+      { tpl: 'A', eyebrow: 'brandscript', size: 'md', noWordmark: true, muted: "Meet Able.", punch: "Per-deposit,\n{not per-month.}", meta: '3 / 6' },
+      { tpl: 'C', eyebrow: 'brandscript', size: 'md', shot: '02-allocation-flow', noWordmark: true, muted: "Every deposit", punch: "fills the\n{floor first.}", meta: '4 / 6' },
+      { tpl: 'A', eyebrow: 'brandscript', size: 'md', muted: "Same income.", punch: "{Different relationship}\nto money.", meta: '5 / 6' },
+      { tpl: 'A', eyebrow: 'brandscript', size: 'md', punch: "Start your\n{30-day}\nfree trial.", meta: 'becomeable.app/get-able' },
+  ] },
+
+  { id: 'C245', slug: 'brandscript-year-one-calm', theme: 'glass', format: 'tiktok', slides: [
+      { tpl: 'A', eyebrow: 'brandscript', size: 'md', muted: "You want a year", punch: "that doesn't end in\n{panic.}", meta: '1 / 6' },
+      { tpl: 'A', eyebrow: 'brandscript', size: 'md', muted: "December usually =", punch: "{scramble.}\nApril usually = surprise.", meta: '2 / 6' },
+      { tpl: 'A', eyebrow: 'brandscript', size: 'md', noWordmark: true, muted: "Meet Able.", punch: "Built for the way\nyou {actually}\nget paid.", meta: '3 / 6' },
+      { tpl: 'C', eyebrow: 'brandscript', size: 'md', shot: '02-allocation-flow', noWordmark: true, muted: "Floor + tax pre-funded.", punch: "{All year.}", meta: '4 / 6' },
+      { tpl: 'A', eyebrow: 'brandscript', size: 'md', muted: "Year-end recap:", punch: "debt down. Savings up.\n{No panic.}", meta: '5 / 6' },
+      { tpl: 'A', eyebrow: 'brandscript', size: 'md', punch: "Start your\n{30-day}\nfree trial.", meta: 'becomeable.app/get-able' },
+  ] },
+
+  { id: 'C246', slug: 'brandscript-permission', theme: 'white', format: 'tiktok', slides: [
+      { tpl: 'A', eyebrow: 'brandscript', size: 'md', muted: "You want to", punch: "stop feeling {guilty}\nabout money.", meta: '1 / 6' },
+      { tpl: 'A', eyebrow: 'brandscript', size: 'md', muted: "The advice was wrong", punch: "for your {income}\nshape.", meta: '2 / 6' },
+      { tpl: 'A', eyebrow: 'brandscript', size: 'md', noWordmark: true, muted: "The problem was never you.", punch: "It was the {advice}\nyou were handed.", meta: '3 / 6' },
+      { tpl: 'C', eyebrow: 'brandscript', size: 'md', shot: '02-allocation-flow', noWordmark: true, muted: "Per-deposit allocation.", punch: "Not {per-month.}", meta: '4 / 6' },
+      { tpl: 'A', eyebrow: 'brandscript', size: 'md', muted: "Shame fades.", punch: "{Structure} takes\nits place.", meta: '5 / 6' },
+      { tpl: 'A', eyebrow: 'brandscript', size: 'md', punch: "Start your\n{30-day}\nfree trial.", meta: 'becomeable.app/get-able' },
+  ] },
+
+  { id: 'C247', slug: 'brandscript-reserve-bridge', theme: 'green', format: 'tiktok', slides: [
+      { tpl: 'A', eyebrow: 'brandscript', size: 'md', muted: "You want to bridge", punch: "{slow months}\nwithout panic.", meta: '1 / 6' },
+      { tpl: 'A', eyebrow: 'brandscript', size: 'md', muted: "Slow months feel like", punch: "{emergencies.}", meta: '2 / 6' },
+      { tpl: 'A', eyebrow: 'brandscript', size: 'md', noWordmark: true, muted: "Meet Able.", punch: "Built for the way\nyou {actually}\nget paid.", meta: '3 / 6' },
+      { tpl: 'C', eyebrow: 'brandscript', size: 'md', shot: '02-allocation-flow', noWordmark: true, muted: "Every good-month deposit", punch: "grows the {reserve.}", meta: '4 / 6' },
+      { tpl: 'A', eyebrow: 'brandscript', size: 'md', muted: "Slow months become", punch: "{routine.}\nNot emergencies.", meta: '5 / 6' },
+      { tpl: 'A', eyebrow: 'brandscript', size: 'md', punch: "Start your\n{30-day}\nfree trial.", meta: 'becomeable.app/get-able' },
+  ] },
+
+  { id: 'C248', slug: 'brandscript-weekly-rhythm', theme: 'glass-dark', format: 'tiktok', slides: [
+      { tpl: 'A', eyebrow: 'brandscript', size: 'md', muted: "You want a money habit", punch: "that takes {10 minutes}\na week.", meta: '1 / 6' },
+      { tpl: 'A', eyebrow: 'brandscript', size: 'md', muted: "Most apps want", punch: "{daily} attention.", meta: '2 / 6' },
+      { tpl: 'A', eyebrow: 'brandscript', size: 'md', noWordmark: true, muted: "Meet Able.", punch: "Built for the way\nyou {actually}\nget paid.", meta: '3 / 6' },
+      { tpl: 'C', eyebrow: 'brandscript', size: 'md', shot: '01-dashboard', noWordmark: true, muted: "Automation does the daily.", punch: "You do the\n{weekly.}", meta: '4 / 6' },
+      { tpl: 'A', eyebrow: 'brandscript', size: 'md', muted: "10 minutes Sunday.", punch: "Then you're\n{done.}", meta: '5 / 6' },
+      { tpl: 'A', eyebrow: 'brandscript', size: 'md', punch: "Start your\n{30-day}\nfree trial.", meta: 'becomeable.app/get-able' },
+  ] },
+
+  { id: 'C249', slug: 'brandscript-finally-save', theme: 'black', format: 'tiktok', slides: [
+      { tpl: 'A', eyebrow: 'brandscript', size: 'md', muted: "You want to", punch: "actually {build}\nsavings.", meta: '1 / 6' },
+      { tpl: 'A', eyebrow: 'brandscript', size: 'md', muted: "Slow months", punch: "wipe what you\n{saved.}", meta: '2 / 6' },
+      { tpl: 'A', eyebrow: 'brandscript', size: 'md', noWordmark: true, muted: "Meet Able.", punch: "Built for the way\nyou {actually}\nget paid.", meta: '3 / 6' },
+      { tpl: 'C', eyebrow: 'brandscript', size: 'md', shot: '02-allocation-flow', noWordmark: true, muted: "Reserve grows on every deposit.", punch: "Bills {don't}\nraid it.", meta: '4 / 6' },
+      { tpl: 'A', eyebrow: 'brandscript', size: 'md', muted: "Savings line that goes", punch: "{up.}\nNot sideways.", meta: '5 / 6' },
+      { tpl: 'A', eyebrow: 'brandscript', size: 'md', punch: "Start your\n{30-day}\nfree trial.", meta: 'becomeable.app/get-able' },
+  ] },
+
+  { id: 'C250', slug: 'brandscript-end-the-cycle', theme: 'page', format: 'tiktok', slides: [
+      { tpl: 'A', eyebrow: 'brandscript', size: 'md', muted: "You want to end", punch: "the Day 1-31\n{cycle.}", meta: '1 / 6' },
+      { tpl: 'A', eyebrow: 'brandscript', size: 'md', muted: "Same income.", punch: "{Same shame.}", meta: '2 / 6' },
+      { tpl: 'A', eyebrow: 'brandscript', size: 'md', noWordmark: true, muted: "Meet Able.", punch: "Same foundation.\n{Different clock.}", meta: '3 / 6' },
+      { tpl: 'C', eyebrow: 'brandscript', size: 'md', shot: '02-allocation-flow', noWordmark: true, muted: "Different unit of time.", punch: "{Per-deposit.}", meta: '4 / 6' },
+      { tpl: 'A', eyebrow: 'brandscript', size: 'md', muted: "Same income.", punch: "{Different} outcome.", meta: '5 / 6' },
+      { tpl: 'A', eyebrow: 'brandscript', size: 'md', punch: "Start your\n{30-day}\nfree trial.", meta: 'becomeable.app/get-able' },
+  ] },
+
 ];
 
 
