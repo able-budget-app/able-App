@@ -5820,6 +5820,72 @@ window.CAROUSELS = [
       { tpl: 'A', eyebrow: 'brandscript', size: 'md', punch: "Start your\n{30-day}\nfree trial.", meta: 'becomeable.app/get-able' },
   ] },
 
+  // ── MORE IDENTITY-ARC (C251-C258) — vulnerable transformation moments ──
+
+  { id: 'C251', slug: 'identity-can-afford-this', theme: 'page', format: 'tiktok', slides: [
+      { tpl: 'A', eyebrow: 'identity', size: 'md', muted: "\"We can afford this.\"", punch: "First time you said it\n{out loud.}", meta: '1 / 5' },
+      { tpl: 'A', eyebrow: 'identity', size: 'md', muted: "Used to whisper it.", punch: "Or {avoid} the question.", meta: '2 / 5' },
+      { tpl: 'C', eyebrow: 'identity', size: 'md', shot: '01-dashboard', noWordmark: true, muted: "Free spending bucket?", punch: "{It has the number.}", meta: '3 / 5' },
+      { tpl: 'A', eyebrow: 'identity', size: 'md', muted: "No flinch.", punch: "No {mental math.}\nJust yes.", meta: '4 / 5' },
+      { tpl: 'A', eyebrow: 'identity', size: 'md', punch: "Free for\n{30 days.}", meta: 'becomeable.app/get-able' },
+  ] },
+
+  { id: 'C252', slug: 'identity-holiday-no-borrow', theme: 'green', format: 'tiktok', slides: [
+      { tpl: 'A', eyebrow: 'identity', size: 'md', muted: "December.", punch: "First holiday without\n{a credit card.}", meta: '1 / 5' },
+      { tpl: 'A', eyebrow: 'identity', size: 'md', muted: "Free spending bucket", punch: "had the {gift money}\nready.", meta: '2 / 5' },
+      { tpl: 'C', eyebrow: 'identity', size: 'md', shot: '01-dashboard', noWordmark: true, muted: "Floor still funded.", punch: "Tax still {growing.}", meta: '3 / 5' },
+      { tpl: 'A', eyebrow: 'identity', size: 'md', muted: "January arrives.", punch: "{No} statement panic.", meta: '4 / 5' },
+      { tpl: 'A', eyebrow: 'identity', size: 'md', punch: "Free for\n{30 days.}", meta: 'becomeable.app/get-able' },
+  ] },
+
+  { id: 'C253', slug: 'identity-slow-week-didnt-break', theme: 'glass-dark', format: 'tiktok', slides: [
+      { tpl: 'A', eyebrow: 'identity', size: 'md', muted: "A slow week.", punch: "Used to {trigger}\nthe spiral.", meta: '1 / 5' },
+      { tpl: 'A', eyebrow: 'identity', size: 'md', muted: "Now it's just", punch: "a {slow week.}", meta: '2 / 5' },
+      { tpl: 'C', eyebrow: 'identity', size: 'md', shot: '01-dashboard', noWordmark: true, muted: "Floor still funded.", punch: "Reserve {still} there.", meta: '3 / 5' },
+      { tpl: 'A', eyebrow: 'identity', size: 'md', muted: "Same anxiety used to come.", punch: "Now it {doesn't.}", meta: '4 / 5' },
+      { tpl: 'A', eyebrow: 'identity', size: 'md', punch: "Free for\n{30 days.}", meta: 'becomeable.app/get-able' },
+  ] },
+
+  { id: 'C254', slug: 'identity-accountant-call-calm', theme: 'white', format: 'tiktok', slides: [
+      { tpl: 'A', eyebrow: 'identity', size: 'md', muted: "Accountant call.", punch: "Used to be a\n{panic} call.", meta: '1 / 5' },
+      { tpl: 'A', eyebrow: 'identity', size: 'md', muted: "\"How much do I owe?\"", punch: "\"Where's my\n{paperwork?}\"", meta: '2 / 5' },
+      { tpl: 'C', eyebrow: 'identity', size: 'md', shot: '14-tax-export', noWordmark: true, muted: "One CSV.", punch: "Tax bucket {already}\nfunded.", meta: '3 / 5' },
+      { tpl: 'A', eyebrow: 'identity', size: 'md', muted: "Call becomes a", punch: "{check-in.}\nNot a crisis.", meta: '4 / 5' },
+      { tpl: 'A', eyebrow: 'identity', size: 'md', punch: "Free for\n{30 days.}", meta: 'becomeable.app/get-able' },
+  ] },
+
+  { id: 'C255', slug: 'identity-said-no-to-client', theme: 'black', format: 'tiktok', slides: [
+      { tpl: 'A', eyebrow: 'identity', size: 'md', muted: "You said {no}", punch: "to a bad client.", meta: '1 / 5' },
+      { tpl: 'A', eyebrow: 'identity', size: 'md', muted: "Used to take {anything}", punch: "because the bills.", meta: '2 / 5' },
+      { tpl: 'C', eyebrow: 'identity', size: 'md', shot: '01-dashboard', noWordmark: true, muted: "Floor funded for {weeks.}", punch: "Reserve {holding.}", meta: '3 / 5' },
+      { tpl: 'A', eyebrow: 'identity', size: 'md', muted: "You can wait for the", punch: "{right} client.", meta: '4 / 5' },
+      { tpl: 'A', eyebrow: 'identity', size: 'md', punch: "Free for\n{30 days.}", meta: 'becomeable.app/get-able' },
+  ] },
+
+  { id: 'C256', slug: 'identity-no-dread-opening-app', theme: 'glass', format: 'tiktok', slides: [
+      { tpl: 'A', eyebrow: 'identity', size: 'md', muted: "Morning routine.", punch: "Open the {budget app}\nwithout dread.", meta: '1 / 5' },
+      { tpl: 'A', eyebrow: 'identity', size: 'md', muted: "Used to dread it.", punch: "Now it's just\n{check-in.}", meta: '2 / 5' },
+      { tpl: 'C', eyebrow: 'identity', size: 'md', shot: '01-dashboard', noWordmark: true, muted: "Everything where", punch: "you {expected.}", meta: '3 / 5' },
+      { tpl: 'A', eyebrow: 'identity', size: 'md', muted: "No surprises.", punch: "{No spirals.}\nClose the app.", meta: '4 / 5' },
+      { tpl: 'A', eyebrow: 'identity', size: 'md', punch: "Free for\n{30 days.}", meta: 'becomeable.app/get-able' },
+  ] },
+
+  { id: 'C257', slug: 'identity-caught-up-debt', theme: 'green', format: 'tiktok', slides: [
+      { tpl: 'A', eyebrow: 'identity', size: 'md', muted: "\"I caught up.\"", punch: "Words you {never}\nthought you'd say.", meta: '1 / 5' },
+      { tpl: 'A', eyebrow: 'identity', size: 'md', muted: "Card balance:", punch: "{lower} every month.", meta: '2 / 5' },
+      { tpl: 'C', eyebrow: 'identity', size: 'md', shot: '10-debts', noWordmark: true, muted: "Extra debt bucket fed", punch: "with {every deposit.}", meta: '3 / 5' },
+      { tpl: 'A', eyebrow: 'identity', size: 'md', muted: "Months stack up.", punch: "Then {one day:}\ncaught up.", meta: '4 / 5' },
+      { tpl: 'A', eyebrow: 'identity', size: 'md', punch: "Free for\n{30 days.}", meta: 'becomeable.app/get-able' },
+  ] },
+
+  { id: 'C258', slug: 'identity-day-one-year-two', theme: 'page', format: 'tiktok', slides: [
+      { tpl: 'A', eyebrow: 'identity', size: 'md', muted: "Year 2, Day 1.", punch: "Same income\n{shape.}", meta: '1 / 5' },
+      { tpl: 'A', eyebrow: 'identity', size: 'md', muted: "Same clients.", punch: "Same {variance.}", meta: '2 / 5' },
+      { tpl: 'C', eyebrow: 'identity', size: 'md', shot: '04-score', noWordmark: true, muted: "Different position.", punch: "Different {feel.}", meta: '3 / 5' },
+      { tpl: 'A', eyebrow: 'identity', size: 'md', muted: "Year 1 was the work.", punch: "Year 2 is the\n{compound.}", meta: '4 / 5' },
+      { tpl: 'A', eyebrow: 'identity', size: 'md', punch: "Free for\n{30 days.}", meta: 'becomeable.app/get-able' },
+  ] },
+
 ];
 
 
