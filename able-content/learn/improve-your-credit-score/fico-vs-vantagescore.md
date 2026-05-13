@@ -7,6 +7,7 @@ meta_description: "Why you have different scores. You have multiple credit score
 target_keyword: "fico vs vantagescore"
 secondary_keywords: []
 cluster: learn-credit
+youtube_id: "qLm8iCILUiQ"
 page_type: supporting
 parent: /learn/improve-your-credit-score/
 internal_links:

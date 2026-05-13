@@ -7,6 +7,7 @@ meta_description: "The fastest way to boost your score. Credit utilization is th
 target_keyword: "mastering credit utilization"
 secondary_keywords: []
 cluster: learn-credit
+youtube_id: "Sm3Zss1DpeA"
 page_type: supporting
 parent: /learn/improve-your-credit-score/
 internal_links:

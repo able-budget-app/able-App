@@ -7,6 +7,7 @@ meta_description: "Never miss a payment again. Payment history is 35% of your sc
 target_keyword: "automating on time payments"
 secondary_keywords: []
 cluster: learn-credit
+youtube_id: "51GuFv9SF9M"
 page_type: supporting
 parent: /learn/improve-your-credit-score/
 internal_links:

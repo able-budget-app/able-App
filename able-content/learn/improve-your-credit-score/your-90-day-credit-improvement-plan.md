@@ -7,6 +7,7 @@ meta_description: "Add 50-150 points in 3 months. The playbook for adding signif
 target_keyword: "your 90 day credit improvement plan"
 secondary_keywords: []
 cluster: learn-credit
+youtube_id: "uokhOzTt6sE"
 page_type: supporting
 parent: /learn/improve-your-credit-score/
 internal_links:

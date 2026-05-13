@@ -7,6 +7,7 @@ meta_description: "Not all debt is the enemy. Most advice treats all debt like p
 target_keyword: "good debt vs bad debt"
 secondary_keywords: []
 cluster: learn-debt
+youtube_id: "ryPOL6w5ZLw"
 page_type: supporting
 parent: /learn/get-out-of-debt/
 internal_links:

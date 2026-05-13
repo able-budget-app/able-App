@@ -7,6 +7,7 @@ meta_description: "Your 90-day action plan. You have the theory. Time to build t
 target_keyword: "build your debt payoff schedule"
 secondary_keywords: []
 cluster: learn-debt
+youtube_id: "kdSl8GEuVj0"
 page_type: supporting
 parent: /learn/get-out-of-debt/
 internal_links:

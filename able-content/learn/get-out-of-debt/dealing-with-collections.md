@@ -7,6 +7,7 @@ meta_description: "Know your rights. Collections rules are different. The Fair D
 target_keyword: "dealing with collections"
 secondary_keywords: []
 cluster: learn-debt
+youtube_id: "nDlNIEb8weI"
 page_type: supporting
 parent: /learn/get-out-of-debt/
 internal_links:

@@ -7,6 +7,7 @@ meta_description: "Thin file or damaged credit starter kit. No credit history or
 target_keyword: "building credit from scratch or scratch again"
 secondary_keywords: []
 cluster: learn-credit
+youtube_id: "YEjaSca4tUk"
 page_type: supporting
 parent: /learn/improve-your-credit-score/
 internal_links:

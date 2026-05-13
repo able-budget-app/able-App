@@ -7,6 +7,7 @@ meta_description: "How to shop without wrecking your score. Every credit pull is
 target_keyword: "hard vs soft inquiries"
 secondary_keywords: []
 cluster: learn-credit
+youtube_id: "AEam6LJfTu8"
 page_type: supporting
 parent: /learn/improve-your-credit-score/
 internal_links:

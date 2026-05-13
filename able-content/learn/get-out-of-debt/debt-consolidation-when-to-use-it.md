@@ -7,6 +7,7 @@ meta_description: "A tool, not a magic fix. Consolidation combines multiple debt
 target_keyword: "debt consolidation when to use it"
 secondary_keywords: []
 cluster: learn-debt
+youtube_id: "vZDzgKWjIjY"
 page_type: supporting
 parent: /learn/get-out-of-debt/
 internal_links:

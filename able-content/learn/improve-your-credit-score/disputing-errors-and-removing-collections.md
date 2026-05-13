@@ -7,6 +7,7 @@ meta_description: "Your credit report cleanup checklist. Errors and collections 
 target_keyword: "disputing errors and removing collections"
 secondary_keywords: []
 cluster: learn-credit
+youtube_id: "BaP7IfjVmgs"
 page_type: supporting
 parent: /learn/improve-your-credit-score/
 internal_links:

@@ -7,6 +7,7 @@ meta_description: "The five factors explained simply. Your credit score is a thr
 target_keyword: "how your credit score actually works"
 secondary_keywords: []
 cluster: learn-credit
+youtube_id: "AjWwkHCa2k8"
 page_type: supporting
 parent: /learn/improve-your-credit-score/
 internal_links:

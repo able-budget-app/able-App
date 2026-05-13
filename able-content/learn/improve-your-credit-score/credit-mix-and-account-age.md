@@ -7,6 +7,7 @@ meta_description: "Why variety matters. The last 25% of your score comes from tw
 target_keyword: "credit mix and account age"
 secondary_keywords: []
 cluster: learn-credit
+youtube_id: "6KveUd-vMyo"
 page_type: supporting
 parent: /learn/improve-your-credit-score/
 internal_links:

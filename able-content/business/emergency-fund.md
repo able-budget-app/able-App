@@ -11,6 +11,7 @@ secondary_keywords:
   - how much emergency fund entrepreneur
   - emergency fund inconsistent income
 cluster: business
+youtube_id: "nCvIvVKcysk"
 page_type: supporting
 parent: /business/
 internal_links:

@@ -7,6 +7,7 @@ meta_description: "Pick the method that fits your brain. Two main strategies, bo
 target_keyword: "debt snowball vs debt avalanche"
 secondary_keywords: []
 cluster: learn-debt
+youtube_id: "xnyjd9ZfJQo"
 page_type: supporting
 parent: /learn/get-out-of-debt/
 internal_links:
