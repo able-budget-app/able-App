@@ -46,6 +46,8 @@ const HARD_MAX_BATCHES = 10;            // 500 txns; safely under 150s gateway
 const _ALLOWED_ORIGINS = new Set([
   'https://becomeable.app',
   'https://www.becomeable.app',
+  'capacitor://localhost',
+  'able://localhost',
 ]);
 function _allowOrigin(origin: string | null): string {
   if (!origin) return 'https://becomeable.app';

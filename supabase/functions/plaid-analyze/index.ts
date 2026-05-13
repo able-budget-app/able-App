@@ -54,6 +54,8 @@ const READY_TIME_CAP_MS = 3 * 60 * 1000;
 const _ALLOWED_ORIGINS = new Set([
   'https://becomeable.app',
   'https://www.becomeable.app',
+  'capacitor://localhost',
+  'able://localhost',
 ]);
 function _allowOrigin(origin: string | null): string {
   if (!origin) return 'https://becomeable.app';

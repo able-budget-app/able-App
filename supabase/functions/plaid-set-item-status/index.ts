@@ -35,6 +35,8 @@ const SERVICE_ROLE = _getServiceKey();
 const _ALLOWED_ORIGINS = new Set([
   'https://becomeable.app',
   'https://www.becomeable.app',
+  'capacitor://localhost',
+  'able://localhost',
 ]);
 function _allowOrigin(origin: string | null): string {
   if (!origin) return 'https://becomeable.app';

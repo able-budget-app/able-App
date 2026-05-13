@@ -3,6 +3,8 @@ import { createClient } from 'npm:@supabase/supabase-js@2'
 const _ALLOWED_ORIGINS = new Set([
   'https://becomeable.app',
   'https://www.becomeable.app',
+  'capacitor://localhost',
+  'able://localhost',
 ]);
 function _allowOrigin(origin: string | null): string {
   if (!origin) return 'https://becomeable.app';
@@ -59,16 +61,7 @@ function _getServiceKey(): string {
     const userId = userRes.user.id
     const userEmail = (userRes.user.email ?? '').toLowerCase()
 
-    // Eligibility gate: only paid/lifetime users can refer.
     const admin = createClient(SUPABASE_URL, SERVICE_ROLE)
-    const { data: profile } = await admin
-      .from('profiles')
-      .select('subscription_status')
-      .eq('id', userId)
-      .single()
-    if (!profile || !['active', 'lifetime'].includes(profile.subscription_status)) {
-      return json(req, { error: 'The referral program opens after your trial converts.' }, 403)
-    }
 
     const body = await req.json()
     const name = (body.name ?? '').toString().trim()

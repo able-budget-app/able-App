@@ -54,6 +54,8 @@ const MAX_PAGES = 50; // hard cap. Each page is up to 500 txns. 25k limit.
 const _ALLOWED_ORIGINS = new Set([
   'https://becomeable.app',
   'https://www.becomeable.app',
+  'capacitor://localhost',
+  'able://localhost',
 ]);
 function _allowOrigin(origin: string | null): string {
   if (!origin) return 'https://becomeable.app';

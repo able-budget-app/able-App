@@ -39,6 +39,8 @@ const MAX_ITEMS_PER_RUN = 50;   // sanity cap so a backlog can't fanout-bomb
 const _ALLOWED_ORIGINS = new Set([
   'https://becomeable.app',
   'https://www.becomeable.app',
+  'capacitor://localhost',
+  'able://localhost',
 ]);
 function _allowOrigin(origin: string | null): string {
   if (!origin) return 'https://becomeable.app';

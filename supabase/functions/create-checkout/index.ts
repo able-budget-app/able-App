@@ -3,6 +3,8 @@ import { createClient } from 'npm:@supabase/supabase-js@2'
 const _ALLOWED_ORIGINS = new Set([
   'https://becomeable.app',
   'https://www.becomeable.app',
+  'capacitor://localhost',
+  'able://localhost',
 ]);
 function _allowOrigin(origin: string | null): string {
   if (!origin) return 'https://becomeable.app';
@@ -21,6 +23,8 @@ function corsHeaders(req: Request) {
 }const ALLOWED_ORIGINS = [
   'https://becomeable.app',
   'https://www.becomeable.app',
+  'capacitor://localhost',
+  'able://localhost',
   'https://becomeable.netlify.app',
   'http://localhost:3000',
   'http://localhost:5173',

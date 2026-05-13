@@ -806,11 +806,11 @@ function buildLowBuffer(user: any, buffer: number, monthlyBills: number, unsub: 
   // Coach-stress moment. The "money flows in waves" line is the only place
   // in the email set where the energy/waves framing is allowed.
   const inner = hero({ eyebrow: 'Coach', tone: 'terra', title: 'A gentle nudge.' })
-    + heroNumber({ label: 'Your buffer', value: money(buffer), sub: `About ${pct}% of one month of bills` })
+    + heroNumber({ label: 'Your reserve', value: money(buffer), sub: `About ${pct}% of one month of bills` })
     + callout({ tone: 'terra', body: `Money flows in waves, and slow stretches are part of the cycle. This is the moment to be intentional with the next few decisions. Slow expenses where you can. More is on its way.` })
     + cta({ label: 'See your plan', href: `${APP_URL}/app.html`, tone: 'terra' });
   return {
-    subject: 'Your buffer is running low',
+    subject: 'Your reserve is running low',
     html: layout({ tone: 'terra', inner, unsub }),
   };
 }

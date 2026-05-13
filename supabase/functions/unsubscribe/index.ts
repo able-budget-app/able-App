@@ -41,7 +41,7 @@ const PREF_LABELS: Record<PrefKey, string> = {
   dormancy: 'check-in nudges',
   weekly: 'the weekly summary',
   bill_reminder: 'bill-due reminders',
-  low_buffer: 'low-buffer alerts',
+  low_buffer: 'low-reserve alerts',
   monthly_wrap: 'the monthly wrap',
 };
 
