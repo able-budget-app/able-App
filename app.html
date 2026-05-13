@@ -1720,6 +1720,11 @@ posthog.init('phc_B6PH36QxpExnyBYhfScFFF6LhDvoyxuFr6PypJuxxky3', {
       <button type="button" id="auth-resend-btn" onclick="resendSignupConfirmation()" style="background:none;border:none;font-family:var(--ds-f);font-size:13px;font-weight:700;color:var(--ds-green);cursor:pointer;padding:6px 10px;text-decoration:underline;">Didn't get it? Resend confirmation email</button>
       <div id="auth-resend-note" style="font-size:12px;font-weight:600;color:var(--ds-t3);margin-top:4px;display:none;"></div>
     </div>
+    <!-- Sign in with Apple - per App Review 4.8, must appear above other 3p providers -->
+    <button onclick="doAppleAuth()" style="width:100%;padding:13px;border-radius:var(--ds-r1);border:1.5px solid #000;background:#000;font-family:var(--ds-f);font-size:14px;font-weight:700;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:10px;transition:all .18s;margin-bottom:.5rem;color:#fff;">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M17.05 20.28c-.98.95-2.05.8-3.08.35-1.09-.46-2.09-.48-3.24 0-1.44.62-2.2.44-3.06-.35C2.79 15.25 3.51 7.59 9.05 7.31c1.35.07 2.29.74 3.08.8 1.18-.24 2.31-.93 3.57-.84 1.51.12 2.65.72 3.4 1.8-3.12 1.87-2.38 5.98.48 7.13-.57 1.5-1.31 2.99-2.54 4.09zM12.03 7.25c-.15-2.23 1.66-4.07 3.74-4.25.29 2.58-2.34 4.5-3.74 4.25z"/></svg>
+      Sign in with Apple
+    </button>
     <!-- Google button - works for both sign in and sign up -->
     <button onclick="doGoogleAuth()" style="width:100%;padding:13px;border-radius:var(--ds-r1);border:1.5px solid var(--ds-t4);background:var(--ds-card);font-family:var(--ds-f);font-size:14px;font-weight:700;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:10px;transition:all .18s;margin-bottom:1rem;color:var(--ds-t1);" onmouseover="this.style.borderColor='var(--ds-green)';this.style.background='var(--ds-green-l)'" onmouseout="this.style.borderColor='var(--ds-t4)';this.style.background='var(--ds-card)'">
       <svg width="18" height="18" viewBox="0 0 48 48"><path fill="#FFC107" d="M43.6 20H24v8h11.3C33.6 32.6 29.3 36 24 36c-6.6 0-12-5.4-12-12s5.4-12 12-12c3 0 5.8 1.1 7.9 3l5.7-5.7C34.1 6.5 29.3 4 24 4 12.9 4 4 12.9 4 24s8.9 20 20 20c11 0 19.7-8 19.7-20 0-1.3-.1-2.7-.1-4z"/><path fill="#FF3D00" d="M6.3 14.7l6.6 4.8C14.5 16 19 12 24 12c3 0 5.8 1.1 7.9 3l5.7-5.7C34.1 6.5 29.3 4 24 4 16.3 4 9.7 8.3 6.3 14.7z"/><path fill="#4CAF50" d="M24 44c5.2 0 9.9-1.9 13.5-5l-6.2-5.2C29.5 35.6 26.9 36 24 36c-5.2 0-9.6-3.3-11.2-8l-6.6 5.1C9.6 39.6 16.3 44 24 44z"/><path fill="#1976D2" d="M43.6 20H24v8h11.3c-.9 2.6-2.6 4.7-4.8 6.2l6.2 5.2C40.5 36.2 44 30.6 44 24c0-1.3-.1-2.7-.4-4z"/></svg>
@@ -3079,6 +3084,48 @@ async function doGoogleAuth() {
     }
   });
   if(error) showAuthError(error.message);
+}
+
+// Sign in with Apple. Dual path:
+//   - iOS Capacitor: native plugin → idToken → signInWithIdToken (in-app sheet,
+//     no Safari handoff, App Store reviewer-friendly per HIG)
+//   - Web / Android / other: signInWithOAuth web flow → redirect → callback
+// Apple guideline 4.8 requires Sign in with Apple as a peer option whenever
+// any other 3p sign-in is offered (we ship Google).
+async function doAppleAuth() {
+  hideAuthMessages();
+  try {
+    if (_isCapacitor()) {
+      const SignInWithApple = window.Capacitor?.Plugins?.SignInWithApple;
+      if (!SignInWithApple) {
+        showAuthError('Sign in with Apple is not available on this device.');
+        return;
+      }
+      // Native sheet: returns identityToken + authorizationCode. Supabase
+      // verifies the JWT against Apple's public keys and creates/signs in.
+      const result = await SignInWithApple.authorize({
+        clientId: 'com.becomeable.app',
+        redirectURI: 'https://becomeable.app/app.html',
+        scopes: 'email name',
+        state: '',
+        nonce: Math.random().toString(36).slice(2),
+      });
+      const idToken = result?.response?.identityToken;
+      if (!idToken) { showAuthError('Apple did not return an identity token.'); return; }
+      const { error } = await sbGet().auth.signInWithIdToken({ provider: 'apple', token: idToken });
+      if (error) showAuthError(error.message);
+    } else {
+      const { error } = await sbGet().auth.signInWithOAuth({
+        provider: 'apple',
+        options: { redirectTo: window.location.origin + '/app.html' },
+      });
+      if (error) showAuthError(error.message);
+    }
+  } catch (e) {
+    // User cancellation throws — silent. Real errors surface to the auth screen.
+    if (e?.code === '1001' || /cancel/i.test(e?.message || '')) return;
+    showAuthError(e?.message || 'Apple sign-in failed. Try again.');
+  }
 }
 
 function togglePw(id) {
