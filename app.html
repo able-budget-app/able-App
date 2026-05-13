@@ -104,7 +104,7 @@
 }
 *{box-sizing:border-box;margin:0;padding:0;}
 html,body{overflow-x:hidden;overflow-x:clip;max-width:100%;}
-body{background:var(--ds-page);color:var(--ds-t1);font-family:var(--ds-f);min-height:100vh;min-height:100dvh;overscroll-behavior-x:none;overscroll-behavior-y:contain;}
+body{background:var(--ds-page);color:var(--ds-t1);font-family:var(--ds-f);min-height:100vh;min-height:100dvh;overscroll-behavior-x:none;overscroll-behavior-y:contain;padding-top:env(safe-area-inset-top,0px);}
 h1,h2,h3{font-family:var(--ds-f);}
 input,select,button,textarea{font-family:inherit;}
 
@@ -366,7 +366,7 @@ input,select,button,textarea{font-family:inherit;}
 .ring-wrap svg{transform:rotate(-90deg);}
 .ring-center{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:900;color:var(--ds-green);letter-spacing:-.02em;}
 .buffer-card{background:linear-gradient(135deg,#eaf2fc 0%,#dce8f5 100%);border-radius:var(--ds-r2);padding:1.35rem;margin-bottom:1rem;box-shadow:var(--ds-sh1);}
-.history-item{display:flex;justify-content:space-between;align-items:center;padding:11px 14px;background:var(--ds-card);border-radius:var(--ds-r1);margin-bottom:7px;box-shadow:var(--ds-sh1);}
+.history-item{display:flex;justify-content:space-between;align-items:center;padding:11px 18px 11px 14px;background:var(--ds-card);border-radius:var(--ds-r1);margin-bottom:7px;box-shadow:var(--ds-sh1);}
 .debt-card{background:var(--ds-card);border-radius:var(--ds-r2);padding:1.35rem;margin-bottom:.9rem;box-shadow:var(--ds-sh2);}
 .debt-balance-input{background:#fdeef2;border:1.5px solid rgba(192,64,96,.25);border-radius:var(--ds-r1);color:var(--ds-c4);font-family:var(--ds-f);font-size:1.15rem;font-weight:800;width:110px;text-align:right;padding:6px 12px;outline:none;transition:all .2s;}
 .debt-balance-input:focus{border-color:var(--coral);}
@@ -390,7 +390,7 @@ input,select,button,textarea{font-family:inherit;}
 .fc-meta{font-size:11px;font-weight:600;color:var(--ds-t3);letter-spacing:.02em;white-space:nowrap;}
 .fc-actions{display:flex;gap:6px;align-items:center;flex-shrink:0;}
 .fc-actions .btn-sm{padding:6px 12px;font-size:12px;}
-.fc-x-corner{align-self:flex-end;background:transparent;border:0;color:var(--ds-t3);font-family:var(--ds-f);font-size:14px;font-weight:700;line-height:1;padding:0 0 0 8px;margin:-4px -4px -2px 0;cursor:pointer;transition:color .15s;}
+.fc-x-corner{align-self:flex-end;background:transparent;border:0;color:var(--ds-t3);font-family:var(--ds-f);font-size:14px;font-weight:700;line-height:1;padding:4px 8px;margin:-4px 0 -2px 0;cursor:pointer;transition:color .15s;}
 .fc-x-corner:hover{color:var(--ds-c4);}
 .score-big{font-family:var(--ds-f);font-size:6rem;font-weight:900;line-height:1;letter-spacing:-.05em;}
 .score-row{display:flex;align-items:center;gap:12px;margin-bottom:12px;font-size:13px;font-weight:700;}
@@ -429,7 +429,7 @@ input,select,button,textarea{font-family:inherit;}
 .modal{background:var(--ds-card);border-radius:var(--ds-r3);padding:1.75rem;width:100%;max-width:480px;box-shadow:var(--ds-sh3);max-height:90vh;max-height:90dvh;overflow-y:auto;overscroll-behavior:contain;-webkit-overflow-scrolling:touch;animation:modalSlideUp .25s cubic-bezier(.34,1.56,.64,1);position:relative;}
 @keyframes modalSlideUp{from{opacity:0;transform:translateY(20px) scale(.96);}to{opacity:1;transform:translateY(0) scale(1);}}
 .modal-title{font-family:var(--ds-f);font-size:1.35rem;font-weight:800;margin-bottom:1.35rem;color:var(--ds-t1);letter-spacing:-.02em;padding-right:36px;}
-.modal-close{position:absolute;top:max(10px, env(safe-area-inset-top, 0px));right:10px;width:44px;height:44px;border-radius:50%;background:var(--ds-card2);border:none;cursor:pointer;display:flex;align-items:center;justify-content:center;color:var(--ds-t2);transition:all .15s;z-index:2;}
+.modal-close{position:absolute;top:10px;right:10px;width:44px;height:44px;border-radius:50%;background:var(--ds-card2);border:none;cursor:pointer;display:flex;align-items:center;justify-content:center;color:var(--ds-t2);transition:all .15s;z-index:2;}
 .modal-close:hover{background:var(--ds-t4);color:var(--ds-t1);}
 .modal-close:focus{outline:none;box-shadow:0 0 0 3px rgba(42,122,74,.2);}
 .modal-actions{display:flex;gap:10px;justify-content:flex-end;margin-top:1.5rem;}
@@ -449,7 +449,7 @@ input,select,button,textarea{font-family:inherit;}
   @keyframes sheetSlideUp{from{transform:translateY(100%);}to{transform:translateY(0);}}
   .modal::before{content:'';display:block;width:40px;height:4px;background:var(--ds-t4);border-radius:4px;margin:-.25rem auto 1rem;}
   .modal-title{margin-bottom:1rem;}
-  .modal-close{top:max(18px, env(safe-area-inset-top, 0px));right:14px;}
+  .modal-close{top:18px;right:14px;}
   .modal-actions{position:sticky;bottom:0;background:var(--ds-card);margin:1rem -1.25rem 0;padding:12px 1.25rem calc(1rem + env(safe-area-inset-bottom,0px));border-top:1px solid var(--ds-t4);flex-direction:column-reverse;gap:8px;}
   .modal-actions .btn{width:100%;}
 }
@@ -2366,9 +2366,9 @@ posthog.init('phc_B6PH36QxpExnyBYhfScFFF6LhDvoyxuFr6PypJuxxky3', {
       </label>
     </div>
     <div id="reclassify-error" style="color:var(--ds-c4);font-size:12px;font-weight:600;margin-top:.85rem;display:none;"></div>
-    <div style="display:flex;gap:8px;justify-content:flex-end;margin-top:1.25rem;">
-      <button class="btn btn-sm btn-ghost" onclick="closeReclassifyModal()">Cancel</button>
-      <button class="btn btn-sm btn-primary" id="reclassify-save-btn" onclick="applyReclassify()">Save changes</button>
+    <div class="modal-actions">
+      <button class="btn btn-ghost" onclick="closeReclassifyModal()">Cancel</button>
+      <button class="btn btn-primary" id="reclassify-save-btn" onclick="applyReclassify()">Save changes</button>
     </div>
   </div>
 </div>
