@@ -3583,22 +3583,24 @@ async function _onAuthStateChangeImpl(user) {
   // via auth.admin when support genuinely needs them.
   if(window.posthog) posthog.identify(user.id);
 
-  // MFA gate: if the user has a verified TOTP factor but the session is still
-  // at aal1, halt here and require the 6-digit challenge before any app data
-  // is fetched or rendered. submitMfaChallenge() re-enters this function.
-  // Race against a 2s timeout - on the post-Stripe wedged-client path, this
-  // call hangs forever and would block the entire post-auth flow. Failing
-  // open on timeout is safe: if MFA is actually required, the user will hit
-  // an aal1-rejected query downstream and be re-challenged then.
-  try {
-    const aalPromise = sbGet().auth.mfa.getAuthenticatorAssuranceLevel();
-    const aalTimeout = new Promise((_, rej) => setTimeout(() => rej(new Error('aal_timeout')), 2000));
-    const { data: aal } = await Promise.race([aalPromise, aalTimeout]);
-    if (aal && aal.currentLevel === 'aal1' && aal.nextLevel === 'aal2') {
-      const factor = await _getVerifiedTotpFactor();
-      if (factor) { showMfaChallenge(factor.id); return; }
-    }
-  } catch(_) { /* fail open: don't lock users out on a transient error or wedged client */ }
+  // MFA gate kickoff: race the AAL query in parallel with the data fetches
+  // below. Awaited at the top of the main try block so a challenge can still
+  // halt the flow before any app screen renders. For the 99% of users without
+  // MFA this removes ~200-500ms of pure serial wait from the sign-in path.
+  // 2s timeout catches the post-Stripe wedged-client path; fail-open is safe
+  // because RLS will reject aal1 queries downstream if MFA is actually
+  // required and we'll re-challenge then.
+  const aalCheckPromise = (async () => {
+    try {
+      const aalTimeout = new Promise((_, rej) => setTimeout(() => rej(new Error('aal_timeout')), 2000));
+      const { data: aal } = await Promise.race([sbGet().auth.mfa.getAuthenticatorAssuranceLevel(), aalTimeout]);
+      if (aal && aal.currentLevel === 'aal1' && aal.nextLevel === 'aal2') {
+        const factor = await _getVerifiedTotpFactor();
+        return factor || null;
+      }
+    } catch(_) {}
+    return null;
+  })();
 
   // signup_completed: fires once per user per browser. We check user.created_at
   // against now to make sure this is a genuine first-time sign-in, not just
@@ -3743,6 +3745,12 @@ async function _onAuthStateChangeImpl(user) {
       sbGet().from('user_data').select('*').eq('id', user.id).single(),
       userDataTimeout
     ]).catch(e => ({ data: null, error: e }));
+
+    // MFA gate: await the parallel AAL check (kicked off at top of function).
+    // If a verified TOTP factor exists and session is still aal1, halt here
+    // and show the challenge — any data fetched in parallel is discarded.
+    const mfaFactor = await aalCheckPromise;
+    if (mfaFactor) { showMfaChallenge(mfaFactor.id); return; }
 
     // Fast path: if Stripe handed us a session_id on the redirect, verify it
     // directly with Stripe's API and skip the webhook-delivery polling loop
