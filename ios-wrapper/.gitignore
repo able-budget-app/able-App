@@ -1,6 +1,9 @@
 node_modules/
 www/
 
+# Derived web assets (run `npm run cap:sync` to repopulate)
+ios/App/App/public/
+
 # Xcode
 ios/App/Pods/
 ios/App/Podfile.lock
