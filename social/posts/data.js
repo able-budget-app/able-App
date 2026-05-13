@@ -2144,31 +2144,6 @@ window.CAROUSELS = [
         meta: 'becomeable.app/get-able' },
   ] },
 
-  // C69 — Credit score in 90 days (credit cluster, action plan)
-  { id: 'C69', slug: 'credit-score-90-days', theme: 'glass-dark', format: 'tiktok', slides: [
-      { tpl: 'A', eyebrow: 'Swipe →', size: 'md',
-        punch: "Credit score,\nin {90 days.}",
-        meta: '1 / 6' },
-      { tpl: 'A', eyebrow: 'Day 1', size: 'md',
-        muted: "Day 1.",
-        punch: "Pull your report.\n{Dispute errors.}",
-        meta: '2 / 6' },
-      { tpl: 'A', eyebrow: 'Day 30', size: 'md',
-        muted: "Day 30.",
-        punch: "Utilization under\n{30%.}\nEvery card.",
-        meta: '3 / 6' },
-      { tpl: 'A', eyebrow: 'Day 60', size: 'md',
-        muted: "Day 60.",
-        punch: "Pay every bill\n{on time.}",
-        meta: '4 / 6' },
-      { tpl: 'A', eyebrow: 'Day 90', size: 'md',
-        muted: "Day 90.",
-        punch: "Score moves.\n{100 points} up.",
-        meta: '5 / 6' },
-      { tpl: 'A', eyebrow: 'mixed', size: 'md',
-        punch: "Become {Able.}\n30 days free.",
-        meta: 'becomeable.app/get-able' },
-  ] },
 
   // ─────────────────────────────────────────────────────────
   // PERSONA carousels (C70-C74). Same Floor-First methodology,
@@ -6420,7 +6395,32 @@ window.RESERVED_CAROUSELS = [
       { tpl: 'A', eyebrow: '5 mistakes', size: 'md',
         punch: "Free for\n{30 days.}",
         meta: 'becomeable.app/get-able' },
+  ] },  // C69 — Credit score in 90 days (credit cluster, action plan)
+  { id: 'C69', slug: 'credit-score-90-days', theme: 'glass-dark', flagged: 'credit-edu', format: 'tiktok', slides: [
+      { tpl: 'A', eyebrow: 'Swipe →', size: 'md',
+        punch: "Credit score,\nin {90 days.}",
+        meta: '1 / 6' },
+      { tpl: 'A', eyebrow: 'Day 1', size: 'md',
+        muted: "Day 1.",
+        punch: "Pull your report.\n{Dispute errors.}",
+        meta: '2 / 6' },
+      { tpl: 'A', eyebrow: 'Day 30', size: 'md',
+        muted: "Day 30.",
+        punch: "Utilization under\n{30%.}\nEvery card.",
+        meta: '3 / 6' },
+      { tpl: 'A', eyebrow: 'Day 60', size: 'md',
+        muted: "Day 60.",
+        punch: "Pay every bill\n{on time.}",
+        meta: '4 / 6' },
+      { tpl: 'A', eyebrow: 'Day 90', size: 'md',
+        muted: "Day 90.",
+        punch: "Score moves.\n{100 points} up.",
+        meta: '5 / 6' },
+      { tpl: 'A', eyebrow: 'mixed', size: 'md',
+        punch: "Become {Able.}\n30 days free.",
+        meta: 'becomeable.app/get-able' },
   ] },
+
 ];
 
 
