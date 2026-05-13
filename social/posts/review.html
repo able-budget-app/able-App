@@ -115,6 +115,77 @@
   .tools button:hover { background: rgba(255,255,255,.14); }
   .tools button.danger:hover { background: rgba(220,80,80,.25); border-color: rgba(220,80,80,.5); }
 
+  /* Flagged carousels */
+  .nav-list li.flag-unreviewed::before {
+    content: '🚩';
+    font-size: 11px;
+    margin-right: 4px;
+    flex-shrink: 0;
+  }
+  .nav-list li.flag-approved::before {
+    content: '✓';
+    color: #6fcf80;
+    font-weight: 800;
+    margin-right: 6px;
+    flex-shrink: 0;
+  }
+  .nav-list li.flag-reserved::before {
+    content: '⏸';
+    color: #f5b955;
+    margin-right: 6px;
+    flex-shrink: 0;
+  }
+  .flag-bar {
+    background: linear-gradient(135deg, rgba(245,185,85,.10), rgba(245,185,85,.03));
+    border: 1px solid rgba(245,185,85,.32);
+    border-radius: 8px;
+    padding: 16px 20px;
+    margin-bottom: 24px;
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    flex-wrap: wrap;
+  }
+  .flag-bar .flag-info {
+    font-size: 13px;
+    line-height: 1.45;
+    color: #111c16;
+    flex: 1;
+    min-width: 280px;
+  }
+  .flag-bar .flag-info strong {
+    display: block;
+    font-size: 14px;
+    margin-bottom: 4px;
+  }
+  .flag-bar .flag-actions {
+    display: flex;
+    gap: 8px;
+  }
+  .flag-bar button {
+    border: 1px solid rgba(0,0,0,.16);
+    background: #fff;
+    color: #111c16;
+    border-radius: 6px;
+    padding: 9px 16px;
+    font-size: 13px;
+    font-weight: 700;
+    cursor: pointer;
+    font-family: inherit;
+  }
+  .flag-bar button.btn-approve:hover { background: rgba(111,207,128,.12); border-color: rgba(111,207,128,.5); }
+  .flag-bar button.btn-reserve:hover { background: rgba(245,185,85,.16); border-color: rgba(245,185,85,.5); }
+  .flag-bar button.btn-approve.active {
+    background: #6fcf80;
+    color: #fff;
+    border-color: #6fcf80;
+  }
+  .flag-bar button.btn-reserve.active {
+    background: #f5b955;
+    color: #111c16;
+    border-color: #f5b955;
+  }
+
   /* Main */
   .main {
     padding: 32px 40px;
@@ -264,6 +335,7 @@
     <div id="sections"></div>
     <div class="tools">
       <button id="copyMd">Copy comments as markdown</button>
+      <button id="copyFlags">Copy flag decisions</button>
       <button id="exportJson">Export JSON</button>
       <button id="clearAll" class="danger">Clear all comments</button>
     </div>
@@ -283,14 +355,31 @@
 <script>
 (() => {
   const LS_KEY = 'ableReview.comments';
+  const FLAG_KEY = 'ableReview.flags';
 
   // ── Data assembly ──
-  const tiktokCarousels = (window.CAROUSELS || []).filter(c => c.format === 'tiktok');
-  const squareCarousels = (window.CAROUSELS || []).filter(c => c.format !== 'tiktok');
+  const flaggedCarousels = (window.CAROUSELS || []).filter(c => c.flagged);
+  const tiktokCarousels = (window.CAROUSELS || []).filter(c => c.format === 'tiktok' && !c.flagged);
+  const squareCarousels = (window.CAROUSELS || []).filter(c => c.format !== 'tiktok' && !c.flagged);
   const productCarousels = window.PRODUCT_CAROUSELS || [];
+  const reservedCarousels = window.RESERVED_CAROUSELS || [];
 
-  const ALL = [...tiktokCarousels, ...squareCarousels, ...productCarousels];
+  const ALL = [...flaggedCarousels, ...tiktokCarousels, ...squareCarousels, ...productCarousels, ...reservedCarousels];
   const byId = Object.fromEntries(ALL.map(c => [c.id, c]));
+
+  // ── Flag decisions persistence ──
+  const loadFlags = () => {
+    try { return JSON.parse(localStorage.getItem(FLAG_KEY) || '{}'); }
+    catch { return {}; }
+  };
+  let flagDecisions = loadFlags();
+  const saveFlagDecisions = () => localStorage.setItem(FLAG_KEY, JSON.stringify(flagDecisions));
+  const getFlagDecision = (cid) => flagDecisions[cid] || null;
+  const setFlagDecision = (cid, state) => {
+    if (state) flagDecisions[cid] = state;
+    else delete flagDecisions[cid];
+    saveFlagDecisions();
+  };
 
   // ── Comments persistence ──
   const loadComments = () => {
@@ -323,9 +412,11 @@
 
   const renderSections = () => {
     const sections = [
+      { label: '🚩 Flagged for review', items: flaggedCarousels },
       { label: 'TikTok · 9:16', items: tiktokCarousels },
       { label: 'Square · 1:1', items: squareCarousels },
       { label: 'Product', items: productCarousels },
+      { label: '⏸ Reserved (held for later)', items: reservedCarousels, reserved: true },
     ].filter(s => s.items.length > 0);
 
     sectionsEl.innerHTML = sections.map(section => `
@@ -333,7 +424,13 @@
       <ul class="nav-list">
         ${section.items.map(c => {
           const cnt = countCommentsFor(c.id);
-          return `<li data-id="${c.id}">
+          const decision = c.flagged ? getFlagDecision(c.id) : null;
+          const flagClass = c.flagged
+            ? (decision === 'approve' ? 'flag-approved'
+              : decision === 'reserve' ? 'flag-reserved'
+              : 'flag-unreviewed')
+            : '';
+          return `<li data-id="${c.id}" class="${flagClass}">
             <span class="id">${c.id}</span>
             <span class="slug">${c.slug || ''}</span>
             ${cnt ? `<span class="badge">${cnt}</span>` : ''}
@@ -391,7 +488,36 @@
     const fmt = carousel.format === 'tiktok' ? 'tiktok' : 'square';
     const themeLabel = carousel.theme || 'page';
 
+    const flagBarHtml = (() => {
+      if (!carousel.flagged) return '';
+      const decision = getFlagDecision(carousel.id);
+      const reasons = {
+        'tax-edu': {
+          title: 'Tax-education content',
+          body: "Able doesn't help with taxes beyond the tax bucket + classify + export. Approve if the carousel ties to an Able feature; reserve if it's pure thought-leadership that could imply Able does taxes."
+        },
+        'credit-edu': {
+          title: 'Credit-score content',
+          body: "Able doesn't help with credit scores yet. Approve if it's valuable thought-leadership worth posting; reserve to revisit when Able adds a credit feature."
+        },
+      };
+      const r = reasons[carousel.flagged] || { title: 'Flagged for review', body: '' };
+      return `
+        <div class="flag-bar" data-flag-bar="${carousel.id}">
+          <div class="flag-info">
+            <strong>🚩 ${r.title}</strong>
+            ${r.body}
+          </div>
+          <div class="flag-actions">
+            <button class="btn-approve ${decision === 'approve' ? 'active' : ''}" data-action="approve">✓ Approve</button>
+            <button class="btn-reserve ${decision === 'reserve' ? 'active' : ''}" data-action="reserve">⏸ Reserve</button>
+          </div>
+        </div>
+      `;
+    })();
+
     mainEl.innerHTML = `
+      ${flagBarHtml}
       <div class="carousel-header">
         <div class="id">${carousel.id} · ${themeLabel} · ${carousel.format || 'square'}</div>
         <div class="title">${carousel.slug || '(no slug)'}</div>
@@ -399,6 +525,31 @@
       </div>
       <div class="slide-grid" id="slideGrid"></div>
     `;
+
+    if (carousel.flagged) {
+      const bar = mainEl.querySelector(`[data-flag-bar="${carousel.id}"]`);
+      bar.querySelectorAll('button').forEach(btn => {
+        btn.addEventListener('click', () => {
+          const action = btn.dataset.action;
+          const current = getFlagDecision(carousel.id);
+          const next = current === action ? null : action;
+          setFlagDecision(carousel.id, next);
+          bar.querySelectorAll('button').forEach(b => b.classList.remove('active'));
+          if (next) btn.classList.add('active');
+          // Update sidebar li class
+          const li = sectionsEl.querySelector(`li[data-id="${carousel.id}"]`);
+          if (li) {
+            li.classList.remove('flag-approved', 'flag-reserved', 'flag-unreviewed');
+            li.classList.add(
+              next === 'approve' ? 'flag-approved'
+              : next === 'reserve' ? 'flag-reserved'
+              : 'flag-unreviewed'
+            );
+          }
+          toast(next ? `${next === 'approve' ? 'Approved' : 'Reserved'} ${carousel.id}` : `Cleared ${carousel.id}`);
+        });
+      });
+    }
 
     const grid = document.getElementById('slideGrid');
     carousel.slides.forEach((slide, i) => {
@@ -490,6 +641,37 @@
       toast('Markdown copied.');
     } catch {
       // fallback: show in a textarea-prompt-like alert
+      window.prompt('Copy this:', md);
+    }
+  });
+
+  const flagDecisionsAsMarkdown = () => {
+    const approved = [], reserved = [], unreviewed = [];
+    flaggedCarousels.forEach(c => {
+      const d = getFlagDecision(c.id);
+      const label = `${c.id} · ${c.slug || ''} (${c.flagged})`;
+      if (d === 'approve') approved.push(label);
+      else if (d === 'reserve') reserved.push(label);
+      else unreviewed.push(label);
+    });
+    return [
+      '## Approved (keep in active library):',
+      approved.length ? approved.map(s => '- ' + s).join('\n') : '_(none)_',
+      '',
+      '## Reserved (move to RESERVED_CAROUSELS):',
+      reserved.length ? reserved.map(s => '- ' + s).join('\n') : '_(none)_',
+      '',
+      '## Unreviewed:',
+      unreviewed.length ? unreviewed.map(s => '- ' + s).join('\n') : '_(none)_',
+    ].join('\n');
+  };
+
+  document.getElementById('copyFlags').addEventListener('click', async () => {
+    const md = flagDecisionsAsMarkdown();
+    try {
+      await navigator.clipboard.writeText(md);
+      toast('Flag decisions copied.');
+    } catch {
       window.prompt('Copy this:', md);
     }
   });
