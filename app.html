@@ -433,7 +433,7 @@ input,select,button,textarea{font-family:inherit;}
 .bills-name{font-weight:700;color:var(--ds-t1);font-size:14px;line-height:1.3;}
 .bills-meta{font-size:11px;font-weight:600;color:var(--ds-t3);margin-top:3px;}
 .bills-right{display:flex;align-items:center;gap:8px;flex-shrink:0;}
-.bills-amt-input{background:var(--ds-card2);border:1px solid var(--ds-t4);border-radius:var(--ds-r1);color:var(--ds-t1);font-family:var(--ds-f);font-size:14px;font-weight:800;width:95px;text-align:right;outline:none;transition:all .15s;padding:6px 10px;letter-spacing:-.01em;cursor:text;-webkit-appearance:none;appearance:none;}
+.bills-amt-input{background:var(--ds-card2);border:1px solid var(--ds-t4);border-radius:var(--ds-r1);color:var(--ds-t1);font-family:var(--ds-f);font-size:14px;font-weight:800;width:74px;text-align:right;outline:none;transition:all .15s;padding:6px 8px;letter-spacing:-.01em;cursor:text;-webkit-appearance:none;appearance:none;}
 .bills-amt-input:hover{border-color:var(--ds-green);background:var(--ds-card);}
 .bills-amt-input:focus{border-color:var(--ds-green);background:var(--ds-card);box-shadow:0 0 0 3px rgba(42,122,74,.15);}
 .bills-amt-static{font-weight:800;text-align:right;font-family:var(--ds-f);font-size:14px;letter-spacing:-.01em;color:var(--ds-t3);padding:6px 8px;}
@@ -443,7 +443,7 @@ input,select,button,textarea{font-family:inherit;}
 @media(max-width:540px){
   /* Header columns (BILL/DUE/AMOUNT) hidden — row is self-labeling. */
   .bills-header{display:none !important;}
-  .bills-amt-input{font-size:16px;padding:8px 12px;min-height:36px;width:110px;}
+  .bills-amt-input{font-size:16px;padding:8px 10px;min-height:36px;width:88px;}
 }
 .modal-bg{position:fixed;inset:0;background:rgba(17,28,22,.45);z-index:200;display:flex;align-items:center;justify-content:center;padding:1rem;backdrop-filter:blur(6px);animation:modalFadeIn .2s ease;overscroll-behavior:contain;}
 /* Allocation preview is launched FROM the allocate sheet (z-index 220), so it
@@ -1772,7 +1772,7 @@ posthog.init('phc_B6PH36QxpExnyBYhfScFFF6LhDvoyxuFr6PypJuxxky3', {
         var ld = document.createElement('div');
         ld.id = 'checkout-return-loading';
         ld.style.cssText = 'position:fixed;inset:0;display:flex;align-items:center;justify-content:center;background:var(--ds-page);z-index:9999;font-family:var(--ds-f);';
-        ld.innerHTML = '<div style="text-align:center;padding:2rem;"><div class="brand-wordmark-wrap" style="margin-bottom:.75rem;"><div class="brand-wordmark brand-wordmark--xl brand-wordmark--green">Able</div></div><div style="display:inline-flex;align-items:center;gap:10px;margin-top:1.25rem;padding:10px 18px;background:var(--ds-card);border-radius:var(--ds-r1);box-shadow:var(--ds-sh1);"><div style="width:10px;height:10px;border-radius:50%;background:var(--ds-green);animation:dsPulse 1.2s ease-in-out infinite;"></div><div style="font-size:13px;color:var(--ds-t2);font-weight:700;letter-spacing:.02em;">Confirming your subscription. Usually takes a few seconds.</div></div></div><style>@keyframes dsPulse{0%,100%{opacity:.4;transform:scale(.9)}50%{opacity:1;transform:scale(1.1)}}</style>';
+        ld.innerHTML = '<div style="text-align:center;padding:2rem 1rem;"><div class="brand-wordmark-wrap" style="margin-bottom:1.5rem;"><div class="brand-wordmark brand-wordmark--xl brand-wordmark--loading">Able</div></div><div style="font-size:12px;color:var(--ds-t3);font-weight:700;letter-spacing:.08em;text-transform:uppercase;">Confirming your subscription</div><div style="font-size:11px;color:var(--ds-t3);font-weight:600;margin-top:8px;">Usually takes a few seconds.</div></div>';
         document.body.appendChild(ld);
       }
       return;
@@ -3642,7 +3642,7 @@ async function _onAuthStateChangeImpl(user) {
 
   const authBox = document.querySelector('.auth-box');
   const showLoading = (msg) => {
-    if(authBox) authBox.innerHTML = `<div style="text-align:center;padding:1rem 0;font-family:var(--ds-f);"><div class="brand-wordmark-wrap" style="margin-bottom:.4rem;"><div class="brand-wordmark">Able</div></div><div style="display:inline-flex;align-items:center;gap:10px;margin-top:1.25rem;padding:10px 18px;background:var(--ds-green-l);border-radius:100px;"><div style="width:10px;height:10px;border-radius:50%;background:var(--ds-green);animation:dsPulse 1.2s ease-in-out infinite;"></div><div style="font-size:13px;color:var(--ds-green);font-weight:700;letter-spacing:.02em;">${msg}</div></div></div>`;
+    if(authBox) authBox.innerHTML = `<div style="text-align:center;padding:1.5rem 1rem;font-family:var(--ds-f);"><div class="brand-wordmark-wrap" style="margin-bottom:1.5rem;"><div class="brand-wordmark brand-wordmark--xl brand-wordmark--loading">Able</div></div><div style="font-size:12px;color:var(--ds-t3);font-weight:700;letter-spacing:.08em;text-transform:uppercase;">${msg}</div></div>`;
   };
   // Debounce the "Loading your account" pill so fast paths (fresh signup →
   // paywall in <600ms) skip the flash. Returning users with longer load times
@@ -11508,13 +11508,14 @@ document.addEventListener('DOMContentLoaded', () => {
     if (Kb?.setAccessoryBarVisible) Kb.setAccessoryBarVisible({ isVisible: false });
   } catch (_) {}
 
-  // Body-scroll lock while any modal is visible. On iOS WKWebView, opening a
-  // modal-bg while the body is scrollable lets the underlying page shift when
-  // the system tries to scroll a focused input into view — making the modal
-  // appear to jump. Locking body scroll pins it.
+  // Body-scroll lock while any modal/sheet is visible. On iOS WKWebView,
+  // opening a modal-bg while the body is scrollable lets the underlying page
+  // shift when the system tries to scroll a focused input into view — making
+  // the modal appear to jump. Locking body scroll pins it. Covers both
+  // .modal-bg (standard modals) and .db-sheet (allocate / log income).
   let _scrollY = 0;
   const _modalObserver = new MutationObserver(() => {
-    const anyOpen = Array.from(document.querySelectorAll('.modal-bg'))
+    const anyOpen = Array.from(document.querySelectorAll('.modal-bg, .db-sheet'))
       .some(m => m.style.display && m.style.display !== 'none');
     if (anyOpen && !document.body.classList.contains('modal-open')) {
       _scrollY = window.scrollY || window.pageYOffset || 0;
@@ -14349,6 +14350,14 @@ function _rerenderAllPages(){
   if (document.getElementById('page-settings')?.classList.contains('active')) {
     try { loadSettingsPage(); } catch(_){}
   }
+  // Belt-and-suspenders: re-mount the currently active page by re-routing to
+  // it. Triggers any per-page init that the individual renderers above may
+  // have skipped (e.g. activity-list paint races on async render).
+  try {
+    const activePage = document.querySelector('.page.active');
+    const id = activePage?.id || '';
+    if (id.startsWith('page-')) goTo(id.slice(5));
+  } catch(_){}
 }
 function enterDemoMode(){
   if (_isDemoActive()) return;
@@ -15131,7 +15140,7 @@ window.addEventListener('load', async () => {
       const loadingDiv = document.createElement('div');
       loadingDiv.id = 'checkout-return-loading';
       loadingDiv.style.cssText = 'position:fixed;inset:0;display:flex;align-items:center;justify-content:center;background:var(--ds-page);z-index:9999;font-family:var(--ds-f);';
-      loadingDiv.innerHTML = `<div style="text-align:center;padding:2rem;"><div class="brand-wordmark-wrap" style="margin-bottom:.75rem;"><div class="brand-wordmark brand-wordmark--xl brand-wordmark--green">Able</div></div><div style="display:inline-flex;align-items:center;gap:10px;margin-top:1.25rem;padding:10px 18px;background:var(--ds-card);border-radius:var(--ds-r1);box-shadow:var(--ds-sh1);"><div style="width:10px;height:10px;border-radius:50%;background:var(--ds-green);animation:dsPulse 1.2s ease-in-out infinite;"></div><div style="font-size:13px;color:var(--ds-t2);font-weight:700;letter-spacing:.02em;">Confirming your subscription. Usually takes a few seconds.</div></div></div><style>@keyframes dsPulse{0%,100%{opacity:.4;transform:scale(.9)}50%{opacity:1;transform:scale(1.1)}}</style>`;
+      loadingDiv.innerHTML = `<div style="text-align:center;padding:2rem 1rem;"><div class="brand-wordmark-wrap" style="margin-bottom:1.5rem;"><div class="brand-wordmark brand-wordmark--xl brand-wordmark--loading">Able</div></div><div style="font-size:12px;color:var(--ds-t3);font-weight:700;letter-spacing:.08em;text-transform:uppercase;">Confirming your subscription</div><div style="font-size:11px;color:var(--ds-t3);font-weight:600;margin-top:8px;">Usually takes a few seconds.</div></div>`;
       document.body.appendChild(loadingDiv);
     }
     // Escape hatch: if no auth session lands within 3s, the post-auth flow that
