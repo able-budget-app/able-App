@@ -210,21 +210,23 @@ def _execute_with_retry(req, attempts=4, base_delay=2.0):
             time.sleep(delay)
 
 
-def get_sheet(sheets_svc, sheet_id):
+def get_sheet(sheets_svc, sheet_id, tab=None):
+    rng = f"{tab}!A1:ZZ" if tab else "A1:ZZ"
     req = sheets_svc.spreadsheets().values().get(
-        spreadsheetId=sheet_id, range="A1:ZZ"
+        spreadsheetId=sheet_id, range=rng
     )
     res = _execute_with_retry(req)
     values = res.get("values", [])
     if not values:
-        sys.exit("error: sheet empty")
+        sys.exit(f"error: tab '{tab or '(first)'}' is empty")
     return values[0], values[1:]
 
 
-def update_cell(sheets_svc, sheet_id, row_1based, col_idx, value):
+def update_cell(sheets_svc, sheet_id, row_1based, col_idx, value, tab=None):
     cell = f"{col_letter(col_idx)}{row_1based}"
+    rng = f"{tab}!{cell}" if tab else cell
     req = sheets_svc.spreadsheets().values().update(
-        spreadsheetId=sheet_id, range=cell, valueInputOption="RAW",
+        spreadsheetId=sheet_id, range=rng, valueInputOption="RAW",
         body={"values": [[value]]},
     )
     _execute_with_retry(req)
@@ -300,6 +302,7 @@ def main():
     p.add_argument("--dry-run", action="store_true", help="Generate drafts but don't write to sheet")
     p.add_argument("--overwrite", action="store_true",
                    help="Re-draft rows that already have a draft. Preserves linkedin_scheduled_date.")
+    p.add_argument("--tab", help="Sheet tab name (default: yt-longform)")
     args = p.parse_args()
 
     sheet_id = args.sheet_id or os.environ.get("SHEET_ID")
@@ -308,9 +311,11 @@ def main():
     if not os.environ.get("ANTHROPIC_API_KEY"):
         sys.exit("error: ANTHROPIC_API_KEY not set (add to .env.local)")
 
+    tab = args.tab or os.environ.get("YT_LONGFORM_TAB") or "yt-longform"
+
     creds = load_creds()
     sheets = build("sheets", "v4", credentials=creds, cache_discovery=False)
-    header, rows = get_sheet(sheets, sheet_id)
+    header, rows = get_sheet(sheets, sheet_id, tab=tab)
     cols = {h.strip(): i for i, h in enumerate(header)}
 
     required_cols = (
@@ -395,10 +400,10 @@ def main():
 
         # Write to sheet
         sheet_row = i + 2  # 1-based + header
-        update_cell(sheets, sheet_id, sheet_row, cols["linkedin_post_text"], draft)
-        update_cell(sheets, sheet_id, sheet_row, cols["linkedin_status"], "pending_review")
+        update_cell(sheets, sheet_id, sheet_row, cols["linkedin_post_text"], draft, tab=tab)
+        update_cell(sheets, sheet_id, sheet_row, cols["linkedin_status"], "pending_review", tab=tab)
         if sched is not None:
-            update_cell(sheets, sheet_id, sheet_row, cols["linkedin_scheduled_date"], sched.isoformat())
+            update_cell(sheets, sheet_id, sheet_row, cols["linkedin_scheduled_date"], sched.isoformat(), tab=tab)
         print(f"  ✓ written to sheet row {sheet_row}")
 
     print(f"\n[batch] done — tokens in/out: {total_in}/{total_out}")

@@ -21,12 +21,15 @@ sheet_id = os.environ.get("SHEET_ID")
 if not sheet_id:
     sys.exit("SHEET_ID not set")
 
+tab = os.environ.get("YT_LONGFORM_TAB") or "yt-longform"
+rng = f"{tab}!A1:ZZ"
+
 creds = Credentials.from_authorized_user_file(
     str(ROOT / "secrets/google-oauth-token.json"),
     ["https://www.googleapis.com/auth/spreadsheets"],
 )
 sheets = build("sheets", "v4", credentials=creds, cache_discovery=False)
-res = sheets.spreadsheets().values().get(spreadsheetId=sheet_id, range="A1:ZZ").execute()
+res = sheets.spreadsheets().values().get(spreadsheetId=sheet_id, range=rng).execute()
 vals = res["values"]
 hdr = [h.strip() for h in vals[0]]
 ci = {h: i for i, h in enumerate(hdr)}

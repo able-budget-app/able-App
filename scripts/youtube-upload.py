@@ -102,11 +102,12 @@ def get_credentials():
     return creds
 
 
-def get_sheet_rows(sheets_svc, sheet_id):
-    """Return the header row + data rows of the first tab of the sheet."""
+def get_sheet_rows(sheets_svc, sheet_id, tab=None):
+    """Return the header row + data rows of `tab` (or the first tab if tab is None)."""
+    rng = f"{tab}!A1:ZZ" if tab else "A1:ZZ"
     req = sheets_svc.spreadsheets().values().get(
         spreadsheetId=sheet_id,
-        range="A1:ZZ",
+        range=rng,
     )
     res = _execute_with_retry(req)
     values = res.get("values", [])
@@ -125,11 +126,12 @@ def col_letter(idx: int) -> str:
             return out
 
 
-def update_cell(sheets_svc, sheet_id, row_idx_1based, col_idx, value):
+def update_cell(sheets_svc, sheet_id, row_idx_1based, col_idx, value, tab=None):
     cell = f"{col_letter(col_idx)}{row_idx_1based}"
+    rng = f"{tab}!{cell}" if tab else cell
     req = sheets_svc.spreadsheets().values().update(
         spreadsheetId=sheet_id,
-        range=cell,
+        range=rng,
         valueInputOption="RAW",
         body={"values": [[value]]},
     )
@@ -184,16 +186,19 @@ def main():
     p.add_argument("--dry-run", action="store_true", help="Show what would be uploaded; don't actually upload")
     p.add_argument("--shorts", action="store_true",
                    help="Upload carousel MP4s as YouTube Shorts (file_slug column, no thumbnail)")
+    p.add_argument("--tab", help="Sheet tab name (default: yt-shorts for --shorts, yt-longform otherwise)")
     args = p.parse_args()
 
-    # --shorts mode swaps: sheet env var, file lookup column, mp4 path, and skips thumbnail.
+    # --shorts mode swaps: sheet env var, file lookup column, mp4 path, tab, thumbnail handling.
     is_shorts = args.shorts
     if is_shorts:
         sheet_id = args.sheet_id or os.environ.get("SHORTS_SHEET_ID") or os.environ.get("SHEET_ID")
         slug_col = "file_slug"
+        tab = args.tab or os.environ.get("SHORTS_TAB") or "yt-shorts"
     else:
         sheet_id = args.sheet_id or os.environ.get("SHEET_ID")
         slug_col = "slug"
+        tab = args.tab or os.environ.get("YT_LONGFORM_TAB") or "yt-longform"
 
     if not sheet_id:
         env_var = "SHORTS_SHEET_ID" if is_shorts else "SHEET_ID"
@@ -203,9 +208,9 @@ def main():
     sheets = build("sheets", "v4", credentials=creds, cache_discovery=False)
     youtube = build("youtube", "v3", credentials=creds, cache_discovery=False)
 
-    header, rows = get_sheet_rows(sheets, sheet_id)
+    header, rows = get_sheet_rows(sheets, sheet_id, tab=tab)
     if not header:
-        sys.exit("error: sheet is empty")
+        sys.exit(f"error: tab '{tab}' is empty (or doesn't exist in this workbook)")
 
     cols = {h.strip(): i for i, h in enumerate(header)}
     required = [slug_col, "status", "yt_title", "yt_description", "yt_tags", "youtube_video_id"]
@@ -272,7 +277,7 @@ def main():
             continue
 
         # Mark uploading so a re-run doesn't double-process
-        update_cell(sheets, sheet_id, sheet_row_1based, cols["status"], "uploading")
+        update_cell(sheets, sheet_id, sheet_row_1based, cols["status"], "uploading", tab=tab)
         try:
             video_id = upload_video(youtube, mp4, title, description, tags)
             print(f"  [video] {video_id}")
@@ -281,17 +286,17 @@ def main():
                 print(f"  [thumb] set")
             else:
                 print(f"  [thumb] skipped (Shorts auto-thumbnail)")
-            update_cell(sheets, sheet_id, sheet_row_1based, cols["youtube_video_id"], video_id)
+            update_cell(sheets, sheet_id, sheet_row_1based, cols["youtube_video_id"], video_id, tab=tab)
             url = f"https://youtu.be/{video_id}"
             if "youtube_url" in cols:
-                update_cell(sheets, sheet_id, sheet_row_1based, cols["youtube_url"], url)
+                update_cell(sheets, sheet_id, sheet_row_1based, cols["youtube_url"], url, tab=tab)
             if "yt_published_date" in cols:
-                update_cell(sheets, sheet_id, sheet_row_1based, cols["yt_published_date"], time.strftime("%Y-%m-%d"))
-            update_cell(sheets, sheet_id, sheet_row_1based, cols["status"], "uploaded")
+                update_cell(sheets, sheet_id, sheet_row_1based, cols["yt_published_date"], time.strftime("%Y-%m-%d"), tab=tab)
+            update_cell(sheets, sheet_id, sheet_row_1based, cols["status"], "uploaded", tab=tab)
             ok += 1
         except HttpError as e:
             print(f"  [error] {e}")
-            update_cell(sheets, sheet_id, sheet_row_1based, cols["status"], "failed")
+            update_cell(sheets, sheet_id, sheet_row_1based, cols["status"], "failed", tab=tab)
             fail += 1
             if "quotaExceeded" in str(e):
                 print(f"  [stop] quota exceeded — try again tomorrow or apply for increase")
