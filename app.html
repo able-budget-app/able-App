@@ -106,14 +106,18 @@
 html,body{overflow-x:hidden;overflow-x:clip;max-width:100%;}
 html{background:var(--ds-page);min-height:100vh;min-height:100dvh;}
 body{background:var(--ds-page);color:var(--ds-t1);font-family:var(--ds-f);min-height:100vh;min-height:100dvh;overscroll-behavior-x:none;overscroll-behavior-y:contain;padding-top:env(safe-area-inset-top,0px);}
+/* Lock body scroll while any modal-bg is visible. JS sets body.style.top to
+   -window.scrollY so visual position is preserved while body is fixed. */
+body.modal-open{position:fixed;left:0;right:0;width:100%;overflow:hidden;}
 h1,h2,h3{font-family:var(--ds-f);}
 input,select,button,textarea{font-family:inherit;}
 /* iOS auto-zooms when an input's font-size is below 16px. Force 16px on mobile
-   for text-entry fields so focusing them doesn't snap the page in. */
+   for text-entry fields so focusing them doesn't snap the page in. !important
+   so inline `style="font-size:13px"` from older markup can't undo this. */
 @media (max-width:800px){
   input[type="text"],input[type="number"],input[type="email"],input[type="password"],
   input[type="tel"],input[type="search"],input[type="url"],input:not([type]),
-  select,textarea{font-size:16px;}
+  select,textarea{font-size:16px !important;}
 }
 
 /* AUTH SCREEN */
@@ -129,6 +133,17 @@ input,select,button,textarea{font-family:inherit;}
    Use modifier classes for size + color variants. */
 .brand-wordmark{font-family:var(--ds-f);font-size:1.75rem;font-weight:900;color:var(--ds-t1);letter-spacing:-.03em;line-height:1;position:relative;display:inline-block;}
 .brand-wordmark::after{content:'';position:absolute;left:0;right:-4%;bottom:-3px;height:5px;background:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 120 4.2' preserveAspectRatio='none'><path d='M3 2.6 Q2 2.4 3 2.15 Q58 1.75 115 0.15 Q119 1 119 2 Q119 3 115 3.9 Q58 3.55 3 2.65 Q2 2.45 3 2.6 Z' fill='%232a7a4a'/></svg>") no-repeat center / 100% 100%;pointer-events:none;}
+/* Loading variant: the swoosh becomes the progress bar — fills left → right,
+   then loops. Used on auth/booting screens in place of a separate spinner. */
+.brand-wordmark--loading::after{
+  animation: brandSwooshFill 1.4s cubic-bezier(.45,.05,.55,.95) infinite;
+}
+@keyframes brandSwooshFill{
+  0%   { clip-path: inset(0 100% 0 0); }
+  55%  { clip-path: inset(0 0 0 0); }
+  60%  { clip-path: inset(0 0 0 0); }
+  100% { clip-path: inset(0 0 0 100%); }
+}
 .brand-wordmark--lg{font-size:2rem;}
 .brand-wordmark--xl{font-size:2.25rem;}
 .brand-wordmark--green{color:var(--ds-green);}
@@ -417,8 +432,7 @@ input,select,button,textarea{font-family:inherit;}
 .bills-mid{flex:1;min-width:0;}
 .bills-name{font-weight:700;color:var(--ds-t1);font-size:14px;line-height:1.3;}
 .bills-meta{font-size:11px;font-weight:600;color:var(--ds-t3);margin-top:3px;}
-.bills-right{display:flex;flex-direction:column;align-items:flex-end;gap:6px;flex-shrink:0;}
-.bills-amt-line{display:flex;align-items:center;gap:8px;}
+.bills-right{display:flex;align-items:center;gap:8px;flex-shrink:0;}
 .bills-amt-input{background:var(--ds-card2);border:1px solid var(--ds-t4);border-radius:var(--ds-r1);color:var(--ds-t1);font-family:var(--ds-f);font-size:14px;font-weight:800;width:95px;text-align:right;outline:none;transition:all .15s;padding:6px 10px;letter-spacing:-.01em;cursor:text;-webkit-appearance:none;appearance:none;}
 .bills-amt-input:hover{border-color:var(--ds-green);background:var(--ds-card);}
 .bills-amt-input:focus{border-color:var(--ds-green);background:var(--ds-card);box-shadow:0 0 0 3px rgba(42,122,74,.15);}
@@ -1775,7 +1789,7 @@ posthog.init('phc_B6PH36QxpExnyBYhfScFFF6LhDvoyxuFr6PypJuxxky3', {
       // Returning user - pre-fill auth-box with the same "Loading your account"
       // pill _onAuthStateChangeImpl writes via showLoading(). First paint
       // matches the post-SIGNED_IN state, no sign-in flash.
-      box.innerHTML = '<div style="text-align:center;padding:1rem 0;font-family:var(--ds-f);"><div class="brand-wordmark-wrap" style="margin-bottom:.4rem;"><div class="brand-wordmark">Able</div></div><div style="display:inline-flex;align-items:center;gap:10px;margin-top:1.25rem;padding:10px 18px;background:var(--ds-green-l);border-radius:100px;"><div style="width:10px;height:10px;border-radius:50%;background:var(--ds-green);animation:dsPulse 1.2s ease-in-out infinite;"></div><div style="font-size:13px;color:var(--ds-green);font-weight:700;letter-spacing:.02em;">Loading your account</div></div></div><style>@keyframes dsPulse{0%,100%{opacity:.4;transform:scale(.9)}50%{opacity:1;transform:scale(1.1)}}</style>';
+      box.innerHTML = '<div style="text-align:center;padding:1.5rem 1rem;font-family:var(--ds-f);"><div class="brand-wordmark-wrap" style="margin-bottom:1.5rem;"><div class="brand-wordmark brand-wordmark--xl brand-wordmark--loading">Able</div></div><div style="font-size:12px;color:var(--ds-t3);font-weight:700;letter-spacing:.08em;text-transform:uppercase;">Loading your account</div></div>';
     }
     // No session, no checkout - default sign-in form is the correct first paint.
   } catch (_) { /* localStorage blocked or env issue; sign-in form is safe default */ }
@@ -2434,7 +2448,7 @@ posthog.init('phc_B6PH36QxpExnyBYhfScFFF6LhDvoyxuFr6PypJuxxky3', {
         <div style="font-size:13px;color:var(--ds-t2);font-weight:600;margin-bottom:1rem;line-height:1.6;">Edit these to match your actual income streams.</div>
         <div id="sources-list"></div>
         <div style="display:flex;gap:8px;margin-top:.85rem;">
-          <input type="text" id="new-source" placeholder="New income source" style="flex:1;background:var(--ds-page);border:1.5px solid var(--ds-t4);border-radius:var(--ds-r1);padding:10px 14px;font-size:13px;font-weight:700;outline:none;font-family:var(--ds-f);color:var(--ds-t1);">
+          <input type="text" id="new-source" placeholder="New income source" style="flex:1;background:var(--ds-page);border:1.5px solid var(--ds-t4);border-radius:var(--ds-r1);padding:10px 14px;font-weight:700;outline:none;font-family:var(--ds-f);color:var(--ds-t1);">
           <button class="btn btn-primary btn-sm" onclick="addSource()">Add</button>
         </div>
       </div>
@@ -2519,15 +2533,15 @@ posthog.init('phc_B6PH36QxpExnyBYhfScFFF6LhDvoyxuFr6PypJuxxky3', {
       <div class="sec">Security</div>
       <div class="card" id="security-card" style="display:flex;flex-direction:column;gap:10px;">
         <div style="font-size:13px;font-weight:600;color:var(--ds-t2);line-height:1.6;">Two-factor authentication adds a one-time code from your authenticator app on top of your password. Required to connect a bank account.</div>
-        <div id="mfa-status-card" style="display:flex;align-items:center;justify-content:space-between;gap:12px;padding:14px 16px;background:var(--ds-page);border:1.5px solid var(--ds-t4);border-radius:var(--ds-r1);">
-          <div style="display:flex;align-items:center;gap:10px;">
+        <div id="mfa-status-card" style="display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;padding:14px 16px;background:var(--ds-page);border:1.5px solid var(--ds-t4);border-radius:var(--ds-r1);">
+          <div style="display:flex;align-items:center;gap:10px;flex:1;min-width:200px;">
             <svg id="mfa-status-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" style="color:var(--ds-t3);flex-shrink:0;"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
-            <div>
+            <div style="min-width:0;">
               <div id="mfa-status-label" style="font-weight:800;font-size:14px;color:var(--ds-t1);">Loading…</div>
-              <div id="mfa-status-sub" style="font-size:11px;color:var(--ds-t3);font-weight:600;margin-top:2px;"></div>
+              <div id="mfa-status-sub" style="font-size:11px;color:var(--ds-t3);font-weight:600;margin-top:2px;line-height:1.4;"></div>
             </div>
           </div>
-          <button class="btn btn-sm" id="mfa-action-btn" onclick="onMfaActionClick()" style="white-space:nowrap;">…</button>
+          <button class="btn btn-sm" id="mfa-action-btn" onclick="onMfaActionClick()" style="white-space:nowrap;flex-shrink:0;padding:8px 16px;">…</button>
         </div>
         <div style="font-size:11px;color:var(--ds-t3);font-weight:600;line-height:1.5;">Lost access to your authenticator? Email <a href="mailto:hello@becomeable.app" style="color:var(--ds-green);font-weight:700;text-decoration:none;">hello@becomeable.app</a> from the address on your account and we'll verify your identity and reset two-factor for you.</div>
       </div>
@@ -8658,10 +8672,7 @@ function renderBillsPage(){
         <div class="bills-name">${escapeHtml(b.name)} <span style="display:inline-block;width:7px;height:7px;border-radius:50%;background:${catDots[b.cat]||'var(--text3)'};margin-left:3px;vertical-align:middle;"></span>${linkTag}${freqTag}${reviewTag}${fundedTag}</div>
         <div class="bills-meta">${billDueLabel(b)}</div>
       </div>
-      <div class="bills-right">
-        <div class="bills-amt-line">${amtInput}<button class="bills-x" onclick="delBill(${i})" title="${b.fromDebtId?'Remove from Debt tab':'Remove'}" aria-label="Remove">✕</button></div>
-        ${editBtn}
-      </div>`;
+      <div class="bills-right">${amtInput}${editBtn}<button class="bills-x" onclick="delBill(${i})" title="${b.fromDebtId?'Remove from Debt tab':'Remove'}" aria-label="Remove">✕</button></div>`;
     el.appendChild(d);
   });
   document.getElementById('bills-total').textContent=f2(totalBills());
@@ -11497,6 +11508,26 @@ document.addEventListener('DOMContentLoaded', () => {
     if (Kb?.setAccessoryBarVisible) Kb.setAccessoryBarVisible({ isVisible: false });
   } catch (_) {}
 
+  // Body-scroll lock while any modal is visible. On iOS WKWebView, opening a
+  // modal-bg while the body is scrollable lets the underlying page shift when
+  // the system tries to scroll a focused input into view — making the modal
+  // appear to jump. Locking body scroll pins it.
+  let _scrollY = 0;
+  const _modalObserver = new MutationObserver(() => {
+    const anyOpen = Array.from(document.querySelectorAll('.modal-bg'))
+      .some(m => m.style.display && m.style.display !== 'none');
+    if (anyOpen && !document.body.classList.contains('modal-open')) {
+      _scrollY = window.scrollY || window.pageYOffset || 0;
+      document.body.classList.add('modal-open');
+      document.body.style.top = (-_scrollY) + 'px';
+    } else if (!anyOpen && document.body.classList.contains('modal-open')) {
+      document.body.classList.remove('modal-open');
+      document.body.style.top = '';
+      window.scrollTo(0, _scrollY);
+    }
+  });
+  _modalObserver.observe(document.body, { attributes: true, subtree: true, attributeFilter: ['style'] });
+
   const observer = new MutationObserver(() => {
     const settingsActive = document.getElementById('page-settings')?.classList.contains('active');
     if (settingsActive) refreshPushUI();
@@ -13899,8 +13930,12 @@ function hideToast(){
 // elements off-screen. Skip auto-focus inside Capacitor so the user controls
 // when the keyboard appears (by tapping the field themselves).
 function _isCapacitor(){
-  return !!(window.Capacitor && (window.Capacitor.isNativePlatform?.() ||
-    document.querySelector('meta[name="able-runtime"]')?.content==='ios-capacitor'));
+  // Check the build-time runtime marker first - it's injected by sync-www.mjs
+  // into every Capacitor build and is always present before window.Capacitor
+  // bridges in. window.Capacitor.isNativePlatform() is the runtime confirmation.
+  if (document.querySelector('meta[name="able-runtime"]')?.content === 'ios-capacitor') return true;
+  if (window.Capacitor?.isNativePlatform?.()) return true;
+  return false;
 }
 function _modalFocus(id, delay){
   if (_isCapacitor()) return;
@@ -14297,6 +14332,24 @@ function toggleDemoMode(){
     enterDemoMode();
   }
 }
+// Demo enter/exit swaps the entire S state. Every visible page needs to
+// re-render or it'll keep showing whatever it last drew (e.g. demo activity
+// stays on the Activity page after exiting). refreshHome() alone covers Home.
+function _rerenderAllPages(){
+  try { refreshHome(); } catch(_){}
+  try { renderUpcoming(); } catch(_){}
+  try { renderHistory(); } catch(_){}
+  try { renderBillsPage(); } catch(_){}
+  try { renderDebtPage(); } catch(_){}
+  try { renderForecast(); } catch(_){}
+  try { renderScore(); } catch(_){}
+  try { renderActivityPage(); } catch(_){}
+  try { renderQuarterlyTaxCard(); } catch(_){}
+  // Settings page reads S.settings + email_prefs + sources, so re-run if mounted.
+  if (document.getElementById('page-settings')?.classList.contains('active')) {
+    try { loadSettingsPage(); } catch(_){}
+  }
+}
 function enterDemoMode(){
   if (_isDemoActive()) return;
   _demoBackupS = JSON.parse(JSON.stringify(S));
@@ -14308,7 +14361,7 @@ function enterDemoMode(){
   window.saveUserData = async () => {};
   _renderDemoBanner(true);
   _updateDemoButtonLabel(true);
-  refreshHome();
+  _rerenderAllPages();
   showToast('Demo mode on. Real data is parked.');
   Able.track?.('demo_mode_on');
 }
@@ -14327,7 +14380,7 @@ function exitDemoMode(){
   }
   _renderDemoBanner(false);
   _updateDemoButtonLabel(false);
-  refreshHome();
+  _rerenderAllPages();
   showToast('Real data restored.');
   Able.track?.('demo_mode_off');
 }
