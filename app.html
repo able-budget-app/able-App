@@ -358,10 +358,15 @@ input,select,button,textarea{font-family:inherit;}
 .bill-paid-row .bills-name{text-decoration:line-through;color:var(--ds-t3);}
 .checkbtn{width:28px;height:28px;border-radius:50%;border:2px solid var(--ds-t4);background:transparent;cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:12px;transition:all .2s;flex-shrink:0;}
 .checkbtn.checked{background:var(--ds-green);border-color:var(--ds-green);color:white;}
-.upcoming-item{display:flex;align-items:center;gap:12px;padding:12px 14px;border-radius:var(--ds-r2);margin-bottom:8px;background:var(--ds-card);box-shadow:var(--ds-sh1);}
+.upcoming-item{display:grid;grid-template-columns:40px 1fr auto;align-items:center;column-gap:12px;padding:12px 14px;border-radius:var(--ds-r2);margin-bottom:8px;background:var(--ds-card);box-shadow:var(--ds-sh1);}
 .upcoming-item.urgent{background:#fdeef2;}
 .upcoming-item.soon{background:#fef3e0;}
 .upcoming-bubble{width:40px;height:40px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:800;flex-shrink:0;text-align:center;line-height:1.2;color:var(--ds-t1);}
+.upcoming-mid{min-width:0;}
+.upcoming-name{font-size:13px;font-weight:700;color:var(--ds-t1);overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+.upcoming-due{font-size:11px;color:var(--ds-t3);font-weight:600;margin-top:2px;}
+.upcoming-amt{font-size:.95rem;font-weight:800;text-align:right;white-space:nowrap;line-height:1.15;}
+.upcoming-amt-sub{font-size:10px;color:var(--ds-t3);font-weight:700;margin-top:2px;}
 .ring-card{background:linear-gradient(135deg,#eaf5ee 0%,#d9ecde 100%);border-radius:var(--ds-r2);padding:1.35rem;display:flex;align-items:center;gap:1.25rem;margin-bottom:1rem;box-shadow:var(--ds-sh1);}
 .ring-wrap{position:relative;width:70px;height:70px;flex-shrink:0;}
 .ring-wrap svg{transform:rotate(-90deg);}
@@ -380,18 +385,17 @@ input,select,button,textarea{font-family:inherit;}
 /* Forecast row - card-style with three internal rows so mobile lays out
    cleanly without children wrapping awkwardly. Left border color carries the
    status (green = expected, coral = overdue, gray = already received). */
-.forecast-item{background:var(--ds-card);border:1px solid var(--ds-line);border-left:3px solid var(--ds-green);border-radius:var(--ds-r2);padding:14px 16px;margin-bottom:10px;box-shadow:var(--ds-sh1);display:flex;flex-direction:column;gap:8px;font-family:var(--ds-f);}
+.forecast-item{background:var(--ds-card);border:1px solid var(--ds-line);border-left:3px solid var(--ds-green);border-radius:var(--ds-r2);padding:14px 14px 14px 16px;margin-bottom:10px;box-shadow:var(--ds-sh1);display:grid;grid-template-columns:1fr auto auto;column-gap:10px;row-gap:8px;align-items:center;font-family:var(--ds-f);}
 .forecast-item--overdue{border-left-color:var(--ds-c4);}
 .forecast-item--received{border-left-color:var(--ds-t3);opacity:.72;}
-.fc-row{display:flex;align-items:center;justify-content:space-between;gap:10px;}
-.fc-source{font-size:14px;font-weight:800;color:var(--ds-t1);letter-spacing:-.01em;flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
-.fc-amt{font-size:15px;font-weight:900;color:var(--ds-green);letter-spacing:-.02em;white-space:nowrap;}
+.fc-source{font-size:14px;font-weight:800;color:var(--ds-t1);letter-spacing:-.01em;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+.fc-amt{font-size:15px;font-weight:900;color:var(--ds-green);letter-spacing:-.02em;white-space:nowrap;text-align:right;}
 .forecast-item--overdue .fc-amt{color:var(--ds-c4);}
-.fc-meta-cluster{display:flex;align-items:center;gap:8px;flex:1;min-width:0;}
+.fc-meta-cluster{display:flex;align-items:center;gap:8px;min-width:0;flex-wrap:wrap;}
 .fc-meta{font-size:11px;font-weight:600;color:var(--ds-t3);letter-spacing:.02em;white-space:nowrap;}
-.fc-actions{display:flex;gap:6px;align-items:center;flex-shrink:0;}
-.fc-actions .btn-sm{padding:6px 12px;font-size:12px;}
-.fc-x-corner{align-self:flex-end;background:transparent;border:0;color:var(--ds-t3);font-family:var(--ds-f);font-size:14px;font-weight:700;line-height:1;padding:4px 8px;margin:-4px 0 -2px 0;cursor:pointer;transition:color .15s;}
+.fc-gotit-cell{grid-column:2 / span 2;justify-self:stretch;}
+.fc-gotit-cell .btn{width:100%;padding:8px 12px;font-size:12px;}
+.fc-x-corner{background:transparent;border:0;color:var(--ds-t3);font-family:var(--ds-f);font-size:14px;font-weight:700;line-height:1;padding:4px 6px;margin:0;cursor:pointer;transition:color .15s;justify-self:end;}
 .fc-x-corner:hover{color:var(--ds-c4);}
 .score-big{font-family:var(--ds-f);font-size:6rem;font-weight:900;line-height:1;letter-spacing:-.05em;}
 .score-row{display:flex;align-items:center;gap:12px;margin-bottom:12px;font-size:13px;font-weight:700;}
@@ -2886,6 +2890,22 @@ posthog.init('phc_B6PH36QxpExnyBYhfScFFF6LhDvoyxuFr6PypJuxxky3', {
       <div class="field"><label>Source</label><select id="ei-source"></select></div>
     </div>
     <div class="modal-actions"><button class="btn" onclick="closeModal('modal-edit-income')">Cancel</button><button class="btn btn-primary" onclick="saveEditIncome()">Save changes</button></div>
+  </div>
+</div>
+<div class="modal-bg" id="modal-edit-debt" style="display:none;" role="dialog" aria-modal="true" aria-labelledby="modal-edit-debt-title" onclick="if(event.target===this)closeModal('modal-edit-debt')">
+  <div class="modal">
+    <button class="modal-close" onclick="closeModal('modal-edit-debt')" aria-label="Close"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button>
+    <div class="modal-title" id="modal-edit-debt-title">Edit debt</div>
+    <div id="ed-name" style="font-size:13px;color:var(--ds-t2);font-weight:700;margin-bottom:12px;"></div>
+    <div class="form-row">
+      <div class="field"><label>Minimum monthly payment ($)</label><input type="number" id="ed-min" placeholder="0" min="0" step="0.01" inputmode="decimal"></div>
+      <div class="field"><label>Interest rate (%)</label><input type="number" id="ed-rate" placeholder="0" min="0" step="0.01" inputmode="decimal"></div>
+    </div>
+    <div class="field" style="margin-top:12px;">
+      <label>Due day of month (1-31)</label>
+      <input type="number" id="ed-due" placeholder="Leave blank for no linked bill" min="1" max="31" inputmode="numeric">
+    </div>
+    <div class="modal-actions"><button class="btn" onclick="closeModal('modal-edit-debt')">Cancel</button><button class="btn btn-primary" onclick="saveEditDebt()">Save changes</button></div>
   </div>
 </div>
 
@@ -8346,11 +8366,11 @@ function renderUpcoming(){
     const perOcc=occ>1?(b.amount/occ):b.amount;
     // Multi-occurrence bills show "$50 x 3 = $150" so the total matches the allocation reservation.
     const amtHtml=occ>1
-      ?`<div style="text-align:right;"><div style="font-size:.95rem;font-weight:800;">${f2(b.amount)}</div><div style="font-size:10px;color:var(--text3);font-weight:700;margin-top:2px;">${f2(perOcc)} x ${occ} in ${win}d</div></div>`
-      :`<div style="font-size:.95rem;font-weight:800;color:${b.paid?'var(--text3)':'inherit'};text-decoration:${b.paid?'line-through':'none'};">${f2(b.amount)}</div>`;
+      ?`<div class="upcoming-amt"><div>${f2(b.amount)}</div><div class="upcoming-amt-sub">${f2(perOcc)} x ${occ} in ${win}d</div></div>`
+      :`<div class="upcoming-amt" style="color:${b.paid?'var(--ds-t3)':'inherit'};text-decoration:${b.paid?'line-through':'none'};">${f2(b.amount)}</div>`;
     const d=document.createElement('div');d.className='upcoming-item '+cls;
     d.innerHTML=`<div class="upcoming-bubble" style="background:${bbg};color:${bc};">${lbl}</div>
-      <div style="flex:1;"><div style="font-size:13px;font-weight:700;">${escapeHtml(b.name)}${b.paid?' ✓':''}</div><div style="font-size:11px;color:var(--text3);font-weight:600;">${billDueLabel(b)}</div></div>
+      <div class="upcoming-mid"><div class="upcoming-name">${escapeHtml(b.name)}${b.paid?' ✓':''}</div><div class="upcoming-due">${billDueLabel(b)}</div></div>
       ${amtHtml}`;
     el.appendChild(d);
   });
@@ -8373,19 +8393,19 @@ function renderHistory(){
       ?`<span class="history-done-badge history-done-badge--complete">✓ Locked in</span>`
       :`<span class="history-done-badge history-done-badge--partial">${counts.done}/${counts.total}</span>`):'';
     d.innerHTML=`
-      <div style="display:flex;align-items:center;justify-content:space-between;padding:11px 14px;cursor:${hasJobs?'pointer':'default'};" ${hasJobs?`onclick="toggleIncomeExpand('${h.id}')"`:''}>
-        <div style="display:flex;align-items:center;gap:10px;min-width:0;">
-          ${hasJobs?`<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="color:var(--ds-t3);transform:rotate(${expanded?'90':'0'}deg);transition:transform .2s;flex-shrink:0;"><polyline points="9 18 15 12 9 6"/></svg>`:'<span style="width:14px;"></span>'}
+      <div style="display:flex;align-items:flex-start;justify-content:space-between;gap:12px;padding:10px 12px 12px 14px;position:relative;cursor:${hasJobs?'pointer':'default'};" ${hasJobs?`onclick="toggleIncomeExpand('${h.id}')"`:''}>
+        <div style="display:flex;align-items:flex-start;gap:10px;min-width:0;flex:1;padding-top:2px;">
+          ${hasJobs?`<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="color:var(--ds-t3);transform:rotate(${expanded?'90':'0'}deg);transition:transform .2s;flex-shrink:0;margin-top:3px;"><polyline points="9 18 15 12 9 6"/></svg>`:'<span style="width:14px;"></span>'}
           <div style="min-width:0;">
             <div style="font-size:13px;font-weight:800;color:var(--ds-t1);letter-spacing:-.01em;display:flex;align-items:center;flex-wrap:wrap;">${escapeHtml(h.source)}${badge}</div>
-            <div style="font-size:11px;color:var(--ds-t3);font-weight:600;">${h.date}${hasJobs?' · tap to see breakdown':''}${h.mergedWithPlaidTxnId?` · matched deposit${h.gross_amount && h.gross_amount > h.amount + 0.01 ? ` · originally ${f2(h.gross_amount)}` : ''}`:''}</div>
+            <div style="font-size:11px;color:var(--ds-t3);font-weight:600;margin-top:2px;">${h.date}${hasJobs?' · tap to see breakdown':''}${h.mergedWithPlaidTxnId?` · matched deposit${h.gross_amount && h.gross_amount > h.amount + 0.01 ? ` · originally ${f2(h.gross_amount)}` : ''}`:''}</div>
           </div>
         </div>
-        <div style="display:flex;align-items:center;gap:6px;">
-          <div style="font-size:.95rem;font-weight:900;color:var(--ds-green);letter-spacing:-.01em;">+${f2(h.amount)}</div>
-          <button class="btn btn-sm btn-ghost" onclick="event.stopPropagation();editIncome('${h.id}')" style="padding:4px 8px;font-size:11px;" title="Edit">Edit</button>
-          <button class="btn btn-sm btn-danger-ghost" onclick="event.stopPropagation();deleteIncome('${h.id}')" style="padding:4px 8px;font-size:14px;" title="Delete">✕</button>
+        <div style="display:flex;flex-direction:column;align-items:flex-end;gap:6px;flex-shrink:0;padding-top:14px;">
+          <div style="font-size:.95rem;font-weight:900;color:var(--ds-green);letter-spacing:-.01em;line-height:1;">+${f2(h.amount)}</div>
+          <button class="btn btn-sm btn-ghost" onclick="event.stopPropagation();editIncome('${h.id}')" style="padding:3px 12px;font-size:11px;min-width:54px;" title="Edit">Edit</button>
         </div>
+        <button class="fc-x-corner" onclick="event.stopPropagation();deleteIncome('${h.id}')" title="Delete" aria-label="Delete" style="position:absolute;top:4px;right:6px;align-self:auto;margin:0;padding:6px 8px;">✕</button>
       </div>
       ${expanded && hasJobs?`
         <div style="border-top:1px solid var(--ds-t4);padding:12px 14px 14px 32px;background:var(--ds-card2);">
@@ -8983,23 +9003,36 @@ function renderDebtPage(){
   renderTimeline();
 }
 
+let _editingDebtIdx=null;
 function editDebt(i){
-  const d=S.debts[i];
-  const newMin=prompt('Minimum monthly payment ($):', d.min||'');
-  if(newMin===null) return;
-  const newDue=prompt('Due day of month (1-31), or leave blank for no linked bill:', d.dueDay||'');
-  if(newDue===null) return;
-  const newRate=prompt('Interest rate (%):', d.rate||'');
-  if(newRate===null) return;
-  d.min=parseFloat(newMin)||0;
-  d.dueDay=parseInt(newDue)||null;
-  d.rate=parseFloat(newRate)||0;
+  const d=S.debts[i];if(!d)return;
+  _editingDebtIdx=i;
+  document.getElementById('ed-name').textContent=d.name||'Debt';
+  document.getElementById('ed-min').value=d.min||'';
+  document.getElementById('ed-rate').value=d.rate||'';
+  document.getElementById('ed-due').value=d.dueDay||'';
+  document.getElementById('modal-edit-debt').style.display='flex';
+  setTimeout(()=>document.getElementById('ed-min').focus(),50);
+}
+function saveEditDebt(){
+  if(_editingDebtIdx===null)return;
+  const d=S.debts[_editingDebtIdx];if(!d){closeModal('modal-edit-debt');return;}
+  const min=parseFloat(document.getElementById('ed-min').value);
+  const rate=parseFloat(document.getElementById('ed-rate').value);
+  const dueRaw=document.getElementById('ed-due').value.trim();
+  const due=dueRaw===''?null:parseInt(dueRaw);
+  if(due!==null&&(isNaN(due)||due<1||due>31)){showToast('Due day must be between 1 and 31');return;}
+  d.min=isNaN(min)?0:min;
+  d.rate=isNaN(rate)?0:rate;
+  d.dueDay=due;
   // User editing + saving is the human review of an auto-detected debt.
   d.pending_review=false;
   // Mirror the cleared flag onto the linked bill so its REVIEW pill clears too.
   const linkedBill=S.bills.find(b=>b.fromDebtId===d.id);
   if(linkedBill) linkedBill.pending_review=false;
   syncLinkedBill(d);
+  _editingDebtIdx=null;
+  closeModal('modal-edit-debt');
   save();renderDebtPage();renderBillsPage();renderUpcoming();refreshHome();
 }
 function updateDebt(i,v){
@@ -9175,25 +9208,20 @@ function renderForecast(){
     const sign = received ? '+' : '';
     const div = document.createElement('div');
     div.className = cls;
-    // Layout: corner ✕ at top-right (subtle remove), then source/amount on
-    // row 1, then date/pill cluster + Got it (aligned vertically under amount)
-    // on row 2. Received state hides Got it.
+    // Grid layout: row 1 = source | amount | ✕, row 2 = meta-cluster | Got it (spanning amt+x cols).
+    // Got it button spans from $$ left edge to × right edge so its width matches the amount/× cluster.
     const gotItBtn = received
       ? ''
-      : `<button class="btn btn-sm btn-primary" onclick="gotMoney(${realIdx})">Got it →</button>`;
+      : `<div class="fc-gotit-cell"><button class="btn btn-sm btn-primary" onclick="gotMoney(${realIdx})">Got it →</button></div>`;
     div.innerHTML = `
+      <div class="fc-source">${escapeHtml(f.source)}${f.note ? ' · ' + escapeHtml(f.note) : ''}</div>
+      <div class="fc-amt">${sign}${f2(f.amount)}</div>
       <button class="fc-x-corner" onclick="delForecast(${realIdx})" title="Remove" aria-label="Remove">✕</button>
-      <div class="fc-row">
-        <div class="fc-source">${escapeHtml(f.source)}${f.note ? ' · ' + escapeHtml(f.note) : ''}</div>
-        <div class="fc-amt">${sign}${f2(f.amount)}</div>
+      <div class="fc-meta-cluster">
+        <span class="fc-meta">${dateStr} · ${daysStr}</span>
+        <span class="pill" style="background:${pillBg};color:${pillColor};">${pillLabel}</span>
       </div>
-      <div class="fc-row">
-        <div class="fc-meta-cluster">
-          <span class="fc-meta">${dateStr} · ${daysStr}</span>
-          <span class="pill" style="background:${pillBg};color:${pillColor};">${pillLabel}</span>
-        </div>
-        <div class="fc-actions">${gotItBtn}</div>
-      </div>
+      ${gotItBtn}
     `;
     el.appendChild(div);
   });

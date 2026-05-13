@@ -3,7 +3,7 @@
   "appName": "Able",
   "webDir": "www",
   "ios": {
-    "contentInset": "always",
+    "contentInset": "never",
     "scheme": "Able",
     "limitsNavigationsToAppBoundDomains": false
   },
