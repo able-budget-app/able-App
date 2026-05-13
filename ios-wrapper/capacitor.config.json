@@ -9,5 +9,12 @@
   },
   "server": {
     "iosScheme": "able"
+  },
+  "plugins": {
+    "Keyboard": {
+      "resize": "body",
+      "resizeOnFullScreen": true,
+      "style": "default"
+    }
   }
 }

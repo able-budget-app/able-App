@@ -413,6 +413,9 @@ input,select,button,textarea{font-family:inherit;}
 .bills-due{font-size:11px;font-weight:700;color:var(--ds-t3);width:50px;flex-shrink:0;}
 .bills-actions{display:flex;align-items:center;gap:4px;flex-shrink:0;}
 @media(max-width:540px){
+  /* Header columns (BILL/DUE/AMOUNT) don't align with the 2-row mobile grid
+     where due drops under name, so hide them — the row itself is self-labeling. */
+  .bills-header{display:none !important;}
   .bills-row{display:grid;grid-template-columns:auto 1fr auto;grid-template-areas:"check name amount" "check due actions";column-gap:12px;row-gap:4px;padding:14px 14px;align-items:center;}
   .bills-row > .checkbtn{grid-area:check;align-self:center;}
   .bills-name{grid-area:name;font-size:14px;line-height:1.3;padding-left:0 !important;}
@@ -2156,7 +2159,7 @@ posthog.init('phc_B6PH36QxpExnyBYhfScFFF6LhDvoyxuFr6PypJuxxky3', {
     </div>
   </div>
   <div class="card" style="padding:.25rem 0;">
-    <div style="display:flex;padding:12px 16px;border-bottom:1px solid var(--ds-t4);">
+    <div class="bills-header" style="display:flex;padding:12px 16px;border-bottom:1px solid var(--ds-t4);">
       <div style="width:24px;"></div>
       <div style="flex:1;font-size:10px;font-weight:800;color:var(--ds-t3);text-transform:uppercase;letter-spacing:.12em;padding-left:8px;font-family:var(--ds-f);">Bill</div>
       <div style="width:50px;font-size:10px;font-weight:800;color:var(--ds-t3);text-transform:uppercase;letter-spacing:.12em;font-family:var(--ds-f);">Due</div>
@@ -8393,19 +8396,21 @@ function renderHistory(){
       ?`<span class="history-done-badge history-done-badge--complete">✓ Locked in</span>`
       :`<span class="history-done-badge history-done-badge--partial">${counts.done}/${counts.total}</span>`):'';
     d.innerHTML=`
-      <div style="display:flex;align-items:flex-start;justify-content:space-between;gap:12px;padding:10px 12px 12px 14px;position:relative;cursor:${hasJobs?'pointer':'default'};" ${hasJobs?`onclick="toggleIncomeExpand('${h.id}')"`:''}>
-        <div style="display:flex;align-items:flex-start;gap:10px;min-width:0;flex:1;padding-top:2px;">
+      <div style="display:flex;align-items:flex-start;justify-content:space-between;gap:12px;padding:11px 14px;cursor:${hasJobs?'pointer':'default'};" ${hasJobs?`onclick="toggleIncomeExpand('${h.id}')"`:''}>
+        <div style="display:flex;align-items:flex-start;gap:10px;min-width:0;flex:1;">
           ${hasJobs?`<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="color:var(--ds-t3);transform:rotate(${expanded?'90':'0'}deg);transition:transform .2s;flex-shrink:0;margin-top:3px;"><polyline points="9 18 15 12 9 6"/></svg>`:'<span style="width:14px;"></span>'}
           <div style="min-width:0;">
             <div style="font-size:13px;font-weight:800;color:var(--ds-t1);letter-spacing:-.01em;display:flex;align-items:center;flex-wrap:wrap;">${escapeHtml(h.source)}${badge}</div>
             <div style="font-size:11px;color:var(--ds-t3);font-weight:600;margin-top:2px;">${h.date}${hasJobs?' · tap to see breakdown':''}${h.mergedWithPlaidTxnId?` · matched deposit${h.gross_amount && h.gross_amount > h.amount + 0.01 ? ` · originally ${f2(h.gross_amount)}` : ''}`:''}</div>
           </div>
         </div>
-        <div style="display:flex;flex-direction:column;align-items:flex-end;gap:6px;flex-shrink:0;padding-top:14px;">
-          <div style="font-size:.95rem;font-weight:900;color:var(--ds-green);letter-spacing:-.01em;line-height:1;">+${f2(h.amount)}</div>
-          <button class="btn btn-sm btn-ghost" onclick="event.stopPropagation();editIncome('${h.id}')" style="padding:3px 12px;font-size:11px;min-width:54px;" title="Edit">Edit</button>
+        <div style="display:flex;flex-direction:column;align-items:flex-end;gap:3px;flex-shrink:0;">
+          <div style="display:flex;align-items:center;gap:8px;line-height:1;">
+            <div style="font-size:.95rem;font-weight:900;color:var(--ds-green);letter-spacing:-.01em;">+${f2(h.amount)}</div>
+            <button class="fc-x-corner" onclick="event.stopPropagation();deleteIncome('${h.id}')" title="Delete" aria-label="Delete" style="margin:0;padding:2px 4px;">✕</button>
+          </div>
+          <button class="btn btn-sm btn-ghost" onclick="event.stopPropagation();editIncome('${h.id}')" style="padding:3px 12px;font-size:11px;" title="Edit">Edit</button>
         </div>
-        <button class="fc-x-corner" onclick="event.stopPropagation();deleteIncome('${h.id}')" title="Delete" aria-label="Delete" style="position:absolute;top:4px;right:6px;align-self:auto;margin:0;padding:6px 8px;">✕</button>
       </div>
       ${expanded && hasJobs?`
         <div style="border-top:1px solid var(--ds-t4);padding:12px 14px 14px 32px;background:var(--ds-card2);">
@@ -11457,6 +11462,14 @@ async function disablePushNotifications(){
 }
 // Refresh push UI whenever Settings becomes the active page.
 document.addEventListener('DOMContentLoaded', () => {
+  // Capacitor: hide the iOS input accessory toolbar (^ v ✓ above keyboard) so
+  // focused fields in modals don't get crowded by an unnecessary native bar.
+  // resize:"body" mode (capacitor.config.json) handles the keyboard-jump itself.
+  try {
+    const Kb = window.Capacitor?.Plugins?.Keyboard;
+    if (Kb?.setAccessoryBarVisible) Kb.setAccessoryBarVisible({ isVisible: false });
+  } catch (_) {}
+
   const observer = new MutationObserver(() => {
     const settingsActive = document.getElementById('page-settings')?.classList.contains('active');
     if (settingsActive) refreshPushUI();
