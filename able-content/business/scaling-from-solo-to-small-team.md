@@ -33,6 +33,8 @@ The trouble is that scaling past yourself is harder than it looks. Hiring people
 
 Here is the framework: when to make the jump, the four stages of solo-to-team scaling, and the reserve you need before the first hire.
 
+This piece sits inside the broader [How to Pay Yourself as a Business Owner With Variable Income](/business/) guide.
+
 ---
 
 ## The Solo Ceiling Math

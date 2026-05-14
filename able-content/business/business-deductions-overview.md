@@ -3,7 +3,7 @@ title: "Business Deductions Overview: The Categories That Save You the Most"
 slug: business-deductions-overview
 url: /business/business-deductions-overview/
 meta_title: "Business Deductions Overview for Self-Employed | Able"
-meta_description: "The deduction categories most self-employed people use, what counts and what does not, the tracking habits that capture them, and the three rules that keep you out of trouble."
+meta_description: "The deduction categories self-employed people use, what counts and what does not, the tracking habits that capture them, and three rules to follow."
 target_keyword: "business deductions self employed"
 secondary_keywords:
   - small business tax deductions
@@ -31,6 +31,8 @@ Most self-employed people leave deductions on the table for one of two reasons. 
 This article fixes the first problem. A clean overview of the categories most solo operators use, what each category covers, what does not count, and the tracking habits that capture deductions in real time instead of reconstructing them at tax season.
 
 This is not a substitute for an accountant on your specific situation. It is the floor of categories you should know about before you talk to one.
+
+This piece sits inside the broader [How to Pay Yourself as a Business Owner With Variable Income](/business/) guide.
 
 ---
 

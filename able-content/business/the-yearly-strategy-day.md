@@ -3,7 +3,7 @@ title: "The Yearly Strategy Day: How Solo Operators Plan the Next 12 Months in O
 slug: the-yearly-strategy-day
 url: /business/the-yearly-strategy-day/
 meta_title: "Yearly Strategy Day for Solo Operators | Able"
-meta_description: "The structured 8-hour day that produces a real plan for the coming year. Five sections, the specific outputs from each, and the calendar setup that makes it work."
+meta_description: "The structured 8-hour day that produces a real plan for the coming year. Five sections, specific outputs, and the calendar setup that makes it work."
 target_keyword: "yearly strategy day"
 secondary_keywords:
   - annual planning solo
@@ -34,6 +34,8 @@ The fix is a structured Yearly Strategy Day: one day, blocked deliberately, devo
 It takes 6 to 8 hours. Most people who do it for the first time wish they had done it earlier. The clarity from one well-structured day usually saves dozens of less-structured weeks throughout the year.
 
 Here is the framework.
+
+This piece sits inside the broader [How to Pay Yourself as a Business Owner With Variable Income](/business/) guide.
 
 ---
 

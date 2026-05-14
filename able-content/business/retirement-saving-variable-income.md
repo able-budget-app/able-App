@@ -33,6 +33,8 @@ The fix is the same fix that works for everything else with variable income: per
 
 Here is the landscape, the math that decides which account fits you, and the system that funds it deposit by deposit.
 
+This piece sits inside the broader [How to Pay Yourself as a Business Owner With Variable Income](/business/) guide.
+
 ---
 
 ## Why Self-Employed People Under-Save for Retirement

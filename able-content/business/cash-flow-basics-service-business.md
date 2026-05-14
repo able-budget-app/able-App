@@ -3,7 +3,7 @@ title: "Cash Flow Basics for a Service Business: The Number That Actually Matter
 slug: cash-flow-basics-service-business
 url: /business/cash-flow-basics-service-business/
 meta_title: "Cash Flow Basics for Service Business Owners | Able"
-meta_description: "Profit is not the same as cash. Here is how cash flow actually works in a service business, the three timing problems that kill solo operators, and the system that fixes them."
+meta_description: "Profit is not the same as cash. How cash flow really works in a service business, the three timing problems that kill solo operators, and the fix."
 target_keyword: "cash flow service business"
 secondary_keywords:
   - service business cash flow
@@ -32,6 +32,8 @@ You finished the work. The invoice went out. The client said "approved." None of
 Service businesses live and die on this timing. A profitable business with bad cash flow goes under. A barely-profitable business with great cash flow lasts forever. Understanding the difference, and building a system that protects you from the timing gap, is the most underrated skill in solo work.
 
 Here is what cash flow actually is, why it bites service businesses harder than product businesses, and the structure that keeps you from being the next "I had a great year, why am I broke?" cautionary tale.
+
+This piece sits inside the broader [How to Pay Yourself as a Business Owner With Variable Income](/business/) guide.
 
 ---
 

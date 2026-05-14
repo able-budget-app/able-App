@@ -31,6 +31,8 @@ This is a problem, because margin is the number that tells you whether the busin
 
 Here is what a healthy margin looks like for a solo service business, how to calculate yours honestly, and the four ways to improve it.
 
+This piece sits inside the broader [How to Pay Yourself as a Business Owner With Variable Income](/business/) guide.
+
 ---
 
 ## What Profit Margin Actually Measures

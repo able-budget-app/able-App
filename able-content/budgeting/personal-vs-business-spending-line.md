@@ -33,6 +33,8 @@ The blur produces three problems: missed deductions, audit risk, and bookkeeping
 
 Here is the framework. What counts as business, what counts as personal, the four hidden costs of blurring the line, and the practical rules for clean separation even when you are a sole prop.
 
+This piece sits inside the broader [How to Budget With Inconsistent Income](/budgeting/) guide.
+
 ---
 
 ## What Actually Counts as Business

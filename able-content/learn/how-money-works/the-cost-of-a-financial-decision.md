@@ -35,6 +35,8 @@ Most financial decisions feel small in the moment because the price tag is the o
 
 Here is the framework. The three forces that turn small decisions into big outcomes, the math that makes each one real, and the practical examples for variable income.
 
+This piece sits inside the broader [How Money Works](/learn/how-money-works/) guide.
+
 ---
 
 ## Force 1: Compounding

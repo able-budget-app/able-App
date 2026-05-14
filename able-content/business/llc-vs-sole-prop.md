@@ -31,6 +31,8 @@ Online forums tell you to form an LLC the day you start invoicing. YouTube ads s
 
 The actual answer is more boring. For most freelancers in the first year or two, sole proprietorship is fine. The LLC becomes worth it at a specific threshold. The S-corp election becomes worth it at a different specific threshold. The math is not magic. Here is what it actually says.
 
+This piece sits inside the broader [How to Pay Yourself as a Business Owner With Variable Income](/business/) guide.
+
 ---
 
 ## What "Sole Proprietor" Means

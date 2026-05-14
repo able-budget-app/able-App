@@ -33,6 +33,8 @@ The fix is not to spend less on the holidays. The fix is to fund the holidays in
 
 Here is the framework. Why the timing trap hits self-employed people harder, the 90-day setup, and the 5 expense categories to plan for.
 
+This piece sits inside the broader [How to Budget With Inconsistent Income](/budgeting/) guide.
+
 ---
 
 ## Why November and December Are Different

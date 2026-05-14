@@ -3,7 +3,7 @@ title: "Setting Financial Goals on Variable Income: The 3-Tier Goal System"
 slug: setting-financial-goals-on-variable-income
 url: /learn/how-money-works/setting-financial-goals-on-variable-income/
 meta_title: "Financial Goals on Variable Income | Able"
-meta_description: "Why standard goal-setting breaks for self-employed people, the 3-tier goal system that handles income variance, and the quarterly review that keeps you on track."
+meta_description: "Why standard goal-setting fails on variable income, the 3-tier system that handles the variance, and the quarterly review that keeps you on track."
 target_keyword: "financial goals variable income"
 secondary_keywords:
   - financial goals self employed
@@ -32,6 +32,8 @@ For self-employed people, the math is messier. A goal of "$10,000 by December" m
 The fix is not to abandon goals. The fix is to design goals that fit the income shape. Goals that flex when income flexes, that protect the base case, and that capture the upside when good months arrive.
 
 Here is the 3-tier goal system. Why it works, how to set the tiers, and the quarterly review that keeps it honest.
+
+This piece sits inside the broader [How Money Works](/learn/how-money-works/) guide.
 
 ---
 

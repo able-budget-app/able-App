@@ -3,7 +3,7 @@ title: "Surviving a Slow Month: A Tactical Guide for Variable Income"
 slug: surviving-a-slow-month
 url: /budgeting/surviving-a-slow-month/
 meta_title: "How to Survive a Slow Month on Variable Income | Able"
-meta_description: "A slow month does not have to break your year. Here is the tactical guide: what to cut, what to protect, the calls that save thousands, and the rule that keeps the next month clean."
+meta_description: "A slow month does not have to break your year. The tactical guide: what to cut, what to protect, the calls that save thousands, and the rule that helps."
 target_keyword: "surviving a slow month"
 secondary_keywords:
   - slow month freelancer
@@ -30,6 +30,8 @@ A slow month is not an emergency. It is a feature of variable income. The first 
 The playbook is short. Six tactical moves and one rule. Done well, a slow month is a small drawdown of the reserve and a slightly tighter discretionary budget. Done badly, a slow month becomes the seed of credit card debt that takes the next three months to repay.
 
 Here is the actual playbook. Pull it out the moment you realize the month is going to be light.
+
+This piece sits inside the broader [How to Budget With Inconsistent Income](/budgeting/) guide.
 
 ---
 

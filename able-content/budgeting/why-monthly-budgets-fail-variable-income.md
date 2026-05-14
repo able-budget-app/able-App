@@ -3,7 +3,7 @@ title: "Why Monthly Budgets Fail on Variable Income (and What Actually Works)"
 slug: why-monthly-budgets-fail-variable-income
 url: /budgeting/why-monthly-budgets-fail-variable-income/
 meta_title: "Why Monthly Budgets Fail with Variable Income | Able"
-meta_description: "The five reasons monthly budgets break for self-employed people, the false confidence they produce, and the budgeting approach that actually fits how you get paid."
+meta_description: "The five reasons monthly budgets break for self-employed people, the false confidence they produce, and the approach that fits how you get paid."
 target_keyword: "monthly budget variable income"
 secondary_keywords:
   - why budgets fail freelancer
@@ -32,6 +32,8 @@ For W-2 employees, this works. The paycheck is the same every two weeks. The num
 For self-employed people, this collapses almost immediately. The monthly income number is a guess. The allocation that follows is a guess on top of a guess. By month three, the budget is a document in a folder somewhere that no longer reflects reality.
 
 Here is exactly why monthly budgets fail on variable income, and what actually works instead.
+
+This piece sits inside the broader [How to Budget With Inconsistent Income](/budgeting/) guide.
 
 ---
 

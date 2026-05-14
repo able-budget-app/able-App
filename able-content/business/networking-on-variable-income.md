@@ -3,7 +3,7 @@ title: "Networking on Variable Income: How to Invest in Relationships Without Bu
 slug: networking-on-variable-income
 url: /business/networking-on-variable-income/
 meta_title: "Networking for Self-Employed on a Budget | Able"
-meta_description: "Why most networking advice costs more than it produces, the four high-leverage relationship activities for variable income, and the budget framework that keeps it sustainable."
+meta_description: "Why most networking advice costs more than it produces, the four high-leverage activities for variable income, and a budget framework that fits."
 target_keyword: "networking variable income"
 secondary_keywords:
   - networking for freelancers
@@ -32,6 +32,8 @@ For self-employed people on variable income, networking has the same value (refe
 The goal is not to skip networking. The goal is to network in ways that produce high relationship value per dollar spent, sustainable on a variable income.
 
 Here is the framework. Why most networking advice is too expensive, the four high-leverage activities for variable income, and the budget structure that keeps it manageable.
+
+This piece sits inside the broader [How to Pay Yourself as a Business Owner With Variable Income](/business/) guide.
 
 ---
 

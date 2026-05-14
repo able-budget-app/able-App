@@ -3,7 +3,7 @@ title: "How to Recover From a Financial Setback: The 90-Day Reset for Self-Emplo
 slug: how-to-recover-from-a-financial-setback
 url: /budgeting/how-to-recover-from-a-financial-setback/
 meta_title: "Recovering From a Financial Setback | Able"
-meta_description: "The four-step 90-day reset for self-employed people after a setback (lost client, big bill, slow stretch). Triage, stabilize, rebuild, and the discipline that holds."
+meta_description: "The four-step 90-day reset for self-employed people after a lost client, big bill, or slow stretch. Triage, stabilize, rebuild, and the discipline that holds."
 target_keyword: "recover financial setback"
 secondary_keywords:
   - financial recovery freelancer
@@ -30,6 +30,8 @@ Every self-employed person has setbacks. The biggest client leaves. The tax bill
 The setback itself is rarely the catastrophic problem. The catastrophic problem is the response to the setback. Bad responses compound the damage and turn a 1-quarter problem into a 1-year problem. Good responses contain the damage and restore the system.
 
 Here is the framework. The four-step 90-day reset that turns a setback into a recovery, and the discipline that prevents the next one from being worse.
+
+This piece sits inside the broader [How to Budget With Inconsistent Income](/budgeting/) guide.
 
 ---
 

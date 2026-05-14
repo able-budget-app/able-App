@@ -3,7 +3,7 @@ title: "The End-of-Quarter Financial Checkup: A 60-Minute Routine for Self-Emplo
 slug: end-of-quarter-financial-checkup
 url: /business/end-of-quarter-financial-checkup/
 meta_title: "End-of-Quarter Checkup for Self-Employed | Able"
-meta_description: "The 60-minute quarterly review that catches problems before they grow. Six checkpoints across revenue, costs, reserve, tax, and forecast, plus the action list it produces."
+meta_description: "The 60-minute quarterly review that catches problems before they grow. Six checkpoints across revenue, costs, reserve, and tax, plus an action list."
 target_keyword: "quarterly financial review self employed"
 secondary_keywords:
   - quarterly checkup freelance
@@ -32,6 +32,8 @@ Never: months pass, the bank balance is the only signal, problems accumulate qui
 The fix is the regular interval. A 60-minute review at the end of each quarter (March, June, September, December) catches problems while they are still small and lets you adjust before the small problems compound.
 
 Here is the checklist. Six checkpoints, 10 minutes each. The output is a short action list for the next quarter.
+
+This piece sits inside the broader [How to Pay Yourself as a Business Owner With Variable Income](/business/) guide.
 
 ---
 

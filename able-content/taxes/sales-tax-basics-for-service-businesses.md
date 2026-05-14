@@ -3,7 +3,7 @@ title: "Sales Tax Basics for Service Businesses: What Applies, What Doesn't"
 slug: sales-tax-basics-for-service-businesses
 url: /taxes/sales-tax-basics-for-service-businesses/
 meta_title: "Sales Tax for Service Businesses Explained | Able"
-meta_description: "When sales tax applies to services, which states are tightening rules, the nexus question for remote freelancers, and the practical setup for collecting and remitting."
+meta_description: "When sales tax applies to services, which states are tightening rules, the nexus question for remote freelancers, and the setup for collecting and remitting."
 target_keyword: "sales tax service business"
 secondary_keywords:
   - do freelancers charge sales tax
@@ -32,6 +32,8 @@ State legislatures have been steadily expanding what counts as "taxable" to incl
 Here is the framework. What sales tax actually is, when it applies to services, the nexus question for remote work, and what to do if you discover you have been missing it.
 
 Note: sales tax rules vary dramatically by state and change frequently. This article is educational. For your specific situation, work with a CPA or sales-tax specialist (services like Avalara, TaxJar, or local accountants).
+
+This piece sits inside the broader [Quarterly Taxes for Self-Employed](/taxes/) guide.
 
 ---
 

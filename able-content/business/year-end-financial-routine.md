@@ -33,6 +33,8 @@ A clean year-end routine takes about six hours spread across the four weeks. It 
 
 Here is the routine. Six hours, in four parts.
 
+This piece sits inside the broader [How to Pay Yourself as a Business Owner With Variable Income](/business/) guide.
+
 ---
 
 ## Part 1: Mid-December Tax Moves (90 minutes)

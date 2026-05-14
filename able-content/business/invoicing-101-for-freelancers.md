@@ -3,7 +3,7 @@ title: "Invoicing 101 for Freelancers: Get Paid Without the Awkward Follow-ups"
 slug: invoicing-101-for-freelancers
 url: /business/invoicing-101-for-freelancers/
 meta_title: "Invoicing 101 for Freelancers and Small Business | Able"
-meta_description: "How to send invoices that get paid faster. Terms, late fees, payment processors, what to include, and the follow-up cadence that works."
+meta_description: "How to send invoices that actually get paid on variable income. Terms, late fees, payment processors, and the follow-up cadence that closes the gap."
 target_keyword: "invoicing for freelancers"
 secondary_keywords:
   - how to invoice clients
@@ -30,6 +30,8 @@ Most freelancers lose more money to bad invoicing than to bad pricing. The price
 Invoicing is not a paperwork problem. It is a cash flow problem dressed up as paperwork. The way you write an invoice, the terms you set, the moment you send it, and the cadence you follow up all decide whether the money lands in time or whether you spend three weeks chasing a client who already approved the work.
 
 Here is the system that works. Five rules and a follow-up schedule. Twenty minutes to set up. Fewer awkward follow-ups for the rest of your career.
+
+This piece sits inside the broader [How to Pay Yourself as a Business Owner With Variable Income](/business/) guide.
 
 ---
 

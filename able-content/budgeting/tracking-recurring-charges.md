@@ -33,6 +33,8 @@ The unconscious set is the leak. Most freelancers find $200 to $600 a month of r
 
 Here is the framework. The five recurring-charge patterns that hide easily, the quarterly audit that finds them, and the rule that keeps the stack lean going forward.
 
+This piece sits inside the broader [How to Budget With Inconsistent Income](/budgeting/) guide.
+
 ---
 
 ## The Five Patterns
@@ -177,9 +179,9 @@ The second thing it buys is clarity.
 
 A lean stack is easier to think about. You know what you use. You know what each tool does. New tools get evaluated against the existing set, not added on top of it.
 
-The third thing it buys is the mental model of "every dollar has a job."
+The third thing it buys is the mental model of "every deposit has a purpose."
 
-Recurring charges that do not earn their place violate the model. The audit reinforces the rule: every outflow has a purpose. The leaky charges stop fitting the worldview.
+Recurring charges that do not earn their place violate the model. The audit reinforces the rule: every outflow has a destination. The leaky charges stop fitting the worldview.
 
 You are able to pay down debt, even on slow months.
 

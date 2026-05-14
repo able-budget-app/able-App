@@ -3,7 +3,7 @@ title: "Transitioning From W-2 to Self-Employed: The Financial Setup That Makes 
 slug: transitioning-from-w2-to-self-employed
 url: /business/transitioning-from-w2-to-self-employed/
 meta_title: "W-2 to Self-Employed Transition Guide | Able"
-meta_description: "The reserve, insurance, and tax setups to complete before quitting the W-2. The mistakes that derail year one, and the income recovery timeline most people actually face."
+meta_description: "The reserve, insurance, and tax setups to complete before quitting the W-2. The mistakes that derail year one, and the recovery timeline you face."
 target_keyword: "w2 to self employed transition"
 secondary_keywords:
   - quitting job to freelance
@@ -32,6 +32,8 @@ The risks compound: income variance arrives at the same time as new tax responsi
 The transition that goes well is usually set up months in advance. Reserve in place, insurance arranged, tax savings started, client pipeline begun before the W-2 ended. The first six months as a self-employed person are easier when the runway is already built.
 
 Here is the framework. The financial preparations to complete before quitting, the mistakes that derail year one, and the income recovery timeline most people actually face.
+
+This piece sits inside the broader [How to Pay Yourself as a Business Owner With Variable Income](/business/) guide.
 
 ---
 

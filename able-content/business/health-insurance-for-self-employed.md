@@ -30,6 +30,8 @@ Most self-employed people underestimate this cost when they price their work. Th
 
 Here is the actual landscape: five real options, what each one costs, who they work for, and the tax deduction that brings the real price down.
 
+This piece sits inside the broader [How to Pay Yourself as a Business Owner With Variable Income](/business/) guide.
+
 ---
 
 ## What Health Insurance Actually Costs

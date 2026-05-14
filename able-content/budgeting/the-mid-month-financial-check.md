@@ -31,6 +31,8 @@ A mid-month check, run on day 15 of each month, catches problems while there is 
 
 Here is the routine. Why mid-month is the right interval, the five specific things to check, and what to do with the output.
 
+This piece sits inside the broader [How to Budget With Inconsistent Income](/budgeting/) guide.
+
 ---
 
 ## Why Mid-Month Is the Right Interval

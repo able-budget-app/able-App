@@ -3,7 +3,7 @@ title: "Teaching Your Partner the Per-Deposit Method: How to Get Aligned Without
 slug: teaching-your-partner-the-per-deposit-method
 url: /budgeting/teaching-your-partner-the-per-deposit-method/
 meta_title: "Teaching Your Partner Per-Deposit Budgeting | Able"
-meta_description: "The conversation that gets your partner on board with per-deposit allocation, the three account structures couples actually use, and the joint-decision rules that keep it working."
+meta_description: "The conversation that gets your partner on board with per-deposit allocation, the three account structures couples use, and joint-decision rules."
 target_keyword: "couples per deposit budgeting"
 secondary_keywords:
   - budget with partner variable income
@@ -32,6 +32,8 @@ The pattern that fails: one person learns the per-deposit method, gets excited, 
 The pattern that works: the partner is brought into the framework before the setup happens, the structure accounts for both people's relationship with money, and the joint decisions get made together rather than imposed.
 
 Here is the framework. The conversation that gets your partner on board, the three account structures that work for couples, and the joint-decision rules that keep the system running.
+
+This piece sits inside the broader [How to Budget With Inconsistent Income](/budgeting/) guide.
 
 ---
 

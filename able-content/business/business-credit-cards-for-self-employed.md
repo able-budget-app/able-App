@@ -3,7 +3,7 @@ title: "Business Credit Cards for the Self-Employed: When to Get One, How to Use
 slug: business-credit-cards-for-self-employed
 url: /business/business-credit-cards-for-self-employed/
 meta_title: "Business Credit Cards for Self-Employed | Able"
-meta_description: "Why a separate business credit card matters even for sole proprietors, the three card types to consider, and the rules that keep the card from becoming a debt trap."
+meta_description: "Why a separate business card matters even for sole proprietors, the three card types to consider, and the rules that keep it from becoming a debt trap."
 target_keyword: "business credit card self employed"
 secondary_keywords:
   - best business credit card freelance
@@ -32,6 +32,8 @@ It is small because the setup is 20 minutes. It is high-leverage because the dow
 Most freelancers operate without one for too long. The pattern: a personal credit card handles both personal and business charges. The line items get mixed. At tax time, the bookkeeping reconstruction takes hours. Categorization mistakes happen. Real deductions get missed.
 
 Here is the framework. Why the business credit card matters even for sole proprietors, the three card types to consider, the qualifying rules, and the discipline that keeps the card from becoming a debt trap.
+
+This piece sits inside the broader [How to Pay Yourself as a Business Owner With Variable Income](/business/) guide.
 
 ---
 

@@ -3,7 +3,7 @@ title: "Building a Business Reserve: The Account That Saves Your Year"
 slug: building-a-business-reserve
 url: /business/building-a-business-reserve/
 meta_title: "How to Build a Business Cash Reserve | Able"
-meta_description: "A business reserve is not the same as your emergency fund. Here is how big it should be, how to build it deposit by deposit, and the rules that keep it from getting raided."
+meta_description: "A business reserve is not your emergency fund. How big it should be, how to build it deposit by deposit, and the rules that keep it from getting raided."
 target_keyword: "business cash reserve"
 secondary_keywords:
   - small business cash reserve
@@ -32,6 +32,8 @@ It is also the account most self-employed people skip building, because it does 
 A business reserve is different from a personal emergency fund. Different purpose, different math, different account. Knowing the difference, and structuring both, is the foundation of being able to make business decisions without flinching.
 
 Here is what a reserve actually does, how big it should be, and the system that builds it without willpower.
+
+This piece sits inside the broader [How to Pay Yourself as a Business Owner With Variable Income](/business/) guide.
 
 ---
 

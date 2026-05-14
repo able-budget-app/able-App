@@ -3,7 +3,7 @@ title: "The True Cost of Debt: What 'Just the Minimum' Actually Costs You"
 slug: the-true-cost-of-debt
 url: /learn/how-money-works/the-true-cost-of-debt/
 meta_title: "True Cost of Debt: Minimum Payments and Compounding | Able"
-meta_description: "What a credit card balance actually costs when you only pay the minimum, how interest compounds, and the math that turns $5,000 of debt into $14,000 of payments."
+meta_description: "What a credit card balance actually costs when you only pay the minimum, how interest compounds, and how $5,000 of debt becomes $14,000 of payments."
 target_keyword: "true cost of debt"
 secondary_keywords:
   - minimum payment cost
@@ -32,6 +32,8 @@ What the statement does not say is what the minimum-payment path actually costs.
 The cost of debt is not the interest rate. The cost of debt is the interest rate compounded over the time it takes you to pay it off. Compounding is the lever, and the longer you carry the debt, the more aggressive the lever becomes.
 
 Here is the math.
+
+This piece sits inside the broader [How Money Works](/learn/how-money-works/) guide.
 
 ---
 

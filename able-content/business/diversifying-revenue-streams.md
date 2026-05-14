@@ -3,7 +3,7 @@ title: "Diversifying Revenue Streams: How Solo Operators Reduce Single-Source Ri
 slug: diversifying-revenue-streams
 url: /business/diversifying-revenue-streams/
 meta_title: "Diversifying Revenue Streams for Solo Operators | Able"
-meta_description: "The single-client risk that quietly threatens most freelance businesses, the four diversification patterns that fit solo operators, and how to start without spreading thin."
+meta_description: "The single-client risk that threatens freelance businesses, the four diversification patterns that fit solo operators, and how to start without spreading thin."
 target_keyword: "diversify revenue freelance"
 secondary_keywords:
   - multiple income streams freelance
@@ -32,6 +32,8 @@ Diversification is the structural fix. Multiple revenue streams, each contributi
 The trap is that most diversification advice tells you to "build passive income" or "create a course," which often distracts from the core business and produces neither additional revenue nor reduced risk. The right diversification for a solo operator is usually more conservative and more targeted.
 
 Here is the framework. Why concentration is the silent risk, the four diversification patterns that actually work, and how to start without spreading too thin.
+
+This piece sits inside the broader [How to Pay Yourself as a Business Owner With Variable Income](/business/) guide.
 
 ---
 

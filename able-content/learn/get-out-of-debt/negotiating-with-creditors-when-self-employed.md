@@ -35,6 +35,8 @@ For self-employed people, the negotiation question matters because variable inco
 
 Here is the framework. When negotiation is worth attempting, the four ask types that work, the scripts that open the door, and the credit consequences to understand before starting.
 
+This piece sits inside the broader [How to Get Out of Debt on Variable Income](/learn/get-out-of-debt/) guide.
+
 ---
 
 ## When Negotiation Is Worth Attempting

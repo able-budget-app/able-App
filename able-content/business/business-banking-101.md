@@ -33,6 +33,8 @@ The setup is one afternoon. The payoff is years of cleaner taxes, faster bookkee
 
 Here is the system that works.
 
+This piece sits inside the broader [How to Pay Yourself as a Business Owner With Variable Income](/business/) guide.
+
 ---
 
 ## Why Separate Accounts Matter

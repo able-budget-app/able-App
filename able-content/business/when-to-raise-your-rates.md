@@ -3,7 +3,7 @@ title: "When to Raise Your Rates: The Signals, the Math, and the Conversation"
 slug: when-to-raise-your-rates
 url: /business/when-to-raise-your-rates/
 meta_title: "When to Raise Your Freelance Rates | Able"
-meta_description: "Six signals that say it is time, the math that justifies the number, and the conversation script that loses fewer clients than you fear. Plus the reserve target that gives you spine."
+meta_description: "Six signals that say it is time, the math behind the new number, the script that loses fewer clients than you fear, and the reserve that gives you spine."
 target_keyword: "when to raise freelance rates"
 secondary_keywords:
   - how often raise rates freelance
@@ -32,6 +32,8 @@ The signs were there earlier. The pipeline was full. The work felt easy. The cli
 By the time you raise, the gap between your real value and your price is so wide that even a meaningful increase feels like catching up. The lost margin during those late years is real money. Compounded across a career, it is six figures.
 
 The fix is not braver pricing. The fix is recognizing the signals when they happen, doing the math, and executing the rate change before the gap widens. Here is the playbook.
+
+This piece sits inside the broader [How to Pay Yourself as a Business Owner With Variable Income](/business/) guide.
 
 ---
 

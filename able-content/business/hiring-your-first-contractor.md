@@ -31,6 +31,8 @@ You stop being a person who does the work. You become a person who runs work, ev
 
 Here is when bringing on a contractor makes sense, what it actually costs you (the rate is not the full number), the paperwork that protects you legally, and the cash flow trap that has hurt more freelancers than any other hiring mistake.
 
+This piece sits inside the broader [How to Pay Yourself as a Business Owner With Variable Income](/business/) guide.
+
 ---
 
 ## When to Hire a Contractor

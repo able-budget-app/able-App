@@ -3,7 +3,7 @@ title: "Couples on Variable Income: How to Budget When One (or Both) of You Is S
 slug: couples-on-variable-income
 url: /budgeting/couples-on-variable-income/
 meta_title: "Couples Budgeting with Variable Income | Able"
-meta_description: "When one partner is self-employed and the other isn't, the math gets complicated. Here is the framework for combined budgeting, the conversations to have, and the system that works."
+meta_description: "When one partner is self-employed and the other is not, the math gets complicated. The framework for combined budgeting and conversations that work."
 target_keyword: "couples budgeting variable income"
 secondary_keywords:
   - couples self employed budget
@@ -32,6 +32,8 @@ In every case, the household has two cash flow rhythms running at once, and they
 Without a system, this combination produces friction. The salaried partner sees the variance as instability. The self-employed partner feels judged for having the wrong shape of income. Both end up arguing about money in ways that have less to do with the math than with the mismatched rhythms.
 
 Here is the framework that smooths the friction. Three account structures to choose from, the conversations to have at each transition point, and the rule that keeps both partners feeling treated fairly.
+
+This piece sits inside the broader [How to Budget With Inconsistent Income](/budgeting/) guide.
 
 ---
 

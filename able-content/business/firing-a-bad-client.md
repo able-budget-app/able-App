@@ -3,7 +3,7 @@ title: "How to Fire a Bad Client (Without Killing Your Cash Flow)"
 slug: firing-a-bad-client
 url: /business/firing-a-bad-client/
 meta_title: "How to Fire a Bad Client Without Killing Cash Flow | Able"
-meta_description: "Some clients cost more than they pay. Here is how to recognize the warning signs, the math on firing one, and the script that ends the relationship without drama."
+meta_description: "Some clients cost more than they pay. How to spot the warning signs, the math on firing one, and the script that ends the relationship cleanly."
 target_keyword: "fire a bad client"
 secondary_keywords:
   - how to end client relationship
@@ -30,6 +30,8 @@ The longest you keep a bad client is one or two months past when you should have
 Firing a client feels like losing income. Sometimes it is. More often, it is recovering capacity, energy, and good will that the bad client was draining. The math works out in your favor more reliably than most freelancers expect.
 
 Here is how to recognize a bad client before they become an emergency, the cash flow math that tells you when to act, and the script that ends the relationship without drama.
+
+This piece sits inside the broader [How to Pay Yourself as a Business Owner With Variable Income](/business/) guide.
 
 ---
 

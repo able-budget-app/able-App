@@ -3,7 +3,7 @@ title: "The First 90 Days of Self-Employment: A Financial Setup Checklist"
 slug: first-90-days-self-employment
 url: /business/first-90-days-self-employment/
 meta_title: "First 90 Days of Self-Employment Financial Setup | Able"
-meta_description: "The financial setup that protects your first 90 days as a freelancer or business owner. Banking, taxes, invoicing, insurance, and the reserve target that gets you stable."
+meta_description: "The financial setup that protects your first 90 days as a freelancer. Banking, taxes, invoicing, insurance, and the reserve target that gets you stable."
 target_keyword: "starting self employment checklist"
 secondary_keywords:
   - first 90 days freelance
@@ -31,6 +31,8 @@ The first 90 days of self-employment shape the next five years more than people 
 Most new freelancers do the setup haphazardly. Set up the LLC in month one, ignore taxes until April, mix accounts because it is easier in the short term, find an accountant only when something breaks. Each shortcut is small individually. Together they produce the "second year is harder than the first" problem that hits most self-employed people.
 
 The 90-day checklist below is the version of the setup that prevents that. Day-by-day for the first two weeks, then weekly for the rest of the quarter. Hit most of these and the business has a structural foundation that will hold for years.
+
+This piece sits inside the broader [How to Pay Yourself as a Business Owner With Variable Income](/business/) guide.
 
 ---
 

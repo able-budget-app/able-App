@@ -34,6 +34,8 @@ A real price covers more than your time. It covers the slow months, the taxes yo
 
 Here is how to build a price from the ground up. The math takes 20 minutes. The decision lasts years.
 
+This piece sits inside the broader [How to Pay Yourself as a Business Owner With Variable Income](/business/) guide.
+
 ---
 
 ## Why "What I Used to Make Hourly" Is the Wrong Anchor

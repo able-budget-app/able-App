@@ -35,6 +35,8 @@ What happens to that money in the next 24 hours determines whether it produces s
 
 Here is the framework. Why unexpected deposits are particularly leaky, the 24-hour routing rule, and the 4-question filter to apply.
 
+This piece sits inside the broader [How to Budget With Inconsistent Income](/budgeting/) guide.
+
 ---
 
 ## Why Unexpected Deposits Disappear

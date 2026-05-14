@@ -3,7 +3,7 @@ title: "Owner Draws vs. Salary: How Self-Employed People Should Pay Themselves"
 slug: owner-draws-vs-salary
 url: /business/owner-draws-vs-salary/
 meta_title: "Owner Draws vs Salary for Self-Employed | Able"
-meta_description: "When to take owner draws, when to switch to W-2 salary, the S-corp threshold that triggers the change, and how to pay yourself a steady amount from variable income."
+meta_description: "When to take owner draws, when to switch to W-2 salary, the S-corp threshold that flips the choice, and how to pay yourself steadily on variable income."
 target_keyword: "owner draw vs salary"
 secondary_keywords:
   - how to pay yourself self employed
@@ -30,6 +30,8 @@ Most self-employed people get this question wrong because they ask it in the wro
 The question is not "draws or salary." The question is "what is my business structure, and what are the rules for that structure." Once the structure is set, the answer to draws-or-salary is largely automatic.
 
 Here is the framework: what each option means, when each applies, the S-corp threshold that flips the decision, and how to actually pay yourself a steady "paycheck" from variable income regardless of which method you use.
+
+This piece sits inside the broader [How to Pay Yourself as a Business Owner With Variable Income](/business/) guide.
 
 ---
 

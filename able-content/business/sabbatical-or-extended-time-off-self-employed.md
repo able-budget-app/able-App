@@ -3,7 +3,7 @@ title: "Taking a Sabbatical or Extended Time Off as a Self-Employed Person"
 slug: sabbatical-or-extended-time-off-self-employed
 url: /business/sabbatical-or-extended-time-off-self-employed/
 meta_title: "Sabbatical for Self-Employed: How to Take Time Off | Able"
-meta_description: "The reserve target that funds a real break, the client conversation that protects the business while you are gone, and the 90-day re-entry plan that prevents the crash."
+meta_description: "The reserve target that funds a real break, the client conversation that protects the business while you are gone, and the re-entry plan that holds."
 target_keyword: "self employed sabbatical"
 secondary_keywords:
   - freelancer sabbatical
@@ -32,6 +32,8 @@ A real break, two weeks or more, completely disconnected, is rare for self-emplo
 The fear is understandable. It is also fixable. With the right preparation (reserve, client conversation, re-entry plan), a real break is possible without the business collapsing.
 
 Here is the framework. The reserve target that funds an actual sabbatical, the client communication that protects the relationships, and the re-entry plan that prevents the post-break crash.
+
+This piece sits inside the broader [How to Pay Yourself as a Business Owner With Variable Income](/business/) guide.
 
 ---
 

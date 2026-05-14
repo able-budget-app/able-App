@@ -3,7 +3,7 @@ title: "Avalanche vs. Snowball on Variable Income: Which Debt Method Actually Wo
 slug: avalanche-vs-snowball-variable-income
 url: /learn/get-out-of-debt/avalanche-vs-snowball-variable-income/
 meta_title: "Avalanche vs Snowball for Variable Income | Able"
-meta_description: "The two main debt-payoff methods, the math that says one is cheaper, the psychology that often says the other works better, and why variable income tilts the choice."
+meta_description: "The two main debt-payoff methods, the math that picks one, the psychology that often picks the other, and why variable income tilts the choice."
 target_keyword: "avalanche vs snowball debt"
 secondary_keywords:
   - debt snowball variable income
@@ -34,6 +34,8 @@ The snowball method is psychologically optimal. It says: pay off the smallest ba
 Both methods have proponents who insist their method is "the right way." The truth is that the right method depends on your specific situation, especially on variable income, where the discipline question and the math question interact differently than for steady-paycheck households.
 
 Here is what each method actually does, the math on real numbers, the psychology that matters for variable income, and how to choose.
+
+This piece sits inside the broader [How to Get Out of Debt on Variable Income](/learn/get-out-of-debt/) guide.
 
 ---
 

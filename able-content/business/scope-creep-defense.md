@@ -33,6 +33,8 @@ Multiply that across every project, and the cumulative drag on margin is enormou
 
 Here is how to spot scope creep, the four kinds to watch for, and the scripts that hold the line without making you the bad guy.
 
+This piece sits inside the broader [How to Pay Yourself as a Business Owner With Variable Income](/business/) guide.
+
 ---
 
 ## Why Scope Creep Happens

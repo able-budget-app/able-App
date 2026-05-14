@@ -35,6 +35,8 @@ The fix is the sinking fund. A dedicated bucket for each irregular expense, fund
 
 Here is the framework. Why sinking funds work especially well on variable income, the 10 categories most self-employed people need, and how to start without setting up 20 savings accounts.
 
+This piece sits inside the broader [How to Budget With Inconsistent Income](/budgeting/) guide.
+
 ---
 
 ## Why Irregular Expenses Are the Real Budget Killers

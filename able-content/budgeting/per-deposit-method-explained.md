@@ -35,6 +35,8 @@ The per-deposit method is the alternative. Instead of allocating monthly income 
 
 Here is how it works.
 
+This piece sits inside the broader [How to Budget With Inconsistent Income](/budgeting/) guide.
+
 ---
 
 ## Why Monthly Budgets Fail on Variable Income

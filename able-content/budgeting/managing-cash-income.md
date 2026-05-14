@@ -3,7 +3,7 @@ title: "Managing Cash Income: The System That Keeps You Out of Trouble"
 slug: managing-cash-income
 url: /budgeting/managing-cash-income/
 meta_title: "Managing Cash Income for Self-Employed and Tipped Workers | Able"
-meta_description: "Cash payments do not skip the rules. Here is the system for tracking cash income, the tax obligation that comes with it, and the routine that keeps you out of trouble."
+meta_description: "Cash payments do not skip the rules. The system for tracking cash income, the tax obligation that comes with it, and the routine that keeps you safe."
 target_keyword: "managing cash income"
 secondary_keywords:
   - cash income freelance
@@ -32,6 +32,8 @@ It hits your wallet in physical bills. It does not show up on a bank statement. 
 The IRS treats it the same as every other dollar. Tipped servers, gig workers, freelancers who get paid in cash for some work, photographers shooting weddings, dog walkers, music teachers. The rules do not change. The cash is taxable income from the moment it lands in your hand.
 
 The fix is not complicated. A short logging routine, a clear path from cash to bank account, and the same allocation rules you use for everything else. Here is what it looks like.
+
+This piece sits inside the broader [How to Budget With Inconsistent Income](/budgeting/) guide.
 
 ---
 

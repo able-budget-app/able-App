@@ -3,7 +3,7 @@ title: "The 30-Day Trial Mindset: How to Test a Financial Habit Without Committi
 slug: the-30-day-trial-mindset
 url: /budgeting/the-30-day-trial-mindset/
 meta_title: "The 30-Day Trial Mindset for Money Habits | Able"
-meta_description: "Why financial habits feel hard to start, the 30-day framing that lowers the activation cost, and the three habits worth trialing if you're new to budgeting variable income."
+meta_description: "Why money habits are hard to start, the 30-day framing that lowers the activation cost, and three habits worth trialing if you are new to variable income."
 target_keyword: "30 day money habit"
 secondary_keywords:
   - 30 day budget challenge
@@ -34,6 +34,8 @@ The fix is to lower the activation cost by reframing the habit as a 30-day trial
 The framing changes everything. You can stop after 30 days with no shame. You can adjust the rules after 30 days based on what you learned. You can extend or recommit based on results, not based on willpower.
 
 Here is how the 30-day trial mindset works, why it produces better long-term habits than permanent commitments, and three financial habits worth trialing if you are new to budgeting variable income.
+
+This piece sits inside the broader [How to Budget With Inconsistent Income](/budgeting/) guide.
 
 ---
 

@@ -33,6 +33,8 @@ Here is how the penalty actually works, the safe-harbor rules that let you avoid
 
 Note: this article is educational. For your actual tax filing, work with a CPA or tax professional who knows your specific situation. Able does not file your taxes for you.
 
+This piece sits inside the broader [Quarterly Taxes for Self-Employed](/taxes/) guide.
+
 ---
 
 ## What the Penalty Is

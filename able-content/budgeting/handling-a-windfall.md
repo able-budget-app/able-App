@@ -33,6 +33,8 @@ This is not a discipline problem. It is a structural problem. Money without a de
 
 Here is the five-move sequence that turns a windfall into real progress, and the four mistakes that empty it inside a month.
 
+This piece sits inside the broader [How to Budget With Inconsistent Income](/budgeting/) guide.
+
 ---
 
 ## Why Windfalls Disappear

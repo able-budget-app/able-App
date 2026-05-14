@@ -33,6 +33,8 @@ The personal emergency fund covers personal disasters: job loss (in the W-2 worl
 
 A self-employed person needs both. Here is why, how each one works, and the order to build them in if you have neither.
 
+This piece sits inside the broader [How Money Works](/learn/how-money-works/) guide.
+
 ---
 
 ## What Each Fund Is For

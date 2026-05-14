@@ -35,6 +35,8 @@ This is the lifestyle-creep trap, and it is the single biggest reason self-emplo
 
 Here is the framework. Why this happens, the four-step rule sequence that captures the surplus, and the lifestyle decision that has to be made deliberately every time.
 
+This piece sits inside the broader [How to Budget With Inconsistent Income](/budgeting/) guide.
+
 ---
 
 ## Why Good Months Disappear

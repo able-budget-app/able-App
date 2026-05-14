@@ -34,6 +34,8 @@ The point of bookkeeping is not to make your business look professional. It is t
 
 Here is the minimum that works.
 
+This piece sits inside the broader [How to Pay Yourself as a Business Owner With Variable Income](/business/) guide.
+
 ---
 
 ## What Bookkeeping Actually Has to Do

@@ -31,6 +31,8 @@ The pattern is consistent. Year one: file the return yourself using TurboTax. Ye
 
 The right time to hire is earlier than most people think. Here is the framework: when you need one, what kind of pro to look for, the questions to ask, and the red flags to avoid.
 
+This piece sits inside the broader [How to Pay Yourself as a Business Owner With Variable Income](/business/) guide.
+
 ---
 
 ## When an Accountant Pays for Itself

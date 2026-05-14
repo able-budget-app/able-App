@@ -3,7 +3,7 @@ title: "The Deposit Up Front Conversation: How to Ask for It Without Losing the 
 slug: the-deposit-up-front-conversation
 url: /business/the-deposit-up-front-conversation/
 meta_title: "How to Ask for a Deposit Up Front | Able"
-meta_description: "Why up-front deposits change everything, the standard percentages by service type, the email scripts that get them paid, and the objection responses that hold the line."
+meta_description: "Why up-front deposits change everything, the standard percentages by service type, the scripts that get them paid, and the responses that hold the line."
 target_keyword: "deposit up front freelance"
 secondary_keywords:
   - 50 percent deposit freelance
@@ -34,6 +34,8 @@ A 50 percent deposit on a $5,000 project means $2,500 hits your account before y
 Yet most freelancers do not ask for it. The reasons are familiar: it feels awkward, the client might say no, the competition does not require deposits, "it has never been a problem before."
 
 Here is why deposits matter, the standard percentages by service type, the scripts that get them paid, and the objection responses that hold the line.
+
+This piece sits inside the broader [How to Pay Yourself as a Business Owner With Variable Income](/business/) guide.
 
 ---
 
