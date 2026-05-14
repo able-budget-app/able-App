@@ -15,12 +15,17 @@ cd "$(dirname "$0")/.."
 
 BATCH="${1:-5}"
 
-# Make sure SHEET_ID is in env (drafter needs it). Hardcoded fallback below.
-if [[ -f .env.local ]] && grep -q "^SHEET_ID=" .env.local; then
-    set -a; source <(grep "^SHEET_ID=" .env.local); set +a
+# Load SHEET_ID + tab overrides from .env.local if present. No hardcoded
+# fallback — require explicit env so a forgotten migration fails loudly
+# instead of silently posting to the old single-purpose sheet.
+if [[ -f .env.local ]]; then
+    set -a
+    source <(grep -E "^(SHEET_ID|YT_LONGFORM_TAB|SHORTS_SHEET_ID|SHORTS_TAB)=" .env.local || true)
+    set +a
 fi
-: "${SHEET_ID:=1sJvQ3PtEbeizyJLVhEFv3-YgOBZGuiwzb3EdkKXv3ro}"
+: "${SHEET_ID:?error: SHEET_ID not set. Add SHEET_ID=<mega-workbook-id> to .env.local}"
 export SHEET_ID
+[[ -n "${YT_LONGFORM_TAB:-}" ]] && export YT_LONGFORM_TAB
 
 bar() { printf '═%.0s' {1..60}; echo; }
 
