@@ -855,7 +855,7 @@
         <ul>
           <li><span class="pill pill-done">Live</span> Per-deposit allocator, the five buckets, bill reservations, the planning window, the AI Coach, Stripe billing, the email cron, the referral system, the in-app tour</li>
           <li><span class="pill pill-done">Live</span> Bank sync (multiple banks, debts &amp; APRs detected, recurring charges spotted, full deep-dive on first link, newly-added-bank review modal shipped May 11), the analyzer that builds your plan, two-factor auth, web push, in-app upgrade from monthly to annual, state-aware tax math</li>
-          <li><span class="pill pill-progress">Open</span> Streaming responses for the Coach; rotate service_role JWT (key exposed in transcript May 11)</li>
+          <li><span class="pill pill-progress">Open</span> Streaming responses for the Coach (still non-streaming); rotate <code>CRON_SECRET</code> (exposed in transcript May 13 while debugging the operator digest). Legacy service_role JWT already retired May 12.</li>
         </ul>
       </div>
       <div class="stat-card">
@@ -1089,7 +1089,7 @@
         <li><span class="pill pill-done">✅</span> <strong>Landing page</strong> — sets the tone everything else inherits <em>(redone May 7)</em></li>
         <li><span class="pill pill-done">✅</span> <strong>The method explainer page</strong> — <code>/method/</code> live</li>
         <li><span class="pill pill-done">✅</span> <strong>Pricing page</strong> — $14.99/mo + $129/yr locked</li>
-        <li><span class="pill pill-progress">🟡</span> <strong>Pay-Yourself-First blog series</strong> — 10 articles shipped at <code>/learn/pay-yourself-first/</code>; small voice sweep pending (trial-day CTA 7d → 30d, 2 bucket-name fixes)</li>
+        <li><span class="pill pill-done">✅</span> <strong>Pay-Yourself-First blog series</strong> — 10 articles shipped at <code>/learn/pay-yourself-first/</code>; voice sweep done May 12 (7d → 30d trial CTA across 143 files in <code>71f1980</code>; PYF/YNAB language sweep in <code>290646a</code>)</li>
         <li><span class="pill pill-done">✅</span> <strong>Business-side blog series</strong> — pillar + 1 supporting per the scoped plan (could expand later if desired)</li>
         <li><span class="pill pill-done">✅</span> <strong>Email sequences</strong> — 14 templates redesigned May 7 + 2 new (deep-dive summary, achievement unlock). Daily pg_cron firing at 16:00 UTC verified working May 12 (was silently 401'ing due to CRON_SECRET mismatch — fixed in same session).</li>
         <li><span class="pill pill-done">✅</span> <strong>175 social posts</strong> — sweep done, captions written (598 total across 65-week cadence), cross-poster wired</li>
@@ -1129,12 +1129,13 @@
       </div>
       <div class="goal">A steady cadence, not one-time bursts.</div>
       <ul>
-        <li><span class="pill pill-progress">🟢 Ready to go live</span> <strong>Social engine</strong> — cross-poster scenario <code>4869011</code> built (IG + FB + LinkedIn), Sunday TikTok digest <code>5021586</code> paused-ready, comment-watcher <code>5022585</code> parked on Make IG app scope limit. Cadence + 598 captions queued.</li>
-        <li><span class="pill pill-done">✅ Live</span> <strong>YouTube engine</strong> — auto-upload pipeline live as of May 10 (<code>scripts/youtube-upload.py</code>); quota increase form submitted.</li>
+        <li><span class="pill pill-progress">🟢 Ready to go live</span> <strong>Social engine (IG/FB/LinkedIn)</strong> — cross-poster scenario <code>4869011</code> built, comment-watcher <code>5022585</code> parked on Make IG app scope limit. Cadence + 598 captions queued.</li>
+        <li><span class="pill pill-progress">🟢 Library ready</span> <strong>TikTok slideshow engine</strong> — 266 slideshow carousels (<code>format: 'tiktok'</code>, 1080×1920) built in <code>social/posts/data.js</code>; Sunday digest scenario <code>5021586</code> paused-ready for posting cadence.</li>
+        <li><span class="pill pill-done">✅ Live</span> <strong>YouTube engine (long-form)</strong> — auto-upload pipeline live as of May 10 (<code>scripts/youtube-upload.py</code>); quota increase form submitted.</li>
+        <li><span class="pill pill-pending">🔴 Next to build</span> <strong>YouTube Shorts engine</strong> — repurpose the 266 slideshows into Shorts. Pipeline not yet built; this is the next engine to scope.</li>
         <li><span class="pill pill-progress">🟢 Ready to go live</span> <strong>LinkedIn engine</strong> — 13 drafts in the sheet pending review; Tue/Thu 9am ET locked; Make poster spec'd (~45 min build).</li>
-        <li><span class="pill pill-pending">🔴 Not started</span> <strong>SEO engine</strong> — pillar and cluster plan, weekly publish schedule, backlink and technical baseline</li>
+        <li><span class="pill pill-pending">🔴 Not started</span> <strong>SEO + repurposing engine</strong> — pillar/cluster plan + weekly publish schedule + backlink and technical baseline; each post then loops out as narrated audio → YouTube long-form → Shorts → social cuts. One pipeline, multiple outputs.</li>
         <li><span class="pill pill-pending">🔴 Not started</span> <strong>Email cadence</strong> — broadcasts beyond trigger emails (newsletter, method drip)</li>
-        <li><span class="pill pill-pending">🔴 Not started</span> <strong>Repurposing loop</strong> — blog post → narrated audio → YouTube video, on a loop</li>
       </ul>
     </div>
 
