@@ -19043,19 +19043,77 @@ async function coachSend() {
           loadingBubble.innerHTML = `${dots}<span>${RETRY_TEXT[attempt]}</span>`;
         }
       }
+      // Once we receive the first streamed delta, we've started writing to the
+      // user's view — retrying would double-render. Track that and abort retry.
+      let streamingStarted = false;
       try {
         // Backend re-loads conversation history from coach_messages keyed by
         // user_id, so we don't need to ship it from the client.
-        const result = await sbGet().functions.invoke('coach-chat', {
-          body: { message: msg, state: buildCoachState() }
+        const { data: { session } } = await sbGet().auth.getSession();
+        if (!session) throw new Error('Not signed in');
+        const res = await fetch(SUPABASE_URL + '/functions/v1/coach-chat', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': 'Bearer ' + session.access_token,
+            'apikey': SUPABASE_KEY,
+            'Accept': 'text/event-stream',
+          },
+          body: JSON.stringify({ message: msg, state: buildCoachState() }),
         });
-        if (result.error) throw result.error;
-        if (result.data && result.data.error) throw new Error(result.data.error);
-        if (!result.data || !result.data.reply) throw new Error('Empty response from Coach.');
-        data = result.data;
+        if (!res.ok) {
+          let errBody;
+          try { errBody = await res.json(); } catch { errBody = {}; }
+          throw new Error(errBody.error || ('Coach failed: ' + res.status));
+        }
+        const reader = res.body.getReader();
+        const decoder = new TextDecoder();
+        let buffer = '';
+        let assistantText = '';
+        let remainingToday = null;
+        let streamErr = null;
+        let liveBubble = null;
+        while (true) {
+          const { done: rdone, value } = await reader.read();
+          if (rdone) break;
+          buffer += decoder.decode(value, { stream: true });
+          const events = buffer.split('\n\n');
+          buffer = events.pop() ?? '';
+          for (const ev of events) {
+            if (!ev.startsWith('data: ')) continue;
+            let payload;
+            try { payload = JSON.parse(ev.substring(6)); } catch { continue; }
+            if (typeof payload.delta === 'string') {
+              if (!streamingStarted) {
+                streamingStarted = true;
+                const lb = view.querySelector('.coach-bubble.loading');
+                if (lb) {
+                  lb.classList.remove('loading');
+                  lb.innerHTML = '';
+                  liveBubble = lb;
+                }
+              }
+              assistantText += payload.delta;
+              if (liveBubble) {
+                liveBubble.innerHTML = coachRenderMarkdown(assistantText);
+                view.scrollTop = view.scrollHeight;
+              }
+            } else if (payload.done) {
+              remainingToday = payload.remainingToday;
+            } else if (payload.error) {
+              streamErr = payload.error;
+            }
+          }
+        }
+        if (streamErr) throw new Error(streamErr);
+        if (!assistantText.trim()) throw new Error('Empty response from Coach.');
+        data = { reply: assistantText.trim(), remainingToday };
         break;
       } catch (e) {
         lastErr = e;
+        // Once deltas have rendered, retrying would double-render — surface
+        // the error directly through the outer catch instead.
+        if (streamingStarted) throw e;
         const raw = (e && e.message) ? String(e.message) : '';
         const isRetryable = RETRY_PATTERNS.some(p => p.test(raw));
         // Don't retry on non-retryable errors or after the final attempt.

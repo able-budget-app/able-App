@@ -97,31 +97,61 @@ Deno.serve(async (req) => {
     ];
 
     const anthropic = new Anthropic({ apiKey: ANTHROPIC_API_KEY });
-    const response = await anthropic.messages.create({
-      model: 'claude-haiku-4-5',
-      max_tokens: 600,
-      system: [
-        { type: 'text', text: BRAND_VOICE, cache_control: { type: 'ephemeral' } },
-        { type: 'text', text: buildStateBlock(state), cache_control: { type: 'ephemeral' } },
-      ],
-      messages,
+    const remainingToday = DAILY_CAP - (count ?? 0) - 1;
+    const encoder = new TextEncoder();
+
+    const body = new ReadableStream({
+      async start(controller) {
+        let fullText = '';
+        try {
+          const stream = anthropic.messages.stream({
+            model: 'claude-haiku-4-5',
+            max_tokens: 600,
+            system: [
+              { type: 'text', text: BRAND_VOICE, cache_control: { type: 'ephemeral' } },
+              { type: 'text', text: buildStateBlock(state), cache_control: { type: 'ephemeral' } },
+            ],
+            messages,
+          });
+
+          for await (const event of stream) {
+            if (event.type === 'content_block_delta' && event.delta.type === 'text_delta') {
+              const chunk = event.delta.text;
+              fullText += chunk;
+              controller.enqueue(encoder.encode(`data: ${JSON.stringify({ delta: chunk })}\n\n`));
+            }
+          }
+
+          const finalMessage = await stream.finalMessage();
+          const reply = fullText.trim();
+
+          await admin.from('coach_messages').insert([
+            { user_id: userId, role: 'user', content: message },
+            { user_id: userId, role: 'assistant', content: reply },
+          ]);
+
+          controller.enqueue(encoder.encode(`data: ${JSON.stringify({ done: true, usage: finalMessage.usage, remainingToday })}\n\n`));
+          controller.close();
+        } catch (e) {
+          console.error('coach-chat stream error:', e);
+          const raw = e instanceof Error ? e.message : '';
+          let safeMsg = 'Stream failed. Try again.';
+          if (/rate_limit|429/i.test(raw)) safeMsg = 'Rate limit. Try again.';
+          else if (/overloaded|529|503/i.test(raw)) safeMsg = 'Service overloaded. Try again.';
+          controller.enqueue(encoder.encode(`data: ${JSON.stringify({ error: safeMsg })}\n\n`));
+          controller.close();
+        }
+      },
     });
 
-    const reply = response.content
-      .filter((b): b is Anthropic.TextBlock => b.type === 'text')
-      .map((b) => b.text)
-      .join('\n')
-      .trim();
-
-    await admin.from('coach_messages').insert([
-      { user_id: userId, role: 'user', content: message },
-      { user_id: userId, role: 'assistant', content: reply },
-    ]);
-
-    return json(req, {
-      reply,
-      usage: response.usage,
-      remainingToday: DAILY_CAP - (count ?? 0) - 1,
+    return new Response(body, {
+      status: 200,
+      headers: {
+        ...corsHeaders(req),
+        'Content-Type': 'text/event-stream',
+        'Cache-Control': 'no-cache, no-transform',
+        'X-Accel-Buffering': 'no',
+      },
     });
   } catch (e) {
     console.error('coach-chat error:', e);
