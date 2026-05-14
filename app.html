@@ -1021,7 +1021,7 @@ body.is-scrolling .btn-primary:hover{transform:none!important;box-shadow:inherit
 .coach-typing-dots span:nth-child(3){animation-delay:.36s;}
 @keyframes coachTypingDot{0%,60%,100%{opacity:.35;transform:scale(.85);}30%{opacity:1;transform:scale(1.15);}}
 .coach-empty{text-align:center;padding:1.5rem 1rem;color:var(--ds-t3);}
-.coach-empty-title{font-size:15px;font-weight:700;color:var(--ds-t2);margin-bottom:1rem;}
+.coach-empty-title{font-size:16px;font-weight:800;color:var(--ds-t1);margin-bottom:1rem;letter-spacing:-.01em;}
 .coach-examples{display:flex;flex-direction:column;gap:8px;max-width:440px;margin:0 auto;}
 .coach-example{background:var(--ds-card);border:1.5px solid var(--ds-t4);border-radius:var(--ds-r2);padding:12px 14px;font-size:13px;font-weight:600;color:var(--ds-t1);cursor:pointer;text-align:left;transition:all .18s;font-family:var(--ds-f);}
 .coach-example:hover{border-color:var(--ds-green);background:var(--ds-green-l);}
@@ -2734,7 +2734,7 @@ posthog.init('phc_B6PH36QxpExnyBYhfScFFF6LhDvoyxuFr6PypJuxxky3', {
     <div class="coach-panel-header">
       <div>
         <div id="coach-panel-title" style="font-family:var(--ds-f);font-size:1.25rem;font-weight:800;color:var(--ds-t1);letter-spacing:-.02em;">Coach</div>
-        <div style="font-size:12px;color:var(--ds-t2);font-weight:600;margin-top:2px;">Ask anything about your money. I see your bills, debts, reserve, and income.</div>
+        <div style="font-size:12px;color:var(--ds-t2);font-weight:600;margin-top:2px;">Ask anything. I know your real numbers.</div>
       </div>
       <button class="coach-close" onclick="closeCoachPanel()" aria-label="Close">✕</button>
     </div>
@@ -2745,7 +2745,7 @@ posthog.init('phc_B6PH36QxpExnyBYhfScFFF6LhDvoyxuFr6PypJuxxky3', {
       </button>
     </div>
     <div class="coach-input-wrap">
-      <textarea id="coach-input" placeholder="How should I split this $4k deposit?" rows="2" onkeydown="if(event.key==='Enter'&&!event.shiftKey){event.preventDefault();coachSend();}"></textarea>
+      <textarea id="coach-input" placeholder="How should I split this deposit?" rows="2" onkeydown="if(event.key==='Enter'&&!event.shiftKey){event.preventDefault();coachSend();}"></textarea>
       <button class="btn btn-primary" id="coach-send" onclick="coachSend()">Send</button>
     </div>
     <div class="coach-footer" id="coach-footer"></div>
@@ -18959,12 +18959,12 @@ const COACH_INTROS = {
     "What if income drops 30%?",
     "Should I raise my owner pay %?",
   ]},
-  score: { title: "Curious why your score changed?", examples: [
+  score: { title: "Score on your mind?", examples: [
     "Why did my score move this month?",
     "Where can I pick up easy points?",
     "How am I trending vs last month?",
   ]},
-  learn: { title: "Any lesson giving you trouble?", examples: [
+  learn: { title: "Stuck on a lesson?", examples: [
     "Explain compound interest with my numbers.",
     "What's my actual DTI?",
     "How does pay yourself first fit inconsistent income?",
