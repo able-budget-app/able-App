@@ -3656,9 +3656,17 @@ async function verifyCheckoutSession(sessionId) {
 // SUBSCRIPTION CHECK
 // ═══════════════════════════════════════
 async function checkSubscription(userId) {
-  // Local dev bypass: localhost has no real Stripe webhook landing, so polling
-  // would always time out. Production hostnames (becomeable.app) hit the real check.
-  if (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1') {
+  // Local dev bypass: only for true http(s)://localhost web dev, where there's
+  // no real Stripe webhook landing and polling would always time out.
+  // CRITICAL: must NOT match capacitor://localhost or able://localhost —
+  // those are the iOS Capacitor wrapper, where every user has hostname
+  // 'localhost' and the paywall MUST gate them like production. Pre-fix,
+  // every iOS sign-up silently skipped the paywall to onboarding.
+  const proto = window.location.protocol;
+  const host = window.location.hostname;
+  const isLocalWebDev = (proto === 'http:' || proto === 'https:') &&
+                       (host === 'localhost' || host === '127.0.0.1');
+  if (isLocalWebDev) {
     return true;
   }
   // Check cache first - avoids round trip for returning users
