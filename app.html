@@ -11878,8 +11878,10 @@ document.addEventListener('DOMContentLoaded', () => {
             // Same-document navigation with a different query string triggers
             // a full WebView reload, which is what we want — the page-load
             // IIFE that wires up sessionStorage flags only runs on a fresh
-            // load.
-            window.location.href = '/app.html' + qs;
+            // load. Use /index.html because sync-www.mjs renames app.html →
+            // index.html when building the Capacitor bundle (the deep-link
+            // handler is Capacitor-only; web users never hit this path).
+            window.location.href = '/index.html' + qs;
           }
           // Cancel / portal-return / other deep links: Browser is already
           // closed; no further work needed. Future deep-link shapes (Plaid
