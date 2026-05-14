@@ -2329,7 +2329,7 @@ posthog.init('phc_B6PH36QxpExnyBYhfScFFF6LhDvoyxuFr6PypJuxxky3', {
   <div id="ach-groups" class="ach-groups"></div>
 
   <!-- Detailed habit breakdown. -->
-  <div class="sec" id="habit-detail-sec">May habits, in detail</div>
+  <div class="sec" id="habit-detail-sec">May habits in detail</div>
   <div class="card" id="habit-detail-card" style="padding:14px 16px;">
     <div id="score-rows"></div>
   </div>
@@ -2669,7 +2669,7 @@ posthog.init('phc_B6PH36QxpExnyBYhfScFFF6LhDvoyxuFr6PypJuxxky3', {
     <div id="refer-active" style="display:none;">
       <div class="sec">Earn free months and a free year</div>
       <div class="card" style="margin-bottom:1rem;">
-        <div style="font-size:15px;color:var(--ds-t2);font-weight:500;line-height:1.6;margin-bottom:1rem;">Invite friends who might find Able useful. When they start a trial or convert to paid, you earn rewards applied as credits to your subscription.</div>
+        <div style="font-size:15px;color:var(--ds-t2);font-weight:500;line-height:1.6;margin-bottom:1rem;">Invite friends. When they start a trial or subscribe, you earn credits on your own subscription.</div>
         <div class="refer-progress-grid">
           <div class="refer-progress-card">
             <div class="refer-progress-label">Next free month</div>
@@ -2679,7 +2679,7 @@ posthog.init('phc_B6PH36QxpExnyBYhfScFFF6LhDvoyxuFr6PypJuxxky3', {
           </div>
           <div class="refer-progress-card">
             <div class="refer-progress-label">Next free year</div>
-            <div class="refer-progress-sub">Every 5 friends who convert to paid.</div>
+            <div class="refer-progress-sub">Every 5 friends who subscribe.</div>
             <div class="refer-progress-bar"><div class="refer-progress-fill" id="refer-convert-fill" style="width:0%;"></div></div>
             <div class="refer-progress-count" id="refer-convert-count">0 of 5</div>
           </div>
@@ -10413,7 +10413,7 @@ function renderHabitDetailRows({s1,s2,s3,s4,s5}){
   const el = document.getElementById('score-rows');
   if (!el) return;
   const sec = document.getElementById('habit-detail-sec');
-  if (sec) sec.textContent = new Date().toLocaleDateString('en-US',{month:'long'}) + ' habits, in detail';
+  if (sec) sec.textContent = new Date().toLocaleDateString('en-US',{month:'long'}) + ' habits in detail';
   const rows = [
     { label:'Bills covered',         sub:'Bills paid or set aside this month.',                 val:s1, max:30 },
     { label:'Paid yourself',         sub:'Owner draw against your monthly target.',             val:s5, max:20 },
