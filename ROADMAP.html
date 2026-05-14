@@ -843,7 +843,7 @@
       <h2>Where things stand — May 12</h2>
       <p><strong>Phases 1, 2, and 3 are done. Phase 4 is mostly done.</strong> The product is feature-complete: bank sync, analyzer, tax bucket with quarterly projections, MFA, web push, deep-dive on first connect, in-app monthly-to-annual upgrade, multi-bank with newly-added-bank review modal (shipped May 11). Floor-First method is named, written, in-app. Brand is locked. Reference doc is up to date.</p>
       <p><strong>Marketing is most of the way there.</strong> Landing page redone (May 7). Method explainer page live. All 14 email templates redesigned plus 2 new ones (May 7). PYF blog cluster (10 articles) is published, pending a small voice sweep (the trial-day CTA card needs 7d → 30d). Business blog cluster shipped per the original scoped plan (pillar + 1 supporting). 175 social posts ready and the cross-poster is wired. YouTube auto-upload pipeline live (May 10). LinkedIn pipeline ready with 13 drafts in the sheet pending review. <strong>Open marketing gaps:</strong> ad copy (not started), video script refresh (not verified), email cron auto-fire status (cron exists, schedule may need enabling).</p>
-      <p><strong>What's next:</strong> launch hardening (security defense-in-depth, error tracking, daily digest). Then SEO engine and full social-cadence go-live. Then App Store. Plaid-driven money in/out (B6) is parked until real customers tell us what they expect.</p>
+      <p><strong>What's next:</strong> ad copy, SEO engine, full social-cadence go-live, then App Store. Launch hardening (Phase 4.5) closed May 14 — error tracking, daily digest, feedback button, status banner, and Launch funnel are all live. Plaid-driven money in/out (B6) is parked until real customers tell us what they expect.</p>
     </section>
 
     <h2 id="status"><span class="num">01</span>Where things stand</h2>
@@ -878,7 +878,8 @@
           <li>Repo cleanup: 2.8GB → 1.6GB, root reorganized, stale drafts dropped (May 11)</li>
           <li>Email cron debugged + fixed — was silently 401'ing for weeks due to CRON_SECRET mismatch; daily pipeline now firing real emails (May 12)</li>
           <li>Content sweep across 143 article CTA cards: stale 7-day trial copy → 30-day (May 12)</li>
-          <li><strong>Up next:</strong> launch hardening (security defense-in-depth, error tracking, daily digest), then ad copy + SEO at scale, then App Store</li>
+          <li>Phase 4.5 launch hardening closed (May 14) — error tracking, operator daily digest, in-app feedback button, status banner, PostHog Launch funnel all live</li>
+          <li><strong>Up next:</strong> ad copy + SEO at scale, then App Store</li>
         </ul>
       </div>
     </div>
@@ -1098,22 +1099,22 @@
       <div class="exit"><strong>Done when</strong>Every public surface says the same thing about what Able is. No stale claims anywhere.</div>
     </div>
 
-    <div class="phase phase-1" id="phase-launch-hardening" style="border-color: var(--amber); background: linear-gradient(180deg, var(--amber-soft) 0%, transparent 30%);">
+    <div class="phase phase-1" id="phase-launch-hardening" style="border-color: var(--green); background: linear-gradient(180deg, var(--green-soft) 0%, transparent 30%);">
       <div class="phase-header">
         <div>
-          <div class="phase-num" style="color: var(--amber);">Phase 4.5 <span class="pill pill-progress" style="margin-left: 6px;">🟡 NEXT</span></div>
+          <div class="phase-num" style="color: var(--green);">Phase 4.5 <span class="pill pill-done" style="margin-left: 6px;">✅ DONE</span></div>
           <h3>Launch hardening</h3>
         </div>
-        <span class="duration">~1 week · before paid ads or App Store</span>
+        <span class="duration">Closed May 14 · safety net is live</span>
       </div>
       <div class="goal">Be ready when the first 20-50 paying users start hitting edges. Don't ship to scale without the safety net.</div>
       <ul>
-        <li><strong>Security audit</strong> — done for the most part; remaining items: defense-in-depth on user-data queries, locking down which origins can hit our endpoints</li>
-        <li><strong>Error tracking</strong> — catch bugs the moment they happen so Paul sees them, not the user</li>
-        <li><strong>Daily morning email</strong> — automated digest: signups today, trials started, conversions, errors hit, anything in a broken state</li>
-        <li><strong>Funnel dashboards</strong> — landing → signup → bank connect → plan built → first deposit → trial converts</li>
-        <li><strong>In-app feedback button</strong> — a "report a bug or suggest something" link that emails support</li>
-        <li><strong>Status indicator</strong> — when Plaid or Stripe or Supabase are degraded, tell users instead of letting them think Able is broken</li>
+        <li><span class="pill pill-done">✅</span> <strong>Security audit</strong> — defense-in-depth on user-data queries shipped; CORS locked to becomeable.app allowlist across 26 Edge Functions; legacy service_role JWT retired via sb_secret_* migration (May 12)</li>
+        <li><span class="pill pill-done">✅</span> <strong>Error tracking</strong> — PostHog <code>captureException</code> wrapped in app.html + index.html, global error/unhandledrejection handlers, explicit <code>Able.captureError</code> at 5 critical Edge Function failure sites</li>
+        <li><span class="pill pill-done">✅</span> <strong>Daily morning email</strong> — <code>operator-digest-daily</code> Edge Function + pg_cron jobid 8 firing at 14:00 UTC; counts last-24h signups + plaid_items + active users, current trial/active/total, top-10 PostHog errors</li>
+        <li><span class="pill pill-done">✅</span> <strong>Funnel dashboards</strong> — PostHog "Launch funnel" insight live: landing_viewed → signup_completed → bank_connected → plan_built → first_income_logged → trial_started → subscription_activated</li>
+        <li><span class="pill pill-done">✅</span> <strong>In-app feedback button</strong> — "Report a bug or share feedback" in Settings → Account; modal → <code>submit-feedback</code> Edge Function → Resend email to hello@becomeable.app with <code>reply_to</code> set to user</li>
+        <li><span class="pill pill-done">✅</span> <strong>Status indicator</strong> — <code>public.system_status</code> single-row table + thin banner fixed atop app.html; SQL toggle flips banner in &lt;5 min (or immediately on tab focus)</li>
       </ul>
       <div class="exit"><strong>Done when</strong>Errors land in Paul's inbox within minutes. The morning digest arrives daily. Funnels are visible. The safety net is up.</div>
     </div>
