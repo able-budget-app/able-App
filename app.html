@@ -1957,16 +1957,16 @@ posthog.init('phc_B6PH36QxpExnyBYhfScFFF6LhDvoyxuFr6PypJuxxky3', {
 
       <div id="ob-building" style="display:none;">
         <div class="ob-loading-icon"><svg width="52" height="52" viewBox="0 0 24 24" fill="none" stroke="var(--ds-green)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v3M12 18v3M3 12h3M18 12h3M5.6 5.6l2.1 2.1M16.3 16.3l2.1 2.1M5.6 18.4l2.1-2.1M16.3 7.7l2.1-2.1"/><circle cx="12" cy="12" r="4"/></svg></div>
-        <div class="ob-loading-title">Setting up your account...</div>
-        <div class="ob-loading-sub">AI is building your personalized budget</div>
+        <div class="ob-loading-title">Building your plan</div>
+        <div class="ob-loading-sub">Reading your transactions. About 30 seconds.</div>
       </div>
 
       <div id="ob-review" style="display:none;">
-        <div class="ob-msg">Here's what I set up for you. Look it over and tell me if anything's off.</div>
+        <div class="ob-msg">Here's your plan. Tell me if anything's off.</div>
         <div id="ob-summary"></div>
         <div class="ob-actions">
           <button class="btn-ghost btn btn-sm" onclick="obRestart()">Start over</button>
-          <button class="btn btn-primary" onclick="obConfirm()">Looks good. Let's go</button>
+          <button class="btn btn-primary" onclick="obConfirm()">Confirm and start →</button>
         </div>
       </div>
     </div>
@@ -4389,7 +4389,7 @@ function renderObStep() {
 
   document.getElementById('ob-progress').style.width = ((obStep / OB_QUESTIONS.length) * 100) + '%';
   document.getElementById('ob-step-label').textContent = `Step ${obStep + 1} of ${OB_QUESTIONS.length}`;
-  document.getElementById('ob-msg').innerHTML = `<div>${q.msg}</div><div style="font-size:13px;color:var(--text3);font-weight:500;line-height:1.6;margin-top:.5rem;">${q.hint}</div>`;
+  document.getElementById('ob-msg').innerHTML = `<div>${q.msg}</div><div style="font-size:13px;color:var(--ds-t3);font-weight:500;line-height:1.6;margin-top:.5rem;">${q.hint}</div>`;
 
   // Default: show the Continue button. The plaid type may hide it.
   document.getElementById('ob-next-btn').style.display = 'inline-flex';
