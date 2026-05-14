@@ -2136,7 +2136,7 @@ posthog.init('phc_B6PH36QxpExnyBYhfScFFF6LhDvoyxuFr6PypJuxxky3', {
   <h1 class="sr-only">Forecast</h1>
   <div class="two-col">
     <div>
-      <div class="sec">Expected income coming in</div>
+      <div class="sec">Expected income</div>
       <div id="forecast-list"><div class="empty-state">No expected income added yet. Log a payment you know is coming so Able can plan ahead.</div></div>
       <div class="sec">Add expected income</div>
       <div class="card">
@@ -2273,7 +2273,7 @@ posthog.init('phc_B6PH36QxpExnyBYhfScFFF6LhDvoyxuFr6PypJuxxky3', {
     <div id="bills-body"></div>
   </div>
   <div style="display:flex;align-items:center;justify-content:space-between;gap:10px;padding:0 4px;margin-top:.75rem;flex-wrap:wrap;">
-    <div style="font-size:12px;color:var(--ds-t3);font-weight:600;">Sorted by due date. Click any amount to edit. Check off bills as you pay them each month.</div>
+    <div style="font-size:12px;color:var(--ds-t3);font-weight:600;">Sorted by due date. Click any amount to edit.</div>
     <button class="btn btn-sm btn-ghost" id="bills-catchup-btn" style="display:none;font-size:11px;letter-spacing:-.005em;" onclick="markPaidThroughToday()" title="Check off every bill whose due day is on or before today">Catch up past-due →</button>
   </div>
 </div>
@@ -2352,7 +2352,7 @@ posthog.init('phc_B6PH36QxpExnyBYhfScFFF6LhDvoyxuFr6PypJuxxky3', {
     </div>
     <div>
       <div style="font-weight:800;font-size:14px;color:var(--ds-t1);letter-spacing:-.01em;">Sandbox mode. Nothing here affects your real numbers.</div>
-      <div style="font-size:12px;color:var(--ds-t2);font-weight:600;margin-top:3px;">Type any income amount and see how it would be split. Great for planning ahead.</div>
+      <div style="font-size:12px;color:var(--ds-t2);font-weight:600;margin-top:3px;">Type any income amount and see how it would be split.</div>
     </div>
   </div>
   <div class="two-col">
@@ -2388,7 +2388,7 @@ posthog.init('phc_B6PH36QxpExnyBYhfScFFF6LhDvoyxuFr6PypJuxxky3', {
      the new category and (optionally) a user_classification_overrides row so
      future matching txns auto-classify the same way. -->
 <div class="page" id="page-activity">
-  <h1 class="sec" style="margin-top:0;">Activity</h1>
+  <h1 class="sr-only">Activity</h1>
 
   <!-- Tax Export - a compact pill 9 months of the year, expands to a full
        gradient card during US tax season (Jan 1 - Apr 15) when it's actually
