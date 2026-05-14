@@ -855,7 +855,7 @@
         <ul>
           <li><span class="pill pill-done">Live</span> Per-deposit allocator, the five buckets, bill reservations, the planning window, the AI Coach, Stripe billing, the email cron, the referral system, the in-app tour</li>
           <li><span class="pill pill-done">Live</span> Bank sync (multiple banks, debts &amp; APRs detected, recurring charges spotted, full deep-dive on first link, newly-added-bank review modal shipped May 11), the analyzer that builds your plan, two-factor auth, web push, in-app upgrade from monthly to annual, state-aware tax math</li>
-          <li><span class="pill pill-progress">Open</span> Streaming responses for the Coach (still non-streaming); rotate <code>CRON_SECRET</code> (exposed in transcript May 13 while debugging the operator digest). Legacy service_role JWT already retired May 12.</li>
+          <li><span class="pill pill-done">Live</span> Streaming Coach responses (May 14, SSE via <code>anthropic.messages.stream</code>); <code>CRON_SECRET</code> rotated May 14; legacy service_role JWT retired May 12.</li>
         </ul>
       </div>
       <div class="stat-card">
