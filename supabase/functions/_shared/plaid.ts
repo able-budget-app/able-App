@@ -202,6 +202,25 @@ export type AccountsGetRes = {
 export const accountsGet = (access_token: string) =>
   plaidApi<{ access_token: string }, AccountsGetRes>('/accounts/get', { access_token });
 
+// /accounts/balance/get — forces Plaid to pull a live balance from the
+// institution, bypassing Plaid's cached snapshot. Used to correct stale
+// balances on OAuth banks (Chase et al) where /transactions/sync returns
+// fresh txns alongside a cached balance from an earlier poll cycle.
+// Billed per call (Plaid "Balance" product). Caller should rate-limit.
+export type AccountsBalanceGetRes = {
+  accounts: PlaidAccount[];
+  item: { item_id: string; institution_id: string | null };
+  request_id: string;
+};
+
+export const accountsBalanceGet = (access_token: string, account_ids?: string[]) =>
+  plaidApi<{ access_token: string; options?: { account_ids: string[] } }, AccountsBalanceGetRes>(
+    '/accounts/balance/get',
+    account_ids?.length
+      ? { access_token, options: { account_ids } }
+      : { access_token },
+  );
+
 export type ItemGetRes = {
   item: {
     item_id: string;

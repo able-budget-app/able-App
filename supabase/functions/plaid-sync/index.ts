@@ -25,6 +25,7 @@
 import { createClient, type SupabaseClient } from 'npm:@supabase/supabase-js@2';
 import {
   transactionsSync,
+  accountsBalanceGet,
   type TransactionsSyncRes,
   type PlaidTransaction,
   type PlaidAccount,
@@ -226,10 +227,20 @@ Deno.serve(async (req) => {
     await admin.from('plaid_items').update(updatePayload).eq('id', item.id);
     console.log(`plaid-sync: item=${item.id} done in ${Date.now() - tStart}ms, total added=${totalAdded}, modified=${totalModified}, removed=${totalRemoved}, status=${lastStatus}`);
 
-    // Auto-classify the just-synced transactions in the background. Skip
-    // when nothing changed to save LLM calls. Defer via EdgeRuntime.waitUntil
-    // so this handler returns fast.
+    // When fresh activity arrived, force a live balance pull. Plaid's
+    // /transactions/sync returns accounts[].balances from its most recent
+    // *balance* poll cycle, which on OAuth banks (Chase et al) runs on a
+    // separate schedule from the transaction poll. So a single payload can
+    // contain fresh txns + a stale cached balance. /accounts/balance/get
+    // bypasses the cache and asks the institution live, which fixes the
+    // mismatch the user sees on the hero card.
+    //
+    // Billed per call by Plaid ("Balance" product), so we only fire when
+    // we actually have new/modified txns to justify it. Failures are
+    // swallowed — the sync still succeeded and the stale balance is
+    // better than no balance.
     if (totalAdded > 0 || totalModified > 0) {
+      await refreshLiveBalances(admin, item.id, item.access_token);
       scheduleBackgroundClassify(item.id);
     }
 
@@ -315,6 +326,42 @@ async function upsertAccounts(
     return;
   }
   for (const r of data ?? []) accountMap.set(r.plaid_account_id, r.id);
+}
+
+// Force a live balance pull from the institution and overwrite the cached
+// balance on plaid_accounts. See call site for rationale.
+async function refreshLiveBalances(
+  admin: SupabaseClient,
+  plaidItemRowId: string,
+  accessToken: string,
+): Promise<void> {
+  const t0 = Date.now();
+  try {
+    const resp = await accountsBalanceGet(accessToken);
+    let updated = 0;
+    for (const a of resp.accounts) {
+      const { error } = await admin
+        .from('plaid_accounts')
+        .update({
+          current_balance: a.balances.current,
+          available_balance: a.balances.available,
+          last_balance_at: new Date().toISOString(),
+        })
+        .eq('plaid_item_id', plaidItemRowId)
+        .eq('plaid_account_id', a.account_id);
+      if (error) {
+        console.error(`balance refresh: update failed for account ${a.account_id}:`, error);
+      } else {
+        updated++;
+      }
+    }
+    console.log(`plaid-sync: item=${plaidItemRowId} live balance refresh — ${updated}/${resp.accounts.length} accounts updated in ${Date.now() - t0}ms`);
+  } catch (e) {
+    // Common cases: PRODUCT_NOT_READY, INVALID_PRODUCT (Balance not enabled
+    // on the Plaid account), ITEM_LOGIN_REQUIRED, rate limit. All non-fatal
+    // — keep the cached balance and move on.
+    console.warn(`plaid-sync: item=${plaidItemRowId} live balance refresh failed in ${Date.now() - t0}ms:`, e instanceof Error ? e.message : e);
+  }
 }
 
 function buildTxnRow(
