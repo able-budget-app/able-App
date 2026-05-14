@@ -1837,8 +1837,8 @@ posthog.init('phc_B6PH36QxpExnyBYhfScFFF6LhDvoyxuFr6PypJuxxky3', {
       <div class="field" style="margin-bottom:10px;"><label>Password</label><div class="pw-wrap"><input type="password" id="signup-pass" name="new-password" autocomplete="new-password" enterkeyhint="next" onkeydown="if(event.key==='Enter'){event.preventDefault();document.getElementById('signup-pass2').focus();}" placeholder="At least 6 characters"><button type="button" tabindex="-1" class="pw-eye" aria-label="Show password" onclick="togglePw('signup-pass')"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7z"/><circle cx="12" cy="12" r="3"/></svg></button></div></div>
       <div class="field" style="margin-bottom:1rem;"><label>Confirm password</label><div class="pw-wrap"><input type="password" id="signup-pass2" name="new-password" autocomplete="new-password" enterkeyhint="go" placeholder="••••••••" onkeydown="if(event.key==='Enter')doSignup()"><button type="button" tabindex="-1" class="pw-eye" aria-label="Show password" onclick="togglePw('signup-pass2')"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7z"/><circle cx="12" cy="12" r="3"/></svg></button></div></div>
       <button class="btn btn-primary" style="width:100%;" onclick="doSignup()" id="signup-btn">Create account</button>
-      <div style="font-size:11px;color:var(--text3);font-weight:600;text-align:center;margin-top:.75rem;line-height:1.5;">We'll send a confirmation email. Click the link, then return and sign in.</div>
-      <div style="font-size:11px;color:var(--text3);font-weight:600;text-align:center;margin-top:.75rem;line-height:1.5;">By creating an account you agree to our <a href="/terms.html" target="_blank" style="color:var(--ds-green);text-decoration:none;font-weight:700;">Terms</a> and <a href="/privacy.html" target="_blank" style="color:var(--ds-green);text-decoration:none;font-weight:700;">Privacy Policy</a>.</div>
+      <div style="font-size:11px;color:var(--ds-t3);font-weight:600;text-align:center;margin-top:.75rem;line-height:1.5;">A confirmation email is on the way. Click the link, then return and sign in.</div>
+      <div style="font-size:11px;color:var(--ds-t3);font-weight:600;text-align:center;margin-top:.75rem;line-height:1.5;">By creating an account you agree to the <a href="/terms.html" target="_blank" style="color:var(--ds-green);text-decoration:none;font-weight:700;">Terms</a> and <a href="/privacy.html" target="_blank" style="color:var(--ds-green);text-decoration:none;font-weight:700;">Privacy Policy</a>.</div>
     </div>
   </div>
 </div>
@@ -2203,7 +2203,7 @@ posthog.init('phc_B6PH36QxpExnyBYhfScFFF6LhDvoyxuFr6PypJuxxky3', {
           <div class="field"><label>Interest rate (%)</label><input type="number" id="nd-apr" placeholder="0" step="0.01"></div>
         </div>
         <div class="form-row">
-          <div class="field" style="grid-column:1/-1;"><label>Due day of month (optional)</label><input type="number" id="nd-due" placeholder="e.g. 15" min="1" max="31"><div style="font-size:11px;color:var(--ds-t3);font-weight:600;margin-top:5px;">If set, we'll auto-add this minimum payment to your Bills so it shows up in Allocate.</div></div>
+          <div class="field" style="grid-column:1/-1;"><label>Due day of month (optional)</label><input type="number" id="nd-due" placeholder="e.g. 15" min="1" max="31"><div style="font-size:11px;color:var(--ds-t3);font-weight:600;margin-top:5px;">If set, this minimum payment is auto-added to your Bills so it shows up in Allocate.</div></div>
         </div>
         <button class="btn btn-primary btn-sm" onclick="addDebt()">Add debt</button>
       </div>
@@ -2777,7 +2777,7 @@ posthog.init('phc_B6PH36QxpExnyBYhfScFFF6LhDvoyxuFr6PypJuxxky3', {
         <div id="job-list"></div>
         <div style="display:flex;gap:8px;margin-top:.85rem;flex-wrap:wrap;">
           <button class="btn btn-sm" onclick="exportAllocation()">Save plan</button>
-          <button class="btn btn-sm btn-ghost" onclick="askCoachAboutLastAllocation()">Ask the coach →</button>
+          <button class="btn btn-sm btn-ghost" onclick="askCoachAboutLastAllocation()">Ask Coach →</button>
           <button class="btn btn-sm btn-ghost" onclick="closeAllocateSheet()" style="margin-left:auto;">Done</button>
         </div>
       </div>
@@ -2842,7 +2842,7 @@ posthog.init('phc_B6PH36QxpExnyBYhfScFFF6LhDvoyxuFr6PypJuxxky3', {
   <div class="modal" style="max-width:560px;">
     <button class="modal-close" onclick="closeModal('modal-detected-bills')" aria-label="Close"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button>
     <div class="modal-title" id="modal-detected-bills-title">Review detected bills</div>
-    <div style="margin-bottom:1.25rem;font-size:13px;color:var(--ds-t2);line-height:1.55;font-weight:600;">We found these recurring charges in your transactions. Pre-selected the ones that look like bills - uncheck anything that isn't.</div>
+    <div style="margin-bottom:1.25rem;font-size:13px;color:var(--ds-t2);line-height:1.55;font-weight:600;">Able found these recurring charges. Pre-selected the ones that look like bills - uncheck anything that isn't.</div>
     <div id="detected-bills-list" style="max-height:50vh;overflow-y:auto;-webkit-overflow-scrolling:touch;"></div>
     <div class="modal-actions"><button class="btn" onclick="closeModal('modal-detected-bills')">Cancel</button><button class="btn btn-primary" id="detected-bills-save" onclick="saveDetectedBills()">Save 0 bills</button></div>
   </div>
@@ -4167,7 +4167,7 @@ const OB_QUESTIONS = [
     key: 'brought_here',
     type: 'multiselect',
     msg: "What brought you here?",
-    hint: "Pick what feels true. No judgment. We'll tilt the plan and Coach toward what matters most to you.",
+    hint: "Pick what feels true. No judgment. Able tilts the plan and Coach toward what matters most to you.",
     choices: [
       { value: 'freeze',         label: "Stop the freezing-up cycle when money lands" },
       { value: 'leaks',          label: "Plug subscription leaks I keep paying for" },
@@ -4208,7 +4208,7 @@ const OB_QUESTIONS = [
     key: 'goals',
     type: 'choice',
     msg: "What matters most to you right now?",
-    hint: "Whichever you pick, your Floor (bills + tax) gets covered first. That's Floor-First Budgeting. We'll tilt the rest toward this. You can change it anytime.",
+    hint: "Whichever you pick, your Floor (bills + tax) gets covered first. That's Floor-First Budgeting. Able tilts the rest toward this. You can change it anytime.",
     choices: [
       { value: 'crush_debt',   label: 'Crush debt',          sub: 'More of every dollar pays off what you owe.' },
       { value: 'build_safety', label: 'Build a safety net',  sub: 'More set aside for slow months and surprises.' },
@@ -6269,7 +6269,7 @@ function obRenderPlanReviewUI() {
   let gapLine = '';
   if (floorTotal > 0 && avgIncome > 0 && floorTotal > avgIncome + 1) {
     const gap = Math.round(floorTotal - avgIncome);
-    gapLine = `<div class="plan-floor-callout-gap"><b>Heads up:</b> your Floor is about $${gap.toLocaleString()} above your average month. That's normal for Floor-First. We'll close the gap together - deposits fill what's next, and Coach will help on the slow weeks.</div>`;
+    gapLine = `<div class="plan-floor-callout-gap"><b>Heads up:</b> your Floor is about $${gap.toLocaleString()} above your average month. That's normal for Floor-First. Each deposit fills what's next, and Coach helps on the slow weeks.</div>`;
   }
   if (floorTotal > 0.5 && billItems.length > 0) {
     html += `
@@ -7078,7 +7078,7 @@ async function switchToAnnual() {
   const isTrialing=_switchPlanPreview?.subscription_status==='trialing';
   const message=isTrialing
     ? "Switch to the annual plan?\n\nNo charge today since you're still in your free trial. When the trial ends, you'll be billed $129/yr instead of $14.99/mo. You save $50.88."
-    : "Switch to the annual plan?\n\nWe'll charge the prorated difference to your saved card today, then $129/yr going forward. You save $50.88 over the next 12 months.";
+    : "Switch to the annual plan?\n\nThe prorated difference will be charged to your saved card today, then $129/yr going forward. You save $50.88 over the next 12 months.";
   if(!confirm(message)) return;
   const btn=document.getElementById('switch-to-annual-btn');
   if(!btn) return;
@@ -9174,7 +9174,7 @@ function updateBillDueField(){
     wrap.innerHTML=`<div class="form-row">
       <div class="field"><label>Next date it hits</label><input type="date" id="nb-due-date" value="${today}"></div>
       <div class="field"><label>Every N days</label><input type="number" id="nb-freq-days" placeholder="10" min="1" max="365" value="10"></div>
-    </div><div style="font-size:11px;color:var(--ds-t3);font-weight:600;margin-top:5px;">For things like groceries every 10-12 days. We'll use the day count you set.</div>`;
+    </div><div style="font-size:11px;color:var(--ds-t3);font-weight:600;margin-top:5px;">For things like groceries every 10-12 days. Able uses the day count you set.</div>`;
   }
 }
 
@@ -10908,7 +10908,7 @@ async function settingsHandlePostLink(public_token, metadata) {
           const reason = error || data?.error;
           console.warn('post-link plaid-sync failed:', reason);
           Able.captureError?.(reason instanceof Error ? reason : new Error(String(reason?.message || reason)), { context: 'plaid-sync', surface: 'post-link' });
-          showToast(`Connected ${friendly}, but the first sync hit a snag. We'll retry automatically.`, { duration: 6000 });
+          showToast(`Connected ${friendly}, but the first sync hit a snag. Auto-retrying.`, { duration: 6000 });
           return;
         }
         const imported = (data && (data.transactions_added ?? data.imported ?? data.txn_count)) || null;
@@ -10934,7 +10934,7 @@ async function settingsHandlePostLink(public_token, metadata) {
       .catch((e) => {
         console.warn('post-link plaid-sync failed:', e);
         Able.captureError?.(e, { context: 'plaid-sync', surface: 'post-link-catch' });
-        showToast(`Connected ${friendly}, but the first sync hit a snag. We'll retry automatically.`, { duration: 6000 });
+        showToast(`Connected ${friendly}, but the first sync hit a snag. Auto-retrying.`, { duration: 6000 });
       });
   }
   Able.track?.('plaid_item_added_from_settings', {
@@ -12126,7 +12126,7 @@ function renderDeepDiveBanner(){
         <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
       </div>
       <div class="deep-dive-banner-body">
-        <div class="deep-dive-banner-title">We found ${total} more item${total>1?'s':''} in your last 12 months</div>
+        <div class="deep-dive-banner-title">Able found ${total} more item${total>1?'s':''} in your last 12 months</div>
         <div class="deep-dive-banner-sub">${parts.join(' · ')}. Confirm or edit to fold them into your plan.</div>
       </div>
       <button class="deep-dive-banner-cta" onclick="goTo('${target}')">Review</button>
