@@ -6937,8 +6937,18 @@ async function startCheckout() {
     }
 
     const priceId=selectedPlan==='annual'?PRICE_ANNUAL:PRICE_MONTHLY;
-    const returnUrl=window.location.origin+'/app.html?checkout=success';
-    const cancelUrl=window.location.origin+'/app.html';
+    // On Capacitor, Stripe Checkout opens in SFSafariViewController via
+    // @capacitor/browser (App Store compliant). Stripe's success/cancel URLs
+    // must be https://, so we point them at /checkout-return.html which
+    // bounces back to the app via able:// deep link. On web, redirect to
+    // /app.html?checkout=success directly — same flow as before.
+    const isCap = _isCapacitor();
+    const returnUrl = isCap
+      ? 'https://becomeable.app/checkout-return.html'
+      : window.location.origin+'/app.html?checkout=success';
+    const cancelUrl = isCap
+      ? 'https://becomeable.app/checkout-return.html?canceled=1'
+      : window.location.origin+'/app.html';
 
     const refToken = localStorage.getItem('able_ref_token') || undefined;
     Able.track('checkout_started', { plan: selectedPlan, referred: !!refToken });
@@ -6966,7 +6976,22 @@ async function startCheckout() {
     // Stripe has the ref_token in session metadata now; clear local copy.
     localStorage.removeItem('able_ref_token');
     try { await flushSave(); } catch(e) { /* swallow - proceed to checkout */ }
-    window.location.href=session_url;
+    // Capacitor: open Stripe in SFSafariViewController so it stays inside
+    // the app envelope. Apple flags an in-WebView navigation to an external
+    // payment URL as IAP-avoidance (Guideline 3.1.1); the system browser
+    // sheet is the compliant path. The deep-link handler will close it
+    // when the user returns via able://checkout-success.
+    if (_isCapacitor() && window.Capacitor?.Plugins?.Browser?.open) {
+      await window.Capacitor.Plugins.Browser.open({ url: session_url, presentationStyle: 'popover' });
+      // Reset the button so the user has a working CTA if they dismiss
+      // SFSafariViewController without completing checkout. On the success
+      // path the deep-link handler triggers a full reload and this state
+      // gets wiped anyway.
+      btn.textContent='Get started →';
+      btn.disabled=false;
+    } else {
+      window.location.href=session_url;
+    }
   } catch(e) {
     errEl.textContent=e.message;
     errEl.style.display='block';
@@ -6980,14 +7005,29 @@ async function openManageSubscription() {
   btn.disabled=true;
   btn.innerHTML='<div style="font-weight:800;color:var(--ds-t2);padding:2px 0;">Opening Stripe…</div>';
   try {
+    // Same bridge-page treatment as startCheckout. Stripe's billing portal
+    // return_url must be https://, so Capacitor sends it to
+    // /checkout-return.html (with no session_id, which the bridge treats as
+    // "just bounce back to the app").
+    const returnUrl = _isCapacitor()
+      ? 'https://becomeable.app/checkout-return.html?portal=1'
+      : window.location.origin+'/app.html';
     const resp=await sbGet().functions.invoke('create-portal-session',{
-      body:{returnUrl:window.location.origin+'/app.html'}
+      body:{returnUrl}
     });
     if(resp.error) throw new Error(typeof resp.error==='string'?resp.error:(resp.error.message||JSON.stringify(resp.error)));
     const url=resp.data?.portal_url;
     if(!url) throw new Error(resp.data?.error||'Portal unavailable');
     try { await flushSave(); } catch(e) { /* swallow - proceed to portal */ }
-    window.location.href=url;
+    if (_isCapacitor() && window.Capacitor?.Plugins?.Browser?.open) {
+      await window.Capacitor.Plugins.Browser.open({ url, presentationStyle: 'popover' });
+      // Reset the button after a beat — the in-app browser hides the app UI
+      // anyway, but if the user dismisses without changing anything they'd
+      // otherwise see "Opening Stripe…" stuck on the button.
+      setTimeout(() => { btn.disabled = false; btn.innerHTML = original; }, 1000);
+    } else {
+      window.location.href=url;
+    }
   } catch(e) {
     alert('Could not open subscription management: '+e.message);
     btn.disabled=false;
@@ -11804,17 +11844,38 @@ document.addEventListener('DOMContentLoaded', () => {
         try {
           const raw = event?.url || '';
           if (!raw) return;
-          // able://localhost/app.html?checkout=success  → /app.html?checkout=success
-          // able://checkout-success?session_id=...      → /app.html?checkout-success&session_id=...
+          // Always dismiss the in-app browser if one is open — Stripe Checkout
+          // / billing portal / future Plaid Hosted Link all return via deep
+          // link and we want SFSafariViewController gone before the app UI
+          // settles back. Browser.close() is a no-op when nothing is open.
+          try { window.Capacitor?.Plugins?.Browser?.close?.(); } catch (_) {}
           const u = new URL(raw);
-          const search = u.search || '';
-          const hash = u.hash || '';
-          const target = '/app.html' + search + hash;
-          // history.replaceState updates the URL without a reload so the
-          // page's existing ?checkout=success handling (lines ~3886-3960)
-          // fires on the next event-loop tick when we dispatch popstate.
-          history.replaceState(null, '', target);
-          window.dispatchEvent(new PopStateEvent('popstate'));
+          // Two shapes we expect from /checkout-return.html:
+          //   able://checkout-success?session_id=cs_...   ← payment succeeded
+          //   able://localhost/app.html                   ← cancel / portal bounce
+          // For success we navigate to /app.html?checkout=success&session_id=...
+          // which triggers a full reload — the existing web post-checkout
+          // flow (pre-auth flash guard at ~L1844, sessionStorage flag setter
+          // at ~L15573, settle at ~L3886) then runs end-to-end as it does on
+          // the web. For cancel/portal we just dismissed Browser above and
+          // leave the user on whatever screen they were on (paywall or
+          // settings).
+          const isSuccess =
+            u.host === 'checkout-success' ||
+            u.pathname === '//checkout-success' ||
+            /[?&]checkout=success(&|$)/.test(u.search);
+          if (isSuccess) {
+            const sid = u.searchParams.get('session_id') || '';
+            const qs = '?checkout=success' + (sid ? '&session_id=' + encodeURIComponent(sid) : '');
+            // Same-document navigation with a different query string triggers
+            // a full WebView reload, which is what we want — the page-load
+            // IIFE that wires up sessionStorage flags only runs on a fresh
+            // load.
+            window.location.href = '/app.html' + qs;
+          }
+          // Cancel / portal-return / other deep links: Browser is already
+          // closed; no further work needed. Future deep-link shapes (Plaid
+          // Hosted Link callback, push notifications, etc.) get added here.
         } catch (e) {
           console.warn('[Able] deep-link parse failed:', e);
         }

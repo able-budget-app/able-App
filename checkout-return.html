@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Returning to Able…</title>
+<meta name="robots" content="noindex,nofollow">
+<link rel="icon" href="/favicon.ico">
+<style>
+  :root{
+    --ds-green:#0F5132;
+    --ds-page:#F7F4EE;
+    --ds-text:#1A1A1A;
+    --ds-t2:#3D3D3D;
+    --ds-t3:#6B6B6B;
+    --ds-f:-apple-system,BlinkMacSystemFont,"SF Pro Text",system-ui,sans-serif;
+  }
+  *{box-sizing:border-box}
+  html,body{margin:0;padding:0;height:100%;background:var(--ds-page);color:var(--ds-text);font-family:var(--ds-f);-webkit-font-smoothing:antialiased}
+  .wrap{min-height:100%;display:flex;align-items:center;justify-content:center;padding:2rem 1.25rem;text-align:center}
+  .card{max-width:380px;width:100%}
+  .mark{font-size:44px;font-weight:900;letter-spacing:-.02em;color:var(--ds-green);margin-bottom:.75rem;font-family:"Times New Roman",Georgia,serif}
+  .label{font-size:11px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--ds-t3);margin-bottom:1.5rem}
+  .msg{font-size:15px;font-weight:600;color:var(--ds-t2);line-height:1.5;margin-bottom:2rem}
+  .btn{display:inline-block;background:var(--ds-green);color:#fff;font-weight:800;font-size:15px;padding:14px 28px;border-radius:999px;text-decoration:none;letter-spacing:.01em;border:none;cursor:pointer;font-family:inherit}
+  .btn:active{transform:scale(.98)}
+  .fine{margin-top:1.5rem;font-size:12px;color:var(--ds-t3);font-weight:500;line-height:1.5}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="card">
+    <div class="mark">Able</div>
+    <div class="label" id="status-label">Returning to the app…</div>
+    <div class="msg" id="status-msg">If Able doesn't open automatically, tap below.</div>
+    <a class="btn" id="open-btn" href="#">Open Able</a>
+    <div class="fine">You can safely close this tab.</div>
+  </div>
+</div>
+<script>
+(function(){
+  // Bridge from Stripe Checkout (SFSafariViewController on iOS Capacitor) back
+  // to the native app via able:// URL scheme. Stripe's success/cancel URLs
+  // must be https://, but the app is reachable via able://. This page is the
+  // shortest possible hop between the two.
+  //
+  // Web users never land here — only Capacitor's startCheckout points Stripe
+  // at /checkout-return.html. Web's successUrl is /app.html?checkout=success
+  // directly.
+  var qs = new URLSearchParams(window.location.search);
+  var sessionId = qs.get('session_id');
+  var target;
+  if (sessionId) {
+    // Checkout succeeded. Hand session_id back so app.html can call
+    // verify-checkout-session and settle the trial without waiting on
+    // webhook delivery.
+    target = 'able://checkout-success?session_id=' + encodeURIComponent(sessionId);
+  } else {
+    // Cancel, portal return, or anything else without a session_id.
+    // Just bounce the user back into the app — no settle, no toast.
+    target = 'able://localhost/app.html';
+  }
+  var btn = document.getElementById('open-btn');
+  if (btn) btn.href = target;
+
+  // Fire the deep link automatically. iOS catches the able:// scheme and
+  // launches/foregrounds Able; @capacitor/app's appUrlOpen listener picks it
+  // up and the app handles the rest.
+  setTimeout(function(){
+    try { window.location.href = target; } catch (_) {}
+  }, 80);
+
+  // After ~3s, if the user is still here, the deep link didn't fire (app
+  // uninstalled? scheme blocked?). Surface a clearer prompt.
+  setTimeout(function(){
+    var label = document.getElementById('status-label');
+    var msg = document.getElementById('status-msg');
+    if (label) label.textContent = 'Tap to return';
+    if (msg) msg.textContent = 'We couldn’t open Able automatically. Tap the button to continue.';
+  }, 3000);
+})();
+</script>
+</body>
+</html>
