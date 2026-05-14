@@ -16,6 +16,7 @@ related list, footer). The frontmatter `url` field determines the output path:
 import sys
 import os
 import re
+from datetime import date
 from pathlib import Path
 import yaml
 import markdown
@@ -494,15 +495,25 @@ def write_output(fm, html):
 def main(content_root: Path):
     md_files = sorted(content_root.rglob("*.md"))
     generated = []
+    skipped = []
+    today = date.today()
     for p in md_files:
         if p.name == "README.md":
             continue
         fm, body = parse_file(p)
+        pub = fm.get("publish_date")
+        if pub:
+            pub_d = pub if isinstance(pub, date) else date.fromisoformat(str(pub))
+            if pub_d > today:
+                skipped.append((p.name, pub_d))
+                continue
         html = render_html(fm, body, [])
         out = write_output(fm, html)
         rel_out = out.relative_to(REPO_ROOT)
         print(f"  {p.name}  ->  {rel_out}")
         generated.append((fm, out))
+    for name, pub_d in skipped:
+        print(f"  [skip] {name}  (publish_date {pub_d.isoformat()} > {today.isoformat()})")
     return generated
 
 
