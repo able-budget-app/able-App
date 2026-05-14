@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="canvas-size" content="2732x2732">
+<title>Able · splash-light (logo only — HTML overlay adds swoosh + tagline)</title>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:wght@500;700;800;900&display=swap" rel="stylesheet">
+<style>
+  html, body { width: 2732px; height: 2732px; margin: 0; padding: 0; background: #2a7a4a; }
+  .canvas {
+    width: 2732px; height: 2732px;
+    background: #2a7a4a;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: 'Bricolage Grotesque', -apple-system, sans-serif;
+  }
+  .wordmark {
+    font-size: 340px;
+    font-weight: 900;
+    line-height: 1;
+    letter-spacing: -.03em;
+    color: #ffffff;
+    /* Reserve space below "Able" so the HTML overlay's swoosh + tagline
+       slot in at the same vertical position. ~64% of font-size accounts
+       for: swoosh thickness (20%) + gap (10%) + tagline line (~14%) +
+       breathing room (~20%). */
+    padding-bottom: calc(340px * 0.64);
+  }
+</style>
+</head>
+<body>
+  <div class="canvas">
+    <span class="wordmark">Able</span>
+  </div>
+</body>
+</html>

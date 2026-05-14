@@ -5,6 +5,7 @@
   "ios": {
     "contentInset": "never",
     "scheme": "Able",
+    "backgroundColor": "#2a7a4a",
     "limitsNavigationsToAppBoundDomains": false
   },
   "server": {
@@ -15,6 +16,14 @@
       "resize": "none",
       "resizeOnFullScreen": true,
       "style": "default"
+    },
+    "SplashScreen": {
+      "launchShowDuration": 5000,
+      "launchAutoHide": false,
+      "backgroundColor": "#2a7a4a",
+      "showSpinner": false,
+      "splashFullScreen": true,
+      "splashImmersive": true
     }
   }
 }

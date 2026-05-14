@@ -181,6 +181,10 @@ input,select,button,textarea{font-family:inherit;}
 #onboard-screen{position:fixed;inset:0;background:var(--ds-page);z-index:998;display:flex;align-items:center;justify-content:center;padding:1rem;overflow-y:auto;font-family:var(--ds-f);}
 .onboard-wrap{width:100%;max-width:580px;margin:auto;padding:1rem 0;}
 .onboard-card{background:var(--ds-card);border-radius:var(--ds-r3);padding:2.25rem 2rem;box-shadow:var(--ds-sh3);}
+@media (max-width:560px){
+  .onboard-wrap{padding:.5rem 0;}
+  .onboard-card{padding:1.5rem 1rem;border-radius:var(--ds-r2);}
+}
 .onboard-progress{height:6px;background:var(--ds-green-l);border-radius:100px;overflow:hidden;margin-bottom:.85rem;}
 .onboard-progress-fill{height:100%;background:linear-gradient(90deg,#2a7a4a,#3d9e78);border-radius:100px;transition:width .5s cubic-bezier(.23,1,.32,1);width:0%;}
 .onboard-step-label{font-size:10px;font-weight:800;color:var(--ds-t3);letter-spacing:.12em;text-transform:uppercase;margin-bottom:1.5rem;}
@@ -191,29 +195,29 @@ input,select,button,textarea{font-family:inherit;}
 .ob-input:focus{border-color:var(--ds-green);box-shadow:0 0 0 3px rgba(42,122,74,.1);}
 .ob-input::placeholder{color:var(--ds-t3);font-weight:500;}
 #ob-input-area{margin-bottom:1.25rem;}
-/* Debt-review extra-debts rows. On mobile, four inputs in a flex row
-   shrunk each below 70px wide and clipped placeholder text - felt
-   visually inconsistent with the wider single-input forms elsewhere
-   in onboarding. Switch to a 2-col grid on mobile (Name+Balance row,
-   Min+Rate row, X button on its own line), keep 4-in-a-row on desktop. */
-.ob-table-row{display:grid;grid-template-columns:1fr 1fr auto;gap:8px;margin-bottom:14px;align-items:center;background:#fafbfa;border:1px solid var(--ds-line);border-radius:var(--ds-r1);padding:12px;}
-.ob-table-row .ob-table-input:nth-of-type(1){grid-column:1/3;}
-.ob-table-row .ob-table-input:nth-of-type(2){grid-column:1;}
-.ob-table-row .ob-table-input:nth-of-type(3){grid-column:2;}
-.ob-table-row .ob-table-input:nth-of-type(4){grid-column:1/3;}
-.ob-table-row .ob-table-x{grid-column:3;grid-row:1/5;}
-.ob-table-input{min-width:0;background:#fff;border:1.5px solid var(--ds-t4);border-radius:var(--ds-r1);color:var(--ds-t1);font-family:var(--ds-f);font-size:16px;font-weight:600;padding:12px 14px;outline:none;transition:all .2s;}
+/* Debt-review extra-debts rows. Each row is a labeled card with the X
+   absolutely positioned in the top-right so the inputs get full width.
+   Name + Rate on their own rows, Balance + Min side-by-side. */
+.ob-table-row{position:relative;display:grid;grid-template-columns:1fr 1fr;gap:10px 8px;margin-bottom:14px;background:#fafbfa;border:1px solid var(--ds-line);border-radius:var(--ds-r1);padding:14px;padding-right:42px;}
+.ob-table-row .ob-table-label{display:flex;flex-direction:column;gap:5px;font-size:10px;font-weight:800;color:var(--ds-t3);text-transform:uppercase;letter-spacing:.06em;min-width:0;}
+.ob-table-row .ob-table-label.span-2{grid-column:1/3;}
+.ob-table-input{min-width:0;width:100%;background:#fff;border:1.5px solid var(--ds-t4);border-radius:var(--ds-r1);color:var(--ds-t1);font-family:var(--ds-f);font-size:16px;font-weight:600;padding:12px 14px;outline:none;transition:all .2s;}
 .ob-table-input:focus{border-color:var(--ds-green);box-shadow:0 0 0 3px rgba(42,122,74,.1);}
 .ob-table-input::placeholder{color:var(--ds-t3);font-weight:500;}
-.ob-table-x{width:36px;height:36px;flex-shrink:0;align-self:start;background:transparent;border:none;color:var(--ds-t3);font-size:20px;cursor:pointer;border-radius:50%;transition:all .15s;}
+.ob-table-x{position:absolute;top:8px;right:8px;width:32px;height:32px;flex-shrink:0;background:transparent;border:none;color:var(--ds-t3);font-size:20px;cursor:pointer;border-radius:50%;transition:all .15s;display:flex;align-items:center;justify-content:center;}
 .ob-table-x:hover{background:#fdeef2;color:var(--ds-c4);}
 /* Desktop ≥980px: keep 2x2 grid (the "wide" 4-in-a-row felt cropped
    inside the 640px modal - placeholders like "Min payment" got
    clipped). The 2x2 reads cleaner everywhere. */
 .ob-actions{display:flex;justify-content:space-between;align-items:center;gap:.75rem;margin-top:1rem;}
-#onboard-screen .btn-primary{display:inline-flex;align-items:center;justify-content:center;gap:6px;padding:14px 26px;background:linear-gradient(135deg,#2a7a4a,#3d9e78);color:white;border:none;border-radius:var(--ds-r1);font-family:var(--ds-f);font-size:14px;font-weight:800;cursor:pointer;transition:all .2s;box-shadow:0 4px 14px rgba(42,122,74,.3);letter-spacing:-.01em;flex:1;}
+#onboard-screen .btn-primary{display:inline-flex;align-items:center;justify-content:center;gap:6px;padding:14px 22px;background:linear-gradient(135deg,#2a7a4a,#3d9e78);color:white;border:none;border-radius:var(--ds-r1);font-family:var(--ds-f);font-size:14px;font-weight:800;cursor:pointer;transition:all .2s;box-shadow:0 4px 14px rgba(42,122,74,.3);letter-spacing:-.01em;white-space:nowrap;flex:0 0 auto;}
 #onboard-screen .btn-primary:hover{transform:translateY(-1px);box-shadow:0 6px 20px rgba(42,122,74,.4);}
-#onboard-screen .btn-ghost,#onboard-screen .btn-sm{background:transparent;color:var(--ds-t2);border:none;font-family:var(--ds-f);font-size:13px;font-weight:700;cursor:pointer;padding:10px 16px;border-radius:var(--ds-r1);transition:color .15s;}
+#onboard-screen .btn-ghost,#onboard-screen .btn-sm{background:transparent;color:var(--ds-t2);border:none;font-family:var(--ds-f);font-size:13px;font-weight:700;cursor:pointer;padding:10px 12px;border-radius:var(--ds-r1);transition:color .15s;white-space:nowrap;}
+@media (max-width:480px){
+  .ob-actions{gap:.4rem;}
+  #onboard-screen .btn-ghost,#onboard-screen .btn-sm{font-size:12px;padding:8px 6px;}
+  #onboard-screen .btn-primary{padding:14px 18px;font-size:13px;}
+}
 #onboard-screen .btn-ghost:hover,#onboard-screen .btn-sm:hover{color:var(--ds-green);}
 #onboard-screen .btn-ghost.btn-sm[onclick*="obAddRow"]{color:var(--ds-green);font-weight:700;padding:6px 0;}
 .ob-loading-icon{font-size:52px;text-align:center;margin:1.5rem 0 .75rem;animation:dsPulse 1.5s ease-in-out infinite;}
@@ -1728,6 +1732,44 @@ posthog.init('phc_B6PH36QxpExnyBYhfScFFF6LhDvoyxuFr6PypJuxxky3', {
 </script>
 </head>
 <body>
+<!-- Capacitor splash overlay. Paints on first frame in Capacitor builds only;
+     bridges from the native LaunchScreen.storyboard image to the loaded app
+     while the underline draws in left-to-right. Native PNG shows "Able" with
+     no swoosh; this overlay adds the same logo + an animated swoosh on top
+     so the user sees the brand mark "complete" itself. Removed entirely on
+     web (no meta-runtime tag → script no-ops). -->
+<style>
+  html.cap-splash-on #splash-overlay{position:fixed;inset:0;z-index:99999;background:#2a7a4a;display:flex;align-items:center;justify-content:center;font-family:'Bricolage Grotesque',-apple-system,BlinkMacSystemFont,sans-serif;opacity:1;transition:opacity 420ms ease-out;}
+  html.cap-splash-on #splash-overlay.splash-fade-out{opacity:0;pointer-events:none;}
+  /* Match the native PNG: 340px PNG wordmark scales to ~106px on screen
+     (2732 px square scaleAspectFill on ~393×852 viewport → ×0.312). Same
+     ~0.64 reserve below the baseline so the swoosh and tagline slot in
+     under "Able" without nudging the logo position. */
+  html.cap-splash-on #splash-overlay .splash-wordmark{font-size:108px;font-weight:900;line-height:1;letter-spacing:-.03em;color:#ffffff;position:relative;display:inline-block;padding-bottom:calc(108px * 0.64);}
+  html.cap-splash-on #splash-overlay .splash-underline{position:absolute;left:0;right:-4%;bottom:calc(108px * 0.5);height:calc(108px * 0.205);background:#ffffff;-webkit-mask-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 120 4.2' preserveAspectRatio='none'><path d='M3 2.6 Q2 2.4 3 2.15 Q58 1.75 115 0.15 Q119 1 119 2 Q119 3 115 3.9 Q58 3.55 3 2.65 Q2 2.45 3 2.6 Z' fill='white'/></svg>");mask-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 120 4.2' preserveAspectRatio='none'><path d='M3 2.6 Q2 2.4 3 2.15 Q58 1.75 115 0.15 Q119 1 119 2 Q119 3 115 3.9 Q58 3.55 3 2.65 Q2 2.45 3 2.6 Z' fill='white'/></svg>");-webkit-mask-repeat:no-repeat;mask-repeat:no-repeat;-webkit-mask-size:100% 100%;mask-size:100% 100%;clip-path:inset(0 100% 0 0);animation:splashUnderlineFill 1700ms cubic-bezier(.22,.61,.36,1) 600ms forwards;}
+  /* Tagline sits below the underline, matched to roughly the same width
+     (left:0 to right:-4% of wordmark) so the whole composition reads as a
+     single locked-up brand mark. Fades in after the underline finishes
+     drawing. Uses canonical brand line so it fits in a single line at a
+     readable size. */
+  html.cap-splash-on #splash-overlay .splash-tagline{position:absolute;left:0;right:-4%;bottom:calc(108px * 0.10);text-align:center;font-size:11px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:rgba(255,255,255,.85);opacity:0;animation:splashTaglineIn 700ms ease-out 2500ms forwards;}
+  @keyframes splashUnderlineFill{to{clip-path:inset(0 0 0 0);}}
+  @keyframes splashTaglineIn{to{opacity:1;}}
+</style>
+<script>
+  (function(){
+    if (!document.querySelector('meta[name="able-runtime"][content="ios-capacitor"]')) return;
+    document.documentElement.classList.add('cap-splash-on');
+    document.body.insertAdjacentHTML('afterbegin',
+      '<div id="splash-overlay" aria-hidden="true">' +
+        '<span class="splash-wordmark">Able' +
+          '<span class="splash-underline"></span>' +
+          '<span class="splash-tagline">Built for inconsistent income</span>' +
+        '</span>' +
+      '</div>'
+    );
+  })();
+</script>
 <div id="app-toast" class="app-toast" role="status" aria-live="polite"></div>
 <!-- System status banner. Toggled via public.system_status (single-row).
      Hidden by default; renderSystemStatus() shows it when is_active=true.
@@ -1898,7 +1940,7 @@ posthog.init('phc_B6PH36QxpExnyBYhfScFFF6LhDvoyxuFr6PypJuxxky3', {
         <div id="ob-input-area"></div>
         <div class="ob-actions">
           <button class="btn-ghost btn btn-sm" id="ob-back-btn" onclick="obBack()" style="display:none;">Back</button>
-          <button class="btn-ghost btn btn-sm" onclick="skipOnboarding()" style="font-size:12px;color:var(--ds-t3);margin-left:auto;">Skip for now and explore</button>
+          <button class="btn-ghost btn btn-sm" onclick="skipOnboarding()" style="font-size:12px;color:var(--ds-t3);margin-left:auto;">Skip for now</button>
           <button class="btn btn-primary" id="ob-next-btn" onclick="obNext()">Continue →</button>
         </div>
       </div>
@@ -4486,7 +4528,7 @@ function renderObStep() {
     }
     document.getElementById('ob-back-btn').style.display = obStep > 0 ? 'inline-block' : 'none';
     document.getElementById('ob-next-btn').textContent = obStep === OB_QUESTIONS.length - 1 ? 'Build my budget →' : 'Continue →';
-    setTimeout(() => document.getElementById('ob-text-input')?.focus(), 100);
+    if (!_shouldSkipAutoFocus()) setTimeout(() => document.getElementById('ob-text-input')?.focus(), 100);
   }
 }
 
@@ -5926,10 +5968,10 @@ function obAskExtraDebts(planJson) {
 
     const renderRows = () => rows.map((r, i) => `
       <div class="ob-table-row" data-row="${i}">
-        <input class="ob-table-input" data-field="name" type="text" placeholder="Name" value="${r.name || ''}" title="Name">
-        <input class="ob-table-input" data-field="balance" type="number" placeholder="Balance" value="${r.balance ?? ''}" title="Balance">
-        <input class="ob-table-input" data-field="min" type="number" placeholder="Min payment" value="${r.min ?? ''}" title="Min payment">
-        <input class="ob-table-input" data-field="rate" type="number" step="0.01" placeholder="Rate %" value="${r.rate ?? ''}" title="Rate %">
+        <label class="ob-table-label span-2">Name<input class="ob-table-input" data-field="name" type="text" placeholder="e.g. Discover card" value="${r.name || ''}"></label>
+        <label class="ob-table-label">Balance<input class="ob-table-input" data-field="balance" type="number" inputmode="decimal" placeholder="$" value="${r.balance ?? ''}"></label>
+        <label class="ob-table-label">Min / mo<input class="ob-table-input" data-field="min" type="number" inputmode="decimal" placeholder="$" value="${r.min ?? ''}"></label>
+        <label class="ob-table-label span-2">Interest rate<input class="ob-table-input" data-field="rate" type="number" inputmode="decimal" step="0.01" placeholder="%" value="${r.rate ?? ''}"></label>
         <button type="button" class="ob-table-x" onclick="window._obExtraDebtsRemove(${i})" title="Remove">×</button>
       </div>
     `).join('');
@@ -6157,17 +6199,24 @@ function obRenderPlanReviewUI() {
       .plan-row input::placeholder{font-weight:500;color:var(--ds-t3);}
       .plan-row .x{padding:0 8px;font-size:18px;background:none;border:none;color:var(--ds-t3);cursor:pointer;}
       .plan-row .x:hover{color:#c85a5a;}
+      @media (max-width:560px){
+        .plan-edit-area .plan-row-headers{display:none !important;}
+        .plan-edit-area .plan-row{grid-template-columns:1fr 1fr !important;position:relative;padding:12px 38px 12px 12px;background:#fafbfa;border:1px solid var(--ds-line);border-radius:var(--ds-r1);margin-bottom:10px;gap:8px;}
+        .plan-edit-area .plan-row input{font-size:14px;padding:10px 12px;background:#fff;}
+        .plan-edit-area .plan-row input[data-field="name"]{grid-column:1/3;}
+        .plan-edit-area .plan-row .x{position:absolute;top:6px;right:4px;width:30px;height:30px;display:flex;align-items:center;justify-content:center;padding:0;}
+      }
       .plan-presets{display:flex;gap:6px;margin-bottom:10px;}
       .plan-presets button{flex:1;padding:8px 10px;font-size:12px;font-weight:700;border:1px solid var(--ds-line);background:#fff;border-radius:6px;cursor:pointer;}
       .plan-presets button:hover{border-color:#3d9e78;}
       .plan-split-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;}
       .plan-split-grid label{display:flex;flex-direction:column;font-size:11px;font-weight:700;color:var(--ds-t3);text-transform:uppercase;letter-spacing:.04em;gap:4px;}
       .plan-split-sum{margin-top:8px;font-size:12px;font-weight:700;color:var(--ds-t2);}
-      .plan-coach{background:var(--ds-green-l);border:1px solid var(--ds-green-m);border-radius:var(--ds-r1);padding:18px 20px;margin-bottom:16px;font-size:14px;line-height:1.7;color:#2a4a35;font-weight:500;}
-      .plan-coach p{margin:0 0 12px 0;}
-      .plan-coach p:last-child{margin-bottom:0;}
-      .plan-coach .num{font-weight:800;color:#1f3a28;background:rgba(255,255,255,.55);padding:1px 5px;border-radius:4px;}
-      .plan-coach .closer{font-weight:700;color:#1f3a28;display:block;padding-top:8px;border-top:1px dashed rgba(42,74,53,.25);}
+      .plan-coach{background:#fff;border:1px solid var(--ds-line);border-radius:var(--ds-r2);margin-bottom:16px;font-size:14px;line-height:1.65;color:var(--ds-t2);font-weight:500;overflow:hidden;}
+      .plan-coach p{margin:0;padding:14px 18px;border-bottom:1px solid #eef2ef;}
+      .plan-coach p:last-of-type{border-bottom:none;}
+      .plan-coach .num{font-weight:800;color:var(--ds-green);background:var(--ds-green-l);padding:2px 7px;border-radius:5px;letter-spacing:-.01em;white-space:nowrap;}
+      .plan-coach .closer{font-weight:800;color:var(--ds-t1);background:var(--ds-green-l);border-top:1px solid var(--ds-green-m);padding:13px 18px;display:block;text-align:center;letter-spacing:-.01em;font-size:13.5px;}
       .plan-error{background:#fdecec;border:1px solid #f3c5c5;border-radius:var(--ds-r1);padding:.75rem;font-size:12px;color:#a04545;font-weight:600;margin-bottom:10px;}
       .plan-degraded{background:#fff7e6;border:1px solid #f0d8a8;border-radius:var(--ds-r1);padding:12px 14px;font-size:13px;color:#6b4a1a;font-weight:600;line-height:1.5;margin-bottom:12px;}
       .plan-saved-pill{background:var(--ds-green-l);border:1px solid var(--ds-green-m);border-radius:var(--ds-r1);padding:10px 14px;font-size:12.5px;color:#2a4a35;font-weight:600;line-height:1.5;margin-bottom:12px;}
@@ -11742,6 +11791,59 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   } catch (_) {}
 
+  // Capacitor deep-link handler. iOS calls @capacitor/app's appUrlOpen
+  // listener when something external taps an able:// URL — e.g. Safari
+  // returning from Stripe Checkout, an APNs deep link, or a future Plaid
+  // Hosted Link callback. We translate the inbound path/query onto the
+  // current page so existing handlers (?checkout=success, ?plaid=...,
+  // etc.) just work without each call site knowing about deep links.
+  try {
+    const App = window.Capacitor?.Plugins?.App;
+    if (App?.addListener) {
+      App.addListener('appUrlOpen', (event) => {
+        try {
+          const raw = event?.url || '';
+          if (!raw) return;
+          // able://localhost/app.html?checkout=success  → /app.html?checkout=success
+          // able://checkout-success?session_id=...      → /app.html?checkout-success&session_id=...
+          const u = new URL(raw);
+          const search = u.search || '';
+          const hash = u.hash || '';
+          const target = '/app.html' + search + hash;
+          // history.replaceState updates the URL without a reload so the
+          // page's existing ?checkout=success handling (lines ~3886-3960)
+          // fires on the next event-loop tick when we dispatch popstate.
+          history.replaceState(null, '', target);
+          window.dispatchEvent(new PopStateEvent('popstate'));
+        } catch (e) {
+          console.warn('[Able] deep-link parse failed:', e);
+        }
+      });
+    }
+  } catch (_) {}
+
+  // Capacitor splash hand-off. Native LaunchScreen.storyboard shows the
+  // green "Able" PNG (no swoosh). When DOMContentLoaded fires the HTML
+  // overlay (#splash-overlay) is already painted underneath, with the
+  // swoosh underline mid-animation. Dismiss the native splash so the
+  // animated overlay becomes visible, then fade the overlay out after the
+  // 900ms underline fill + a short hold so the user sees the swoosh
+  // "complete" before the app appears.
+  try {
+    const Sp = window.Capacitor?.Plugins?.SplashScreen;
+    if (Sp?.hide) Sp.hide({ fadeOutDuration: 360 });
+    const overlay = document.getElementById('splash-overlay');
+    if (overlay) {
+      // CSS animation budget:
+      //   600ms underline delay + 1700ms underline fill = 2300ms
+      //   2500ms tagline delay + 700ms tagline fade-in   = 3200ms
+      //   + ~700ms hold so the eye lands on the locked-up mark
+      // → start fade-out at 3900ms, remove at 4380ms.
+      setTimeout(() => overlay.classList.add('splash-fade-out'), 3900);
+      setTimeout(() => overlay.remove(), 4380);
+    }
+  } catch (_) {}
+
   // Body-scroll lock while any modal/sheet is visible. On iOS WKWebView,
   // opening a modal-bg while the body is scrollable lets the underlying page
   // shift when the system tries to scroll a focused input into view — making
@@ -14674,6 +14776,89 @@ function _updateDemoButtonLabel(on){
     : 'See Able with curated sample data. Your real data is preserved.';
 }
 
+// Dev helper: jump straight to the onboarding plan-review screen with
+// canned data so the post-Plaid layout can be polished without burning
+// Plaid + Anthropic spend. Call from Safari Web Inspector console:
+//   _devPlanReview()           - full plan review (Step 9, post-Plaid)
+//   _devPlanReview('extra')    - "any other debts?" step (Step 8)
+// Does NOT write to the database. To exit, refresh the page or tap a
+// tab in the bottom nav.
+window._devPlanReview = function(which) {
+  const demoExtras = [
+    { name: 'Ultimate Rewards® ending 0714', balance_estimate: 6846, rate_estimate: 0.26, min_payment: 245, source: 'plaid' },
+    { name: 'Ultimate Rewards® ending 4766', balance_estimate: 8952, rate_estimate: 0.23, min_payment: 256, source: 'plaid' },
+    { name: 'Toyota auto loan',              balance_estimate: null, rate_estimate: null, min_payment: 537, source: 'plaid' },
+  ];
+  const demoPlan = {
+    income_sources: [
+      { name: 'Airbnb host payouts',                  average_amount: 912 },
+      { name: 'Marketing payments (Stripe + Venmo)',  average_amount: 1207 },
+    ],
+    bills: [
+      { name: 'Planet Home mortgage', amount: 2651.43, due_day_of_month: 22, frequency: 'monthly' },
+      { name: 'USAA Insurance',       amount: 187.20,  due_day_of_month: 4,  frequency: 'monthly' },
+      { name: 'Verizon',              amount: 86.06,   due_day_of_month: 20, frequency: 'monthly' },
+      { name: 'Idaho Power',          amount: 94.70,   due_day_of_month: 16, frequency: 'monthly' },
+      { name: 'Sparklight internet',  amount: 79.65,   due_day_of_month: 9,  frequency: 'monthly' },
+      { name: 'Intermountain Gas',    amount: 31.88,   frequency: 'monthly' },
+      { name: 'City of Nampa',        amount: 177.53,  frequency: 'monthly' },
+      { name: 'Northwestern Mutual',  amount: 48.50,   frequency: 'monthly' },
+      { name: 'Villa Sport',          amount: 19.07,   due_day_of_month: 1,  frequency: 'monthly' },
+      { name: 'ChatGPT (OpenAI)',     amount: 20.00,   due_day_of_month: 19, frequency: 'monthly' },
+      { name: 'Spotify',              amount: 12.24,   due_day_of_month: 20, frequency: 'monthly' },
+      { name: 'Netflix',              amount: 7.99,    due_day_of_month: 22, frequency: 'monthly' },
+      { name: 'iCloud (Apple)',       amount: 9.99,    due_day_of_month: 17, frequency: 'monthly' },
+      { name: 'Google One',           amount: 1.99,    due_day_of_month: 27, frequency: 'monthly' },
+    ],
+    debts: demoExtras.map(({source, ...rest}) => rest),
+    tax_allocation: {
+      suggested_pct: 25,
+      evidence_summary: 'No tax payments were found in the 3-month lookback window, so the rate is estimated rather than derived from history. Income mix is 1099/self-employment, federal baseline of 22% plus Idaho ~3%.',
+    },
+    surplus_split: { owner_pct: 30, debt_pct: 20, reserve_pct: 30, free_pct: 20 },
+  };
+  const demoCoach = `<p>Paul, I can see two income streams over the past 4 months: weekly Airbnb host payouts averaging about <span class="num">$912</span> and irregular marketing payments via Stripe and Venmo averaging about <span class="num">$1,207</span>. Income swings hard, with your best month at <span class="num">$7,803</span> and your lightest at <span class="num">$1,362</span>, so your Floor-First Budgeting plan leans heavily on building a reserve.</p><p>Your floor runs about <span class="num">$3,249</span> a month in bills, plus <span class="num">25%</span> off the top of every deposit for taxes.</p><p>You also have <span class="num">$1,038</span> in debt minimums on top of that, including two Chase cards and a Toyota loan.</p><span class="closer">Tell me what to change.</span>`;
+
+  // Show onboard-screen, hide everything else
+  document.querySelectorAll('#auth-screen,#dashboard-screen,#plan-screen,#score-screen,#more-screen').forEach(el => { if (el) el.style.display = 'none'; });
+  const ob = document.getElementById('onboard-screen');
+  if (ob) ob.style.display = 'block';
+  document.body.classList.remove('app-loaded');
+
+  if (which === 'extra') {
+    // "Any other debts?" Step 8 — uses obAskExtraDebts machinery directly.
+    obAnswers = obAnswers || {};
+    obAnswers.extra_debts_asked = false;
+    obAskExtraDebts(demoPlan).then((extras) => {
+      console.log('[dev] Extra debts captured:', extras);
+    });
+    return;
+  }
+
+  obPlanReview = {
+    plan_id: 'dev-demo',
+    plan_json: demoPlan,
+    coach_summary: demoCoach,
+    sections: {
+      income_sources: { decision: 'accept', editing: false, items: JSON.parse(JSON.stringify(demoPlan.income_sources)) },
+      bills:          { decision: 'accept', editing: false, items: JSON.parse(JSON.stringify(demoPlan.bills)) },
+      debts:          { decision: 'accept', editing: false, items: JSON.parse(JSON.stringify(demoPlan.debts)) },
+      tax_allocation: { decision: 'accept', editing: false, suggested_pct: 25 },
+      surplus_split:  { decision: 'accept', editing: false, ...demoPlan.surplus_split },
+    },
+    submitting: false,
+    autoApplying: false,
+    error: null,
+  };
+  document.getElementById('ob-question-area').style.display = 'none';
+  document.getElementById('ob-building').style.display = 'none';
+  document.getElementById('ob-review').style.display = 'block';
+  const legacyActions = document.querySelector('#ob-review .ob-actions');
+  if (legacyActions) legacyActions.style.display = 'none';
+  obRenderPlanReviewUI();
+  console.log('[dev] Plan review rendered with canned data. No API calls, no DB writes. Refresh to exit.');
+};
+
 async function clearAllData(){
   if(!confirm('This will delete ALL your data. Are you sure?'))return;
   if(!confirm('Last chance. This cannot be undone.'))return;
@@ -15066,9 +15251,15 @@ function positionTourUI(targetEl) {
   const pad = 6;
   const spot = document.getElementById('tour-spotlight');
   if (spot) {
+    // Clamp the spotlight to the viewport so the green ring doesn't bleed
+    // past the right edge when a card sits flush against it (e.g. the
+    // edge-to-edge hero on mobile).
+    const vw = window.innerWidth;
+    const left = Math.max(0, rect.left + sx - pad);
+    const right = Math.min(vw, rect.right + sx + pad);
     spot.style.top = (rect.top + sy - pad) + 'px';
-    spot.style.left = (rect.left + sx - pad) + 'px';
-    spot.style.width = (rect.width + pad*2) + 'px';
+    spot.style.left = left + 'px';
+    spot.style.width = Math.max(0, right - left) + 'px';
     spot.style.height = (rect.height + pad*2) + 'px';
     // Match the target's border-radius so the green ring follows the
     // actual card silhouette. Without this, a hero with --ds-r3 (26px)
