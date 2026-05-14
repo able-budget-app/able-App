@@ -2492,14 +2492,14 @@ posthog.init('phc_B6PH36QxpExnyBYhfScFFF6LhDvoyxuFr6PypJuxxky3', {
     <div>
       <div class="sec">Fixed allocations</div>
       <div class="card">
-        <div style="font-size:13px;color:var(--ds-t2);font-weight:600;line-height:1.6;margin-bottom:1rem;">Money that comes off the top of every income, before bills. Use for contractor splits, tax set-asides, or paying yourself first.</div>
+        <div style="font-size:13px;color:var(--ds-t2);font-weight:600;line-height:1.6;margin-bottom:1rem;">Money that comes off the top of every deposit, before bills. Use for contractor splits, tax set-asides, or paying yourself first.</div>
         <div id="fa-list"></div>
         <div id="fa-total" style="font-size:11px;font-weight:700;color:var(--ds-t3);margin-top:.5rem;"></div>
         <button class="btn btn-primary btn-sm" style="margin-top:.75rem;" onclick="openFixedAllocModal()">+ Add rule</button>
       </div>
       <div class="sec">Planning window</div>
       <div class="card">
-        <div style="font-size:13px;color:var(--ds-t2);font-weight:600;line-height:1.6;margin-bottom:1rem;">When new money comes in, how far ahead should the allocator plan? Short windows send more money to debt. Longer windows keep more in reserve for upcoming bills.</div>
+        <div style="font-size:13px;color:var(--ds-t2);font-weight:600;line-height:1.6;margin-bottom:1rem;">When money lands, how far ahead should Able plan? Short windows send more money to debt. Longer windows keep more in reserve for upcoming bills.</div>
         <div style="display:flex;gap:8px;flex-wrap:wrap;" id="window-tabs">
           <button class="btn btn-sm window-tab" data-win="7" onclick="selectWindow(7)">7 days</button>
           <button class="btn btn-sm window-tab" data-win="14" onclick="selectWindow(14)">14 days</button>
@@ -2547,7 +2547,7 @@ posthog.init('phc_B6PH36QxpExnyBYhfScFFF6LhDvoyxuFr6PypJuxxky3', {
       </div>
       <div class="sec">Push notifications</div>
       <div class="card" id="push-card">
-        <div style="font-size:13px;color:var(--ds-t2);font-weight:600;line-height:1.6;margin-bottom:1rem;">A nudge on your phone or laptop the morning a bill is due, or when a deposit lands and needs allocating. Browser notifications, no app install required.</div>
+        <div style="font-size:13px;color:var(--ds-t2);font-weight:600;line-height:1.6;margin-bottom:1rem;">A nudge on your phone or laptop the morning a bill is due, or when a deposit lands and needs allocating.</div>
         <div id="push-status" style="font-size:12px;color:var(--ds-t3);font-weight:600;margin-bottom:.85rem;"></div>
         <button class="btn btn-primary btn-sm" id="push-enable-btn" onclick="enablePushNotifications()" style="width:100%;">Enable push notifications</button>
         <button class="btn btn-sm" id="push-disable-btn" onclick="disablePushNotifications()" style="width:100%;display:none;">Turn off push notifications</button>
@@ -2560,13 +2560,13 @@ posthog.init('phc_B6PH36QxpExnyBYhfScFFF6LhDvoyxuFr6PypJuxxky3', {
           <input type="checkbox" id="set-hide-quarterly-tax" onchange="toggleHideQuarterlyTax(this.checked)" style="width:20px;height:20px;accent-color:var(--ds-green);margin-top:1px;flex-shrink:0;">
           <div style="flex:1;">
             <div style="font-weight:700;font-size:14px;color:var(--ds-t1);">Hide quarterly tax card</div>
-            <div style="font-size:12px;color:var(--ds-t3);font-weight:600;margin-top:3px;line-height:1.5;">Removes the "Next quarterly tax" banner from your home screen. Your tax % stays set — only the reminder is hidden.</div>
+            <div style="font-size:12px;color:var(--ds-t3);font-weight:600;margin-top:3px;line-height:1.5;">Removes the "Next quarterly tax" banner from your home screen. Your tax % stays set. Only the reminder is hidden.</div>
           </div>
         </label>
       </div>
       <div class="sec">Email reminders</div>
       <div class="card">
-        <div style="font-size:13px;color:var(--ds-t2);font-weight:600;line-height:1.6;margin-bottom:1rem;">We'll send these to the email on file. Unsubscribe anytime.</div>
+        <div style="font-size:13px;color:var(--ds-t2);font-weight:600;line-height:1.6;margin-bottom:1rem;">Sent to the email on file. Unsubscribe anytime.</div>
         <label style="display:flex;align-items:flex-start;gap:12px;padding:12px 0;border-bottom:1px solid var(--ds-t4);cursor:pointer;">
           <input type="checkbox" id="ep-bill_reminder" onchange="toggleEmailPref('bill_reminder',this.checked)" style="width:20px;height:20px;accent-color:var(--ds-green);margin-top:1px;flex-shrink:0;">
           <div style="flex:1;">
@@ -2578,7 +2578,7 @@ posthog.init('phc_B6PH36QxpExnyBYhfScFFF6LhDvoyxuFr6PypJuxxky3', {
           <input type="checkbox" id="ep-low_buffer" onchange="toggleEmailPref('low_buffer',this.checked)" style="width:20px;height:20px;accent-color:var(--ds-green);margin-top:1px;flex-shrink:0;">
           <div style="flex:1;">
             <div style="font-weight:700;font-size:14px;color:var(--ds-t1);">Reserve running low</div>
-            <div style="font-size:12px;color:var(--ds-t3);font-weight:600;margin-top:3px;line-height:1.5;">If your reserve drops below half a month of bills, we'll let you know so you can rebuild before a slow stretch.</div>
+            <div style="font-size:12px;color:var(--ds-t3);font-weight:600;margin-top:3px;line-height:1.5;">If your reserve drops below half a month of bills, you'll get an email so you can rebuild before a slow stretch.</div>
           </div>
         </label>
         <label style="display:flex;align-items:flex-start;gap:12px;padding:12px 0;border-bottom:1px solid var(--ds-t4);cursor:pointer;">
@@ -2592,7 +2592,7 @@ posthog.init('phc_B6PH36QxpExnyBYhfScFFF6LhDvoyxuFr6PypJuxxky3', {
           <input type="checkbox" id="ep-dormancy" onchange="toggleEmailPref('dormancy',this.checked)" style="width:20px;height:20px;accent-color:var(--ds-green);margin-top:1px;flex-shrink:0;">
           <div style="flex:1;">
             <div style="font-weight:700;font-size:14px;color:var(--ds-t1);">Check-in nudge</div>
-            <div style="font-size:12px;color:var(--ds-t3);font-weight:600;margin-top:3px;line-height:1.5;">If you haven't opened Able in 5 days, we'll send a gentle reminder.</div>
+            <div style="font-size:12px;color:var(--ds-t3);font-weight:600;margin-top:3px;line-height:1.5;">If you haven't opened Able in 5 days, you'll get a gentle nudge.</div>
           </div>
         </label>
         <label style="display:flex;align-items:flex-start;gap:12px;padding:12px 0;cursor:pointer;">
@@ -2617,7 +2617,7 @@ posthog.init('phc_B6PH36QxpExnyBYhfScFFF6LhDvoyxuFr6PypJuxxky3', {
       </div>
       <div class="sec">Security</div>
       <div class="card" id="security-card" style="display:flex;flex-direction:column;gap:10px;">
-        <div style="font-size:13px;font-weight:600;color:var(--ds-t2);line-height:1.6;">Two-factor authentication adds a one-time code from your authenticator app on top of your password. Required to connect a bank account.</div>
+        <div style="font-size:13px;font-weight:600;color:var(--ds-t2);line-height:1.6;">Two-factor authentication adds a one-time code from your authenticator app, alongside your password. Required to connect a bank account.</div>
         <div id="mfa-status-card" style="display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;padding:14px 16px;background:var(--ds-page);border:1.5px solid var(--ds-t4);border-radius:var(--ds-r1);">
           <div style="display:flex;align-items:center;gap:10px;flex:1;min-width:200px;">
             <svg id="mfa-status-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" style="color:var(--ds-t3);flex-shrink:0;"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
@@ -2635,7 +2635,7 @@ posthog.init('phc_B6PH36QxpExnyBYhfScFFF6LhDvoyxuFr6PypJuxxky3', {
         <div style="font-size:13px;font-weight:600;color:var(--ds-t2);margin-bottom:6px;">Signed in as <strong id="settings-email" style="color:var(--ds-t1);"></strong></div>
         <button class="btn" onclick="replayTour()" style="text-align:left;padding:14px 16px;">
           <div style="font-weight:800;display:flex;align-items:center;gap:10px;color:var(--ds-t1);"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink:0;color:var(--ds-green);"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="6"/><circle cx="12" cy="12" r="2"/></svg>Replay app tour</div>
-          <div style="font-size:11px;color:var(--ds-t3);font-weight:600;margin-top:5px;margin-left:28px;">Walk through the guided tour again.</div>
+          <div style="font-size:11px;color:var(--ds-t3);font-weight:600;margin-top:5px;margin-left:28px;">Walk through the tour from the start.</div>
         </button>
         <button class="btn" id="demo-mode-btn" onclick="toggleDemoMode()" style="text-align:left;padding:14px 16px;">
           <div style="font-weight:800;display:flex;align-items:center;gap:10px;color:var(--ds-t1);"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink:0;color:var(--ds-c5);"><circle cx="12" cy="12" r="10"/><path d="M9 9h.01M15 9h.01"/><path d="M8 14s1.5 2 4 2 4-2 4-2"/></svg><span id="demo-mode-label">Try demo mode</span></div>
@@ -2643,7 +2643,7 @@ posthog.init('phc_B6PH36QxpExnyBYhfScFFF6LhDvoyxuFr6PypJuxxky3', {
         </button>
         <button class="btn" onclick="openFeedbackModal()" style="text-align:left;padding:14px 16px;">
           <div style="font-weight:800;display:flex;align-items:center;gap:10px;color:var(--ds-t1);"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink:0;color:var(--ds-green);"><path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"/></svg>Report a bug or share feedback</div>
-          <div style="font-size:11px;color:var(--ds-t3);font-weight:600;margin-top:5px;margin-left:28px;">Tell us what broke or what'd make Able better. Goes straight to Paul.</div>
+          <div style="font-size:11px;color:var(--ds-t3);font-weight:600;margin-top:5px;margin-left:28px;">Tell Able what broke or what'd make it better. Every message gets read.</div>
         </button>
         <button class="btn" onclick="contactSupport()" style="text-align:left;padding:14px 16px;">
           <div style="font-weight:800;display:flex;align-items:center;gap:10px;color:var(--ds-t1);"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink:0;color:var(--ds-green);"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>Contact support</div>
