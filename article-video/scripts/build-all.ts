@@ -44,6 +44,7 @@ let ranTts = 0;
 let ranThumb = 0;
 let ranVideo = 0;
 let skipped = 0;
+const failures: Array<{slug: string; step: string; msg: string}> = [];
 
 for (const slug of slugs) {
   const dir = `videos/${slug}`;
@@ -69,8 +70,14 @@ for (const slug of slugs) {
   // 1. TTS
   if (force || !existsSync(audioPath)) {
     console.log(`  → tts`);
-    execSync(`VIDEO=${slug} npm run tts`, {stdio: 'inherit'});
-    ranTts++;
+    try {
+      execSync(`VIDEO=${slug} npm run tts`, {stdio: 'inherit'});
+      ranTts++;
+    } catch (e: any) {
+      console.error(`  [tts failed] ${slug}: ${e.message?.split('\n')[0] ?? e}`);
+      failures.push({slug, step: 'tts', msg: e.message?.split('\n')[0] ?? String(e)});
+      continue;
+    }
   } else {
     console.log(`  ✓ audio exists (${audioPath})`);
   }
@@ -78,11 +85,17 @@ for (const slug of slugs) {
   // 2. Thumbnail
   if (force || !existsSync(thumbPath)) {
     console.log(`  → thumbnail`);
-    execSync(
-      `npx remotion still src/index.ts Thumbnail ${thumbPath} --props=${scriptPath} --log=warn`,
-      {stdio: 'inherit'},
-    );
-    ranThumb++;
+    try {
+      execSync(
+        `npx remotion still src/index.ts Thumbnail ${thumbPath} --props=${scriptPath} --log=warn`,
+        {stdio: 'inherit'},
+      );
+      ranThumb++;
+    } catch (e: any) {
+      console.error(`  [thumbnail failed] ${slug}: ${e.message?.split('\n')[0] ?? e}`);
+      failures.push({slug, step: 'thumbnail', msg: e.message?.split('\n')[0] ?? String(e)});
+      // Don't continue — try render anyway. Thumbnail is non-blocking.
+    }
   } else {
     console.log(`  ✓ thumbnail exists (${thumbPath})`);
   }
@@ -90,12 +103,23 @@ for (const slug of slugs) {
   // 3. Video
   if (force || !existsSync(videoPath)) {
     console.log(`  → render`);
-    execSync(`VIDEO=${slug} npm run render`, {stdio: 'inherit'});
-    ranVideo++;
+    try {
+      execSync(`VIDEO=${slug} npm run render`, {stdio: 'inherit'});
+      ranVideo++;
+    } catch (e: any) {
+      console.error(`  [render failed] ${slug}: ${e.message?.split('\n')[0] ?? e}`);
+      failures.push({slug, step: 'render', msg: e.message?.split('\n')[0] ?? String(e)});
+      continue;
+    }
   } else {
     console.log(`  ✓ video exists (${videoPath})`);
   }
 }
 
 console.log(``);
-console.log(`[build-all] done — tts:${ranTts} thumb:${ranThumb} video:${ranVideo} skipped:${skipped}`);
+console.log(`[build-all] done — tts:${ranTts} thumb:${ranThumb} video:${ranVideo} skipped:${skipped} failed:${failures.length}`);
+if (failures.length > 0) {
+  console.log(`\n[failures]`);
+  for (const f of failures) console.log(`  ${f.step} ${f.slug}: ${f.msg}`);
+  process.exit(2); // distinguish per-video failures (2) from total crash (1)
+}
