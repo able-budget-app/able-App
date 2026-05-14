@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Support · Able</title>
+<meta name="description" content="Help with Able — bank connections, subscriptions, tax export, sign-in, and more.">
+<link rel="canonical" href="https://becomeable.app/support.html">
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,300;12..96,400;12..96,500;12..96,600;12..96,700;12..96,800;12..96,900&display=swap" rel="stylesheet">
+<style>
+:root {
+  --page: #f0f7f2;
+  --card: #ffffff;
+  --t1: #111c16;
+  --t2: #4a5c52;
+  --t3: #557064;
+  --t4: #c4d8cc;
+  --green: #2a7a4a;
+  --r1: 12px;
+  --r2: 18px;
+  --f: 'Bricolage Grotesque', -apple-system, sans-serif;
+}
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+body {
+  font-family: var(--f);
+  background: var(--page);
+  color: var(--t1);
+  line-height: 1.7;
+  -webkit-font-smoothing: antialiased;
+}
+a { color: var(--green); text-decoration: none; }
+a:hover { text-decoration: underline; }
+
+.nav {
+  background: rgba(240, 247, 242, .92);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border-bottom: 1px solid rgba(196, 216, 204, .4);
+  padding: 0 2rem;
+  position: sticky;
+  top: 0;
+  z-index: 10;
+}
+.nav-inner {
+  max-width: 1160px;
+  margin: 0 auto;
+  height: 60px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.nav-logo {
+  font-size: 1.35rem;
+  font-weight: 900;
+  color: var(--t1);
+  letter-spacing: -.03em;
+  position: relative;
+  display: inline-block;
+  padding-bottom: 4px;
+}
+.nav-logo::after {
+  content: '';
+  position: absolute;
+  left: 2%;
+  right: 0;
+  bottom: 0;
+  height: 6px;
+  background: var(--green);
+  clip-path: polygon(0 80%, 100% 0, 100% 100%, 0 100%);
+  pointer-events: none;
+}
+.nav .home { font-size: 14px; font-weight: 700; color: var(--t2); }
+.nav .home:hover { color: var(--green); text-decoration: none; }
+
+main {
+  max-width: 720px;
+  margin: 0 auto;
+  padding: 3rem 1.5rem 5rem;
+}
+
+h1 {
+  font-size: clamp(2rem, 4vw, 2.75rem);
+  font-weight: 900;
+  letter-spacing: -.04em;
+  line-height: 1.1;
+  margin-bottom: .5rem;
+  color: var(--t1);
+}
+.lede {
+  font-size: 17px;
+  color: var(--t2);
+  font-weight: 600;
+  margin-bottom: 2.5rem;
+  line-height: 1.55;
+}
+h2 {
+  font-size: 1.25rem;
+  font-weight: 900;
+  letter-spacing: -.02em;
+  line-height: 1.2;
+  margin-top: 2.5rem;
+  margin-bottom: .75rem;
+  color: var(--t1);
+}
+h2:first-of-type { margin-top: 0; }
+p, ul, ol { margin-bottom: 1rem; color: var(--t2); font-size: 16px; font-weight: 500; }
+p strong, li strong { color: var(--t1); font-weight: 800; }
+ul, ol { padding-left: 1.5rem; }
+li { margin-bottom: .35rem; }
+
+.contact-block {
+  background: var(--card);
+  border-radius: var(--r2);
+  padding: 1.5rem 1.75rem;
+  color: var(--t2);
+  font-weight: 500;
+  line-height: 1.7;
+  box-shadow: 0 1px 4px rgba(0,0,0,.05);
+  margin-top: 1rem;
+}
+.contact-block strong { color: var(--t1); font-weight: 800; display: block; margin-bottom: .5rem; font-size: 18px; letter-spacing: -.01em; }
+.contact-block .email-line { font-size: 17px; font-weight: 700; margin: .25rem 0 .65rem; }
+.contact-block .email-line a { color: var(--green); }
+.contact-block .response { font-size: 14px; color: var(--t3); font-weight: 600; }
+
+hr {
+  border: none;
+  border-top: 1px solid var(--t4);
+  margin: 2.5rem 0;
+}
+
+footer {
+  max-width: 1160px;
+  margin: 0 auto;
+  padding: 2rem 1.5rem 3rem;
+  text-align: center;
+  font-size: 12px;
+  color: var(--t3);
+  font-weight: 600;
+  border-top: 1px solid var(--t4);
+}
+footer a { color: var(--t2); margin: 0 .4rem; }
+footer a:hover { color: var(--green); text-decoration: none; }
+
+@media (max-width: 640px) {
+  .nav { padding: 0 1.25rem; }
+  main { padding: 2rem 1.25rem 4rem; }
+  h1 { font-size: 2rem; }
+}
+</style>
+</head>
+<body>
+
+<nav class="nav">
+  <div class="nav-inner">
+    <a href="/" class="nav-logo">Able</a>
+    <a href="/" class="home">← Back to home</a>
+  </div>
+</nav>
+
+<main>
+
+<h1>Support</h1>
+<p class="lede">Help with Able. Most answers are below. For anything else, the inbox is the fastest path.</p>
+
+<h2>Get in touch</h2>
+<div class="contact-block">
+  <strong>Email support</strong>
+  <div class="email-line"><a href="mailto:hello@becomeable.app">hello@becomeable.app</a></div>
+  <div class="response">Replies usually within 24 hours, often within the hour. Include your account email when writing in.</div>
+</div>
+
+<hr>
+
+<h2>Billing and subscription</h2>
+<p><strong>Cancel the trial or subscription.</strong> Open Able → More → Settings → Subscription → Manage or cancel subscription. The Stripe billing portal handles it. Cancellation takes effect at the end of the current billing period.</p>
+<p><strong>Switch from monthly to annual.</strong> Same path: Settings → Subscription → Switch to annual. The prorated difference charges to your saved card, and you save $50 over the year.</p>
+<p><strong>Update card or download invoices.</strong> Manage or cancel subscription → opens Stripe's portal where every saved card and past invoice lives.</p>
+<p><strong>Refunds.</strong> Email <a href="mailto:hello@becomeable.app">hello@becomeable.app</a> within 14 days of a charge and describe what went wrong. Refunds are issued at Able's discretion and processed within 5-7 business days.</p>
+
+<h2>Bank connection (Plaid)</h2>
+<p><strong>Connecting your first bank.</strong> Onboarding asks you to connect during setup. If you skipped it, open More → Settings → Connected accounts → Connect another bank.</p>
+<p><strong>Reconnect a bank.</strong> Plaid sometimes requires re-authentication after 90 days or a bank password change. When that happens you'll see a "Reconnect needed" badge — tap it to re-link.</p>
+<p><strong>Disconnect a bank.</strong> Settings → Connected accounts → tap the bank → Disconnect. Able stops syncing transactions and removes that bank's data from your account.</p>
+<p><strong>Bank not supported.</strong> Plaid covers 12,000+ US banks. If yours isn't listed, you can still use Able by entering bills and income manually.</p>
+
+<h2>Two-factor authentication (2FA)</h2>
+<p><strong>Set up 2FA.</strong> Settings → Security → Turn on. Scan the QR code with 1Password, Google Authenticator, Authy, or any TOTP authenticator app.</p>
+<p><strong>Lost access to your authenticator.</strong> Email <a href="mailto:hello@becomeable.app">hello@becomeable.app</a> from the address on your account. Identity gets verified manually and two-factor reset within the hour.</p>
+
+<h2>Tax export</h2>
+<p>For US-based users: Able tracks transactions marked tax-deductible across the year. Open the Plan tab → Activity → Tax Export. The export is a CSV grouped by Plaid personal-finance category, ready for an accountant or Schedule C.</p>
+
+<h2>Privacy and data</h2>
+<p><strong>Export your data.</strong> Email <a href="mailto:hello@becomeable.app">hello@becomeable.app</a> with subject "Data export." A copy of your account data is delivered within 30 days.</p>
+<p><strong>Delete your account.</strong> Settings → Account → Clear all data. This wipes the account and cannot be undone. Bank connections are removed from Plaid at the same time.</p>
+<p>Full details in the <a href="/privacy.html">Privacy Policy</a>.</p>
+
+<h2>Something else?</h2>
+<p>If the answer isn't here, email <a href="mailto:hello@becomeable.app">hello@becomeable.app</a>. Every message gets read.</p>
+
+</main>
+
+<footer>
+  &copy; 2026 Able App
+  <a href="/">Home</a>·<a href="/privacy.html">Privacy</a>·<a href="/terms.html">Terms</a>·<a href="/support.html">Support</a>
+</footer>
+
+</body>
+</html>

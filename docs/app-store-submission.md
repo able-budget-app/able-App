@@ -12,20 +12,11 @@ Status: drafted 2026-05-14. Awaiting final pass before submission.
 
 ### App Name (30 char limit)
 
-**Recommended:** `Able: Floor-First Budgeting` *(27 chars)*
-
-Alternatives if you want different ASO emphasis:
-- `Able` *(4 chars — pure brand)*
-- `Able: Inconsistent Income` *(25 chars)*
-- `Able: Freelance Budget` *(22 chars)*
-
-The colon variant indexes against the right keywords without diluting the brand. "Floor-First" is unique to Able and reads like a proprietary methodology, which it is.
+**`Able: Inconsistent Income`** *(25 chars)*
 
 ### Subtitle (30 char limit)
 
-**Recommended:** `Built for inconsistent income` *(29 chars)*
-
-Locked phrase from `brand-script.md`. Fits exactly without the period.
+**`Built for inconsistent income`** *(29 chars)*
 
 ### Bundle ID
 
@@ -37,7 +28,7 @@ Locked phrase from `brand-script.md`. Fits exactly without the period.
 
 ### Secondary Category
 
-**Productivity** *(or Business — pick one based on which surfaces feel right for the audience)*
+**Productivity**
 
 ---
 
@@ -123,7 +114,7 @@ Avoid: any competitor names (Mint, YNAB, Copilot) — Apple rejects.
 | Field | Value |
 |---|---|
 | **Marketing URL** | https://becomeable.app |
-| **Support URL** | https://becomeable.app/support *(create this page if it doesn't exist; or use mailto:hello@becomeable.app — Apple accepts either)* |
+| **Support URL** | https://becomeable.app/support.html |
 | **Privacy Policy URL** | https://becomeable.app/privacy |
 
 ---
@@ -187,22 +178,21 @@ For each item below: **Linked to user identity = Yes; Used for tracking = No.**
 |---|---|
 | First name | Paul |
 | Last name | Johnson |
-| Phone | *(fill in)* |
+| Phone | (208) 899-7499 |
 | Email | hello@becomeable.app |
 
 ### Demo Account
 
-**You need to create this before submission.** Use a dedicated reviewer account:
-
 | Field | Value |
 |---|---|
-| Username | `appreview+apple@becomeable.app` *(or similar)* |
-| Password | *(generate a strong password and paste it here)* |
+| Username | `appreview+apple@becomeable.app` |
+| Password | `applereviewer_1` |
 
-Pre-seed this account in production with:
-- Confirmed email (Supabase Dashboard → Authentication → Users → Confirm email)
-- An active subscription (manually set `profiles.subscription_status = 'active'` so reviewers don't hit the paywall)
-- Some sample bills + debts entered manually (so the dashboard is not empty when they sign in)
+Pre-seeded with:
+- Confirmed email
+- `subscription_status = 'active'` (skips paywall)
+- Manually-entered sample bills + debts (so the dashboard renders meaningfully)
+- A couple of seed Coach messages (so the panel isn't empty when reviewers open it)
 
 ### Notes for Reviewer
 
@@ -261,7 +251,7 @@ For future updates, use the standard "What's new" format: bullet list of user-vi
 ### Copyright
 
 ```
-© 2026 Able LLC *(or whichever entity owns it)*
+© 2026 Able LLC
 ```
 
 ### Routing App Coverage File
