@@ -23,7 +23,20 @@
 <meta name="apple-mobile-web-app-title" content="Able">
 <meta name="theme-color" content="#2a7a4a">
 <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;500;600;700;800&family=Lora:ital,wght@0,400;0,600;1,400&family=Bricolage+Grotesque:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
-<script src="https://js.stripe.com/v3/" crossorigin="anonymous" defer></script>
+<!-- Stripe.js: load only on web. On Capacitor we use Stripe Checkout via
+     @capacitor/browser, never Stripe Elements / Apple Pay button in-app, so
+     Stripe.js is dead weight and its hidden iframe spams the WebView console
+     with "Blocked a frame with origin able://localhost" warnings on every
+     paywall paint. -->
+<script>
+  if (!document.querySelector('meta[name="able-runtime"][content="ios-capacitor"]')) {
+    var s = document.createElement('script');
+    s.src = 'https://js.stripe.com/v3/';
+    s.crossOrigin = 'anonymous';
+    s.defer = true;
+    document.head.appendChild(s);
+  }
+</script>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.js" crossorigin="anonymous" defer></script>
 <!-- Demo seed (local-only). Runs only when ?demo=1 is in the URL. See SETUP.md. -->
 <script>
@@ -15575,12 +15588,15 @@ document.addEventListener('keydown', (e) => {
 // ═══════════════════════════════════════
 
 window.addEventListener('load', async () => {
-  if(typeof Stripe === 'undefined' || typeof supabase === 'undefined') {
+  // Stripe.js only loads on web (see conditional injector in <head>).
+  // On Capacitor we skip the Stripe.js gate and the init entirely.
+  const _isCap = !!document.querySelector('meta[name="able-runtime"][content="ios-capacitor"]');
+  if(typeof supabase === 'undefined' || (!_isCap && typeof Stripe === 'undefined')) {
     document.getElementById('auth-screen').innerHTML = '<div style="text-align:center;padding:3rem;font-family:sans-serif;color:#888;">Failed to load required scripts. Please check your internet connection and reload.</div>';
     return;
   }
 
-  window._stripe = Stripe(STRIPE_KEY);
+  if (!_isCap) window._stripe = Stripe(STRIPE_KEY);
 
   // Strip ?checkout=success from the URL BEFORE Supabase client init.
   // Verified 2026-05-01 in fresh incognito: when supabase.createClient runs
