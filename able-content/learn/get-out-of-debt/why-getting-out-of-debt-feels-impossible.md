@@ -7,6 +7,7 @@ meta_description: "The real reason you feel stuck. The treadmill is real. You ma
 target_keyword: "why getting out of debt feels impossible"
 secondary_keywords: []
 cluster: learn-debt
+youtube_id: "KTOVTwf4yPk"
 page_type: supporting
 parent: /learn/get-out-of-debt/
 internal_links:

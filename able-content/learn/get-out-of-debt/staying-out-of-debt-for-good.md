@@ -7,6 +7,7 @@ meta_description: "The habits that prevent relapse. Staying out of debt is harde
 target_keyword: "staying out of debt for good"
 secondary_keywords: []
 cluster: learn-debt
+youtube_id: "bUwwhqEMadY"
 page_type: supporting
 parent: /learn/get-out-of-debt/
 internal_links:

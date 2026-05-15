@@ -7,6 +7,7 @@ meta_description: "The missing playbook for entrepreneurs. Every debt book assum
 target_keyword: "how to handle debt with variable income"
 secondary_keywords: []
 cluster: learn-debt
+youtube_id: "5LFLenWO7RE"
 page_type: supporting
 parent: /learn/get-out-of-debt/
 internal_links:

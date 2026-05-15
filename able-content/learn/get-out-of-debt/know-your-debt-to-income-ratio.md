@@ -7,6 +7,7 @@ meta_description: "The number every lender looks at. Debt-to-income (DTI) is the
 target_keyword: "know your debt to income ratio"
 secondary_keywords: []
 cluster: learn-debt
+youtube_id: "-BEihIojcNo"
 page_type: supporting
 parent: /learn/get-out-of-debt/
 internal_links:

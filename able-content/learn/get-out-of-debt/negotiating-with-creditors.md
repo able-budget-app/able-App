@@ -7,6 +7,7 @@ meta_description: "You have more leverage than you think. Most people never call
 target_keyword: "negotiating with creditors"
 secondary_keywords: []
 cluster: learn-debt
+youtube_id: "08NiJqFqscQ"
 page_type: supporting
 parent: /learn/get-out-of-debt/
 internal_links:

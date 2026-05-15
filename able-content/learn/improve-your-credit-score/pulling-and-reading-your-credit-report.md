@@ -7,6 +7,7 @@ meta_description: "What to look for on your report. Your credit report isn't you
 target_keyword: "pulling and reading your credit report"
 secondary_keywords: []
 cluster: learn-credit
+youtube_id: "Z4XTvz-oByE"
 page_type: supporting
 parent: /learn/improve-your-credit-score/
 internal_links:
