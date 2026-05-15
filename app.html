@@ -14857,6 +14857,74 @@ function _updateDemoButtonLabel(on){
     : 'See Able with curated sample data. Your real data is preserved.';
 }
 
+// Dev helper: seed a fully-populated account for App Store screenshots.
+// Writes bills, debts, history (deposits with allocations), buffer, and
+// profile to user_data so Dashboard, Coach, Plan hub, Score, and Allocate
+// sheet all show consistent demo data as you navigate. Must be signed in.
+//   _devSeedAccount()
+window._devSeedAccount = async function() {
+  if (!currentUser) { alert('Sign in first.'); return; }
+  const now = Date.now();
+  const daysAgo = (n) => new Date(now - n * 86400000);
+  const fmtDate = (d) => d.toLocaleDateString();
+
+  S.bills = [
+    { id:'b1',  name:'Rent',                 amount:2651.43, due_day_of_month:22, frequency:'monthly', cat:'home',     funded:1450, allocated:1450 },
+    { id:'b2',  name:'Auto insurance',       amount:187.20,  due_day_of_month:4,  frequency:'monthly', cat:'transport',funded:187.20, allocated:187.20 },
+    { id:'b3',  name:'Phone bill',           amount:86.06,   due_day_of_month:20, frequency:'monthly', cat:'utility',  funded:86.06,  allocated:86.06 },
+    { id:'b4',  name:'Electric',             amount:94.70,   due_day_of_month:16, frequency:'monthly', cat:'utility',  funded:60,     allocated:60 },
+    { id:'b5',  name:'Internet',             amount:79.65,   due_day_of_month:9,  frequency:'monthly', cat:'utility',  funded:79.65,  allocated:79.65 },
+    { id:'b6',  name:'Gas',                  amount:31.88,   frequency:'monthly', cat:'utility',  funded:31.88, allocated:31.88 },
+    { id:'b7',  name:'Water + trash',        amount:177.53,  frequency:'monthly', cat:'utility',  funded:0,    allocated:0 },
+    { id:'b8',  name:'Life insurance',       amount:48.50,   frequency:'monthly', cat:'insurance',funded:48.50, allocated:48.50 },
+    { id:'b9',  name:'Gym membership',       amount:19.07,   due_day_of_month:1,  frequency:'monthly', cat:'fitness',  funded:19.07, allocated:19.07 },
+    { id:'b10', name:'ChatGPT (OpenAI)',     amount:20.00,   due_day_of_month:19, frequency:'monthly', cat:'software', funded:20,    allocated:20 },
+    { id:'b11', name:'Spotify',              amount:12.24,   due_day_of_month:20, frequency:'monthly', cat:'software', funded:12.24, allocated:12.24 },
+    { id:'b12', name:'Netflix',              amount:7.99,    due_day_of_month:22, frequency:'monthly', cat:'software', funded:7.99,  allocated:7.99 },
+    { id:'b13', name:'iCloud (Apple)',       amount:9.99,    due_day_of_month:17, frequency:'monthly', cat:'software', funded:9.99,  allocated:9.99 },
+    { id:'b14', name:'Google One',           amount:1.99,    due_day_of_month:27, frequency:'monthly', cat:'software', funded:1.99,  allocated:1.99 },
+  ];
+  S.debts = [
+    { id:'d1', name:'Credit card ending 0714', balance:6846, rate:26, min_payment:245 },
+    { id:'d2', name:'Credit card ending 4766', balance:8952, rate:23, min_payment:256 },
+    { id:'d3', name:'Auto loan',               balance:18420, rate:6.5, min_payment:537 },
+  ];
+  S.buffer = 1840;
+  S.allocated_to_bills = 2024.21;
+  S.profile = { name:'Alex' };
+  S.sources = ['Freelance design retainers','Consulting payouts (Stripe + Venmo)','Other'];
+  S.settings = Object.assign({}, S.settings || {}, { debtPct:20, bufPct:30, freePct:20, ownerPct:30, allocateWindow:14 });
+  S.history = [
+    { id:'h_'+now+'_a', amount:1207, source:'Consulting payouts (Stripe + Venmo)', date:fmtDate(daysAgo(2)),  ts: now - 2*86400000,
+      debtExtra:120, bufContrib:240, billsPaid:483, ownerPaid:364, balanceDelta:0, jobs:[
+        {name:'Bills',amount:483},{name:'Reserve',amount:240},{name:'Debt extra',amount:120},{name:'Owner pay',amount:364}
+      ], jobsDone:{} },
+    { id:'h_'+now+'_b', amount:912, source:'Freelance design retainers', date:fmtDate(daysAgo(7)), ts: now - 7*86400000,
+      debtExtra:90, bufContrib:182, billsPaid:365, ownerPaid:275, balanceDelta:0, jobs:[
+        {name:'Bills',amount:365},{name:'Reserve',amount:182},{name:'Debt extra',amount:90},{name:'Owner pay',amount:275}
+      ], jobsDone:{} },
+    { id:'h_'+now+'_c', amount:2400, source:'Consulting payouts (Stripe + Venmo)', date:fmtDate(daysAgo(14)), ts: now - 14*86400000,
+      debtExtra:240, bufContrib:480, billsPaid:960, ownerPaid:720, balanceDelta:0, jobs:[
+        {name:'Bills',amount:960},{name:'Reserve',amount:480},{name:'Debt extra',amount:240},{name:'Owner pay',amount:720}
+      ], jobsDone:{} },
+    { id:'h_'+now+'_d', amount:912, source:'Freelance design retainers', date:fmtDate(daysAgo(21)), ts: now - 21*86400000,
+      debtExtra:90, bufContrib:182, billsPaid:365, ownerPaid:275, balanceDelta:0, jobs:[
+        {name:'Bills',amount:365},{name:'Reserve',amount:182},{name:'Debt extra',amount:90},{name:'Owner pay',amount:275}
+      ], jobsDone:{} },
+  ];
+
+  await saveUserData();
+  if (typeof flushSave === 'function') flushSave();
+
+  // Land on the dashboard with everything rendered.
+  document.querySelectorAll('#auth-screen,#onboard-screen,#plan-screen,#score-screen,#more-screen').forEach(el => { if (el) el.style.display = 'none'; });
+  const db = document.getElementById('dashboard-screen');
+  if (db) db.style.display = 'block';
+  document.body.classList.add('app-loaded');
+  if (typeof renderDashboard === 'function') renderDashboard();
+  console.log('[dev] Account seeded. Navigate freely; data persists.');
+};
+
 // Dev helper: jump straight to the onboarding plan-review screen with
 // canned data so the post-Plaid layout can be polished without burning
 // Plaid + Anthropic spend. Call from Safari Web Inspector console:
@@ -14866,25 +14934,25 @@ function _updateDemoButtonLabel(on){
 // tab in the bottom nav.
 window._devPlanReview = function(which) {
   const demoExtras = [
-    { name: 'Ultimate Rewards® ending 0714', balance_estimate: 6846, rate_estimate: 0.26, min_payment: 245, source: 'plaid' },
-    { name: 'Ultimate Rewards® ending 4766', balance_estimate: 8952, rate_estimate: 0.23, min_payment: 256, source: 'plaid' },
-    { name: 'Toyota auto loan',              balance_estimate: null, rate_estimate: null, min_payment: 537, source: 'plaid' },
+    { name: 'Credit card ending 0714',    balance_estimate: 6846, rate_estimate: 0.26, min_payment: 245, source: 'plaid' },
+    { name: 'Credit card ending 4766',    balance_estimate: 8952, rate_estimate: 0.23, min_payment: 256, source: 'plaid' },
+    { name: 'Auto loan',                  balance_estimate: null, rate_estimate: null, min_payment: 537, source: 'plaid' },
   ];
   const demoPlan = {
     income_sources: [
-      { name: 'Airbnb host payouts',                  average_amount: 912 },
-      { name: 'Marketing payments (Stripe + Venmo)',  average_amount: 1207 },
+      { name: 'Freelance design retainers',           average_amount: 912 },
+      { name: 'Consulting payouts (Stripe + Venmo)',  average_amount: 1207 },
     ],
     bills: [
-      { name: 'Planet Home mortgage', amount: 2651.43, due_day_of_month: 22, frequency: 'monthly' },
-      { name: 'USAA Insurance',       amount: 187.20,  due_day_of_month: 4,  frequency: 'monthly' },
-      { name: 'Verizon',              amount: 86.06,   due_day_of_month: 20, frequency: 'monthly' },
-      { name: 'Idaho Power',          amount: 94.70,   due_day_of_month: 16, frequency: 'monthly' },
-      { name: 'Sparklight internet',  amount: 79.65,   due_day_of_month: 9,  frequency: 'monthly' },
-      { name: 'Intermountain Gas',    amount: 31.88,   frequency: 'monthly' },
-      { name: 'City of Nampa',        amount: 177.53,  frequency: 'monthly' },
-      { name: 'Northwestern Mutual',  amount: 48.50,   frequency: 'monthly' },
-      { name: 'Villa Sport',          amount: 19.07,   due_day_of_month: 1,  frequency: 'monthly' },
+      { name: 'Rent',                 amount: 2651.43, due_day_of_month: 22, frequency: 'monthly' },
+      { name: 'Auto insurance',       amount: 187.20,  due_day_of_month: 4,  frequency: 'monthly' },
+      { name: 'Phone bill',           amount: 86.06,   due_day_of_month: 20, frequency: 'monthly' },
+      { name: 'Electric',             amount: 94.70,   due_day_of_month: 16, frequency: 'monthly' },
+      { name: 'Internet',             amount: 79.65,   due_day_of_month: 9,  frequency: 'monthly' },
+      { name: 'Gas',                  amount: 31.88,   frequency: 'monthly' },
+      { name: 'Water + trash',        amount: 177.53,  frequency: 'monthly' },
+      { name: 'Life insurance',       amount: 48.50,   frequency: 'monthly' },
+      { name: 'Gym membership',       amount: 19.07,   due_day_of_month: 1,  frequency: 'monthly' },
       { name: 'ChatGPT (OpenAI)',     amount: 20.00,   due_day_of_month: 19, frequency: 'monthly' },
       { name: 'Spotify',              amount: 12.24,   due_day_of_month: 20, frequency: 'monthly' },
       { name: 'Netflix',              amount: 7.99,    due_day_of_month: 22, frequency: 'monthly' },
@@ -14898,7 +14966,13 @@ window._devPlanReview = function(which) {
     },
     surplus_split: { owner_pct: 30, debt_pct: 20, reserve_pct: 30, free_pct: 20 },
   };
-  const demoCoach = `<p>Paul, I can see two income streams over the past 4 months: weekly Airbnb host payouts averaging about <span class="num">$912</span> and irregular marketing payments via Stripe and Venmo averaging about <span class="num">$1,207</span>. Income swings hard, with your best month at <span class="num">$7,803</span> and your lightest at <span class="num">$1,362</span>, so your Floor-First Budgeting plan leans heavily on building a reserve.</p><p>Your floor runs about <span class="num">$3,249</span> a month in bills, plus <span class="num">25%</span> off the top of every deposit for taxes.</p><p>You also have <span class="num">$1,038</span> in debt minimums on top of that, including two Chase cards and a Toyota loan.</p><span class="closer">Tell me what to change.</span>`;
+  const demoCoach = `Alex, I can see two income streams over the past 4 months: weekly freelance design retainers averaging about $912 and irregular consulting payouts via Stripe and Venmo averaging about $1,207. Income swings hard, with your best month at $7,803 and your lightest at $1,362, so your Floor-First Budgeting plan leans heavily on building a reserve.
+
+Your floor runs about $3,249 a month in bills, plus 25% off the top of every deposit for taxes.
+
+You also have $1,038 in debt minimums on top of that, including two credit cards and an auto loan.
+
+Tell me what to change.`;
 
   // Show onboard-screen, hide everything else
   document.querySelectorAll('#auth-screen,#dashboard-screen,#plan-screen,#score-screen,#more-screen').forEach(el => { if (el) el.style.display = 'none'; });

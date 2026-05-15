@@ -6,7 +6,7 @@ All articles in the taxes cluster bundled into one Google Doc. Pillar first, the
 
 ---
 
-# Article: index
+# Article: cluster-index
 
 ---
 title: "Quarterly Taxes for Self-Employed: The Complete Guide"
@@ -23,6 +23,8 @@ secondary_keywords:
   - self employment tax guide
 cluster: taxes
 page_type: pillar
+youtube_id: "APZCMXbdJpM"
+youtube_uploaded: "2026-05-10"
 internal_links:
   - /taxes/how-much-to-set-aside/
   - /taxes/bad-month-quarterly-taxes/
@@ -251,7 +253,7 @@ You are able to budget inconsistent income.
 
 Able routes a tax percentage off every business deposit automatically. Your tax account fills up in the background while you work. Quarterly payments become a non-event.
 
-Seven days free. Cancel anytime.
+30 days free. Cancel anytime.
 
 **[Start Free Trial](https://becomeable.app/signup)**
 
@@ -481,7 +483,7 @@ You are able to budget inconsistent income.
 
 Able handles the set-aside automatically. You pick your percentage. Every deposit gets split. Your tax account stays funded. Quarterly payments come out of money that was always there.
 
-Seven days free. Cancel anytime.
+30 days free. Cancel anytime.
 
 **[Start Free Trial](https://becomeable.app/signup)**
 
@@ -673,7 +675,7 @@ You are able to budget inconsistent income.
 
 Able automates the set-aside. Every deposit gets split. Your tax account stays full in the background. Quarterlies become a non-event, even after a bad month.
 
-Seven days free. Cancel anytime.
+30 days free. Cancel anytime.
 
 **[Start Free Trial](https://becomeable.app/signup)**
 
@@ -937,7 +939,7 @@ You are able to budget inconsistent income.
 
 Every business deposit gets split automatically. Tax account fills in the background. Deductions reduce what you owe; the setaside handles what you owe after deductions.
 
-Seven days free. Cancel anytime.
+30 days free. Cancel anytime.
 
 **[Start Free Trial](https://becomeable.app/signup)**
 
@@ -1177,7 +1179,7 @@ You are able to budget inconsistent income.
 
 Every business deposit gets routed automatically. A tax percentage moves off the top. When quarterlies or April hits, the money is already there.
 
-Seven days free. Cancel anytime.
+30 days free. Cancel anytime.
 
 **[Start Free Trial](https://becomeable.app/signup)**
 
@@ -1490,7 +1492,7 @@ You are able to budget inconsistent income.
 
 Every deposit routed automatically. Tax account full when it matters.
 
-Seven days free. Cancel anytime.
+30 days free. Cancel anytime.
 
 **[Start Free Trial](https://becomeable.app/signup)**
 
@@ -1706,7 +1708,7 @@ You are able to budget inconsistent income.
 
 Every 1099 deposit gets split automatically. Tax account fills in the background. Quarterly payments become a non-event.
 
-Seven days free. Cancel anytime.
+30 days free. Cancel anytime.
 
 **[Start Free Trial](https://becomeable.app/signup)**
 
@@ -1947,7 +1949,7 @@ You are able to budget inconsistent income.
 
 Platform deposit lands. Tax moves off the top. Quarterlies become a non-event.
 
-Seven days free. Cancel anytime.
+30 days free. Cancel anytime.
 
 **[Start Free Trial](https://becomeable.app/signup)**
 

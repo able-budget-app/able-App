@@ -1724,38 +1724,38 @@ Free for 30 days. $14.99/mo or $129/yr after.`,
   // ─────────────────────────────────────────────────────────
 
   '8|Mon': {
-    // 22 calm-beats-panic · single
-    ig: `Calm beats panic. Specific beats vague.
+    // S04 stat-60-freelancers · single
+    ig: `60% of freelancers worry about managing irregular income.
 
-Most money advice is loud and abstract. "Save more!" "Cut expenses!" "Build wealth!" None of it tells you what to do at 9am Monday with this specific deposit.
+Nearly half wish their pay was more consistent.
+80% couldn't cover a $1,000 surprise.
 
-Specific is the only kind of help that helps.
+Three numbers. One underlying problem.
 
-Free for 30 days. Link in bio.
+Income lands when it lands. Bills don't wait.
 
-#freelancing #1099life #variableincome #budgeting #selfemployed`,
+Built for the way you actually get paid. Free for 30 days.
+Link in bio.
 
-    tt: `Calm beats panic. Specific beats vague.
+#freelancing #1099life #variableincome #budgeting #freelancetok`,
 
-Loud advice never moved a dollar.
+    tt: `60% of freelancers worry about irregular income.
+
+Three numbers, one problem. Income lands when it lands. Bills don't wait.
 
 becomeable.app/get-able
 
-#freelancetok #1099 #moneytok`,
+#freelancetok #1099 #variableincome`,
 
-    li: `Calm beats panic. Specific beats vague.
+    li: `60% of freelancers say they worry about managing irregular income. Nearly half wish their pay was more consistent. About 80% of gig-dependent workers say they couldn't cover a $1,000 surprise expense without borrowing.
 
-Most personal finance content sells the opposite of those two principles. It's loud (panic-toned hooks, "STOP DOING THIS NOW" headlines) and abstract ("save more," "cut expenses," "build wealth").
+Three separate surveys. One underlying problem.
 
-The loudness is the point, engagement metrics reward it. The abstraction is also the point, abstract advice can apply to everyone, which means it can sell to everyone, which means it can scale.
+The shared cause is structural, not personal. Income arrives in deposits, not paychecks. Amounts vary. Schedules slip. Every existing budgeting tool was built around a Friday paycheck of a known amount, and when you don't have that, the system fails.
 
-The cost of loud and abstract is that nothing actionable gets delivered. The viewer feels something briefly, doesn't know what to do at 9am Monday with their specific deposit, scrolls to the next thing.
+The fix is not more discipline. It is a system that bends with the cash flow. Allocate by deposit, not by month. Fund the floor (bills and tax) first, before any dollar gets to vote on dinner. Build a reserve that absorbs slow months. Score reality at the end of the month, not the plan you set at the start.
 
-Calm and specific is the inverse pattern. Quiet voice. Specific answer to a specific question. "Move 30% of this $4,200 deposit to a separate tax account, today, before you do anything else." That's the kind of help that actually changes a number on a balance sheet.
-
-That's the voice we built Able around. Both the product and how we communicate. Calm beats panic. Specific beats vague.
-
-Free for 30 days. $14.99/mo or $129/yr after.`,
+Floor-First Budgeting. Built for the way you actually get paid. Free for 30 days. $14.99/mo or $129/yr after.`,
   },
 
   '8|Tue': {
@@ -2555,43 +2555,39 @@ Free for 30 days. $14.99/mo or $129/yr after.`,
   },
 
   '11|Wed': {
-    // C15 what-able-isnt · carousel
-    ig: `If you're a freelancer, here's what Able doesn't do. (Swipe.)
+    // CS04 confidence-gap · carousel
+    ig: `Only 13% of Americans feel confident about their money.
 
-Not investment advice. Not a credit card. Not another spreadsheet you'll abandon. Not a lecture about lattes.
+77% feel anxious about their finances.
+88% report financial stress in 2026.
+9 in 10 consumers feel financial stress.
 
-Just one thing: split every deposit.
+That's not a discipline gap. It's a system gap.
+
+Calm is a feature. Not a side effect.
 
 Free for 30 days. Link in bio.
 
-#freelancing #1099life #variableincome #budgeting #selfemployed`,
+#financialstress #budgeting #variableincome #1099 #floorfirst`,
 
-    tt: `What Able isn't.
+    tt: `Only 13% feel confident about their money.
 
-Not investments.
-Not a credit card.
-Not another spreadsheet.
-Not a lecture about coffee.
-
-One thing: split every deposit.
+9 in 10 feel financial stress.
+That's a system gap, not a willpower gap.
 
 becomeable.app/get-able
 
-#freelancetok #1099 #variableincome`,
+#moneytok #financialstress #variableincome`,
 
-    li: `Things Able does not do, written out so the scope is clear.
+    li: `Only 13% of Americans say they feel "very good" about their finances. 77% feel anxious about money. 88% report some form of financial stress entering 2026. By PYMNTS' measure, 9 in 10 consumers currently feel financial stress.
 
-Not investment advice. There are tools for that. Able is downstream of investing. It figures out how much is genuinely free to invest each month. The investment decision happens in a different account.
+Those four numbers describe the same population, measured four different ways. They are not measuring a small group of struggling people. They describe the median experience of being an American adult in 2026.
 
-Not a credit card. Not a bank. Not a money-movement product. Able sits on top of whatever banking setup you already have. It doesn't replace the bank. It tells the bank's existing dollars what their job is.
+When 9 in 10 of any population report a feeling, the explanation is not 9 in 10 individual character flaws. The explanation is structural. Something about the environment, the tools, or the system is producing the feeling at scale.
 
-Not another spreadsheet. The maintenance overhead of a spreadsheet is the reason most people abandon them by March. Able does not require maintenance. The split happens automatically on every deposit. There's nothing to update.
+In the case of personal finance, the structural answer is this: the tooling most Americans inherit was designed around income shapes that no longer match how most people get paid. Monthly budgeting assumes a Friday paycheck of a known amount. Around 77 million American adults don't have that.
 
-Not a lecture about discretionary spending. The "cancel your subscriptions, stop buying coffee" framing assumes the leak is luxuries. For variable-income earners, the leak is structural. Deposits sitting in checking with no purpose. Cutting subscriptions doesn't fix it. Routing every deposit to a specific purpose does.
-
-Just one thing: split every deposit. That's the entire scope. Tax bucket. Bills. Reserve. Debt. Free spending. Five jobs assigned the moment the money lands.
-
-The narrowness of the scope is intentional. A tool that does one thing precisely is more useful than a tool that does many things vaguely.
+Calm is a feature of having a system that fits. It is not a side effect of being good with money. Floor-First Budgeting routes every deposit the moment it lands, so the system holds steady even when the cash flow doesn't.
 
 Free for 30 days. $14.99/mo or $129/yr after.`,
   },
@@ -3400,39 +3396,36 @@ Free for 30 days. $14.99/mo or $129/yr after.`,
   },
 
   '14|Fri': {
-    // C24 coach-consultant · carousel
-    links: 'becomeable.app/budgeting/coach-consultant-budget/',
-    ig: `If you're a coach or consultant, here's the budget. (Swipe.)
+    // CS05 freelancer-worry · carousel
+    ig: `60% of freelancers worry about irregular income.
+Nearly half wish their pay was more consistent.
+80% couldn't cover a $1,000 surprise.
 
-Session income looks predictable until a referral drought hits. Insurance delays compound the pain.
+Three numbers. One problem.
 
-Income reserve. Bills paid in dry weeks.
+Income lands when it lands. Bills don't wait.
 
-Free for 30 days. Link in bio.
+Built for the way you actually get paid. Free for 30 days. Link in bio.
 
-#coachlife #coaching #consultant #freelancelife #1099life`,
+#freelancetok #1099life #variableincome #budgeting #creatorlife`,
 
-    tt: `Coach/consultant budget.
+    tt: `60% of freelancers worry about irregular income.
 
-Session income = predictable until it isn't.
-Referral drought = weeks long.
-Insurance delays = predictable friction.
+Income lands when it lands. Bills don't wait.
 
-becomeable.app/budgeting/coach-consultant-budget/
+becomeable.app/get-able
 
-#coachlife #consulting #1099`,
+#freelancetok #1099 #variableincome`,
 
-    li: `How coaches and consultants budget session-based income.
+    li: `Three numbers from three different freelancer-focused surveys, all from the last 18 months. 60% of freelancers worry about managing irregular income. Nearly half wish their pay was more consistent. About 80% of gig-dependent workers cannot cover a $1,000 surprise expense without borrowing.
 
-Session work feels predictable. The schedule is full, sessions are booked weeks out, the rate is set. Right up until it isn't. A few clients pause. Two referrals don't convert. A holiday week breaks the rhythm. Insurance reimbursements delay 60-90 days. The "predictable" income suddenly has gaps.
+The surveys ask different questions. They produce the same picture.
 
-The fix is treating predictability as a default-on assumption that's regularly wrong. Plan as if a referral drought is always two months out. The reserve covers a 4-6 week dry stretch without breaking the bills. Tax bucket gets funded on every deposit because session income is taxable income.
+Income arrives when it arrives, in amounts that vary. Bills arrive on a schedule, in amounts that don't. The mismatch between those two timelines is the part that breaks people, and no amount of "be more disciplined" closes that gap.
 
-The other piece coaches frequently miss: the relationship between client volume and personal energy. Taking any client to keep the cash flowing creates compounding resentment that makes the work worse and the income lumpier. A reserve big enough to say no to the wrong client is a business asset, not just a personal one.
+The gap closes structurally. A reserve account that absorbs slow months. A tax bucket funded as a percentage of every deposit. A pay-yourself number that comes out reliably regardless of what the deposit looked like. Free spending that is what remains after the four jobs above are funded, not the residual after spending.
 
-Income reserve. Bills paid in dry weeks. Free to say no.
-
-Free for 30 days. $14.99/mo or $129/yr after.`,
+This is Floor-First Budgeting. Built for the way you actually get paid. Free for 30 days. $14.99/mo or $129/yr after.`,
   },
 
   '14|Sat': {
@@ -3995,41 +3988,39 @@ Free for 30 days. $14.99/mo or $129/yr after.`,
   // ─────────────────────────────────────────────────────────
 
   '17|Mon': {
-    // 32 irs-takes · single
-    links: 'becomeable.app/taxes/how-much-to-set-aside/',
-    ig: `If you're 1099, here's the math.
+    // S05 stat-91-worry-budget · single
+    ig: `91.8% of Americans worry about their budget.
 
-A $4,000 deposit feels like $4,000.
+Only about a third use one consistently.
 
-$1,200 belongs to the IRS.
+The gap between worry and working system is the size of the problem.
 
-The 30% rule isn't tax advice. It's a structural reality. Move it the moment the deposit clears.
+Most budgeting tools were built for someone with a paycheck. If your income lands in deposits, none of that fits.
 
-Free for 30 days. Link in bio.
+Built for inconsistent income. Free for 30 days. Link in bio.
 
-#1099life #freelancing #selfemployed #taxes #variableincome`,
+#budgeting #variableincome #1099life #freelancetok #floorfirst`,
 
-    tt: `A $4,000 deposit feels like $4,000.
+    tt: `91.8% of Americans worry about their budget.
+Only a third use one consistently.
 
-$1,200 belongs to the IRS.
+That gap is the size of the problem.
 
-The 30% rule.
+becomeable.app/get-able
 
-becomeable.app/taxes/how-much-to-set-aside/
+#budgettok #1099 #moneytok`,
 
-#freelancetok #1099 #taxtok`,
+    li: `91.8% of Americans worry about their budget to some degree. Only about one-third use a formal budgeting method consistently.
 
-    li: `A $4,000 deposit feels like $4,000. $1,200 of it belongs to the IRS.
+That gap between worry and working system is the size of the problem. The intent is there. The execution is not. The category has been failing 60% of its addressable market for thirty years and treating it as a user problem rather than a tool problem.
 
-That sentence captures the most common 1099 financial mistake. The deposit clears, the brain registers the full amount as available money, and discretionary decisions get made against the pre-tax balance. By the time April arrives, the tax money has been spent in a thousand small unmemorable ways.
+Most budgeting tools were built around a specific income shape: a steady paycheck of a predictable amount on a predictable schedule. The whole shape of the tool depends on that assumption.
 
-The 30% rule is structural, not advisory. It's the floor for most 1099 earners. Self-employment tax is 15.3% by itself. Federal income tax is another 12-22% depending on bracket. State tax adds 0-10%. Compounded, 30% is conservative for most. Higher earners often need 35-40%.
+77 million American adults now report income that varies month to month. For them, monthly allocation is the wrong unit of analysis. The deposit is.
 
-The fix is mechanical. Route 30% to a separate account the moment a deposit clears. Don't let it sit in checking even briefly. Don't trust yourself to remember it later. The money was never yours. Treat it as if the IRS sent the deposit pre-deducted. Spending what's left feels different than spending the whole amount.
+Floor-First Budgeting allocates per deposit. Every deposit fills the floor (bills and tax) before any dollar gets to vote on dinner. The reserve absorbs slow months. The pay-yourself number is steady regardless of what the deposit looked like.
 
-April becomes paperwork instead of a reckoning. The bucket that's been filling all year is what pays the bill.
-
-Free for 30 days. $14.99/mo or $129/yr after.`,
+That is the tooling 77 million people have been missing. Free for 30 days. $14.99/mo or $129/yr after.`,
   },
 
   '17|Tue': {
@@ -4725,38 +4716,42 @@ Free for 30 days. $14.99/mo or $129/yr after.`,
   // ─────────────────────────────────────────────────────────
 
   '20|Mon': {
-    // 51 three-months-slow · single
-    ig: `If you're a freelancer, here's the question.
+    // S01 stat-77-million · single (Reality Check arc kickoff)
+    ig: `77 million Americans get paid different amounts every month.
 
-Three months of slow. What does that actually cost?
+That's about 1 in 3 working adults.
+Source: Federal Reserve.
 
-Without a reserve, three slow months is a survival event. With a reserve, three slow months is a normal month repeated three times. The math is the same. The system underneath is different.
+Every budgeting app was built for the other 2.
+Steady paycheck. Steady Friday. Steady amount.
 
-Free for 30 days. Link in bio.
+If your income lands in deposits, none of that fits.
 
-#freelancing #1099life #variableincome #budgeting #freelancelife`,
+Built for the 77 million. Free for 30 days. Link in bio.
 
-    tt: `Three months of slow.
+#variableincome #1099life #freelancetok #budgeting #floorfirst`,
 
-What does that actually cost?
+    tt: `77 million Americans get paid different amounts every month.
+
+1 in 3 working adults. Source: Federal Reserve.
+
+Every budgeting app was built for the other 2.
 
 becomeable.app/get-able
 
-#freelancetok #1099 #variableincome`,
+#variableincome #1099 #freelancetok`,
 
-    li: `Three months of slow. What does that actually cost?
+    li: `Welcome to Reality Check week. The next three days are about the actual numbers behind why the current personal-finance toolkit fails so many people. Day 1 is the headline number.
 
-The honest answer depends entirely on whether the user has a reserve. With a 3-month reserve in place, three slow months is a routine drawdown event. Bills pay, tax bucket continues to fund, debt continues to decline, the user takes their normal monthly paycheck. The reserve refills when income returns to normal.
+77 million American adults get paid different amounts every month. The source is the Federal Reserve's *Survey of Household Economics and Decisionmaking*, which found that nearly 3 in 10 adults report income that varies month to month. Applied to the ~258 million US adult population, that is approximately 77 million people.
 
-Without a reserve, three slow months is a survival event. Bills get prioritized against rent, debt minimums get pushed to credit, tax money gets raided for living expenses, the user lives on credit cards and high-cost debt. The recovery from three slow months without a reserve takes 6-12 months of normal income afterward, because the debt and missed contributions compound.
+That is not a fringe category. It is roughly 1 in 3 working-age adults in the country. And the trend is growing, not shrinking. The full-time independent workforce alone more than doubled between 2020 and 2024.
 
-Same three slow months. Different cost by an order of magnitude. The variable was the reserve.
+Every legacy budgeting tool, from the spreadsheet template to the zero-based app, was built around a different assumption. Steady paycheck. Steady Friday. Steady amount. If your income lands in deposits instead of paychecks, none of that fits, and the entire category has been failing you on a structural level for most of its history.
 
-Building the reserve is the highest-leverage move most variable-income earners can make. It compounds in the right direction. Every additional month of reserve reduces the cost of any future slow stretch. The math works the same way debt math works, but in reverse.
+Floor-First Budgeting is the toolkit built for the 77 million. Free for 30 days. $14.99/mo or $129/yr after.
 
-Three months of slow is the right scenario to plan for. It's common enough to be likely, severe enough to break weak systems, recoverable with a working one.
-
-Free for 30 days. $14.99/mo or $129/yr after.`,
+Tomorrow: what the 87% number actually means.`,
   },
 
   '20|Tue': {
@@ -4801,44 +4796,40 @@ Free for 30 days. $14.99/mo or $129/yr after.`,
   },
 
   '20|Wed': {
-    // C31 home-office · carousel
-    links: 'becomeable.app/taxes/home-office-deduction/',
-    ig: `If you work from home, here's the home office deduction. (Swipe.)
+    // CS01 stat-77-million-explained · carousel (Reality Check arc day 2)
+    ig: `77 million Americans get paid differently every month. (Swipe.)
 
-Two methods: simplified ($5 per sq ft) or actual (document everything).
+1 in 3 working adults.
+Source: Federal Reserve.
 
-Run both. Take the bigger.
+Every budgeting app was built for the other 2.
+
+The fix isn't more discipline. It's a system built for the 77 million.
 
 Free for 30 days. Link in bio.
 
-#homeoffice #1099life #freelancing #remotework #taxes`,
+#variableincome #1099life #freelancetok #floorfirst #budgeting`,
 
-    tt: `Home office deduction.
+    tt: `77 million Americans get paid differently every month.
 
-Simplified: $5/sq ft.
-Actual: document everything.
+1 in 3 working adults. Source: Federal Reserve.
+The fix isn't more discipline. It's a system built for them.
 
-Run both. Take the bigger.
+becomeable.app/get-able
 
-becomeable.app/taxes/home-office-deduction/
+#variableincome #1099 #freelancetok`,
 
-#freelancetok #1099 #taxtok`,
+    li: `The 77 million number deserves a closer look than the headline allows. Here are the four facts inside it.
 
-    li: `The home office deduction, in plain language.
+First, the source. The number comes from the Federal Reserve's *Survey of Household Economics and Decisionmaking* (SHED) for 2022, the most recent release covering month-to-month income variability. The Fed found that nearly 3 in 10 American adults report income that varies from month to month. Applied to the ~258M adult population, that is approximately 77 million.
 
-If you use part of your home regularly and exclusively for business, you may qualify for the home office deduction. The "regular and exclusive" test is strict. The space has to be primarily a workspace, not a guest room that doubles as an office.
+Second, the breakdown by income source. Among wage earners specifically, 33% report variable monthly income. Among those on non-labor income like Social Security or pensions, only 13% do. The volatility is a labor-market phenomenon, not a retiree-noise effect.
 
-Two methods to calculate the deduction:
+Third, the measured reality. Where the Fed asks people to self-report, JPMorgan Chase Institute measured actual bank-account data and found that 89% of US households experienced a month-to-month income change of at least 5%. The median household saw a 36% swing.
 
-Simplified method: $5 per square foot of qualified home office space, up to 300 square feet. Maximum deduction is $1,500. Quick math, low documentation overhead. Good for most freelancers with a small dedicated office.
+Fourth, the structural implication. Every legacy budgeting tool assumes a steady paycheck. 77 million adults don't have one. The category has been failing a third of its market by design.
 
-Actual expenses method: a percentage of actual home expenses (mortgage interest or rent, utilities, insurance, repairs, depreciation), based on the percentage of total square footage your office occupies. Higher documentation burden. Often produces a bigger deduction, especially in higher-cost-of-living areas.
-
-The right approach: run both calculations. Take whichever produces the bigger deduction in any given year. Most tax software will do this comparison automatically. Some years simplified wins, some years actual wins.
-
-Documentation matters either way. Photos of the space, square footage measurement, records of business use. The IRS audits home office deductions more aggressively than most categories.
-
-Free for 30 days. $14.99/mo or $129/yr after.`,
+Floor-First Budgeting is built for that third. Allocate by deposit, not by month. Fund the floor (bills + tax) first. Build a reserve. Score reality, not the plan. Free for 30 days. $14.99/mo or $129/yr after.`,
   },
 
   '20|Thu': {
@@ -4912,25 +4903,35 @@ Free for 30 days. $14.99/mo or $129/yr after.`,
   },
 
   '20|Sat': {
-    // R53 reel-product-more-learn · more-learn clip · IG+TT only
-    ig: `Built-in lessons.
+    // RS01 stat-77-million-reel · reel (Reality Check arc day 3)
+    ig: `77 million Americans get paid differently every month.
 
-Not a generic finance app's "tips." Lessons written for variable income.
+Every budgeting app was built for the other 2.
 
-Quarterlies. Reserves. Home office. Schedule C.
-The stuff a steady-paycheck guide never covers.
+Floor-First Budgeting was built for them.
 
-Free for 30 days.
-Link in bio.
+Free for 30 days. Link in bio.
 
-#freelancing #variableincome #1099 #financialliteracy #selfemployed`,
+#variableincome #1099life #floorfirst #budgeting #freelancetok`,
 
-    tt: `Built-in lessons. For variable income.
+    tt: `77 million.
 
-The stuff a steady-paycheck guide never covers.
+Every budgeting app was built for the other 2.
+Floor-First Budgeting was built for them.
+
 becomeable.app/get-able
 
-#freelancetok #1099 #moneytok`,
+#variableincome #1099 #moneytok`,
+
+    li: `77 million Americans get paid in deposits, not paychecks.
+
+Every budgeting app on the market was built for the other 2 in 3 of the population, the ones who get a Friday paycheck of a known amount. Steady. Predictable. Allocable on the 1st.
+
+For the 77 million, that whole assumption breaks. Income arrives when it arrives. Amounts vary. Months underdeliver. Months overdeliver. The annual total works out, but the monthly experience is anything but smooth.
+
+Floor-First Budgeting was built for them. Every deposit fills the floor (bills + tax) first. The reserve absorbs slow months. The pay-yourself number is steady regardless of what the deposit looked like. Free spending is what is left after the four jobs above are funded.
+
+Free for 30 days. $14.99/mo or $129/yr after.`,
   },
 
   '20|Sun': {
@@ -4971,36 +4972,46 @@ Free for 30 days. $14.99/mo or $129/yr after.`,
   // ─────────────────────────────────────────────────────────
 
   '21|Mon': {
-    // 17 budgeting-failing · single
-    ig: `If you're a freelancer, here's the reframe.
+    // S02 stat-87-struggle · single (Reality Check arc continues)
+    ig: `87% of Americans struggle to manage their spending.
 
-You're not failing at budgeting. Budgeting is failing you.
+Not a discipline problem.
+A structure problem.
 
-Generic budgeting tools were built around a steady paycheck. Variable income breaks the assumptions. The failure isn't yours.
+When 87% fail, it's not 87 individual willpower problems. It's a category gap.
 
-Free for 30 days. Link in bio.
+The tooling was built for a workforce that no longer exists.
 
-#freelancing #1099life #variableincome #budgeting #moneymindset`,
+Built for the way you actually get paid. Free for 30 days. Link in bio.
 
-    tt: `Not failing at budgeting.
+#budgeting #variableincome #1099life #floorfirst #freelancetok`,
 
-Budgeting is failing you.
+    tt: `87% of Americans struggle to manage spending.
+
+Not a discipline problem. A structure problem.
+The tooling was built for a workforce that no longer exists.
 
 becomeable.app/get-able
 
-#freelancetok #1099 #budgeting`,
+#budgettok #1099 #moneytok`,
 
-    li: `You're not failing at budgeting. Budgeting is failing you.
+    li: `Day 2 of Reality Check week. Yesterday: 77 million. Today: 87%.
 
-Most variable-income earners have spent years feeling like they can't budget. Apps don't stick. Spreadsheets get abandoned. Goals get missed. The pattern is so consistent it produces a felt identity: "I'm bad at budgeting."
+LendingTree's January 2026 Financial Outlook Survey found that 87% of Americans say they struggled to manage their spending in 2025. The same survey found that 91.8% worry about their budget to some degree, while only about one-third use a formal budgeting method consistently.
 
-But the cause isn't user failure. It's tool failure. Generic budgeting tools were designed around a single income shape: regular paychecks on a predictable schedule. That shape produces specific defaults. Monthly category allocation, fixed savings goals, "this month vs. last month" comparisons. All of those defaults misfire when income is variable.
+The instinct on reading that 87% number is to conclude that most people are bad with money. That conclusion is wrong.
 
-So the user follows generic instructions. The instructions produce wrong answers. The user concludes the problem is theirs. The conclusion is wrong. The instructions were generic, the income wasn't.
+The same population that produces the 87% also produces these numbers: 69% plan to start tracking their spending, 59% plan to learn more about managing money, 77% have already changed how they manage their finances in response to economic conditions, and 83% say they are focused on what they can control financially.
 
-A tool that fits variable income produces different results without changing the user. Same person, different toolkit. The "failing at budgeting" identity dissolves when the budgeting actually works.
+That is not a portrait of indifference. It is effort meeting friction.
 
-Free for 30 days. $14.99/mo or $129/yr after.`,
+When 87% of any population fails at the same task, the explanation is rarely that 87% of people share the same individual flaw. The explanation is structural. The tool, the system, the assumption doesn't fit.
+
+For personal finance, the structural mismatch is between the monthly-paycheck assumption that the legacy toolkit was built on, and the deposit-based reality that more than a third of American workers now live in.
+
+Floor-First Budgeting fits the deposit-based reality. Free for 30 days. $14.99/mo or $129/yr after.
+
+Tomorrow: the confidence gap.`,
   },
 
   '21|Tue': {
@@ -5042,43 +5053,35 @@ Free for 30 days. $14.99/mo or $129/yr after.`,
   },
 
   '21|Wed': {
-    // C17 freelancer-budget · carousel
-    links: 'becomeable.app/budgeting/freelancer-budget/',
-    ig: `If you're a freelancer, here's the budget. (Swipe.)
+    // CS02 stat-87-struggle-explained · carousel
+    ig: `87% of Americans struggle to manage their spending. (Swipe.)
 
-Last month: $7,400. Month before: $3,100. Budgeting your best month leaves you broke. It's not discipline. It's fear of the empty week.
+91.8% worry about their budget.
+Only 1 in 3 has a system that works.
 
-Tax. Bills. Reserve. Debt. Free.
+When 87% fail, it's not a willpower gap. It's a category gap.
 
-Free for 30 days. Link in bio.
+Built for the way you actually get paid. Free for 30 days. Link in bio.
 
-#freelancing #1099life #variableincome #budgeting #freelancelife`,
+#budgeting #variableincome #1099life #floorfirst #freelancetok`,
 
-    tt: `How freelancers budget variable income.
+    tt: `87% struggle. 91.8% worry. Only 1 in 3 has a system that works.
 
-Last month: $7,400.
-Month before: $3,100.
-Best-month budget = broke.
+When 87% fail, the tool is the problem.
 
-Tax. Bills. Reserve. Debt. Free.
+becomeable.app/get-able
 
-becomeable.app/budgeting/freelancer-budget/
+#budgettok #1099 #moneytok`,
 
-#freelancetok #1099 #variableincome`,
+    li: `87% of Americans say they struggled to manage their spending in 2025 (LendingTree, January 2026). 91.8% worry about their budget. Only about one-third use a formal budgeting method consistently. 34% of US adults (about 88 million) say they are struggling or in crisis with their finances (Ramsey, Q4 2025).
 
-    li: `How a freelancer budgets variable income, in plain language.
+If you read those numbers as a portrait of individual character, you reach the wrong conclusion. They describe a system failure at scale.
 
-The numbers vary wildly. Last month: $7,400. Month before: $3,100. The trap is budgeting your best month. Committing to spending levels that match peak income. Then a slow month hits, and you're already over-extended on commitments the slow month can't cover.
+The 87% who struggle are not lazy. They are working with a toolkit that was designed around a different economy. Steady paychecks. Predictable schedules. Monthly allocation against a known total. Those assumptions held for the bulk of the 20th-century American workforce. They do not hold for the 70 million Americans who now participate in the gig economy, the 27.7 million who work full-time as independents, the 33% of wage earners with variable monthly income, or any of the deposit-based workers who get paid by invoice, commission, or platform payout.
 
-The other trap is budgeting your worst month. Under-living so dramatically that the slow months feel survivable. That works for a while, but it's punishing during good months when you've structurally restricted yourself.
+When the assumptions don't hold, the tooling stops working, and the people using the tooling get blamed for the failure.
 
-The variable-income answer isn't to pick a month and budget against it. It's to budget against a flow, not a month. Every deposit gets split into the same five jobs in the same order:
-
-Tax (30% off the top). Bills (this cycle's commitments). Reserve (for slow months). Debt (scheduled payments). Free (what's left).
-
-Big deposits fund all five aggressively. Slow deposits still fund all five, just at smaller amounts. The reserve does the work of bridging between the two. The user pays themselves a steady monthly paycheck from the reserve, and that paycheck doesn't change when the deposits do.
-
-It's not discipline. It's structure. The structure handles what discipline can't.
+Floor-First Budgeting drops the monthly-paycheck assumption and rebuilds around the deposit. Every deposit fills the floor (bills + tax) first. The reserve absorbs lumpiness. The pay-yourself number stays steady. Free spending is what is left after the four jobs above are funded.
 
 Free for 30 days. $14.99/mo or $129/yr after.`,
   },
@@ -5158,25 +5161,34 @@ Free for 30 days. $14.99/mo or $129/yr after.`,
   },
 
   '21|Sat': {
-    // R47 reel-product-debt-snowball · plan-debt clip · IG+TT only
-    ig: `Highest APR first.
+    // RS02 stat-87-struggle-reel · reel
+    ig: `87% of Americans struggle to manage their spending.
 
-Watch it drop.
+91.8% worry. Only 1 in 3 has a system that works.
 
-Same income, different month. Debt shrinks instead of compounding.
-Not a sprint. A schedule that bends with how you actually get paid.
+When 87% fail, the tool is the problem.
 
-Free for 30 days. Card required.
-Link in bio.
+Free for 30 days. Link in bio.
 
-#debtfree #avalanche #variableincome #freelancing #1099`,
+#budgeting #variableincome #1099life #floorfirst #freelancetok`,
 
-    tt: `Highest APR first. Watch it drop.
+    tt: `87% struggle.
+91.8% worry.
+Only 1 in 3 has a system that works.
 
-A schedule that bends with variable income.
+The tool is the problem.
+
 becomeable.app/get-able
 
-#debtfreejourney #freelancetok #moneytok`,
+#budgettok #1099 #moneytok`,
+
+    li: `Three numbers. One conclusion.
+
+87% of Americans struggle to manage their spending. 91.8% worry about their budget. Only about a third use a formal budgeting method consistently.
+
+When 87% of any population fails at the same task, it is not 87 individual willpower problems. It is a structure problem. The tooling was built for a workforce that no longer exists.
+
+Floor-First Budgeting fits the workforce that does exist. Built for the way you actually get paid. Free for 30 days. $14.99/mo or $129/yr after.`,
   },
 
   '21|Sun': {
@@ -5217,36 +5229,41 @@ Free for 30 days. $14.99/mo or $129/yr after.`,
   // ─────────────────────────────────────────────────────────
 
   '22|Mon': {
-    // 46 mint-replacement · single
-    ig: `If you used Mint, here's the catch.
+    // S03 stat-only-13-confident · single (Reality Check finale)
+    ig: `Only 13% of Americans feel confident about their money.
 
-Coming from Mint? The replacement still assumes a paycheck.
+That's the gap.
 
-Most "Mint alternatives" inherited Mint's defaults. Same paycheck-shaped tool with a different logo. Variable income breaks all of them the same way.
+The 87% are not failing at willpower. They're missing a structure that fits.
 
-Free for 30 days. Link in bio.
+The 13% who feel confident are operating with one.
 
-#freelancing #1099life #variableincome #budgeting #personalfinance`,
+That's what Able is. Free for 30 days. Link in bio.
 
-    tt: `Coming from Mint?
+#budgeting #financialconfidence #variableincome #1099life #floorfirst`,
 
-The replacement still assumes a paycheck.
+    tt: `Only 13% of Americans feel confident about money.
+
+The 87% aren't failing. They're missing a structure that fits.
+The 13% have one.
 
 becomeable.app/get-able
 
-#freelancetok #1099 #variableincome`,
+#moneytok #budgettok #1099`,
 
-    li: `Coming from Mint? The replacement still assumes a paycheck.
+    li: `Reality Check week, day 3. Yesterday: 87%. Today: the inverse.
 
-When Mint shut down, the budgeting app market filled with alternatives. Most of them inherited Mint's core defaults: monthly category allocation, "this month vs. last month" comparisons, savings goals based on a baseline, automatic transaction categorization that assumes regular paychecks.
+Only 13% of Americans say they feel "very good" about their finances. About 41% feel somewhat good or better. The remaining 6 in 10 feel shaky or worse.
 
-The defaults aren't wrong for users with regular paychecks. They're wrong for variable income. Switching from Mint to a Mint-shaped alternative produces the same friction with a different logo. The shape of the tool didn't change.
+The 87% who struggle and the 13% who feel confident are not separated by 87 individual willpower failings and 13 individual successes. They are separated by structure.
 
-What changed for variable-income earners isn't who shut down. It's whether the available tools fit the income shape. Most still don't. The Mint-replacement market is still mostly paycheck-shaped.
+The 13% who feel confident are usually operating with: a clearly defined floor (bills + tax) that fills before anything else; a reserve with at least one month of floor already stored, so slow months don't trigger crisis; a steady pay-yourself number that comes out regardless of what the month did; a tax account funded as a percentage of every deposit; and a free-spending number that is what is left after the four above, not the residual after spending.
 
-A tool built specifically for variable income makes different default assumptions. Income arrives lumpy. Allocation happens at deposit, not at month-start. Buckets are percentage-driven. A reserve sits between income and bills. None of those defaults match the Mint inheritance.
+Once that structure is in place, the discipline and literacy gaps stop costing money. The structure does the work the rules used to require.
 
-Free for 30 days. $14.99/mo or $129/yr after.`,
+That is the entire mechanism behind Floor-First Budgeting and the Able app. Build the structure once. Let it run.
+
+Free for 30 days. $14.99/mo or $129/yr after. Reality Check week closes today.`,
   },
 
   '22|Tue': {
@@ -5285,39 +5302,46 @@ Free for 30 days. $14.99/mo or $129/yr after.`,
   },
 
   '22|Wed': {
-    // C35 credit-score · carousel
-    ig: `If you have variable income, here's your credit in 6 slides. (Swipe.)
+    // CS03 stat-five-numbers · carousel
+    ig: `5 numbers that explain your finances. (Swipe.)
 
-Two factors dominate. Payment history (35%). Utilization (30%, keep below 10%).
+77M get paid differently each month.
+89% see income swings.
+60% of freelancers worry about pay.
+Only 13% feel confident.
+87% struggle with spending.
 
-Pay balances down: 30 to 60 points in 30 days.
+This is a structure problem. Not a willpower one.
 
 Free for 30 days. Link in bio.
 
-#1099life #freelancing #creditscore #personalfinance #variableincome`,
+#budgeting #variableincome #1099life #floorfirst #freelancetok`,
 
-    tt: `Credit score in 6 slides.
+    tt: `5 numbers that explain your finances.
 
-Payment history: 35%.
-Utilization: 30%, keep below 10%.
+77M paid differently. 89% see swings. 60% worry. 13% feel confident. 87% struggle.
 
-Pay balances down: 30-60 pts in 30 days.
+It's a structure problem.
 
 becomeable.app/get-able
 
-#freelancetok #1099 #creditscore`,
+#budgettok #1099 #moneytok`,
 
-    li: `Improving your credit score, the variable-income version.
+    li: `Five numbers that, together, describe the structural failure of the personal-finance category.
 
-Two factors dominate the score. Payment history is 35%. Credit utilization is 30%. Together they're 65% of the calculation. The other factors, credit age, new credit, credit mix, are smaller and slower to move.
+1. 77 million American adults get paid different amounts every month (Federal Reserve SHED 2022).
+2. 89% of US households see month-to-month income changes of at least 5% (JPMorgan Chase Institute, measured from actual bank-account data).
+3. 60% of freelancers worry about managing irregular income (Remote freelancer survey).
+4. Only 13% of Americans feel very good about their finances (Capital One Mind Over Money).
+5. 87% of Americans struggled to manage their spending in 2025 (LendingTree, January 2026).
 
-For variable-income earners, the payment history factor is where most of the volatility comes from. Slow months can mean missed payments. Missed payments tank the score for years. The reserve fixes this structurally. Once the reserve covers minimums on slow months, payment history stops being volatile. Every payment hits on time, every month, regardless of income.
+None of these numbers, alone, is shocking. Together, they tell a coherent story.
 
-Credit utilization is the faster lever. Most scoring models penalize high utilization (above 30%) and reward low utilization (below 10%). Paying balances down from a high utilization to below 10% can move the score 30-60 points in a single billing cycle. This is the highest-leverage move available for users with high credit card balances.
+The story is not that Americans are bad with money. It is that the tools were designed around an income shape (steady paycheck, fixed Friday) that no longer matches how most workers get paid, and the people getting paid differently have been the most poorly served.
 
-The variable-income-specific advice: automate everything. Auto-pay minimums. Auto-pay statement balance if cash flow allows. Never miss a payment due to attention drift. The reserve makes this automation reliable.
+The fix is structural. Move from monthly allocation to per-deposit allocation. Fund the floor (bills + tax) before any dollar gets to vote on dinner. Build a reserve. Score reality at the end of the month, not the plan you wrote at the start.
 
-Free for 30 days. $14.99/mo or $129/yr after.`,
+Floor-First Budgeting. Built for the way you actually get paid. Free for 30 days. $14.99/mo or $129/yr after.`,
   },
 
   '22|Thu': {
@@ -5387,25 +5411,40 @@ Free for 30 days. $14.99/mo or $129/yr after.`,
   },
 
   '22|Sat': {
-    // R35 reel-business-moment · IG+TT only
-    ig: `Revenue up. Owner pay flat.
+    // RS03 stat-volatility-every-bracket-reel · reel (Reality Check closer)
+    ig: `Volatility doesn't care what you earn.
 
-Because every deposit had someone else's purpose.
+20.6% of households over $150K live paycheck to paycheck.
+5.6M independents earn over $100K. Their income still swings.
 
-Set an owner-pay percent. Every deposit honors it.
-Pay yourself automatically. Boring is right.
+Volatility isn't low income. It needs a different toolkit.
 
-Free for 30 days.
-Link in bio.
+Floor-First Budgeting. Free for 30 days. Link in bio.
 
-#smallbusiness #ownership #variableincome #payyourselffirst #budgeting`,
+#variableincome #1099life #floorfirst #budgeting #freelancetok`,
 
-    tt: `Revenue up. Owner pay flat.
+    tt: `Volatility doesn't care what you earn.
 
-Set an owner-pay percent. Every deposit honors it.
+20.6% of $150K+ households live paycheck-to-paycheck.
+Volatility ≠ low income. Volatility = needs a different toolkit.
+
 becomeable.app/get-able
 
-#smallbusinesstok #ownerpay #moneytok`,
+#variableincome #1099 #moneytok`,
+
+    li: `Closing Reality Check week with the number that surprises people most.
+
+20.6% of US households earning over $150,000 a year live paycheck to paycheck (LendEDU). 5.6 million independent workers earn over $100,000 annually (MBO Partners). Their income still swings month to month, often dramatically.
+
+Income volatility is not the same thing as low income. They are different problems that need different tools, and conflating them has done real damage to the public conversation about personal finance.
+
+Low income needs higher income. The fix is more money. Volatility needs a different toolkit. The fix is structure: a reserve that absorbs slow months, a tax bucket on every deposit, a steady pay-yourself number that holds regardless of what the deposit looked like.
+
+Many of the people most affected by volatility have plenty of money on an annual basis. What they don't have is a monthly experience that matches the annual total. Floor-First Budgeting fixes that. Same income. Different feeling.
+
+Free for 30 days. $14.99/mo or $129/yr after.
+
+Reality Check week closes. The next deposit begins.`,
   },
 
   '22|Sun': {
@@ -5922,34 +5961,38 @@ Free for 30 days. $14.99/mo or $129/yr after.`,
   // ─────────────────────────────────────────────────────────
 
   '25|Mon': {
-    // 08 calm-feature · single
-    ig: `If you're a freelancer, here's the design philosophy.
+    // S06 stat-89-month-swings · single
+    ig: `89% of US households see their income swing every month.
 
-Calm is a feature. Not a side effect.
+Median swing: 36%. Up or down.
 
-Most fintech optimizes for engagement. Able optimizes for calm. The fewer minutes you spend in it, the better it's doing its job.
+A third of your income moves every month. A monthly budget doesn't survive that.
 
-Free for 30 days. Link in bio.
+A per-deposit system does.
 
-#freelancing #1099life #variableincome #moneymindset #personalfinance`,
+Every deposit, already sorted. Free for 30 days. Link in bio.
 
-    tt: `Calm is a feature.
+#variableincome #1099life #budgeting #floorfirst #moneytok`,
 
-Not a side effect.
+    tt: `89% of households see their income swing every month.
+Median swing: 36%.
+
+A monthly budget doesn't survive that.
+A per-deposit system does.
 
 becomeable.app/get-able
 
-#freelancetok #1099 #moneymindset`,
+#variableincome #1099 #moneytok`,
 
-    li: `Calm is a feature. Not a side effect.
+    li: `89% of US households experienced month-to-month income changes of at least 5% in JPMorgan Chase Institute's bank-account-data study. The median household saw a 36% swing month to month.
 
-That's the design philosophy in five words. Most fintech apps optimize for engagement. Streaks, notifications, gamified goals, "insights" that drive opens. The underlying business model rewards engagement. Engagement is the product.
+Those two numbers deserve a pause. Almost every American household sees its income move monthly. The typical household sees a third of its monthly income come or go.
 
-Able optimizes for calm. The point is for you to open it less, not more. Open it once when a deposit clears, watch the split happen, close it. That's the loop. The fewer minutes you spend in the app, the better the app is doing its job.
+This is not the popular narrative about a small population of "gig workers" with unstable pay. This is the measured reality across every checking account JPMorgan looked at. It includes salaried workers (extra paychecks in 5-Friday months, tax refunds, year-end bonuses). It includes hourly workers with variable schedules. It includes commission earners. It includes freelancers. It includes everybody.
 
-The reason this is the right pattern for variable income specifically: the income condition is already cognitively expensive. Wondering whether the tax bucket has the right amount, whether bills will clear, whether a slow month is going to break something. All of that is already burning attention. The right tool reduces attention spent on money, not increases it.
+If 89% of households are affected and the typical swing is 36%, then any budgeting system that assumes a steady monthly income is, by design, going to fail to fit reality 89% of the time.
 
-Calm isn't a side effect of the system working. It's the system's primary output. The bucket math, the auto-splits, the boring reliable execution. All of it produces calm by design. The features are calm-producing. Same money, different felt experience.
+Floor-First Budgeting drops the steady-income assumption. Every deposit, whatever the size, gets allocated the moment it lands. The floor (bills + tax) fills first. The reserve absorbs the variance. The pay-yourself number stays steady regardless of what the deposit looked like.
 
 Free for 30 days. $14.99/mo or $129/yr after.`,
   },
@@ -6613,23 +6656,42 @@ becomeable.app/get-able
 #1099 #taxes #freelancetok`,
   },
   '29|Wed': {
-    // C31 home-office carousel REUSE
-    ig: `Home office, the simplified method.
+    // CS06 stat-paycheck-brackets · carousel
+    ig: `53% of Americans live paycheck to paycheck. (Swipe.)
 
-$5 per sq ft. Up to 300 sq ft. Up to $1,500.
+72.8% of those earning under $50K.
+Even 20.6% of those earning over $150K.
 
-No measurements. No depreciation tables. No receipts for the carpet. Most freelancers should just take this.
+Paycheck-to-paycheck is not an income problem. It's a structure problem.
 
-Swipe →
-Link in bio.
+Earn more without a system? You leak more.
 
-#homeoffice #scheduleC #1099 #taxes #freelancing`,
-    tt: `Home office, simplified.
+Free for 30 days. Link in bio.
 
-$5/sqft. Up to 300 sqft. Up to $1,500.
+#paycheckpaycheck #budgeting #variableincome #floorfirst #1099life`,
+
+    tt: `53% live paycheck to paycheck. Even 20.6% of $150K+ households.
+
+It's not an income problem. It's a structure problem.
+Earn more without a system? You leak more.
+
 becomeable.app/get-able
 
-#scheduleC #homeoffice #1099 #freelancetok`,
+#moneytok #budgettok #1099`,
+
+    li: `53% of Americans self-report living paycheck to paycheck (LendEDU). 72.8% of those earning under $50,000 do. And even 20.6% of households earning over $150,000 say the same.
+
+The last number is the interesting one. Paycheck-to-paycheck is not, as commonly assumed, a low-income condition. It cuts across every bracket. One in five households earning $150K+ still ends each month with very little buffer between income and expenses.
+
+Which means the popular policy framing, "the answer is higher wages," is, for a meaningful share of the population, wrong. Higher wages without a structural system simply produce higher leaks. The household that lives paycheck-to-paycheck at $40K and then moves up to $150K very often lives paycheck-to-paycheck at $150K.
+
+The missing ingredient is not money. It is structure.
+
+Floor-First Budgeting provides the structure. Every deposit fills the floor (bills + tax) before any dollar gets to vote on dinner. The reserve grows during surplus months. The pay-yourself number is set to a level below your best and above your worst, and it holds.
+
+Plug the leak first. Then scale up.
+
+Free for 30 days. $14.99/mo or $129/yr after.`,
   },
   '29|Thu': {
     // P11 product-tax-set-aside REUSE
@@ -7041,23 +7103,37 @@ becomeable.app/get-able
 #freelancetok #1099 #moneytok`,
   },
   '32|Thu': {
-    // 71 single
-    ig: `Consolidation isn't a fresh start. It's a refinance.
+    // S07 stat-88-million-crisis · single
+    ig: `88 million Americans say they are struggling or in crisis with their finances.
 
-Same debt. New rate. Same behavior on top.
+Also true: 77% experienced a setback last year. 83% are focused on what they can control.
 
-The actual fresh start is the floor + reserve underneath, then attacking the principal that doesn't refill.
+Intent is high. Tools haven't caught up.
 
-Free for 30 days.
-Link in bio.
+The fix is structural, not personal. Free for 30 days. Link in bio.
 
-#debtconsolidation #debtfree #1099 #variableincome #freelancing`,
-    tt: `Consolidation isn't a fresh start. It's a refinance.
+#financialstress #budgeting #variableincome #1099life #floorfirst`,
 
-The fresh start is the floor underneath.
+    tt: `88 million Americans in financial crisis.
+83% focused on what they can control.
+
+Intent is high. Tools haven't caught up.
+
 becomeable.app/get-able
 
-#debtconsolidation #debtfreejourney #freelancetok`,
+#moneytok #budgettok #1099`,
+
+    li: `Ramsey Solutions' Q4 2025 State of Personal Finance report found that 34% of American adults, approximately 88 million people, say they are struggling or in crisis with their finances.
+
+That number is large. It can be tempting to read it and conclude the situation is hopeless, the population is set in its ways, the work of change is too big to attempt.
+
+The rest of the data argues the opposite.
+
+77% of Americans say they experienced a financial setback in 2025 (NEFE). 88% report some form of financial stress entering 2026. 77% have already changed how they manage their finances in response to economic conditions. 83% say they are focused on what they can control financially. 69% plan to start tracking their spending. 59% plan to learn more about managing money.
+
+The population is not stuck. The population is leaning in. What's missing is the tooling that fits the way most of them actually get paid.
+
+Floor-First Budgeting is built for the 88 million who want a working system. Free for 30 days. $14.99/mo or $129/yr after.`,
   },
   '32|Fri': {
     // C35 credit-score carousel REUSE
@@ -7605,21 +7681,37 @@ becomeable.app/get-able
 #variableincome #freelancetok #1099`,
   },
   '36|Fri': {
-    // C36 pay-yourself-first carousel REUSE
-    ig: `Owner pay, automated. The actual mechanic.
+    // CS07 stat-gig-economy-growth · carousel
+    ig: `70 million Americans now work in the gig economy. (Swipe.)
 
-Not "save what's left." A percent routes from every deposit, alongside the floor (bills + tax). Your salary is automatic, not the leftover.
+27.7M work full-time as independents. More than double the 2020 number.
 
-Swipe →
-Link in bio.
+Income arrives in deposits, not paychecks. Old budgeting tools weren't built for this.
 
-#payyourselffirst #variableincome #1099 #freelancing #savings`,
-    tt: `Owner pay, automated. Actual mechanic.
+Floor-First Budgeting was. Free for 30 days. Link in bio.
 
-Not save-what's-left. A percent routes with every deposit.
+#gigeconomy #variableincome #1099life #freelancetok #floorfirst`,
+
+    tt: `70M Americans in the gig economy.
+27.7M full-time independents. More than double 2020.
+
+Old budgeting tools weren't built for this. Floor-First was.
+
 becomeable.app/get-able
 
-#payyourselffirst #freelancetok #1099`,
+#gigtok #1099 #variableincome`,
+
+    li: `70 million Americans participate in the gig economy in 2025, roughly 36% of the workforce. 27.7 million work full-time as independents, more than double the 13.6 million who did in 2020. 5.6 million of those independents earn over $100,000 a year.
+
+This is not a side-hustle category anymore. It is a structural part of the US labor force, and it has roughly doubled in size in four years.
+
+The budgeting category has not adapted at the same pace. The dominant consumer-finance tools are still built around the W-2 paycheck. They assume a predictable amount on a predictable day. They assume taxes are withheld at the source. They assume monthly budgeting is the right unit of analysis.
+
+For the deposit-based 36%, almost every one of those assumptions is wrong.
+
+Floor-First Budgeting drops the assumptions. Per-deposit allocation. Tax bucket funded at the source as a percentage of every deposit. Reserve account that absorbs slow months. Pay-yourself number that holds regardless of what the deposit looked like. Free spending as the residual after the four jobs above are funded, not as the leftover after spending.
+
+That is the toolkit the gig economy needs. Free for 30 days. $14.99/mo or $129/yr after.`,
   },
   '36|Sat': {
     // R46 plan-forecast REUSE — pay yourself framing
@@ -8103,23 +8195,41 @@ becomeable.app/get-able
 #etsy #1099 #taxes`,
   },
   '40|Wed': {
-    // C23 etsy-seller carousel REUSE
-    ig: `An Etsy seller's actual P&L.
+    // CS08 stat-89-percent-swings · carousel
+    ig: `89% of US households see their income swing every month. (Swipe.)
 
-Gross sales. Minus fees. Minus shipping. Minus materials. Minus tax. = net.
+Median swing: 36%.
 
-Most sellers know the gross. The system shows you the net week one.
+A third of your income moves month to month. Every month.
 
-Swipe →
-Link in bio.
+A monthly budget doesn't survive that. A per-deposit system does.
 
-#etsy #ecommerce #1099 #marketplace #budgeting`,
-    tt: `Etsy seller's P&L.
+Free for 30 days. Link in bio.
 
-Gross. Fees. Shipping. Materials. Tax. Net.
+#variableincome #1099life #budgeting #floorfirst #moneytok`,
+
+    tt: `89% of households see income swings.
+Median: 36%.
+
+A monthly budget can't hold. A per-deposit system can.
+
 becomeable.app/get-able
 
-#etsy #ecommerce #1099`,
+#variableincome #1099 #moneytok`,
+
+    li: `JPMorgan Chase Institute studied actual checking-account data from millions of US households and found two facts that should reframe the entire personal-finance conversation.
+
+First: 89% of US households experienced a month-to-month income change of at least 5%. Not 30%, not 50%, not the subset of the population that calls itself "variable income." 89%.
+
+Second: the median household saw a 36% swing in monthly income.
+
+Those numbers come from transaction data, not self-report, which makes them stronger than survey statistics. They describe the measured reality of how American income actually moves month to month.
+
+If the median household sees a 36% monthly swing, the very idea of "this month I have $X to spend" is unstable for the typical household. Some months $X is much larger than others. The budget that assumes $X is approximately constant is making a category error.
+
+Floor-First Budgeting drops the constant-monthly assumption and routes per deposit. Every deposit, whatever its size, fills the floor (bills + tax) first. The reserve grows during surplus months and pays the pay-yourself number through slow months. The end-of-month report becomes a score on what actually happened, not a plan you set at the start that the cash flow ignored.
+
+Free for 30 days. $14.99/mo or $129/yr after.`,
   },
   '40|Thu': {
     // P03 product-bills-funded
@@ -8660,23 +8770,35 @@ becomeable.app/get-able
 #gigwork #freelancetok #1099`,
   },
   '44|Thu': {
-    // P15 product-balance-clear
-    ig: `Available to spend. Not your balance.
+    // S08 stat-69-want-track · single
+    ig: `69% of Americans plan to start tracking their spending.
 
-The bank shows the balance. The system shows what's actually free after the floor, the reserve, and the schedule.
+The intent is there. The tool isn't.
 
-Two numbers, one honest.
+Most trackers are built for steady paychecks. If your income arrives in deposits, the math doesn't fit.
 
-Free for 30 days.
-Link in bio.
+Built for the way you actually get paid. Free for 30 days. Link in bio.
 
-#variableincome #1099 #gigwork #budgeting #floorfirst`,
-    tt: `Available to spend. Not your balance.
+#budgeting #moneytok #variableincome #1099life #floorfirst`,
 
-Two numbers. One honest.
+    tt: `69% of Americans plan to track their spending.
+
+The intent is there. The tool isn't.
+Built for the way you actually get paid.
+
 becomeable.app/get-able
 
-#variableincome #freelancetok #1099`,
+#budgettok #1099 #moneytok`,
+
+    li: `69% of Americans say they plan to start tracking their spending. 59% plan to learn more about managing money. 77% have already changed how they manage their finances in response to economic conditions.
+
+The willingness is not the problem. The willingness is enormous. What's missing is a tool that fits the way deposits-based workers actually get paid.
+
+Most tracking apps assume a steady paycheck. They expect a recurring income amount on a predictable day. When your income arrives in deposits of varying size on varying schedule, the calendar view stops being useful, the monthly bar chart misleads, and the budget you set on the 1st gets redrawn by every new deposit until the original plan no longer reflects reality.
+
+Floor-First Budgeting tracks per deposit. The moment a deposit lands, the tracker routes it: tax bucket first, floor (bills) second, reserve third, pay-yourself fourth, free spending last. The view that matters is not "what did I spend this month," but "did the floor fill, did the reserve grow, did anything leak." That is the score that actually changes behavior over time.
+
+Free for 30 days. $14.99/mo or $129/yr after.`,
   },
   '44|Fri': {
     // PC6 product-slow-month REUSE 2x — gig
@@ -9456,23 +9578,38 @@ becomeable.app/get-able
 #ownerpay #smallbusinesstok #1099`,
   },
   '50|Wed': {
-    // C36 pay-yourself-first carousel REUSE 2x — business
-    ig: `Owner pay, automated. Business owner edition.
+    // CS09 stat-88-million-crisis-multi · carousel
+    ig: `88 million Americans are struggling or in crisis with money. (Swipe.)
 
-Revenue lands. The floor runs (bills + tax). Owner-pay percent runs alongside. What's left is business reinvestment, not your salary.
+77% had a setback last year. 83% are focused on what they can control.
 
-Make owner pay automatic, not optional.
+Intent is high. Tools haven't caught up.
 
-Swipe →
-Link in bio.
+The fix is structural, not personal. Free for 30 days. Link in bio.
 
-#smallbusiness #ownerpay #payyourselffirst #1099 #budgeting`,
-    tt: `Owner pay, automated. Owner edition.
+#financialstress #budgeting #variableincome #1099life #floorfirst`,
 
-Make owner pay automatic, not optional.
+    tt: `88M in crisis. 83% focused on what they can control.
+
+Intent is high. Tools haven't caught up.
+
 becomeable.app/get-able
 
-#ownerpay #smallbusinesstok #1099`,
+#moneytok #budgettok #1099`,
+
+    li: `Stack these numbers in order.
+
+88 million American adults (34%) say they are struggling or in crisis with their finances (Ramsey, Q4 2025). 77% experienced a financial setback in 2025 (NEFE). 88% report some form of financial stress entering 2026.
+
+Now stack the response numbers next to them.
+
+83% are focused on what they can control financially. 77% have already changed how they manage their finances. 69% plan to start tracking spending. 59% plan to learn more about managing money. 53% have set a budget for 2026, up from 46% in 2025.
+
+The first stack describes the pain. The second stack describes the willingness to act. Both stacks describe the same population.
+
+The gap between "I am taking action" and "the action is working" is the size of the budgeting-tool category gap. The willing population is being handed tools built for a workforce that no longer exists.
+
+Floor-First Budgeting is built for the workforce that does exist. Free for 30 days. $14.99/mo or $129/yr after.`,
   },
   '50|Thu': {
     // P38 product-bs-i-am-able-save
@@ -10543,25 +10680,38 @@ becomeable.app/get-able
 #floorfirst #freelancetok #1099`,
   },
   '58|Wed': {
-    // C45 three-steps carousel REUSE 2x — methodology
-    ig: `Floor-First, the three steps.
+    // CS10 stat-volatility-every-bracket · carousel
+    ig: `Volatility doesn't care what you earn. (Swipe.)
 
-1. Connect your bank.
-2. Confirm the plan (bills + tax floor).
-3. Schedule debt.
+20.6% of households over $150K live paycheck to paycheck.
+5.6M independents earn over $100K. Their income still swings.
 
-That's the system. Then it runs.
+Volatility isn't low income. It needs a different toolkit.
 
-Swipe →
-Link in bio.
+Floor-First Budgeting. Free for 30 days. Link in bio.
 
-#floorfirst #variableincome #1099 #budgeting #methodology`,
-    tt: `Floor-First. Three steps.
+#variableincome #1099life #floorfirst #budgeting #freelancetok`,
 
-Connect. Confirm floor. Schedule debt.
+    tt: `Volatility doesn't care what you earn.
+
+20.6% of $150K+ households live paycheck-to-paycheck.
+Volatility ≠ low income. Volatility = needs a different toolkit.
+
 becomeable.app/get-able
 
-#floorfirst #freelancetok #1099`,
+#variableincome #1099 #moneytok`,
+
+    li: `The most common mistake in personal-finance commentary is treating income volatility and low income as the same problem. They are not.
+
+20.6% of US households earning over $150,000 a year live paycheck to paycheck (LendEDU). 5.6 million independent workers earn over $100,000 annually. Their income still swings month to month, often dramatically. A creator's brand-deal payment lands 60 days after the content posts. A real estate agent gets one $14,000 commission and then nothing for six weeks. A consultant invoices for $22,000 and waits net-45 to get paid.
+
+The annual totals on those careers are strong. The monthly experience is anything but steady. And monthly experience is what makes or breaks a budget.
+
+Low income needs higher income. The fix is structural in the labor market, not in personal-finance tooling. Volatility needs a different fix: structure inside the household. A reserve that absorbs slow months. A tax bucket funded as a percentage of every deposit. A steady pay-yourself number that holds.
+
+Floor-First Budgeting is the toolkit for volatility, at any income level. Same income. Different feeling.
+
+Free for 30 days. $14.99/mo or $129/yr after.`,
   },
   '58|Thu': {
     // P01 product-floor-coverage

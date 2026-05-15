@@ -22,14 +22,14 @@ A tool that helps them budget and manage their inconsistent income.
 That is the singular want. The three outcomes that follow (debt down, savings up, stop living unpredictable check to unpredictable check) belong in the Success section.
 
 **Product statement (single sentence, use wherever a one-liner is needed):**
-> "An app built for entrepreneurs who struggle to manage inconsistent income."
+> "An app built for people who struggle to budget inconsistent income."
 
 **North Star (the why-we-exist line):**
 > "We help entrepreneurs budget inconsistent income so they can pay down debt, save, and stop living unpredictable check to unpredictable check."
 
 **Audience taglines (interchangeable by context, all locked):**
 - "Built for inconsistent income."
-- "An app built for entrepreneurs who struggle to manage inconsistent income."
+- "An app built for people who struggle to budget inconsistent income."
 - "For freelancers, creators, and business owners."
 - "Built for the paycheck that does not come every two weeks."
 

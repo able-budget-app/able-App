@@ -1,0 +1,796 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex,nofollow">
+<title>Able · Unit Economics</title>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:wght@400;500;600;700;800;900&family=DM+Serif+Display&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#f0f7f2;
+    --paper:#fafdfb;
+    --card:#ffffff;
+    --card2:#f7fbf8;
+    --t1:#111c16;
+    --t2:#4a5c52;
+    --t3:#8ca898;
+    --t4:#c4d8cc;
+    --green:#2a7a4a;
+    --green2:#1f6038;
+    --green-l:#eaf5ee;
+    --green-m:#b8e0c8;
+    --warn:#c97c0a;
+    --warn-bg:#fef3e0;
+    --danger:#c04060;
+    --danger-bg:#fdeef2;
+    --info:#3570b8;
+    --info-bg:#e5eef9;
+    --f:'Bricolage Grotesque',-apple-system,sans-serif;
+    --fs:'DM Serif Display',Georgia,serif;
+    --r1:10px;
+    --r2:16px;
+    --r3:22px;
+    --sh1:0 1px 4px rgba(0,0,0,.05),0 2px 8px rgba(0,0,0,.04);
+    --sh2:0 2px 8px rgba(0,0,0,.05),0 4px 16px rgba(0,0,0,.06);
+  }
+  *{box-sizing:border-box;margin:0;padding:0;}
+  html{font-size:14px;}
+  body{
+    background:var(--paper);
+    color:var(--t1);
+    font-family:var(--f);
+    line-height:1.55;
+    -webkit-font-smoothing:antialiased;
+    padding:32px 24px 80px;
+  }
+  .wrap{max-width:1180px;margin:0 auto;}
+
+  /* Header */
+  header{
+    margin-bottom:28px;
+    padding-bottom:20px;
+    border-bottom:1px solid var(--t4);
+    display:flex;
+    align-items:flex-end;
+    justify-content:space-between;
+    gap:24px;
+    flex-wrap:wrap;
+  }
+  h1{
+    font-family:var(--fs);
+    font-size:2.4rem;
+    font-weight:400;
+    color:var(--t1);
+    letter-spacing:-.01em;
+    line-height:1;
+  }
+  .sub{
+    font-size:.85rem;
+    color:var(--t2);
+    margin-top:8px;
+  }
+  .updated{
+    font-size:.78rem;
+    color:var(--t3);
+    letter-spacing:.06em;
+    text-transform:uppercase;
+    font-weight:700;
+  }
+
+  /* KPI cards */
+  .kpis{
+    display:grid;
+    grid-template-columns:repeat(auto-fit,minmax(170px,1fr));
+    gap:14px;
+    margin-bottom:32px;
+  }
+  .kpi{
+    background:var(--card);
+    border:1px solid var(--t4);
+    border-radius:var(--r2);
+    padding:18px 18px 16px;
+    box-shadow:var(--sh1);
+  }
+  .kpi-label{
+    font-size:.7rem;
+    color:var(--t3);
+    text-transform:uppercase;
+    letter-spacing:.1em;
+    font-weight:700;
+    margin-bottom:6px;
+  }
+  .kpi-value{
+    font-family:var(--fs);
+    font-size:1.9rem;
+    font-weight:400;
+    color:var(--t1);
+    line-height:1.1;
+  }
+  .kpi-sub{
+    font-size:.78rem;
+    color:var(--t2);
+    margin-top:4px;
+  }
+  .kpi-good .kpi-value{color:var(--green);}
+  .kpi-bad .kpi-value{color:var(--danger);}
+
+  /* Section */
+  section{margin-bottom:36px;}
+  h2{
+    font-family:var(--fs);
+    font-size:1.4rem;
+    font-weight:400;
+    color:var(--t1);
+    margin-bottom:14px;
+  }
+  h2 .hint{
+    font-family:var(--f);
+    font-size:.78rem;
+    color:var(--t3);
+    font-weight:500;
+    margin-left:10px;
+  }
+
+  /* Inputs row */
+  .inputs{
+    background:var(--green-l);
+    border:1px solid var(--green-m);
+    border-radius:var(--r2);
+    padding:18px 20px;
+    display:grid;
+    grid-template-columns:repeat(auto-fit,minmax(180px,1fr));
+    gap:14px 22px;
+  }
+  .input-cell{display:flex;flex-direction:column;gap:4px;}
+  .input-cell label{
+    font-size:.7rem;
+    color:var(--green2);
+    text-transform:uppercase;
+    letter-spacing:.08em;
+    font-weight:700;
+  }
+  .input-cell .val{
+    font-family:var(--fs);
+    font-size:1.4rem;
+    color:var(--t1);
+    background:#fff;
+    border:1px solid var(--green-m);
+    border-radius:8px;
+    padding:6px 10px;
+    outline:none;
+    min-width:60px;
+    transition:border-color .15s;
+  }
+  .input-cell .val:focus{border-color:var(--green);background:#fffef9;}
+
+  /* Vendor table */
+  .vendor-table{
+    width:100%;
+    background:var(--card);
+    border:1px solid var(--t4);
+    border-radius:var(--r2);
+    overflow:hidden;
+    box-shadow:var(--sh1);
+    border-collapse:collapse;
+  }
+  .vendor-table thead{
+    background:var(--green-l);
+  }
+  .vendor-table th{
+    text-align:left;
+    padding:12px 14px;
+    font-size:.72rem;
+    text-transform:uppercase;
+    letter-spacing:.08em;
+    color:var(--green2);
+    font-weight:700;
+    border-bottom:1px solid var(--green-m);
+  }
+  .vendor-table th.num{text-align:right;}
+  .vendor-table td{
+    padding:14px;
+    border-bottom:1px solid var(--green-l);
+    vertical-align:top;
+    font-size:.88rem;
+    color:var(--t1);
+  }
+  .vendor-table td.num{text-align:right;font-variant-numeric:tabular-nums;}
+  .vendor-table tr:last-child td{border-bottom:none;}
+  .vendor-name{
+    font-weight:700;
+    color:var(--t1);
+  }
+  .vendor-role{
+    font-size:.76rem;
+    color:var(--t2);
+    margin-top:2px;
+  }
+  .editable{
+    background:#fffef5;
+    border:1px dashed #e0d5a8;
+    border-radius:6px;
+    padding:2px 6px;
+    min-width:50px;
+    display:inline-block;
+    outline:none;
+    font-variant-numeric:tabular-nums;
+  }
+  .editable:focus{border-color:var(--green);background:#fff;}
+  .pill{
+    display:inline-block;
+    padding:2px 9px;
+    border-radius:10px;
+    font-size:.68rem;
+    font-weight:700;
+    letter-spacing:.04em;
+    text-transform:uppercase;
+  }
+  .pill-good{background:var(--green-l);color:var(--green2);}
+  .pill-warn{background:var(--warn-bg);color:var(--warn);}
+  .pill-bad{background:var(--danger-bg);color:var(--danger);}
+  .pill-info{background:var(--info-bg);color:var(--info);}
+
+  .totals-row td{
+    background:var(--green-l);
+    font-weight:700;
+    border-top:2px solid var(--green-m);
+  }
+
+  /* Threshold cards */
+  .thresholds{
+    display:grid;
+    grid-template-columns:repeat(auto-fit,minmax(220px,1fr));
+    gap:14px;
+  }
+  .threshold{
+    background:var(--card);
+    border:1px solid var(--t4);
+    border-radius:var(--r2);
+    padding:18px;
+    box-shadow:var(--sh1);
+  }
+  .threshold h3{
+    font-family:var(--fs);
+    font-size:1.6rem;
+    font-weight:400;
+    color:var(--green);
+    margin-bottom:6px;
+  }
+  .threshold h3 .users{font-size:.85rem;color:var(--t2);font-family:var(--f);font-weight:600;}
+  .threshold ul{list-style:none;margin-top:10px;}
+  .threshold li{
+    font-size:.82rem;
+    color:var(--t2);
+    padding:5px 0;
+    border-top:1px solid var(--green-l);
+    display:flex;
+    gap:8px;
+    align-items:flex-start;
+  }
+  .threshold li:first-of-type{border-top:none;}
+  .threshold li b{color:var(--t1);font-weight:700;}
+
+  /* Bottlenecks */
+  .bottle-list{
+    background:var(--card);
+    border:1px solid var(--t4);
+    border-radius:var(--r2);
+    overflow:hidden;
+  }
+  .bottle{
+    padding:16px 20px;
+    border-bottom:1px solid var(--green-l);
+    display:grid;
+    grid-template-columns:170px 1fr;
+    gap:18px;
+    align-items:flex-start;
+  }
+  .bottle:last-child{border-bottom:none;}
+  .bottle-vendor{
+    font-weight:700;
+    font-size:.88rem;
+    color:var(--t1);
+  }
+  .bottle-vendor .pill{display:block;margin-top:4px;}
+  .bottle-detail{font-size:.86rem;color:var(--t2);}
+  .bottle-detail b{color:var(--t1);}
+
+  /* Notes */
+  .notes{
+    background:var(--info-bg);
+    border-left:4px solid var(--info);
+    border-radius:0 var(--r1) var(--r1) 0;
+    padding:16px 20px;
+    font-size:.85rem;
+    color:var(--t1);
+  }
+  .notes b{color:var(--info);}
+  .notes ul{margin:8px 0 0 18px;color:var(--t2);}
+  .notes li{margin:3px 0;}
+
+  /* Footer */
+  footer{
+    margin-top:48px;
+    padding-top:24px;
+    border-top:1px solid var(--t4);
+    font-size:.78rem;
+    color:var(--t3);
+    display:flex;
+    justify-content:space-between;
+    gap:16px;
+    flex-wrap:wrap;
+  }
+  button.reset{
+    background:transparent;
+    border:1px solid var(--t4);
+    color:var(--t2);
+    padding:6px 12px;
+    border-radius:8px;
+    cursor:pointer;
+    font-family:var(--f);
+    font-size:.78rem;
+  }
+  button.reset:hover{border-color:var(--danger);color:var(--danger);}
+
+  @media print{
+    body{padding:0;background:#fff;}
+    button.reset{display:none;}
+    .editable{border-color:transparent;background:transparent;}
+  }
+  @media (max-width:680px){
+    .bottle{grid-template-columns:1fr;}
+    .vendor-table{font-size:.78rem;}
+    .vendor-table td,.vendor-table th{padding:10px 8px;}
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<header>
+  <div>
+    <h1>Unit economics</h1>
+    <div class="sub">Cost-per-user, vendor tiers, and scale thresholds. Edit the highlighted cells — values save locally.</div>
+  </div>
+  <div class="updated" id="updated">Snapshot · 2026-05-14</div>
+</header>
+
+<!-- ───── Inputs ───── -->
+<section>
+  <h2>Inputs <span class="hint">edit me</span></h2>
+  <div class="inputs">
+    <div class="input-cell">
+      <label>Paying — monthly ($14.99)</label>
+      <div class="val" contenteditable="true" data-key="paying_monthly">0</div>
+    </div>
+    <div class="input-cell">
+      <label>Paying — annual ($129)</label>
+      <div class="val" contenteditable="true" data-key="paying_annual">0</div>
+    </div>
+    <div class="input-cell">
+      <label>Trial users (no MRR)</label>
+      <div class="val" contenteditable="true" data-key="trial_users">0</div>
+    </div>
+    <div class="input-cell">
+      <label>Refund / churn (%)</label>
+      <div class="val" contenteditable="true" data-key="churn_pct">5</div>
+    </div>
+  </div>
+</section>
+
+<!-- ───── KPIs ───── -->
+<section>
+  <h2>Top line <span class="hint">computed</span></h2>
+  <div class="kpis">
+    <div class="kpi"><div class="kpi-label">Total paying</div><div class="kpi-value" id="kpi_paying">0</div><div class="kpi-sub" id="kpi_paying_sub">monthly + annual</div></div>
+    <div class="kpi"><div class="kpi-label">MRR</div><div class="kpi-value" id="kpi_mrr">$0</div><div class="kpi-sub">incl. annual ÷ 12</div></div>
+    <div class="kpi"><div class="kpi-label">ARR</div><div class="kpi-value" id="kpi_arr">$0</div><div class="kpi-sub">MRR × 12</div></div>
+    <div class="kpi"><div class="kpi-label">Monthly vendor cost</div><div class="kpi-value" id="kpi_cost">$0</div><div class="kpi-sub">sum of table</div></div>
+    <div class="kpi kpi-good"><div class="kpi-label">Gross margin</div><div class="kpi-value" id="kpi_margin">—</div><div class="kpi-sub" id="kpi_margin_sub">(MRR − cost) ÷ MRR</div></div>
+    <div class="kpi"><div class="kpi-label">Cost per paying user</div><div class="kpi-value" id="kpi_cpu">$0</div><div class="kpi-sub">monthly</div></div>
+  </div>
+</section>
+
+<!-- ───── Vendor table ───── -->
+<section>
+  <h2>Vendors <span class="hint">edit the yellow cells when invoices arrive</span></h2>
+  <table class="vendor-table">
+    <thead>
+      <tr>
+        <th style="width:24%;">Vendor</th>
+        <th style="width:14%;">Tier</th>
+        <th class="num" style="width:14%;">Monthly cost</th>
+        <th style="width:24%;">Next-tier trigger</th>
+        <th class="num" style="width:12%;">Next-tier price</th>
+        <th class="num" style="width:12%;">$/user/mo</th>
+      </tr>
+    </thead>
+    <tbody id="vendor-body"></tbody>
+    <tfoot>
+      <tr class="totals-row">
+        <td colspan="2">Total</td>
+        <td class="num" id="total_cost">$0</td>
+        <td></td>
+        <td></td>
+        <td class="num" id="total_cpu">$0</td>
+      </tr>
+    </tfoot>
+  </table>
+</section>
+
+<!-- ───── Scale thresholds ───── -->
+<section>
+  <h2>Scale thresholds <span class="hint">what changes at each band</span></h2>
+  <div class="thresholds">
+    <div class="threshold">
+      <h3>v1 <span class="users">0–1k users</span></h3>
+      <ul>
+        <li><b>Supabase Pro</b> ($25). Free tier won't cut it past launch — Pro gives daily backups + 8GB DB.</li>
+        <li><b>Netlify Pro</b> ($20) — 1TB bandwidth, 25k build minutes, 2M function invocations.</li>
+        <li><b>Anthropic Tier 1</b> — upgrade <b>before launch</b> (memory note: 10K out tokens/min cap will bite).</li>
+        <li><b>Plaid</b> production, pay-per-active-item. No tier.</li>
+      </ul>
+    </div>
+    <div class="threshold">
+      <h3>v2 <span class="users">1k–5k users</span></h3>
+      <ul>
+        <li><b>Supabase</b> — watch egress (250GB included). Add connection pooler config.</li>
+        <li><b>Netlify Pro</b> ($20) already in place — watch build minutes if CI gets heavier.</li>
+        <li><b>PostHog</b> — 1M events/mo free; add event sampling for heavy users.</li>
+        <li><b>Resend Pro</b> ($20) if email volume > 3k/mo.</li>
+        <li><b>Anthropic Tier 2</b> auto-unlocks at $400 spent + 7d age.</li>
+      </ul>
+    </div>
+    <div class="threshold">
+      <h3>v3 <span class="users">5k–25k users</span></h3>
+      <ul>
+        <li><b>Supabase Team</b> ($599) for SOC2 + log retention + point-in-time recovery.</li>
+        <li><b>Plaid</b> negotiate volume pricing — talk to AE at 5k linked items.</li>
+        <li><b>Cloudflare</b> in front of Netlify for cache + WAF (free tier covers it).</li>
+        <li><b>Anthropic prompt caching</b> already in place per memory — verify cache hit rate stays > 70%.</li>
+      </ul>
+    </div>
+    <div class="threshold">
+      <h3>v4 <span class="users">25k+ users</span></h3>
+      <ul>
+        <li><b>Supabase</b> read replicas + dedicated compute.</li>
+        <li><b>Stripe</b> negotiate interchange-plus.</li>
+        <li><b>Re-evaluate self-hosting</b> AI inference if Anthropic spend > $20k/mo.</li>
+        <li><b>Postgres connection pool</b> via PgBouncer/Supavisor mandatory.</li>
+        <li>Hire SRE or pull in DevOps contractor.</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<!-- ───── Bottlenecks ───── -->
+<section>
+  <h2>Bottlenecks to watch <span class="hint">these bite before you hit "scale"</span></h2>
+  <div class="bottle-list">
+    <div class="bottle">
+      <div class="bottle-vendor">Anthropic<span class="pill pill-bad">URGENT</span></div>
+      <div class="bottle-detail">
+        <b>Tier 1 caps at 10K output tokens/min.</b> Coach + carousel + blog generation share this budget. One viral signup spike = throttling. <b>Action:</b> upgrade tier before launch (memory note 2026-05-12).
+      </div>
+    </div>
+    <div class="bottle">
+      <div class="bottle-vendor">Supabase<span class="pill pill-warn">SOON</span></div>
+      <div class="bottle-detail">
+        <b>Default connection pool = 60.</b> At ~5k DAU with idle-keep-alive, you'll exhaust it. <b>Action:</b> enable Supavisor transaction-mode pooler before 1k DAU.
+      </div>
+    </div>
+    <div class="bottle">
+      <div class="bottle-vendor">Plaid<span class="pill pill-warn">SOON</span></div>
+      <div class="bottle-detail">
+        <b>Per-item monthly fee + per-API call.</b> Cost scales linearly with user count, not request volume — so the cap is "how many users", not "how active are they." <b>Action:</b> track $/linked-item monthly; renegotiate at 5k items.
+      </div>
+    </div>
+    <div class="bottle">
+      <div class="bottle-vendor">Stripe<span class="pill pill-info">FIXED</span></div>
+      <div class="bottle-detail">
+        2.9% + 30¢ on every charge. On $14.99/mo: <b>~$0.74 per user per month</b> (~5% of revenue). On $129/yr: <b>~$4.04 once</b> (~3.1%). Tiny but bakes into margin — already in vendor table.
+      </div>
+    </div>
+    <div class="bottle">
+      <div class="bottle-vendor">PostHog<span class="pill pill-info">WATCH</span></div>
+      <div class="bottle-detail">
+        Free tier = 1M events/mo. A noisy event ("scroll", "input") on 5k DAU burns it fast. <b>Action:</b> audit event volume monthly; drop any event you'd never query.
+      </div>
+    </div>
+    <div class="bottle">
+      <div class="bottle-vendor">Netlify<span class="pill pill-good">LATER</span></div>
+      <div class="bottle-detail">
+        Bandwidth = the limiter, not function invocations. Static HTML + WebP images keep this low. Won't bite until 10k+ DAU. Cloudflare in front later if needed.
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ───── Notes ───── -->
+<section>
+  <h2>Update protocol</h2>
+  <div class="notes">
+    <b>Weekly (Sundays, 15 min):</b>
+    <ul>
+      <li>Pull user count from Supabase: <code>select count(*) from auth.users where deleted_at is null;</code></li>
+      <li>Pull paying users from Stripe → Customers (filter active subscriptions).</li>
+      <li>Update <b>Inputs</b> at top — everything below recomputes.</li>
+    </ul>
+    <b style="display:block;margin-top:10px;">Monthly (when invoices land):</b>
+    <ul>
+      <li>Update each vendor's <b>Monthly cost</b> column with the actual invoice.</li>
+      <li>If a vendor's $/user is rising faster than revenue/user, flag it — that's a margin leak.</li>
+      <li>Export this page to PDF (Cmd-P → Save as PDF) for monthly investor update.</li>
+    </ul>
+    <b style="display:block;margin-top:10px;">Don't automate yet.</b> Manual updates force you to look at the numbers. Build API pulls only when this takes >30 min/week.
+  </div>
+</section>
+
+<footer>
+  <div>Values persist in <code>localStorage</code> on this device. Clearing browser data = reset.</div>
+  <button class="reset" onclick="if(confirm('Reset all values to defaults?')){localStorage.removeItem('able_unit_econ');location.reload();}">Reset</button>
+</footer>
+
+</div>
+
+<script>
+// ───── Vendor seed data ─────
+const VENDORS = [
+  {
+    id:'supabase',
+    name:'Supabase',
+    role:'Postgres · Auth · Edge Functions',
+    tier:'Pro',
+    cost:25,
+    trigger:'DB > 8GB · egress > 250GB · MAU > 100k',
+    nextPrice:599,
+    nextLabel:'Team',
+    pillar:'fixed'
+  },
+  {
+    id:'netlify',
+    name:'Netlify',
+    role:'Static hosting · CDN · Edge Functions',
+    tier:'Pro',
+    cost:20,
+    trigger:'Bandwidth > 1TB · build minutes > 25k/mo',
+    nextPrice:0,
+    nextLabel:'Business (custom)',
+    pillar:'fixed'
+  },
+  {
+    id:'cloudflare',
+    name:'Cloudflare',
+    role:'Domain registrar (becomeable.app) · CDN/WAF later',
+    tier:'Registrar',
+    cost:1.25,
+    trigger:'Add CDN/WAF when Netlify bandwidth tips',
+    nextPrice:0,
+    nextLabel:'Free covers CDN/WAF',
+    pillar:'fixed'
+  },
+  {
+    id:'apple',
+    name:'Apple Developer',
+    role:'iOS App Store membership',
+    tier:'Individual',
+    cost:8.33,
+    trigger:'Annual renewal · $99/yr',
+    nextPrice:0,
+    nextLabel:'—',
+    pillar:'fixed'
+  },
+  {
+    id:'plaid',
+    name:'Plaid',
+    role:'Bank linking · transactions sync',
+    tier:'Production PAYG',
+    cost:0,
+    trigger:'Linear with linked items',
+    nextPrice:0,
+    nextLabel:'Volume deal @5k items',
+    pillar:'variable',
+    perUserCost:0.30 // rough $/active item/mo
+  },
+  {
+    id:'anthropic',
+    name:'Anthropic',
+    role:'AI Coach · content generation',
+    tier:'Tier 1',
+    cost:0,
+    trigger:'$400 spent + 7d → Tier 2 auto',
+    nextPrice:0,
+    nextLabel:'Tier 2 (auto)',
+    pillar:'variable',
+    perUserCost:0.33 // $3-5/user/yr ÷ 12 ≈ $0.33
+  },
+  {
+    id:'openai',
+    name:'OpenAI',
+    role:'TTS for article videos',
+    tier:'PAYG',
+    cost:0,
+    trigger:'n/a — content prod only',
+    nextPrice:0,
+    nextLabel:'—',
+    pillar:'fixed-content'
+  },
+  {
+    id:'posthog',
+    name:'PostHog',
+    role:'Product analytics',
+    tier:'Free',
+    cost:0,
+    trigger:'> 1M events/mo',
+    nextPrice:0,
+    nextLabel:'Scale (usage-based)',
+    pillar:'variable',
+    perUserCost:0.02
+  },
+  {
+    id:'resend',
+    name:'Resend',
+    role:'Transactional email',
+    tier:'Free',
+    cost:0,
+    trigger:'> 3k emails/mo',
+    nextPrice:20,
+    nextLabel:'Pro (50k/mo)',
+    pillar:'fixed'
+  },
+  {
+    id:'stripe',
+    name:'Stripe',
+    role:'Payments (2.9% + 30¢)',
+    tier:'PAYG',
+    cost:0,
+    trigger:'Negotiate @ $80k/mo volume',
+    nextPrice:0,
+    nextLabel:'Interchange-plus',
+    pillar:'pct-revenue'
+  },
+  {
+    id:'misc',
+    name:'Misc tools',
+    role:'TestFlight ·  font licenses · etc.',
+    tier:'Annual',
+    cost:0,
+    trigger:'Add as they appear',
+    nextPrice:0,
+    nextLabel:'—',
+    pillar:'fixed'
+  }
+];
+
+const PRICE_MONTHLY = 14.99;
+const PRICE_ANNUAL = 129;
+const STORAGE_KEY = 'able_unit_econ';
+
+// ───── Load / save ─────
+const state = (() => {
+  try { return JSON.parse(localStorage.getItem(STORAGE_KEY) || '{}'); }
+  catch { return {}; }
+})();
+
+function save(){ localStorage.setItem(STORAGE_KEY, JSON.stringify(state)); }
+
+function num(v){ const n = parseFloat(String(v).replace(/[^0-9.-]/g,'')); return isNaN(n) ? 0 : n; }
+function money(n){ return '$' + Math.round(n).toLocaleString(); }
+function money2(n){ return '$' + n.toFixed(2); }
+
+// ───── Render vendor rows ─────
+function renderVendors(){
+  const body = document.getElementById('vendor-body');
+  body.innerHTML = VENDORS.map(v => {
+    const storedCost = state['vendor_' + v.id];
+    const cost = storedCost !== undefined ? num(storedCost) : v.cost;
+    return `
+      <tr data-vendor="${v.id}">
+        <td>
+          <div class="vendor-name">${v.name}</div>
+          <div class="vendor-role">${v.role}</div>
+        </td>
+        <td>${v.tier}</td>
+        <td class="num">$<span class="editable" contenteditable="true" data-vkey="vendor_${v.id}">${cost}</span></td>
+        <td style="font-size:.8rem;color:var(--t2);">${v.trigger}<div style="font-size:.72rem;color:var(--t3);margin-top:2px;">→ ${v.nextLabel}${v.nextPrice ? ' ($' + v.nextPrice + ')' : ''}</div></td>
+        <td class="num">${v.nextPrice ? '$' + v.nextPrice : '—'}</td>
+        <td class="num" data-cpu="${v.id}">—</td>
+      </tr>
+    `;
+  }).join('');
+
+  body.querySelectorAll('.editable').forEach(el => {
+    el.addEventListener('input', () => {
+      state[el.dataset.vkey] = el.textContent;
+      save();
+      recompute();
+    });
+    el.addEventListener('blur', () => {
+      el.textContent = num(el.textContent);
+    });
+  });
+}
+
+// ───── Recompute ─────
+function recompute(){
+  const monthly = num(state.paying_monthly || 0);
+  const annual = num(state.paying_annual || 0);
+  const trial = num(state.trial_users || 0);
+  const totalPaying = monthly + annual;
+
+  // MRR: monthly subs × $14.99 + annual subs × $129 / 12
+  const mrr = monthly * PRICE_MONTHLY + (annual * PRICE_ANNUAL / 12);
+  const arr = mrr * 12;
+
+  // Vendor costs (fixed + variable per user)
+  let totalCost = 0;
+  VENDORS.forEach(v => {
+    let cost = num(state['vendor_' + v.id] !== undefined ? state['vendor_' + v.id] : v.cost);
+    // Stripe is % of revenue: estimate
+    if (v.id === 'stripe' && state['vendor_stripe'] === undefined) {
+      // 2.9% + 30¢ on each monthly charge + annual charge ÷ 12
+      const stripeMonthly = monthly * (PRICE_MONTHLY * 0.029 + 0.30);
+      const stripeAnnual = annual * (PRICE_ANNUAL * 0.029 + 0.30) / 12;
+      cost = stripeMonthly + stripeAnnual;
+    }
+    // Variable vendors: add per-user component if no manual override
+    if (v.perUserCost && state['vendor_' + v.id] === undefined) {
+      cost = v.perUserCost * (totalPaying + trial);
+    }
+    totalCost += cost;
+    document.querySelector(`[data-cpu="${v.id}"]`).textContent =
+      totalPaying > 0 ? money2(cost / totalPaying) : '—';
+    document.querySelector(`[data-vendor="${v.id}"] .editable`).textContent = cost.toFixed(2);
+  });
+
+  // KPIs
+  document.getElementById('kpi_paying').textContent = totalPaying.toLocaleString();
+  document.getElementById('kpi_paying_sub').textContent = `${monthly} mo · ${annual} yr · ${trial} trial`;
+  document.getElementById('kpi_mrr').textContent = money(mrr);
+  document.getElementById('kpi_arr').textContent = money(arr);
+  document.getElementById('kpi_cost').textContent = money(totalCost);
+  document.getElementById('total_cost').textContent = money(totalCost);
+
+  const cpu = totalPaying > 0 ? totalCost / totalPaying : 0;
+  document.getElementById('kpi_cpu').textContent = totalPaying > 0 ? money2(cpu) : '—';
+  document.getElementById('total_cpu').textContent = totalPaying > 0 ? money2(cpu) : '—';
+
+  const margin = mrr > 0 ? ((mrr - totalCost) / mrr) * 100 : 0;
+  const marginEl = document.getElementById('kpi_margin');
+  const marginCard = marginEl.closest('.kpi');
+  marginCard.classList.remove('kpi-good','kpi-bad');
+  if (mrr === 0) {
+    marginEl.textContent = '—';
+  } else {
+    marginEl.textContent = margin.toFixed(0) + '%';
+    if (margin >= 70) marginCard.classList.add('kpi-good');
+    else if (margin < 50) marginCard.classList.add('kpi-bad');
+  }
+  document.getElementById('kpi_margin_sub').textContent = mrr > 0
+    ? `${money(mrr - totalCost)} profit/mo`
+    : '(MRR − cost) ÷ MRR';
+}
+
+// ───── Inputs ─────
+function bindInputs(){
+  document.querySelectorAll('[data-key]').forEach(el => {
+    const k = el.dataset.key;
+    if (state[k] !== undefined) el.textContent = state[k];
+    el.addEventListener('input', () => {
+      state[k] = el.textContent;
+      save();
+      recompute();
+    });
+    el.addEventListener('blur', () => {
+      el.textContent = num(el.textContent);
+    });
+  });
+}
+
+renderVendors();
+bindInputs();
+recompute();
+</script>
+</body>
+</html>

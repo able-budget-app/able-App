@@ -540,4 +540,42 @@ window.REELS = [
     muted: "No tricks.",
     punch: "Just the\n{math.}" },
 
+  // ── Stats reels (added 2026-05-14 — data-led short-form video) ──
+  // Sourced from docs/statistics.md. Each reel = 6-8 beats, ~20 sec, ends on Able reframe.
+  { id: 'RS01', slug: 'stat-77-million-reel', theme: 'glass-dark', format: 'text-reel', durationSec: 22, eyebrow: 'mixed',
+    beats: [
+      { text: "{77 million.}", durationSec: 2.5 },
+      { text: "Americans get paid\n{differently} every month.", durationSec: 3 },
+      { text: "About 1 in {3}\nworking adults.", durationSec: 3 },
+      { text: "Every budgeting app\nwas built for the {other 2}.", durationSec: 3.5 },
+      { text: "Steady paycheck.\nSteady Friday.", durationSec: 2.5 },
+      { text: "Your income lands\nin {deposits}. Not paychecks.", durationSec: 3 },
+      { text: "Floor-First\n{Budgeting.}", durationSec: 2.5, theme: 'green' },
+      { text: "Built for the way\nyou {actually} get paid.", durationSec: 2, theme: 'green' },
+    ] },
+
+  { id: 'RS02', slug: 'stat-87-struggle-reel', theme: 'page', format: 'text-reel', durationSec: 20, eyebrow: 'mixed',
+    beats: [
+      { text: "{87%.}", durationSec: 2 },
+      { text: "Of Americans struggle\nto manage {spending}.", durationSec: 3 },
+      { text: "{91.8%} worry\nabout their budget.", durationSec: 3 },
+      { text: "Only {1 in 3} has\na system that works.", durationSec: 3 },
+      { text: "When 87% fail,", durationSec: 2.5, theme: 'black' },
+      { text: "it's not a {willpower}\nproblem.", durationSec: 2.5, theme: 'black' },
+      { text: "It's a\n{structure} problem.", durationSec: 2, theme: 'green' },
+      { text: "Built for the way\nyou {actually} get paid.", durationSec: 2, theme: 'green' },
+    ] },
+
+  { id: 'RS03', slug: 'stat-volatility-every-bracket-reel', theme: 'white', format: 'text-reel', durationSec: 20, eyebrow: 'mixed',
+    beats: [
+      { text: "Volatility doesn't care\nwhat you {earn}.", durationSec: 3 },
+      { text: "{20.6%} of households\nover $150K.", durationSec: 3 },
+      { text: "Live paycheck\nto {paycheck.}", durationSec: 2.5 },
+      { text: "{5.6 million} independents\nearn over $100K.", durationSec: 3 },
+      { text: "Their income still\n{swings} every month.", durationSec: 3 },
+      { text: "Volatility is not\n{low income.}", durationSec: 2.5, theme: 'glass-dark' },
+      { text: "Volatility needs\na {different toolkit.}", durationSec: 2, theme: 'green' },
+      { text: "Floor-First\n{Budgeting.}", durationSec: 1, theme: 'green' },
+    ] },
+
 ];

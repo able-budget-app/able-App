@@ -6,7 +6,7 @@ Currently 2 articles. Pillar + emergency-fund. Paste into one Google Doc.
 
 ---
 
-# Article: index
+# Article: cluster-index
 
 ---
 title: "How to Pay Yourself as a Business Owner With Variable Income"
@@ -22,6 +22,8 @@ secondary_keywords:
   - pay yourself from business
 cluster: business
 page_type: pillar
+youtube_id: "8oT6lEWZa1c"
+youtube_uploaded: "2026-05-10"
 internal_links:
   - /business/emergency-fund/
   - /budgeting/
@@ -258,7 +260,7 @@ You are able to budget inconsistent income.
 
 Able handles the four-account structure automatically. Client money lands, taxes come off, the smoothing reserve grows, and your paycheck hits personal checking on the schedule you pick.
 
-Seven days free. Cancel anytime.
+30 days free. Cancel anytime.
 
 **[Start Free Trial](https://becomeable.app/signup)**
 
@@ -290,6 +292,7 @@ secondary_keywords:
   - how much emergency fund entrepreneur
   - emergency fund inconsistent income
 cluster: business
+youtube_id: "nCvIvVKcysk"
 page_type: supporting
 parent: /business/
 internal_links:
@@ -527,7 +530,7 @@ You are able to budget inconsistent income.
 
 Able automates the allocation. Every deposit gets split. A percentage goes to the emergency fund on every single one. The fund grows in the background while you focus on work.
 
-Seven days free. Cancel anytime.
+30 days free. Cancel anytime.
 
 **[Start Free Trial](https://becomeable.app/signup)**
 

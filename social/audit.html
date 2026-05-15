@@ -1,0 +1,488 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Able · Content audit</title>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400;12..96,600;12..96,800&display=swap" rel="stylesheet">
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    background: #d9e8de;
+    font-family: 'Bricolage Grotesque', sans-serif;
+    color: #111c16;
+    padding: 32px 40px 80px;
+    -webkit-font-smoothing: antialiased;
+  }
+  h1 { font-size: 26px; font-weight: 800; letter-spacing: -.02em; margin-bottom: 4px; }
+  .sub { font-size: 13px; color: #4a5c52; margin-bottom: 20px; }
+
+  /* Summary strip */
+  .summary {
+    display: flex; gap: 8px; flex-wrap: wrap;
+    background: #fff; border-radius: 14px; padding: 14px 16px;
+    margin-bottom: 18px; border: 1px solid rgba(0,0,0,.06);
+    font-size: 12.5px;
+  }
+  .summary b { color: #111c16; }
+  .summary .sep { width: 1px; background: rgba(0,0,0,.1); margin: 0 4px; }
+
+  /* Filter rows */
+  .filter-row {
+    display: flex; gap: 10px; align-items: center; flex-wrap: wrap;
+    margin-bottom: 12px;
+  }
+  .filter-row .label {
+    font-size: 11px; text-transform: uppercase; letter-spacing: .08em;
+    color: #4a5c52; font-weight: 700; width: 90px;
+  }
+  .chip {
+    display: inline-block; padding: 6px 12px; border-radius: 999px;
+    background: #fff; border: 1px solid rgba(0,0,0,.1);
+    font-size: 12px; font-weight: 600; cursor: pointer;
+    color: #4a5c52; transition: all .15s ease;
+  }
+  .chip:hover { border-color: #2a7a4a; color: #2a7a4a; }
+  .chip.active { background: #2a7a4a; color: #fff; border-color: #2a7a4a; }
+  .chip .count {
+    display: inline-block; margin-left: 6px; padding: 1px 6px;
+    background: rgba(0,0,0,.08); border-radius: 6px; font-size: 10.5px;
+    font-weight: 700;
+  }
+  .chip.active .count { background: rgba(255,255,255,.2); }
+
+  .toolbar {
+    display: flex; gap: 12px; align-items: center; justify-content: space-between;
+    background: #fff; border-radius: 14px; padding: 12px 16px;
+    margin-bottom: 18px; border: 1px solid rgba(0,0,0,.06);
+  }
+  .toolbar input {
+    flex: 1; padding: 8px 12px; border: 1px solid rgba(0,0,0,.12);
+    border-radius: 8px; font-family: inherit; font-size: 13px; min-width: 220px;
+  }
+  .toolbar .view-toggle { display: flex; gap: 6px; }
+  .visible-count { font-size: 12px; color: #4a5c52; font-weight: 600; }
+
+  /* Grid */
+  .grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 16px;
+  }
+  .card {
+    background: #fff; border-radius: 14px; overflow: hidden;
+    border: 1px solid rgba(0,0,0,.06);
+    display: flex; flex-direction: column;
+  }
+  .card-head {
+    padding: 10px 12px 8px;
+    border-bottom: 1px solid rgba(0,0,0,.05);
+    display: flex; gap: 6px; flex-wrap: wrap; align-items: center;
+  }
+  .badge {
+    font-size: 10px; padding: 2px 7px; border-radius: 999px;
+    font-weight: 700; letter-spacing: .02em; text-transform: uppercase;
+  }
+  .badge.id { background: #111c16; color: #fff; }
+  .badge.type-single { background: #eaf5ee; color: #2a7a4a; border: 1px solid #c4d8cc; }
+  .badge.type-carousel { background: #0e1a14; color: #fff; }
+  .badge.type-reel { background: #2a7a4a; color: #fff; }
+  .badge.type-brandscript { background: #fff; color: #2a7a4a; border: 1px solid #2a7a4a; }
+  .badge.lane-stats { background: #ffeacc; color: #8a4500; }
+  .badge.lane-brandscript { background: #f0e6ff; color: #5a3a8a; }
+  .badge.lane-product { background: #cce0ff; color: #1a4080; }
+  .badge.lane-other { background: #f0f0f0; color: #555; }
+  .badge.cat { background: rgba(0,0,0,.05); color: #4a5c52; }
+  .badge.scheduled { background: #2a7a4a; color: #fff; }
+  .badge.unscheduled { background: #f5e1c4; color: #8a5000; }
+  .badge.reserved { background: #ddd; color: #555; }
+  .badge.theme { background: rgba(0,0,0,.04); color: #4a5c52; font-weight: 500; }
+
+  .card-slug {
+    padding: 4px 12px 8px; font-size: 12px; color: #4a5c52;
+    word-break: break-word;
+  }
+  .card-frame {
+    position: relative; width: 100%; padding-bottom: 100%;
+    background: #f5f5f5; overflow: hidden;
+  }
+  .card-frame iframe {
+    position: absolute; top: 0; left: 0; width: 270%; height: 270%;
+    border: 0; transform: scale(.37); transform-origin: 0 0;
+    pointer-events: none;
+  }
+  .card-frame.reel-frame iframe {
+    width: 222%; height: 395%; transform: scale(.45);
+  }
+  .card-actions {
+    padding: 8px 12px 10px; display: flex; gap: 8px; justify-content: space-between;
+    font-size: 11.5px;
+  }
+  .card-actions a { color: #2a7a4a; text-decoration: none; font-weight: 600; }
+  .card-actions a:hover { text-decoration: underline; }
+  .card-actions .meta { color: #4a5c52; font-weight: 500; }
+
+  .empty-state {
+    grid-column: 1 / -1;
+    padding: 60px 20px; text-align: center; color: #4a5c52;
+    background: #fff; border-radius: 14px; border: 1px dashed rgba(0,0,0,.12);
+  }
+
+  details.inventory {
+    background: #fff; border: 1px solid rgba(0,0,0,.06); border-radius: 14px;
+    margin-top: 24px; padding: 12px 16px;
+  }
+  details.inventory summary {
+    cursor: pointer; font-size: 13px; font-weight: 700; color: #2a7a4a;
+    padding: 4px 0; user-select: none;
+  }
+  details.inventory ul { margin: 10px 0 6px 18px; font-size: 12.5px; color: #4a5c52; }
+  details.inventory li { margin-bottom: 2px; font-family: ui-monospace, SFMono-Regular, monospace; }
+  .inv-issue { color: #b04500; }
+
+  .reel-text {
+    padding: 12px;
+    font-size: 13px; line-height: 1.45; color: #4a5c52;
+    white-space: pre-wrap;
+    background: #f9f9f9;
+  }
+  .reel-text strong { color: #111c16; }
+</style>
+</head>
+<body>
+
+<h1>Able · Content audit</h1>
+<p class="sub">Every piece in <code>posts/data.js</code> + <code>reels/data.js</code>, grouped by lane. Filter by lane, type, scheduled state, or theme. Search by id/slug/cat. Cards render the actual visual.</p>
+
+<div class="summary" id="summary"></div>
+
+<div class="filter-row">
+  <span class="label">Lane</span>
+  <div id="lane-filters"></div>
+</div>
+<div class="filter-row">
+  <span class="label">Type</span>
+  <div id="type-filters"></div>
+</div>
+<div class="filter-row">
+  <span class="label">Schedule</span>
+  <div id="schedule-filters"></div>
+</div>
+<div class="filter-row">
+  <span class="label">Theme</span>
+  <div id="theme-filters"></div>
+</div>
+
+<div class="toolbar">
+  <input id="search" type="search" placeholder="Search id, slug, cat, or note (e.g. 'CS01', 'stat-77', 'gig')…" />
+  <span class="visible-count" id="visible-count">0 visible</span>
+</div>
+
+<div class="grid" id="grid"></div>
+
+<details class="inventory" id="inventory">
+  <summary>Inventory check (orphans, unscheduled, integrity)</summary>
+  <div id="inventory-body"></div>
+</details>
+
+<script src="posts/data.js"></script>
+<script src="posts/product-data.js"></script>
+<script src="reels/data.js"></script>
+<script>
+(function () {
+  // ─── Load all items ─────────────────────────────────────────────
+  const POSTS_ARR       = window.POSTS || [];
+  const CAROUSELS_ARR   = window.CAROUSELS || [];
+  const RESERVED_ARR    = window.RESERVED_CAROUSELS || [];
+  const BRANDSCRIPT_ARR = window.BRANDSCRIPT || [];
+  const REELS_ARR       = window.REELS || [];
+  const PRODUCT_POSTS     = window.PRODUCT_POSTS || [];
+  const PRODUCT_CAROUSELS = window.PRODUCT_CAROUSELS || [];
+
+  // Annotate kind on each (avoid mutating originals)
+  const items = [
+    ...POSTS_ARR.map(p => ({ ...p, _kind: 'single', _arr: 'POSTS' })),
+    ...CAROUSELS_ARR.map(p => ({ ...p, _kind: 'carousel', _arr: 'CAROUSELS' })),
+    ...RESERVED_ARR.map(p => ({ ...p, _kind: 'carousel', _arr: 'RESERVED' })),
+    ...BRANDSCRIPT_ARR.map(p => ({ ...p, _kind: 'brandscript', _arr: 'BRANDSCRIPT' })),
+    ...REELS_ARR.map(p => ({ ...p, _kind: 'reel', _arr: 'REELS' })),
+    ...PRODUCT_POSTS.map(p => ({ ...p, _kind: 'single', _arr: 'PRODUCT_POSTS' })),
+    ...PRODUCT_CAROUSELS.map(p => ({ ...p, _kind: 'carousel', _arr: 'PRODUCT_CAROUSELS' })),
+  ];
+
+  // ─── Detect lane from id prefix ────────────────────────────────
+  function laneOf(item) {
+    const id = String(item.id || '');
+    if (/^(S|CS|RS)\d+/.test(id)) return 'Stats';
+    if (id.startsWith('B') && /^B\d/.test(id)) return 'BrandScript';
+    if (id.startsWith('P0') || id.startsWith('PC')) return 'Product';
+    if (item._arr === 'RESERVED') return 'Reserve';
+    if (item._arr === 'BRANDSCRIPT') return 'BrandScript';
+    return 'Library'; // singles/carousels/reels with no special prefix
+  }
+  items.forEach(it => { it._lane = laneOf(it); });
+
+  // ─── Pull scheduled IDs from WEEKS by fetching index.html  ─────
+  // (index.html already has the WEEKS array; we parse it once)
+  const SCHEDULE = new Map(); // id -> { week, day }
+  fetch('index.html').then(r => r.text()).then(html => {
+    // Extract WEEKS via regex on the day rows
+    const dayRe = /\{\s*n:\s*(\d+),[\s\S]*?days:\s*\[([\s\S]*?)\]/g;
+    let m;
+    while ((m = dayRe.exec(html)) !== null) {
+      const wk = parseInt(m[1], 10);
+      const inner = m[2];
+      const slotRe = /day:\s*'(\w+)',\s*type:\s*'(\w+)',\s*id:\s*'([^']+)'(?:,\s*note:\s*'([^']*)')?/g;
+      let sm;
+      while ((sm = slotRe.exec(inner)) !== null) {
+        SCHEDULE.set(sm[3], { week: wk, day: sm[1], type: sm[2], note: sm[4] || '' });
+      }
+    }
+    // Sunday brand-script also from BS_CADENCE
+    const bsRe = /const BS_CADENCE\s*=\s*\{([\s\S]*?)\n\s*\};/;
+    const bsBlock = html.match(bsRe);
+    if (bsBlock) {
+      const bsItem = /(\d+):\s*\{\s*id:\s*'([^']+)'/g;
+      let bm;
+      while ((bm = bsItem.exec(bsBlock[1])) !== null) {
+        SCHEDULE.set(bm[2], { week: parseInt(bm[1], 10), day: 'Sun', type: 'brandscript', note: 'Sunday brand-script' });
+      }
+    }
+    annotateScheduling();
+    renderAll();
+  }).catch(() => {
+    // If WEEKS load fails, still render
+    annotateScheduling();
+    renderAll();
+  });
+
+  function annotateScheduling() {
+    items.forEach(it => {
+      const sched = SCHEDULE.get(it.id);
+      if (sched) {
+        it._scheduled = `W${sched.week} · ${sched.day}`;
+        it._weekNum = sched.week;
+      } else {
+        it._scheduled = it._arr === 'RESERVED' ? 'Reserve' : null;
+      }
+    });
+  }
+
+  // ─── Sort: prefer scheduled week order, then id ────────────────
+  function compareItems(a, b) {
+    const aw = a._weekNum ?? 9999;
+    const bw = b._weekNum ?? 9999;
+    if (aw !== bw) return aw - bw;
+    return String(a.id).localeCompare(String(b.id), undefined, { numeric: true });
+  }
+
+  // ─── State ─────────────────────────────────────────────────────
+  const state = {
+    lane: 'Stats',
+    type: 'all',
+    schedule: 'all',
+    theme: 'all',
+    q: '',
+  };
+
+  // ─── Build filter chips ────────────────────────────────────────
+  function counts(by) {
+    const m = new Map();
+    items.forEach(it => {
+      const k = by(it);
+      m.set(k, (m.get(k) || 0) + 1);
+    });
+    return m;
+  }
+  function chipRow(elId, key, options) {
+    const root = document.getElementById(elId);
+    root.innerHTML = '';
+    options.forEach(({ value, label, count }) => {
+      const b = document.createElement('button');
+      b.className = 'chip' + (state[key] === value ? ' active' : '');
+      b.innerHTML = `${label}${count != null ? `<span class="count">${count}</span>` : ''}`;
+      b.addEventListener('click', () => {
+        state[key] = value;
+        renderAll();
+      });
+      root.appendChild(b);
+    });
+  }
+
+  function rebuildFilters() {
+    const laneCounts = counts(it => it._lane);
+    const lanes = ['Stats', 'BrandScript', 'Product', 'Library', 'Reserve'];
+    chipRow('lane-filters', 'lane', [
+      { value: 'all', label: 'All', count: items.length },
+      ...lanes.filter(l => laneCounts.has(l))
+        .map(l => ({ value: l, label: l, count: laneCounts.get(l) }))
+    ]);
+    const typeCounts = counts(it => it._kind);
+    chipRow('type-filters', 'type', [
+      { value: 'all', label: 'All' },
+      ...['single', 'carousel', 'reel', 'brandscript']
+        .filter(t => typeCounts.has(t))
+        .map(t => ({ value: t, label: t, count: typeCounts.get(t) }))
+    ]);
+    chipRow('schedule-filters', 'schedule', [
+      { value: 'all', label: 'All' },
+      { value: 'scheduled', label: 'Scheduled', count: items.filter(i => i._scheduled && i._scheduled !== 'Reserve').length },
+      { value: 'unscheduled', label: 'Unscheduled', count: items.filter(i => !i._scheduled).length },
+      { value: 'reserve', label: 'Reserve', count: items.filter(i => i._scheduled === 'Reserve').length },
+    ]);
+    const themes = [...new Set(items.map(i => i.theme).filter(Boolean))].sort();
+    chipRow('theme-filters', 'theme', [
+      { value: 'all', label: 'All' },
+      ...themes.map(t => ({ value: t, label: t }))
+    ]);
+  }
+
+  // ─── Render summary strip ──────────────────────────────────────
+  function renderSummary() {
+    const el = document.getElementById('summary');
+    const total = items.length;
+    const scheduled = items.filter(i => i._scheduled && i._scheduled !== 'Reserve').length;
+    const stats = items.filter(i => i._lane === 'Stats').length;
+    el.innerHTML = `
+      <span><b>${total}</b> total pieces</span><span class="sep"></span>
+      <span><b>${scheduled}</b> scheduled in WEEKS</span><span class="sep"></span>
+      <span><b>${stats}</b> in Stats lane</span><span class="sep"></span>
+      <span><b>${POSTS_ARR.length}</b> singles · <b>${CAROUSELS_ARR.length}</b> carousels · <b>${RESERVED_ARR.length}</b> reserved · <b>${BRANDSCRIPT_ARR.length}</b> brand-script · <b>${REELS_ARR.length}</b> reels</span>
+    `;
+  }
+
+  // ─── Card render ───────────────────────────────────────────────
+  function previewFor(it) {
+    if (it._kind === 'carousel') {
+      return `<div class="card-frame"><iframe src="posts/cover.html?id=${encodeURIComponent(it.id)}" loading="lazy"></iframe></div>`;
+    }
+    if (it._kind === 'reel') {
+      // Reel preview = first beat text rendered
+      const first = (it.beats || [])[0];
+      const punchClean = first ? first.text.replace(/\{([^}]+)\}/g, '<strong>$1</strong>') : '';
+      return `<div class="reel-text">${punchClean.replace(/\n/g, '<br>')}<br><br><em>${(it.beats || []).length} beats · ${it.durationSec || '?'}s</em></div>`;
+    }
+    // single, brandscript
+    return `<div class="card-frame"><iframe src="posts/template.html?id=${encodeURIComponent(it.id)}" loading="lazy"></iframe></div>`;
+  }
+  function actionsFor(it) {
+    if (it._kind === 'carousel') {
+      const slides = it.slides ? it.slides.length : '?';
+      return `<a href="posts/carousel.html?id=${encodeURIComponent(it.id)}" target="_blank">Open ${slides} slides →</a><span class="meta">${it._scheduled || 'unscheduled'}</span>`;
+    }
+    if (it._kind === 'reel') {
+      return `<a href="reels/index.html#${encodeURIComponent(it.id)}" target="_blank">Open reel →</a><span class="meta">${it._scheduled || 'unscheduled'}</span>`;
+    }
+    return `<a href="posts/template.html?id=${encodeURIComponent(it.id)}" target="_blank">Open full →</a><span class="meta">${it._scheduled || 'unscheduled'}</span>`;
+  }
+  function laneBadgeClass(lane) {
+    if (lane === 'Stats') return 'lane-stats';
+    if (lane === 'BrandScript') return 'lane-brandscript';
+    if (lane === 'Product') return 'lane-product';
+    return 'lane-other';
+  }
+  function cardFor(it) {
+    const lane = it._lane;
+    const sched = it._scheduled;
+    const schedBadge = sched
+      ? (sched === 'Reserve'
+          ? '<span class="badge reserved">Reserve</span>'
+          : `<span class="badge scheduled">${sched}</span>`)
+      : '<span class="badge unscheduled">Unscheduled</span>';
+    return `
+      <div class="card">
+        <div class="card-head">
+          <span class="badge id">${it.id}</span>
+          <span class="badge type-${it._kind}">${it._kind}</span>
+          <span class="badge ${laneBadgeClass(lane)}">${lane}</span>
+          ${it.cat ? `<span class="badge cat">${it.cat}</span>` : ''}
+          ${it.theme ? `<span class="badge theme">${it.theme}</span>` : ''}
+          ${schedBadge}
+        </div>
+        <div class="card-slug">${it.slug || '<em>no slug</em>'}</div>
+        ${previewFor(it)}
+        <div class="card-actions">${actionsFor(it)}</div>
+      </div>
+    `;
+  }
+
+  // ─── Filter + render ───────────────────────────────────────────
+  function filterItems() {
+    return items.filter(it => {
+      if (state.lane !== 'all' && it._lane !== state.lane) return false;
+      if (state.type !== 'all' && it._kind !== state.type) return false;
+      if (state.schedule === 'scheduled' && (!it._scheduled || it._scheduled === 'Reserve')) return false;
+      if (state.schedule === 'unscheduled' && it._scheduled) return false;
+      if (state.schedule === 'reserve' && it._scheduled !== 'Reserve') return false;
+      if (state.theme !== 'all' && it.theme !== state.theme) return false;
+      if (state.q) {
+        const q = state.q.toLowerCase();
+        const blob = `${it.id} ${it.slug || ''} ${it.cat || ''} ${it._scheduled || ''}`.toLowerCase();
+        if (!blob.includes(q)) return false;
+      }
+      return true;
+    }).sort(compareItems);
+  }
+
+  function renderAll() {
+    rebuildFilters();
+    renderSummary();
+    const filtered = filterItems();
+    const grid = document.getElementById('grid');
+    grid.innerHTML = filtered.length
+      ? filtered.map(cardFor).join('')
+      : '<div class="empty-state">No pieces match this filter combo. Loosen something.</div>';
+    document.getElementById('visible-count').textContent = `${filtered.length} visible`;
+    renderInventory();
+  }
+
+  // ─── Inventory check ──────────────────────────────────────────
+  function renderInventory() {
+    const allIds = new Set(items.map(i => i.id));
+    const orphanScheduled = []; // scheduled IDs that don't exist in data
+    SCHEDULE.forEach((info, id) => {
+      if (!allIds.has(id)) orphanScheduled.push({ id, ...info });
+    });
+    const unscheduledNonReserve = items
+      .filter(i => !i._scheduled && i._kind !== 'brandscript')
+      .map(i => `${i.id} (${i._kind}) · ${i.slug || ''}`);
+    const dupeIds = [];
+    const seen = new Map();
+    items.forEach(i => {
+      if (seen.has(i.id)) dupeIds.push(`${i.id} (in ${seen.get(i.id)} and ${i._arr})`);
+      else seen.set(i.id, i._arr);
+    });
+
+    const body = document.getElementById('inventory-body');
+    body.innerHTML = `
+      <p style="margin:8px 0;font-size:12.5px;color:#4a5c52">
+        Scheduled (in WEEKS): <b>${SCHEDULE.size}</b> slots. Library total: <b>${items.length}</b> pieces.
+      </p>
+      ${orphanScheduled.length ? `
+        <p style="margin-top:10px;font-size:12.5px"><b class="inv-issue">${orphanScheduled.length} scheduled IDs missing from data.js</b> (will break the build):</p>
+        <ul>${orphanScheduled.map(o => `<li class="inv-issue">${o.id} → W${o.week}/${o.day} · ${o.note}</li>`).join('')}</ul>
+      ` : '<p style="margin-top:10px;font-size:12.5px;color:#2a7a4a">✓ Every scheduled ID exists in data.js</p>'}
+      ${dupeIds.length ? `
+        <p style="margin-top:10px;font-size:12.5px"><b class="inv-issue">${dupeIds.length} duplicate IDs across arrays:</b></p>
+        <ul>${dupeIds.map(d => `<li class="inv-issue">${d}</li>`).join('')}</ul>
+      ` : '<p style="margin-top:10px;font-size:12.5px;color:#2a7a4a">✓ No duplicate IDs across arrays</p>'}
+      ${unscheduledNonReserve.length ? `
+        <p style="margin-top:10px;font-size:12.5px"><b>${unscheduledNonReserve.length} pieces in library but not scheduled</b> (available for rotation):</p>
+        <details><summary style="cursor:pointer;font-size:12px;color:#4a5c52">Show list</summary>
+        <ul>${unscheduledNonReserve.map(s => `<li>${s}</li>`).join('')}</ul>
+        </details>
+      ` : ''}
+    `;
+  }
+
+  // ─── Search wiring ────────────────────────────────────────────
+  document.getElementById('search').addEventListener('input', e => {
+    state.q = e.target.value.trim();
+    renderAll();
+  });
+
+  // First render (before WEEKS fetch resolves; will re-render after)
+  renderAll();
+})();
+</script>
+</body>
+</html>

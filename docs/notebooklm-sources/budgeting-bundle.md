@@ -6,7 +6,7 @@ All articles in the budgeting cluster bundled into one Google Doc. Pillar first,
 
 ---
 
-# Article: index
+# Article: cluster-index
 
 ---
 title: "How to Budget With Inconsistent Income: The Complete Guide"
@@ -23,6 +23,8 @@ secondary_keywords:
   - how to budget without a steady paycheck
 cluster: budgeting
 page_type: pillar
+youtube_id: "Y8-nTegVbs8"
+youtube_uploaded: "2026-05-10"
 internal_links:
   - /budgeting/freelancer-budget/
   - /budgeting/commission-income-budget/
@@ -289,7 +291,7 @@ Your paycheck does not follow a schedule. Your budget can.
 
 Able is the only budgeting app built from the ground up for entrepreneurs with inconsistent income. Every deposit is split the moment it arrives. Taxes, bills, smoothing reserve, debt, savings. Automatic. In the right order.
 
-Seven days free. Cancel anytime.
+30 days free. Cancel anytime.
 
 **[Start Free Trial](https://becomeable.app/signup)**
 
@@ -322,6 +324,7 @@ secondary_keywords:
   - budgeting as a freelancer
   - freelance income budget
 cluster: budgeting
+youtube_id: "K35WZ8Xx4wE"
 page_type: supporting
 parent: /budgeting/
 internal_links:
@@ -516,7 +519,7 @@ You are able to budget inconsistent income.
 
 Able is built for this. Every deposit gets routed automatically. Taxes come off the top. Your Floor gets funded. Your smoothing reserve grows. You stop guessing.
 
-Seven days free. Cancel anytime.
+30 days free. Cancel anytime.
 
 **[Start Free Trial](https://becomeable.app/signup)**
 
@@ -549,6 +552,7 @@ secondary_keywords:
   - substack writer budget
   - influencer budgeting
 cluster: budgeting
+youtube_id: "neVVXgLThNk"
 page_type: supporting
 parent: /budgeting/
 internal_links:
@@ -700,7 +704,7 @@ You are able to budget inconsistent income.
 
 Able routes every platform payout, every brand deal, every merch deposit. Taxes off the top. Floor funded. Smoothing reserve absorbing the spikes. A creator salary to your personal checking on the schedule you pick.
 
-Seven days free. Cancel anytime.
+30 days free. Cancel anytime.
 
 **[Start Free Trial](https://becomeable.app/signup)**
 
@@ -733,6 +737,7 @@ secondary_keywords:
   - how to break feast or famine cycle
   - feast famine freelance
 cluster: budgeting
+youtube_id: "4hw-aqlJESU"
 page_type: supporting
 parent: /budgeting/
 internal_links:
@@ -880,7 +885,7 @@ You are able to budget inconsistent income.
 
 Able is the system. Every deposit, routed automatically, the moment it arrives. Tax account. Floor funded. Smoothing reserve. Debt and savings moving forward. The feast never leaks. The famine never threatens you.
 
-Seven days free. Cancel anytime.
+30 days free. Cancel anytime.
 
 **[Start Free Trial](https://becomeable.app/signup)**
 
@@ -911,6 +916,7 @@ secondary_keywords:
   - pay yourself consistent income
   - smoothing reserve self-employed
 cluster: budgeting
+youtube_id: "1H452MSsLyo"
 page_type: supporting
 parent: /budgeting/
 internal_links:
@@ -1090,7 +1096,7 @@ You are able to budget inconsistent income.
 
 Able automates the five-bucket system. Client payments land. Taxes come off. Your Floor stays funded. The smoothing reserve grows. You get paid a steady amount on a schedule you set.
 
-Seven days free. Cancel anytime.
+30 days free. Cancel anytime.
 
 **[Start Free Trial](https://becomeable.app/signup)**
 
@@ -1121,6 +1127,7 @@ secondary_keywords:
   - budget for commission sales
   - commission based income budget
 cluster: budgeting
+youtube_id: "P1KegcCBdtQ"
 page_type: supporting
 parent: /budgeting/
 internal_links:
@@ -1310,7 +1317,7 @@ You are able to budget inconsistent income.
 
 Able routes every commission the moment it arrives. Taxes off the top. Floor funded. Smoothing reserve growing. Debt and savings moving forward.
 
-Seven days free. Cancel anytime.
+30 days free. Cancel anytime.
 
 **[Start Free Trial](https://becomeable.app/signup)**
 
@@ -1342,6 +1349,7 @@ secondary_keywords:
   - solopreneur budget
   - coaching business finances
 cluster: budgeting
+youtube_id: "thWItIDeYIo"
 page_type: supporting
 parent: /budgeting/
 internal_links:
@@ -1501,7 +1509,7 @@ You are able to budget inconsistent income.
 
 Able routes every session fee, every package deposit, every insurance reimbursement the moment it lands. Taxes off the top. Floor funded. Smoothing reserve growing. Your paycheck to personal checking on the schedule you set.
 
-Seven days free. Cancel anytime.
+30 days free. Cancel anytime.
 
 **[Start Free Trial](https://becomeable.app/signup)**
 
@@ -1534,6 +1542,7 @@ secondary_keywords:
   - web developer budget
   - design studio budgeting
 cluster: budgeting
+youtube_id: "hG5Sirl38R0"
 page_type: supporting
 parent: /budgeting/
 internal_links:
@@ -1695,7 +1704,7 @@ You are able to budget inconsistent income.
 
 Able routes every invoice the moment it clears. Taxes off the top. Floor funded. Smoothing reserve growing. Your paycheck to personal checking on the day you pick.
 
-Seven days free. Cancel anytime.
+30 days free. Cancel anytime.
 
 **[Start Free Trial](https://becomeable.app/signup)**
 
@@ -1728,6 +1737,7 @@ secondary_keywords:
   - online seller taxes
   - 1099-k etsy taxes
 cluster: budgeting
+youtube_id: "0wbn6ylwZZk"
 page_type: supporting
 parent: /budgeting/
 internal_links:
@@ -1896,7 +1906,7 @@ You are able to budget inconsistent income.
 
 Able routes every platform deposit as it clears. COGS replaced. Taxes off the top. Smoothing reserve absorbing Q4 so Q1 is livable. Your seller paycheck on a schedule that doesn't change with the season.
 
-Seven days free. Cancel anytime.
+30 days free. Cancel anytime.
 
 **[Start Free Trial](https://becomeable.app/signup)**
 
@@ -1930,6 +1940,7 @@ secondary_keywords:
   - real estate agent finances
   - realtor taxes
 cluster: budgeting
+youtube_id: "Faou9iz32Ik"
 page_type: supporting
 parent: /budgeting/
 internal_links:
@@ -2091,7 +2102,7 @@ You are able to budget inconsistent income.
 
 Able routes every closing check the day it hits. Brokerage and TC costs accounted for. Taxes off the top. Chargeback reserve funded. Smoothing reserve growing. Your realtor paycheck landing on schedule.
 
-Seven days free. Cancel anytime.
+30 days free. Cancel anytime.
 
 **[Start Free Trial](https://becomeable.app/signup)**
 
@@ -2124,6 +2135,7 @@ secondary_keywords:
   - gig worker budget
   - delivery driver taxes
 cluster: budgeting
+youtube_id: "P-osA2nWG7Q"
 page_type: supporting
 parent: /budgeting/
 internal_links:
@@ -2274,7 +2286,7 @@ You are able to budget inconsistent income.
 
 Able handles the split automatically. Every payout gets routed. Tax account, vehicle fund, bills account, smoothing reserve. You drive. The money lands in the right places.
 
-Seven days free. Cancel anytime.
+30 days free. Cancel anytime.
 
 **[Start Free Trial](https://becomeable.app/signup)**
 

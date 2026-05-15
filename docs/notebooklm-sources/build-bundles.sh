@@ -105,5 +105,12 @@ build_cluster "$OUT/learn-bundle.md" "Learn" \
   able-content/learn/get-business-funding/index.md \
   able-content/learn/improve-your-credit-score/index.md
 
+build_cluster "$OUT/inconsistent-income-data-bundle.md" "Inconsistent Income Data" \
+  "Stats-led cluster. Pillar + 2 supporting articles backed by 2025-2026 survey data on the 77M+ Americans with inconsistent income. Bundle this Google Doc as a NotebookLM source for the inconsistent-income-data long-form video and any data-led derivatives. Always include docs/statistics.md as a second source for full citations." \
+  able-content/learn/inconsistent-income-data/index.md \
+  able-content/learn/inconsistent-income-data/why-87-percent-struggle-to-budget.md \
+  able-content/learn/inconsistent-income-data/inside-77-million-variable-income-workers.md \
+  docs/statistics.md
+
 echo "[bundles] regenerated:"
 wc -l $OUT/*.md

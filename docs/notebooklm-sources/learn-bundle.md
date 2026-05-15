@@ -6,7 +6,7 @@ Self-contained learning paths. Each was originally a sub-pillar with its own str
 
 ---
 
-# Article: pay-yourself-first
+# Article: cluster-index
 
 ---
 title: "Pay Yourself First"
@@ -18,6 +18,8 @@ target_keyword: "pay yourself first"
 secondary_keywords: []
 cluster: learn-payself
 page_type: pillar
+youtube_id: "tYd3WLDsBpE"
+youtube_uploaded: "2026-05-10"
 internal_links:
   - /learn/
   - /learn/pay-yourself-first/why-youre-not-paying-yourself-and-why-thats-killing-your-business/
@@ -39,13 +41,13 @@ The one thing most entrepreneurs skip. Learn why it matters and the simplest way
 
 ## Start practicing today
 
-Able is the app where the lessons in this course turn into a running system. Every deposit routed. Tax off the top. Smoothing reserve absorbing the swings. Seven days free. Cancel anytime.
+Able is the app where the lessons in this course turn into a running system. Every deposit routed. Tax off the top. Smoothing reserve absorbing the swings. 30 days free. Cancel anytime.
 
 **[Start Free Trial](https://becomeable.app/signup)**
 
 ---
 
-# Article: how-money-works
+# Article: cluster-index
 
 ---
 title: "How Money Actually Works"
@@ -57,6 +59,8 @@ target_keyword: "how money actually works"
 secondary_keywords: []
 cluster: learn-money
 page_type: pillar
+youtube_id: "UlMgWbKCfLw"
+youtube_uploaded: "2026-05-10"
 internal_links:
   - /learn/
   - /learn/how-money-works/money-is-a-skill-you-can-learn/
@@ -105,13 +109,13 @@ The core principles that quietly decide whether you end up wealthy or stuck. Tim
 
 ## Start practicing today
 
-Able is the app where the lessons in this course turn into a running system. Every deposit routed. Tax off the top. Smoothing reserve absorbing the swings. Seven days free. Cancel anytime.
+Able is the app where the lessons in this course turn into a running system. Every deposit routed. Tax off the top. Smoothing reserve absorbing the swings. 30 days free. Cancel anytime.
 
 **[Start Free Trial](https://becomeable.app/signup)**
 
 ---
 
-# Article: get-out-of-debt
+# Article: cluster-index
 
 ---
 title: "How to Get Out of Debt"
@@ -123,6 +127,8 @@ target_keyword: "how to get out of debt"
 secondary_keywords: []
 cluster: learn-debt
 page_type: pillar
+youtube_id: "VO6tNrHdfVU"
+youtube_uploaded: "2026-05-10"
 internal_links:
   - /learn/
   - /learn/get-out-of-debt/why-getting-out-of-debt-feels-impossible/
@@ -171,13 +177,13 @@ A step-by-step plan for paying off debt when your income moves around. Built for
 
 ## Start practicing today
 
-Able is the app where the lessons in this course turn into a running system. Every deposit routed. Tax off the top. Smoothing reserve absorbing the swings. Seven days free. Cancel anytime.
+Able is the app where the lessons in this course turn into a running system. Every deposit routed. Tax off the top. Smoothing reserve absorbing the swings. 30 days free. Cancel anytime.
 
 **[Start Free Trial](https://becomeable.app/signup)**
 
 ---
 
-# Article: get-business-funding
+# Article: cluster-index
 
 ---
 title: "How to Get Funding"
@@ -189,6 +195,8 @@ target_keyword: "how to get funding"
 secondary_keywords: []
 cluster: learn-funding
 page_type: pillar
+youtube_id: "bK52-NKAN_g"
+youtube_uploaded: "2026-05-10"
 internal_links:
   - /learn/
   - /learn/get-business-funding/personal-credit-vs-business-credit/
@@ -237,13 +245,13 @@ From personal credit to business credit to SBA loans. The real roadmap to gettin
 
 ## Start practicing today
 
-Able is the app where the lessons in this course turn into a running system. Every deposit routed. Tax off the top. Smoothing reserve absorbing the swings. Seven days free. Cancel anytime.
+Able is the app where the lessons in this course turn into a running system. Every deposit routed. Tax off the top. Smoothing reserve absorbing the swings. 30 days free. Cancel anytime.
 
 **[Start Free Trial](https://becomeable.app/signup)**
 
 ---
 
-# Article: improve-your-credit-score
+# Article: cluster-index
 
 ---
 title: "How to Improve Your Credit Score"
@@ -255,6 +263,8 @@ target_keyword: "how to improve your credit score"
 secondary_keywords: []
 cluster: learn-credit
 page_type: pillar
+youtube_id: "5YI83Et6Rfk"
+youtube_uploaded: "2026-05-10"
 internal_links:
   - /learn/
   - /learn/improve-your-credit-score/how-your-credit-score-actually-works/
@@ -303,6 +313,6 @@ Everything you need to add 50-150 points to your score in 90 days. Understand th
 
 ## Start practicing today
 
-Able is the app where the lessons in this course turn into a running system. Every deposit routed. Tax off the top. Smoothing reserve absorbing the swings. Seven days free. Cancel anytime.
+Able is the app where the lessons in this course turn into a running system. Every deposit routed. Tax off the top. Smoothing reserve absorbing the swings. 30 days free. Cancel anytime.
 
 **[Start Free Trial](https://becomeable.app/signup)**

@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<title>Able · Carousel Review</title>
+<title>Able · Content Review</title>
 <link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400;12..96,500;12..96,600;12..96,700;12..96,800;12..96,900&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="_styles.css">
 <style>
@@ -16,7 +16,7 @@
   }
   .app {
     display: grid;
-    grid-template-columns: 280px 1fr;
+    grid-template-columns: 320px 1fr;
     min-height: 100vh;
   }
 
@@ -24,305 +24,239 @@
   .sidebar {
     background: #111c16;
     color: #fff;
-    padding: 24px 18px 24px 24px;
+    padding: 22px 18px 24px 22px;
     position: sticky;
     top: 0;
     height: 100vh;
     overflow-y: auto;
     box-sizing: border-box;
   }
-  .sidebar h1 {
-    font-size: 20px;
-    font-weight: 800;
-    letter-spacing: -.01em;
-    margin: 0 0 4px 0;
-  }
-  .sidebar .sub {
-    font-size: 12px;
-    color: rgba(255,255,255,.55);
-    margin-bottom: 20px;
-  }
-  .section-label {
-    font-size: 10px;
-    font-weight: 800;
-    letter-spacing: .18em;
-    text-transform: uppercase;
-    color: rgba(255,255,255,.45);
-    margin: 18px 0 6px 0;
-  }
-  .nav-list { list-style: none; padding: 0; margin: 0; }
-  .nav-list li {
-    padding: 7px 10px;
-    border-radius: 6px;
-    cursor: pointer;
-    font-size: 13px;
-    color: rgba(255,255,255,.82);
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    gap: 8px;
-    line-height: 1.25;
-  }
-  .nav-list li:hover { background: rgba(255,255,255,.06); }
-  .nav-list li.active {
-    background: #2a7a4a;
-    color: #fff;
-  }
-  .nav-list .id {
-    font-weight: 800;
-    font-size: 12px;
-    letter-spacing: .04em;
-    flex-shrink: 0;
-  }
-  .nav-list .slug {
-    flex: 1;
-    color: rgba(255,255,255,.62);
-    font-size: 12px;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    white-space: nowrap;
-  }
-  .nav-list li.active .slug { color: rgba(255,255,255,.85); }
-  .nav-list .badge {
-    background: #f0c84a;
-    color: #111c16;
-    font-size: 10px;
-    font-weight: 800;
-    padding: 2px 6px;
-    border-radius: 999px;
-    min-width: 16px;
-    text-align: center;
-  }
-  .tools {
-    margin-top: 24px;
-    padding-top: 18px;
-    border-top: 1px solid rgba(255,255,255,.12);
-  }
-  .tools button {
+  .sidebar h1 { font-size: 18px; font-weight: 800; letter-spacing: -.01em; margin: 0 0 2px 0; }
+  .sidebar .sub { font-size: 11.5px; color: rgba(255,255,255,.55); margin-bottom: 14px; }
+
+  .filter-block { margin-bottom: 12px; }
+  .filter-block label {
     display: block;
+    font-size: 10px;
+    font-weight: 800;
+    letter-spacing: .14em;
+    text-transform: uppercase;
+    color: rgba(255,255,255,.55);
+    margin-bottom: 4px;
+  }
+  .filter-block select {
     width: 100%;
     background: rgba(255,255,255,.08);
     color: #fff;
     border: 1px solid rgba(255,255,255,.14);
     border-radius: 6px;
-    padding: 9px 12px;
-    font-size: 12px;
-    font-weight: 600;
-    cursor: pointer;
-    margin-bottom: 8px;
+    padding: 8px 10px;
+    font-size: 13px;
     font-family: inherit;
+    cursor: pointer;
+  }
+  .filter-block select:focus { outline: none; border-color: #6fcf80; }
+
+  .filter-search input {
+    width: 100%;
+    background: rgba(255,255,255,.06);
+    color: #fff;
+    border: 1px solid rgba(255,255,255,.14);
+    border-radius: 6px;
+    padding: 8px 10px;
+    font-size: 12px;
+    font-family: inherit;
+    margin-bottom: 10px;
+  }
+  .filter-search input::placeholder { color: rgba(255,255,255,.4); }
+
+  .section-label {
+    font-size: 10px;
+    font-weight: 800;
+    letter-spacing: .18em;
+    text-transform: uppercase;
+    color: rgba(255,255,255,.55);
+    margin: 14px 0 6px 0;
+  }
+  .nav-list { list-style: none; padding: 0; margin: 0; }
+  .nav-list li {
+    padding: 6px 9px;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 12.5px;
+    color: rgba(255,255,255,.82);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 6px;
+    line-height: 1.25;
+  }
+  .nav-list li:hover { background: rgba(255,255,255,.06); }
+  .nav-list li.active { background: #2a7a4a; color: #fff; }
+  .nav-list .id { font-weight: 800; font-size: 11.5px; letter-spacing: .04em; flex-shrink: 0; }
+  .nav-list .slug { flex: 1; color: rgba(255,255,255,.62); font-size: 11.5px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .nav-list li.active .slug { color: rgba(255,255,255,.85); }
+  .nav-list .badge { background: #f0c84a; color: #111c16; font-size: 10px; font-weight: 800; padding: 1px 5px; border-radius: 999px; min-width: 16px; text-align: center; }
+
+  .nav-list .lane-pill {
+    font-size: 9px;
+    padding: 1px 5px;
+    border-radius: 999px;
+    font-weight: 800;
+    letter-spacing: .02em;
+    text-transform: uppercase;
+    margin-right: 2px;
+  }
+  .nav-list .lane-stats { background: #ffb84d; color: #4a2800; }
+  .nav-list .lane-brand { background: #c5a8e8; color: #2e1a4a; }
+  .nav-list .lane-product { background: #88b8ff; color: #0a2a55; }
+  .nav-list .lane-reserve { background: rgba(255,255,255,.18); color: rgba(255,255,255,.7); }
+
+  .tools { margin-top: 22px; padding-top: 16px; border-top: 1px solid rgba(255,255,255,.12); }
+  .tools button {
+    display: block; width: 100%;
+    background: rgba(255,255,255,.08); color: #fff;
+    border: 1px solid rgba(255,255,255,.14); border-radius: 6px;
+    padding: 8px 12px; font-size: 12px; font-weight: 600;
+    cursor: pointer; margin-bottom: 6px; font-family: inherit;
   }
   .tools button:hover { background: rgba(255,255,255,.14); }
   .tools button.danger:hover { background: rgba(220,80,80,.25); border-color: rgba(220,80,80,.5); }
 
-  /* Flagged carousels */
-  .nav-list li.flag-unreviewed::before {
-    content: '🚩';
-    font-size: 11px;
-    margin-right: 4px;
-    flex-shrink: 0;
-  }
-  .nav-list li.flag-approved::before {
-    content: '✓';
-    color: #6fcf80;
-    font-weight: 800;
-    margin-right: 6px;
-    flex-shrink: 0;
-  }
-  .nav-list li.flag-reserved::before {
-    content: '⏸';
-    color: #f5b955;
-    margin-right: 6px;
-    flex-shrink: 0;
-  }
+  /* Flagged */
+  .nav-list li.flag-unreviewed::before { content: '🚩'; font-size: 11px; margin-right: 4px; flex-shrink: 0; }
+  .nav-list li.flag-approved::before { content: '✓'; color: #6fcf80; font-weight: 800; margin-right: 6px; flex-shrink: 0; }
+  .nav-list li.flag-reserved::before { content: '⏸'; color: #f5b955; margin-right: 6px; flex-shrink: 0; }
+
   .flag-bar {
     background: linear-gradient(135deg, rgba(245,185,85,.10), rgba(245,185,85,.03));
     border: 1px solid rgba(245,185,85,.32);
     border-radius: 8px;
-    padding: 16px 20px;
-    margin-bottom: 24px;
-    display: flex;
-    align-items: center;
-    gap: 14px;
-    flex-wrap: wrap;
+    padding: 16px 20px; margin-bottom: 24px;
+    display: flex; align-items: center; gap: 14px; flex-wrap: wrap;
   }
-  .flag-bar .flag-info {
-    font-size: 13px;
-    line-height: 1.45;
-    color: #111c16;
-    flex: 1;
-    min-width: 280px;
-  }
-  .flag-bar .flag-info strong {
-    display: block;
-    font-size: 14px;
-    margin-bottom: 4px;
-  }
-  .flag-bar .flag-actions {
-    display: flex;
-    gap: 8px;
-  }
-  .flag-bar button {
-    border: 1px solid rgba(0,0,0,.16);
-    background: #fff;
-    color: #111c16;
-    border-radius: 6px;
-    padding: 9px 16px;
-    font-size: 13px;
-    font-weight: 700;
-    cursor: pointer;
-    font-family: inherit;
-  }
+  .flag-bar .flag-info { font-size: 13px; line-height: 1.45; color: #111c16; flex: 1; min-width: 280px; }
+  .flag-bar .flag-info strong { display: block; font-size: 14px; margin-bottom: 4px; }
+  .flag-bar .flag-actions { display: flex; gap: 8px; }
+  .flag-bar button { border: 1px solid rgba(0,0,0,.16); background: #fff; color: #111c16; border-radius: 6px; padding: 9px 16px; font-size: 13px; font-weight: 700; cursor: pointer; font-family: inherit; }
   .flag-bar button.btn-approve:hover { background: rgba(111,207,128,.12); border-color: rgba(111,207,128,.5); }
   .flag-bar button.btn-reserve:hover { background: rgba(245,185,85,.16); border-color: rgba(245,185,85,.5); }
-  .flag-bar button.btn-approve.active {
-    background: #6fcf80;
-    color: #fff;
-    border-color: #6fcf80;
-  }
-  .flag-bar button.btn-reserve.active {
-    background: #f5b955;
-    color: #111c16;
-    border-color: #f5b955;
-  }
+  .flag-bar button.btn-approve.active { background: #6fcf80; color: #fff; border-color: #6fcf80; }
+  .flag-bar button.btn-reserve.active { background: #f5b955; color: #111c16; border-color: #f5b955; }
 
   /* Main */
-  .main {
-    padding: 32px 40px;
-    overflow-x: hidden;
-  }
-  .carousel-header {
-    margin-bottom: 24px;
-  }
-  .carousel-header .id {
-    font-size: 11px;
-    font-weight: 800;
-    letter-spacing: .18em;
-    text-transform: uppercase;
-    color: #4a5c52;
-    margin-bottom: 6px;
-  }
-  .carousel-header .title {
-    font-size: 28px;
-    font-weight: 800;
-    letter-spacing: -.02em;
-    color: #111c16;
-    margin-bottom: 4px;
-  }
-  .carousel-header .meta {
-    font-size: 13px;
-    color: #4a5c52;
-  }
+  .main { padding: 28px 36px; overflow-x: hidden; }
 
-  .slide-grid {
-    display: flex;
-    flex-direction: column;
-    gap: 32px;
+  .header {
+    margin-bottom: 22px;
+    display: flex; gap: 10px; flex-wrap: wrap; align-items: center;
   }
+  .header .title-block { flex: 1; min-width: 320px; }
+  .header .id { font-size: 11px; font-weight: 800; letter-spacing: .18em; text-transform: uppercase; color: #4a5c52; margin-bottom: 4px; }
+  .header .title { font-size: 26px; font-weight: 800; letter-spacing: -.02em; color: #111c16; margin-bottom: 4px; line-height: 1.15; }
+  .header .meta { font-size: 13px; color: #4a5c52; }
+  .header .pills { display: flex; gap: 6px; flex-wrap: wrap; }
+  .header .pill {
+    font-size: 11px; font-weight: 700; padding: 4px 10px; border-radius: 999px;
+    background: rgba(0,0,0,.05); color: #4a5c52;
+  }
+  .header .pill.kind { background: #111c16; color: #fff; }
+  .header .pill.channels { background: #d9e8de; color: #1e4e30; }
+  .header .pill.lane-stats { background: #ffb84d; color: #4a2800; }
+  .header .pill.lane-brand { background: #c5a8e8; color: #2e1a4a; }
+  .header .pill.lane-product { background: #88b8ff; color: #0a2a55; }
+
+  /* Carousel slide grid (existing) */
+  .slide-grid { display: flex; flex-direction: column; gap: 28px; }
   .slide-row {
     display: grid;
-    grid-template-columns: 540px 1fr;
-    gap: 24px;
+    grid-template-columns: 480px 1fr;
+    gap: 22px;
     align-items: start;
   }
-  /* Square format renders shorter — keep grid the same but cap height */
-  .slide-frame {
-    width: 540px;
-    overflow: hidden;
-    border-radius: 8px;
-    background: #fff;
-    box-shadow: 0 8px 24px rgba(0,0,0,.10);
-    position: relative;
-  }
-  .slide-frame.tiktok { height: 960px; }
-  .slide-frame.square { height: 540px; }
-  .slide-frame .post {
-    transform: scale(.5);
-    transform-origin: top left;
-    box-shadow: none;
-    flex-shrink: 0;
-  }
+  .slide-frame { width: 480px; overflow: hidden; border-radius: 8px; background: #fff; box-shadow: 0 8px 24px rgba(0,0,0,.10); position: relative; }
+  .slide-frame.tiktok { height: 853px; }
+  .slide-frame.square { height: 480px; }
+  .slide-frame .post { transform: scale(.444); transform-origin: top left; box-shadow: none; flex-shrink: 0; }
   .slide-frame .slide-number {
-    position: absolute;
-    top: 8px;
-    left: 8px;
-    background: rgba(0,0,0,.65);
-    color: #fff;
-    font-size: 11px;
-    font-weight: 800;
-    letter-spacing: .14em;
-    text-transform: uppercase;
-    padding: 4px 8px;
-    border-radius: 4px;
-    z-index: 20;
+    position: absolute; top: 8px; left: 8px;
+    background: rgba(0,0,0,.65); color: #fff;
+    font-size: 11px; font-weight: 800; letter-spacing: .14em; text-transform: uppercase;
+    padding: 4px 8px; border-radius: 4px; z-index: 20;
   }
 
-  .comment-col {
-    padding-top: 4px;
+  /* Single render */
+  .single-row {
+    display: grid;
+    grid-template-columns: 480px 1fr;
+    gap: 22px;
+    align-items: start;
   }
-  .comment-col label {
-    display: block;
-    font-size: 11px;
-    font-weight: 800;
-    letter-spacing: .14em;
-    text-transform: uppercase;
-    color: #4a5c52;
+  .single-frame { width: 480px; height: 480px; overflow: hidden; border-radius: 8px; background: #fff; box-shadow: 0 8px 24px rgba(0,0,0,.10); position: relative; }
+  .single-frame .post { transform: scale(.444); transform-origin: top left; box-shadow: none; }
+
+  /* Reel render */
+  .reel-row { display: grid; grid-template-columns: 320px 1fr; gap: 24px; align-items: start; }
+  .reel-frame {
+    width: 320px;
+    background: #111c16;
+    border-radius: 12px;
+    padding: 18px;
+    color: #fff;
+    box-shadow: 0 8px 24px rgba(0,0,0,.12);
+  }
+  .reel-meta { font-size: 11px; color: rgba(255,255,255,.55); letter-spacing: .14em; text-transform: uppercase; margin-bottom: 12px; font-weight: 800; }
+  .reel-beat {
+    background: rgba(255,255,255,.05);
+    border-left: 3px solid rgba(255,255,255,.2);
+    padding: 10px 14px;
     margin-bottom: 8px;
-  }
-  .comment-col textarea {
-    width: 100%;
-    min-height: 120px;
-    background: #fff;
-    border: 1px solid #d2dad4;
-    border-radius: 8px;
-    padding: 12px 14px;
     font-size: 14px;
-    font-family: inherit;
-    line-height: 1.4;
-    color: #111c16;
-    resize: vertical;
-    box-sizing: border-box;
+    line-height: 1.45;
+    border-radius: 0 6px 6px 0;
+    white-space: pre-wrap;
   }
-  .comment-col textarea:focus {
-    outline: none;
-    border-color: #2a7a4a;
-    box-shadow: 0 0 0 3px rgba(42,122,74,.18);
+  .reel-beat .dur { display: block; font-size: 10px; color: rgba(255,255,255,.45); margin-top: 4px; }
+  .reel-beat strong { background: rgba(111,207,128,.3); padding: 0 4px; border-radius: 3px; font-weight: 700; color: #fff; }
+
+  /* Long-form render */
+  .longform-row { display: grid; grid-template-columns: 1fr 1fr; gap: 28px; align-items: start; }
+  .longform-info {
+    background: #fff; border-radius: 12px; padding: 24px;
+    box-shadow: 0 8px 24px rgba(0,0,0,.10);
   }
-  .comment-col textarea.has-content {
-    background: #fffceb;
-    border-color: #f0c84a;
+  .longform-info h3 { font-size: 13px; font-weight: 800; letter-spacing: .14em; text-transform: uppercase; color: #4a5c52; margin: 0 0 8px; }
+  .longform-info .row { margin-bottom: 10px; font-size: 13.5px; line-height: 1.5; }
+  .longform-info .row b { color: #111c16; }
+  .longform-info .row.has-video { color: #2a7a4a; font-weight: 700; }
+  .longform-info .row.no-video { color: #b04500; }
+  .longform-info a { color: #2a7a4a; font-weight: 700; text-decoration: none; }
+  .longform-info a:hover { text-decoration: underline; }
+  .open-btn {
+    display: inline-block; margin-top: 12px;
+    background: #2a7a4a; color: #fff; padding: 10px 18px;
+    border-radius: 8px; font-weight: 700; text-decoration: none; font-size: 13px;
   }
-  .comment-col .saved {
-    font-size: 11px;
-    color: #2a7a4a;
-    margin-top: 6px;
-    opacity: 0;
-    transition: opacity .2s;
-  }
+
+  .comment-col { padding-top: 4px; }
+  .comment-col label { display: block; font-size: 11px; font-weight: 800; letter-spacing: .14em; text-transform: uppercase; color: #4a5c52; margin-bottom: 8px; }
+  .comment-col textarea { width: 100%; min-height: 120px; background: #fff; border: 1px solid #d2dad4; border-radius: 8px; padding: 12px 14px; font-size: 14px; font-family: inherit; line-height: 1.4; color: #111c16; resize: vertical; box-sizing: border-box; }
+  .comment-col textarea:focus { outline: none; border-color: #2a7a4a; box-shadow: 0 0 0 3px rgba(42,122,74,.18); }
+  .comment-col textarea.has-content { background: #fffceb; border-color: #f0c84a; }
+  .comment-col .saved { font-size: 11px; color: #2a7a4a; margin-top: 6px; opacity: 0; transition: opacity .2s; }
   .comment-col .saved.show { opacity: 1; }
 
-  .empty {
-    padding: 80px 40px;
-    text-align: center;
-    color: #4a5c52;
-  }
+  .empty { padding: 80px 40px; text-align: center; color: #4a5c52; }
   .empty h2 { font-weight: 800; font-size: 22px; margin-bottom: 8px; }
+  .empty-tip { font-size: 12.5px; color: #6a7d72; margin-top: 14px; }
 
   .toast {
-    position: fixed;
-    bottom: 24px;
-    right: 24px;
-    background: #2a7a4a;
-    color: #fff;
-    padding: 12px 18px;
-    border-radius: 8px;
-    font-size: 13px;
-    font-weight: 700;
-    opacity: 0;
-    transform: translateY(8px);
+    position: fixed; bottom: 24px; right: 24px;
+    background: #2a7a4a; color: #fff; padding: 12px 18px;
+    border-radius: 8px; font-size: 13px; font-weight: 700;
+    opacity: 0; transform: translateY(8px);
     transition: opacity .2s, transform .2s;
-    pointer-events: none;
-    z-index: 100;
+    pointer-events: none; z-index: 100;
   }
   .toast.show { opacity: 1; transform: translateY(0); }
 </style>
@@ -330,9 +264,52 @@
 <body>
 <div class="app">
   <aside class="sidebar">
-    <h1>Carousel Review</h1>
+    <h1>Content Review</h1>
     <div class="sub" id="totalSub">— loading —</div>
+
+    <div class="filter-block">
+      <label>Channel</label>
+      <select id="filterChannel">
+        <option value="all">All channels</option>
+        <option value="instagram">Instagram</option>
+        <option value="facebook">Facebook</option>
+        <option value="tiktok">TikTok</option>
+        <option value="yt-shorts">YouTube Shorts</option>
+        <option value="yt-longform">YouTube Long-form</option>
+        <option value="linkedin">LinkedIn</option>
+      </select>
+    </div>
+
+    <div class="filter-block">
+      <label>Lane</label>
+      <select id="filterLane">
+        <option value="all">All lanes</option>
+        <option value="Stats">Stats</option>
+        <option value="BrandScript">BrandScript</option>
+        <option value="Product">Product</option>
+        <option value="Library">Library</option>
+        <option value="Reserve">Reserve</option>
+      </select>
+    </div>
+
+    <div class="filter-block">
+      <label>Type</label>
+      <select id="filterType">
+        <option value="all">All types</option>
+        <option value="single">Singles</option>
+        <option value="carousel">Carousels (slideshows)</option>
+        <option value="reel">Reels</option>
+        <option value="brandscript">Brandscript</option>
+        <option value="longform">Long-form articles</option>
+      </select>
+    </div>
+
+    <div class="filter-search">
+      <input id="filterQ" type="search" placeholder="Search id, slug, title…">
+    </div>
+
     <div id="sections"></div>
+
     <div class="tools">
       <button id="copyMd">Copy comments as markdown</button>
       <button id="copyFlags">Copy flag decisions</button>
@@ -342,8 +319,9 @@
   </aside>
   <main class="main" id="main">
     <div class="empty">
-      <h2>Pick a carousel</h2>
-      <div>Pick one from the left to start reviewing.</div>
+      <h2>Pick something to review</h2>
+      <div>Use the filters on the left. Default view shows all channels.</div>
+      <div class="empty-tip">Channel filter narrows to where the piece publishes. Lane filter narrows to Stats / BrandScript / Product / Library / Reserve.</div>
     </div>
   </main>
 </div>
@@ -351,101 +329,166 @@
 
 <script src="data.js"></script>
 <script src="product-data.js"></script>
+<script src="long-form-data.js"></script>
+<script src="../reels/data.js"></script>
 <script src="_render.js"></script>
 <script>
 (() => {
   const LS_KEY = 'ableReview.comments';
   const FLAG_KEY = 'ableReview.flags';
 
-  // ── Data assembly ──
-  const flaggedCarousels = (window.CAROUSELS || []).filter(c => c.flagged);
-  const tiktokCarousels = (window.CAROUSELS || []).filter(c => c.format === 'tiktok' && !c.flagged);
-  const squareCarousels = (window.CAROUSELS || []).filter(c => c.format !== 'tiktok' && !c.flagged);
-  const productCarousels = window.PRODUCT_CAROUSELS || [];
-  const reservedCarousels = window.RESERVED_CAROUSELS || [];
-
-  const ALL = [...flaggedCarousels, ...tiktokCarousels, ...squareCarousels, ...productCarousels, ...reservedCarousels];
-  const byId = Object.fromEntries(ALL.map(c => [c.id, c]));
-
-  // ── Flag decisions persistence ──
-  const loadFlags = () => {
-    try { return JSON.parse(localStorage.getItem(FLAG_KEY) || '{}'); }
-    catch { return {}; }
-  };
-  let flagDecisions = loadFlags();
-  const saveFlagDecisions = () => localStorage.setItem(FLAG_KEY, JSON.stringify(flagDecisions));
-  const getFlagDecision = (cid) => flagDecisions[cid] || null;
-  const setFlagDecision = (cid, state) => {
-    if (state) flagDecisions[cid] = state;
-    else delete flagDecisions[cid];
-    saveFlagDecisions();
+  // ── Channel map ──
+  // Which channels a kind+format publishes to.
+  const channelsFor = (item) => {
+    const kind = item._kind;
+    if (kind === 'longform') return ['yt-longform', 'linkedin'];
+    if (kind === 'reel') return ['instagram', 'facebook', 'tiktok', 'yt-shorts'];
+    if (kind === 'carousel') {
+      // tiktok-format carousels render as both square carousels AND slideshows + Shorts
+      return ['instagram', 'facebook', 'tiktok', 'yt-shorts'];
+    }
+    if (kind === 'single') return ['instagram', 'facebook'];
+    if (kind === 'brandscript') return ['instagram', 'facebook', 'linkedin'];
+    return [];
   };
 
-  // ── Comments persistence ──
-  const loadComments = () => {
-    try { return JSON.parse(localStorage.getItem(LS_KEY) || '{}'); }
-    catch { return {}; }
+  // ── Lane detection ──
+  const laneOf = (item) => {
+    const id = String(item.id || '');
+    if (/^(S|CS|RS)\d/.test(id)) return 'Stats';
+    if (/^B\d/.test(id)) return 'BrandScript';
+    if (/^(P0|PC)/.test(id)) return 'Product';
+    if (item._fromReserved) return 'Reserve';
+    return 'Library';
   };
-  let comments = loadComments();
+
+  // ── Build the full item list ──
+  const annotate = (arr, kind, extra = {}) =>
+    (arr || []).map(x => ({ ...x, _kind: kind, ...extra }));
+
+  const allItems = [
+    ...annotate(window.POSTS, 'single'),
+    ...annotate(window.CAROUSELS, 'carousel'),
+    ...annotate(window.RESERVED_CAROUSELS, 'carousel', { _fromReserved: true }),
+    ...annotate(window.BRANDSCRIPT, 'brandscript'),
+    ...annotate(window.REELS, 'reel'),
+    ...annotate(window.PRODUCT_POSTS, 'single', { _product: true }),
+    ...annotate(window.PRODUCT_CAROUSELS, 'carousel', { _product: true }),
+    ...annotate(window.LONGFORM, 'longform'),
+  ];
+  allItems.forEach(it => {
+    it._lane = laneOf(it);
+    it._channels = channelsFor(it);
+    it._displayId = it.id;
+    it._displayTitle = it.title || it.slug || '';
+  });
+
+  const byId = Object.fromEntries(allItems.map(c => [c.id, c]));
+
+  // ── Persistence (comments + flags) ──
+  const loadJSON = (k) => { try { return JSON.parse(localStorage.getItem(k) || '{}'); } catch { return {}; } };
+  let comments = loadJSON(LS_KEY);
+  let flagDecisions = loadJSON(FLAG_KEY);
   const saveComments = () => localStorage.setItem(LS_KEY, JSON.stringify(comments));
+  const saveFlagDecisions = () => localStorage.setItem(FLAG_KEY, JSON.stringify(flagDecisions));
+
   const getComment = (cid, sIdx) => (comments[cid] && comments[cid][sIdx]) || '';
   const setComment = (cid, sIdx, text) => {
     if (!text.trim()) {
-      if (comments[cid]) {
-        delete comments[cid][sIdx];
-        if (!Object.keys(comments[cid]).length) delete comments[cid];
-      }
+      if (comments[cid]) { delete comments[cid][sIdx]; if (!Object.keys(comments[cid]).length) delete comments[cid]; }
     } else {
       if (!comments[cid]) comments[cid] = {};
       comments[cid][sIdx] = text;
     }
     saveComments();
   };
-  const countCommentsFor = (cid) =>
-    comments[cid] ? Object.keys(comments[cid]).length : 0;
-  const totalComments = () =>
-    Object.values(comments).reduce((sum, c) => sum + Object.keys(c).length, 0);
+  const countCommentsFor = (cid) => comments[cid] ? Object.keys(comments[cid]).length : 0;
+  const totalComments = () => Object.values(comments).reduce((sum, c) => sum + Object.keys(c).length, 0);
+  const getFlagDecision = (cid) => flagDecisions[cid] || null;
+  const setFlagDecision = (cid, state) => { if (state) flagDecisions[cid] = state; else delete flagDecisions[cid]; saveFlagDecisions(); };
+
+  // ── Filter state ──
+  const state = { channel: 'all', lane: 'all', type: 'all', q: '' };
+
+  // ── Filter items ──
+  const filterItems = () => {
+    return allItems.filter(it => {
+      if (state.channel !== 'all' && !it._channels.includes(state.channel)) return false;
+      if (state.lane !== 'all' && it._lane !== state.lane) return false;
+      if (state.type !== 'all' && it._kind !== state.type) return false;
+      if (state.q) {
+        const q = state.q.toLowerCase();
+        const blob = `${it.id} ${it.slug || ''} ${it.title || ''} ${it.cat || ''}`.toLowerCase();
+        if (!blob.includes(q)) return false;
+      }
+      return true;
+    });
+  };
 
   // ── Sidebar render ──
   const sectionsEl = document.getElementById('sections');
   const totalSubEl = document.getElementById('totalSub');
 
-  const renderSections = () => {
-    const sections = [
-      { label: '🚩 Flagged for review', items: flaggedCarousels },
-      { label: 'TikTok · 9:16', items: tiktokCarousels },
-      { label: 'Square · 1:1', items: squareCarousels },
-      { label: 'Product', items: productCarousels },
-      { label: '⏸ Reserved (held for later)', items: reservedCarousels, reserved: true },
-    ].filter(s => s.items.length > 0);
+  const lanePillClass = (lane) =>
+    lane === 'Stats' ? 'lane-stats'
+    : lane === 'BrandScript' ? 'lane-brand'
+    : lane === 'Product' ? 'lane-product'
+    : lane === 'Reserve' ? 'lane-reserve'
+    : '';
 
-    sectionsEl.innerHTML = sections.map(section => `
-      <div class="section-label">${section.label} (${section.items.length})</div>
-      <ul class="nav-list">
-        ${section.items.map(c => {
-          const cnt = countCommentsFor(c.id);
-          const decision = c.flagged ? getFlagDecision(c.id) : null;
-          const flagClass = c.flagged
-            ? (decision === 'approve' ? 'flag-approved'
-              : decision === 'reserve' ? 'flag-reserved'
-              : 'flag-unreviewed')
-            : '';
-          return `<li data-id="${c.id}" class="${flagClass}">
-            <span class="id">${c.id}</span>
-            <span class="slug">${c.slug || ''}</span>
-            ${cnt ? `<span class="badge">${cnt}</span>` : ''}
-          </li>`;
-        }).join('')}
-      </ul>
-    `).join('');
+  const renderSections = () => {
+    const filtered = filterItems();
+    // Group by kind
+    const groups = [
+      { label: 'Singles', kind: 'single' },
+      { label: 'Carousels (IG/FB) · Slideshows (TT) · YT Shorts', kind: 'carousel' },
+      { label: 'Reels (video)', kind: 'reel' },
+      { label: 'Brandscript', kind: 'brandscript' },
+      { label: 'Long-form articles', kind: 'longform' },
+    ];
+
+    sectionsEl.innerHTML = groups
+      .map(g => {
+        const items = filtered.filter(it => it._kind === g.kind);
+        if (!items.length) return '';
+        // Sort: Stats lane first, then by id
+        items.sort((a, b) => {
+          if (a._lane !== b._lane) {
+            if (a._lane === 'Stats') return -1;
+            if (b._lane === 'Stats') return 1;
+          }
+          return String(a.id).localeCompare(String(b.id), undefined, { numeric: true });
+        });
+        return `
+          <div class="section-label">${g.label} (${items.length})</div>
+          <ul class="nav-list">
+            ${items.map(it => {
+              const cnt = countCommentsFor(it.id);
+              const isFlagged = it.flagged;
+              const decision = isFlagged ? getFlagDecision(it.id) : null;
+              const flagClass = isFlagged
+                ? (decision === 'approve' ? 'flag-approved' : decision === 'reserve' ? 'flag-reserved' : 'flag-unreviewed')
+                : '';
+              const lanePill = it._lane !== 'Library'
+                ? `<span class="lane-pill ${lanePillClass(it._lane)}">${it._lane.slice(0, 4)}</span>`
+                : '';
+              return `<li data-id="${it.id}" class="${flagClass}">
+                ${lanePill}<span class="id">${it.id}</span>
+                <span class="slug">${it.slug || it.title || ''}</span>
+                ${cnt ? `<span class="badge">${cnt}</span>` : ''}
+              </li>`;
+            }).join('')}
+          </ul>
+        `;
+      })
+      .join('') || `<div style="padding:20px 4px;font-size:12px;color:rgba(255,255,255,.5)">No items match these filters.</div>`;
 
     sectionsEl.querySelectorAll('li[data-id]').forEach(li => {
-      li.addEventListener('click', () => selectCarousel(li.dataset.id));
+      li.addEventListener('click', () => selectItem(li.dataset.id));
     });
 
     const total = totalComments();
-    totalSubEl.textContent =
-      `${ALL.length} carousels · ${total} comment${total === 1 ? '' : 's'}`;
+    totalSubEl.textContent = `${filtered.length} of ${allItems.length} · ${total} comment${total === 1 ? '' : 's'}`;
   };
 
   const updateBadge = (cid) => {
@@ -455,199 +498,231 @@
     const cnt = countCommentsFor(cid);
     if (cnt) {
       if (existing) existing.textContent = cnt;
-      else {
-        const b = document.createElement('span');
-        b.className = 'badge';
-        b.textContent = cnt;
-        li.appendChild(b);
-      }
-    } else if (existing) {
-      existing.remove();
-    }
+      else { const b = document.createElement('span'); b.className = 'badge'; b.textContent = cnt; li.appendChild(b); }
+    } else if (existing) existing.remove();
     const total = totalComments();
-    totalSubEl.textContent =
-      `${ALL.length} carousels · ${total} comment${total === 1 ? '' : 's'}`;
+    const filtered = filterItems();
+    totalSubEl.textContent = `${filtered.length} of ${allItems.length} · ${total} comment${total === 1 ? '' : 's'}`;
   };
 
-  // ── Main render ──
+  // ── Main view ──
   const mainEl = document.getElementById('main');
   let activeId = null;
 
-  const selectCarousel = (id) => {
-    activeId = id;
-    sectionsEl.querySelectorAll('li').forEach(li => {
-      li.classList.toggle('active', li.dataset.id === id);
-    });
-
-    const carousel = byId[id];
-    if (!carousel) {
-      mainEl.innerHTML = `<div class="empty"><h2>Not found</h2><div>No carousel with id ${id}.</div></div>`;
-      return;
-    }
-
-    const fmt = carousel.format === 'tiktok' ? 'tiktok' : 'square';
-    const themeLabel = carousel.theme || 'page';
-
-    const flagBarHtml = (() => {
-      if (!carousel.flagged) return '';
-      const decision = getFlagDecision(carousel.id);
-      const reasons = {
-        'tax-edu': {
-          title: 'Tax-education content',
-          body: "Able doesn't help with taxes beyond the tax bucket + classify + export. Approve if the carousel ties to an Able feature; reserve if it's pure thought-leadership that could imply Able does taxes."
-        },
-        'credit-edu': {
-          title: 'Credit-score content',
-          body: "Able doesn't help with credit scores yet. Approve if it's valuable thought-leadership worth posting; reserve to revisit when Able adds a credit feature."
-        },
-      };
-      const r = reasons[carousel.flagged] || { title: 'Flagged for review', body: '' };
-      return `
-        <div class="flag-bar" data-flag-bar="${carousel.id}">
-          <div class="flag-info">
-            <strong>🚩 ${r.title}</strong>
-            ${r.body}
-          </div>
-          <div class="flag-actions">
-            <button class="btn-approve ${decision === 'approve' ? 'active' : ''}" data-action="approve">✓ Approve</button>
-            <button class="btn-reserve ${decision === 'reserve' ? 'active' : ''}" data-action="reserve">⏸ Reserve</button>
-          </div>
+  const flagBarHtml = (item) => {
+    if (!item.flagged) return '';
+    const decision = getFlagDecision(item.id);
+    const reasons = {
+      'tax-edu': { title: 'Tax-education content', body: "Able doesn't help with taxes beyond the tax bucket + classify + export. Approve if the carousel ties to an Able feature; reserve if it's pure thought-leadership that could imply Able does taxes." },
+      'credit-edu': { title: 'Credit-score content', body: "Able doesn't help with credit scores yet. Approve if it's valuable thought-leadership worth posting; reserve to revisit when Able adds a credit feature." },
+    };
+    const r = reasons[item.flagged] || { title: 'Flagged for review', body: '' };
+    return `
+      <div class="flag-bar" data-flag-bar="${item.id}">
+        <div class="flag-info"><strong>🚩 ${r.title}</strong>${r.body}</div>
+        <div class="flag-actions">
+          <button class="btn-approve ${decision === 'approve' ? 'active' : ''}" data-action="approve">✓ Approve</button>
+          <button class="btn-reserve ${decision === 'reserve' ? 'active' : ''}" data-action="reserve">⏸ Reserve</button>
         </div>
-      `;
-    })();
-
-    mainEl.innerHTML = `
-      ${flagBarHtml}
-      <div class="carousel-header">
-        <div class="id">${carousel.id} · ${themeLabel} · ${carousel.format || 'square'}</div>
-        <div class="title">${carousel.slug || '(no slug)'}</div>
-        <div class="meta">${carousel.slides.length} slide${carousel.slides.length === 1 ? '' : 's'}</div>
       </div>
+    `;
+  };
+
+  const headerHtml = (item) => {
+    const kindLabel = { single: 'Single', carousel: 'Carousel/Slideshow', reel: 'Reel', brandscript: 'Brandscript', longform: 'Long-form' }[item._kind];
+    const channelPills = item._channels.map(c => `<span class="pill channels">${c}</span>`).join('');
+    const lanePillCls = lanePillClass(item._lane);
+    return `
+      <div class="header">
+        <div class="title-block">
+          <div class="id">${item.id} · ${item.theme || item._kind}</div>
+          <div class="title">${item.slug || item.title || '(no slug)'}</div>
+          <div class="meta">${item.title || ''}</div>
+        </div>
+        <div class="pills">
+          <span class="pill kind">${kindLabel}</span>
+          ${item._lane !== 'Library' ? `<span class="pill ${lanePillCls}">${item._lane}</span>` : ''}
+          ${channelPills}
+        </div>
+      </div>
+    `;
+  };
+
+  const renderCarousel = (item) => {
+    const fmt = item.format === 'tiktok' ? 'tiktok' : 'square';
+    mainEl.innerHTML = `
+      ${flagBarHtml(item)}
+      ${headerHtml(item)}
       <div class="slide-grid" id="slideGrid"></div>
     `;
-
-    if (carousel.flagged) {
-      const bar = mainEl.querySelector(`[data-flag-bar="${carousel.id}"]`);
-      bar.querySelectorAll('button').forEach(btn => {
-        btn.addEventListener('click', () => {
-          const action = btn.dataset.action;
-          const current = getFlagDecision(carousel.id);
-          const next = current === action ? null : action;
-          setFlagDecision(carousel.id, next);
-          bar.querySelectorAll('button').forEach(b => b.classList.remove('active'));
-          if (next) btn.classList.add('active');
-          // Update sidebar li class
-          const li = sectionsEl.querySelector(`li[data-id="${carousel.id}"]`);
-          if (li) {
-            li.classList.remove('flag-approved', 'flag-reserved', 'flag-unreviewed');
-            li.classList.add(
-              next === 'approve' ? 'flag-approved'
-              : next === 'reserve' ? 'flag-reserved'
-              : 'flag-unreviewed'
-            );
-          }
-          toast(next ? `${next === 'approve' ? 'Approved' : 'Reserved'} ${carousel.id}` : `Cleared ${carousel.id}`);
-        });
-      });
-    }
-
+    wireFlagBar(item);
     const grid = document.getElementById('slideGrid');
-    carousel.slides.forEach((slide, i) => {
-      const slideData = Object.assign(
-        { theme: carousel.theme, format: carousel.format },
-        slide
-      );
+    item.slides.forEach((slide, i) => {
+      const slideData = Object.assign({ theme: item.theme, format: item.format }, slide);
       const row = document.createElement('div');
       row.className = 'slide-row';
-
       const frame = document.createElement('div');
       frame.className = `slide-frame ${fmt}`;
       const tag = document.createElement('div');
-      tag.className = 'slide-number';
-      tag.textContent = `Slide ${i + 1}`;
+      tag.className = 'slide-number'; tag.textContent = `Slide ${i + 1}`;
       frame.appendChild(tag);
-      const post = document.createElement('div');
-      post.className = 'post';
-      frame.appendChild(post);
+      const post = document.createElement('div'); post.className = 'post'; frame.appendChild(post);
       renderSlideInto(post, slideData);
-
-      const col = document.createElement('div');
-      col.className = 'comment-col';
-      const slotKey = String(i + 1);
-      const initial = getComment(id, slotKey);
-      col.innerHTML = `
-        <label>Comment · Slide ${i + 1}</label>
-        <textarea data-cid="${id}" data-slide="${slotKey}"
-          placeholder="Notes for this slide…">${initial.replace(/</g, '&lt;')}</textarea>
-        <div class="saved">Saved.</div>
-      `;
-      const ta = col.querySelector('textarea');
-      if (initial.trim()) ta.classList.add('has-content');
-      const savedEl = col.querySelector('.saved');
-
-      let debounce;
-      ta.addEventListener('input', () => {
-        clearTimeout(debounce);
-        debounce = setTimeout(() => {
-          setComment(id, slotKey, ta.value);
-          ta.classList.toggle('has-content', !!ta.value.trim());
-          updateBadge(id);
-          savedEl.classList.add('show');
-          setTimeout(() => savedEl.classList.remove('show'), 900);
-        }, 250);
-      });
-      ta.addEventListener('blur', () => {
-        setComment(id, slotKey, ta.value);
-        updateBadge(id);
-      });
-
-      row.appendChild(frame);
-      row.appendChild(col);
+      const col = makeCommentCol(item.id, String(i + 1), `Slide ${i + 1}`);
+      row.appendChild(frame); row.appendChild(col);
       grid.appendChild(row);
     });
+  };
 
-    document.title = `Review · ${carousel.id} · ${carousel.slug || ''}`;
+  const renderSingle = (item) => {
+    mainEl.innerHTML = `
+      ${headerHtml(item)}
+      <div class="single-row">
+        <div class="single-frame"><div class="post"></div></div>
+        <div id="singleComment"></div>
+      </div>
+    `;
+    const post = mainEl.querySelector('.single-frame .post');
+    // Pass the full item so product-template fields (shot, pos, noWordmark) reach the renderer.
+    renderSlideInto(post, item);
+    document.getElementById('singleComment').replaceWith(makeCommentCol(item.id, 'main', 'Notes'));
+  };
+
+  const renderReel = (item) => {
+    const beats = item.beats || [];
+    mainEl.innerHTML = `
+      ${headerHtml(item)}
+      <div class="reel-row">
+        <div class="reel-frame">
+          <div class="reel-meta">${beats.length} beats · ${item.durationSec || '?'}s · ${item.theme || ''}</div>
+          ${beats.map((b, i) => `
+            <div class="reel-beat">
+              ${b.text.replace(/\{([^}]+)\}/g, '<strong>$1</strong>').replace(/\n/g, '<br>')}
+              <span class="dur">Beat ${i + 1} · ${b.durationSec || '?'}s${b.theme ? ' · ' + b.theme : ''}</span>
+            </div>
+          `).join('')}
+        </div>
+        <div id="reelComment"></div>
+      </div>
+    `;
+    document.getElementById('reelComment').replaceWith(makeCommentCol(item.id, 'main', 'Notes'));
+  };
+
+  const renderLongform = (item) => {
+    const hasVideo = !!item.youtube_id;
+    mainEl.innerHTML = `
+      ${headerHtml(item)}
+      <div class="longform-row">
+        <div class="longform-info">
+          <h3>Article details</h3>
+          <div class="row"><b>Title:</b> ${item.title || '(no title)'}</div>
+          <div class="row"><b>Type:</b> ${item.page_type || 'supporting'}</div>
+          <div class="row"><b>Cluster:</b> ${item.cluster || '(none)'}</div>
+          <div class="row"><b>URL:</b> ${item.url ? `<a href="${item.url}" target="_blank">${item.url}</a>` : '<em>(not set)</em>'}</div>
+          <div class="row ${hasVideo ? 'has-video' : 'no-video'}">
+            <b>YouTube:</b> ${hasVideo ? `<a href="https://youtu.be/${item.youtube_id}" target="_blank">${item.youtube_id}</a>` : 'Not uploaded yet'}
+          </div>
+          <div class="row"><b>Source path:</b> <code>able-content/${item.path}</code></div>
+          ${item.url ? `<a class="open-btn" href="${item.url}" target="_blank">Open article →</a>` : ''}
+        </div>
+        <div id="longComment"></div>
+      </div>
+    `;
+    document.getElementById('longComment').replaceWith(makeCommentCol(item.id, 'main', 'Notes'));
+  };
+
+  const makeCommentCol = (cid, slotKey, labelText) => {
+    const col = document.createElement('div');
+    col.className = 'comment-col';
+    const initial = getComment(cid, slotKey);
+    col.innerHTML = `
+      <label>${labelText}</label>
+      <textarea placeholder="Notes for this…">${initial.replace(/</g, '&lt;')}</textarea>
+      <div class="saved">Saved.</div>
+    `;
+    const ta = col.querySelector('textarea');
+    if (initial.trim()) ta.classList.add('has-content');
+    const savedEl = col.querySelector('.saved');
+    let debounce;
+    ta.addEventListener('input', () => {
+      clearTimeout(debounce);
+      debounce = setTimeout(() => {
+        setComment(cid, slotKey, ta.value);
+        ta.classList.toggle('has-content', !!ta.value.trim());
+        updateBadge(cid);
+        savedEl.classList.add('show');
+        setTimeout(() => savedEl.classList.remove('show'), 900);
+      }, 250);
+    });
+    ta.addEventListener('blur', () => { setComment(cid, slotKey, ta.value); updateBadge(cid); });
+    return col;
+  };
+
+  const wireFlagBar = (item) => {
+    if (!item.flagged) return;
+    const bar = mainEl.querySelector(`[data-flag-bar="${item.id}"]`);
+    if (!bar) return;
+    bar.querySelectorAll('button').forEach(btn => {
+      btn.addEventListener('click', () => {
+        const action = btn.dataset.action;
+        const current = getFlagDecision(item.id);
+        const next = current === action ? null : action;
+        setFlagDecision(item.id, next);
+        bar.querySelectorAll('button').forEach(b => b.classList.remove('active'));
+        if (next) btn.classList.add('active');
+        const li = sectionsEl.querySelector(`li[data-id="${item.id}"]`);
+        if (li) {
+          li.classList.remove('flag-approved', 'flag-reserved', 'flag-unreviewed');
+          li.classList.add(next === 'approve' ? 'flag-approved' : next === 'reserve' ? 'flag-reserved' : 'flag-unreviewed');
+        }
+        toast(next ? `${next === 'approve' ? 'Approved' : 'Reserved'} ${item.id}` : `Cleared ${item.id}`);
+      });
+    });
+  };
+
+  const selectItem = (id) => {
+    activeId = id;
+    sectionsEl.querySelectorAll('li').forEach(li => li.classList.toggle('active', li.dataset.id === id));
+    const item = byId[id];
+    if (!item) {
+      mainEl.innerHTML = `<div class="empty"><h2>Not found</h2><div>No item with id ${id}.</div></div>`;
+      return;
+    }
+    if (item._kind === 'carousel') renderCarousel(item);
+    else if (item._kind === 'reel') renderReel(item);
+    else if (item._kind === 'longform') renderLongform(item);
+    else renderSingle(item); // single + brandscript
+    document.title = `Review · ${item.id} · ${item.slug || item.title || ''}`;
     history.replaceState(null, '', '?id=' + id);
   };
+
+  // ── Filter wiring ──
+  document.getElementById('filterChannel').addEventListener('change', e => { state.channel = e.target.value; renderSections(); });
+  document.getElementById('filterLane').addEventListener('change', e => { state.lane = e.target.value; renderSections(); });
+  document.getElementById('filterType').addEventListener('change', e => { state.type = e.target.value; renderSections(); });
+  document.getElementById('filterQ').addEventListener('input', e => { state.q = e.target.value.trim(); renderSections(); });
 
   // ── Tools ──
   const toast = (msg) => {
     const t = document.getElementById('toast');
-    t.textContent = msg;
-    t.classList.add('show');
+    t.textContent = msg; t.classList.add('show');
     setTimeout(() => t.classList.remove('show'), 1400);
   };
-
   const commentsAsMarkdown = () => {
     const lines = [];
-    ALL.forEach(c => {
+    allItems.forEach(c => {
       const cs = comments[c.id];
       if (!cs || !Object.keys(cs).length) return;
-      lines.push(`## ${c.id} · ${c.slug || ''}`);
-      Object.keys(cs)
-        .sort((a, b) => Number(a) - Number(b))
-        .forEach(sIdx => {
-          lines.push(`- Slide ${sIdx}: ${cs[sIdx]}`);
-        });
+      lines.push(`## ${c.id} · ${c.slug || c.title || ''}`);
+      Object.keys(cs).sort((a, b) => isNaN(+a) || isNaN(+b) ? a.localeCompare(b) : Number(a) - Number(b))
+        .forEach(k => lines.push(`- ${k === 'main' ? 'Notes' : 'Slide ' + k}: ${cs[k]}`));
       lines.push('');
     });
     return lines.join('\n').trim() || '(no comments yet)';
   };
-
-  document.getElementById('copyMd').addEventListener('click', async () => {
-    const md = commentsAsMarkdown();
-    try {
-      await navigator.clipboard.writeText(md);
-      toast('Markdown copied.');
-    } catch {
-      // fallback: show in a textarea-prompt-like alert
-      window.prompt('Copy this:', md);
-    }
-  });
-
   const flagDecisionsAsMarkdown = () => {
     const approved = [], reserved = [], unreviewed = [];
-    flaggedCarousels.forEach(c => {
+    allItems.filter(it => it.flagged).forEach(c => {
       const d = getFlagDecision(c.id);
       const label = `${c.id} · ${c.slug || ''} (${c.flagged})`;
       if (d === 'approve') approved.push(label);
@@ -656,54 +731,41 @@
     });
     return [
       '## Approved (keep in active library):',
-      approved.length ? approved.map(s => '- ' + s).join('\n') : '_(none)_',
-      '',
+      approved.length ? approved.map(s => '- ' + s).join('\n') : '_(none)_', '',
       '## Reserved (move to RESERVED_CAROUSELS):',
-      reserved.length ? reserved.map(s => '- ' + s).join('\n') : '_(none)_',
-      '',
+      reserved.length ? reserved.map(s => '- ' + s).join('\n') : '_(none)_', '',
       '## Unreviewed:',
       unreviewed.length ? unreviewed.map(s => '- ' + s).join('\n') : '_(none)_',
     ].join('\n');
   };
-
-  document.getElementById('copyFlags').addEventListener('click', async () => {
-    const md = flagDecisionsAsMarkdown();
-    try {
-      await navigator.clipboard.writeText(md);
-      toast('Flag decisions copied.');
-    } catch {
-      window.prompt('Copy this:', md);
-    }
+  document.getElementById('copyMd').addEventListener('click', async () => {
+    try { await navigator.clipboard.writeText(commentsAsMarkdown()); toast('Markdown copied.'); }
+    catch { window.prompt('Copy this:', commentsAsMarkdown()); }
   });
-
+  document.getElementById('copyFlags').addEventListener('click', async () => {
+    try { await navigator.clipboard.writeText(flagDecisionsAsMarkdown()); toast('Flag decisions copied.'); }
+    catch { window.prompt('Copy this:', flagDecisionsAsMarkdown()); }
+  });
   document.getElementById('exportJson').addEventListener('click', () => {
-    const blob = new Blob([JSON.stringify(comments, null, 2)], { type: 'application/json' });
+    const blob = new Blob([JSON.stringify({ comments, flagDecisions }, null, 2)], { type: 'application/json' });
     const ts = new Date().toISOString().slice(0, 19).replace(/[:T]/g, '-');
     const url = URL.createObjectURL(blob);
     const a = document.createElement('a');
-    a.href = url;
-    a.download = `carousel-comments-${ts}.json`;
-    a.click();
+    a.href = url; a.download = `content-review-${ts}.json`; a.click();
     URL.revokeObjectURL(url);
   });
-
   document.getElementById('clearAll').addEventListener('click', () => {
     if (!confirm('Clear ALL comments? This cannot be undone.')) return;
-    comments = {};
-    saveComments();
-    renderSections();
-    if (activeId) selectCarousel(activeId);
+    comments = {}; saveComments(); renderSections();
+    if (activeId) selectItem(activeId);
     toast('All comments cleared.');
   });
 
   // ── Boot ──
   renderSections();
   const initialId = new URLSearchParams(location.search).get('id');
-  if (initialId && byId[initialId]) {
-    selectCarousel(initialId);
-  } else if (tiktokCarousels.length) {
-    selectCarousel(tiktokCarousels[0].id);
-  }
+  if (initialId && byId[initialId]) selectItem(initialId);
+  // If no initial, leave the empty state (so filters take effect first)
 })();
 </script>
 </body>
