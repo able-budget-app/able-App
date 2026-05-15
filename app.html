@@ -1772,6 +1772,25 @@ posthog.init('phc_B6PH36QxpExnyBYhfScFFF6LhDvoyxuFr6PypJuxxky3', {
 <script>
   (function(){
     if (!document.querySelector('meta[name="able-runtime"][content="ios-capacitor"]')) return;
+    // OAuth bounce-back: the appUrlOpen handler reloads the WebView after
+    // exchangeCodeForSession to work around a Supabase REST hang. We don't
+    // want the swoosh splash to replay on that reload — the user already
+    // saw it on cold launch. The flag is sessionStorage so it auto-clears
+    // when the WebView is fully torn down (app kill), but survives the
+    // single hard reload.
+    try {
+      const skipFlag = sessionStorage.getItem('able_skip_splash_once');
+      if (skipFlag) {
+        sessionStorage.removeItem('able_skip_splash_once');
+        const age = Date.now() - parseInt(skipFlag, 10);
+        // Only honor a fresh flag (within 30s). Stale flag = OAuth-reload
+        // that never completed; user shouldn't lose the splash on cold launch.
+        if (age >= 0 && age < 30000) {
+          try { window.Capacitor?.Plugins?.SplashScreen?.hide?.({ fadeOutDuration: 0 }); } catch(_){}
+          return;
+        }
+      }
+    } catch(_) {}
     document.documentElement.classList.add('cap-splash-on');
     document.body.insertAdjacentHTML('afterbegin',
       '<div id="splash-overlay" aria-hidden="true">' +
@@ -1930,7 +1949,8 @@ posthog.init('phc_B6PH36QxpExnyBYhfScFFF6LhDvoyxuFr6PypJuxxky3', {
     </div>
     <div id="paywall-error" style="display:none;margin-top:.75rem;background:#fdeef2;border:1.5px solid rgba(192,64,96,.3);border-radius:var(--ds-r1);padding:12px 14px;font-size:13px;font-weight:600;color:var(--ds-c4);font-family:var(--ds-f);"></div>
     <div style="text-align:center;margin-top:1.25rem;font-size:11px;color:var(--ds-t3);font-weight:600;letter-spacing:.025em;line-height:1.7;">
-      Secured by Stripe · Cancel anytime · <a href="/terms.html" target="_blank" style="color:var(--ds-t3);text-decoration:none;font-weight:700;">Terms</a> · <a href="/privacy.html" target="_blank" style="color:var(--ds-t3);text-decoration:none;font-weight:700;">Privacy</a>
+      Your subscription auto-renews at the rate shown above until canceled. Cancel anytime in Settings → Manage subscription.<br>
+      Secured by Stripe · <a href="/terms.html" target="_blank" style="color:var(--ds-t3);text-decoration:none;font-weight:700;">Terms</a> · <a href="/privacy.html" target="_blank" style="color:var(--ds-t3);text-decoration:none;font-weight:700;">Privacy</a>
     </div>
     <div style="text-align:center;margin-top:1rem;">
       <button class="btn-ghost btn btn-sm" onclick="doSignOut()">Sign out</button>
@@ -2651,7 +2671,11 @@ posthog.init('phc_B6PH36QxpExnyBYhfScFFF6LhDvoyxuFr6PypJuxxky3', {
         </button>
         <button class="btn" onclick="clearAllData()" style="text-align:left;padding:14px 16px;border-color:rgba(192,64,96,.25);">
           <div style="font-weight:800;display:flex;align-items:center;gap:10px;color:var(--ds-c4);"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink:0;"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/><path d="M10 11v6M14 11v6"/><path d="M9 6V4a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v2"/></svg>Clear all data</div>
-          <div style="font-size:11px;color:var(--ds-t3);font-weight:600;margin-top:5px;margin-left:28px;">Wipes everything. Cannot be undone.</div>
+          <div style="font-size:11px;color:var(--ds-t3);font-weight:600;margin-top:5px;margin-left:28px;">Wipes your bills, debts, and history. Account stays.</div>
+        </button>
+        <button class="btn" onclick="deleteAccount()" style="text-align:left;padding:14px 16px;border-color:rgba(192,64,96,.5);">
+          <div style="font-weight:800;display:flex;align-items:center;gap:10px;color:var(--ds-c4);"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink:0;"><path d="M18 6L6 18M6 6l12 12"/></svg>Delete account</div>
+          <div style="font-size:11px;color:var(--ds-t3);font-weight:600;margin-top:5px;margin-left:28px;">Permanently deletes your account and all data. Cannot be undone.</div>
         </button>
         <button class="btn" onclick="doSignOut()" style="text-align:left;padding:14px 16px;">
           <div style="font-weight:800;color:var(--ds-t1);">Sign out</div>
@@ -3167,10 +3191,54 @@ function showAuthSuccess(msg){const el=document.getElementById('auth-success');e
 function hideAuthMessages(){document.getElementById('auth-error').style.display='none';document.getElementById('auth-success').style.display='none';if(typeof hideSignupResendOption==='function')hideSignupResendOption();}
 
 async function doGoogleAuth() {
+  const isCap = _isCapacitor();
+  // On Capacitor, window.location.origin is able://localhost. We can't use
+  // able://localhost/... as the OAuth redirect because Capacitor's WKWebView
+  // would intercept it as a content URL (iosScheme=able + host=localhost
+  // matches the WebView's content pattern), triggering a full page reload
+  // and replaying the splash. Using a non-localhost host (able://oauth-
+  // callback) routes the URL only through the native deep-link handler,
+  // leaving the WebView untouched.
+  const redirectTo = isCap
+    ? 'able://oauth-callback'
+    : window.location.origin + '/app.html';
+
+  if (isCap) {
+    // skipBrowserRedirect keeps the Capacitor WebView on the auth-screen
+    // instead of navigating away to the Supabase OAuth URL. We open the URL
+    // ourselves in external Safari (or fall back to SFSafariViewController),
+    // so when Supabase deep-links back via able://localhost/app.html?code=X
+    // our WebView is still alive, exchangeCodeForSession completes in-place,
+    // and SIGNED_IN fires onAuthStateChange — no full page reload, no splash
+    // replay.
+    const { data, error } = await sbGet().auth.signInWithOAuth({
+      provider: 'google',
+      options: {
+        redirectTo,
+        queryParams: { prompt: 'select_account' },
+        skipBrowserRedirect: true
+      }
+    });
+    if (error) { showAuthError(error.message); return; }
+    const oauthUrl = data?.url;
+    if (!oauthUrl) { showAuthError('Could not start Google sign-in.'); return; }
+    const AppLauncher = window.Capacitor?.Plugins?.AppLauncher;
+    try {
+      if (AppLauncher?.openUrl) {
+        await AppLauncher.openUrl({ url: oauthUrl });
+      } else {
+        await window.Capacitor.Plugins.Browser.open({ url: oauthUrl, presentationStyle: 'fullscreen' });
+      }
+    } catch (e) {
+      showAuthError(e?.message || 'Could not open Google sign-in.');
+    }
+    return;
+  }
+
   const {error} = await sbGet().auth.signInWithOAuth({
     provider: 'google',
     options: {
-      redirectTo: window.location.origin + '/app.html',
+      redirectTo,
       // Force Google's account picker every time. Without this, Google silently
       // signs the user in with whatever account the browser already has cached,
       // which means "sign out then create a new account" loops back into the same
@@ -3212,7 +3280,12 @@ async function doAppleAuth() {
       // Mismatch like "passed nonce and nonce in id_token should either both
       // exist or not" or "nonces mismatch" come from sending the wrong form
       // to either side.
-      const rawNonce = Math.random().toString(36).slice(2) + Math.random().toString(36).slice(2);
+      // Cryptographically random nonce. Math.random in WKWebView is
+      // predictable (xorshift128+) which defeats the entire id_token replay
+      // defense Apple/Supabase require.
+      const _rb = new Uint8Array(32);
+      crypto.getRandomValues(_rb);
+      const rawNonce = Array.from(_rb).map(b => b.toString(16).padStart(2, '0')).join('');
       const hashedNonce = await _sha256Hex(rawNonce);
       const result = await SignInWithApple.authorize({
         clientId: 'com.becomeable.app',
@@ -3415,8 +3488,18 @@ async function doSignOut() {
   // Clear everything client-side IMMEDIATELY for instant feedback
   if(currentUser) {
     sessionStorage.removeItem('able_access_'+currentUser.id);
+    // Drop the cross-launch subscription cache too — otherwise a second
+    // user signing in on the same device within 24h inherits the previous
+    // user's optimistic "has access" grant.
+    try { localStorage.removeItem('able_sub_'+currentUser.id); } catch(_){}
     _clearUserDataCache(currentUser.id);
   }
+  // Defensive: clear any auth-flow flags so a sign-in immediately after
+  // sign-out can't inherit a stale "OAuth reload pending" state.
+  try {
+    sessionStorage.removeItem('able_oauth_reload_pending');
+    sessionStorage.removeItem('able_skip_splash_once');
+  } catch(_){}
   // Clear Supabase's auth token from localStorage manually for instant sign out
   Object.keys(localStorage).forEach(k => {
     if(k.startsWith('sb-') && k.includes('-auth-token')) localStorage.removeItem(k);
@@ -3679,7 +3762,7 @@ async function checkSubscription(userId) {
   if (isLocalWebDev) {
     return true;
   }
-  // Check cache first - avoids round trip for returning users
+  // Check sessionStorage cache first — fast path within a single session.
   const cached = sessionStorage.getItem('able_access_'+userId);
   if(cached === 'true') {
     // Cache hit, but still fetch the actual status in the background so
@@ -3688,31 +3771,75 @@ async function checkSubscription(userId) {
     return true;
   }
 
+  // localStorage cache (cross-launch). The first Supabase REST call after
+  // a fresh app launch on Capacitor routinely takes 4–6s+ to settle, and
+  // a paying user staring at the paywall while we figure that out is the
+  // worst UX. If we've previously confirmed an active subscription within
+  // the last 24h, grant optimistic access and refresh in the background.
+  // 24h TTL means a lapsed sub still hits the paywall by the next day.
+  const lsKey = 'able_sub_'+userId;
   try {
-    // 2s per-call timeout (was 5s). Supabase typically responds in <500ms;
-    // a 5s wait on a stalled call burned a third of the polling budget on
-    // one attempt. Tighter timeout = faster retry, faster perceived flow.
-    const timeout = new Promise((_, reject) => setTimeout(() => reject(new Error('timeout')), 2000));
+    const raw = localStorage.getItem(lsKey);
+    if (raw) {
+      const parsed = JSON.parse(raw);
+      const fresh = parsed?.ts && (Date.now() - parsed.ts) < 24*60*60*1000;
+      const grant = ['active','trialing','lifetime'].includes(parsed?.status);
+      if (fresh && grant) {
+        sessionStorage.setItem('able_access_'+userId, 'true');
+        fetchSubscriptionStatus(userId).then(s=>{
+          if (s) {
+            try { localStorage.setItem(lsKey, JSON.stringify({status:s, ts:Date.now()})); } catch(_){}
+            renderSubscriptionPlan(s);
+          }
+        });
+        return true;
+      }
+    }
+  } catch (_) {}
+
+  // Retry pattern: the first Supabase REST call after a cold Capacitor
+  // launch routinely takes 6s+ (TLS handshake + cold WebView networking
+  // stack), while subsequent calls in the same session settle in <500ms.
+  // Use a generous first timeout + one retry so paying users don't bounce
+  // to the paywall on cold sign-in.
+  const attempt = async (timeoutMs) => {
+    const timeout = new Promise((_, reject) => setTimeout(() => reject(new Error('timeout')), timeoutMs));
     const query = sbGet().from('profiles').select('subscription_status').eq('id', userId).single();
     const result = await Promise.race([query, timeout]);
-    const data = result?.data;
-    if(!data) return false;
-    const status = data.subscription_status;
-    renderSubscriptionPlan(status);
-    // Fire once-per-user events for subscription lifecycle moments.
-    // Deterministic eventID matches stripe-webhook's capi_<userId>_<event>
-    // so Meta dedupes browser pixel + server CAPI into one conversion.
-    if (status === 'active') {
-      Able.trackOnce('subscription_activated', { eventID: `capi_${userId}_Subscribe` });
+    return result?.data || null;
+  };
+  let data;
+  try {
+    data = await attempt(8000);
+  } catch (e) {
+    console.debug('checkSubscription first attempt error:', e.message, '— retrying');
+    try {
+      data = await attempt(8000);
+    } catch (e2) {
+      console.debug('checkSubscription retry error:', e2.message);
+      return false;
     }
-    if (status === 'inactive') Able.trackOnce('subscription_canceled');
-    const hasAccess = ['active', 'trialing', 'lifetime'].includes(status);
-    if(hasAccess) sessionStorage.setItem('able_access_'+userId, 'true');
-    return hasAccess;
-  } catch(e) {
-    console.debug('checkSubscription error:', e.message);
-    return false;
   }
+  if(!data) return false;
+  const status = data.subscription_status;
+  renderSubscriptionPlan(status);
+  // Fire once-per-user events for subscription lifecycle moments.
+  // Deterministic eventID matches stripe-webhook's capi_<userId>_<event>
+  // so Meta dedupes browser pixel + server CAPI into one conversion.
+  if (status === 'active') {
+    Able.trackOnce('subscription_activated', { eventID: `capi_${userId}_Subscribe` });
+  }
+  if (status === 'inactive') Able.trackOnce('subscription_canceled');
+  const hasAccess = ['active', 'trialing', 'lifetime'].includes(status);
+  if(hasAccess) {
+    sessionStorage.setItem('able_access_'+userId, 'true');
+    try { localStorage.setItem('able_sub_'+userId, JSON.stringify({status, ts:Date.now()})); } catch(_){}
+  } else {
+    // Authoritative "not subscribed" — clear any stale optimistic cache so
+    // a lapsed sub correctly hits the paywall on next sign-in.
+    try { localStorage.removeItem('able_sub_'+userId); } catch(_){}
+  }
+  return hasAccess;
 }
 
 async function fetchSubscriptionStatus(userId) {
@@ -3965,6 +4092,10 @@ async function _onAuthStateChangeImpl(user) {
         console.debug(`[Able] verify-checkout-session: ${Math.round(performance.now()-tVerify)}ms`, vData, vErr);
         if (!vErr && vData?.status === 'active') {
           sessionStorage.setItem('able_access_'+user.id, 'true');
+          // Persist across app launches so the next sign-in skips the
+          // slow first-call Supabase REST query entirely. Subscription
+          // status from verify is authoritative — we just took payment.
+          try { localStorage.setItem('able_sub_'+user.id, JSON.stringify({status: vData.subscription_status || 'trialing', ts: Date.now()})); } catch(_){}
           hasAccess = true;
           Able.track('checkout_verified_via_session_id');
         } else if (vErr || (vData && vData.status !== 'pending' && vData.status !== 'active')) {
@@ -6994,17 +7125,25 @@ async function startCheckout() {
     // Stripe has the ref_token in session metadata now; clear local copy.
     localStorage.removeItem('able_ref_token');
     try { await flushSave(); } catch(e) { /* swallow - proceed to checkout */ }
-    // Capacitor: open Stripe in SFSafariViewController so it stays inside
-    // the app envelope. Apple flags an in-WebView navigation to an external
-    // payment URL as IAP-avoidance (Guideline 3.1.1); the system browser
-    // sheet is the compliant path. The deep-link handler will close it
-    // when the user returns via able://checkout-success.
-    if (_isCapacitor() && window.Capacitor?.Plugins?.Browser?.open) {
-      await window.Capacitor.Plugins.Browser.open({ url: session_url, presentationStyle: 'popover' });
+    // Capacitor: open Stripe in EXTERNAL Safari (not SFSafariViewController)
+    // via @capacitor/app-launcher. Apple 3.1.1 enforcement is meaningfully
+    // more lenient on a full-app-switch to system Safari than on the in-app
+    // browser sheet. Stripe's success_url (/checkout-return.html) deep-links
+    // back to the app via able://checkout-success?session_id=X, where the
+    // appUrlOpen handler picks it up and runs the post-checkout settle.
+    if (_isCapacitor()) {
+      const AppLauncher = window.Capacitor?.Plugins?.AppLauncher;
+      if (AppLauncher?.openUrl) {
+        await AppLauncher.openUrl({ url: session_url });
+      } else {
+        // Fallback if the plugin isn't loaded for some reason — opens the
+        // in-app browser sheet so the user can still complete checkout.
+        await window.Capacitor.Plugins.Browser.open({ url: session_url, presentationStyle: 'fullscreen' });
+      }
       // Reset the button so the user has a working CTA if they dismiss
-      // SFSafariViewController without completing checkout. On the success
-      // path the deep-link handler triggers a full reload and this state
-      // gets wiped anyway.
+      // Safari without completing checkout. On the success path the
+      // deep-link handler triggers a full reload and this state gets
+      // wiped anyway.
       btn.textContent='Get started →';
       btn.disabled=false;
     } else {
@@ -7037,11 +7176,17 @@ async function openManageSubscription() {
     const url=resp.data?.portal_url;
     if(!url) throw new Error(resp.data?.error||'Portal unavailable');
     try { await flushSave(); } catch(e) { /* swallow - proceed to portal */ }
-    if (_isCapacitor() && window.Capacitor?.Plugins?.Browser?.open) {
-      await window.Capacitor.Plugins.Browser.open({ url, presentationStyle: 'popover' });
-      // Reset the button after a beat — the in-app browser hides the app UI
-      // anyway, but if the user dismisses without changing anything they'd
-      // otherwise see "Opening Stripe…" stuck on the button.
+    if (_isCapacitor()) {
+      // External Safari via @capacitor/app-launcher for the same 3.1.1
+      // reasoning as startCheckout. Stripe billing portal isn't a "purchase"
+      // surface per se (just management), but keeping the pattern consistent
+      // reduces reviewer confusion.
+      const AppLauncher = window.Capacitor?.Plugins?.AppLauncher;
+      if (AppLauncher?.openUrl) {
+        await AppLauncher.openUrl({ url });
+      } else {
+        await window.Capacitor.Plugins.Browser.open({ url, presentationStyle: 'fullscreen' });
+      }
       setTimeout(() => { btn.disabled = false; btn.innerHTML = original; }, 1000);
     } else {
       window.location.href=url;
@@ -11858,16 +12003,57 @@ document.addEventListener('DOMContentLoaded', () => {
   try {
     const App = window.Capacitor?.Plugins?.App;
     if (App?.addListener) {
-      App.addListener('appUrlOpen', (event) => {
+      App.addListener('appUrlOpen', async (event) => {
         try {
           const raw = event?.url || '';
           if (!raw) return;
           // Always dismiss the in-app browser if one is open — Stripe Checkout
-          // / billing portal / future Plaid Hosted Link all return via deep
-          // link and we want SFSafariViewController gone before the app UI
-          // settles back. Browser.close() is a no-op when nothing is open.
+          // / billing portal / Supabase OAuth all return via deep link and we
+          // want SFSafariViewController gone before the app UI settles back.
+          // Browser.close() is a no-op when nothing is open.
           try { window.Capacitor?.Plugins?.Browser?.close?.(); } catch (_) {}
           const u = new URL(raw);
+
+          // Supabase OAuth callback (Google sign-in). PKCE flow appends
+          // ?code=<verifier> on success. We exchange the code here, then
+          // force a full WebView reload to /index.html.
+          //
+          // Why the reload: Supabase REST queries (.from('profiles').select)
+          // on the SAME WebView lifecycle as the OAuth code exchange hang
+          // and time out indefinitely on Capacitor — measured 16s+ in
+          // production. Queries on a FRESHLY-loaded WebView (where the
+          // Supabase client initializes with the cached session from
+          // localStorage from the start) resolve in <500ms. The exact root
+          // cause is unclear (suspected: client-internal auth state race
+          // after exchangeCodeForSession), but the reload reliably works
+          // around it. Costs ~1s of splash replay; gains: paying users
+          // actually get into the app on sign-in.
+          const oauthCode = u.searchParams.get('code');
+          if (oauthCode) {
+            // Store a timestamp so stale flags (>30s old, indicating a
+            // crash/kill mid-OAuth) get ignored by the SIGNED_IN check.
+            // Without this guard, a future email/password sign-in could
+            // be silently deferred forever because nothing clears the flag.
+            try { sessionStorage.setItem('able_oauth_reload_pending', String(Date.now())); } catch(_){}
+            try { sessionStorage.setItem('able_skip_splash_once', String(Date.now())); } catch(_){}
+            try {
+              const { error } = await sbGet().auth.exchangeCodeForSession(oauthCode);
+              if (error) {
+                try { sessionStorage.removeItem('able_oauth_reload_pending'); } catch(_){}
+                try { sessionStorage.removeItem('able_skip_splash_once'); } catch(_){}
+                console.warn('[Able] OAuth code exchange failed:', error);
+                return;
+              }
+              window.location.href = '/index.html';
+              return;
+            } catch (e) {
+              try { sessionStorage.removeItem('able_oauth_reload_pending'); } catch(_){}
+              try { sessionStorage.removeItem('able_skip_splash_once'); } catch(_){}
+              console.warn('[Able] OAuth code exchange error:', e);
+              return;
+            }
+          }
+
           // Two shapes we expect from /checkout-return.html:
           //   able://checkout-success?session_id=cs_...   ← payment succeeded
           //   able://localhost/app.html                   ← cancel / portal bounce
@@ -15024,6 +15210,38 @@ async function clearAllData(){
   alert('All data cleared.');
 }
 
+// Permanent account deletion. Wipes the auth user + all owned rows server-
+// side, then signs out client-side. After this the user cannot sign back in
+// to the same account. Required by Apple Guideline 5.1.1(v) for any app
+// that offers account creation.
+async function deleteAccount(){
+  if(!confirm('This will PERMANENTLY DELETE your Able account and all of your data. This cannot be undone. Continue?')) return;
+  if(!confirm('Last chance. Type-confirm by tapping OK once more to permanently delete your account.')) return;
+  try {
+    const resp = await sbGet().functions.invoke('delete-account', { body: {} });
+    if (resp.error || !resp.data?.ok) {
+      const msg = resp.data?.error || resp.error?.message || 'Account deletion failed. Please contact hello@becomeable.app.';
+      alert(msg);
+      return;
+    }
+    // Clear local state and sign out. The auth user is already deleted server-
+    // side; signOut just tears down the client-side session and reloads.
+    if (currentUser) {
+      try { sessionStorage.removeItem('able_access_'+currentUser.id); } catch(_){}
+      try { localStorage.removeItem('able_sub_'+currentUser.id); } catch(_){}
+      try { _clearUserDataCache(currentUser.id); } catch(_){}
+    }
+    Object.keys(localStorage).forEach(k => {
+      if (k.startsWith('sb-') && k.includes('-auth-token')) localStorage.removeItem(k);
+    });
+    try { await sbGet().auth.signOut(); } catch(_){}
+    alert('Your account has been deleted.');
+    window.location.href = window.location.origin + window.location.pathname;
+  } catch (e) {
+    alert('Account deletion failed: ' + (e?.message || e) + '\n\nIf this keeps happening, email hello@becomeable.app.');
+  }
+}
+
 // ═══════════════════════════════════════
 // NAV
 // ═══════════════════════════════════════
@@ -15909,6 +16127,10 @@ window.addEventListener('load', async () => {
     // INITIAL_SESSION fires once when auth is fully initialized - queries work reliably from this point
     if(event === 'INITIAL_SESSION') {
       initialSessionHandled = true;
+      // Clear the OAuth deferral flag (set by appUrlOpen handler before the
+      // WebView reload). From this point any SIGNED_IN events fire from
+      // genuine user actions (e.g., email sign-in) and should route normally.
+      try { sessionStorage.removeItem('able_oauth_reload_pending'); } catch(_){}
       if(session?.user) {
         currentUser = session.user;
         await runAuthFlow(session.user);
@@ -15919,6 +16141,19 @@ window.addEventListener('load', async () => {
     // exchange timing. Always run the flow when we have a user; the runAuthFlow guard
     // dedupes against a concurrent INITIAL_SESSION-triggered run.
     if(event === 'SIGNED_IN' && session?.user) {
+      // OAuth deep-link path sets a sessionStorage flag (timestamp value)
+      // right before forcing a WebView reload. Skip routing both pre-reload
+      // and post-reload-pre-INITIAL_SESSION (avoids a 16s timeout on the
+      // SIGNED_IN-triggered checkSubscription). INITIAL_SESSION's handler
+      // clears the flag and owns routing. Stale flag (>30s) is ignored —
+      // covers the crash-mid-OAuth case where the reload never fired.
+      const oauthFlag = sessionStorage.getItem('able_oauth_reload_pending');
+      if (oauthFlag) {
+        const flagAge = Date.now() - parseInt(oauthFlag, 10);
+        if (flagAge >= 0 && flagAge < 30000) return;
+        // Stale — clear it and proceed normally
+        try { sessionStorage.removeItem('able_oauth_reload_pending'); } catch(_){}
+      }
       currentUser = session.user;
       await runAuthFlow(session.user);
     }

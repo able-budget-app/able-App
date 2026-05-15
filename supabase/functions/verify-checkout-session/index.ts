@@ -114,8 +114,12 @@ function _getServiceKey(): string {
     if (!session) return json(req, { error: 'Session not found' }, 404)
 
     // Ownership check: the session must belong to the calling user.
+    // Fail-closed: missing metadata.supabase_uid (legacy/dashboard-created
+    // sessions, future paths) must NOT grant access — otherwise any
+    // authenticated user who can guess a cs_xxx can attach that customer
+    // to their own profile.
     const sessionUid = session.metadata?.supabase_uid
-    if (sessionUid && sessionUid !== userId) {
+    if (!sessionUid || sessionUid !== userId) {
       return json(req, { error: 'Session does not belong to caller' }, 403)
     }
 

@@ -51,12 +51,12 @@ def load_creds():
     return creds
 
 
-def read_sheet(sheet_id: str) -> dict:
+def read_sheet(sheet_id: str, tab: str) -> dict:
     """Return {page_url: {video_id, published_date}} for rows where video_id is populated."""
     creds = load_creds()
     sheets = build("sheets", "v4", credentials=creds, cache_discovery=False)
     res = sheets.spreadsheets().values().get(
-        spreadsheetId=sheet_id, range="A1:ZZ"
+        spreadsheetId=sheet_id, range=f"{tab}!A1:ZZ"
     ).execute()
     values = res.get("values", [])
     if not values:
@@ -135,6 +135,7 @@ def patch_frontmatter(fm: str, video_id: str, uploaded_date: str) -> str:
 def main():
     p = argparse.ArgumentParser()
     p.add_argument("--sheet-id", help="Google Sheet ID (or SHEET_ID env var)")
+    p.add_argument("--tab", help="Sheet tab name (or YT_LONGFORM_TAB env var, default 'yt-longform')")
     p.add_argument("--dry-run", action="store_true", help="Show changes without writing")
     p.add_argument("--build", action="store_true", help="Run build-resources.py after patching")
     args = p.parse_args()
@@ -142,8 +143,9 @@ def main():
     sheet_id = args.sheet_id or os.environ.get("SHEET_ID")
     if not sheet_id:
         sys.exit("error: pass --sheet-id or set SHEET_ID env var")
+    tab = args.tab or os.environ.get("YT_LONGFORM_TAB") or "yt-longform"
 
-    sheet_data = read_sheet(sheet_id)
+    sheet_data = read_sheet(sheet_id, tab)
     print(f"[inject] {len(sheet_data)} sheet row(s) have a youtube_video_id")
 
     # Index articles by url (frontmatter `url:` field — unambiguous across clusters)
