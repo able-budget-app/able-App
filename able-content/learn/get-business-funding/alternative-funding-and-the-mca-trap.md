@@ -7,6 +7,7 @@ meta_description: "Fast money comes at a brutal cost. When banks say no, alterna
 target_keyword: "alternative funding and the mca trap"
 secondary_keywords: []
 cluster: learn-funding
+youtube_id: "615oSzf1a4U"
 page_type: supporting
 parent: /learn/get-business-funding/
 internal_links:

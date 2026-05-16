@@ -7,6 +7,7 @@ meta_description: "The reasons behind the rejections. Roughly 80% of small busin
 target_keyword: "why small business owners get denied"
 secondary_keywords: []
 cluster: learn-funding
+youtube_id: "ehMMzfv15_g"
 page_type: supporting
 parent: /learn/get-business-funding/
 internal_links:

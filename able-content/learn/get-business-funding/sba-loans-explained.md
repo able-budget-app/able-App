@@ -7,6 +7,7 @@ meta_description: "The cheapest money you can borrow. The SBA doesn't lend direc
 target_keyword: "sba loans explained"
 secondary_keywords: []
 cluster: learn-funding
+youtube_id: "YPkHtlg7wJw"
 page_type: supporting
 parent: /learn/get-business-funding/
 internal_links:

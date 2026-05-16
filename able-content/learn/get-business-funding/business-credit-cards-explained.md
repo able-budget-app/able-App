@@ -7,6 +7,7 @@ meta_description: "Personal guarantee vs true business credit. Business cards co
 target_keyword: "business credit cards explained"
 secondary_keywords: []
 cluster: learn-funding
+youtube_id: "cIhJcXJKxe4"
 page_type: supporting
 parent: /learn/get-business-funding/
 internal_links:

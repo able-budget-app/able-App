@@ -7,6 +7,7 @@ meta_description: "The fastest path to business credit. Once your business infra
 target_keyword: "building paydex to 80"
 secondary_keywords: []
 cluster: learn-funding
+youtube_id: "uOuW-Ej490U"
 page_type: supporting
 parent: /learn/get-business-funding/
 internal_links:

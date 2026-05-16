@@ -7,6 +7,7 @@ meta_description: "From unfundable to approved. The full playbook for going from
 target_keyword: "your 6 month funding readiness roadmap"
 secondary_keywords: []
 cluster: learn-funding
+youtube_id: "kDPhcRWXGNg"
 page_type: supporting
 parent: /learn/get-business-funding/
 internal_links:

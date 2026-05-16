@@ -7,6 +7,7 @@ meta_description: "Two separate systems. Most owners don't know their business c
 target_keyword: "personal credit vs business credit"
 secondary_keywords: []
 cluster: learn-funding
+youtube_id: "2dPIN2qSIV0"
 page_type: supporting
 parent: /learn/get-business-funding/
 internal_links:

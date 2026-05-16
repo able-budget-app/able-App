@@ -6,10 +6,20 @@ and youtube_video_id is empty. After a successful upload, status flips to
 'uploaded' (still Unlisted). When you've reviewed them, flip Visibility to
 Public manually in YouTube Studio.
 
+Long-form mode also (by default) chains the article-linking pipeline at the
+end of the run:
+  1. Upload MP4 to YouTube, write video_id to the sheet
+  2. Run inject-youtube-ids.py to patch `youtube_id:` into article frontmatter
+  3. Run build-resources.py to rebuild the public HTML pages with the embed
+  4. git add the changed `able-content/` + public HTML, commit, and push to main
+     (Netlify auto-deploys on push). Pass --no-commit to stop after step 3.
+Pass --no-website to skip steps 2-4.
+
 Run:
   python3 scripts/youtube-upload.py                          # long-form (default), batch=5
   python3 scripts/youtube-upload.py --batch=3
   python3 scripts/youtube-upload.py --slug=taxes             # one specific video
+  python3 scripts/youtube-upload.py --no-website             # skip inject+build chain
   python3 scripts/youtube-upload.py --shorts                 # carousel MP4s as Shorts
   python3 scripts/youtube-upload.py --shorts --batch=3
 
@@ -40,6 +50,7 @@ https://support.google.com/youtube/contact/yt_api_form to lift the cap.
 import argparse
 import os
 import random
+import subprocess
 import sys
 import time
 from pathlib import Path
@@ -187,6 +198,10 @@ def main():
     p.add_argument("--shorts", action="store_true",
                    help="Upload carousel MP4s as YouTube Shorts (file_slug column, no thumbnail)")
     p.add_argument("--tab", help="Sheet tab name (default: yt-shorts for --shorts, yt-longform otherwise)")
+    p.add_argument("--no-website", action="store_true",
+                   help="Skip the post-upload inject + build chain (long-form only; default is to run it)")
+    p.add_argument("--no-commit", action="store_true",
+                   help="Run inject + build but skip the git commit/push (long-form only)")
     args = p.parse_args()
 
     # --shorts mode swaps: sheet env var, file lookup column, mp4 path, tab, thumbnail handling.
@@ -309,6 +324,82 @@ def main():
     print(f"\n[upload · {mode}] done — ok:{ok} fail:{fail}")
     print(f"  next: review the {ok} uploaded video(s) in YouTube Studio,")
     print(f"  then flip Visibility from Unlisted → Public via Studio's bulk action.")
+
+    # Chain: long-form uploads → patch article frontmatter → rebuild public HTML → push.
+    # Shorts don't link to articles, so the chain is long-form only.
+    if not is_shorts and not args.no_website and ok > 0 and not args.dry_run:
+        run_website_chain(sheet_id, tab, do_commit=not args.no_commit, uploaded_count=ok)
+
+
+# Output dirs that build-resources.py writes to. These plus able-content/
+# are the only paths the chain should ever stage for commit.
+PUBLISH_PATHS = ["able-content", "learn", "taxes", "business", "budgeting"]
+
+
+def run_website_chain(sheet_id: str, tab: str, do_commit: bool, uploaded_count: int):
+    """Inject youtube_ids into able-content/ frontmatter, rebuild public HTML, push."""
+    env = {**os.environ, "SHEET_ID": sheet_id, "YT_LONGFORM_TAB": tab}
+
+    print(f"\n[website] inject — patch youtube_id into article frontmatter")
+    inject_rc = subprocess.run(
+        ["python3", "scripts/inject-youtube-ids.py"],
+        cwd=ROOT, env=env,
+    ).returncode
+    if inject_rc != 0:
+        print(f"  [error] inject-youtube-ids.py exited {inject_rc} — skipping build")
+        return
+
+    print(f"\n[website] build — regenerate public HTML")
+    build_rc = subprocess.run(
+        ["python3", "scripts/build-resources.py", "able-content"],
+        cwd=ROOT,
+    ).returncode
+    if build_rc != 0:
+        print(f"  [error] build-resources.py exited {build_rc}")
+        return
+
+    if not do_commit:
+        print(f"\n[website] done — skipped commit (--no-commit). "
+              f"Stage & push manually to publish.")
+        return
+
+    git_publish(uploaded_count)
+
+
+def git_publish(uploaded_count: int):
+    """Stage only the publish paths, commit, push to current upstream."""
+    print(f"\n[git] staging {', '.join(PUBLISH_PATHS)}")
+    paths_present = [p for p in PUBLISH_PATHS if (ROOT / p).exists()]
+    subprocess.run(["git", "add", "--", *paths_present], cwd=ROOT, check=True)
+
+    # Anything staged?
+    diff_rc = subprocess.run(
+        ["git", "diff", "--cached", "--quiet"], cwd=ROOT
+    ).returncode
+    if diff_rc == 0:
+        print(f"  [git] no staged changes — nothing to commit (frontmatter + HTML already up-to-date)")
+        return
+
+    plural = "s" if uploaded_count != 1 else ""
+    msg = (
+        f"blog: embed {uploaded_count} new YouTube video{plural} in article pages\n"
+        f"\n"
+        f"Co-Authored-By: Claude Opus 4.7 (1M context) <noreply@anthropic.com>"
+    )
+    commit_rc = subprocess.run(
+        ["git", "commit", "-m", msg], cwd=ROOT
+    ).returncode
+    if commit_rc != 0:
+        print(f"  [git] commit failed (rc={commit_rc}) — fix and push manually")
+        return
+
+    print(f"[git] pushing to remote")
+    push_rc = subprocess.run(["git", "push"], cwd=ROOT).returncode
+    if push_rc != 0:
+        print(f"  [git] push failed (rc={push_rc}) — push manually")
+        return
+
+    print(f"\n[website] live — Netlify will redeploy from main; embeds will appear within ~1 min")
 
 
 if __name__ == "__main__":

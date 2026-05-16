@@ -7,6 +7,7 @@ meta_description: "The infrastructure lenders expect to see. Before applying for
 target_keyword: "setting up a fundable business"
 secondary_keywords: []
 cluster: learn-funding
+youtube_id: "7tGYbWPTsp4"
 page_type: supporting
 parent: /learn/get-business-funding/
 internal_links:

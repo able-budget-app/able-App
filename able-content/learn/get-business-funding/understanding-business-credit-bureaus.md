@@ -7,6 +7,7 @@ meta_description: "The three agencies that rate your business. Personal credit h
 target_keyword: "understanding business credit bureaus"
 secondary_keywords: []
 cluster: learn-funding
+youtube_id: "326un84W4qI"
 page_type: supporting
 parent: /learn/get-business-funding/
 internal_links:

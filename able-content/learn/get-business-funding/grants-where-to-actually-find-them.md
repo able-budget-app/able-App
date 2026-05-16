@@ -7,6 +7,7 @@ meta_description: "Free money exists, but it takes work. Grants are the best fun
 target_keyword: "grants where to actually find them"
 secondary_keywords: []
 cluster: learn-funding
+youtube_id: "xE46m-gZY20"
 page_type: supporting
 parent: /learn/get-business-funding/
 internal_links:
