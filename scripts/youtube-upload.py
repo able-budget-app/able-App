@@ -10,10 +10,13 @@ Long-form mode also (by default) chains the article-linking pipeline at the
 end of the run:
   1. Upload MP4 to YouTube, write video_id to the sheet
   2. Run inject-youtube-ids.py to patch `youtube_id:` into article frontmatter
+     (also flips embed_status → 'linked' in the sheet)
   3. Run build-resources.py to rebuild the public HTML pages with the embed
   4. git add the changed `able-content/` + public HTML, commit, and push to main
      (Netlify auto-deploys on push). Pass --no-commit to stop after step 3.
-Pass --no-website to skip steps 2-4.
+  5. Run draft-linkedin-batch.py to write a LinkedIn post draft into the sheet
+     for every newly-uploaded video. Pass --no-linkedin to skip.
+Pass --no-website to skip steps 2-5.
 
 Run:
   python3 scripts/youtube-upload.py                          # long-form (default), batch=5
@@ -202,6 +205,8 @@ def main():
                    help="Skip the post-upload inject + build chain (long-form only; default is to run it)")
     p.add_argument("--no-commit", action="store_true",
                    help="Run inject + build but skip the git commit/push (long-form only)")
+    p.add_argument("--no-linkedin", action="store_true",
+                   help="Skip the LinkedIn draft step at the end of the chain (long-form only)")
     args = p.parse_args()
 
     # --shorts mode swaps: sheet env var, file lookup column, mp4 path, tab, thumbnail handling.
@@ -325,10 +330,16 @@ def main():
     print(f"  next: review the {ok} uploaded video(s) in YouTube Studio,")
     print(f"  then flip Visibility from Unlisted → Public via Studio's bulk action.")
 
-    # Chain: long-form uploads → patch article frontmatter → rebuild public HTML → push.
-    # Shorts don't link to articles, so the chain is long-form only.
+    # Chain: long-form uploads → patch article frontmatter → rebuild public HTML
+    # → git push → draft LinkedIn posts. Shorts don't link to articles, so the
+    # chain is long-form only.
     if not is_shorts and not args.no_website and ok > 0 and not args.dry_run:
-        run_website_chain(sheet_id, tab, do_commit=not args.no_commit, uploaded_count=ok)
+        run_website_chain(
+            sheet_id, tab,
+            do_commit=not args.no_commit,
+            do_linkedin=not args.no_linkedin,
+            uploaded_count=ok,
+        )
 
 
 # Output dirs that build-resources.py writes to. These plus able-content/
@@ -336,8 +347,8 @@ def main():
 PUBLISH_PATHS = ["able-content", "learn", "taxes", "business", "budgeting"]
 
 
-def run_website_chain(sheet_id: str, tab: str, do_commit: bool, uploaded_count: int):
-    """Inject youtube_ids into able-content/ frontmatter, rebuild public HTML, push."""
+def run_website_chain(sheet_id: str, tab: str, do_commit: bool, do_linkedin: bool, uploaded_count: int):
+    """Inject youtube_ids → rebuild HTML → git push → draft LinkedIn posts."""
     env = {**os.environ, "SHEET_ID": sheet_id, "YT_LONGFORM_TAB": tab}
 
     print(f"\n[website] inject — patch youtube_id into article frontmatter")
@@ -358,12 +369,31 @@ def run_website_chain(sheet_id: str, tab: str, do_commit: bool, uploaded_count: 
         print(f"  [error] build-resources.py exited {build_rc}")
         return
 
-    if not do_commit:
-        print(f"\n[website] done — skipped commit (--no-commit). "
-              f"Stage & push manually to publish.")
-        return
+    if do_commit:
+        git_publish(uploaded_count)
+    else:
+        print(f"\n[website] skipped commit (--no-commit). Stage & push manually to publish.")
 
-    git_publish(uploaded_count)
+    if do_linkedin:
+        run_linkedin_drafter(env, uploaded_count)
+    else:
+        print(f"\n[linkedin] skipped (--no-linkedin)")
+
+
+def run_linkedin_drafter(env: dict, uploaded_count: int):
+    """Draft LinkedIn posts for the newly-uploaded videos. The drafter picks the
+    next N eligible rows (yid set, linkedin_status empty), so passing
+    --count=uploaded_count drains the new uploads without touching legacy rows."""
+    print(f"\n[linkedin] drafting {uploaded_count} LinkedIn post(s) for new upload(s)")
+    rc = subprocess.run(
+        ["python3", "scripts/draft-linkedin-batch.py", f"--count={uploaded_count}"],
+        cwd=ROOT, env=env,
+    ).returncode
+    if rc != 0:
+        print(f"  [error] draft-linkedin-batch.py exited {rc} — drafts may be incomplete")
+        return
+    print(f"\n[linkedin] done — review drafts in the sheet's linkedin_post_text column,")
+    print(f"           then flip linkedin_status: pending_review → approved to schedule.")
 
 
 def git_publish(uploaded_count: int):

@@ -51,10 +51,15 @@ def load_creds():
     return creds
 
 
-def read_sheet(sheet_id: str, tab: str) -> dict:
-    """Return {page_url: {video_id, published_date}} for rows where video_id is populated."""
+def get_sheets_service():
     creds = load_creds()
-    sheets = build("sheets", "v4", credentials=creds, cache_discovery=False)
+    return build("sheets", "v4", credentials=creds, cache_discovery=False)
+
+
+def read_sheet(sheets, sheet_id: str, tab: str):
+    """Return (rows_by_url, cols_index) where rows_by_url maps page_url →
+    {video_id, published_date, embed_status, row_idx_1based}. row_idx_1based
+    is the sheet row number (header is row 1, first data row is 2)."""
     res = sheets.spreadsheets().values().get(
         spreadsheetId=sheet_id, range=f"{tab}!A1:ZZ"
     ).execute()
@@ -70,7 +75,7 @@ def read_sheet(sheet_id: str, tab: str) -> dict:
             sys.exit(f"error: sheet is missing column: {required}")
 
     out = {}
-    for row in rows:
+    for i, row in enumerate(rows):
         row = row + [""] * (len(header) - len(row))
         url = row[cols["page_url"]].strip()
         vid = row[cols["youtube_video_id"]].strip()
@@ -82,8 +87,33 @@ def read_sheet(sheet_id: str, tab: str) -> dict:
                 row[cols["yt_published_date"]].strip()
                 if "yt_published_date" in cols else ""
             ),
+            "embed_status": (
+                row[cols["embed_status"]].strip()
+                if "embed_status" in cols else ""
+            ),
+            "row_idx_1based": i + 2,  # +1 for header, +1 for 1-based
         }
-    return out
+    return out, cols
+
+
+def col_letter(idx: int) -> str:
+    """0 → A, 25 → Z, 26 → AA."""
+    out = ""
+    while True:
+        out = chr(ord("A") + idx % 26) + out
+        idx = idx // 26 - 1
+        if idx < 0:
+            return out
+
+
+def update_cell(sheets, sheet_id: str, tab: str, row_1based: int, col_idx: int, value: str):
+    cell = f"{tab}!{col_letter(col_idx)}{row_1based}"
+    sheets.spreadsheets().values().update(
+        spreadsheetId=sheet_id,
+        range=cell,
+        valueInputOption="RAW",
+        body={"values": [[value]]},
+    ).execute()
 
 
 SLUG_RE = re.compile(r"^slug:\s*(.+?)\s*$", re.MULTILINE)
@@ -145,7 +175,8 @@ def main():
         sys.exit("error: pass --sheet-id or set SHEET_ID env var")
     tab = args.tab or os.environ.get("YT_LONGFORM_TAB") or "yt-longform"
 
-    sheet_data = read_sheet(sheet_id, tab)
+    sheets = get_sheets_service()
+    sheet_data, cols = read_sheet(sheets, sheet_id, tab)
     print(f"[inject] {len(sheet_data)} sheet row(s) have a youtube_video_id")
 
     # Index articles by url (frontmatter `url:` field — unambiguous across clusters)
@@ -160,7 +191,11 @@ def main():
         if m:
             by_url[m.group(1).strip().strip('"')] = md
 
-    updated, unchanged, missing = 0, 0, []
+    embed_status_col = cols.get("embed_status")
+    if embed_status_col is None:
+        print(f"  [warn] sheet has no 'embed_status' column — won't track linked articles")
+
+    updated, unchanged, missing, status_updates = 0, 0, [], 0
     for url, data in sheet_data.items():
         md = by_url.get(url)
         if not md:
@@ -173,22 +208,32 @@ def main():
             continue
 
         existing_yid = YID_RE.search(fm)
-        if existing_yid and existing_yid.group(1).strip() == data["video_id"]:
-            unchanged += 1
-            continue
-
-        new_fm = patch_frontmatter(fm, data["video_id"], data["published_date"])
-        new_text = "---\n" + new_fm + "\n---\n" + body
+        already_linked = existing_yid and existing_yid.group(1).strip() == data["video_id"]
 
         rel = md.relative_to(ROOT)
-        if args.dry_run:
-            print(f"  [dry] {rel} ← youtube_id: {data['video_id']}")
+        if already_linked:
+            unchanged += 1
         else:
-            md.write_text(new_text)
-            print(f"  [write] {rel} ← youtube_id: {data['video_id']}")
-        updated += 1
+            new_fm = patch_frontmatter(fm, data["video_id"], data["published_date"])
+            new_text = "---\n" + new_fm + "\n---\n" + body
+            if args.dry_run:
+                print(f"  [dry] {rel} ← youtube_id: {data['video_id']}")
+            else:
+                md.write_text(new_text)
+                print(f"  [write] {rel} ← youtube_id: {data['video_id']}")
+            updated += 1
 
-    print(f"\n[inject] updated:{updated} unchanged:{unchanged} missing:{len(missing)}")
+        # Sync embed_status back to the sheet — both for newly-linked rows
+        # AND for already-linked rows whose embed_status is stale (e.g. blank).
+        if embed_status_col is not None and data["embed_status"] != "linked":
+            if args.dry_run:
+                print(f"        [dry] sheet row {data['row_idx_1based']} embed_status → linked")
+            else:
+                update_cell(sheets, sheet_id, tab, data["row_idx_1based"], embed_status_col, "linked")
+            status_updates += 1
+
+    print(f"\n[inject] updated:{updated} unchanged:{unchanged} "
+          f"embed_status→linked:{status_updates} missing:{len(missing)}")
     if missing:
         print(f"  page_urls in sheet with no matching article file:")
         for u in missing:
