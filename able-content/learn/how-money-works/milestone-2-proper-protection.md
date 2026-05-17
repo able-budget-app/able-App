@@ -7,6 +7,7 @@ meta_description: "Protect your income before you grow it. Most people think wea
 target_keyword: "milestone 2 proper protection"
 secondary_keywords: []
 cluster: learn-money
+youtube_id: "Ih9kbqg7Os8"
 page_type: supporting
 parent: /learn/how-money-works/
 internal_links:

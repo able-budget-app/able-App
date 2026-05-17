@@ -7,6 +7,7 @@ meta_description: "First car, first home, marriage, family. Everyone hits the sa
 target_keyword: "firsts the big life moments"
 secondary_keywords: []
 cluster: learn-money
+youtube_id: "yn15AMVAR-Y"
 page_type: supporting
 parent: /learn/how-money-works/
 internal_links:

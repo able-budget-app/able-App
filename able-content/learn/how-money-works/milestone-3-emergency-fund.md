@@ -7,6 +7,7 @@ meta_description: "The cash that keeps you off the credit card. An emergency fun
 target_keyword: "milestone 3 emergency fund"
 secondary_keywords: []
 cluster: learn-money
+youtube_id: "_JrT1gzivNk"
 page_type: supporting
 parent: /learn/how-money-works/
 internal_links:

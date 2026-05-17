@@ -7,6 +7,7 @@ meta_description: "The drag on every wealth plan. Debt is the biggest drag on we
 target_keyword: "milestone 4 debt management"
 secondary_keywords: []
 cluster: learn-money
+youtube_id: "hwfj1DFEK5U"
 page_type: supporting
 parent: /learn/how-money-works/
 internal_links:

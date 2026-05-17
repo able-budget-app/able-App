@@ -7,6 +7,7 @@ meta_description: "Why starting early beats starting bigger. Compound interest i
 target_keyword: "compound interest and the time value of money"
 secondary_keywords: []
 cluster: learn-money
+youtube_id: "0ZIUwAQlz4g"
 page_type: supporting
 parent: /learn/how-money-works/
 internal_links:
