@@ -1,7 +1,7 @@
 # Privacy Policy
 
 **Effective date:** 2026-04-23
-**Last updated:** 2026-04-23
+**Last updated:** 2026-05-16
 
 Able App ("Able," "we," "us," or "our") operates the Able application at https://becomeable.app and the Able web app at https://becomeable.app/app.html (together, the "Service"). This Privacy Policy explains what information we collect, how we use it, who we share it with, and the rights you have over it.
 
@@ -23,7 +23,7 @@ Able is a budgeting tool, so most of what you put into it is financial informati
 - Your allocation preferences (percentages across debt, savings, and spending)
 - Goals, notes, and any other content you choose to save
 
-You enter this data manually. Able does not currently connect to your bank account.
+You can enter this data manually, or you can connect a bank account through Plaid (see Section 1.7) to import balances and transactions.
 
 ### 1.3 Usage and product analytics
 We collect basic product analytics to understand how the Service is used and to improve it. This may include:
@@ -31,7 +31,14 @@ We collect basic product analytics to understand how the Service is used and to 
 - Device and browser type, operating system, approximate location (country/region) derived from IP
 - Referral source
 
-We do not use these analytics to build an advertising profile of you.
+Inside the Able web app (the signed-in product at `/app.html`), our general-purpose product analytics is limited to PostHog, used to improve the Service. The advertising and conversion-tracking tags described in Section 1.3.1 also fire on a small number of in-app moments — primarily the post-checkout confirmation page — so we can attribute paid subscriptions back to the ad campaign that brought you in. They do not track your day-to-day app usage.
+
+### 1.3.1 Advertising and conversion tracking on our marketing pages
+On our public marketing pages (the home page and our landing pages) we also run advertising and conversion-tracking tags so that we can measure the performance of our ads and reach you with relevant ads on other platforms. These include:
+- **Meta Pixel** (Facebook and Instagram) — page views, content views, sign-ups, and purchases, plus a hashed copy of your email if you sign up, so Meta can match conversions back to ads you saw.
+- **Google Ads / Google Analytics 4 (gtag)** — page views and conversion events for ad measurement and retargeting.
+
+These tags set cookies that Meta and Google use to build behavioral profiles for advertising. Under California law (CCPA/CPRA) this counts as *sharing your personal information for cross-context behavioral advertising*. See Section 9 for how to opt out.
 
 ### 1.4 Payment information
 Payments for the Service are processed by Stripe. We do not collect or store your full credit card number. We receive and store:
@@ -48,7 +55,17 @@ Anthropic's privacy policy: https://www.anthropic.com/legal/privacy
 Anthropic's commercial terms state that API content is not used to train their models.
 
 ### 1.6 Cookies and local storage
-We use cookies and browser local storage to keep you signed in, remember your preferences, and cache your app state for offline reliability. You can clear these at any time through your browser settings; doing so will sign you out.
+We use cookies and browser local storage to keep you signed in, remember your preferences, and cache your app state for offline reliability. We also allow third-party advertising cookies (Meta Pixel, Google Ads) on our public marketing pages — see Section 1.3.1 and Section 9. You can clear cookies at any time through your browser settings; doing so will sign you out.
+
+### 1.7 Bank connections via Plaid
+If you choose to connect a bank account, we use **Plaid Inc.** to establish that connection. You authenticate with your bank directly inside Plaid's interface; we never see your bank username or password. Once you authorize the connection, Plaid sends us:
+- The name and type of each connected account, masked account number, and current/available balance
+- Recent transactions (date, amount, merchant, category) for the lookback window you select when connecting
+- For credit and loan accounts, the balance, minimum payment, and statement information
+
+We store this information so Able can detect bills, track buffer balances, and surface recurring debts. You can disconnect a bank at any time from inside the app; disconnecting stops future data pulls and you can also request deletion of previously imported transactions by emailing us.
+
+Plaid's privacy policy: https://plaid.com/legal/#end-user-privacy-policy
 
 ---
 
@@ -64,7 +81,7 @@ We use what we collect to:
 - Detect fraud, abuse, and security issues
 - Comply with our legal obligations
 
-We do not sell your personal information.
+We do not sell your personal information for money. However, our use of Meta Pixel and Google advertising tags on our marketing pages may be considered "sharing for cross-context behavioral advertising" under California law. You can opt out at any time — see Section 9.
 
 ---
 
@@ -74,11 +91,14 @@ We share information only with the following categories of service providers, an
 
 | Vendor | Purpose | Data shared |
 |---|---|---|
-| Supabase | Database, authentication, serverless functions | Account data, app data, coach messages |
+| Supabase | Database, authentication, serverless functions | Account data, app data, coach messages, imported bank data |
 | Stripe | Payments and subscription management | Email, subscription status, billing country |
+| Plaid | Bank account connections (if you choose to connect) | Bank credentials you enter directly into Plaid; Plaid returns balances and transactions to us |
 | Anthropic | AI Coach responses | Your coach message and a snapshot of your in-app numbers |
 | Resend | Transactional and marketing email | Email address, name |
 | PostHog (US cloud) | Product analytics | Usage events, device/browser metadata |
+| Meta Platforms (Facebook/Instagram) | Advertising measurement and retargeting on marketing pages | Page-view and conversion events, cookie identifiers, hashed email on sign-up/purchase |
+| Google (Google Ads, GA4) | Advertising measurement and retargeting on marketing pages | Page-view and conversion events, cookie identifiers |
 
 We may also disclose information if required by law, subpoena, or court order, or when we believe in good faith that disclosure is necessary to protect our rights, your safety, or the safety of others.
 
@@ -134,9 +154,17 @@ The Service is not intended for children under 13 (or under 16 in the EEA/UK). W
 
 ## 9. California, EU, and UK residents
 
-If you are in California, the EU, or the UK, you have additional rights under the CCPA, GDPR, or UK GDPR respectively. The rights listed in Section 6 satisfy most of these, but you also have the right to lodge a complaint with your local data protection authority.
+If you are in California, the EU, or the UK, you have additional rights under the CCPA/CPRA, GDPR, or UK GDPR respectively. The rights listed in Section 6 satisfy most of these, but you also have the right to lodge a complaint with your local data protection authority.
 
-Our legal basis for processing your information under GDPR/UK GDPR is (1) performance of our contract with you to provide the Service, (2) your consent (for marketing email), and (3) our legitimate interest in operating and improving the Service.
+Our legal basis for processing your information under GDPR/UK GDPR is (1) performance of our contract with you to provide the Service, (2) your consent (for marketing email and advertising cookies), and (3) our legitimate interest in operating and improving the Service.
+
+### 9.1 Do Not Sell or Share My Personal Information (California)
+California residents have the right to opt out of the sale or sharing of their personal information for cross-context behavioral advertising. To opt out:
+- **Browser-level:** Enable the Global Privacy Control (GPC) signal in your browser or extension. We honor GPC on our marketing pages and will disable Meta Pixel and Google advertising tags for that browser.
+- **Email request:** Send a request to hello@becomeable.app with the subject "Do Not Sell or Share." We will confirm and act within 15 business days.
+- **Platform-level:** You can also opt out of Meta advertising through Meta's ad preferences (https://www.facebook.com/settings?tab=ads) and Google advertising through Google's My Ad Center (https://myadcenter.google.com).
+
+Opting out does not affect the analytics we run inside the signed-in product (PostHog), which is used for product improvement, not advertising.
 
 ---
 

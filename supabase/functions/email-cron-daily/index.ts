@@ -554,7 +554,8 @@ function footer(unsub: string): string {
     <a href="${APP_URL}/app.html" style="color:${T.green};font-weight:700;text-decoration:none;">Open Able</a>
     &middot;
     <a href="${unsub}" style="color:${T.inkMuted};text-decoration:underline;">Unsubscribe</a>
-    <div style="margin-top:8px;font-size:11px;color:${T.inkLight};">becomeable.app</div>
+    <div style="margin-top:8px;font-size:11px;color:${T.inkLight};">Able App &middot; 7548 E Savanna River St, Nampa, ID 83687, USA</div>
+    <div style="margin-top:2px;font-size:11px;color:${T.inkLight};">becomeable.app</div>
   </td></tr>`;
 }
 

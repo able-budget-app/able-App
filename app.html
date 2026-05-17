@@ -1640,12 +1640,20 @@ body.is-scrolling .btn-primary:hover{transform:none!important;box-shadow:inherit
   }
 }
 </style>
+<!-- Global Privacy Control (GPC) gate. If the browser signals GPC,
+     we suppress Meta Pixel and Google Ads tags. PostHog still runs as
+     first-party product analytics. Matches the marketing pages and is
+     what the privacy policy promises under Section 9.1. -->
+<script>
+window.__ABLE_GPC = !!(navigator.globalPrivacyControl);
+</script>
 <!-- Meta Pixel - page view tracking. To activate: create a pixel in Meta
      Events Manager, copy the numeric ID (15-16 digits), paste it as the
      META_PIXEL_ID value in BOTH index.html and app.html (also update the
      noscript fallback image URL below). Gate uses a numeric regex check
      so accidental global find/replace can't silently break the snippet. -->
 <script>
+if (!window.__ABLE_GPC) {
 !function(f,b,e,v,n,t,s)
 {if(f.fbq)return;n=f.fbq=function(){n.callMethod?
 n.callMethod.apply(n,arguments):n.queue.push(arguments)};
@@ -1659,6 +1667,7 @@ if (/^\d{10,20}$/.test(META_PIXEL_ID)) {
   fbq('init', META_PIXEL_ID);
   fbq('track', 'PageView');
 }
+}
 </script>
 <noscript><img height="1" width="1" style="display:none" src="https://www.facebook.com/tr?id=940091778831653&ev=PageView&noscript=1"/></noscript>
 
@@ -1667,6 +1676,7 @@ if (/^\d{10,20}$/.test(META_PIXEL_ID)) {
      customer ID with dashes stripped. Gate uses a prefix+digit regex
      so accidental find/replace can't silently break. -->
 <script>
+if (!window.__ABLE_GPC) {
 var GOOGLE_ADS_ID = 'AW-18142778282';
 if (/^AW-\d{8,12}$/.test(GOOGLE_ADS_ID)) {
   var gtagScript = document.createElement('script');
@@ -1677,6 +1687,7 @@ if (/^AW-\d{8,12}$/.test(GOOGLE_ADS_ID)) {
   function gtag(){dataLayer.push(arguments);}
   gtag('js', new Date());
   gtag('config', GOOGLE_ADS_ID);
+}
 }
 </script>
 
@@ -12010,8 +12021,9 @@ document.addEventListener('DOMContentLoaded', () => {
           // Always dismiss the in-app browser if one is open — Stripe Checkout
           // / billing portal / Supabase OAuth all return via deep link and we
           // want SFSafariViewController gone before the app UI settles back.
-          // Browser.close() is a no-op when nothing is open.
-          try { window.Capacitor?.Plugins?.Browser?.close?.(); } catch (_) {}
+          // Browser.close() rejects with "No active window to close!" when
+          // nothing is open — swallow both the sync throw and the promise.
+          try { window.Capacitor?.Plugins?.Browser?.close?.()?.catch?.(() => {}); } catch (_) {}
           const u = new URL(raw);
 
           // Supabase OAuth callback (Google sign-in). PKCE flow appends
