@@ -2674,12 +2674,17 @@ a { text-decoration: none; color: inherit; }
   }
 }
 </style>
+<!-- Global Privacy Control (GPC) gate. See index.html for full notes. -->
+<script>
+window.__ABLE_GPC = !!(navigator.globalPrivacyControl);
+</script>
 <!-- Meta Pixel - page view tracking. To activate: create a pixel in Meta
      Events Manager, copy the numeric ID (15-16 digits), paste it as the
      META_PIXEL_ID value in BOTH index.html and app.html (also update the
      noscript fallback image URL below). Gate uses a numeric regex check
      so accidental global find/replace can't silently break the snippet. -->
 <script>
+if (!window.__ABLE_GPC) {
 !function(f,b,e,v,n,t,s)
 {if(f.fbq)return;n=f.fbq=function(){n.callMethod?
 n.callMethod.apply(n,arguments):n.queue.push(arguments)};
@@ -2694,6 +2699,7 @@ if (/^\d{10,20}$/.test(META_PIXEL_ID)) {
   fbq('track', 'PageView');
   fbq('track', 'ViewContent', { content_name: window.location.pathname, content_category: 'landing' });
 }
+}
 </script>
 <noscript><img height="1" width="1" style="display:none" src="https://www.facebook.com/tr?id=940091778831653&ev=PageView&noscript=1"/></noscript>
 
@@ -2702,6 +2708,7 @@ if (/^\d{10,20}$/.test(META_PIXEL_ID)) {
      customer ID with dashes stripped. Gate uses a prefix+digit regex
      so accidental find/replace can't silently break. -->
 <script>
+if (!window.__ABLE_GPC) {
 var GOOGLE_ADS_ID = 'AW-18142778282';
 // Paste GA4 measurement ID below to activate GA4 tracking. Find it at
 // analytics.google.com → Admin → Data Streams → web stream. Format: G-XXXXXXXXXX.
@@ -2719,6 +2726,7 @@ if (_hasAds || _hasGa4) {
   gtag('js', new Date());
   if (_hasAds) gtag('config', GOOGLE_ADS_ID);
   if (_hasGa4) gtag('config', GA4_MEASUREMENT_ID);
+}
 }
 </script>
 
@@ -3549,7 +3557,7 @@ window.Able.track = function(event, props) {
 
 // Capture clicks on any CTA that heads to the app.
 document.querySelectorAll('a[href^="/app.html"], a[href="/app.html"]').forEach(a => {
-  a.addEventListener('click', () => {
+  a.addEventListener('click', (e) => {
     const loc = a.closest('.hero') ? 'hero'
               : a.closest('.nav') ? 'nav'
               : a.closest('.pricing-section') ? 'pricing'
@@ -3561,7 +3569,14 @@ document.querySelectorAll('a[href^="/app.html"], a[href="/app.html"]').forEach(a
               : a.closest('.shift-section') ? 'shift'
               : a.closest('.stakes-section') ? 'stakes'
               : 'other';
+    if (e.defaultPrevented || e.metaKey || e.ctrlKey || e.shiftKey || e.button !== 0) {
+      Able.track('landing_cta_clicked', { location: loc, page: window.location.pathname });
+      return;
+    }
+    e.preventDefault();
+    const href = a.href;
     Able.track('landing_cta_clicked', { location: loc, page: window.location.pathname });
+    setTimeout(() => { window.location.href = href; }, 250);
   });
 });
 
