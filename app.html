@@ -8,6 +8,17 @@
      header), not a meta tag. Report-Only specifically cannot be delivered
      via <meta>; the browser ignores it. Edit the policy in _headers. -->
 
+<!-- Preconnect to external origins so TCP+TLS handshakes happen in parallel
+     with HTML parse instead of serially when each <script>/<link> is reached.
+     Combined with the font preload below, cuts cold-load TTI by 200-500ms. -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
+<link rel="preconnect" href="https://js.stripe.com" crossorigin>
+<link rel="preconnect" href="https://connect.facebook.net" crossorigin>
+<link rel="preconnect" href="https://us.i.posthog.com" crossorigin>
+<link rel="preconnect" href="https://www.googletagmanager.com" crossorigin>
+
 <title>Able. Built for inconsistent income.</title>
 <link rel="icon" type="image/svg+xml" href="/favicon.svg">
 <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32.png">
@@ -22,6 +33,9 @@
 <meta name="apple-mobile-web-app-status-bar-style" content="default">
 <meta name="apple-mobile-web-app-title" content="Able">
 <meta name="theme-color" content="#2a7a4a">
+<!-- Preload starts the CSS fetch in parallel with HTML parse. The stylesheet
+     link below still applies normally; preload just front-loads the request. -->
+<link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;500;600;700;800&family=Lora:ital,wght@0,400;0,600;1,400&family=Bricolage+Grotesque:wght@400;500;600;700;800;900&display=swap">
 <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;500;600;700;800&family=Lora:ital,wght@0,400;0,600;1,400&family=Bricolage+Grotesque:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
 <!-- Stripe.js: load only on web. On Capacitor we use Stripe Checkout via
      @capacitor/browser, never Stripe Elements / Apple Pay button in-app, so
@@ -1640,120 +1654,11 @@ body.is-scrolling .btn-primary:hover{transform:none!important;box-shadow:inherit
   }
 }
 </style>
-<!-- Global Privacy Control (GPC) gate. If the browser signals GPC,
-     we suppress Meta Pixel and Google Ads tags. PostHog still runs as
-     first-party product analytics. Matches the marketing pages and is
-     what the privacy policy promises under Section 9.1. -->
-<script>
-window.__ABLE_GPC = !!(navigator.globalPrivacyControl);
-</script>
-<!-- Meta Pixel - page view tracking. To activate: create a pixel in Meta
-     Events Manager, copy the numeric ID (15-16 digits), paste it as the
-     META_PIXEL_ID value in BOTH index.html and app.html (also update the
-     noscript fallback image URL below). Gate uses a numeric regex check
-     so accidental global find/replace can't silently break the snippet. -->
-<script>
-if (!window.__ABLE_GPC) {
-!function(f,b,e,v,n,t,s)
-{if(f.fbq)return;n=f.fbq=function(){n.callMethod?
-n.callMethod.apply(n,arguments):n.queue.push(arguments)};
-if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';
-n.queue=[];t=b.createElement(e);t.async=!0;
-t.src=v;s=b.getElementsByTagName(e)[0];
-s.parentNode.insertBefore(t,s)}(window, document,'script',
-'https://connect.facebook.net/en_US/fbevents.js');
-var META_PIXEL_ID = '940091778831653';
-if (/^\d{10,20}$/.test(META_PIXEL_ID)) {
-  fbq('init', META_PIXEL_ID);
-  fbq('track', 'PageView');
-}
-}
-</script>
-<noscript><img height="1" width="1" style="display:none" src="https://www.facebook.com/tr?id=940091778831653&ev=PageView&noscript=1"/></noscript>
-
-<!-- Google Ads gtag - page view tracking. The Google tag ID is issued
-     by Google Ads (Goals → Conversions → Google tag) and is NOT the
-     customer ID with dashes stripped. Gate uses a prefix+digit regex
-     so accidental find/replace can't silently break. -->
-<script>
-if (!window.__ABLE_GPC) {
-var GOOGLE_ADS_ID = 'AW-18142778282';
-if (/^AW-\d{8,12}$/.test(GOOGLE_ADS_ID)) {
-  var gtagScript = document.createElement('script');
-  gtagScript.async = true;
-  gtagScript.src = 'https://www.googletagmanager.com/gtag/js?id=' + GOOGLE_ADS_ID;
-  document.head.appendChild(gtagScript);
-  window.dataLayer = window.dataLayer || [];
-  function gtag(){dataLayer.push(arguments);}
-  gtag('js', new Date());
-  gtag('config', GOOGLE_ADS_ID);
-}
-}
-</script>
-
-<!-- PostHog analytics -->
-<script>
-!function(t,e){var o,n,p,r;e.__SV||(window.posthog=e,e._i=[],e.init=function(i,s,a){function g(t,e){var o=e.split(".");2==o.length&&(t=t[o[0]],e=o[1]),t[e]=function(){t.push([e].concat(Array.prototype.slice.call(arguments,0)))}}(p=t.createElement("script")).type="text/javascript",p.crossOrigin="anonymous",p.async=!0,p.src=s.api_host.replace(".i.posthog.com","-assets.i.posthog.com")+"/static/array.js",(r=t.getElementsByTagName("script")[0]).parentNode.insertBefore(p,r);var u=e;for(void 0!==a?u=e[a]=[]:a="posthog",u.people=u.people||[],u.toString=function(t){var e="posthog";return"posthog"!==a&&(e+="."+a),t||(e+=" (stub)"),e},u.people.toString=function(){return u.toString(1)+".people (stub)"},o="init capture register register_once register_for_session unregister unregister_for_session getFeatureFlag getFeatureFlagPayload isFeatureEnabled reloadFeatureFlags updateEarlyAccessFeatureEnrollment getEarlyAccessFeatures on onFeatureFlags onSessionId getSurveys getActiveMatchingSurveys renderSurvey canRenderSurvey getNextSurveyStep identify setPersonProperties group resetGroups setPersonPropertiesForFlags resetPersonPropertiesForFlags setGroupPropertiesForFlags resetGroupPropertiesForFlags reset get_distinct_id getGroups get_session_id get_session_replay_url alias set_config startSessionRecording stopSessionRecording sessionRecordingStarted captureException loadToolbar get_property getSessionProperty createPersonProfile opt_in_capturing opt_out_capturing has_opted_in_capturing has_opted_out_capturing clear_opt_in_out_capturing debug getPageViewId captureTraceFeedback captureTraceMetric".split(" "),n=0;n<o.length;n++)g(u,o[n]);e._i.push([i,s,a])},e.__SV=1)}(document,window.posthog||[]);
-posthog.init('phc_B6PH36QxpExnyBYhfScFFF6LhDvoyxuFr6PypJuxxky3', {
-  api_host: 'https://us.i.posthog.com',
-  defaults: '2026-01-30'
-});
-</script>
-
-<!-- Global error capture -> PostHog. Sentry isn't free; this gives Paul an
-     inbox-feedable error stream via PostHog's $exception event. -->
-<script>
-(function () {
-  var IGNORE = [
-    /ResizeObserver loop/i,        // benign browser quirk
-    /Script error\.?$/i,           // cross-origin scripts, no useful info
-    /Non-Error promise rejection/i // PostHog stub stringifies pre-load rejections
-  ];
-  var sending = false;
-  function shouldSkip(msg) {
-    msg = String(msg || '');
-    for (var i = 0; i < IGNORE.length; i++) if (IGNORE[i].test(msg)) return true;
-    return false;
-  }
-  function capture(err, extra) {
-    if (sending) return;
-    if (!window.posthog || typeof window.posthog.captureException !== 'function') return;
-    var props = {
-      url: location.pathname + location.search,
-      viewport: window.innerWidth + 'x' + window.innerHeight,
-      user_id: (window.currentUser && window.currentUser.id) || null
-    };
-    if (extra) for (var k in extra) if (Object.prototype.hasOwnProperty.call(extra, k)) props[k] = extra[k];
-    try {
-      sending = true;
-      window.posthog.captureException(err, props);
-    } catch (_) {
-      // swallow - never let the error handler throw
-    } finally {
-      sending = false;
-    }
-  }
-  window.addEventListener('error', function (e) {
-    if (shouldSkip(e.message)) return;
-    var err = e.error || new Error(e.message || 'unknown error');
-    capture(err, { source: 'window.error', filename: e.filename, lineno: e.lineno, colno: e.colno });
-  });
-  window.addEventListener('unhandledrejection', function (e) {
-    var reason = e.reason;
-    var msg = reason && reason.message ? reason.message : String(reason);
-    if (shouldSkip(msg)) return;
-    var err = reason instanceof Error ? reason : new Error(msg);
-    capture(err, { source: 'unhandledrejection' });
-  });
-  // Public helper for try/catch sites that want explicit capture with context.
-  window.Able = window.Able || {};
-  window.Able.captureError = function (err, ctx) {
-    if (!err) return;
-    var e = err instanceof Error ? err : new Error(typeof err === 'string' ? err : JSON.stringify(err));
-    capture(e, Object.assign({ source: 'manual' }, ctx || {}));
-  };
-})();
-</script>
+<!-- Analytics + error capture (Meta Pixel, Google gtag, PostHog, error handler)
+     moved to end of body for faster first paint. See block just before </body>.
+     fbq/dataLayer/posthog all use queueing stubs internally; any Able.track()
+     calls during the gap get buffered and flushed when the SDKs land. The
+     noscript Pixel fallback image still lives in body, just before </body>. -->
 </head>
 <body>
 <!-- Capacitor splash overlay. Paints on first frame in Capacitor builds only;
@@ -19632,6 +19537,127 @@ function openCoachFromNudge() {
   openCoachPanel(prompt);
 }
 
+</script>
+
+<!-- ═══════════════════════════════════════════════════════════════════════
+     ANALYTICS + ERROR CAPTURE (moved here from <head> so they don't block
+     first paint). fbq/dataLayer/posthog all use queueing internally so any
+     calls earlier in the page get buffered and flush when the SDKs land.
+     ═══════════════════════════════════════════════════════════════════════ -->
+
+<!-- Global Privacy Control (GPC) gate. If the browser signals GPC,
+     we suppress Meta Pixel and Google Ads tags. PostHog still runs as
+     first-party product analytics. Matches the marketing pages and is
+     what the privacy policy promises under Section 9.1. -->
+<script>
+window.__ABLE_GPC = !!(navigator.globalPrivacyControl);
+</script>
+<!-- Meta Pixel - page view tracking. To activate: create a pixel in Meta
+     Events Manager, copy the numeric ID (15-16 digits), paste it as the
+     META_PIXEL_ID value in BOTH index.html and app.html (also update the
+     noscript fallback image URL below). Gate uses a numeric regex check
+     so accidental global find/replace can't silently break the snippet. -->
+<script>
+if (!window.__ABLE_GPC) {
+!function(f,b,e,v,n,t,s)
+{if(f.fbq)return;n=f.fbq=function(){n.callMethod?
+n.callMethod.apply(n,arguments):n.queue.push(arguments)};
+if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';
+n.queue=[];t=b.createElement(e);t.async=!0;
+t.src=v;s=b.getElementsByTagName(e)[0];
+s.parentNode.insertBefore(t,s)}(window, document,'script',
+'https://connect.facebook.net/en_US/fbevents.js');
+var META_PIXEL_ID = '940091778831653';
+if (/^\d{10,20}$/.test(META_PIXEL_ID)) {
+  fbq('init', META_PIXEL_ID);
+  fbq('track', 'PageView');
+}
+}
+</script>
+<noscript><img height="1" width="1" style="display:none" src="https://www.facebook.com/tr?id=940091778831653&ev=PageView&noscript=1"/></noscript>
+
+<!-- Google Ads gtag - page view tracking. The Google tag ID is issued
+     by Google Ads (Goals → Conversions → Google tag) and is NOT the
+     customer ID with dashes stripped. Gate uses a prefix+digit regex
+     so accidental find/replace can't silently break. -->
+<script>
+if (!window.__ABLE_GPC) {
+var GOOGLE_ADS_ID = 'AW-18142778282';
+if (/^AW-\d{8,12}$/.test(GOOGLE_ADS_ID)) {
+  var gtagScript = document.createElement('script');
+  gtagScript.async = true;
+  gtagScript.src = 'https://www.googletagmanager.com/gtag/js?id=' + GOOGLE_ADS_ID;
+  document.head.appendChild(gtagScript);
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', GOOGLE_ADS_ID);
+}
+}
+</script>
+
+<!-- PostHog analytics -->
+<script>
+!function(t,e){var o,n,p,r;e.__SV||(window.posthog=e,e._i=[],e.init=function(i,s,a){function g(t,e){var o=e.split(".");2==o.length&&(t=t[o[0]],e=o[1]),t[e]=function(){t.push([e].concat(Array.prototype.slice.call(arguments,0)))}}(p=t.createElement("script")).type="text/javascript",p.crossOrigin="anonymous",p.async=!0,p.src=s.api_host.replace(".i.posthog.com","-assets.i.posthog.com")+"/static/array.js",(r=t.getElementsByTagName("script")[0]).parentNode.insertBefore(p,r);var u=e;for(void 0!==a?u=e[a]=[]:a="posthog",u.people=u.people||[],u.toString=function(t){var e="posthog";return"posthog"!==a&&(e+="."+a),t||(e+=" (stub)"),e},u.people.toString=function(){return u.toString(1)+".people (stub)"},o="init capture register register_once register_for_session unregister unregister_for_session getFeatureFlag getFeatureFlagPayload isFeatureEnabled reloadFeatureFlags updateEarlyAccessFeatureEnrollment getEarlyAccessFeatures on onFeatureFlags onSessionId getSurveys getActiveMatchingSurveys renderSurvey canRenderSurvey getNextSurveyStep identify setPersonProperties group resetGroups setPersonPropertiesForFlags resetPersonPropertiesForFlags setGroupPropertiesForFlags resetGroupPropertiesForFlags reset get_distinct_id getGroups get_session_id get_session_replay_url alias set_config startSessionRecording stopSessionRecording sessionRecordingStarted captureException loadToolbar get_property getSessionProperty createPersonProfile opt_in_capturing opt_out_capturing has_opted_in_capturing has_opted_out_capturing clear_opt_in_out_capturing debug getPageViewId captureTraceFeedback captureTraceMetric".split(" "),n=0;n<o.length;n++)g(u,o[n]);e._i.push([i,s,a])},e.__SV=1)}(document,window.posthog||[]);
+posthog.init('phc_B6PH36QxpExnyBYhfScFFF6LhDvoyxuFr6PypJuxxky3', {
+  api_host: 'https://us.i.posthog.com',
+  defaults: '2026-01-30'
+});
+</script>
+
+<!-- Global error capture -> PostHog. Sentry isn't free; this gives Paul an
+     inbox-feedable error stream via PostHog's $exception event. -->
+<script>
+(function () {
+  var IGNORE = [
+    /ResizeObserver loop/i,        // benign browser quirk
+    /Script error\.?$/i,           // cross-origin scripts, no useful info
+    /Non-Error promise rejection/i // PostHog stub stringifies pre-load rejections
+  ];
+  var sending = false;
+  function shouldSkip(msg) {
+    msg = String(msg || '');
+    for (var i = 0; i < IGNORE.length; i++) if (IGNORE[i].test(msg)) return true;
+    return false;
+  }
+  function capture(err, extra) {
+    if (sending) return;
+    if (!window.posthog || typeof window.posthog.captureException !== 'function') return;
+    var props = {
+      url: location.pathname + location.search,
+      viewport: window.innerWidth + 'x' + window.innerHeight,
+      user_id: (window.currentUser && window.currentUser.id) || null
+    };
+    if (extra) for (var k in extra) if (Object.prototype.hasOwnProperty.call(extra, k)) props[k] = extra[k];
+    try {
+      sending = true;
+      window.posthog.captureException(err, props);
+    } catch (_) {
+      // swallow - never let the error handler throw
+    } finally {
+      sending = false;
+    }
+  }
+  window.addEventListener('error', function (e) {
+    if (shouldSkip(e.message)) return;
+    var err = e.error || new Error(e.message || 'unknown error');
+    capture(err, { source: 'window.error', filename: e.filename, lineno: e.lineno, colno: e.colno });
+  });
+  window.addEventListener('unhandledrejection', function (e) {
+    var reason = e.reason;
+    var msg = reason && reason.message ? reason.message : String(reason);
+    if (shouldSkip(msg)) return;
+    var err = reason instanceof Error ? reason : new Error(msg);
+    capture(err, { source: 'unhandledrejection' });
+  });
+  // Public helper for try/catch sites that want explicit capture with context.
+  window.Able = window.Able || {};
+  window.Able.captureError = function (err, ctx) {
+    if (!err) return;
+    var e = err instanceof Error ? err : new Error(typeof err === 'string' ? err : JSON.stringify(err));
+    capture(e, Object.assign({ source: 'manual' }, ctx || {}));
+  };
+})();
 </script>
 </body>
 </html>
