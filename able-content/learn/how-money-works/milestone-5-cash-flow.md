@@ -7,6 +7,7 @@ meta_description: "The gap between earning and spending. Cash flow is the most i
 target_keyword: "milestone 5 cash flow"
 secondary_keywords: []
 cluster: learn-money
+youtube_id: "8Bbb9hyVh4E"
 page_type: supporting
 parent: /learn/how-money-works/
 internal_links:

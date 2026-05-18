@@ -7,6 +7,7 @@ meta_description: "The three quiet threats to every nest egg. Building wealth is
 target_keyword: "milestone 7 protect wealth"
 secondary_keywords: []
 cluster: learn-money
+youtube_id: "yYvJDef0PQQ"
 page_type: supporting
 parent: /learn/how-money-works/
 internal_links:

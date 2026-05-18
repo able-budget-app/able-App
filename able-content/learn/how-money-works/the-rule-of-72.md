@@ -7,6 +7,7 @@ meta_description: "The math shortcut that reveals everything. The Rule of 72 is 
 target_keyword: "the rule of 72"
 secondary_keywords: []
 cluster: learn-money
+youtube_id: "UTLT-uRYXoY"
 page_type: supporting
 parent: /learn/how-money-works/
 internal_links:

@@ -7,6 +7,7 @@ meta_description: "Financial literacy is a human right. Most people feel behind 
 target_keyword: "money is a skill you can learn"
 secondary_keywords: []
 cluster: learn-money
+youtube_id: "uCeAgadiZ9I"
 page_type: supporting
 parent: /learn/how-money-works/
 internal_links:
