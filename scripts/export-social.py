@@ -6,11 +6,14 @@ Reads social/posts/data.js (POSTS, CAROUSELS, BRANDSCRIPT) and
 social/reels/data.js (REELS) via headless Chromium, then writes:
 
   marketing-footage/social-export/
-    singles/         {ID}_{slug}.png            (1080x1080, PNG — numeric + product)
-    brandscript/     {ID}_{slug}.png            (1080x1080, PNG — B## entries only)
+    singles/         {ID}_{slug}.png            (1080x1080, PNG — all singles incl. B##)
+    brandscript/     {ID}_{slug}.png            (1080x1080, PNG — B## mirror for Drive)
     carousels/       {ID}_{slug}/01.png ...     (one per slide, 1080x1920 — TikTok)
     carousels-square/{ID}_{slug}/01.png ...     (one per slide, 1080x1080 — IG/FB/LinkedIn, via --square)
     reels/           {ID}_{slug}.mp4            (1080x1920, H.264, 30fps, silent)
+
+B## brand-script entries land in BOTH singles/ and brandscript/. singles/ is the
+unified bucket; brandscript/ is a Drive-organization duplicate.
 
 Usage:
   python3 scripts/export-social.py                  # everything
@@ -343,7 +346,16 @@ async def main() -> None:
                     print(f"\n=== Singles ({len(posts)}) ===")
                     if posts: await export_singles(page, posts, args.force, "single")
                     print(f"\n=== Brand-script ({len(bs)}) ===")
-                    if bs: await export_singles(page, bs, args.force, "brand", out_dir=BRANDSCRIPT_DIR)
+                    # Render into singles/ (unified bucket) then mirror into brandscript/
+                    # (dedicated Drive folder for a separate Make scenario lane).
+                    if bs:
+                        await export_singles(page, bs, args.force, "brand")
+                        BRANDSCRIPT_DIR.mkdir(parents=True, exist_ok=True)
+                        for it in bs:
+                            src = SINGLES_DIR / f"{filename_for(it, 'single')}.png"
+                            dst = BRANDSCRIPT_DIR / src.name
+                            if src.exists():
+                                shutil.copy2(src, dst)
                     print(f"\n=== Product posts ({len(prod)}) ===")
                     if prod: await export_singles(page, prod, args.force, "product")
 
