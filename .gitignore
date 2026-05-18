@@ -24,6 +24,7 @@ supabase/.branches/
 marketing-footage/social-export/_raw/
 marketing-footage/social-export/singles/
 marketing-footage/social-export/carousels/
+marketing-footage/social-export/carousels-square/
 marketing-footage/social-export/reels/
 
 # Marketing footage — raw assets and rendered MP4s are heavy and re-buildable

@@ -44,10 +44,31 @@ from playwright.async_api import async_playwright  # type: ignore
 
 ROOT = Path(__file__).resolve().parent.parent
 OUT_DIR = ROOT / "marketing-footage" / "social-export"
-SINGLES_DIR   = OUT_DIR / "singles"
-CAROUSELS_DIR = OUT_DIR / "carousels"
-REELS_DIR     = OUT_DIR / "reels"
-RAW_DIR       = OUT_DIR / "_raw"
+SINGLES_DIR        = OUT_DIR / "singles"
+CAROUSELS_DIR      = OUT_DIR / "carousels"
+CAROUSELS_SQ_DIR   = OUT_DIR / "carousels-square"
+REELS_DIR          = OUT_DIR / "reels"
+RAW_DIR            = OUT_DIR / "_raw"
+
+# CSS injected when --square is set. Reverts .format-tiktok height from 1920
+# back to 1080 and bumps punch/muted type down to fit the smaller canvas.
+SQUARE_OVERRIDE_CSS = """
+.post.format-tiktok {
+  height: 1080px !important;
+  padding: 96px 80px !important;
+}
+.post.format-tiktok .punch,
+.post.format-tiktok .punch.size-md,
+.post.format-tiktok .punch.size-sm {
+  font-size: 84px !important;
+  line-height: 1.04 !important;
+}
+.post.format-tiktok .muted,
+.post.format-tiktok .muted.size-md,
+.post.format-tiktok .muted.size-sm {
+  font-size: 48px !important;
+}
+"""
 
 PORT = 8766  # +1 from record-clips.py's 8765 to avoid clash if both run
 SERVER_URL = f"http://localhost:{PORT}"
@@ -149,12 +170,14 @@ async def export_singles(page, items: list[dict], force: bool, label: str) -> in
 # ─────────────────────────────────────────────────────────────────────
 # Carousels (carousel.html?id=X — all slides on one page)
 # ─────────────────────────────────────────────────────────────────────
-async def export_carousels(page, items: list[dict], force: bool) -> int:
-    CAROUSELS_DIR.mkdir(parents=True, exist_ok=True)
+async def export_carousels(page, items: list[dict], force: bool, square: bool = False) -> int:
+    out_dir = CAROUSELS_SQ_DIR if square else CAROUSELS_DIR
+    label = "carousel-sq" if square else "carousel"
+    out_dir.mkdir(parents=True, exist_ok=True)
     count = 0
     for c in items:
         folder_name = filename_for(c, "carousel")
-        folder = CAROUSELS_DIR / folder_name
+        folder = out_dir / folder_name
         n_slides = len(c.get("slides", []))
         # Skip if all slides exist
         if not force and folder.exists() and len(list(folder.glob("*.png"))) == n_slides:
@@ -168,7 +191,9 @@ async def export_carousels(page, items: list[dict], force: bool) -> int:
         # top:-12px on .slide-wrap so it bleeds 12px into the top of
         # .post's bounding box, ending up as half a green chip in the
         # corner of every exported PNG. Preview keeps it; exports drop it.
-        await page.add_style_tag(content=".slide-tag { display: none !important; }")
+        slide_tag_css = ".slide-tag { display: none !important; }"
+        css = slide_tag_css + SQUARE_OVERRIDE_CSS if square else slide_tag_css
+        await page.add_style_tag(content=css)
         await page.wait_for_timeout(200)
         slide_els = page.locator(".slides .post")
         actual = await slide_els.count()
@@ -180,7 +205,7 @@ async def export_carousels(page, items: list[dict], force: bool) -> int:
                 continue
             await slide_els.nth(i).screenshot(path=str(out))
         count += 1
-        print(f"  [carousel] {folder_name}/ ({actual} slides)")
+        print(f"  [{label}] {folder_name}/ ({actual} slides)")
     return count
 
 
@@ -276,6 +301,7 @@ def parse_args() -> argparse.Namespace:
     p.add_argument("--reels",       action="store_true", help="export reels only")
     p.add_argument("--only",        type=str, default="", help="comma-separated IDs (e.g. 55,B07,C45,R21)")
     p.add_argument("--force",       action="store_true", help="re-export files that already exist")
+    p.add_argument("--square",      action="store_true", help="render carousels at 1080×1080 to carousels-square/ (for IG/FB/LinkedIn feed)")
     return p.parse_args()
 
 
@@ -323,8 +349,9 @@ async def main() -> None:
 
                 if do_carousels:
                     cars = filter_ids(inv["carousels"], only_ids)
-                    print(f"\n=== Carousels ({len(cars)}) ===")
-                    if cars: await export_carousels(page, cars, args.force)
+                    label = "Carousels (square 1080×1080)" if args.square else "Carousels"
+                    print(f"\n=== {label} ({len(cars)}) ===")
+                    if cars: await export_carousels(page, cars, args.force, square=args.square)
 
                 await ctx.close()
             finally:
