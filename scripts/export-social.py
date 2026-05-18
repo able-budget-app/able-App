@@ -6,12 +6,11 @@ Reads social/posts/data.js (POSTS, CAROUSELS, BRANDSCRIPT) and
 social/reels/data.js (REELS) via headless Chromium, then writes:
 
   marketing-footage/social-export/
-    singles/      {ID}_{slug}.png            (1080x1080, PNG)
-    carousels/    {ID}_{slug}/01.png ...     (one per slide, 1080x1080 each)
-    reels/        {ID}_{slug}.mp4            (1080x1920, H.264, 30fps, silent)
-
-Brand-script entries (B01-B41) are exported into singles/ alongside
-the numbered singles, since both render via posts/template.html.
+    singles/         {ID}_{slug}.png            (1080x1080, PNG — numeric + product)
+    brandscript/     {ID}_{slug}.png            (1080x1080, PNG — B## entries only)
+    carousels/       {ID}_{slug}/01.png ...     (one per slide, 1080x1920 — TikTok)
+    carousels-square/{ID}_{slug}/01.png ...     (one per slide, 1080x1080 — IG/FB/LinkedIn, via --square)
+    reels/           {ID}_{slug}.mp4            (1080x1920, H.264, 30fps, silent)
 
 Usage:
   python3 scripts/export-social.py                  # everything
@@ -45,6 +44,7 @@ from playwright.async_api import async_playwright  # type: ignore
 ROOT = Path(__file__).resolve().parent.parent
 OUT_DIR = ROOT / "marketing-footage" / "social-export"
 SINGLES_DIR        = OUT_DIR / "singles"
+BRANDSCRIPT_DIR    = OUT_DIR / "brandscript"
 CAROUSELS_DIR      = OUT_DIR / "carousels"
 CAROUSELS_SQ_DIR   = OUT_DIR / "carousels-square"
 REELS_DIR          = OUT_DIR / "reels"
@@ -148,11 +148,11 @@ def already_exported(path: Path, force: bool) -> bool:
 # ─────────────────────────────────────────────────────────────────────
 # Singles + brand-script (template.html?id=X)
 # ─────────────────────────────────────────────────────────────────────
-async def export_singles(page, items: list[dict], force: bool, label: str) -> int:
-    SINGLES_DIR.mkdir(parents=True, exist_ok=True)
+async def export_singles(page, items: list[dict], force: bool, label: str, out_dir: Path = SINGLES_DIR) -> int:
+    out_dir.mkdir(parents=True, exist_ok=True)
     count = 0
     for it in items:
-        out = SINGLES_DIR / f"{filename_for(it, 'single')}.png"
+        out = out_dir / f"{filename_for(it, 'single')}.png"
         if already_exported(out, force):
             print(f"  [skip] {out.name}")
             continue
@@ -343,7 +343,7 @@ async def main() -> None:
                     print(f"\n=== Singles ({len(posts)}) ===")
                     if posts: await export_singles(page, posts, args.force, "single")
                     print(f"\n=== Brand-script ({len(bs)}) ===")
-                    if bs: await export_singles(page, bs, args.force, "brand")
+                    if bs: await export_singles(page, bs, args.force, "brand", out_dir=BRANDSCRIPT_DIR)
                     print(f"\n=== Product posts ({len(prod)}) ===")
                     if prod: await export_singles(page, prod, args.force, "product")
 

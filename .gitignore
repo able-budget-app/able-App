@@ -23,6 +23,7 @@ supabase/.branches/
 # via scripts/export-social.py. Keep _master-sheet.csv (source-of-truth schedule).
 marketing-footage/social-export/_raw/
 marketing-footage/social-export/singles/
+marketing-footage/social-export/brandscript/
 marketing-footage/social-export/carousels/
 marketing-footage/social-export/carousels-square/
 marketing-footage/social-export/reels/
