@@ -194,7 +194,7 @@ def set_thumbnail(youtube, video_id: str, thumb_path: Path):
 
 def main():
     p = argparse.ArgumentParser()
-    p.add_argument("--batch", type=int, default=5, help="Max uploads this run (default 5; YouTube quota allows ~5/day)")
+    p.add_argument("--batch", type=int, default=999, help="Max uploads this run (default 999; script stops naturally on quotaExceeded)")
     p.add_argument("--slug", help="Upload only this slug/file_slug (overrides --batch)")
     p.add_argument("--sheet-id", help="Google Sheet ID (or set SHEET_ID / SHORTS_SHEET_ID env)")
     p.add_argument("--dry-run", action="store_true", help="Show what would be uploaded; don't actually upload")
