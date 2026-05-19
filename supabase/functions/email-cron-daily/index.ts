@@ -561,7 +561,7 @@ function footer(unsub: string): string {
 
 function layout(opts: { tone: Tone; inner: string; unsub: string }): string {
   const c = toneStyle(opts.tone);
-  return `<!doctype html><html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"></head>
+  return `<!doctype html><html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="color-scheme" content="light only"><meta name="supported-color-schemes" content="light"></head>
 <body style="margin:0;padding:0;background:${T.bg};font-family:Helvetica,Arial,sans-serif;color:${T.ink};-webkit-font-smoothing:antialiased;">
 <table role="presentation" cellpadding="0" cellspacing="0" border="0" width="100%" style="background:${T.bg};"><tr><td align="center" style="padding:36px 16px 32px;">
 <table role="presentation" cellpadding="0" cellspacing="0" border="0" width="100%" style="max-width:520px;">
@@ -685,7 +685,7 @@ function buildOnboardingDay7(user: any, unsub: string): { subject: string; html:
     { label: 'Deposits logged', value: String(recent.length) },
   ];
   if (debtPaid > 0) statRows.push({ label: 'Extra to debt', value: money(debtPaid) });
-  if (bufAdded > 0) statRows.push({ label: 'Added to buffer', value: money(bufAdded) });
+  if (bufAdded > 0) statRows.push({ label: 'Added to reserve', value: money(bufAdded) });
 
   const inner = hero({ eyebrow: 'Week 1', title: 'A week in.' })
     + heroNumber({ label: 'Income logged', value: money(totalIn) })
@@ -714,8 +714,8 @@ function buildOnboardingDay14(user: any, unsub: string): { subject: string; html
     { label: 'Deposits logged', value: String(recent.length) },
   ];
   if (debtPaid > 0) statRows.push({ label: 'Extra to debt', value: money(debtPaid) });
-  if (bufAdded > 0) statRows.push({ label: 'Added to buffer', value: money(bufAdded) });
-  statRows.push({ label: 'Buffer now', value: money(buffer) });
+  if (bufAdded > 0) statRows.push({ label: 'Added to reserve', value: money(bufAdded) });
+  statRows.push({ label: 'Reserve now', value: money(buffer) });
 
   const inner = hero({ eyebrow: 'Two weeks', title: 'Two weeks of data.' })
     + heroNumber({ label: 'Income logged', value: money(totalIn), sub: `${recent.length} deposit${recent.length === 1 ? '' : 's'}` })
@@ -734,8 +734,8 @@ function buildDormancy(user: any, unsub: string): { subject: string; html: strin
   const unpaidCount = bills.filter((b: any) => !b.paid).length;
   const buffer = parseFloat(user.buffer) || 0;
   const lede = unpaidCount > 0
-    ? `${unpaidCount} bill${unpaidCount === 1 ? '' : 's'} to handle soon. ${buffer > 0 ? `Buffer at <strong style="color:${T.ink};">${money(buffer)}</strong>.` : ''}`.trim()
-    : `You're current on bills. ${buffer > 0 ? `Buffer sits at <strong style="color:${T.ink};">${money(buffer)}</strong>.` : 'Quick check-in to keep the rhythm going.'}`;
+    ? `${unpaidCount} bill${unpaidCount === 1 ? '' : 's'} to handle soon. ${buffer > 0 ? `Reserve at <strong style="color:${T.ink};">${money(buffer)}</strong>.` : ''}`.trim()
+    : `You're current on bills. ${buffer > 0 ? `Reserve sits at <strong style="color:${T.ink};">${money(buffer)}</strong>.` : 'Quick check-in to keep the rhythm going.'}`;
   const inner = hero({ title: 'A quick check-in.', lede })
     + openAble('green');
   return {
@@ -769,8 +769,8 @@ function buildWeekly(user: any, unsub: string): { subject: string; html: string 
 
   const statRows: Array<{ label: string; value: string }> = [];
   if (debtPaid > 0) statRows.push({ label: 'Extra to debt', value: money(debtPaid) });
-  if (bufAdded > 0) statRows.push({ label: 'Added to buffer', value: money(bufAdded) });
-  statRows.push({ label: 'Buffer now', value: money(buffer) });
+  if (bufAdded > 0) statRows.push({ label: 'Added to reserve', value: money(bufAdded) });
+  statRows.push({ label: 'Reserve now', value: money(buffer) });
 
   const inner = hero({ eyebrow: 'Last 7 days', title: 'Your week in Able.' })
     + heroNumber({ label: 'Income logged', value: money(totalIn), sub: `${recent.length} deposit${recent.length === 1 ? '' : 's'}` })
@@ -846,8 +846,8 @@ function buildMonthlyWrap(user: any, unsub: string): { subject: string; html: st
 
   const statRows: Array<{ label: string; value: string }> = [];
   if (debtPaid > 0) statRows.push({ label: 'Extra to debt', value: money(debtPaid) });
-  if (bufAdded > 0) statRows.push({ label: 'Added to buffer', value: money(bufAdded) });
-  statRows.push({ label: 'Buffer now', value: money(buffer) });
+  if (bufAdded > 0) statRows.push({ label: 'Added to reserve', value: money(bufAdded) });
+  statRows.push({ label: 'Reserve now', value: money(buffer) });
 
   const inner = hero({ eyebrow: monthName, title: `${monthName} in Able.`, lede: 'Each month is a data point, not a verdict.' })
     + heroNumber({ label: 'Income this month', value: money(totalIn), sub: `${inMonth.length} deposit${inMonth.length === 1 ? '' : 's'}` })
@@ -936,11 +936,11 @@ function buildTrialEndedNoConvert(user: any, unsub: string): { subject: string; 
 const GOLD_ACHIEVEMENTS: Record<string, { name: string; blurb: string }> = {
   halfway_to_able: {
     name: 'Halfway There',
-    blurb: 'Your buffer covers half a month of bills. Slow stretches just got easier to ride out.',
+    blurb: 'Your reserve covers half a month of bills. Slow stretches just got easier to ride out.',
   },
   one_month_ahead: {
     name: 'One Month Ahead',
-    blurb: 'Your buffer covers a full month of bills. You built a real cushion.',
+    blurb: 'Your reserve covers a full month of bills. You built a real cushion.',
   },
   debt_free: {
     name: 'Debt Free Day',

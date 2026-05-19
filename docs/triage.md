@@ -79,6 +79,8 @@ Caveat carried forward: the `refer_*_joined` achievement tiles still need a back
 
 ## Polish — when it's the highest-value thing left (P3)
 
+- **P3-2026-05-19 #1 — Empty-state for weekly digest when no deposits logged.** `buildWeekly` in `email-cron-daily/index.ts:747` currently sends users a digest showing `$0 / 0 deposits` if they had a slow week with nothing logged. Demoralizing/confusing — looks like a bug to the reader. Two paths: (a) skip the send entirely when `recent.length === 0` (cleanest), or (b) render a different copy variant: "Quiet week — that happens. Reserve sits at $X. Log a deposit when the next payment lands." Recommend (a) for true silence-when-silent UX, but (b) preserves weekly touch with paying users. Surfaced 2026-05-19 from a real $0 digest that was correct per data but confusing per reader expectation (paul's pauljohnson912@gmail.com test account showing $0 weekly).
+
 ✅ **All P3 items shipped 2026-05-03 in commits `cd5c390` and `965786e`.** See Done section.
 
 ---
