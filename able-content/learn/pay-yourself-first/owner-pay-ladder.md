@@ -11,6 +11,7 @@ secondary_keywords:
   - owner salary progression
   - how owner pay grows
 cluster: learn-payself
+youtube_id: "cjwilcr2ttE"
 page_type: supporting
 parent: /learn/pay-yourself-first/
 internal_links:

@@ -10,6 +10,7 @@ secondary_keywords:
   - separate owner pay account
   - where to put pay yourself first money
 cluster: learn-payself
+youtube_id: "3JxtW356V3w"
 page_type: supporting
 parent: /learn/pay-yourself-first/
 internal_links:

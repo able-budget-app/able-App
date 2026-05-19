@@ -10,6 +10,7 @@ secondary_keywords:
   - paying yourself with debt
   - owner pay with credit card debt
 cluster: learn-payself
+youtube_id: "qGzDFQT3Y3I"
 page_type: supporting
 parent: /learn/pay-yourself-first/
 internal_links:

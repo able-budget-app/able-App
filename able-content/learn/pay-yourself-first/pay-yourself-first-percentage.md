@@ -10,6 +10,7 @@ secondary_keywords:
   - how much to pay yourself
   - owner pay percentage
 cluster: learn-payself
+youtube_id: "cgIVO2ColOQ"
 page_type: supporting
 parent: /learn/pay-yourself-first/
 internal_links:

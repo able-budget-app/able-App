@@ -10,6 +10,7 @@ secondary_keywords:
   - common pay yourself first errors
   - why pay yourself first fails
 cluster: learn-payself
+youtube_id: "MpM6JP4Jrv8"
 page_type: supporting
 parent: /learn/pay-yourself-first/
 internal_links:
