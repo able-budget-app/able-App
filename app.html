@@ -11950,20 +11950,36 @@ document.addEventListener('DOMContentLoaded', () => {
     if (Kb?.setAccessoryBarVisible) Kb.setAccessoryBarVisible({ isVisible: true });
     if (Kb?.addListener) {
       Kb.addListener('keyboardWillShow', (info) => {
-        document.documentElement.style.setProperty('--kb-h', ((info && info.keyboardHeight) || 0) + 'px');
+        const kbH = (info && info.keyboardHeight) || 0;
+        document.documentElement.style.setProperty('--kb-h', kbH + 'px');
         document.body.classList.add('kb-open');
-        // iOS WKWebView doesn't auto-scroll focused inputs into view when the
-        // scroll container is a nested fixed-position element (#auth-screen,
-        // #onboard-screen, .modal, .db-sheet) instead of body. Manually scroll
-        // the focused input into view above the keyboard. Wait one frame so the
-        // kb-open padding-bottom is applied before measuring.
-        requestAnimationFrame(() => {
+        // iOS WKWebView with Capacitor Keyboard.resize:"none" keeps the layout
+        // viewport at full screen even when the keyboard opens, so
+        // scrollIntoView({block:'center'}) centers in the layout viewport
+        // (still includes the keyboard-covered area) instead of the visible
+        // area above the keyboard. Compute the scroll offset manually and
+        // apply it to the actual scroll container — usually #auth-screen,
+        // #onboard-screen, .modal-bg, or .db-sheet. Two frames so the kb-open
+        // padding-bottom is laid out before we measure.
+        requestAnimationFrame(() => requestAnimationFrame(() => {
           const el = document.activeElement;
-          if (el && typeof el.scrollIntoView === 'function' &&
-              (el.tagName === 'INPUT' || el.tagName === 'TEXTAREA' || el.tagName === 'SELECT')) {
-            try { el.scrollIntoView({ block: 'center', behavior: 'smooth' }); } catch (_) {}
-          }
-        });
+          if (!el || (el.tagName !== 'INPUT' && el.tagName !== 'TEXTAREA' && el.tagName !== 'SELECT')) return;
+          const scroller = el.closest('#auth-screen, #onboard-screen, .modal-bg, .db-sheet, .coach-panel-bg')
+            || document.scrollingElement || document.documentElement;
+          try {
+            const elRect = el.getBoundingClientRect();
+            const sRect = scroller.getBoundingClientRect();
+            const visibleH = Math.max(100, sRect.height - kbH);
+            // Target: put the input ~1/3 from the top of the visible area
+            // (leaves room above for context like field labels).
+            const desiredTopInScroller = visibleH / 3;
+            const elTopInScroller = (elRect.top - sRect.top) + scroller.scrollTop;
+            const targetScrollTop = Math.max(0, elTopInScroller - desiredTopInScroller);
+            scroller.scrollTo
+              ? scroller.scrollTo({ top: targetScrollTop, behavior: 'auto' })
+              : (scroller.scrollTop = targetScrollTop);
+          } catch (_) {}
+        }));
       });
       Kb.addListener('keyboardWillHide', () => {
         document.documentElement.style.setProperty('--kb-h', '0px');
