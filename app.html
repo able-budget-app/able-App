@@ -7652,9 +7652,21 @@ function billOccurrencesInWindow(bill,days){
   if(bill.due==='ongoing') return {count:1,nextDays:0};
   if(freq==='monthly'){
     const d=parseInt(bill.due);if(isNaN(d))return {count:0,nextDays:999};
-    let t=monthlyDueDate(now.getFullYear(),now.getMonth(),d);
-    if(t<now)t=monthlyDueDate(now.getFullYear(),now.getMonth()+1,d);
-    const delta=Math.round((t-now)/86400000);
+    const tThis=monthlyDueDate(now.getFullYear(),now.getMonth(),d);
+    // Past-due unpaid monthly bills: surface them with NEGATIVE nextDays so the
+    // allocator sorts them first within their priority tier. Caller billsInWindow
+    // already routes paid bills through a separate branch (rolls to next cycle),
+    // so reaching this branch with tThis<now implies bill.paid===false.
+    if(tThis<now){
+      if(!bill.paid){
+        const deltaPast=Math.round((tThis-now)/86400000);
+        return {count:1, nextDays:deltaPast};
+      }
+      const tNext=monthlyDueDate(now.getFullYear(),now.getMonth()+1,d);
+      const delta=Math.round((tNext-now)/86400000);
+      return {count: delta<=days?1:0, nextDays:delta};
+    }
+    const delta=Math.round((tThis-now)/86400000);
     return {count: delta<=days?1:0, nextDays:delta};
   }
   if(freq==='weekly'){
@@ -8317,7 +8329,7 @@ function renderJobList(jobs,amount,container,historyId){
     const itemsHtml = isBills ? `
       <div style="margin-top:8px;padding-left:4px;border-left:2px solid ${job.color||'var(--ds-t4)'};">
         ${job.items.map(it=>{
-          const dueText = it.daysUntil===0?'due today':it.daysUntil===1?'due tomorrow':it.daysUntil!=null?`due in ${it.daysUntil}d`:(it.dueLabel||'');
+          const dueText = it.daysUntil===0?'due today':it.daysUntil===1?'due tomorrow':it.daysUntil!=null?(it.daysUntil<0?`${-it.daysUntil}d past due`:`due in ${it.daysUntil}d`):(it.dueLabel||'');
           // Recurring bill (e.g. weekly/biweekly with multiple occurrences in window):
           // show "$100 each × 2 in window" so totalBillAmount=$200 reads correctly as
           // per-occurrence amount × occurrences instead of looking like the bill price.
@@ -8861,7 +8873,7 @@ function renderHistory(){
                     const rightAmt = it.status==='funded_prior'
                       ? `<div style="font-size:10px;font-weight:700;color:var(--ds-green);">covered</div>`
                       : `<div style="font-weight:800;color:var(--ds-t1);letter-spacing:-.01em;margin-left:10px;">${f2(it.amount||0)}</div>`;
-                    const dueText = it.daysUntil===0?'due today':it.daysUntil===1?'due tomorrow':it.daysUntil!=null?`due in ${it.daysUntil}d · ${it.dueLabel||''}`:it.dueLabel||'';
+                    const dueText = it.daysUntil===0?'due today':it.daysUntil===1?'due tomorrow':it.daysUntil!=null?(it.daysUntil<0?`${-it.daysUntil}d past due · ${it.dueLabel||''}`:`due in ${it.daysUntil}d · ${it.dueLabel||''}`):it.dueLabel||'';
                     // For recurring bills with multiple occurrences in the window, show
                     // "$100 each × 2" rather than the multiplied total alone (which reads
                     // as if it were the bill price).
@@ -14658,7 +14670,7 @@ function renderHeroMoney(){
           <div class="db-hero-breakdown-row">
             <div>
               <div class="db-hero-breakdown-name">${r.name}</div>
-              <div class="db-hero-breakdown-meta">${r.days===0?'due today':r.days===1?'due tomorrow':r.days!=null&&r.days<999?'due in '+r.days+'d':'ongoing'}${r.reserved < r.total - 0.01 ? ' · '+f2(r.reserved)+' of '+f2(r.total) : ''}</div>
+              <div class="db-hero-breakdown-meta">${r.days===0?'due today':r.days===1?'due tomorrow':r.days!=null&&r.days<0?(-r.days)+'d past due':r.days!=null&&r.days<999?'due in '+r.days+'d':'ongoing'}${r.reserved < r.total - 0.01 ? ' · '+f2(r.reserved)+' of '+f2(r.total) : ''}</div>
             </div>
             <div class="db-hero-breakdown-amt">${f2(r.reserved)}</div>
           </div>
