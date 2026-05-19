@@ -12,6 +12,7 @@ secondary_keywords:
   - accounts receivable cash flow
   - profit vs cash flow
 cluster: business
+youtube_id: "xjltI8Eisvk"
 page_type: supporting
 parent: /business/
 internal_links:

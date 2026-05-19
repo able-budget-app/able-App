@@ -12,6 +12,7 @@ secondary_keywords:
   - small business year end
   - freelance year end taxes
 cluster: business
+youtube_id: "zYYrNvtIB60"
 page_type: supporting
 parent: /business/
 internal_links:

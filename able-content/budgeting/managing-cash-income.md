@@ -12,6 +12,7 @@ secondary_keywords:
   - cash payment tracking
   - cash freelancer taxes
 cluster: budgeting
+youtube_id: "xcuU7BmCDco"
 page_type: supporting
 parent: /budgeting/
 internal_links:

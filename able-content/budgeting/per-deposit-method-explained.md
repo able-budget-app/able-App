@@ -12,6 +12,7 @@ secondary_keywords:
   - allocation per deposit
   - able budgeting method
 cluster: budgeting
+youtube_id: "c5ZgCPSPyko"
 page_type: supporting
 parent: /budgeting/
 internal_links:

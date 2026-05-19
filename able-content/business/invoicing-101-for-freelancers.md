@@ -12,6 +12,7 @@ secondary_keywords:
   - late payment fees freelance
   - invoicing best practices
 cluster: business
+youtube_id: "F1tFBg2L7FA"
 page_type: supporting
 parent: /business/
 internal_links:

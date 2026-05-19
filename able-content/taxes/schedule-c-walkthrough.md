@@ -12,6 +12,7 @@ secondary_keywords:
   - schedule c small business
   - sole prop tax form
 cluster: taxes
+youtube_id: "5GF57uYNAco"
 page_type: supporting
 parent: /taxes/
 internal_links:

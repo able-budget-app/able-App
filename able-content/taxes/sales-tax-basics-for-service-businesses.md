@@ -12,6 +12,7 @@ secondary_keywords:
   - sales tax remote services
   - sales tax self employed
 cluster: taxes
+youtube_id: "GWNfpeOUwGM"
 page_type: supporting
 parent: /taxes/
 internal_links:

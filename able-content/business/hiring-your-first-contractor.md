@@ -12,6 +12,7 @@ secondary_keywords:
   - subcontracting freelance work
   - contractor agreement template
 cluster: business
+youtube_id: "USmXdJ1KIRw"
 page_type: supporting
 parent: /business/
 internal_links:

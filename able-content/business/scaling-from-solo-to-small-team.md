@@ -12,6 +12,7 @@ secondary_keywords:
   - growing a freelance business
   - hire first employee freelance
 cluster: business
+youtube_id: "HTzwWgsR-0U"
 page_type: supporting
 parent: /business/
 internal_links:

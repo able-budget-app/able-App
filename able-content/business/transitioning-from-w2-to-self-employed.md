@@ -12,6 +12,7 @@ secondary_keywords:
   - prepare to quit job
   - transition to freelance
 cluster: business
+youtube_id: "V_yhatimIj0"
 page_type: supporting
 parent: /business/
 internal_links:

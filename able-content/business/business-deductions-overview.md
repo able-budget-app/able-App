@@ -12,6 +12,7 @@ secondary_keywords:
   - business expense categories
   - tax deduction tracking
 cluster: business
+youtube_id: "tXKeKJpEnuA"
 page_type: supporting
 parent: /business/
 internal_links:

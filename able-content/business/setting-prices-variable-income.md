@@ -12,6 +12,7 @@ secondary_keywords:
   - how to price your services
   - freelancer pricing formula
 cluster: business
+youtube_id: "eghjHnyNSwM"
 page_type: supporting
 parent: /business/
 internal_links:

@@ -12,6 +12,7 @@ secondary_keywords:
   - freelance income mix
   - service product mix freelance
 cluster: business
+youtube_id: "tH4a1OVPQII"
 page_type: supporting
 parent: /business/
 internal_links:

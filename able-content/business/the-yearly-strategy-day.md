@@ -12,6 +12,7 @@ secondary_keywords:
   - 12 month plan freelance
   - solo business strategy
 cluster: business
+youtube_id: "X02_woJSoxg"
 page_type: supporting
 parent: /business/
 internal_links:

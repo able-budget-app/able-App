@@ -12,6 +12,7 @@ secondary_keywords:
   - traditional budget broken freelance
   - variable income budgeting problems
 cluster: budgeting
+youtube_id: "ad6tc6Mbu4o"
 page_type: supporting
 parent: /budgeting/
 internal_links:

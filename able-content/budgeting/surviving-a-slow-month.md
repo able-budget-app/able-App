@@ -12,6 +12,7 @@ secondary_keywords:
   - cash flow slow month
   - freelance dry spell
 cluster: budgeting
+youtube_id: "yp2_xgAsdTs"
 page_type: supporting
 parent: /budgeting/
 internal_links:

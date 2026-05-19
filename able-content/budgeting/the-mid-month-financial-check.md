@@ -12,6 +12,7 @@ secondary_keywords:
   - check budget mid month
   - bi monthly money review
 cluster: budgeting
+youtube_id: "VN1xGmDCbLA"
 page_type: supporting
 parent: /budgeting/
 internal_links:

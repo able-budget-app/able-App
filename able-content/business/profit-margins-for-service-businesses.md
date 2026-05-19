@@ -12,6 +12,7 @@ secondary_keywords:
   - profit margin calculation self employed
   - net profit margin freelance
 cluster: business
+youtube_id: "8NIGHl_5e1o"
 page_type: supporting
 parent: /business/
 internal_links:

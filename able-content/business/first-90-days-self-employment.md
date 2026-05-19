@@ -12,6 +12,7 @@ secondary_keywords:
   - self employment first month
   - freelance financial setup
 cluster: business
+youtube_id: "Yr1utEgvoZM"
 page_type: supporting
 parent: /business/
 internal_links:

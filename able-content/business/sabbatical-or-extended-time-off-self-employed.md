@@ -12,6 +12,7 @@ secondary_keywords:
   - vacation freelancer
   - sabbatical financial plan
 cluster: business
+youtube_id: "7nqTxENlSBY"
 page_type: supporting
 parent: /business/
 internal_links:

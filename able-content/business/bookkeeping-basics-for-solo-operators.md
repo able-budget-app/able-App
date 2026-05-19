@@ -12,6 +12,7 @@ secondary_keywords:
   - monthly bookkeeping checklist
   - freelancer expense tracking
 cluster: business
+youtube_id: "37O6E37iDKk"
 page_type: supporting
 parent: /business/
 internal_links:

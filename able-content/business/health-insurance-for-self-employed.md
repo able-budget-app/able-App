@@ -12,6 +12,7 @@ secondary_keywords:
   - small business health insurance
   - how much does health insurance cost self employed
 cluster: business
+youtube_id: "qFrNImUtyh0"
 page_type: supporting
 parent: /business/
 internal_links:

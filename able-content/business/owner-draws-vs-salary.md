@@ -12,6 +12,7 @@ secondary_keywords:
   - paying yourself as llc owner
   - draws vs distributions
 cluster: business
+youtube_id: "hq4yhlLlxoA"
 page_type: supporting
 parent: /business/
 internal_links:

@@ -12,6 +12,7 @@ secondary_keywords:
   - when to charge more
   - increase consulting rate
 cluster: business
+youtube_id: "8tY_6x9Uqok"
 page_type: supporting
 parent: /business/
 internal_links:

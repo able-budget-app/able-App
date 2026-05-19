@@ -12,6 +12,7 @@ secondary_keywords:
   - lifestyle creep self employed
   - capture good month income
 cluster: budgeting
+youtube_id: "tf3x_fMdcCY"
 page_type: supporting
 parent: /budgeting/
 internal_links:

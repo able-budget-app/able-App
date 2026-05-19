@@ -12,6 +12,7 @@ secondary_keywords:
   - capture surprise income
   - allocate unexpected income
 cluster: budgeting
+youtube_id: "R4rXYOEggQg"
 page_type: supporting
 parent: /budgeting/
 internal_links:

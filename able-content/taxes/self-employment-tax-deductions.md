@@ -12,6 +12,7 @@ secondary_keywords:
   - schedule c deductions
   - independent contractor deductions
 cluster: taxes
+youtube_id: "oY0N1MacdyM"
 page_type: supporting
 parent: /taxes/
 internal_links:

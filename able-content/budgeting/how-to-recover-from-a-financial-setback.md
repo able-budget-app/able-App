@@ -12,6 +12,7 @@ secondary_keywords:
   - financial reset plan
   - rebuild after slow stretch
 cluster: budgeting
+youtube_id: "TZC3sKDp0yU"
 page_type: supporting
 parent: /budgeting/
 internal_links:

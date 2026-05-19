@@ -12,6 +12,7 @@ secondary_keywords:
   - freelancer holidays
   - holiday savings variable income
 cluster: budgeting
+youtube_id: "lkCzcdIS8Ac"
 page_type: supporting
 parent: /budgeting/
 internal_links:

@@ -12,6 +12,7 @@ secondary_keywords:
   - financial review checklist
   - freelance quarterly audit
 cluster: business
+youtube_id: "gdrrsCmxayg"
 page_type: supporting
 parent: /business/
 internal_links:

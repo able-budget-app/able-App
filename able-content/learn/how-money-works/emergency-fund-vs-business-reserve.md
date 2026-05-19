@@ -12,6 +12,7 @@ secondary_keywords:
   - emergency fund freelancer
   - reserve fund difference
 cluster: how-money-works
+youtube_id: "QSBxp6AtRzg"
 page_type: supporting
 parent: /learn/how-money-works/
 internal_links:

@@ -12,6 +12,7 @@ secondary_keywords:
   - windfall planning self employed
   - big check budgeting
 cluster: budgeting
+youtube_id: "Pro_6mKi12Q"
 page_type: supporting
 parent: /budgeting/
 internal_links:

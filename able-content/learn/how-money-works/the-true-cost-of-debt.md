@@ -12,6 +12,7 @@ secondary_keywords:
   - debt compounding
   - hidden cost of debt
 cluster: how-money-works
+youtube_id: "z4QFLLX0LDU"
 page_type: supporting
 parent: /learn/how-money-works/
 internal_links:

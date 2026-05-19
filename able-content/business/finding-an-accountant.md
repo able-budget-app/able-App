@@ -12,6 +12,7 @@ secondary_keywords:
   - bookkeeper vs cpa
   - small business cpa
 cluster: business
+youtube_id: "VUAXrbUxo2Y"
 page_type: supporting
 parent: /business/
 internal_links:

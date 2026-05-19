@@ -12,6 +12,7 @@ secondary_keywords:
   - planned expenses budget
   - non monthly expenses
 cluster: budgeting
+youtube_id: "vxge-YfQKIQ"
 page_type: supporting
 parent: /budgeting/
 internal_links:

@@ -12,6 +12,7 @@ secondary_keywords:
   - one spouse self employed
   - household variable income
 cluster: budgeting
+youtube_id: "2luSaYHbCkY"
 page_type: supporting
 parent: /budgeting/
 internal_links:

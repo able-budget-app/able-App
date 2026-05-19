@@ -12,6 +12,7 @@ secondary_keywords:
   - explain budget to spouse
   - partner financial conversation
 cluster: budgeting
+youtube_id: "kttwFKqA_I4"
 page_type: supporting
 parent: /budgeting/
 internal_links:
