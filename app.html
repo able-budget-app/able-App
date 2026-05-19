@@ -5163,6 +5163,14 @@ const OAUTH_STORAGE_KEY = 'able_plaid_oauth_state';
 
 function plaidRedirectUri() {
   // Must match an "allowed redirect URI" registered in the Plaid dashboard.
+  // Capacitor iOS runs at able://localhost — Plaid only accepts HTTPS URIs, so
+  // we route OAuth banks (Chase / Cap One / USAA / B of A) through a hosted
+  // bridge page on becomeable.app that deeplinks back into the app via
+  // able://plaid-oauth. The appUrlOpen handler picks up the deeplink and
+  // resumes Plaid Link with receivedRedirectUri.
+  if (window.Capacitor?.isNativePlatform?.()) {
+    return 'https://becomeable.app/plaid-oauth.html';
+  }
   return window.location.origin + '/app.html';
 }
 function persistOauthLink(state) {
@@ -5188,20 +5196,28 @@ function stripOauthQueryParams() {
 // Called after auth-flow completes. If we're on an OAuth return URL
 // AND we saved a link_token before the redirect, reopen Link with
 // receivedRedirectUri so the OAuth handoff completes.
-async function tryResumePlaidOauth() {
-  const params = new URLSearchParams(window.location.search);
+//
+// receivedRedirectUriOverride: pass the synthesized HTTPS bridge URL when
+// resuming from the Capacitor appUrlOpen deeplink (able://plaid-oauth?...).
+// Plaid expects the ORIGINAL HTTPS redirect_uri it bounced to (not the
+// custom-scheme deeplink), so we reconstruct it from the deeplink query
+// before handing back to Plaid.create.
+async function tryResumePlaidOauth(receivedRedirectUriOverride) {
+  const params = receivedRedirectUriOverride
+    ? new URL(receivedRedirectUriOverride).searchParams
+    : new URLSearchParams(window.location.search);
   if (!params.get('oauth_state_id')) return false;
   const state = readOauthLink();
   if (!state || !state.token) {
     clearOauthLink();
-    stripOauthQueryParams();
+    if (!receivedRedirectUriOverride) stripOauthQueryParams();
     return false;
   }
 
   try { await ensurePlaidLinkScript(); } catch (e) {
     console.error('OAuth resume: Plaid Link script failed to load', e);
     clearOauthLink();
-    stripOauthQueryParams();
+    if (!receivedRedirectUriOverride) stripOauthQueryParams();
     return false;
   }
 
@@ -5213,7 +5229,7 @@ async function tryResumePlaidOauth() {
 
   const handler = window.Plaid.create({
     token: state.token,
-    receivedRedirectUri: window.location.href,
+    receivedRedirectUri: receivedRedirectUriOverride || window.location.href,
     onSuccess: async (public_token, metadata) => {
       clearOauthLink();
       stripOauthQueryParams();
@@ -11972,6 +11988,23 @@ document.addEventListener('DOMContentLoaded', () => {
               console.warn('[Able] OAuth code exchange error:', e);
               return;
             }
+          }
+
+          // Plaid OAuth bridge deeplink: Safari finishes Chase / Cap One /
+          // USAA / B of A OAuth on becomeable.app/plaid-oauth.html, that
+          // page forwards via able://plaid-oauth?oauth_state_id=...
+          // We hand Plaid the ORIGINAL HTTPS bridge URL (not able://) as
+          // receivedRedirectUri so it can finalize the link in-app.
+          if (u.host === 'plaid-oauth' || u.pathname === '//plaid-oauth') {
+            const synthetic = 'https://becomeable.app/plaid-oauth.html' + (u.search || '');
+            try {
+              if (typeof tryResumePlaidOauth === 'function') {
+                await tryResumePlaidOauth(synthetic);
+              }
+            } catch (e) {
+              console.warn('[Able] Plaid OAuth resume failed:', e);
+            }
+            return;
           }
 
           // Two shapes we expect from /checkout-return.html:
