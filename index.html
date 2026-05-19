@@ -2221,31 +2221,19 @@ a { text-decoration: none; color: inherit; }
 .feature-card.ai-card {
   background: linear-gradient(135deg, #111c16 0%, #1f3828 100%);
   border: 1px solid rgba(42,122,74,.3);
-  grid-column: span 2;
-  display: grid;
-  grid-template-columns: auto 1fr;
-  gap: 1.5rem;
-  align-items: center;
 }
 .feature-card.ai-card .feature-icon {
   background: rgba(42,122,74,.3);
   color: var(--ds-green-m);
-  width: 56px;
-  height: 56px;
-  border-radius: var(--ds-r2);
-  margin-bottom: 0;
 }
-.feature-card.ai-card .feature-icon svg { width: 28px; height: 28px; }
 .feature-card.ai-card .feature-title {
   color: white;
-  font-size: 20px;
 }
 .feature-card.ai-card .feature-body {
   color: rgba(255,255,255,.65);
 }
 @media (max-width: 580px) {
   .features-grid { grid-template-columns: 1fr; padding: 0 1.25rem; }
-  .feature-card.ai-card { grid-column: span 1; grid-template-columns: 1fr; }
 }
 
 /* ═══════════════════════════════════════
