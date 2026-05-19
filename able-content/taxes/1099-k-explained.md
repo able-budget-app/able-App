@@ -12,6 +12,7 @@ secondary_keywords:
   - 1099-k venmo
   - third party payment 1099
 cluster: taxes
+youtube_id: "3Osr9QSLGOQ"
 page_type: supporting
 parent: /taxes/
 internal_links:

@@ -12,6 +12,7 @@ secondary_keywords:
   - home office deduction 2024
   - home office 1099
 cluster: taxes
+youtube_id: "DjgZKwqBpHs"
 page_type: supporting
 parent: /taxes/
 internal_links:

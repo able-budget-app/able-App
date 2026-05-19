@@ -11,6 +11,7 @@ secondary_keywords:
   - tax set aside freelancer
   - 1099 tax rate
 cluster: taxes
+youtube_id: "Roe7DsQLCzo"
 page_type: supporting
 parent: /taxes/
 internal_links:
