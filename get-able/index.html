@@ -15,10 +15,10 @@
 <body>
 <script>
 (function () {
-  // Update these two lines when the app stores ship.
-  var IOS_URL     = '/app.html'; // future: 'https://apps.apple.com/app/idXXXXXXXXX'
+  // Update iOS/Android when each store listing goes live.
+  var IOS_URL     = '/app.html'; // future: 'https://apps.apple.com/app/able-inconsistent-income/id6769551407' (approved 2026-05-18, not yet released)
   var ANDROID_URL = '/app.html'; // future: 'https://play.google.com/store/apps/details?id=app.becomeable'
-  var DESKTOP_URL = '/app.html';
+  var DESKTOP_URL = '/';         // desktop visitors land on marketing site, not straight into app
 
   var ua = (navigator.userAgent || '').toLowerCase();
   var isIPadOnMacUA = /macintosh/.test(ua) && navigator.maxTouchPoints > 1;
