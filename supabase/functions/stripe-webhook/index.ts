@@ -652,7 +652,7 @@ function _getServiceKey(): string {
     return respond(req, { received: true, log });
   } catch (error) {
     console.error("WEBHOOK ERROR:", (error as Error).message, (error as Error).stack);
-    return respond(req, { error: (error as Error).message }, 400);
+    return respond(req, { error: 'Internal server error' }, 400);
   }
 });
 

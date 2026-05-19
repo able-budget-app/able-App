@@ -130,7 +130,7 @@ function _getServiceKey(): string {
     return json(req, { ok: true, ref_token: ref.ref_token })
   } catch (e) {
     console.error('send-referral-invite error:', e)
-    return json(req, { error: (e as Error).message }, 500)
+    return json(req, { error: 'Internal server error' }, 500)
   }
 })
 

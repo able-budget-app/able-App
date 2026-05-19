@@ -149,7 +149,7 @@ Deno.serve(async (req) => {
         console.warn(`item ${item.id} already removed at Plaid; proceeding with local delete`);
       } else {
         console.error('plaid /item/remove failed:', e);
-        return json(req, { error: (e as Error).message }, 502);
+        return json(req, { error: 'Internal server error' }, 502);
       }
     }
 

@@ -300,8 +300,9 @@ input,select,button,textarea{font-family:inherit;}
   .coach-panel-bg, .lc-game-bg{transition:bottom .28s cubic-bezier(.32,.72,0,1);}
   body.kb-open .coach-panel-bg,
   body.kb-open .lc-game-bg{bottom:var(--kb-h,0px);}
-  .modal{transition:padding-bottom .28s cubic-bezier(.32,.72,0,1);}
-  body.kb-open .modal{padding-bottom:var(--kb-h,0px);}
+  .modal,.db-sheet{transition:padding-bottom .28s cubic-bezier(.32,.72,0,1);}
+  body.kb-open .modal,
+  body.kb-open .db-sheet{padding-bottom:var(--kb-h,0px);}
   /* Auth-screen (login/signup) + onboard-screen don't use the overlay pattern —
      pad the bottom so the focused input has room to scroll above the keyboard,
      and switch from align-items:center to flex-start so the form anchors to the
@@ -318,6 +319,17 @@ input,select,button,textarea{font-family:inherit;}
   body{padding-bottom:112px;}
   /* Kill double-tap zoom and callouts on buttons/links app-wide */
   button, a, .btn, .nav-tab, input, select, textarea, [onclick]{touch-action:manipulation;-webkit-tap-highlight-color:transparent;}
+
+  /* Bump critical interaction targets to Apple's 44x44 HIG minimum on mobile.
+     Mark Paid is the conversion ritual per the no-auto-mark decision, so its
+     tap area must be reliable. Delete buttons sit next to amount inputs and
+     misfire on inflate-thumbs. Modal close buttons sit at the corner where
+     the user reaches with the hand opposite the one holding the phone. */
+  .next14-mark{min-height:44px;padding:10px 14px;}
+  .bills-x{min-width:44px;min-height:44px;padding:8px 12px;}
+  .checkbtn{width:44px;height:44px;}
+  .coach-close,.db-sheet-close{width:44px;height:44px;}
+  .coach-nudge-close{min-width:44px;min-height:44px;padding:8px 12px;}
 }
 
 /* PAGES */
@@ -2396,7 +2408,7 @@ body.is-scrolling .btn-primary:hover{transform:none!important;box-shadow:inherit
     <div id="reclassify-chips" style="display:flex;flex-wrap:wrap;gap:8px;margin-bottom:1rem;"></div>
     <div style="margin-bottom:.85rem;">
       <label style="display:block;font-size:11px;font-weight:800;letter-spacing:.06em;text-transform:uppercase;color:var(--ds-t3);margin-bottom:.4rem;">Business (optional)</label>
-      <input type="text" id="reclassify-business" placeholder="e.g. Personal, Acme LLC, Side hustle" list="reclassify-business-suggestions" style="width:100%;font-family:var(--ds-f);font-size:13px;font-weight:600;padding:8px 11px;border:1.5px solid var(--ds-line);border-radius:var(--ds-r1);background:white;color:var(--ds-t1);">
+      <input type="text" id="reclassify-business" placeholder="e.g. Personal, Acme LLC, Side hustle" list="reclassify-business-suggestions" style="width:100%;font-family:var(--ds-f);font-size:16px;font-weight:600;padding:8px 11px;border:1.5px solid var(--ds-line);border-radius:var(--ds-r1);background:white;color:var(--ds-t1);">
       <datalist id="reclassify-business-suggestions"></datalist>
     </div>
     <label style="display:flex;align-items:center;gap:9px;font-size:12px;font-weight:600;color:var(--ds-t2);cursor:pointer;user-select:none;margin-bottom:.65rem;">

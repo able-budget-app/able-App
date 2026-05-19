@@ -116,7 +116,7 @@ Deno.serve(async (req) => {
     return json(req, { ok: true });
   } catch (e) {
     console.error('plaid-webhook error:', e);
-    return json(req, { error: (e as Error).message }, e instanceof VerifyError ? 401 : 500);
+    return json(req, { error: e instanceof VerifyError ? 'Unauthorized' : 'Internal server error' }, e instanceof VerifyError ? 401 : 500);
   }
 });
 

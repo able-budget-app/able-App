@@ -1,5 +1,10 @@
 import { createClient } from 'npm:@supabase/supabase-js@2'
 
+// Single source of truth for both CORS origin reflection and the redirect-URL
+// allowlist Stripe will send users back to. Capacitor/able schemes are valid
+// CORS origins (the iOS WebView sends them) but invalid redirect targets
+// (Stripe redirects are server-side https) — _isAllowedRedirect() applies
+// the stricter HTTPS-only filter.
 const _ALLOWED_ORIGINS = new Set([
   'https://becomeable.app',
   'https://www.becomeable.app',
@@ -20,15 +25,18 @@ function corsHeaders(req: Request) {
   'Access-Control-Allow-Methods': 'POST, OPTIONS',
   'Vary': 'Origin',
   };
-}const ALLOWED_ORIGINS = [
-  'https://becomeable.app',
-  'https://www.becomeable.app',
-  'capacitor://localhost',
-  'able://localhost',
-  'https://becomeable.netlify.app',
-  'http://localhost:3000',
-  'http://localhost:5173',
-]
+}
+// Stripe redirects are server-to-browser https navigations; capacitor:// and
+// able:// schemes can't receive them. Capacitor's checkout flow points Stripe
+// at becomeable.app/checkout-return.html which then deeplinks into the app.
+function _isAllowedRedirect(u: unknown): boolean {
+  if (typeof u !== 'string') return false;
+  if (u.startsWith('https://becomeable.app/') || u === 'https://becomeable.app') return true;
+  if (u.startsWith('https://www.becomeable.app/') || u === 'https://www.becomeable.app') return true;
+  if (/^https:\/\/deploy-preview-\d+--becomeable\.netlify\.app(\/|$)/.test(u)) return true;
+  if (/^http:\/\/(localhost|127\.0\.0\.1)(:\d+)?(\/|$)/.test(u)) return true;
+  return false;
+}
 
 // Resolve the Supabase service-role-equivalent secret. Prefer the new
 // SUPABASE_SECRET_KEYS env (sb_secret_* format) over the deprecated legacy
@@ -72,10 +80,8 @@ Deno.serve(async (req) => {
       return json(req, { error: 'Invalid priceId' }, 400)
     }
 
-    // Constrain redirect URLs to known origins (open redirect guard)
-    const urlOk = (u: unknown) =>
-      typeof u === 'string' && ALLOWED_ORIGINS.some((o) => u.startsWith(o))
-    if (!urlOk(returnUrl) || !urlOk(cancelUrl)) {
+    // Constrain redirect URLs to known origins (open redirect guard).
+    if (!_isAllowedRedirect(returnUrl) || !_isAllowedRedirect(cancelUrl)) {
       return json(req, { error: 'Invalid redirect URL' }, 400)
     }
 
