@@ -35,7 +35,12 @@ check_one() {
 deploy_one() {
   local name="$1"
   echo "DEPLOY $name"
-  supabase functions deploy "$name" --no-verify-jwt=false
+  # --no-verify-jwt (no arg) sets verify_jwt=OFF on the function. Every Able
+  # function handles its own auth (user JWT via supabase-js, service-role
+  # bearer for direct curls, x-internal-auth for cross-function calls). With
+  # gateway JWT verification ON, sb_secret_* keys get rejected as malformed
+  # JWTs — see supabase_edge_function_jwt rule.
+  supabase functions deploy "$name" --no-verify-jwt
 }
 
 if [[ $# -gt 0 ]]; then

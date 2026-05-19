@@ -74,7 +74,7 @@ function corsHeaders(req: Request) {
   };
 }
 
-type Body = { plaid_item_row_id: string };
+type Body = { plaid_item_row_id: string; force_balance_refresh?: boolean };
 
 Deno.serve(async (req) => {
   if (req.method === 'OPTIONS') return new Response('ok', { headers: corsHeaders(req) });
@@ -239,9 +239,9 @@ Deno.serve(async (req) => {
     // we actually have new/modified txns to justify it. Failures are
     // swallowed — the sync still succeeded and the stale balance is
     // better than no balance.
-    if (totalAdded > 0 || totalModified > 0) {
+    if (totalAdded > 0 || totalModified > 0 || body.force_balance_refresh) {
       await refreshLiveBalances(admin, item.id, item.access_token);
-      scheduleBackgroundClassify(item.id);
+      if (totalAdded > 0 || totalModified > 0) scheduleBackgroundClassify(item.id);
     }
 
     return json(req, {

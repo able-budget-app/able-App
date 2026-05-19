@@ -10781,12 +10781,19 @@ async function loadBankBalances() {
       .in('plaid_item_id', itemIds)
       .eq('type', 'depository');
     if (accErr) throw accErr;
+    // Prefer available_balance (spendable now, includes pending deposits) over
+    // current_balance (posted/settled only). Chase's "Available balance" in the
+    // bank UI matches Plaid's available_balance, so this is the number users
+    // expect to see. Falls back to current_balance when available is null
+    // (some smaller institutions don't expose available via Plaid).
     const list = (accounts || []).map((a) => ({
       institution_name: itemsById[a.plaid_item_id]?.institution_name || 'Bank',
       name: a.name || a.subtype || 'Account',
       mask: a.mask,
       subtype: a.subtype,
-      current_balance: typeof a.current_balance === 'number' ? a.current_balance : null,
+      current_balance: typeof a.available_balance === 'number'
+        ? a.available_balance
+        : (typeof a.current_balance === 'number' ? a.current_balance : null),
     }));
     const sum = list.reduce((s, a) => s + (a.current_balance || 0), 0);
     S._bankBalances = { sum, accounts: list };
