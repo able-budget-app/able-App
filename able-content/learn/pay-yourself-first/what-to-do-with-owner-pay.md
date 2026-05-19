@@ -10,6 +10,7 @@ secondary_keywords:
   - owner pay priority
   - personal money priority self employed
 cluster: learn-payself
+youtube_id: "yM7DZ-dLBbo"
 page_type: supporting
 parent: /learn/pay-yourself-first/
 internal_links:

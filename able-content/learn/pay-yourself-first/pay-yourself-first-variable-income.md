@@ -10,6 +10,7 @@ secondary_keywords:
   - pay yourself first freelancer
   - pay yourself first self employed
 cluster: learn-payself
+youtube_id: "nfiL4SaLAnM"
 page_type: supporting
 parent: /learn/pay-yourself-first/
 internal_links:

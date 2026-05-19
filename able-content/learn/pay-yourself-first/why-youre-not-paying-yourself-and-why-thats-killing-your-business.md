@@ -7,6 +7,7 @@ meta_description: "The one thing most entrepreneurs skip. Most entrepreneurs are
 target_keyword: "why youre not paying yourself and why thats killing your bus"
 secondary_keywords: []
 cluster: learn-payself
+youtube_id: "RpAlcn8sLXQ"
 page_type: supporting
 parent: /learn/pay-yourself-first/
 internal_links:

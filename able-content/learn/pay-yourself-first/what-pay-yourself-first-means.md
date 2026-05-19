@@ -10,6 +10,7 @@ secondary_keywords:
   - what does pay yourself first mean
   - pay yourself first explained
 cluster: learn-payself
+youtube_id: "Xo5LWvEEKXU"
 page_type: supporting
 parent: /learn/pay-yourself-first/
 internal_links:

@@ -11,6 +11,7 @@ secondary_keywords:
   - profit first explained
   - mike michalowicz profit first
 cluster: learn-payself
+youtube_id: "OFiQqqxB2_o"
 page_type: supporting
 parent: /learn/pay-yourself-first/
 internal_links:
