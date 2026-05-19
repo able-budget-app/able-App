@@ -11933,6 +11933,18 @@ document.addEventListener('DOMContentLoaded', () => {
       Kb.addListener('keyboardWillShow', (info) => {
         document.documentElement.style.setProperty('--kb-h', ((info && info.keyboardHeight) || 0) + 'px');
         document.body.classList.add('kb-open');
+        // iOS WKWebView doesn't auto-scroll focused inputs into view when the
+        // scroll container is a nested fixed-position element (#auth-screen,
+        // #onboard-screen, .modal, .db-sheet) instead of body. Manually scroll
+        // the focused input into view above the keyboard. Wait one frame so the
+        // kb-open padding-bottom is applied before measuring.
+        requestAnimationFrame(() => {
+          const el = document.activeElement;
+          if (el && typeof el.scrollIntoView === 'function' &&
+              (el.tagName === 'INPUT' || el.tagName === 'TEXTAREA' || el.tagName === 'SELECT')) {
+            try { el.scrollIntoView({ block: 'center', behavior: 'smooth' }); } catch (_) {}
+          }
+        });
       });
       Kb.addListener('keyboardWillHide', () => {
         document.documentElement.style.setProperty('--kb-h', '0px');
