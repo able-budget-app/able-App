@@ -213,13 +213,27 @@ export type AccountsBalanceGetRes = {
   request_id: string;
 };
 
-export const accountsBalanceGet = (access_token: string, account_ids?: string[]) =>
-  plaidApi<{ access_token: string; options?: { account_ids: string[] } }, AccountsBalanceGetRes>(
+// min_last_updated_datetime forces Plaid to consider cached balances older
+// than this timestamp as stale, triggering a live pull from the institution
+// (when the institution supports real-time balance via Plaid). Without it,
+// Plaid happily returns stale snapshots even from "/accounts/balance/get",
+// which is what was causing the May 2026 Chase OAuth stale-balance bug.
+export const accountsBalanceGet = (
+  access_token: string,
+  account_ids?: string[],
+  min_last_updated_datetime?: string,
+) => {
+  const options: { account_ids?: string[]; min_last_updated_datetime?: string } = {};
+  if (account_ids?.length) options.account_ids = account_ids;
+  if (min_last_updated_datetime) options.min_last_updated_datetime = min_last_updated_datetime;
+  return plaidApi<
+    { access_token: string; options?: typeof options },
+    AccountsBalanceGetRes
+  >(
     '/accounts/balance/get',
-    account_ids?.length
-      ? { access_token, options: { account_ids } }
-      : { access_token },
+    Object.keys(options).length ? { access_token, options } : { access_token },
   );
+};
 
 export type ItemGetRes = {
   item: {

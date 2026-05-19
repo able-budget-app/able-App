@@ -337,7 +337,13 @@ async function refreshLiveBalances(
 ): Promise<void> {
   const t0 = Date.now();
   try {
-    const resp = await accountsBalanceGet(accessToken);
+    // Force a live institution pull: Plaid returns its cache by default, even
+    // from /accounts/balance/get. Passing min_last_updated_datetime tells Plaid
+    // "don't give me a snapshot older than 1 hour" — for institutions that
+    // support real-time balance (most major US banks via Plaid Balance), this
+    // forces a fresh pull. Older institutions fall back to cached, no error.
+    const minFresh = new Date(Date.now() - 60 * 60 * 1000).toISOString();
+    const resp = await accountsBalanceGet(accessToken, undefined, minFresh);
     let updated = 0;
     for (const a of resp.accounts) {
       const { error } = await admin
