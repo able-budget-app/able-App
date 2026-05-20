@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="canvas-size" content="1080x1350">
+<title>Able · launch-03-problem-external</title>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:wght@500;700;800;900&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="_brand.css">
+<style>
+  html, body { width: 1080px; height: 1350px; margin: 0; padding: 0; background: #E6EBE0; font-family: 'Bricolage Grotesque', -apple-system, sans-serif; }
+  .canvas {
+    width: 1080px; height: 1350px;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    background: #E6EBE0;
+  }
+  .left {
+    padding: 96px 48px 96px 96px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+  }
+  .right {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+  }
+  .right img {
+    width: 100%;
+    height: auto;
+    max-height: 1280px;
+    object-fit: contain;
+  }
+  .eyebrow {
+    font-size: 22px;
+    font-weight: 800;
+    letter-spacing: .22em;
+    text-transform: uppercase;
+    color: #2a7a4a;
+    margin-bottom: 36px;
+  }
+  .headline {
+    font-size: 54px;
+    font-weight: 800;
+    line-height: 1.06;
+    letter-spacing: -.025em;
+    color: #111c16;
+    margin-bottom: 32px;
+  }
+  .headline em {
+    font-style: normal;
+    color: #2a7a4a;
+  }
+  .subhead {
+    font-size: 24px;
+    font-weight: 500;
+    line-height: 1.32;
+    color: #4a5c52;
+  }
+  .footer-stack {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    align-items: flex-start;
+  }
+  .wordmark { font-size: 56px; }
+  .url {
+    font-size: 22px;
+    font-weight: 700;
+    color: #4a5c52;
+    letter-spacing: .01em;
+  }
+</style>
+</head>
+<body>
+  <div class="canvas">
+    <div class="left">
+      <div>
+        <div class="eyebrow">The problem</div>
+        <h1 class="headline">Most budgeting apps assume a steady paycheck. <em>Yours isn't one.</em></h1>
+        <p class="subhead">Built for the way you actually get paid.</p>
+      </div>
+      <div class="footer-stack">
+        <span class="wordmark">Able</span>
+        <span class="url">Now in the App Store</span>
+      </div>
+    </div>
+    <div class="right">
+      <img src="../marketing-footage/product-shots/01-dashboard/9x16-bare.png" alt="Able home screen">
+    </div>
+  </div>
+</body>
+</html>

@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="canvas-size" content="1080x1350">
+<title>Able · launch-08-insight</title>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:wght@500;700;800;900&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="_brand.css">
+<style>
+  html, body { width: 1080px; height: 1350px; margin: 0; padding: 0; background: #E6EBE0; font-family: 'Bricolage Grotesque', -apple-system, sans-serif; }
+  .canvas {
+    width: 1080px; height: 1350px;
+    background: #E6EBE0;
+    display: flex;
+    flex-direction: column;
+    padding: 80px 80px 64px 80px;
+  }
+  .top {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+  }
+  .eyebrow {
+    font-size: 22px;
+    font-weight: 800;
+    letter-spacing: .22em;
+    text-transform: uppercase;
+    color: #2a7a4a;
+    margin-bottom: 40px;
+  }
+  .quote {
+    font-size: 50px;
+    font-weight: 800;
+    line-height: 1.08;
+    letter-spacing: -.025em;
+    color: #111c16;
+  }
+  .quote::before { content: '\201C'; color: #2a7a4a; }
+  .quote::after  { content: '\201D'; color: #2a7a4a; }
+  .bottom {
+    display: grid;
+    grid-template-columns: 360px 1fr;
+    gap: 48px;
+    align-items: end;
+    margin-top: 48px;
+  }
+  .phone-wrap {
+    display: flex;
+    align-items: flex-end;
+    justify-content: center;
+  }
+  .phone-wrap img {
+    width: 360px;
+    height: auto;
+    object-fit: contain;
+  }
+  .closing {
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+    padding-bottom: 24px;
+  }
+  .closing-line {
+    font-size: 30px;
+    font-weight: 600;
+    line-height: 1.25;
+    letter-spacing: -.015em;
+    color: #111c16;
+    margin-bottom: 16px;
+  }
+  .wordmark { font-size: 60px; }
+  .url {
+    font-size: 22px;
+    font-weight: 700;
+    color: #4a5c52;
+    letter-spacing: .01em;
+  }
+</style>
+</head>
+<body>
+  <div class="canvas">
+    <div class="top">
+      <div class="eyebrow">The insight</div>
+      <p class="quote">Entrepreneurs don't fail to pay down debt because they don't want to. They fail because they're afraid of not knowing when the next check is coming in.</p>
+    </div>
+    <div class="bottom">
+      <div class="phone-wrap">
+        <img src="../marketing-footage/product-shots/10-debts/9x16-bare.png" alt="Able debt projection">
+      </div>
+      <div class="closing">
+        <div class="closing-line">Built for the fear.</div>
+        <span class="wordmark">Able</span>
+        <span class="url">Now in the App Store</span>
+      </div>
+    </div>
+  </div>
+</body>
+</html>
