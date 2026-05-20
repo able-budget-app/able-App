@@ -100,7 +100,7 @@ Swipe to find which week you're in. (You'll recognize all three.)
 
 It's not willpower. It's the wrong tool. Apps built for a paycheck don't work when your paycheck doesn't exist.
 
-Built for variable income. Free for 30 days.
+Built for inconsistent income. Free for 30 days.
 Link in bio.
 
 #freelancing #1099life #variableincome #budgeting #selfemployed`,
@@ -125,7 +125,7 @@ Type 3: The Shame Cycler. Relief when it lands. Spending while it's there. Panic
 
 Same person. Different week.
 
-The reason most budgeting apps don't fix any of these is that they were built for a steady paycheck. Envelopes for next month assume you know what's coming next month. A "save 20%" rule assumes a 20% you can spare every period. None of that maps to variable income.
+The reason most budgeting apps don't fix any of these is that they were built for a steady paycheck. Envelopes for next month assume you know what's coming next month. A "save 20%" rule assumes a 20% you can spare every period. None of that maps to inconsistent income.
 
 The fix is a system that doesn't pretend your paycheck looks like everyone else's. Built Able to be that system.
 
@@ -318,7 +318,7 @@ Not more discipline.
 Not a stricter budget.
 Not "trying harder."
 
-A system. Built for variable income.
+A system. Built for inconsistent income.
 
 Free for 30 days. Link in bio.
 
@@ -399,7 +399,7 @@ becomeable.app/get-able
 
     li: `You shouldn't have to be a CFO to have a calm month.
 
-Run through what most "tools for variable income" actually require: download statements, categorize transactions, reconcile a spreadsheet, project quarterly tax, separate business and personal, build a 12-month forecast. That's a finance job. People who already have a job hire someone to do that.
+Run through what most "tools for inconsistent income" actually require: download statements, categorize transactions, reconcile a spreadsheet, project quarterly tax, separate business and personal, build a 12-month forecast. That's a finance job. People who already have a job hire someone to do that.
 
 If you're a one-person business, freelancer, creator, consultant, contractor, you're already doing the work that pays. Adding a second job to manage the money from the first one is a recipe for nothing changing.
 
@@ -529,7 +529,7 @@ becomeable.app/get-able
 
     li: `One pile. Five jobs. Split first. Spend last.
 
-Most personal finance is built around a "spend, then save what's left" model. With variable income, "what's left" is almost always nothing. By the end of the month, the money has drifted to small things and the big jobs, taxes, debt, savings, went unfunded again.
+Most personal finance is built around a "spend, then save what's left" model. With inconsistent income, "what's left" is almost always nothing. By the end of the month, the money has drifted to small things and the big jobs, taxes, debt, savings, went unfunded again.
 
 Flip the order.
 
@@ -770,7 +770,7 @@ becomeable.app/get-able
 
     li: `Free to try. Built for inconsistent income.
 
-The "free to try" matters because most people in the variable-income camp have already paid for two or three budgeting apps that didn't fit. The trial is to prove the tool actually works for the shape of your money before you commit a single dollar.
+The "free to try" matters because most people in the inconsistent income camp have already paid for two or three budgeting apps that didn't fit. The trial is to prove the tool actually works for the shape of your money before you commit a single dollar.
 
 The "built for inconsistent income" matters because every other budgeting tool you've tried was built for a steady paycheck and rebranded for freelancers. Different surface, same broken assumption underneath.
 
@@ -796,7 +796,7 @@ becomeable.app/get-able
 
     li: `Built for inconsistent income. Every deposit, auto-routed.
 
-The whole product is built around one moment: the moment a deposit hits. Most people in variable-income work do nothing in that moment except feel temporarily relieved. The deposit goes into a single checking account where it sits, drifts, and starts to leak.
+The whole product is built around one moment: the moment a deposit hits. Most people in inconsistent income work do nothing in that moment except feel temporarily relieved. The deposit goes into a single checking account where it sits, drifts, and starts to leak.
 
 Able runs a different sequence. The moment the deposit lands, it's split. Taxes off the top, bills set aside before they're due, a slice into a reserve for the slow months ahead, debt on schedule, what's left yours to spend without guilt. By the end of the same day the money arrived, the floor under your life is already set.
 
@@ -846,7 +846,7 @@ Free for 30 days. $14.99/mo or $129/yr after.`,
     // 25 freezing · single
     ig: `You're not overspending. You're freezing.
 
-The standard diagnosis for "where did the money go" is that you spent too much. For variable-income people, that's usually wrong. The deeper issue is that the money sat unmoved on Day 1, and once money sits, it leaks.
+The standard diagnosis for "where did the money go" is that you spent too much. For inconsistent income people, that's usually wrong. The deeper issue is that the money sat unmoved on Day 1, and once money sits, it leaks.
 
 Built for the freeze. Free for 30 days. Link in bio.
 
@@ -862,7 +862,7 @@ becomeable.app/get-able
 
     li: `You're not overspending. You're freezing.
 
-The standard diagnosis for "where did the money go" is overspending. The standard fix is "be more disciplined." For variable-income people, the diagnosis is usually wrong, which means the fix can't work.
+The standard diagnosis for "where did the money go" is overspending. The standard fix is "be more disciplined." For inconsistent income people, the diagnosis is usually wrong, which means the fix can't work.
 
 The actual pattern, in most freelancer/contractor/creator cases, is this: a deposit lands. You don't move it. The "moving it" is the part that requires a decision, how much for taxes, how much for bills, how much to save for slow months, and you don't have a clear answer to those questions, so you don't decide. You freeze. The money sits in checking for a few days. Once it sits, it starts to leak. $14 here. A subscription. Lunch. Gas. By the time you check the balance, the freeze isn't a freeze anymore. It's a leak.
 
@@ -1077,13 +1077,13 @@ Two. They show what already happened. By the time the dashboard tells you about 
 
 Three. They expect you to do bookkeeping. Categorizing, reconciling, projecting. That's an accountant's job. You don't have a finance degree, and you didn't sign up for one when you opened the app.
 
-Four. The fix they recommend is "save more." Saving requires what's left after spending. Variable-income people rarely have a what's-left, because the leaks consume it.
+Four. The fix they recommend is "save more." Saving requires what's left after spending. Inconsistent income people rarely have a what's-left, because the leaks consume it.
 
-Five. They were built before variable income was a real category. The product roadmap dates from a different decade.
+Five. They were built before inconsistent income was a real category. The product roadmap dates from a different decade.
 
 The root cause is the same in all five: the assumption baked into the software is that your paycheck is steady. None of the surface fixes, a freelancer-themed dashboard, a self-employed onboarding flow, change the underlying assumption.
 
-The fix isn't a better dashboard. It's a system designed from the start around the actual shape of variable income. Splits every deposit the moment it arrives. Doesn't wait for a Monday review. Doesn't ask you to be an accountant.
+The fix isn't a better dashboard. It's a system designed from the start around the actual shape of inconsistent income. Splits every deposit the moment it arrives. Doesn't wait for a Monday review. Doesn't ask you to be an accountant.
 
 Built Able from that angle. Free for 30 days. $14.99/mo or $129/yr after.`,
   },
@@ -1110,7 +1110,7 @@ becomeable.app/get-able
 
 If a single $400 unexpected charge hit your account, you'd notice instantly. You'd dispute it, refund it, change a password, take action. The cost is high enough and the cause is specific enough that detection happens automatically.
 
-The leak that actually drains variable-income accounts doesn't work like that. It's $14 on a Tuesday. $7 on a Friday. A subscription you signed up for in 2021 and forgot. A "while I'm here" coffee. A $48 dinner you can't quite remember the context of. By the end of the month, the total is the same as the dramatic $400 charge would have been. But spread across forty small actions, none of which felt like a decision at the time.
+The leak that actually drains inconsistent income accounts doesn't work like that. It's $14 on a Tuesday. $7 on a Friday. A subscription you signed up for in 2021 and forgot. A "while I'm here" coffee. A $48 dinner you can't quite remember the context of. By the end of the month, the total is the same as the dramatic $400 charge would have been. But spread across forty small actions, none of which felt like a decision at the time.
 
 Detection fails because the leak is below the threshold of "I should pay attention to this." Vigilance can't fix it because by the time you'd notice, you've already noticed. The only fix is structural: a system that prevents the leak by removing the available money in the first place. The tax dollars are gone before they can become a Tuesday coffee. The bill dollars are set aside before they can become a Friday lunch. The reserve is funded before it can be raided.
 
@@ -1202,7 +1202,7 @@ becomeable.app/get-able
 
 Three words. The whole product is built around this single observation.
 
-Idle money in a variable-income setup behaves differently than idle money in a steady-paycheck setup. Steady-paycheck people have an automatic next paycheck and a known budget, so the money in checking is somewhat protected by the predictability of what's coming. Variable-income people have neither. The money in checking is the entire pool of available decisions, and every small purchase competes against every big obligation in the same pool.
+Idle money in a inconsistent income setup behaves differently than idle money in a steady-paycheck setup. Steady-paycheck people have an automatic next paycheck and a known budget, so the money in checking is somewhat protected by the predictability of what's coming. Inconsistent income people have neither. The money in checking is the entire pool of available decisions, and every small purchase competes against every big obligation in the same pool.
 
 In that environment, idle money has nowhere safe to be. It's always on deck for the next "I'll just grab" decision. The leak isn't an event. It's a steady-state property of money sitting in one undifferentiated pool.
 
@@ -1255,7 +1255,7 @@ Four. Debt. On schedule, every month, including slow months. The reserve (bucket
 
 Five. Free. What's left, yours, guilt-free. This bucket is small on purpose. It's the only bucket you spend out of, which means it's also the only spending decision you have to make.
 
-The order matters more than the math. Most personal finance is "spend, then save what's left." That's bucket five first, with the rest "later." With variable income, "later" never arrives. Reverse the order. Spend last.
+The order matters more than the math. Most personal finance is "spend, then save what's left." That's bucket five first, with the rest "later." With inconsistent income, "later" never arrives. Reverse the order. Spend last.
 
 Built Able to run this exact model, automatically. Free for 30 days. $14.99/mo or $129/yr after.`,
   },
@@ -1331,7 +1331,7 @@ Bucket one: taxes. Roughly 30% of every deposit. Not yours. Move it the moment t
 
 Bucket two: bills. Current and upcoming bills, spread across the months they're due. Move the bill money before the bill is due, not the day before.
 
-Bucket three: reserve. A reserve between months so slow months don't feel slow. Personal finance built around steady paychecks skips this entirely. For variable income, it's the most important bucket.
+Bucket three: reserve. A reserve between months so slow months don't feel slow. Personal finance built around steady paychecks skips this entirely. For inconsistent income, it's the most important bucket.
 
 Bucket four: debt. Killed on a schedule. Every month, including slow ones. Bucket three (the reserve) is what makes this possible. It covers the slow-month gap so debt doesn't get skipped.
 
@@ -1708,13 +1708,13 @@ becomeable.app/get-able
 
     li: `Finally pay down your debt.
 
-Most variable-income debt-payoff plans fail in the same place. They start strong. The first month, the payment goes through. The second month too. By month four or five, a slow month hits, the payment gets skipped or reduced, and the plan never recovers. Once the discipline of "every month, no exceptions" breaks once, it's almost impossible to restore.
+Most inconsistent income debt-payoff plans fail in the same place. They start strong. The first month, the payment goes through. The second month too. By month four or five, a slow month hits, the payment gets skipped or reduced, and the plan never recovers. Once the discipline of "every month, no exceptions" breaks once, it's almost impossible to restore.
 
 The reason it breaks is structural, not motivational. Without a reserve between months, the slow month forces the choice between paying debt and paying rent. Rent wins. Debt slides. The plan dies.
 
 The fix is bucket three: a reserve that funds slow months specifically so debt payment can stay on schedule. With the reserve doing its job, the slow month is an event but not a catastrophe. Debt drops on schedule, every month, including slow ones.
 
-That's how variable-income debt actually gets paid down. Not heroic discipline. A reserve in front of the slow months.
+That's how inconsistent income debt actually gets paid down. Not heroic discipline. A reserve in front of the slow months.
 
 Free for 30 days. $14.99/mo or $129/yr after.`,
   },
@@ -1827,7 +1827,7 @@ W-2 workers have layers of cushion the advice silently assumes. Unemployment ins
 
 If you're paid in deposits instead of paychecks, none of those exist. Lose the work, lose all income, immediately. Get sick, lose income for the duration. Take a vacation, lose income. Slow quarter, lose income. Your "emergency fund" isn't a backstop. It's the first, second, and third layer of cushion.
 
-The right baseline for variable-income work is closer to nine months of bills covered, not three. Not because you're paranoid. Because the math actually requires it once you account for the absence of every other backstop the standard advice assumed.
+The right baseline for inconsistent income work is closer to nine months of bills covered, not three. Not because you're paranoid. Because the math actually requires it once you account for the absence of every other backstop the standard advice assumed.
 
 Run that math, and slow quarters stop threatening anything. They become "this is what the reserve is for" instead of "we are in trouble."
 
@@ -1838,7 +1838,7 @@ That's how the reserve bucket in Able is sized. Free for 30 days. $14.99/mo or $
     // 12 where-it-is · single
     ig: `If the goal is more money, you need to know where it is.
 
-A surprising number of variable-income people don't know what's in their tax bucket, what their bills total, or how much "free" money is actually free. The not-knowing is the leak.
+A surprising number of inconsistent income people don't know what's in their tax bucket, what their bills total, or how much "free" money is actually free. The not-knowing is the leak.
 
 Knowing is the fix.
 
@@ -1950,7 +1950,7 @@ becomeable.app/get-able
 
     li: `The actual outcome we sell is small and specific. Not "wealth." Not "financial freedom." Just confidence, every day.
 
-The confidence comes from the numbers doing what they're supposed to do, not from the absence of money worries. Worries about money never fully disappear in variable-income work. That's the nature of the work. What disappears is the secondary worry layer: not knowing whether the system is handling things underneath.
+The confidence comes from the numbers doing what they're supposed to do, not from the absence of money worries. Worries about money never fully disappear in inconsistent income work. That's the nature of the work. What disappears is the secondary worry layer: not knowing whether the system is handling things underneath.
 
 Confidence is being able to open the bank app on a Sunday and not feel anything. Confidence is knowing the tax money is sitting where it's supposed to sit. Confidence is taking on a slow week without bracing.
 
@@ -1990,7 +1990,7 @@ becomeable.app/get-able
 
     li: `Day 1, you breathe. Day 30, you brace.
 
-That two-sentence loop is what variable income actually feels like. Not constant stress, not perpetual scarcity. A repeating wave that resets every time a deposit lands and crashes again as the month wears on.
+That two-sentence loop is what inconsistent income actually feels like. Not constant stress, not perpetual scarcity. A repeating wave that resets every time a deposit lands and crashes again as the month wears on.
 
 The interesting part is that the loop has very little to do with how much money came in. A $4,000 deposit and a $7,000 deposit produce the same Day-30 brace if the system underneath them is the same. A deposit that arrives without a purpose gets reabsorbed into general spending the same way regardless of size.
 
@@ -2064,7 +2064,7 @@ becomeable.app/get-able
 
 #freelancetok #1099 #variableincome`,
 
-    li: `How variable-income earners stop freezing on Day 1, in five concrete steps.
+    li: `How inconsistent income earners stop freezing on Day 1, in five concrete steps.
 
 Step 1: Stop treating a deposit as money. Treat it as energy that's about to do work. A deposit sitting in checking with no purpose assigned is functionally identical to money waiting to leak. Energy with a destination behaves differently than money sitting still.
 
@@ -2072,7 +2072,7 @@ Step 2: Move tax money first, before anything else. Roughly 30% of a 1099 deposi
 
 Step 3: Cover this cycle's bills before you feel like it. Not "when I get around to it." Not "when the bill arrives." The moment the deposit clears. Bill money sitting in checking is bill money about to be reabsorbed.
 
-Step 4: Spread across months. The deposit you got this month is partially funding next month's bills, especially for the persistently leaky ones. Quarterly insurance, annual software, the irregular stuff. A reserve isn't optional in variable income. It's the thing that lets a slow month feel like a normal month.
+Step 4: Spread across months. The deposit you got this month is partially funding next month's bills, especially for the persistently leaky ones. Quarterly insurance, annual software, the irregular stuff. A reserve isn't optional in inconsistent income. It's the thing that lets a slow month feel like a normal month.
 
 Step 5: Spend what's left without flinching. If steps 1-4 are running, what's left is genuinely free. The flinch comes from not knowing if the rest of the system is funded. Once it's funded, the flinch leaves.
 
@@ -2105,7 +2105,7 @@ becomeable.app/get-able
 
     li: `It's not a money problem. It's a Day 14 problem.
 
-The thing that breaks a variable-income month isn't the size of the deposit, the cost of the bills, or the discipline of the person. It's the fourteen days between when the deposit clears and when the bills are due.
+The thing that breaks a inconsistent income month isn't the size of the deposit, the cost of the bills, or the discipline of the person. It's the fourteen days between when the deposit clears and when the bills are due.
 
 Day 1 is fine. The deposit lands and most of the bills aren't due yet. The amount looks adequate. There's a sense of breathing room.
 
@@ -2142,15 +2142,15 @@ becomeable.app/get-able
 
 #freelancetok #1099 #variableincome`,
 
-    li: `What the first 5 days inside Able actually look like for a variable-income earner.
+    li: `What the first 5 days inside Able actually look like for a inconsistent income earner.
 
 Day 1: Connect your account, pick your tax percentage. For most 1099 earners, 30% is the right starting point. For S-corp owners, lower. For W-2 plus side income, somewhere between. The number isn't sacred. It's just the percentage that gets routed off the top of every deposit going forward.
 
-Day 2: Pick which bills you want spread across months. The persistent ones. Quarterly insurance, annual software renewals, recurring household. Spreading turns "big bill in March" into "small piece every month," which is how variable income covers them without a March crisis.
+Day 2: Pick which bills you want spread across months. The persistent ones. Quarterly insurance, annual software renewals, recurring household. Spreading turns "big bill in March" into "small piece every month," which is how inconsistent income covers them without a March crisis.
 
 Day 3: Add debt. Schedule it. Knowing which day debt payments hit means the reserve covers them on slow months, instead of you choosing between making a debt payment and paying rent.
 
-Day 4: Set your reserve target. The point of a reserve in variable income is not "emergency fund." It's "the reserve that makes lean months feel like normal months." One full month of bills is a defensible starting target. Three months is the upper end.
+Day 4: Set your reserve target. The point of a reserve in inconsistent income is not "emergency fund." It's "the reserve that makes lean months feel like normal months." One full month of bills is a defensible starting target. Three months is the upper end.
 
 Day 5: Whatever's left after taxes, bills, debt, and reserve is free. Genuinely free. Spend it without bracing, because the rest of the system is funded.
 
@@ -2187,7 +2187,7 @@ becomeable.app/get-able
 
 You don't move it because you don't know when the next check is coming.
 
-That paralysis isn't a personality trait. It's a structural response to variable income. A reserve dissolves it.
+That paralysis isn't a personality trait. It's a structural response to inconsistent income. A reserve dissolves it.
 
 Free for 30 days. Link in bio.
 
@@ -2203,7 +2203,7 @@ becomeable.app/get-able
 
 #freelancetok #1099 #moneymindset`,
 
-    li: `There's a specific paralysis that variable-income earners deal with that nobody talks about, and it goes like this.
+    li: `There's a specific paralysis that inconsistent income earners deal with that nobody talks about, and it goes like this.
 
 You don't move the money. You don't allocate it. You don't pay yourself a steady amount. You don't fund the tax bucket. You don't pay down debt early. You leave it sitting in checking, doing nothing, leaking.
 
@@ -2250,7 +2250,7 @@ I knew, abstractly, that 30% should go to a tax bucket. I knew that bills should
 
 The problem was that moving the money meant committing it to a job, and committing it to a job felt risky when I didn't know when the next deposit was coming. So I'd leave it as a single ambiguous pile, and I'd let myself spend out of it, and on Day 30 I'd discover that some of what I spent was tax money or bill money. The shame would land. The next month would start the same way.
 
-I built Able for that version of me. Specifically the part that froze. Specifically the part that knew the right answer but couldn't commit to it because variable income made commitment feel reckless. Able takes the commitment off the human and puts it in the system. The deposit gets split before you have a chance to freeze, before you have a chance to overthink it.
+I built Able for that version of me. Specifically the part that froze. Specifically the part that knew the right answer but couldn't commit to it because inconsistent income made commitment feel reckless. Able takes the commitment off the human and puts it in the system. The deposit gets split before you have a chance to freeze, before you have a chance to overthink it.
 
 It's the tool I needed five years ago.
 
@@ -2288,7 +2288,7 @@ A budget app that wants me to allocate by category for the month assumes I know 
 
 So the tools didn't fit, and "figure it out yourself" became the default. Which is how the freezing started. With no tool that fit, I'd leave money in checking and hope the math worked out. Sometimes it did. Often it didn't.
 
-The fix wasn't a better spreadsheet. It wasn't more discipline. It was a tool that treated variable income as the default condition, not as an edge case the user has to work around. Every deposit, regardless of size, gets split the moment it clears. Tax bucket, bills, reserve, debt, free. Five jobs. Always. The system runs without requiring you to know when the next check is coming, because the system isn't waiting on the next check.
+The fix wasn't a better spreadsheet. It wasn't more discipline. It was a tool that treated inconsistent income as the default condition, not as an edge case the user has to work around. Every deposit, regardless of size, gets split the moment it clears. Tax bucket, bills, reserve, debt, free. Five jobs. Always. The system runs without requiring you to know when the next check is coming, because the system isn't waiting on the next check.
 
 That's what I built. Specifically because that's what I needed.
 
@@ -2320,9 +2320,9 @@ becomeable.app/get-able
 
 Step 1: Connect your bank, or don't. Manual entry works fine. Plenty of users prefer manual because logging income deliberately is part of the value. Plaid is there if you want passive.
 
-Step 2: Tell it your expected income range. Not a single number. A range. The whole point is that variable income isn't one number, and the tool assumes that from the start.
+Step 2: Tell it your expected income range. Not a single number. A range. The whole point is that inconsistent income isn't one number, and the tool assumes that from the start.
 
-Step 3: Pick your buckets. The five defaults are taxes, bills, reserve, debt, free spending. Defaults work for most variable-income earners. Customizing takes about eight minutes.
+Step 3: Pick your buckets. The five defaults are taxes, bills, reserve, debt, free spending. Defaults work for most inconsistent income earners. Customizing takes about eight minutes.
 
 Step 4: Each deposit auto-allocates the moment it lands. Before you see the money as "spending money." Before the freezing or the leaking can start. The split happens in the first few seconds after the deposit clears.
 
@@ -2365,7 +2365,7 @@ That's the entire founding sentence. Not "so I'd save more." Not "so I'd hit a s
 
 Bracing is the specific feeling of opening the bank app and tightening up before the number loads. Bracing is the feeling of a slow week starting and immediately calculating whether bills will clear. Bracing is the feeling of Day 30 every single month, when the discrepancy between what you remembered spending and what actually got spent reveals itself.
 
-Bracing isn't fear. It isn't anxiety in the clinical sense. It's a low-grade physical readiness that variable-income earners walk around with, because the system underneath the money isn't trustworthy. You can't trust that the tax bucket has the right amount, because there is no tax bucket. You can't trust that bills are covered, because nothing has been pre-allocated. The bracing is rational. The system gives you nothing else to trust.
+Bracing isn't fear. It isn't anxiety in the clinical sense. It's a low-grade physical readiness that inconsistent income earners walk around with, because the system underneath the money isn't trustworthy. You can't trust that the tax bucket has the right amount, because there is no tax bucket. You can't trust that bills are covered, because nothing has been pre-allocated. The bracing is rational. The system gives you nothing else to trust.
 
 The fix for bracing isn't "stop worrying." It's "build a system worth trusting." Once the tax bucket actually has the right amount in it, on its own, every time, you stop bracing about taxes. Once bills are pre-funded the moment the deposit lands, you stop bracing about bills. The bracing leaves because the source of the bracing leaves.
 
@@ -2400,7 +2400,7 @@ becomeable.app/get-able
 
     li: `The math of waiting, written out.
 
-Per month, the average variable-income earner without a structured system loses somewhere between $1,000 and $2,000 to leaks they can't fully account for. Subscription drift, mixed-purpose dollars, tax money that quietly got spent, bill money that didn't get reserved. Different sources, same outcome.
+Per month, the average inconsistent income earner without a structured system loses somewhere between $1,000 and $2,000 to leaks they can't fully account for. Subscription drift, mixed-purpose dollars, tax money that quietly got spent, bill money that didn't get reserved. Different sources, same outcome.
 
 Six months at that pace is $6,000 to $12,000. One year is $12,000 to $24,000. Three years is the price of a meaningful asset. Five years is the price of a small business runway.
 
@@ -2449,7 +2449,7 @@ Free for 30 days. Link in bio.
 
 #variableincome #1099life #freelancelife #moneymindset #creator`,
 
-    tt: `Why people with variable income don't pay down debt.
+    tt: `Why people with inconsistent income don't pay down debt.
 
 Not because they don't want to.
 
@@ -2459,11 +2459,11 @@ becomeable.app/get-able
 
 #freelancetok #1099 #moneymindset`,
 
-    li: `People with variable income don't fail to pay down debt because they don't want to. They fail because they're afraid of not knowing when the next check is coming.
+    li: `People with inconsistent income don't fail to pay down debt because they don't want to. They fail because they're afraid of not knowing when the next check is coming.
 
 Freelancers, contractors, creators, gig drivers, commission earners, business owners. Same shape underneath. Same fear.
 
-That sentence is the real diagnosis behind most variable-income debt situations. Not lack of intent. Not lack of math literacy. A structural fear that's perfectly rational given the income shape.
+That sentence is the real diagnosis behind most inconsistent income debt situations. Not lack of intent. Not lack of math literacy. A structural fear that's perfectly rational given the income shape.
 
 If you make $4,000 this month and have $4,000 in checking, paying $1,500 against debt feels reckless if you don't know whether next month will be $4,000 or $1,500. The reckless option might be the one that leaves you unable to cover rent in the slow month. So you pay the minimum, leave the cash in checking "just in case," and let the debt linger another cycle.
 
@@ -2504,7 +2504,7 @@ becomeable.app/get-able
 
     li: `You're not undisciplined. You're under-instructed.
 
-Most variable-income earners have spent years internalizing the assumption that they're the problem. The budget didn't work. The savings goal didn't get hit. The tax money got spent. Each individual incident points the finger at the person, because the system is invisible.
+Most inconsistent income earners have spent years internalizing the assumption that they're the problem. The budget didn't work. The savings goal didn't get hit. The tax money got spent. Each individual incident points the finger at the person, because the system is invisible.
 
 But the system isn't invisible. It's just generic. Every mainstream budgeting tool was built for a steady paycheck on a predictable schedule. Allocating by category for the month assumes you know roughly what's coming in. Saving 20% of every paycheck assumes a paycheck. Building a 3-6 month emergency fund assumes a baseline.
 
@@ -2512,7 +2512,7 @@ When the underlying assumption is wrong, every downstream instruction starts to 
 
 The result is a person executing generic instructions and watching them fail, then concluding they failed at execution. They didn't. The instructions failed. The instructions assumed a different person.
 
-The fix is instructions that fit the income shape. Variable income wants split-first, not allocate-by-category. Variable income wants a tax bucket on every deposit, not a tax-time scramble. Variable income wants a reserve, not an emergency fund.
+The fix is instructions that fit the income shape. Inconsistent income wants split-first, not allocate-by-category. Inconsistent income wants a tax bucket on every deposit, not a tax-time scramble. Inconsistent income wants a reserve, not an emergency fund.
 
 That's what Able instructs.
 
@@ -2543,11 +2543,11 @@ becomeable.app/get-able
 
     li: `You're not bad with money. You were handed the wrong tool.
 
-The mainstream budgeting industry was built around a single income shape: regular, predictable, biweekly. Every interface, every calculation, every default assumption traces back to that one shape. When variable income arrived as a category, freelancers, contractors, creators, commission earners, gig workers, the industry's response was "use the same tools, just work harder."
+The mainstream budgeting industry was built around a single income shape: regular, predictable, biweekly. Every interface, every calculation, every default assumption traces back to that one shape. When inconsistent income arrived as a category, freelancers, contractors, creators, commission earners, gig workers, the industry's response was "use the same tools, just work harder."
 
-That's not how tools work. A tool is built for a use case. A hammer drives nails because of the leverage and weight distribution that match the job. Asking a hammer to be good at screws because the user "tries harder" is a category error. Variable income is structurally different from a paycheck. The tool needs to be structurally different too.
+That's not how tools work. A tool is built for a use case. A hammer drives nails because of the leverage and weight distribution that match the job. Asking a hammer to be good at screws because the user "tries harder" is a category error. Inconsistent income is structurally different from a paycheck. The tool needs to be structurally different too.
 
-A tool built for variable income doesn't ask the user to project the month. It splits the deposit. It doesn't ask the user to maintain categories. It maintains buckets. It doesn't shame the user for missing a budget. It doesn't have budgets in the same sense. It has jobs assigned to dollars at the moment of deposit.
+A tool built for inconsistent income doesn't ask the user to project the month. It splits the deposit. It doesn't ask the user to maintain categories. It maintains buckets. It doesn't shame the user for missing a budget. It doesn't have budgets in the same sense. It has jobs assigned to dollars at the moment of deposit.
 
 The shame, the freeze, the leak. None of these are the user. They're the gap between the income shape and the tool shape. Close the gap, the symptoms close.
 
@@ -2598,7 +2598,7 @@ Free for 30 days. $14.99/mo or $129/yr after.`,
 
 You're using the wrong app.
 
-Mainstream budgeting tools were built for a paycheck. Variable income breaks every one of their core assumptions.
+Mainstream budgeting tools were built for a paycheck. Inconsistent income breaks every one of their core assumptions.
 
 Free for 30 days. Link in bio.
 
@@ -2620,9 +2620,9 @@ There's a specific feeling that comes from watching a budgeting app fail to mode
 
 The natural conclusion when a tool doesn't fit is that the user is behind. They didn't set it up right. They're not entering data correctly. They missed a tutorial. They need to try harder.
 
-But the tool was built for a different person. Specifically: a salaried person with a regular paycheck on a predictable schedule. The defaults reflect that person. The interface reflects that person. The calculations reflect that person. When a variable-income earner uses it, the gap between the assumed user and the actual user is what creates the "I'm behind" feeling.
+But the tool was built for a different person. Specifically: a salaried person with a regular paycheck on a predictable schedule. The defaults reflect that person. The interface reflects that person. The calculations reflect that person. When a inconsistent income earner uses it, the gap between the assumed user and the actual user is what creates the "I'm behind" feeling.
 
-A tool built specifically for variable income has different defaults. It treats lumpiness as the rule, not the exception. It splits each deposit on arrival because there's no other reliable allocation moment. It maintains a reserve because that's the variable-income equivalent of a regular paycheck. It tracks against percentages of incoming money, not fixed monthly budgets that assume a baseline.
+A tool built specifically for inconsistent income has different defaults. It treats lumpiness as the rule, not the exception. It splits each deposit on arrival because there's no other reliable allocation moment. It maintains a reserve because that's the inconsistent income equivalent of a regular paycheck. It tracks against percentages of incoming money, not fixed monthly budgets that assume a baseline.
 
 You're not behind. The tool was wrong.
 
@@ -2661,7 +2661,7 @@ Annual is $129 for the year. Saves $50 versus paying monthly. The right pick if 
 
 Either way: free for 30 days at signup. Card required at signup, but no charge during the trial. Cancel anytime in the trial window with zero charge. The card requirement is there to keep bot signups out, not to slip in a surprise charge.
 
-Most variable-income earners go monthly first to confirm the system fits their actual income pattern. After two or three months, the ones who like it switch to annual to save the $50. That's a sensible path.
+Most inconsistent income earners go monthly first to confirm the system fits their actual income pattern. After two or three months, the ones who like it switch to annual to save the $50. That's a sensible path.
 
 The pricing matches the product. The product fixes a specific structural problem. The price is bounded enough that anyone seeing meaningful improvement in their tax bucket alone will recoup it.
 
@@ -2694,7 +2694,7 @@ becomeable.app/get-able
 
 Able is built the opposite way. The point is for you to open it less. Open it once when a deposit clears, watch the split happen, close it. That's the loop. The fewer minutes you spend in the app, the better the app is doing its job.
 
-The reason this is the right pattern for variable-income earners specifically: the income condition is already cognitively expensive. Wondering whether the tax bucket has the right amount, whether bills will clear, whether the slow month is going to break something. All of that is already burning attention. The right tool reduces attention spent on money, not increases it.
+The reason this is the right pattern for inconsistent income earners specifically: the income condition is already cognitively expensive. Wondering whether the tax bucket has the right amount, whether bills will clear, whether the slow month is going to break something. All of that is already burning attention. The right tool reduces attention spent on money, not increases it.
 
 Boring is the feature. Specifically: every deposit gets split the same way. Every month produces the same buckets. Every slow month gets covered by the reserve. The system doesn't surprise you. The lack of surprise is what creates calm.
 
@@ -2725,13 +2725,13 @@ becomeable.app/get-able
 
 #freelancetok #1099 #variableincome`,
 
-    li: `Most budgeting apps assume a steady paycheck. That single assumption is the source of every downstream frustration variable-income earners have with budgeting software.
+    li: `Most budgeting apps assume a steady paycheck. That single assumption is the source of every downstream frustration inconsistent income earners have with budgeting software.
 
 The assumption shows up everywhere. In the onboarding question "what's your monthly income?" (singular, monthly, fixed). In the category-budget interface (allocate the month before the month starts). In the savings goal calculator (10% of your steady income, projected forward). In the comparison view (this month vs. last month, assuming they're roughly the same).
 
-Each of those is a small individual assumption. Stacked, they describe a tool built for someone whose income arrives the same way every two weeks. Not all income works that way. Variable-income earners get told to use the same tools and "work harder," as if the gap between their income shape and the tool's design were a discipline problem.
+Each of those is a small individual assumption. Stacked, they describe a tool built for someone whose income arrives the same way every two weeks. Not all income works that way. Inconsistent income earners get told to use the same tools and "work harder," as if the gap between their income shape and the tool's design were a discipline problem.
 
-It isn't. It's a design problem. A tool built for variable income makes different default assumptions. Income is lumpy. Allocation happens at deposit, not at month-start. Savings is percentage-based on incoming dollars, not a fixed monthly target. The reserve replaces the emergency fund as the primary cushion.
+It isn't. It's a design problem. A tool built for inconsistent income makes different default assumptions. Income is lumpy. Allocation happens at deposit, not at month-start. Savings is percentage-based on incoming dollars, not a fixed monthly target. The reserve replaces the emergency fund as the primary cushion.
 
 When the assumptions match the income, the friction disappears. The tool stops feeling hostile. The feeling that "budgeting just doesn't work for me" goes away because the budgeting tool actually fits.
 
@@ -2770,7 +2770,7 @@ becomeable.app/get-able
 
 $7 here. A drive-through snack on the way home. $14 there. A subscription you forgot you signed up for. $23 on a Tuesday for something delivered. $48 across a weekend that didn't feel notable.
 
-Multiply by 30 days. The number lands somewhere between $1,000 and $2,000 for most variable-income earners. Confirmed by user data, by industry research on small-purchase aggregation, and by the experience of anyone who's added it up retrospectively.
+Multiply by 30 days. The number lands somewhere between $1,000 and $2,000 for most inconsistent income earners. Confirmed by user data, by industry research on small-purchase aggregation, and by the experience of anyone who's added it up retrospectively.
 
 The leak is not a discipline issue. The individual purchases aren't bad. Most of them aren't even regrets. What makes them a leak is that the money funding them was undifferentiated. Sitting in checking with no purpose assigned. A deposit without a purpose gets reabsorbed into general spending the same way water without a container goes wherever gravity sends it.
 
@@ -2811,7 +2811,7 @@ $1,200 to taxes. Roughly 30% of every 1099 deposit belongs to the IRS, regardles
 
 $1,800 to bills. Rent or mortgage, utilities, insurance, the recurring household and business expenses that arrive on a schedule. Some of this is fixed, some scales with cycle. Pre-funding it is what makes "bills paid" a non-event.
 
-$300 to subscriptions. Some of these are remembered, some forgotten. Most variable-income earners who do a clean audit find at least three they didn't realize were still active. Three at $9-15 each is a meaningful percentage of free spending.
+$300 to subscriptions. Some of these are remembered, some forgotten. Most inconsistent income earners who do a clean audit find at least three they didn't realize were still active. Three at $9-15 each is a meaningful percentage of free spending.
 
 $400 "just grabbed." Food, drinks, small purchases that didn't feel like decisions in the moment. The "I'll just pick this up" line item. Spread across 30 days, this is the largest single discretionary category for most freelancers.
 
@@ -2871,7 +2871,7 @@ Free for 30 days. $14.99/mo or $129/yr after.`,
 
 You're guessing.
 
-Variable income without structure is decision after decision with imperfect information. The exhaustion isn't laziness. It's mental load with no offload.
+Inconsistent income without structure is decision after decision with imperfect information. The exhaustion isn't laziness. It's mental load with no offload.
 
 Free for 30 days. Link in bio.
 
@@ -2889,11 +2889,11 @@ becomeable.app/get-able
 
     li: `You're not lazy. You're guessing.
 
-There's a specific cognitive load that variable-income earners carry that nobody talks about: the constant micro-guessing about money. How much of this deposit is taxes? Will the next deposit be enough to cover bills? Should I pay this debt now or wait? Is this purchase fine or should I hold off?
+There's a specific cognitive load that inconsistent income earners carry that nobody talks about: the constant micro-guessing about money. How much of this deposit is taxes? Will the next deposit be enough to cover bills? Should I pay this debt now or wait? Is this purchase fine or should I hold off?
 
 Every one of those questions is a small decision under uncertainty. The information needed to answer correctly isn't available. The income amount isn't known. The next deposit's timing isn't known. The reserve that would absorb being wrong doesn't exist. So each decision becomes a guess, weighted by anxiety about the consequences of guessing wrong.
 
-The exhaustion that comes from this looks like laziness from the outside. The variable-income earner doesn't move money, doesn't make the decision, doesn't allocate. Looks like procrastination. Is actually decision fatigue from having made several hundred small money-guesses already this month.
+The exhaustion that comes from this looks like laziness from the outside. The inconsistent income earner doesn't move money, doesn't make the decision, doesn't allocate. Looks like procrastination. Is actually decision fatigue from having made several hundred small money-guesses already this month.
 
 The fix is to remove the guessing, not increase the willpower. A system that splits every deposit automatically removes the "how much is taxes" question. A reserve removes the "will the next deposit cover bills" question. A scheduled debt plan removes the "pay now or later" question. With those gone, the discretionary spending question is the only one left, and it has a specific bucket size to draw from.
 
@@ -3001,7 +3001,7 @@ becomeable.app/get-able
 
     li: `By the end of the month, $400 is gone. Nothing paid down. Nothing saved. Nothing to show for it.
 
-That's the paralysis anchor most variable-income earners can pinpoint by feel even before they do the math. The general sense that money came in, money went out, the balance is lower, but no specific named outcome happened. No debt got materially reduced. No savings goal got hit. No new asset bought. Just $400 dispersed across small unmemorable purchases.
+That's the paralysis anchor most inconsistent income earners can pinpoint by feel even before they do the math. The general sense that money came in, money went out, the balance is lower, but no specific named outcome happened. No debt got materially reduced. No savings goal got hit. No new asset bought. Just $400 dispersed across small unmemorable purchases.
 
 The frustrating part is that the $400 wasn't "wasted" in any narrative sense. The purchases happened. They were real. Coffee was drunk. Lunches were eaten. Things were used. But they didn't accumulate into anything. Compare that to $400 going into a debt principal: that's measurable, it shows up on next month's statement, the interest math compounds in a positive direction. Compare it to $400 into savings: same thing, measurable, accruing.
 
@@ -3075,7 +3075,7 @@ becomeable.app/get-able
 
 #creatortok #creatoreconomy #variableincome`,
 
-    li: `Same income, different feeling. That's the entire promise of restructuring how money flows for a variable-income earner.
+    li: `Same income, different feeling. That's the entire promise of restructuring how money flows for a inconsistent income earner.
 
 The income amount doesn't change. The deposits land at the same lumpy schedule. The total per year is the same. What changes is what each dollar does the moment it arrives.
 
@@ -3123,10 +3123,10 @@ Free for 30 days. $14.99/mo or $129/yr after.`,
   },
 
   '13|Thu': {
-    // 39 variable-income · single
+    // 39 inconsistent income · single
     ig: `If you're a creator, here's the reframe.
 
-It's not personal finance. It's variable income.
+It's not personal finance. It's inconsistent income.
 
 Different category, different rules, different tools. The personal finance industry treats you like an edge case. You're not.
 
@@ -3136,7 +3136,7 @@ Free for 30 days. Link in bio.
 
     tt: `It's not personal finance.
 
-It's variable income.
+It's inconsistent income.
 
 Different category. Different rules.
 
@@ -3144,11 +3144,11 @@ becomeable.app/get-able
 
 #creatortok #creatoreconomy #variableincome`,
 
-    li: `It's not personal finance. It's variable income.
+    li: `It's not personal finance. It's inconsistent income.
 
-The personal finance industry treats variable-income earners, creators, freelancers, contractors, commission earners, as an edge case of W-2 advice. The defaults assume a paycheck. The math assumes a baseline. The product features assume monthly stability.
+The personal finance industry treats inconsistent income earners, creators, freelancers, contractors, commission earners, as an edge case of W-2 advice. The defaults assume a paycheck. The math assumes a baseline. The product features assume monthly stability.
 
-Variable income isn't a flavor of personal finance. It's a different category. The rules of regular finance carry over only loosely. Allocate by category for the month? Doesn't work, because the month's income isn't known. Save 20% of every paycheck? Doesn't work, because there's no paycheck. Build a 3-6 month emergency fund? Useful, but the more critical structure is a reserve that absorbs lumpiness.
+Inconsistent income isn't a flavor of personal finance. It's a different category. The rules of regular finance carry over only loosely. Allocate by category for the month? Doesn't work, because the month's income isn't known. Save 20% of every paycheck? Doesn't work, because there's no paycheck. Build a 3-6 month emergency fund? Useful, but the more critical structure is a reserve that absorbs lumpiness.
 
 The category needs its own toolkit. Split-first allocation. Percentage-based bucket funding tied to incoming dollars, not fixed monthly amounts. A reserve that sits between income and bills. Tax bucket on every deposit because there's no employer withholding. Free spending capped at what's left after the four other buckets are funded.
 
@@ -3178,9 +3178,9 @@ becomeable.app/budgeting/pay-yourself-steady-paycheck/
 
 #creatortok #creatoreconomy #variableincome`,
 
-    li: `How a variable-income earner pays themselves a steady paycheck.
+    li: `How a inconsistent income earner pays themselves a steady paycheck.
 
-The mismatch: income is lumpy, bills aren't. Most of the bills you owe arrive on a schedule. Rent on the 1st. Insurance on the 15th. Subscriptions on whatever date they renew. Variable income doesn't sync with that schedule. Some months overshoot, some undershoot.
+The mismatch: income is lumpy, bills aren't. Most of the bills you owe arrive on a schedule. Rent on the 1st. Insurance on the 15th. Subscriptions on whatever date they renew. Inconsistent income doesn't sync with that schedule. Some months overshoot, some undershoot.
 
 The fix is a reserve. Big months feed it. Slow months draw from it. The user pays themselves a fixed monthly number from the reserve, regardless of what came in that month. The reserve absorbs the lumpiness so the bills experience steady cash flow.
 
@@ -3233,7 +3233,7 @@ becomeable.app/get-able
 
     li: `For anyone who struggles to budget inconsistent income.
 
-The struggle isn't a discipline issue. It's a category issue. Generic budgeting tools assume regular paychecks. Variable income breaks the assumption, which breaks the tool, which leaves the user holding a tool that produces wrong answers if they follow the instructions correctly.
+The struggle isn't a discipline issue. It's a category issue. Generic budgeting tools assume regular paychecks. Inconsistent income breaks the assumption, which breaks the tool, which leaves the user holding a tool that produces wrong answers if they follow the instructions correctly.
 
 The right tool starts from the opposite assumption: income arrives lumpy, on its own schedule, in different amounts. Allocation happens at the moment of deposit, not at month-start. Buckets are percentage-driven, not fixed dollars. A reserve sits between income and bills to absorb the lumpiness.
 
@@ -3386,11 +3386,11 @@ becomeable.app/get-able
 
 That sentence sounds like a complaint, but it's actually a precise diagnosis. The entire personal finance canon, the books, the apps, the YouTube channels, the blogs, the financial advisors, was developed for the W-2 use case. Regular paycheck. Predictable amount. Same employer for years. Benefits handled automatically. Tax withholding handled automatically.
 
-Variable income breaks every one of those defaults. The paycheck is irregular. The amounts vary by 2x or more month to month. There may not be a single employer. Benefits cost real cash. Tax withholding has to be done manually, by the user, on every deposit.
+Inconsistent income breaks every one of those defaults. The paycheck is irregular. The amounts vary by 2x or more month to month. There may not be a single employer. Benefits cost real cash. Tax withholding has to be done manually, by the user, on every deposit.
 
-When you play any game with the wrong rulebook, you lose. Not because you're worse at the game. Because the rules don't match. The W-2 rulebook applied to variable income produces wrong answers. Sometimes catastrophically wrong, like under-funding the tax bucket and discovering it in April.
+When you play any game with the wrong rulebook, you lose. Not because you're worse at the game. Because the rules don't match. The W-2 rulebook applied to inconsistent income produces wrong answers. Sometimes catastrophically wrong, like under-funding the tax bucket and discovering it in April.
 
-The fix is the right rulebook. Variable-income rules are different in specific, learnable ways. Once they're applied, the same income performs differently. The "hard mode" feeling lifts.
+The fix is the right rulebook. Inconsistent income rules are different in specific, learnable ways. Once they're applied, the same income performs differently. The "hard mode" feeling lifts.
 
 Free for 30 days. $14.99/mo or $129/yr after.`,
   },
@@ -3473,7 +3473,7 @@ becomeable.app/get-able
 
     li: `For anyone who can't budget inconsistent income.
 
-The "can't" is doing real work in that sentence. It's not "won't." It's not "haven't tried." It's "actively cannot, despite trying." That's the experience of trying to apply paycheck-shaped budgeting tools to variable income.
+The "can't" is doing real work in that sentence. It's not "won't." It's not "haven't tried." It's "actively cannot, despite trying." That's the experience of trying to apply paycheck-shaped budgeting tools to inconsistent income.
 
 The categories don't fit. The monthly allocation interface assumes a known monthly income. The savings goal calculator assumes a baseline. The "this month vs. last month" comparison gives meaningless answers. After enough rounds of trying generic tools and watching them fail, "can't budget" becomes the lived experience.
 
@@ -3510,13 +3510,13 @@ becomeable.app/get-able
 
     li: `Bills paid. Taxes covered. Nothing leaked.
 
-Three sentences. They describe the actual outcome of a working money system for variable-income earners. Not "I hit a savings goal." Not "I'm earning more." The boring, structural outcomes that compound month after month.
+Three sentences. They describe the actual outcome of a working money system for inconsistent income earners. Not "I hit a savings goal." Not "I'm earning more." The boring, structural outcomes that compound month after month.
 
 Bills paid: every cycle, on time, without scrambling, without bridging from a credit card, without choosing which one to skip.
 
 Taxes covered: the tax bucket is funded as a percentage of every deposit. April becomes paperwork because the math was done in real time, not annually.
 
-Nothing leaked: the small undifferentiated spending that aggregates to $1,000-$2,000 a month for most variable-income earners didn't happen. Every deposit had a purpose. Free spending was bounded to a specific bucket. When that bucket emptied, small spending stopped.
+Nothing leaked: the small undifferentiated spending that aggregates to $1,000-$2,000 a month for most inconsistent income earners didn't happen. Every deposit had a purpose. Free spending was bounded to a specific bucket. When that bucket emptied, small spending stopped.
 
 The compound of those three sentences across twelve months is the difference between "I earn enough" and "I'm not making it." Same income. Different result.
 
@@ -3549,7 +3549,7 @@ becomeable.app/get-able
 
 #gigtok #1099 #moneymindset`,
 
-    li: `Three patterns variable-income earners fall into. All structural, none personal.
+    li: `Three patterns inconsistent income earners fall into. All structural, none personal.
 
 The Freezer. Money lands and gets left in checking. Moving it feels like committing it to a job, and committing feels reckless when the next deposit is uncertain. By Day 30, the money has been spent without intent, because nothing was allocated. The freeze isn't laziness. It's a rational response to decisions without information.
 
@@ -3608,7 +3608,7 @@ Free for 30 days. $14.99/mo or $129/yr after.`,
 
 Some apps ask you to assign every dollar.
 
-Money you don't have yet. The instructions assume a paycheck on a schedule. Variable income breaks the assumption.
+Money you don't have yet. The instructions assume a paycheck on a schedule. Inconsistent income breaks the assumption.
 
 Free for 30 days. Link in bio.
 
@@ -3626,13 +3626,13 @@ becomeable.app/get-able
 
     li: `Some budgeting apps ask you to assign every dollar to a category before the month starts.
 
-That advice works if you know the month's income. It doesn't if you don't. For variable-income earners, "assign every dollar" requires committing money you haven't received yet to specific categories, then reconciling reality against the plan when the actual income lands and turns out to be different.
+That advice works if you know the month's income. It doesn't if you don't. For inconsistent income earners, "assign every dollar" requires committing money you haven't received yet to specific categories, then reconciling reality against the plan when the actual income lands and turns out to be different.
 
 The reconciliation is the problem. If you assigned $4,000 to monthly categories and $2,800 actually arrived, every category is short. If $5,500 arrived, the surplus has nowhere to go. Either case requires a manual rework. Multiply by twelve months a year, the maintenance cost dominates.
 
-The variable-income alternative is split-first. Money gets categories the moment it arrives, as percentages of what actually landed. No projection. No commitment to amounts not yet earned. No reconciliation. Each deposit gets split into tax bucket, bills, reserve, debt, free. Proportional to the deposit's actual size.
+The inconsistent income alternative is split-first. Money gets categories the moment it arrives, as percentages of what actually landed. No projection. No commitment to amounts not yet earned. No reconciliation. Each deposit gets split into tax bucket, bills, reserve, debt, free. Proportional to the deposit's actual size.
 
-Same outcome (the floor under your life is set). Different timing (allocation at deposit, not at month-start). Materially less friction for variable income.
+Same outcome (the floor under your life is set). Different timing (allocation at deposit, not at month-start). Materially less friction for inconsistent income.
 
 Free for 30 days. $14.99/mo or $129/yr after.`,
   },
@@ -3721,7 +3721,7 @@ becomeable.app/get-able
 
     li: `For people with inconsistent income.
 
-Variable income isn't one job. It's a category that includes freelancers, contractors, creators, commission earners, gig workers, one-person businesses, royalty earners, seasonal workers, and the increasingly common combination of W-2 plus side income.
+Inconsistent income isn't one job. It's a category that includes freelancers, contractors, creators, commission earners, gig workers, one-person businesses, royalty earners, seasonal workers, and the increasingly common combination of W-2 plus side income.
 
 What ties them together isn't the kind of work. It's the income shape. Lumpy in size. Unpredictable in timing. Often without employer tax withholding. Sometimes net-30 or net-60 from when the work was done. Almost always misaligned with bill schedules.
 
@@ -3835,7 +3835,7 @@ becomeable.app/budgeting/etsy-seller-budget/
 
 Q4 is roughly 40% of annual revenue for most established Etsy shops. The other nine months spread thin. Treating Q4 income as Q4 spending money guarantees a difficult winter and a harder spring.
 
-Inventory cash is a separate problem. Cash that's tied up in products on the shelf isn't liquid. A successful drop converts inventory to cash, but a slow month leaves cash inside products that haven't sold yet. The accounting on hand-made and small-batch ecommerce is meaningfully different from service-based variable income.
+Inventory cash is a separate problem. Cash that's tied up in products on the shelf isn't liquid. A successful drop converts inventory to cash, but a slow month leaves cash inside products that haven't sold yet. The accounting on hand-made and small-batch ecommerce is meaningfully different from service-based inconsistent income.
 
 Platform fees, shipping, ad spend, and returns all reduce gross to net. The 1099-K reports gross sales. Which can be 30-50% higher than what actually landed in your account after Etsy's cuts and the cost of fulfilling the orders.
 
@@ -3878,7 +3878,7 @@ The standard budgeting interface is a retrospective dashboard. Categories, spend
 
 The leak doesn't get closed by knowing where it went. It gets closed by giving every deposit a purpose before it has a chance to leak. That's an upstream decision, at the moment of deposit, not a downstream review.
 
-Variable-income earners specifically don't benefit from retrospective dashboards. The income isn't predictable enough for budget-vs-actual to be a clean comparison. The categories don't apply consistently because the income source varies. The "this month vs. last month" view is misleading because the months aren't comparable.
+Inconsistent income earners specifically don't benefit from retrospective dashboards. The income isn't predictable enough for budget-vs-actual to be a clean comparison. The categories don't apply consistently because the income source varies. The "this month vs. last month" view is misleading because the months aren't comparable.
 
 What works: split-first allocation, applied automatically the moment a deposit clears. The decisions are made at deposit time. The retrospective view is a status check, not a reckoning. The leak doesn't happen in the first place because the dollars are routed before the spending decisions can pull from them.
 
@@ -3910,7 +3910,7 @@ becomeable.app/budgeting/commission-income-budget/
 
 #salestok #commission #1099`,
 
-    li: `Commission survival guide for sales-based variable income.
+    li: `Commission survival guide for sales-based inconsistent income.
 
 Commission is a job where the rules change monthly. The comp plan adjusts. The targets move. The split changes. The accelerators kick in or don't. A great month and a terrible month can come from the same level of effort with different external conditions.
 
@@ -3976,7 +3976,7 @@ That sentence captures the lived experience of trying to budget without a tool t
 
 Why it feels impossible: every budgeting tool starts from the wrong premise. Monthly allocation assumes a known monthly income. Savings goals assume a baseline. Category budgets assume stable spending shapes. Each attempt to use generic tools fails in a slightly different way, and the cumulative experience is "this is impossible for me."
 
-It isn't. The tools were wrong. The category, variable income, has its own working toolkit. Split-first allocation. Percentage-driven buckets. A reserve. Tax-on-every-deposit. Once those replace the paycheck-shaped defaults, the friction leaves.
+It isn't. The tools were wrong. The category, inconsistent income, has its own working toolkit. Split-first allocation. Percentage-driven buckets. A reserve. Tax-on-every-deposit. Once those replace the paycheck-shaped defaults, the friction leaves.
 
 The "feels impossible" is a category mismatch, not a personal failure. The feeling lifts when the toolkit matches the income shape.
 
@@ -4047,7 +4047,7 @@ becomeable.app/get-able
 
     li: `You're not overspending. You're freezing.
 
-The freezing metaphor is the most useful diagnostic for variable-income earners. Money lands in checking. The user knows, abstractly, that some of it is tax money and some is bill money and some should be saved. They don't move it. They leave it sitting, treating it as a single ambiguous pile.
+The freezing metaphor is the most useful diagnostic for inconsistent income earners. Money lands in checking. The user knows, abstractly, that some of it is tax money and some is bill money and some should be saved. They don't move it. They leave it sitting, treating it as a single ambiguous pile.
 
 The pile doesn't stay full. It leaks. Subscriptions renew. Small purchases happen. A nice meal here, a small impulse there. By Day 30, the pile is materially smaller, and the user can't fully account for where it went.
 
@@ -4120,7 +4120,7 @@ becomeable.app/get-able
 
     li: `If 30% isn't moved, it isn't yours.
 
-That sentence is the entire principle of variable-income tax management. The IRS gets paid regardless. The only variable is whether you fund the obligation gradually as deposits land or all at once in April.
+That sentence is the entire principle of inconsistent income tax management. The IRS gets paid regardless. The only variable is whether you fund the obligation gradually as deposits land or all at once in April.
 
 Tax money sitting in checking is functionally identical to tax money about to be spent. The brain doesn't easily distinguish between earmarked dollars and general dollars when both are visible in the same account. Spending decisions pull from the visible balance. By April, the bill arrives, the bucket has nothing in it, and the money has to come from somewhere else.
 
@@ -4216,11 +4216,11 @@ becomeable.app/get-able
 
 That sentence describes a real gap in financial education. The K-12 personal finance curriculum, where it exists, assumes a future of regular paychecks. The college-level personal finance courses make the same assumption. Most parents who teach money concepts at home learned in a W-2 world and pass on W-2 frameworks.
 
-Variable income wasn't a category most people prepared for. The standard playbook, "save 20% of every paycheck, build a 3-6 month emergency fund, max your 401k", assumes a paycheck. None of those instructions translate cleanly to income that arrives in lumps on no schedule.
+Inconsistent income wasn't a category most people prepared for. The standard playbook, "save 20% of every paycheck, build a 3-6 month emergency fund, max your 401k", assumes a paycheck. None of those instructions translate cleanly to income that arrives in lumps on no schedule.
 
-The result is a generation of variable-income earners who feel financially illiterate, when actually they were taught literacy in a different language. The frameworks they learned don't apply. The frameworks they need weren't taught.
+The result is a generation of inconsistent income earners who feel financially illiterate, when actually they were taught literacy in a different language. The frameworks they learned don't apply. The frameworks they need weren't taught.
 
-The fix is learning the variable-income toolkit. Split-first allocation. Percentage-based bucket funding. The reserve. Tax-on-every-deposit. None of it is hard. It's just not what you were taught. Once it's learned, the same income behaves predictably.
+The fix is learning the inconsistent income toolkit. Split-first allocation. Percentage-based bucket funding. The reserve. Tax-on-every-deposit. None of it is hard. It's just not what you were taught. Once it's learned, the same income behaves predictably.
 
 Free for 30 days. $14.99/mo or $129/yr after.`,
   },
@@ -4235,7 +4235,7 @@ Free for 30 days. $14.99/mo or $129/yr after.`,
 
 You don't need more income. You need fewer leaks.
 
-Most variable-income earners assume the answer is earning more. Earning more without closing leaks just means more dollars to leak. Same percentage gone, larger denominator.
+Most inconsistent income earners assume the answer is earning more. Earning more without closing leaks just means more dollars to leak. Same percentage gone, larger denominator.
 
 Free for 30 days. Link in bio.
 
@@ -4251,7 +4251,7 @@ becomeable.app/get-able
 
     li: `You don't need more income. You need fewer leaks.
 
-Most variable-income earners assume the answer to feeling broke is earning more. The intuition is straightforward: bigger deposits, more breathing room, less stress. The intuition is wrong, or at least incomplete.
+Most inconsistent income earners assume the answer to feeling broke is earning more. The intuition is straightforward: bigger deposits, more breathing room, less stress. The intuition is wrong, or at least incomplete.
 
 Without a system underneath, earning more produces a larger denominator for the same percentage leak. If 25% of every deposit gets reabsorbed into general spending, small purchases, drift, mixed-bucket dollars, undifferentiated cash, then a $4,000 month leaks $1,000 and a $7,000 month leaks $1,750. The leak scales with income.
 
@@ -4286,7 +4286,7 @@ becomeable.app/get-able
 
     li: `The cost of waiting, written out as monthly totals.
 
-Per month, an unstructured variable-income earner loses about $2,000 to leaks they can't fully account for. Mixed-bucket dollars, subscription drift, tax money that quietly got spent, bill money reabsorbed.
+Per month, an unstructured inconsistent income earner loses about $2,000 to leaks they can't fully account for. Mixed-bucket dollars, subscription drift, tax money that quietly got spent, bill money reabsorbed.
 
 Six months at that pace is $12,000. The price of a beat-up used car. The price of three months of full-time runway. The price of a meaningful chunk of debt principal.
 
@@ -4303,9 +4303,9 @@ Free for 30 days. $14.99/mo or $129/yr after.`,
 
   '18|Wed': {
     // C10 save-more · carousel
-    ig: `If you have variable income, "save more" isn't a plan. (Swipe.)
+    ig: `If you have inconsistent income, "save more" isn't a plan. (Swipe.)
 
-It's a wish dressed as advice. Saving requires left over. Variable income rarely has it.
+It's a wish dressed as advice. Saving requires left over. Inconsistent income rarely has it.
 
 Move savings first. Spend what's left.
 
@@ -4325,7 +4325,7 @@ becomeable.app/get-able
 
     li: `"Save more" isn't a plan. It's a wish dressed as advice.
 
-The reason it doesn't work for variable-income earners specifically: saving requires money left over. Variable income rarely has reliable left-over because the income amount and timing are unpredictable. Some months feel adequate, some don't. By the time "what's left" is calculated, it's often nothing.
+The reason it doesn't work for inconsistent income earners specifically: saving requires money left over. Inconsistent income rarely has reliable left-over because the income amount and timing are unpredictable. Some months feel adequate, some don't. By the time "what's left" is calculated, it's often nothing.
 
 The fix isn't "save more." It's where saving sits in the order. Bills + tax fill the floor first. Then a percentage of every deposit routes to savings, debt, owner pay, free spending. Automatically, the moment the deposit clears.
 
@@ -4391,13 +4391,13 @@ becomeable.app/get-able
 
 #smallbusiness #1099 #freelancetok`,
 
-    li: `Owner pay, automated. The variable-income version.
+    li: `Owner pay, automated. The inconsistent income version.
 
 Most owners are their own last priority. The work pays clients, contractors, software vendors, the brokerage, the platform, the IRS. Whatever's left at the end is what the owner takes home. Some months "what's left" is fine. Some months it isn't.
 
 The fix is structural. An owner-pay percent routes from every deposit, alongside the floor (bills + tax), before discretionary business spending happens. The amount can be small. 5% of every deposit beats 0% by infinity. The percentage is less important than the routing.
 
-The reason this works specifically for variable income: it removes the "wait until the end of the month and see what's left" pattern. By the end of the month, what's left is shaped by every other decision made. Routing owner pay on every deposit means it's funded against gross income, not net. The other decisions get made against what's left after the floor and the owner are paid.
+The reason this works specifically for inconsistent income: it removes the "wait until the end of the month and see what's left" pattern. By the end of the month, what's left is shaped by every other decision made. Routing owner pay on every deposit means it's funded against gross income, not net. The other decisions get made against what's left after the floor and the owner are paid.
 
 A different account is critical. Owner pay sitting in the operating account is owner pay about to be spent on operating expenses. Different account, different mental category, different actual outcome.
 
@@ -4406,13 +4406,13 @@ Free for 30 days. $14.99/mo or $129/yr after.`,
 
   '18|Sat': {
     // R37 reel-tip-name-every-dollar · IG+TT only
-    ig: `One rule for variable income.
+    ig: `One rule for inconsistent income.
 
 Every deposit gets a destination.
 Before it leaves your hand.
 
 That's it. That's the habit.
-Variable income breaks the moment money sits unassigned.
+Inconsistent income breaks the moment money sits unassigned.
 
 Free for 30 days.
 Link in bio.
@@ -4447,7 +4447,7 @@ becomeable.app/get-able
 
     li: `Stop living unpredictable check to unpredictable check.
 
-That phrasing is precise on purpose. Not "paycheck to paycheck". That idiom implies a paycheck, which variable-income earners often don't have. Unpredictable check to unpredictable check captures the actual experience.
+That phrasing is precise on purpose. Not "paycheck to paycheck". That idiom implies a paycheck, which inconsistent income earners often don't have. Unpredictable check to unpredictable check captures the actual experience.
 
 The rhythm: a deposit clears. The amount is some unpredictable size. The user pays the immediate bills, lets the rest fund discretionary spending, watches the balance dwindle, waits for the next deposit. The pattern isn't a steady weekly paycheck shape. It's a series of relief-then-stress cycles, each one shaped by an unknown next deposit's amount and timing.
 
@@ -4493,7 +4493,7 @@ A system has three parts: the action, the trigger, and the verification. "Move 3
 
 Once you have a system, the willpower question disappears. You're not deciding monthly whether to save. You're executing a routine you decided once. The routine survives bad days, busy weeks, distracted moments. Because the routine doesn't require attention to run.
 
-The variable-income financial framework is built from systems like this. Move 30% on every deposit (tax). Move X% to reserve. Schedule debt payments. Cap free spending to a specific bucket. Each one is mechanical. None require ongoing decision-making.
+The inconsistent income financial framework is built from systems like this. Move 30% on every deposit (tax). Move X% to reserve. Schedule debt payments. Cap free spending to a specific bucket. Each one is mechanical. None require ongoing decision-making.
 
 Same person. With a system. Different outcome.
 
@@ -4584,7 +4584,7 @@ Free for 30 days. $14.99/mo or $129/yr after.`,
 
 You don't need to be better. You need a different starting point.
 
-Most variable-income financial advice tells you to do the same things harder. Different starting point, same effort, different result.
+Most inconsistent income financial advice tells you to do the same things harder. Different starting point, same effort, different result.
 
 Free for 30 days. Link in bio.
 
@@ -4602,9 +4602,9 @@ becomeable.app/get-able
 
 That sentence reframes the typical financial-improvement narrative. Most advice, work harder, be more disciplined, track more carefully, save more, assumes the user is the variable. Push the user, get a different result. That model works when the system is right and the user is the problem.
 
-For variable-income earners using paycheck-shaped tools, the model is wrong. The system is the problem. Pushing the user just produces frustrated users running the same broken tools harder.
+For inconsistent income earners using paycheck-shaped tools, the model is wrong. The system is the problem. Pushing the user just produces frustrated users running the same broken tools harder.
 
-A different starting point: assume the system is broken and replace it. Variable income gets a variable-income toolkit. Split-first allocation. Reserve. Percentage-based bucket funding. Tax-on-every-deposit. Same person, different starting point. And suddenly the same effort produces different results, because the underlying mechanics now match the income shape.
+A different starting point: assume the system is broken and replace it. Inconsistent income gets a inconsistent income toolkit. Split-first allocation. Reserve. Percentage-based bucket funding. Tax-on-every-deposit. Same person, different starting point. And suddenly the same effort produces different results, because the underlying mechanics now match the income shape.
 
 The reframe is small but matters. The user isn't broken. The starting point was wrong. Fix the starting point and the rest follows.
 
@@ -4698,13 +4698,13 @@ becomeable.app/get-able
 
     li: `I am able to pay down debt, even on slow months.
 
-That sentence is the new identity variable-income earners earn through structural finances. The "even on slow months" qualifier is doing the real work. Anyone can pay down debt during a flush month. The question is whether the system survives a slow one.
+That sentence is the new identity inconsistent income earners earn through structural finances. The "even on slow months" qualifier is doing the real work. Anyone can pay down debt during a flush month. The question is whether the system survives a slow one.
 
 The structural answer: the reserve covers minimums. During a slow month, the debt schedule keeps running because the reserve absorbs the income gap. The debt principal continues to decline. The slow month doesn't reset progress.
 
 During a normal or strong month, the schedule plus extra principal payments accelerate the timeline. Big months push the payoff date forward. Slow months hold ground. Across the year, debt steadily decreases.
 
-This is the difference between debt-payoff plans that work for variable income and ones that don't. Plans that assume steady income break the moment a slow month hits. Plans that include a reserve as the reserve between income volatility and debt payments survive every income shape.
+This is the difference between debt-payoff plans that work for inconsistent income and ones that don't. Plans that assume steady income break the moment a slow month hits. Plans that include a reserve as the reserve between income volatility and debt payments survive every income shape.
 
 The identity follows the structure. "I am able to pay down debt, even on slow months" is true once the structure is in place. It wasn't true before, regardless of intent.
 
@@ -4854,7 +4854,7 @@ becomeable.app/get-able
 
     li: `The cost of waiting is bigger than the cost of starting.
 
-Setting up a working money system costs maybe an hour, plus the price of a tool. The upfront feels like work. The benefit feels abstract. Most variable-income earners delay it indefinitely.
+Setting up a working money system costs maybe an hour, plus the price of a tool. The upfront feels like work. The benefit feels abstract. Most inconsistent income earners delay it indefinitely.
 
 Not setting up a system has a different cost: the leak continues, every month, indefinitely. About $1,000-$2,000 per month of small undifferentiated drift, plus tax-bucket under-funding, plus reserve absence, plus the cognitive load of running mental cash-flow forecasts.
 
@@ -4956,7 +4956,7 @@ becomeable.app/get-able
 
     li: `Traditional apps assume a steady paycheck. Able assumes your income is lumpy, unpredictable, and rarely on schedule.
 
-That's the entire design philosophy in two sentences. The starting assumption is the difference. Every downstream feature, every interface decision, every default value flows from whether the tool assumes regular income or variable income.
+That's the entire design philosophy in two sentences. The starting assumption is the difference. Every downstream feature, every interface decision, every default value flows from whether the tool assumes regular income or inconsistent income.
 
 In a tool that assumes a paycheck: monthly category budgets, fixed savings goals, "this month vs. last month" comparisons, allocation interfaces that ask you to plan the month before it starts. All of these work fine if income is regular. None of them work cleanly if income is variable.
 
@@ -5043,9 +5043,9 @@ A river is lumpy in volume. Storms swell it. Dry spells shrink it. The flow down
 
 A dam regulates outflow. The reservoir behind the dam absorbs the lumps. The spillway delivers a steady flow regardless of what the source is doing today. Downstream of the dam, life is predictable.
 
-Substitute money for water. Variable income is the lumpy river. The reserve is the dam. The user's monthly paycheck is the steady spillway flow. Big deposit lands, fills the reserve. Slow week, the reserve releases enough to cover normal monthly outflow. The user pays themselves the same amount every month.
+Substitute money for water. Inconsistent income is the lumpy river. The reserve is the dam. The user's monthly paycheck is the steady spillway flow. Big deposit lands, fills the reserve. Slow week, the reserve releases enough to cover normal monthly outflow. The user pays themselves the same amount every month.
 
-The reserve is the structural difference between variable income that feels chaotic and variable income that feels manageable. Same income flow. Different downstream experience. The dam does the regulation.
+The reserve is the structural difference between inconsistent income that feels chaotic and inconsistent income that feels manageable. Same income flow. Different downstream experience. The dam does the regulation.
 
 Build the reserve gradually. One month of bills as the floor. Three months as the comfortable upper end. Every big deposit feeds it. Slow months draw from it. Eventually it runs without attention.
 
@@ -5108,7 +5108,7 @@ becomeable.app/get-able
 
     li: `The day you stop guessing is the day you stop bracing.
 
-That sentence captures the relationship between cognitive load and physical readiness in variable-income work. Bracing is the somatic response to anticipated bad outcomes. Guessing is the cognitive process that produces the anticipation.
+That sentence captures the relationship between cognitive load and physical readiness in inconsistent income work. Bracing is the somatic response to anticipated bad outcomes. Guessing is the cognitive process that produces the anticipation.
 
 When the math runs through your head all day, how much is taxes, will next month cover bills, is this purchase fine, the bracing happens automatically. Each guess carries a probability of being wrong. The body braces in proportion to the cumulative uncertainty.
 
@@ -5133,7 +5133,7 @@ Free for 30 days. Link in bio.
 
 #freelancing #1099life #variableincome #debtfree #debtfreejourney`,
 
-    tt: `Debt with variable income.
+    tt: `Debt with inconsistent income.
 
 Every debt book assumes steady income.
 Yours isn't.
@@ -5145,17 +5145,17 @@ becomeable.app/get-able
 
 #freelancetok #1099 #debtfree`,
 
-    li: `Getting out of debt on variable income, in two moves.
+    li: `Getting out of debt on inconsistent income, in two moves.
 
-Most debt-payoff plans (snowball, avalanche, etc.) assume steady income. The plan calculates how much extra principal you can throw at debt each month, given a known monthly surplus. Variable income breaks this immediately. Some months have a surplus. Some don't. A plan that assumes consistent surplus stalls the first slow month.
+Most debt-payoff plans (snowball, avalanche, etc.) assume steady income. The plan calculates how much extra principal you can throw at debt each month, given a known monthly surplus. Inconsistent income breaks this immediately. Some months have a surplus. Some don't. A plan that assumes consistent surplus stalls the first slow month.
 
-The variable-income strategy:
+The inconsistent income strategy:
 
 Move 1: The reserve covers minimums. Build a reserve big enough to fund debt minimums plus rent plus essential bills for the longest realistic slow stretch. Once the reserve exists, slow months don't break the debt schedule. Minimum payments hit on time. Progress doesn't reset.
 
 Move 2: Good months attack principal. Above the reserve, surplus from strong months goes hard at principal. Not at lifestyle expansion. Not at wishful future spending. Principal. Every $500 toward principal compounds in the right direction faster than most people expect.
 
-This combination, protected schedule via reserve, accelerated principal via good months, produces consistent debt reduction even on variable income. The slow months don't reset. The good months speed up.
+This combination, protected schedule via reserve, accelerated principal via good months, produces consistent debt reduction even on inconsistent income. The slow months don't reset. The good months speed up.
 
 Free for 30 days. $14.99/mo or $129/yr after.`,
   },
@@ -5213,7 +5213,7 @@ becomeable.app/get-able
 
     li: `I am able to save without second-guessing.
 
-The second-guessing is the thing that burns most variable-income savings goals. The user moves money to savings, then immediately starts wondering: should I have? Was that the right amount? Will I need it back next week? Is this reckless given the next deposit's uncertainty?
+The second-guessing is the thing that burns most inconsistent income savings goals. The user moves money to savings, then immediately starts wondering: should I have? Was that the right amount? Will I need it back next week? Is this reckless given the next deposit's uncertainty?
 
 The wondering becomes a tax on the savings habit. Every transfer carries a small cost of mental friction. Repeat enough times, the habit dies.
 
@@ -5290,13 +5290,13 @@ becomeable.app/get-able
 
     li: `Your spreadsheet is dying. You don't need a better spreadsheet. You need a system.
 
-Most variable-income earners go through a spreadsheet phase. The user builds a custom tool to compensate for the gap left by generic apps. Categories, formulas, manual entry, monthly reconciliation. It works for a while.
+Most inconsistent income earners go through a spreadsheet phase. The user builds a custom tool to compensate for the gap left by generic apps. Categories, formulas, manual entry, monthly reconciliation. It works for a while.
 
 The phase ends predictably. The maintenance cost compounds. Manual entry is the killer. The moment you fall behind by two weeks, the rest of the spreadsheet becomes unreliable. By the third quarter, the spreadsheet has been opened three times, the data is stale, and the tool that was supposed to bring control is producing more guilt than insight.
 
 A better spreadsheet doesn't fix this. The maintenance is the problem. The fix is automation.
 
-A system that runs without manual entry, that splits deposits automatically, tracks bucket balances continuously, alerts when something looks off, replaces the spreadsheet with structure. The spreadsheet phase was a sign that variable income needed its own toolkit. The system delivers what the spreadsheet was reaching for, without the maintenance burden.
+A system that runs without manual entry, that splits deposits automatically, tracks bucket balances continuously, alerts when something looks off, replaces the spreadsheet with structure. The spreadsheet phase was a sign that inconsistent income needed its own toolkit. The system delivers what the spreadsheet was reaching for, without the maintenance burden.
 
 Free for 30 days. $14.99/mo or $129/yr after.`,
   },
@@ -5453,7 +5453,7 @@ Reality Check week closes. The next deposit begins.`,
 
 Actually build your savings.
 
-The "actually" is doing work. Most variable-income earners try and quit. The structure is what makes the savings stick.
+The "actually" is doing work. Most inconsistent income earners try and quit. The structure is what makes the savings stick.
 
 Free for 30 days. Link in bio.
 
@@ -5467,7 +5467,7 @@ becomeable.app/get-able
 
     li: `Actually build your savings.
 
-The "actually" carries weight. Most variable-income earners have a savings goal somewhere in their head. Most have tried to build savings multiple times. Most haven't succeeded. The savings goal hits a slow month, the money gets reabsorbed into operating costs, the goal resets.
+The "actually" carries weight. Most inconsistent income earners have a savings goal somewhere in their head. Most have tried to build savings multiple times. Most haven't succeeded. The savings goal hits a slow month, the money gets reabsorbed into operating costs, the goal resets.
 
 The structural reason this fails: savings without a system depends on monthly willpower against unpredictable income. Some months feel adequate, some don't. By the time "what's left" gets calculated, it's often nothing.
 
@@ -5504,7 +5504,7 @@ becomeable.app/get-able
 
     li: `Spreadsheets ask you to be an accountant. You shouldn't have to be.
 
-That sentence captures a real resentment most variable-income earners eventually reach. The work that pays you doesn't include "be your own bookkeeper." But every spreadsheet-based budgeting attempt requires you to do exactly that. Categorize transactions, reconcile accounts, project cash flow, calculate tax obligations, maintain records.
+That sentence captures a real resentment most inconsistent income earners eventually reach. The work that pays you doesn't include "be your own bookkeeper." But every spreadsheet-based budgeting attempt requires you to do exactly that. Categorize transactions, reconcile accounts, project cash flow, calculate tax obligations, maintain records.
 
 Doing the bookkeeping in addition to the actual work means doing two jobs simultaneously. Most freelancers and one-person businesses can sustain that for a few weeks. After that, the bookkeeping job gets neglected, the spreadsheet falls behind, the tool that was supposed to provide control becomes a source of guilt.
 
@@ -5515,11 +5515,11 @@ Free for 30 days. $14.99/mo or $129/yr after.`,
 
   '23|Tue': {
     // R20 save-more · reel
-    ig: `If you have variable income, here's the truth.
+    ig: `If you have inconsistent income, here's the truth.
 
 "Save more" isn't a plan. It's a wish dressed as advice.
 
-Saving needs left over. Variable income rarely has it. Reverse the order.
+Saving needs left over. Inconsistent income rarely has it. Reverse the order.
 
 Free for 30 days. Link in bio.
 
@@ -5537,11 +5537,11 @@ becomeable.app/get-able
 
     li: `"Save more" isn't a plan. It's a wish dressed as advice.
 
-Saving requires money left over. Variable income rarely produces reliable left-over because the income amount and timing are unpredictable. By the time "what's left" gets calculated, it's often nothing. Every month, despite intent.
+Saving requires money left over. Inconsistent income rarely produces reliable left-over because the income amount and timing are unpredictable. By the time "what's left" gets calculated, it's often nothing. Every month, despite intent.
 
 The fix is per-deposit allocation. Every deposit, the moment it clears: bills + tax fill the floor first, then a percentage routes to savings, debt, owner pay, free spending. Not "what's left." A reservation, the second the money lands.
 
-The standard "pay yourself first" advice has the right intuition, order matters, but the wrong implementation for variable income. A fixed monthly save amount can't work when the income isn't fixed. Per-deposit percentages do.
+The standard "pay yourself first" advice has the right intuition, order matters, but the wrong implementation for inconsistent income. A fixed monthly save amount can't work when the income isn't fixed. Per-deposit percentages do.
 
 5% to start. Big deposits contribute more. Slow deposits contribute less. The system never asks the user to decide. Same income produces materially more savings across a year, because the percentage-based mechanism runs without willpower or ongoing decision-making.
 
@@ -5570,7 +5570,7 @@ becomeable.app/get-able
 
     li: `The best money system asks you for nothing.
 
-That sentence is a useful test for whether a financial tool actually fits variable income. Most fintech apps fail it on day one. They ask for daily engagement. Streak counters. Push notifications. Insights you have to scroll through. Goal-setting flows that require ongoing attention.
+That sentence is a useful test for whether a financial tool actually fits inconsistent income. Most fintech apps fail it on day one. They ask for daily engagement. Streak counters. Push notifications. Insights you have to scroll through. Goal-setting flows that require ongoing attention.
 
 The cumulative cost of those engagements is real, especially for users whose actual work is cognitively demanding. Every minute spent maintaining the budgeting app is a minute not spent on the work that pays.
 
@@ -5589,7 +5589,7 @@ Free for 30 days. $14.99/mo or $129/yr after.`,
 
 Every month you guess, another $2,000 gone.
 
-That's not a moral failure. It's the cost of running variable income without a system. The leak compounds. The cost is real. The fix is small.
+That's not a moral failure. It's the cost of running inconsistent income without a system. The leak compounds. The cost is real. The fix is small.
 
 Free for 30 days. Link in bio.
 
@@ -5605,7 +5605,7 @@ becomeable.app/get-able
 
     li: `Every month you guess, another $2,000 gone.
 
-That's the average leak rate for variable-income earners running without structure. Subscription drift, mixed-bucket dollars, tax money quietly spent, bill money reabsorbed into general spending. Different sources, same outcome.
+That's the average leak rate for inconsistent income earners running without structure. Subscription drift, mixed-bucket dollars, tax money quietly spent, bill money reabsorbed into general spending. Different sources, same outcome.
 
 $2,000 a month is $24,000 a year. Three years is $72,000. Five years is $120,000. The compound math is brutal because the leak never stops on its own. Nothing dramatic forces a fix. It's small in any single week, which is why it persists.
 
@@ -5675,7 +5675,7 @@ becomeable.app/get-able
 
     li: `If you've ever frozen on Day 1, checked your balance at 1am, or dreaded April. You're not bad with money. You were handed the wrong tool.
 
-The three patterns named in that sentence are common variable-income experiences. Each one, when looked at individually, looks like a personal failure. Stacked, they describe a structural mismatch between the income shape and the tools available.
+The three patterns named in that sentence are common inconsistent income experiences. Each one, when looked at individually, looks like a personal failure. Stacked, they describe a structural mismatch between the income shape and the tools available.
 
 Freezing on Day 1: the rational response to facing allocation decisions without information. Moving the money commits it to a job. Committing feels reckless when the next deposit is uncertain. So the money sits.
 
@@ -5708,7 +5708,7 @@ becomeable.app/get-able
 
     li: `I am able to budget inconsistent income.
 
-That sentence is the new identity variable-income earners can earn through structural finances. The "I am able" framing is direct, present tense, and specific. It doesn't say "I will be" or "I'm trying." It states the working capability.
+That sentence is the new identity inconsistent income earners can earn through structural finances. The "I am able" framing is direct, present tense, and specific. It doesn't say "I will be" or "I'm trying." It states the working capability.
 
 The capability is real once the structure is in place. Splitting deposits at the moment they land. Funding a tax bucket on every payment. Routing percentages to a reserve. Scheduling debt payments that survive slow months. The system runs the budget. The user runs the system once, then watches it work.
 
@@ -5743,13 +5743,13 @@ becomeable.app/get-able
 
     li: `You're not bad with money. You were handed the wrong tool.
 
-That's the foundational reframe Able is built around. It's also the most accurate diagnosis of what's actually happening when variable-income earners feel like they "can't" budget despite years of trying.
+That's the foundational reframe Able is built around. It's also the most accurate diagnosis of what's actually happening when inconsistent income earners feel like they "can't" budget despite years of trying.
 
-The tools available, Mint and its descendants, generic spreadsheet templates, "manage your money" advice from W-2-shaped sources, were built for a different income shape. Regular paycheck, predictable amount, biweekly schedule. Variable income breaks the underlying assumptions of every one of those tools.
+The tools available, Mint and its descendants, generic spreadsheet templates, "manage your money" advice from W-2-shaped sources, were built for a different income shape. Regular paycheck, predictable amount, biweekly schedule. Inconsistent income breaks the underlying assumptions of every one of those tools.
 
 When the tool doesn't fit, the user follows generic instructions that produce wrong answers. Repeated failure produces a felt identity: "I'm bad at this." But the failure wasn't user error. It was tool error.
 
-A tool built for variable income makes different default assumptions and produces different results. Same person. Different toolkit. The "bad with money" identity dissolves when the budgeting actually works.
+A tool built for inconsistent income makes different default assumptions and produces different results. Same person. Different toolkit. The "bad with money" identity dissolves when the budgeting actually works.
 
 Free for 30 days. $14.99/mo or $129/yr after.`,
   },
@@ -5776,13 +5776,13 @@ becomeable.app/get-able
 
     li: `The shame isn't yours. It belongs to the tool.
 
-Most variable-income earners carry shame about money that they didn't earn through any specific failing. The shame accumulated through repeated experience of generic financial tools producing wrong results. Each failure looked like a personal failure. The cumulative effect was a felt identity of being "bad with money."
+Most inconsistent income earners carry shame about money that they didn't earn through any specific failing. The shame accumulated through repeated experience of generic financial tools producing wrong results. Each failure looked like a personal failure. The cumulative effect was a felt identity of being "bad with money."
 
-The reattribution matters. The tools assumed a paycheck. Variable income breaks the assumptions. Generic instructions produce wrong answers. Following the wrong instructions correctly still produces failure. And the user concludes the failure is theirs.
+The reattribution matters. The tools assumed a paycheck. Inconsistent income breaks the assumptions. Generic instructions produce wrong answers. Following the wrong instructions correctly still produces failure. And the user concludes the failure is theirs.
 
 It isn't. The shame should land on the tool. The tool was wrong for the use case. The user was correctly applying instructions to a tool that didn't fit.
 
-Once the tool fits, once it's specifically built for variable income, the shame stops accumulating. The system works. The user's experience matches their effort. The identity shifts.
+Once the tool fits, once it's specifically built for inconsistent income, the shame stops accumulating. The system works. The user's experience matches their effort. The identity shifts.
 
 Free for 30 days. $14.99/mo or $129/yr after.`,
   },
@@ -5809,7 +5809,7 @@ becomeable.app/get-able
 
     li: `I didn't want to be a budgeter. I wanted to be done thinking about money.
 
-That sentence captures the actual outcome variable-income earners want. Not "be better at budgeting." Not "track spending more carefully." Done thinking about money. With the math handled by something else, the cognitive space freed for the actual work.
+That sentence captures the actual outcome inconsistent income earners want. Not "be better at budgeting." Not "track spending more carefully." Done thinking about money. With the math handled by something else, the cognitive space freed for the actual work.
 
 The standard advice misreads this. "Track every expense" assumes the user wants to be a tracker. "Set goals and review monthly" assumes the user wants to be a goal-setter. The user doesn't want any of that. The user wants the underlying mechanics to run correctly without requiring attention.
 
@@ -5842,7 +5842,7 @@ becomeable.app/get-able
 
     li: `You're not bad at math. You're missing a system.
 
-Variable-income earners often blame their math when budgeting fails. The math is rarely the problem. Most users can do the arithmetic. 30% of $4,000 is $1,200, the bills total $1,800, what's left is $1,000. The math itself isn't where the failure happens.
+Inconsistent income earners often blame their math when budgeting fails. The math is rarely the problem. Most users can do the arithmetic. 30% of $4,000 is $1,200, the bills total $1,800, what's left is $1,000. The math itself isn't where the failure happens.
 
 The failure happens in execution. Knowing the math doesn't make the moves automatic. The user knows they should route 30% to a tax bucket. They don't, because moving money requires attention they don't have at the moment of deposit. The math goes unexecuted.
 
@@ -5918,14 +5918,14 @@ I am able to save. Without second-guessing. Savings is automated as a percentage
 
 I am able. Period. The "able" identity is what sits underneath all the specific capabilities. Once the structure is in place, the user is genuinely able to do the things that previously felt impossible. Not because they got more disciplined. Because the structure removed the obstacles that disguised themselves as discipline failures.
 
-The identity follows the structure. "Unable" was the felt experience of running variable income through paycheck-shaped tools. "Able" is the felt experience of running variable income through tools built for it.
+The identity follows the structure. "Unable" was the felt experience of running inconsistent income through paycheck-shaped tools. "Able" is the felt experience of running inconsistent income through tools built for it.
 
 Free for 30 days. $14.99/mo or $129/yr after.`,
   },
 
   '24|Sun': {
     // B40 outcome-cost-of-waiting · brandscript
-    ig: `If you have variable income, here's the math you've been ignoring.
+    ig: `If you have inconsistent income, here's the math you've been ignoring.
 
 Every month you wait is another $500 to $1,000 gone.
 
@@ -5945,7 +5945,7 @@ becomeable.app/get-able
 
     li: `Every month you wait is another $500 to $1,000 gone.
 
-That's the conservative leak rate for variable-income earners running without structure. The full leak is often higher, closer to $1,000-$2,000 monthly, but $500-$1,000 is the floor.
+That's the conservative leak rate for inconsistent income earners running without structure. The full leak is often higher, closer to $1,000-$2,000 monthly, but $500-$1,000 is the floor.
 
 The wait isn't neutral. It's an active monthly cost. The dollars don't stay put while you decide whether to set up a system. They leak. Into subscription drift, mixed-bucket dollars, small purchases, undifferentiated spending. Every month of waiting is dollars that don't come back.
 
@@ -6026,7 +6026,7 @@ Annual: $129 for the year. Saves $50 versus monthly. Break-even is around month 
 
 Free for 30 days at signup, either plan. Card required at signup. No charge during the trial window. Cancel anytime in the trial with zero charge. The card requirement is there to keep bot signups out, not to slip in a surprise charge.
 
-Most variable-income earners go monthly first to confirm the system fits their actual income pattern. After two or three months, the ones who like it switch to annual to save the $50. That's a sensible path.
+Most inconsistent income earners go monthly first to confirm the system fits their actual income pattern. After two or three months, the ones who like it switch to annual to save the $50. That's a sensible path.
 
 The pricing is bounded enough that anyone seeing meaningful improvement in their tax bucket alone will recoup it. The leak that gets closed by routing every deposit pays for the subscription many times over within the first quarter for most users.
 
@@ -6061,7 +6061,7 @@ Single-income freelance breaks this assumption. There's no second income smoothi
 
 The implications are different for several core decisions. The reserve has to be bigger because there's no fallback income. Health insurance is a personal expense, not a benefit. Retirement contributions have to come from the same income stream that funds living expenses. Slow months don't get covered by a partner's paycheck.
 
-The variable-income financial framework adjusts for this. Larger reserve targets. Health insurance treated as a Floor expense, not a discretionary one. Retirement automated as a percentage of every deposit. Each adjustment is small. Together they describe a financial setup that survives single-income variable income.
+The inconsistent income financial framework adjusts for this. Larger reserve targets. Health insurance treated as a Floor expense, not a discretionary one. Retirement automated as a percentage of every deposit. Each adjustment is small. Together they describe a financial setup that survives single-income inconsistent income.
 
 Free for 30 days. $14.99/mo or $129/yr after.`,
   },
@@ -6088,7 +6088,7 @@ becomeable.app/get-able
 
     li: `Pay yourself last. Pay yourself wrong.
 
-That's the trap most variable-income owners fall into. The work pays clients, contractors, software vendors, the platform, the IRS. Whatever's left at the end is what the owner takes home. Some months "what's left" is fine. Some months it isn't. Many months it's nothing.
+That's the trap most inconsistent income owners fall into. The work pays clients, contractors, software vendors, the platform, the IRS. Whatever's left at the end is what the owner takes home. Some months "what's left" is fine. Some months it isn't. Many months it's nothing.
 
 The "pay yourself last" pattern feels responsible. It feels like the right priority. Business obligations first, personal extraction second. In practice, it means the business never pays the owner reliably. The owner becomes the unfunded line item.
 
@@ -6144,7 +6144,7 @@ Free for 30 days. $14.99/mo or $129/yr after.`,
 
 What's the smallest month you could survive?
 
-That number is your Floor. It's the most useful number in variable-income financial planning. Below it, the system breaks. Above it, you have options.
+That number is your Floor. It's the most useful number in inconsistent income financial planning. Below it, the system breaks. Above it, you have options.
 
 Free for 30 days. Link in bio.
 
@@ -6160,9 +6160,9 @@ becomeable.app/get-able
 
     li: `What's the smallest month you could survive?
 
-That question, taken seriously, produces the most useful number in variable-income financial planning: your Floor. The Floor is the dollar amount per month that covers the genuinely non-negotiable expenses. Rent, utilities, food, insurance, debt minimums, transportation. The expenses that, if unfunded, the system breaks.
+That question, taken seriously, produces the most useful number in inconsistent income financial planning: your Floor. The Floor is the dollar amount per month that covers the genuinely non-negotiable expenses. Rent, utilities, food, insurance, debt minimums, transportation. The expenses that, if unfunded, the system breaks.
 
-Most variable-income earners have never calculated their Floor explicitly. The number sits implicitly behind every cash-flow worry, but it's never written down. Writing it down clarifies a lot.
+Most inconsistent income earners have never calculated their Floor explicitly. The number sits implicitly behind every cash-flow worry, but it's never written down. Writing it down clarifies a lot.
 
 Once the Floor is known, the reserve target follows directly. A reserve big enough to cover the Floor for 3 months is the difference between routine slow stretches and survival events. A reserve big enough for 6 months is comfort. A reserve big enough for 12 months is professional flexibility. The freedom to say no to bad clients without putting yourself at risk.
 
@@ -6179,7 +6179,7 @@ Free for 30 days. $14.99/mo or $129/yr after.`,
 
 Become able.
 
-Not "be better." Not "try harder." Become able. The identity shift that comes with running variable income through tools built for it.
+Not "be better." Not "try harder." Become able. The identity shift that comes with running inconsistent income through tools built for it.
 
 Free for 30 days. Link in bio.
 
@@ -6191,9 +6191,9 @@ becomeable.app/get-able
 
 #freelancetok #1099 #moneymindset`,
 
-    li: `Become able. The identity shift that's possible when variable income runs through tools built for it.
+    li: `Become able. The identity shift that's possible when inconsistent income runs through tools built for it.
 
-"Become able" is the bookend to the variable-income journey. The starting state, for most users, is some version of "unable". Unable to budget, unable to save, unable to plan, unable to feel calm about money. The unable state isn't a personal failing. It's the predictable outcome of running variable income through paycheck-shaped tools.
+"Become able" is the bookend to the inconsistent income journey. The starting state, for most users, is some version of "unable". Unable to budget, unable to save, unable to plan, unable to feel calm about money. The unable state isn't a personal failing. It's the predictable outcome of running inconsistent income through paycheck-shaped tools.
 
 The transition: the structure replaces the discipline. The tax bucket fills itself. The reserve absorbs lumpiness. The bills get pre-funded. The savings routes automatically. None of it requires ongoing willpower. The user runs the setup once, then watches the system work.
 
@@ -6243,7 +6243,7 @@ Built for the 76%. Free for 30 days.
 Link in bio.
 
 #variableincome #freelancing #1099 #selfemployed #budgeting`,
-    tt: `76% of self-employed have variable income.
+    tt: `76% of self-employed have inconsistent income.
 
 Every app still assumes the 24%.
 becomeable.app/get-able
@@ -6759,7 +6759,7 @@ becomeable.app/get-able
 Bills + tax = the floor.
 Fill it first. Every other dollar is a real choice.
 
-The named method, written for variable income.
+The named method, written for inconsistent income.
 
 Free for 30 days.
 Link in bio.
@@ -6781,7 +6781,7 @@ becomeable.app/get-able
 Snowball: smallest balance first. Wins on motivation.
 Avalanche: highest APR first. Wins on math.
 
-Most people pick by personality. Variable income picks by which one survives the slow months.
+Most people pick by personality. Inconsistent income picks by which one survives the slow months.
 
 Free for 30 days.
 Link in bio.
@@ -6815,7 +6815,7 @@ becomeable.app/get-able
   },
   '30|Wed': {
     // C34 get-out-of-debt carousel REUSE
-    ig: `Out of debt on variable income. The honest version.
+    ig: `Out of debt on inconsistent income. The honest version.
 
 Step 1: a floor that holds. Step 2: a reserve that absorbs slow months. Step 3: extra principal whenever the system says it's safe.
 
@@ -6825,7 +6825,7 @@ Swipe →
 Link in bio.
 
 #debtfree #variableincome #1099 #freelancing #budgeting`,
-    tt: `Out of debt on variable income. Honest version.
+    tt: `Out of debt on inconsistent income. Honest version.
 
 Floor. Reserve. Then extra principal.
 becomeable.app/get-able
@@ -6895,7 +6895,7 @@ becomeable.app/get-able
     // B25 outcome · Finally pay down your debt
     ig: `Finally pay down your debt.
 
-Not someday. Not when the income smooths out. On the variable income you actually have.
+Not someday. Not when the income smooths out. On the inconsistent income you actually have.
 
 The math doesn't need a steady paycheck. It needs a system.
 
@@ -6924,7 +6924,7 @@ Free for 30 days.
 Link in bio.
 
 #dti #debt #1099 #freelancing #variableincome`,
-    tt: `DTI on variable income.
+    tt: `DTI on inconsistent income.
 
 12-month average. Minus 20% for safety.
 becomeable.app/get-able
@@ -7085,7 +7085,7 @@ becomeable.app/get-able
   },
   '32|Wed': {
     // C48 monthly-budgets-fail carousel
-    ig: `Why monthly budgets fail variable income.
+    ig: `Why monthly budgets fail inconsistent income.
 
 The whole framework assumes equal monthly inputs. Yours aren't equal. So the budget always "broke this month."
 
@@ -7095,7 +7095,7 @@ Swipe →
 Link in bio.
 
 #variableincome #budgeting #freelancing #1099 #floorfirst`,
-    tt: `Why monthly budgets fail variable income.
+    tt: `Why monthly budgets fail inconsistent income.
 
 Wrong on Day 1, not "broken this month."
 becomeable.app/get-able
@@ -7141,7 +7141,7 @@ Floor-First Budgeting is built for the 88 million who want a working system. Fre
 
 Utilization (the biggest lever). On-time payments. Length of history. Mix of credit. New inquiries.
 
-Variable income makes utilization volatile. The reserve smooths the ratio month over month.
+Inconsistent income makes utilization volatile. The reserve smooths the ratio month over month.
 
 Swipe →
 Link in bio.
@@ -7193,10 +7193,10 @@ becomeable.app/get-able
 #freelancetok #1099 #moneytok`,
   },
 
-  // ─── W33 · Debt · variable income payoff ───
+  // ─── W33 · Debt · inconsistent income payoff ───
   '33|Mon': {
-    // 17 reused — variable income debt closer
-    ig: `Paying down debt on variable income works differently.
+    // 17 reused — inconsistent income debt closer
+    ig: `Paying down debt on inconsistent income works differently.
 
 You can't promise the same monthly payment. You can promise: every deposit gives debt the next slot in line.
 
@@ -7206,7 +7206,7 @@ Free for 30 days.
 Link in bio.
 
 #debtfree #variableincome #1099 #freelancing #budgeting`,
-    tt: `Pay down debt on variable income.
+    tt: `Pay down debt on inconsistent income.
 
 Every deposit gives debt the next slot.
 becomeable.app/get-able
@@ -7233,7 +7233,7 @@ becomeable.app/get-able
 #debtfreejourney #1099 #freelancetok`,
   },
   '33|Wed': {
-    // C34 get-out-of-debt REUSE 2x — variable income angle
+    // C34 get-out-of-debt REUSE 2x — inconsistent income angle
     ig: `Out of debt without a paycheck. The longer version.
 
 Step 1 is the floor. Step 2 is the reserve. Step 3 is the schedule.
@@ -7393,7 +7393,7 @@ becomeable.app/get-able
     // 73 single
     ig: `How much reserve do you actually need?
 
-Math: 1.5x your floor (bills + tax). That's the smoothing target for a typical variable-income month.
+Math: 1.5x your floor (bills + tax). That's the smoothing target for a typical inconsistent income month.
 
 Below that: you're vulnerable. Above it: you can run debt and growth in parallel.
 
@@ -7448,8 +7448,8 @@ becomeable.app/get-able
 #payyourselffirst #freelancetok #1099`,
   },
   '34|Sun': {
-    // B02 brand lockup · Built for variable income (reserve)
-    ig: `Built for variable income.
+    // B02 brand lockup · Built for inconsistent income (reserve)
+    ig: `Built for inconsistent income.
 
 Not "adapted for." Not "works with." Built for.
 
@@ -7459,7 +7459,7 @@ Free for 30 days.
 Link in bio.
 
 #variableincome #1099 #freelancing #floorfirst #budgeting`,
-    tt: `Built for variable income.
+    tt: `Built for inconsistent income.
 
 Not adapted for. Built for.
 becomeable.app/get-able
@@ -7482,7 +7482,7 @@ Link in bio.
 #feastorfamine #variableincome #1099 #freelancing #reserve`,
     tt: `Feast or famine = math problem.
 
-Variable income. Constant bills.
+Inconsistent income. Constant bills.
 becomeable.app/get-able
 
 #feastorfamine #freelancetok #1099`,
@@ -7608,7 +7608,7 @@ becomeable.app/get-able
     // 75 single
     ig: `Pay yourself a steady paycheck.
 
-Set the amount. Set the day. Variable income flows in. Steady amount flows out.
+Set the amount. Set the day. Inconsistent income flows in. Steady amount flows out.
 
 The dam on the river, in concrete settings.
 
@@ -7874,7 +7874,7 @@ becomeable.app/get-able
 
 The phrase you didn't realize you needed until you had it.
 
-Variable income runs through paycheck-shaped tools. Eventually the chest holds tension you can't name. The system unwinds it.
+Inconsistent income runs through paycheck-shaped tools. Eventually the chest holds tension you can't name. The system unwinds it.
 
 Free for 30 days.
 Link in bio.
@@ -8219,7 +8219,7 @@ becomeable.app/get-able
 
     li: `JPMorgan Chase Institute studied actual checking-account data from millions of US households and found two facts that should reframe the entire personal-finance conversation.
 
-First: 89% of US households experienced a month-to-month income change of at least 5%. Not 30%, not 50%, not the subset of the population that calls itself "variable income." 89%.
+First: 89% of US households experienced a month-to-month income change of at least 5%. Not 30%, not 50%, not the subset of the population that calls itself "inconsistent income." 89%.
 
 Second: the median household saw a 36% swing in monthly income.
 
@@ -8349,7 +8349,7 @@ becomeable.app/get-able
   },
   '41|Wed': {
     // PC8 product-why-apps-fail carousel
-    ig: `Why budgeting apps fail variable income.
+    ig: `Why budgeting apps fail inconsistent income.
 
 They assume a paycheck. They want monthly. They show what happened, too late.
 
@@ -8359,7 +8359,7 @@ Swipe →
 Link in bio.
 
 #variableincome #1099 #creator #budgeting #floorfirst`,
-    tt: `Why apps fail variable income.
+    tt: `Why apps fail inconsistent income.
 
 Assume paycheck. Want monthly. Show too late.
 becomeable.app/get-able
@@ -8410,7 +8410,7 @@ becomeable.app/get-able
 Not a stricter budget.
 Not trying harder.
 
-A system. Built for variable income.
+A system. Built for inconsistent income.
 
 Free for 30 days.
 Link in bio.
@@ -9143,7 +9143,7 @@ becomeable.app/get-able
 Savings is "for the future."
 Reserve is "for the gap between checks."
 
-Both useful. Different jobs. Variable income needs the bridge before the savings.
+Both useful. Different jobs. Inconsistent income needs the bridge before the savings.
 
 Free for 30 days.
 Link in bio.
@@ -9182,7 +9182,7 @@ becomeable.app/get-able
 Emergency fund: unexpected events.
 Reserve: expected lumpiness.
 
-Variable income needs both. Reserve first. It runs more often.
+Inconsistent income needs both. Reserve first. It runs more often.
 
 Swipe →
 Link in bio.
@@ -9257,7 +9257,7 @@ becomeable.app/get-able
     ig: `Actually build your savings.
 
 Not "intend to save." Not "save what's left."
-Move it before the rest of the splits run. Watch it grow on the variable income you have.
+Move it before the rest of the splits run. Watch it grow on the inconsistent income you have.
 
 Free for 30 days.
 Link in bio.
@@ -9444,7 +9444,7 @@ becomeable.app/get-able
   },
   '49|Wed': {
     // C4 money-math carousel REUSE
-    ig: `Money math, the variable-income version.
+    ig: `Money math, the inconsistent income version.
 
 Income (variable). Tax (off the top). Bills (constant). Debt (scheduled). Reserve (smoothing). Free (whatever's left).
 
@@ -9454,7 +9454,7 @@ Swipe →
 Link in bio.
 
 #variableincome #1099 #commission #budgeting #floorfirst`,
-    tt: `Money math, variable income version.
+    tt: `Money math, inconsistent income version.
 
 Six numbers. System runs them every deposit.
 becomeable.app/get-able
@@ -9617,7 +9617,7 @@ Floor-First Budgeting is built for the workforce that does exist. Free for 30 da
 
 Not "I should save." Not "I'm trying to save." I am.
 
-The word changes when the structure does the work. Variable income runs through a system, the savings line moves on its own.
+The word changes when the structure does the work. Inconsistent income runs through a system, the savings line moves on its own.
 
 Free for 30 days.
 Link in bio.
@@ -9957,7 +9957,7 @@ becomeable.app/get-able
   // ─── W53 · Business · multi-bank reality ───
   '53|Mon': {
     // 92 single
-    ig: `Most variable-income owners run 2-4 bank accounts.
+    ig: `Most inconsistent income owners run 2-4 bank accounts.
 
 Personal checking. Business checking. Tax savings. Maybe operating reserve.
 
@@ -9967,7 +9967,7 @@ Free for 30 days.
 Link in bio.
 
 #smallbusiness #1099 #variableincome #budgeting #multibank`,
-    tt: `Most variable-income owners run 2-4 accounts.
+    tt: `Most inconsistent income owners run 2-4 accounts.
 
 Connect them all. Treat as one system.
 becomeable.app/get-able
@@ -10037,7 +10037,7 @@ becomeable.app/get-able
   },
   '53|Fri': {
     // PC3 product-built-for-variable carousel
-    ig: `Built for variable income, the feature tour.
+    ig: `Built for inconsistent income, the feature tour.
 
 The floor. The splits. The score. The coach. The export.
 
@@ -10047,7 +10047,7 @@ Swipe →
 Link in bio.
 
 #variableincome #1099 #freelancing #budgeting #floorfirst`,
-    tt: `Built for variable income. Feature tour.
+    tt: `Built for inconsistent income. Feature tour.
 
 Floor. Splits. Score. Coach. Export.
 becomeable.app/get-able
@@ -10332,7 +10332,7 @@ Floor = bills + tax.
 Every deposit fills the floor first.
 Then you spend.
 
-The named method, written for variable income.
+The named method, written for inconsistent income.
 
 Free for 30 days.
 Link in bio.
@@ -10604,7 +10604,7 @@ becomeable.app/get-able
 Not a stricter budget.
 Not trying harder.
 
-A system. Built for variable income.
+A system. Built for inconsistent income.
 
 The identity follows.
 
@@ -10643,7 +10643,7 @@ becomeable.app/get-able
     // 01 reused — method anchor
     ig: `Floor-First Budgeting.
 
-A named method for variable income. Five rules. Locked.
+A named method for inconsistent income. Five rules. Locked.
 
 Bills + tax = the floor. Fill it first. Every other dollar is a real choice.
 
@@ -10653,7 +10653,7 @@ Link in bio.
 #floorfirst #variableincome #1099 #budgeting #methodology`,
     tt: `Floor-First Budgeting.
 
-Named method. Five rules. Variable income.
+Named method. Five rules. Inconsistent income.
 becomeable.app/get-able
 
 #floorfirst #freelancetok #1099`,
@@ -10941,7 +10941,7 @@ becomeable.app/get-able
     ig: `Floor-First vs YNAB. Honestly.
 
 YNAB: zero-based budgeting on a monthly cadence. Best-in-class for steady paychecks.
-Floor-First: per-deposit splits with a floor mechanic. Built for variable income.
+Floor-First: per-deposit splits with a floor mechanic. Built for inconsistent income.
 
 Different jobs. Different audiences. Use the right tool.
 
@@ -10958,7 +10958,7 @@ becomeable.app/get-able
   },
   '60|Tue': {
     // R5 why-apps-fail-variable REUSE
-    ig: `Why budgeting apps fail variable income.
+    ig: `Why budgeting apps fail inconsistent income.
 
 They assume a paycheck. Yours isn't.
 They show what happened. Too late.
@@ -10970,7 +10970,7 @@ Free for 30 days.
 Link in bio.
 
 #floorfirst #variableincome #1099 #budgeting #budgetingapps`,
-    tt: `Why apps fail variable income.
+    tt: `Why apps fail inconsistent income.
 
 Assume paycheck. Show too late. Want monthly.
 becomeable.app/get-able
@@ -10982,7 +10982,7 @@ becomeable.app/get-able
     ig: `Floor-First vs Profit First, comparison.
 
 Profit First: built for businesses. Reverse the order. Profit, then ops.
-Floor-First: built for variable-income individuals. Floor first (bills + tax), then everything else.
+Floor-First: built for inconsistent income individuals. Floor first (bills + tax), then everything else.
 
 Same DNA: rearrange the order. Different audiences.
 
@@ -11020,7 +11020,7 @@ becomeable.app/get-able
   },
   '60|Fri': {
     // C40 apps-fail-you carousel REUSE
-    ig: `Why apps fail YOU specifically, not just "variable income."
+    ig: `Why apps fail YOU specifically, not just "inconsistent income."
 
 Your bills aren't constant either. Your tax rate changes. Your income shape shifts as your business grows.
 
@@ -11308,7 +11308,7 @@ becomeable.app/get-able
     // R15 free-trial REUSE 2x
     ig: `30 days. Card required. Cancel anytime.
 
-The reason it's 30 days: variable income needs at least one income cycle to feel the system. A weekend trial is theater.
+The reason it's 30 days: inconsistent income needs at least one income cycle to feel the system. A weekend trial is theater.
 
 Free for 30 days.
 Link in bio.
@@ -11379,7 +11379,7 @@ becomeable.app/get-able
   },
   '63|Wed': {
     // PC3 product-built-for-variable carousel REUSE
-    ig: `Built for variable income, the trial-day-by-day.
+    ig: `Built for inconsistent income, the trial-day-by-day.
 
 Day 1: connect. Day 2: first split. Day 7: floor steady. Day 30: ready to keep going.
 
@@ -11389,7 +11389,7 @@ Swipe →
 Link in bio.
 
 #variableincome #1099 #freelancing #becomeable #floorfirst`,
-    tt: `Built for variable income. Trial day-by-day.
+    tt: `Built for inconsistent income. Trial day-by-day.
 
 Day 1 connect. Day 30 ready.
 becomeable.app/get-able
@@ -11513,7 +11513,7 @@ becomeable.app/get-able
     ig: `Day 1 to Day 90, then Day 180.
 
 Day 90 was the identity shift. Day 180 is the version that's settled.
-"I am able" became default. Variable income became background.
+"I am able" became default. Inconsistent income became background.
 
 Swipe →
 Link in bio.
@@ -11713,7 +11713,7 @@ becomeable.app/get-able
     // B42 solution · Brand-script close (RESERVE, capstone)
     ig: `The cycle closes. The next deposit begins.
 
-Floor-First Budgeting. Built for variable income. Free for 30 days.
+Floor-First Budgeting. Built for inconsistent income. Free for 30 days.
 
 Become able.
 

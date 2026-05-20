@@ -14,7 +14,7 @@ window.POSTS = [
 
   { id: '03', slug: 'fewer-leaks', theme: 'green', tpl: 'A', eyebrow: 'mixed',
     muted: "You don't need more income.",
-    punch: "You need\n{fewer leaks}." },
+    punch: "You need\nfewer {leaks.}" },
 
   { id: '04', slug: 'every-deposit', theme: 'green', tpl: 'B', eyebrow: 'mixed',
     punch: "Every deposit,\n{already sorted.}" },
@@ -29,7 +29,7 @@ window.POSTS = [
 
   { id: '07', slug: 'shame-tool', theme: 'green', tpl: 'A', eyebrow: 'mixed',
     muted: "The shame isn't yours.",
-    punch: "It belongs to\n{the tool}." },
+    punch: "It belongs to\nthe {tool.}" },
 
   { id: '08', slug: 'calm-feature', theme: 'white', tpl: 'B', eyebrow: 'mixed',
     punch: "Calm is a {feature}.\nNot a side effect." },
@@ -37,13 +37,13 @@ window.POSTS = [
   { id: '09', slug: 'free-to-try', theme: 'page', tpl: 'B', eyebrow: 'mixed', center: true,
     punch: "Free to try.\nBuilt for inconsistent\n{income}." },
 
-  { id: '10', slug: 'money-energy', theme: 'green', tpl: 'A', eyebrow: 'mixed',
-    muted: "Money is energy.",
-    punch: "Direct it, or\n{it leaks}." },
+  { id: '10', slug: 'money-sits-leaks', theme: 'green', tpl: 'A', eyebrow: 'mixed',
+    muted: "Money that sits,",
+    punch: "{leaks.}" },
 
   { id: '11', slug: 'needed-system', theme: 'page', tpl: 'A', eyebrow: 'mixed',
     muted: "I didn't need another\nbudgeting app.",
-    punch: "I needed {a system}." },
+    punch: "I needed\na {system.}" },
 
   { id: '12', slug: 'where-it-is', theme: 'white', tpl: 'A', eyebrow: 'mixed',
     muted: "If the goal is more money,",
@@ -54,14 +54,14 @@ window.POSTS = [
     punch: "You're {guessing}." },
 
   { id: '14', slug: 'same-different', theme: 'glass', tpl: 'B', eyebrow: 'mixed',
-    punch: "Same income.\n{Different feeling}." },
+    punch: "Same income.\n{Different} feeling." },
 
   { id: '15', slug: 'done-thinking', theme: 'glass', tpl: 'A', eyebrow: 'mixed',
     muted: "I didn't want to be\na budgeter.",
-    punch: "I wanted to be\n{done thinking}." },
+    punch: "I wanted to be\n{done} thinking." },
 
   { id: '16', slug: 'white-knuckling', theme: 'glass', tpl: 'B', eyebrow: 'mixed',
-    punch: "Permission to stop\n{white-knuckling}." },
+    punch: "Permission to {stop}\nwhite-knuckling." },
 
   { id: '17', slug: 'budgeting-failing', theme: 'black', tpl: 'A', eyebrow: 'mixed',
     muted: "You're not failing\nat budgeting.",
@@ -69,10 +69,10 @@ window.POSTS = [
 
   { id: '18', slug: 'leak-not-dramatic', theme: 'black', tpl: 'A', eyebrow: 'mixed',
     muted: "The leak isn't dramatic.",
-    punch: "That's why you\ncan't {see it}." },
+    punch: "That's why you\ncan't see {it.}" },
 
   { id: '19', slug: 'nothing-leaked', theme: 'black', tpl: 'B', eyebrow: 'mixed',
-    punch: "Bills paid.\nTaxes covered.\n{Nothing leaked.}" },
+    punch: "Bills paid.\nTaxes covered.\n{Nothing} leaked." },
 
   { id: '20', slug: 'pricing', theme: 'black', tpl: 'B', eyebrow: 'mixed',
     punch: "$14.99 a month.\nOr $129 a year.\n{Save $50.}" },
@@ -86,10 +86,10 @@ window.POSTS = [
 
   { id: '23', slug: 'stop-bracing', theme: 'glass-dark', tpl: 'A', eyebrow: 'mixed',
     muted: "The day you\nstop guessing.",
-    punch: "Is the day you\n{stop bracing}." },
+    punch: "Is the day you\n{stop} bracing." },
 
   { id: '24', slug: 'isnt-yours', theme: 'glass-dark', tpl: 'B', eyebrow: 'mixed',
-    punch: "If 30% isn't moved,\nit {isn't yours}." },
+    punch: "If 30% isn't moved,\nit isn't {yours.}" },
 
   { id: '25', slug: 'freezing', theme: 'white', tpl: 'A', eyebrow: 'mixed',
     muted: "You're not overspending.",
@@ -105,11 +105,11 @@ window.POSTS = [
 
   { id: '28', slug: 'wrong-app', theme: 'black', tpl: 'A', eyebrow: 'mixed',
     muted: "You're not behind.",
-    punch: "You're using\nthe {wrong app}." },
+    punch: "You're using\nthe wrong {app.}" },
 
   { id: '29', slug: 'missing-system', theme: 'green', tpl: 'A', eyebrow: 'mixed',
     muted: "You're not bad at math.",
-    punch: "You're missing\n{a system}." },
+    punch: "You're missing\na {system.}" },
 
   { id: '30', slug: 'hard-mode', theme: 'glass', tpl: 'A', eyebrow: 'mixed',
     muted: "Personal finance\nwas built for W-2s.",
@@ -121,7 +121,7 @@ window.POSTS = [
 
   { id: '32', slug: 'irs-takes', theme: 'black', tpl: 'A', eyebrow: 'mixed',
     muted: "A $4,000 deposit\nfeels like $4,000.",
-    punch: "$1,200 belongs to\n{the IRS}." },
+    punch: "$1,200 belongs to\nthe {IRS.}" },
 
   { id: '33', slug: 'asks-for-nothing', theme: 'page', tpl: 'A', eyebrow: 'mixed',
     muted: "The best money system.",
@@ -129,7 +129,7 @@ window.POSTS = [
 
   { id: '34', slug: 'every-month-guess', theme: 'glass-dark', tpl: 'A', eyebrow: 'mixed',
     muted: "Every month\nyou guess.",
-    punch: "Another\n{$2,000 gone}." },
+    punch: "Another\n$2,000 {gone.}" },
 
   { id: '35', slug: 'yours-isnt', theme: 'green', tpl: 'A', eyebrow: 'mixed',
     muted: "Every budgeting app\nassumes a paycheck.",
@@ -145,23 +145,23 @@ window.POSTS = [
 
   { id: '38', slug: 'too-late', theme: 'page', tpl: 'A', eyebrow: 'mixed',
     muted: "Most apps show what\nalready happened.",
-    punch: "By then it's\n{too late}." },
+    punch: "By then it's\ntoo {late.}" },
 
-  { id: '39', slug: 'variable-income', theme: 'black', tpl: 'A', eyebrow: 'mixed',
+  { id: '39', slug: 'inconsistent-income', theme: 'black', tpl: 'A', eyebrow: 'mixed',
     muted: "It's not\npersonal finance.",
-    punch: "It's {variable}\nincome." },
+    punch: "It's {inconsistent}\nincome." },
 
   { id: '40', slug: 'split-stop-bracing', theme: 'glass-dark', tpl: 'B', eyebrow: 'mixed',
     punch: "Split every deposit.\n{Stop bracing.}" },
 
   { id: '41', slug: 'tired-of-bracing', theme: 'page', tpl: 'B', eyebrow: 'mixed',
-    punch: "I built Able\nso I'd stop\n{bracing}." },
+    punch: "Built so you can\nstop {bracing.}" },
 
   { id: '42', slug: 'i-froze', theme: 'green', tpl: 'B', eyebrow: 'mixed',
-    punch: "Built for the\nversion of me\nthat {froze}." },
+    punch: "Built for everyone\nwho ever {froze.}" },
 
   { id: '43', slug: 'five-buckets', theme: 'white', tpl: 'A', eyebrow: 'mixed',
-    muted: "Taxes. Bills.\nReserve. Debt. Free.",
+    muted: "Taxes. Bills.\nDebt. Reserve. Free.",
     punch: "{Five buckets},\nin order." },
 
   { id: '44', slug: 'move-30', theme: 'glass', tpl: 'A', eyebrow: 'mixed',
@@ -170,23 +170,23 @@ window.POSTS = [
 
   { id: '45', slug: 'starting-point', theme: 'glass-dark', tpl: 'A', eyebrow: 'mixed',
     muted: "You don't need\nto be better.",
-    punch: "You need\na different\n{starting point}." },
+    punch: "You need\na {different}\nstarting point." },
 
   { id: '46', slug: 'mint-replacement', theme: 'white', tpl: 'A', eyebrow: 'mixed',
     muted: "Coming from Mint?",
-    punch: "The replacement\n{still assumes}\na paycheck." },
+    punch: "The replacement\nstill {assumes}\na paycheck." },
 
   { id: '47', slug: 'every-dollar-assigned', theme: 'black', tpl: 'A', eyebrow: 'mixed',
     muted: "Asked to assign\nevery dollar.",
-    punch: "Money you\n{don't have} yet." },
+    punch: "Money you\n{don't} have yet." },
 
   { id: '48', slug: 'two-income-households', theme: 'page', tpl: 'A', eyebrow: 'mixed',
     muted: "Built for\ntwo-income\nhouseholds.",
-    punch: "Yours {isn't one}." },
+    punch: "Yours isn't {one.}" },
 
   { id: '49', slug: 'doesnt-fix-leak', theme: 'white', tpl: 'A', eyebrow: 'mixed',
     muted: "Cancels your\nsubscriptions.",
-    punch: "Doesn't fix\n{the leak}." },
+    punch: "Doesn't fix\nthe {leak.}" },
 
   { id: '50', slug: 'before-you-see-it', theme: 'green', tpl: 'A', eyebrow: 'mixed',
     muted: "30% of every deposit.",
@@ -196,11 +196,11 @@ window.POSTS = [
     punch: "Three months of slow.\nWhat does that\n{actually cost}?" },
 
   { id: '52', slug: 'pay-yourself-wrong', theme: 'black', tpl: 'A', eyebrow: 'mixed',
-    muted: "Pay yourself last.",
-    punch: "Pay yourself\n{wrong}." },
+    muted: "Bills + tax first.",
+    punch: "Then {yourself.}" },
 
   { id: '53', slug: 'cpa-didnt-mention', theme: 'glass', tpl: 'B', eyebrow: 'mixed',
-    punch: "The retirement\nplan your CPA\n{didn't mention}." },
+    punch: "The retirement\nplan your CPA\n{didn't} mention." },
 
   { id: '54', slug: 'smallest-month', theme: 'page', tpl: 'B', eyebrow: 'mixed',
     punch: "What's the smallest\nmonth you could\n{survive}?" },
@@ -222,7 +222,7 @@ window.POSTS = [
   // 57 — L1 Sat · PHILOSOPHICAL PROBLEM
   { id: '57', slug: 'wrong-tool-handed', theme: 'green', tpl: 'A', eyebrow: 'mixed',
     muted: "You're not bad with money.",
-    punch: "You've been handed\nthe {wrong tool}." },
+    punch: "You've been handed\nthe {wrong} tool." },
 
   // 58 — L2 Mon · PROBLEM PEAK (the loop)
   { id: '58', slug: 'the-loop', theme: 'black', tpl: 'A', eyebrow: 'mixed',
@@ -232,7 +232,7 @@ window.POSTS = [
   // 59 — L2 Thu · PHILOSOPHICAL ("you shouldn't have to")
   { id: '59', slug: 'not-a-cfo', theme: 'white', tpl: 'A', eyebrow: 'mixed',
     muted: "You shouldn't have to be a CFO",
-    punch: "to have\na {calm month}." },
+    punch: "to have a\n{calm} month." },
 
   // 60 — L2 Sat · BRIDGE (boring on purpose)
   { id: '60', slug: 'boring-on-purpose', theme: 'page', tpl: 'A', eyebrow: 'mixed',
@@ -251,7 +251,9 @@ window.POSTS = [
 
   // 63 — L3 Sat · CTA CLOSE
   { id: '63', slug: 'free-seven-days', theme: 'green', tpl: 'B', eyebrow: 'mixed', center: true,
-    punch: "Free for {30 days}.\n{becomeable.app/get-able}" },
+    punch: "Free for\n{30 days.}",
+    meta: 'becomeable.app/get-able',
+    appStoreBadge: true },
 
   // ─── Persona-targeted posts (added 2026-05-08, layer "Persona") ───
   // 4 personas × 2 posts each. Each speaks the persona's own moment in
@@ -263,7 +265,7 @@ window.POSTS = [
 
   { id: '65', slug: 'surge-ended', cat: 'Persona', theme: 'black', tpl: 'A', eyebrow: 'gig',
     muted: "Surge ended\nat 9 PM.",
-    punch: "The bills don't\n{know that.}" },
+    punch: "The bills don't\nknow {that.}" },
 
   { id: '66', slug: 'algorithm-cut-views', cat: 'Persona', theme: 'green', tpl: 'A', eyebrow: 'creator',
     muted: "Algorithm cut\nyour views in half.",
@@ -275,11 +277,11 @@ window.POSTS = [
 
   { id: '68', slug: 'commission-then-silence', cat: 'Persona', theme: 'page', tpl: 'A', eyebrow: 'commission',
     muted: "$8k commission lands.",
-    punch: "Then six weeks\n{of silence.}" },
+    punch: "Then six weeks\nof {silence.}" },
 
   { id: '69', slug: 'big-deal-not-whole-month', cat: 'Persona', theme: 'glass-dark', tpl: 'A', eyebrow: 'commission',
     muted: "Big deal closed.",
-    punch: "Don't make it\nyour {whole month.}" },
+    punch: "Don't make it\nyour {whole} month." },
 
   { id: '70', slug: 'net-60-net-zero', cat: 'Persona', theme: 'white', tpl: 'A', eyebrow: 'business',
     muted: "Net-60 invoice.",
@@ -287,7 +289,7 @@ window.POSTS = [
 
   { id: '71', slug: 'last-on-payroll', cat: 'Persona', theme: 'green', tpl: 'A', eyebrow: 'business',
     muted: "You're the last person\non payroll.",
-    punch: "{Pay yourself}\nautomatically." },
+    punch: "Pay {yourself}\nautomatically." },
 
   // ─── Tactical money tips (added 2026-05-08, layer "Tip") ───
   // 12 imperative actionable tips. All use the main `mixed` eyebrow.
@@ -324,20 +326,20 @@ window.POSTS = [
     punch: "{move it.}" },
 
   { id: '80', slug: 'same-rule-per-deposit', cat: 'Tip', theme: 'page', tpl: 'A', eyebrow: 'mixed',
-    muted: "Variable income\nneeds variable rules.",
+    muted: "Inconsistent income\nneeds different rules.",
     punch: "Same rule.\n{Per deposit.}" },
 
   { id: '81', slug: 'one-pile-five-jobs', cat: 'Tip', theme: 'green', tpl: 'A', eyebrow: 'mixed',
     muted: "One pile.\nFive jobs.",
     punch: "That's the\n{whole system.}" },
 
-  { id: '82', slug: 'pay-yourself-first-tip', cat: 'Tip', theme: 'page', tpl: 'A', eyebrow: 'mixed',
+  { id: '82', slug: 'pay-yourself-automatically-tip', cat: 'Tip', theme: 'page', tpl: 'A', eyebrow: 'mixed',
     muted: "Don't pay yourself\nlast.",
     punch: "Pay yourself\n{automatically.}" },
 
   { id: '83', slug: 'every-deposit-good-month', cat: 'Tip', theme: 'white', tpl: 'A', eyebrow: 'mixed',
     muted: "Don't wait for\na 'good month.'",
-    punch: "Every deposit\nis a {good month.}" },
+    punch: "Every deposit\nis a good {month.}" },
 
   // ─── Stat-fact posts (added 2026-05-08, layer "Stat") ───
   // Each stat is real + cited via the meta footer (replaces the default
@@ -362,7 +364,7 @@ window.POSTS = [
 
   { id: '87', slug: 'stat-58-percent-no-3mo-savings', cat: 'Stat', theme: 'white', tpl: 'A', eyebrow: 'gig', size: 'md',
     muted: "58% of gig workers",
-    punch: "can't cover\n{3 months}\nof expenses.",
+    punch: "can't cover\n{3} months\nof expenses.",
     meta: 'Federal Reserve SHED, 2024' },
 
   { id: '88', slug: 'stat-third-couldnt-make-rent', cat: 'Stat', theme: 'page', tpl: 'A', eyebrow: 'gig',
@@ -372,7 +374,7 @@ window.POSTS = [
 
   { id: '89', slug: 'stat-15-percent-no-retirement', cat: 'Stat', theme: 'white', tpl: 'A', eyebrow: 'mixed',
     muted: "15% of self-employed\nworkers",
-    punch: "{never save}\nfor retirement.",
+    punch: "never {save}\nfor retirement.",
     meta: 'Transamerica, 2019' },
 
   { id: '90', slug: 'stat-half-skip-paying-themselves', cat: 'Stat', theme: 'green', tpl: 'A', eyebrow: 'business',
@@ -382,17 +384,17 @@ window.POSTS = [
 
   { id: '91', slug: 'stat-80-percent-cash-flow-stress', cat: 'Stat', theme: 'page', tpl: 'A', eyebrow: 'business',
     muted: "80% of small business\nowners deal with\ncash flow stress.",
-    punch: "{Multiple times}\na year.",
+    punch: "{Multiple} times\na year.",
     meta: 'Bluevine, 2026' },
 
   { id: '92', slug: 'stat-51-percent-uneven-cash-flow', cat: 'Stat', theme: 'white', tpl: 'A', eyebrow: 'business',
     muted: "51% of small employer\nfirms cite",
-    punch: "uneven {cash flow}\nas their biggest\nfinancial challenge.",
+    punch: "uneven cash {flow}\nas their biggest\nfinancial challenge.",
     meta: 'Federal Reserve, 2025' },
 
   { id: '93', slug: 'stat-26-percent-confident-on-taxes', cat: 'Stat', theme: 'glass-dark', tpl: 'A', eyebrow: 'mixed',
     muted: "Only 26% of self-employed\nfeel confident about taxes.",
-    punch: "The rest pay\n{from fear.}",
+    punch: "The rest pay\nfrom {fear.}",
     meta: 'FreshBooks, 2025' },
 
   // ── Stats singles (added 2026-05-14 — data-led punch lines) ──
@@ -447,7 +449,7 @@ window.CAROUSELS = [
         meta: '2 / 7' },
       { tpl: 'A', eyebrow: 'freelance', size: 'md',
         muted: "They show what\nalready happened.",
-        punch: "By then it's\n{too late}.",
+        punch: "By then it's\ntoo {late.}",
         meta: '3 / 7' },
       { tpl: 'A', eyebrow: 'freelance', size: 'md',
         muted: "Spreadsheets ask you\nto be an accountant.",
@@ -458,7 +460,7 @@ window.CAROUSELS = [
         punch: "It's the\n{assumption}.",
         meta: '5 / 7' },
       { tpl: 'A', eyebrow: 'freelance', size: 'md',
-        muted: "Variable income\nneeds a system.",
+        muted: "Inconsistent income\nneeds a system.",
         punch: "That starts\nthe {second}\nit hits.",
         meta: '6 / 7' },
       { tpl: 'B', eyebrow: 'freelance', size: 'md',
@@ -496,7 +498,7 @@ window.CAROUSELS = [
         punch: "It's a {Day 1}\nproblem.",
         meta: '7 / 8' },
       { tpl: 'B', eyebrow: 'freelance', size: 'md',
-        punch: "{Free} for 30 days.\nBuilt for\nvariable income.",
+        punch: "{Free} for 30 days.\nBuilt for\ninconsistent income.",
         meta: 'becomeable.app/get-able' },
   ] },
 
@@ -591,7 +593,7 @@ window.CAROUSELS = [
         punch: "Fills {automatically}.",
         meta: '6 / 7' },
       { tpl: 'B', eyebrow: 'mixed', size: 'md',
-        punch: "{Free} for 30 days.\nBuilt for\nvariable income.",
+        punch: "{Free} for 30 days.\nBuilt for\ninconsistent income.",
         meta: 'becomeable.app/get-able' },
   ] },
 
@@ -655,7 +657,7 @@ window.CAROUSELS = [
         punch: "Not panic.\n{Just Tuesday.}",
         meta: '6 / 7' },
       { tpl: 'B', eyebrow: 'mixed', size: 'md',
-        punch: "{Free} for 30 days.\nBuilt for\nvariable income.",
+        punch: "{Free} for 30 days.\nBuilt for\ninconsistent income.",
         meta: 'becomeable.app/get-able' },
   ] },
 
@@ -699,7 +701,7 @@ window.CAROUSELS = [
         meta: '2 / 7' },
       { tpl: 'A', eyebrow: 'mixed', size: 'md',
         muted: "Saving requires\nleft over.",
-        punch: "Variable income\nrarely {has it}.",
+        punch: "Inconsistent income\nrarely {has it}.",
         meta: '3 / 7' },
       { tpl: 'A', eyebrow: 'mixed', size: 'md',
         muted: "The fix isn't\nmore discipline.",
@@ -742,7 +744,7 @@ window.CAROUSELS = [
         punch: "The math\nchooses {for you}.",
         meta: '6 / 7' },
       { tpl: 'B', eyebrow: 'mixed', size: 'md',
-        punch: "{Free} for 30 days.\nBuilt for\nvariable income.",
+        punch: "{Free} for 30 days.\nBuilt for\ninconsistent income.",
         meta: 'becomeable.app/get-able' },
   ] },
 
@@ -757,11 +759,11 @@ window.CAROUSELS = [
         meta: '2 / 7' },
       { tpl: 'A', eyebrow: 'Day 1', size: 'md',
         muted: "Bills, debts, income.",
-        punch: "{All detected.}\nYou tap Apply.",
+        punch: "All {detected.}\nYou tap Apply.",
         meta: '3 / 7' },
       { tpl: 'A', eyebrow: 'Day 2', size: 'md',
         muted: "First deposit lands.",
-        punch: "{Already split.}\nTax, bills, reserve.",
+        punch: "Already {split.}\nTax, bills, reserve.",
         meta: '4 / 7' },
       { tpl: 'A', eyebrow: 'Day 4', size: 'md',
         muted: "First bill comes due.",
@@ -823,7 +825,7 @@ window.CAROUSELS = [
         punch: "Wanting to\n{try it} first.",
         meta: '5 / 6' },
       { tpl: 'B', eyebrow: 'mixed', size: 'md',
-        punch: "{Free} for 30 days.\nThen pick\neither one.",
+        punch: "{Free} for 30 days.\nSame access\neither way.",
         meta: 'becomeable.app/get-able' },
   ] },
 
@@ -846,7 +848,7 @@ window.CAROUSELS = [
         meta: '4 / 7' },
       { tpl: 'A', eyebrow: 'Not', size: 'md',
         muted: "We don't shame you",
-        punch: "for {small purchases.}",
+        punch: "for {small} purchases.",
         meta: '5 / 7' },
       { tpl: 'B', eyebrow: 'mixed', size: 'md',
         punch: "Just one thing:\nsplit every {deposit}.",
@@ -886,7 +888,7 @@ window.CAROUSELS = [
         punch: "Same money.\n{More work.}",
         meta: '7 / 8' },
       { tpl: 'B', eyebrow: 'mixed', size: 'md',
-        punch: "{Free} for 30 days.\nBuilt for\nvariable income.",
+        punch: "{Free} for 30 days.\nBuilt for\ninconsistent income.",
         meta: 'becomeable.app/get-able' },
   ] },
 
@@ -923,7 +925,7 @@ window.CAROUSELS = [
   // C18 — Pay yourself a steady paycheck (green · pricing)
   { id: 'C18', slug: 'steady-paycheck', theme: 'green', format: 'tiktok', slides: [
       { tpl: 'B', eyebrow: 'Swipe →', size: 'md',
-        punch: "Your income\nis lumpy.\nYour bills {are not}.",
+        punch: "Your income\nis inconsistent.\nYour bills {are not}.",
         meta: '1 / 7' },
       { tpl: 'A', eyebrow: 'mixed', size: 'md',
         muted: "Underpay:\nfeel broke.",
@@ -977,7 +979,7 @@ window.CAROUSELS = [
         punch: "Same number.\n{Same day.}",
         meta: '6 / 7' },
       { tpl: 'B', eyebrow: 'creator', size: 'md',
-        punch: "{Free} for 30 days.\nBuilt for\nvariable income.",
+        punch: "{Free} for 30 days.\nBuilt for\ninconsistent income.",
         meta: 'becomeable.app/get-able' },
   ] },
 
@@ -996,7 +998,7 @@ window.CAROUSELS = [
         meta: '3 / 7' },
       { tpl: 'A', eyebrow: 'mixed', size: 'md',
         muted: "Your Floor.",
-        punch: "The number that\n{doesn't change}.",
+        punch: "The number that\n{doesn't} change.",
         meta: '4 / 7' },
       { tpl: 'A', eyebrow: 'mixed', size: 'md',
         muted: "Everything else.",
@@ -1066,14 +1068,14 @@ window.CAROUSELS = [
         punch: "Rainy days.\nFunded {early}.",
         meta: '6 / 7' },
       { tpl: 'B', eyebrow: 'gig', size: 'md',
-        punch: "{Free} for 30 days.\nBuilt for\nvariable income.",
+        punch: "{Free} for 30 days.\nBuilt for\ninconsistent income.",
         meta: 'becomeable.app/get-able' },
   ] },
 
   // C23 — Etsy seller income system (glass-dark · pricing)
   { id: 'C23', slug: 'etsy-seller', theme: 'glass-dark', format: 'tiktok', slides: [
       { tpl: 'B', eyebrow: 'Swipe →', size: 'md',
-        punch: "How Etsy sellers\nbudget {variable sales.}",
+        punch: "How Etsy sellers\nbudget {inconsistent} sales.",
         meta: '1 / 7' },
       { tpl: 'A', eyebrow: 'mixed', size: 'md',
         muted: "Q4 is 40%\nof revenue.",
@@ -1132,7 +1134,7 @@ window.CAROUSELS = [
   // C25 — Commission income survival (black · free trial)
   { id: 'C25', slug: 'commission-income', theme: 'black', format: 'tiktok', slides: [
       { tpl: 'B', eyebrow: 'Swipe →', size: 'md',
-        punch: "Commission\n{survival guide}.",
+        punch: "Commission\nsurvival {guide.}",
         meta: '1 / 7' },
       { tpl: 'A', eyebrow: 'commission', size: 'md',
         muted: "Commission is a job.",
@@ -1143,7 +1145,7 @@ window.CAROUSELS = [
         meta: '3 / 7' },
       { tpl: 'A', eyebrow: 'commission', size: 'md',
         muted: "You're not\nbad with money.",
-        punch: "You're using\nthe {wrong brain}.",
+        punch: "You're using\nthe {wrong} brain.",
         meta: '4 / 7' },
       { tpl: 'A', eyebrow: 'commission', size: 'md',
         muted: "Route every check.",
@@ -1153,7 +1155,7 @@ window.CAROUSELS = [
         punch: "Slow months.\n{Funded ahead.}",
         meta: '6 / 7' },
       { tpl: 'B', eyebrow: 'commission', size: 'md',
-        punch: "{Free} for 30 days.\nBuilt for\nvariable income.",
+        punch: "{Free} for 30 days.\nBuilt for\ninconsistent income.",
         meta: 'becomeable.app/get-able' },
   ] },
 
@@ -1168,7 +1170,7 @@ window.CAROUSELS = [
         meta: '2 / 7' },
       { tpl: 'A', eyebrow: 'business', size: 'md',
         muted: "No unemployment.\nNo severance.",
-        punch: "No {paid leave.}",
+        punch: "No paid {leave.}",
         meta: '3 / 7' },
       { tpl: 'A', eyebrow: 'business', size: 'md',
         muted: "Your baseline.",
@@ -1209,7 +1211,7 @@ window.CAROUSELS = [
         meta: '5 / 7' },
       { tpl: 'A', eyebrow: 'mixed', size: 'md',
         muted: "If you guess.",
-        punch: "{Err high.}\nA refund beats a bill.",
+        punch: "{Set higher.}\nA refund beats a bill.",
         meta: '6 / 7' },
       { tpl: 'B', eyebrow: 'mixed', size: 'md',
         punch: "Built for\ninconsistent\n{income}.",
@@ -1238,7 +1240,7 @@ window.CAROUSELS = [
         punch: "Tie out at {year-end}.",
         meta: '5 / 6' },
       { tpl: 'B', eyebrow: 'mixed', size: 'md',
-        punch: "{Free} for 30 days.\nBuilt for\nvariable income.",
+        punch: "{Free} for 30 days.\nBuilt for\ninconsistent income.",
         meta: 'becomeable.app/get-able' },
   ] },
 
@@ -1274,7 +1276,7 @@ window.CAROUSELS = [
   // C34 — Get out of debt on inconsistent income (multi: black → green · free trial)
   { id: 'C34', slug: 'get-out-of-debt', theme: 'black', format: 'tiktok', slides: [
       { tpl: 'B', eyebrow: 'Swipe →', size: 'md',
-        punch: "Debt with\n{variable} income.",
+        punch: "Debt with\n{inconsistent} income.",
         meta: '1 / 7' },
       { tpl: 'A', eyebrow: 'mixed', size: 'md',
         muted: "The treadmill.",
@@ -1297,12 +1299,12 @@ window.CAROUSELS = [
         punch: "Attack {principal}.",
         meta: '6 / 7' },
       { tpl: 'B', eyebrow: 'mixed', size: 'md',
-        punch: "{Free} for 30 days.\nBuilt for\nvariable income.",
+        punch: "{Free} for 30 days.\nBuilt for\ninconsistent income.",
         meta: 'becomeable.app/get-able' },
   ] },
 
   // C35 — Improve your credit score (page · pricing)
-  { id: 'C35', slug: 'credit-score', theme: 'page', format: 'tiktok', slides: [
+  { id: 'C35', slug: 'credit-score', theme: 'page', flagged: 'credit-edu', format: 'tiktok', slides: [
       { tpl: 'B', eyebrow: 'Swipe →', size: 'md',
         punch: "Your credit\nin {6 slides}.",
         meta: '1 / 7' },
@@ -1331,8 +1333,8 @@ window.CAROUSELS = [
         meta: 'becomeable.app/get-able' },
   ] },
 
-  // C36 — Owner pay, automated (the variable-income version) (green · website)
-  { id: 'C36', slug: 'pay-yourself-first', theme: 'green', format: 'tiktok', slides: [
+  // C36 — Owner pay, automated (the inconsistent-income version) (green · website)
+  { id: 'C36', slug: 'pay-yourself-automatically', theme: 'green', format: 'tiktok', slides: [
       { tpl: 'B', eyebrow: 'Swipe →', size: 'md',
         punch: "Pay {yourself}\nautomatically.",
         meta: '1 / 7' },
@@ -1387,7 +1389,7 @@ window.CAROUSELS = [
         punch: "Once your reserve\nis full?\nThe next step\n{is real.}",
         meta: '7 / 8' },
       { tpl: 'B', eyebrow: 'mixed', size: 'md',
-        punch: "{Free} for 30 days.\nBuilt for\nvariable income.",
+        punch: "{Free} for 30 days.\nBuilt for\ninconsistent income.",
         meta: 'becomeable.app/get-able' },
   ] },
 
@@ -1430,7 +1432,7 @@ window.CAROUSELS = [
         meta: '1 / 8' },
       { tpl: 'A', eyebrow: 'Type 1', size: 'md',
         muted: "The Freezer.",
-        punch: "Money came.\n{Never moved.}",
+        punch: "Money came.\n{Never} moved.",
         meta: '2 / 8' },
       { tpl: 'A', eyebrow: 'Type 2', size: 'md',
         muted: "The Leaker.",
@@ -1441,7 +1443,7 @@ window.CAROUSELS = [
         punch: "Relief. Spend.\n{Hate. Repeat.}",
         meta: '4 / 8' },
       { tpl: 'B', eyebrow: 'mixed', size: 'md',
-        punch: "Same person.\n{Different week.}",
+        punch: "Same person.\n{Different} week.",
         meta: '5 / 8' },
       { tpl: 'A', eyebrow: 'mixed', size: 'md',
         muted: "It's not willpower.",
@@ -1449,7 +1451,7 @@ window.CAROUSELS = [
         meta: '6 / 8' },
       { tpl: 'A', eyebrow: 'mixed', size: 'md',
         muted: "Built for you,",
-        punch: "if your paycheck\n{doesn't exist}.",
+        punch: "if your paycheck\ndoesn't {exist.}",
         meta: '7 / 8' },
       { tpl: 'A', eyebrow: 'mixed', size: 'md',
         muted: "$14.99 a month.",
@@ -1468,21 +1470,21 @@ window.CAROUSELS = [
         meta: '2 / 8' },
       { tpl: 'A', eyebrow: 'mixed', size: 'md',
         muted: "They give you envelopes",
-        punch: "for {next month}.\nYou don't know yet.",
+        punch: "for {next} month.\nYou don't know yet.",
         meta: '3 / 8' },
       { tpl: 'A', eyebrow: 'mixed', size: 'md',
         muted: "They expect",
-        punch: "a {fixed surplus}.\nYou have variable.",
+        punch: "a {fixed} surplus.\nYou have inconsistent.",
         meta: '4 / 8' },
       { tpl: 'A', eyebrow: 'mixed', size: 'md',
         muted: "They tell you to",
-        punch: "{save more}.\nThat's a wish.",
+        punch: "save more.\nThat's a {wish.}",
         meta: '5 / 8' },
       { tpl: 'B', eyebrow: 'mixed', size: 'md',
         punch: "You don't need\nmore {discipline}.",
         meta: '6 / 8' },
       { tpl: 'B', eyebrow: 'mixed', size: 'md',
-        punch: "You need a system\nthat {doesn't pretend.}",
+        punch: "You need a system\nthat doesn't {pretend.}",
         meta: '7 / 8' },
       { tpl: 'A', eyebrow: 'mixed', size: 'md',
         muted: "$14.99 a month.",
@@ -1521,7 +1523,7 @@ window.CAROUSELS = [
         meta: '7 / 8' },
       { tpl: 'A', eyebrow: 'mixed', size: 'md',
         muted: "Free for 30 days.",
-        punch: "$14.99/mo.\n{Or $129/yr.}",
+        punch: "$14.99/mo.\n{$129/yr.}",
         meta: 'becomeable.app/get-able' },
   ] },
 
@@ -1574,7 +1576,7 @@ window.CAROUSELS = [
         meta: '3 / 6' },
       { tpl: 'A', eyebrow: 'Step 3', size: 'md',
         muted: "Tap each move off",
-        punch: "once you've done it.\nLittle {dopamine hit.}",
+        punch: "once you've done it.\nThe floor {holds.}",
         meta: '4 / 6' },
       { tpl: 'B', eyebrow: 'mixed', size: 'md',
         punch: "Debt drops.\nSavings grow.\nThe {fear fades.}",
@@ -1615,7 +1617,7 @@ window.CAROUSELS = [
         meta: '7 / 8' },
       { tpl: 'A', eyebrow: 'mixed', size: 'md',
         muted: "Free for 30 days.",
-        punch: "{becomeable.app/get-able}",
+        punch: "becomeable.app/get-able",
         meta: 'becomeable.app/get-able' },
   ] },
 
@@ -1634,7 +1636,7 @@ window.CAROUSELS = [
         meta: '2 / 6' },
       { tpl: 'A', eyebrow: 'mixed', size: 'md',
         muted: "Reserve.",
-        punch: "For expected variability.\nSlow weeks.\n{Light months.}",
+        punch: "For expected ups + downs.\nSlow weeks.\n{Light months.}",
         meta: '3 / 6' },
       { tpl: 'A', eyebrow: 'mixed', size: 'md',
         muted: "Emergency fund:\n3 to 6 months\nof essentials.",
@@ -1650,14 +1652,14 @@ window.CAROUSELS = [
   ] },
 
 
-  // C48 — Why monthly budgets fail with variable income (page · website)
+  // C48 — Why monthly budgets fail with inconsistent income (page · website)
   { id: 'C48', slug: 'monthly-budgets-fail', cat: 'Edu', theme: 'page', format: 'tiktok', slides: [
       { tpl: 'B', eyebrow: 'Swipe →', size: 'md',
-        punch: "Why monthly\nbudgets fail with\n{variable income.}",
+        punch: "Why monthly\nbudgets fail with\n{inconsistent income.}",
         meta: '1 / 6' },
       { tpl: 'A', eyebrow: 'mixed', size: 'md',
         muted: "Monthly budgets assume",
-        punch: "a {steady paycheck.}\nYours isn't.",
+        punch: "a steady {paycheck.}\nYours isn't.",
         meta: '2 / 6' },
       { tpl: 'A', eyebrow: 'mixed', size: 'md',
         muted: "You sit down\non the 1st.\nYou divide what\nyou have.",
@@ -1702,7 +1704,7 @@ window.CAROUSELS = [
         punch: "Paying themselves\n{last.}",
         meta: '6 / 7' },
       { tpl: 'B', eyebrow: 'mixed', size: 'md',
-        punch: "Built for variable income.\nFree for {30 days.}",
+        punch: "Built for inconsistent income.\nFree for {30 days.}",
         meta: 'becomeable.app/get-able' },
   ] },
 
@@ -1743,11 +1745,11 @@ window.CAROUSELS = [
   // C51 — Failure stakes / "The cost of waiting" (all white — stark, lets numbers hit)
   { id: 'C51', slug: 'cost-of-waiting', theme: 'white', format: 'tiktok', slides: [
       { tpl: 'A', eyebrow: 'Swipe →', size: 'md',
-        punch: "By the 30th,\n{$500 to $1,000}\nis gone.",
+        punch: "By the 30th,\n$500 to $1,000\n{is gone.}",
         meta: '1 / 6' },
       { tpl: 'A', eyebrow: 'mixed', size: 'md',
         muted: "Six months waiting.",
-        punch: "{$3,000 to $6,000}\nyou didn't save.",
+        punch: "$3,000 to $6,000\nyou {didn't save.}",
         meta: '2 / 6' },
       { tpl: 'A', eyebrow: 'mixed', size: 'md',
         muted: "One year waiting.",
@@ -1807,7 +1809,7 @@ window.CAROUSELS = [
         meta: '2 / 5' },
       { tpl: 'A', eyebrow: 'mixed', size: 'md',
         muted: "Most apps",
-        punch: "assume a\n{steady paycheck.}",
+        punch: "assume a\n{steady} paycheck.",
         meta: '3 / 5' },
       { tpl: 'A', eyebrow: 'mixed', size: 'md',
         muted: "Able is built",
@@ -1873,7 +1875,7 @@ window.CAROUSELS = [
         meta: '2 / 5' },
       { tpl: 'C', eyebrow: 'Step 2', size: 'md', shot: '02-allocation-flow', noWordmark: true,
         muted: "Able tells you",
-        punch: "{where it goes.}",
+        punch: "{it goes.}",
         meta: '3 / 5' },
       { tpl: 'C', eyebrow: 'Step 3', size: 'md', shot: '04-score',
         muted: "And then,",
@@ -1899,7 +1901,7 @@ window.CAROUSELS = [
         meta: '3 / 6' },
       { tpl: 'A', eyebrow: 'mixed', size: 'md',
         muted: "I am able to",
-        punch: "predict\n{what is coming.}",
+        punch: "predict\n{is coming.}",
         meta: '4 / 6' },
       { tpl: 'A', eyebrow: 'mixed', size: 'md',
         muted: "I am able to",
@@ -1917,7 +1919,7 @@ window.CAROUSELS = [
         meta: '1 / 6' },
       { tpl: 'C', eyebrow: 'Day 1', size: 'md', shot: '01-dashboard',
         muted: "Day 1.",
-        punch: "Link your bank.\n{Set your floor.}",
+        punch: "Link your bank.\n{your floor.}",
         meta: '2 / 6' },
       { tpl: 'C', eyebrow: 'First deposit', size: 'md', shot: '02-allocation-flow',
         muted: "First deposit lands.",
@@ -1939,7 +1941,7 @@ window.CAROUSELS = [
   // C59 — Day 1 with Able (all glass — counter-narrative, hopeful)
   { id: 'C59', slug: 'day-one-with-able', theme: 'glass', format: 'tiktok', slides: [
       { tpl: 'A', eyebrow: 'Swipe →', size: 'md', noWordmark: true,
-        punch: "Day 1\n{with Able.}",
+        punch: "Day 1\nwith {Able.}",
         meta: '1 / 6' },
       { tpl: 'C', eyebrow: 'Day 1', size: 'md', shot: '01-dashboard',
         muted: "Money comes in.",
@@ -1947,15 +1949,15 @@ window.CAROUSELS = [
         meta: '2 / 6' },
       { tpl: 'C', eyebrow: 'Day 7', size: 'md', shot: '03-plan-bills',
         muted: "Day 7.",
-        punch: "No snack hole.\n{Bills covered.}",
+        punch: "No snack hole.\nBills {covered.}",
         meta: '3 / 6' },
       { tpl: 'C', eyebrow: 'Day 14', size: 'md', shot: '05-coach',
         muted: "Day 14.",
-        punch: "{No leak.}\nThe plan holds.",
+        punch: "No {leak.}\nThe plan holds.",
         meta: '4 / 6' },
       { tpl: 'C', eyebrow: 'Day 30', size: 'md', shot: '04-score',
         muted: "Day 30.",
-        punch: "You know\n{where it went.}",
+        punch: "You know\nit {went.}",
         meta: '5 / 6' },
       { tpl: 'A', eyebrow: 'mixed', size: 'md',
         punch: "Try {30 days.}\nFree.",
@@ -1975,15 +1977,15 @@ window.CAROUSELS = [
         meta: '1 / 6' },
       { tpl: 'A', eyebrow: 'mixed', size: 'md',
         muted: "Snowball.",
-        punch: "Smallest balance\nfirst.\n{Quick wins.}",
+        punch: "Smallest balance\nfirst.\nQuick {wins.}",
         meta: '2 / 6' },
       { tpl: 'A', eyebrow: 'mixed', size: 'md',
         muted: "Avalanche.",
-        punch: "Highest rate\nfirst.\n{Pure math.}",
+        punch: "Highest rate\nfirst.\nPure {math.}",
         meta: '3 / 6' },
       { tpl: 'A', eyebrow: 'mixed', size: 'md',
         muted: "The truth.",
-        punch: "The one you\n{actually do}\nwins.",
+        punch: "The one you\n{actually}\ndo wins.",
         meta: '4 / 6' },
       { tpl: 'C', eyebrow: 'mixed', size: 'md', shot: '10-debts', noWordmark: true,
         muted: "Able tracks",
@@ -1995,7 +1997,7 @@ window.CAROUSELS = [
   ] },
 
   // C61 — Credit utilization (credit cluster)
-  { id: 'C61', slug: 'credit-utilization-hack', theme: 'page', format: 'tiktok', slides: [
+  { id: 'C61', slug: 'credit-utilization-hack', theme: 'page', flagged: 'credit-edu', format: 'tiktok', slides: [
       { tpl: 'A', eyebrow: 'Swipe →', size: 'md',
         punch: "The biggest\n{credit score}\nhack.",
         meta: '1 / 5' },
@@ -2023,7 +2025,7 @@ window.CAROUSELS = [
         meta: '1 / 6' },
       { tpl: 'A', eyebrow: 'mixed', size: 'md',
         muted: "Main income?",
-        punch: "{25 to 30%}\nof every check.",
+        punch: "{30%.}\nof every check.",
         meta: '2 / 6' },
       { tpl: 'A', eyebrow: 'mixed', size: 'md',
         muted: "Side hustle?",
@@ -2049,11 +2051,11 @@ window.CAROUSELS = [
         meta: '1 / 5' },
       { tpl: 'A', eyebrow: 'mixed', size: 'md',
         muted: "3 months",
-        punch: "of expenses\nwon't cover\n{slow months.}",
+        punch: "of expenses\nwon't cover\nslow {months.}",
         meta: '2 / 5' },
       { tpl: 'A', eyebrow: 'mixed', size: 'md',
         muted: "What you need.",
-        punch: "3 months of\n{baseline income.}",
+        punch: "3 months of\n{baseline} income.",
         meta: '3 / 5' },
       { tpl: 'A', eyebrow: 'mixed', size: 'md',
         muted: "The difference.",
@@ -2064,7 +2066,7 @@ window.CAROUSELS = [
         meta: 'becomeable.app/get-able' },
   ] },
 
-  // C64 — Why "save 10%" doesn't work (PYF cluster, variable income)
+  // C64 — Why "save 10%" doesn't work (PYF cluster, inconsistent income)
   { id: 'C64', slug: 'save-10-percent-doesnt-work', theme: 'green', format: 'tiktok', slides: [
       { tpl: 'A', eyebrow: 'Swipe →', size: 'md',
         punch: "Why {save 10%}\ndoesn't work.",
@@ -2115,7 +2117,7 @@ window.CAROUSELS = [
         meta: '1 / 5' },
       { tpl: 'A', eyebrow: 'mixed', size: 'md',
         muted: "Profit First.",
-        punch: "5 buckets.\n{Business-focused.}",
+        punch: "5 buckets.\nBusiness-{focused.}",
         meta: '2 / 5' },
       { tpl: 'A', eyebrow: 'mixed', size: 'md',
         muted: "Pay Yourself First.",
@@ -2137,7 +2139,7 @@ window.CAROUSELS = [
         meta: '1 / 6' },
       { tpl: 'A', eyebrow: 'Day 1', size: 'md',
         muted: "Day 1.",
-        punch: "Money in.\n{Just in time.}",
+        punch: "Money in.\n{in time.}",
         meta: '2 / 6' },
       { tpl: 'A', eyebrow: 'Day 7', size: 'md',
         muted: "Day 7.",
@@ -2163,7 +2165,7 @@ window.CAROUSELS = [
         meta: '1 / 5' },
       { tpl: 'A', eyebrow: 'mixed', size: 'md',
         muted: "Hobby.",
-        punch: "Burns time.\n{Pays nothing.}",
+        punch: "Burns time.\nPays {nothing.}",
         meta: '2 / 5' },
       { tpl: 'A', eyebrow: 'mixed', size: 'md',
         muted: "Business.",
@@ -2214,11 +2216,11 @@ window.CAROUSELS = [
         meta: '1 / 5' },
       { tpl: 'A', eyebrow: 'creator', size: 'md',
         muted: "Sponsorship hit.",
-        punch: "Next month is\n{a question mark.}",
+        punch: "Next month is\n{question mark.}",
         meta: '2 / 5' },
       { tpl: 'C', eyebrow: 'creator', size: 'md', shot: '02-allocation-flow',
         muted: "AdSense, sponsor,",
-        punch: "affiliate.\n{All routed\nthe same.}",
+        punch: "affiliate.\nAll routed\n{the same.}",
         meta: '3 / 5' },
       { tpl: 'C', eyebrow: 'creator', size: 'md', shot: '04-score',
         muted: "Slow month?",
@@ -2280,7 +2282,7 @@ window.CAROUSELS = [
         meta: '1 / 5' },
       { tpl: 'A', eyebrow: 'business', size: 'md',
         muted: "You're paying",
-        punch: "everyone\n{except yourself.}",
+        punch: "everyone except\n{yourself.}",
         meta: '2 / 5' },
       { tpl: 'C', eyebrow: 'business', size: 'md', shot: '01-dashboard',
         muted: "Owner pay is",
@@ -2308,11 +2310,11 @@ window.CAROUSELS = [
         meta: '2 / 5' },
       { tpl: 'C', eyebrow: 'Coach', size: 'md', shot: '05-coach',
         muted: "Stuck on a number?",
-        punch: "{Ask the Coach.}\nCalm. Specific.",
+        punch: "{the Coach.}\nCalm. Specific.",
         meta: '3 / 5' },
       { tpl: 'C', eyebrow: 'Coach', size: 'md', shot: '05-coach',
         muted: "Not a chatbot.",
-        punch: "Meets you where\n{the stress is.}",
+        punch: "Meets you where\n{stress is.}",
         meta: '4 / 5' },
       { tpl: 'A', eyebrow: 'Coach', size: 'md',
         punch: "Try {30 days.}\nFree.",
@@ -2357,7 +2359,7 @@ window.CAROUSELS = [
         meta: '3 / 5' },
       { tpl: 'C', eyebrow: 'Bills', size: 'md', shot: '02-allocation-flow',
         muted: "By the due date,",
-        punch: "the bill is\n{already covered.}",
+        punch: "the bill is\n{already} covered.",
         meta: '4 / 5' },
       { tpl: 'A', eyebrow: 'Bills', size: 'md',
         punch: "Free for\n{30 days.}",
@@ -2423,7 +2425,7 @@ window.CAROUSELS = [
         punch: "still assume a\n{steady} paycheck.",
         meta: '2 / 5' },
       { tpl: 'C', eyebrow: 'Mint', size: 'md', shot: '01-dashboard',
-        muted: "Variable income.",
+        muted: "Inconsistent income.",
         punch: "{First-class.}\nNot a workaround.",
         meta: '3 / 5' },
       { tpl: 'A', eyebrow: 'Mint', size: 'md',
@@ -2443,11 +2445,11 @@ window.CAROUSELS = [
         meta: '1 / 5' },
       { tpl: 'A', eyebrow: 'YNAB', size: 'md',
         muted: "Before the month starts.",
-        punch: "Money you\n{haven't earned.}",
+        punch: "Money you\nhaven't {earned.}",
         meta: '2 / 5' },
       { tpl: 'C', eyebrow: 'YNAB', size: 'md', shot: '02-allocation-flow',
         muted: "Wait for the deposit.",
-        punch: "Split it the\n{moment it lands.}",
+        punch: "Split it the\n{it lands.}",
         meta: '3 / 5' },
       { tpl: 'A', eyebrow: 'YNAB', size: 'md',
         muted: "Right idea.",
@@ -2537,7 +2539,7 @@ window.CAROUSELS = [
         meta: '1 / 5' },
       { tpl: 'A', eyebrow: 'scenario', size: 'md',
         muted: "Most apps say:",
-        punch: "{wait and see.}",
+        punch: "{and see.}",
         meta: '2 / 5' },
       { tpl: 'C', eyebrow: 'scenario', size: 'md', shot: '03-plan-bills',
         muted: "Floor-First says:",
@@ -2656,7 +2658,7 @@ window.CAROUSELS = [
         meta: '2 / 5' },
       { tpl: 'C', eyebrow: 'scenario', size: 'md', shot: '01-dashboard',
         muted: "The leak isn't",
-        punch: "discipline.\n{It's the system.}",
+        punch: "discipline.\n{the system.}",
         meta: '3 / 5' },
       { tpl: 'A', eyebrow: 'scenario', size: 'md',
         muted: "Per-deposit routing.",
@@ -2777,7 +2779,7 @@ window.CAROUSELS = [
         meta: '3 / 5' },
       { tpl: 'C', eyebrow: 'business', size: 'md', shot: '04-score',
         muted: "Day 31.",
-        punch: "Revenue moved.\nYou {got paid.}",
+        punch: "Revenue moved.\nYou got {paid.}",
         meta: '4 / 5' },
       { tpl: 'A', eyebrow: 'business', size: 'md',
         punch: "Free for\n{30 days.}",
@@ -2801,7 +2803,7 @@ window.CAROUSELS = [
         meta: '3 / 5' },
       { tpl: 'C', eyebrow: 'Debts', size: 'md', shot: '10-debts',
         muted: "Extra debt bucket",
-        punch: "fills with\n{every deposit.}",
+        punch: "fills with\n{every} deposit.",
         meta: '4 / 5' },
       { tpl: 'A', eyebrow: 'Debts', size: 'md',
         punch: "Free for\n{30 days.}",
@@ -2824,7 +2826,7 @@ window.CAROUSELS = [
         meta: '3 / 5' },
       { tpl: 'A', eyebrow: 'Log income', size: 'md',
         muted: "Plaid covers banks.",
-        punch: "This covers\n{everything else.}",
+        punch: "This covers\n{everything} else.",
         meta: '4 / 5' },
       { tpl: 'A', eyebrow: 'Log income', size: 'md',
         punch: "Free for\n{30 days.}",
@@ -2870,7 +2872,7 @@ window.CAROUSELS = [
         meta: '3 / 5' },
       { tpl: 'A', eyebrow: 'Home', size: 'md',
         muted: "Open Able once a day.",
-        punch: "Or {once a week.}\nIt still works.",
+        punch: "Or {a week.}\nIt still works.",
         meta: '4 / 5' },
       { tpl: 'A', eyebrow: 'Home', size: 'md',
         punch: "Free for\n{30 days.}",
@@ -2895,7 +2897,7 @@ window.CAROUSELS = [
         meta: '3 / 5' },
       { tpl: 'C', eyebrow: 'design', size: 'md', shot: '04-score',
         muted: "Slow weeks happen.",
-        punch: "Your floor\n{doesn't notice.}",
+        punch: "Your floor\n{doesn't} notice.",
         meta: '4 / 5' },
       { tpl: 'A', eyebrow: 'design', size: 'md',
         punch: "Free for\n{30 days.}",
@@ -3280,11 +3282,11 @@ window.CAROUSELS = [
   { id: 'C117', slug: 'learn-emergency-fund', theme: 'green', format: 'tiktok', slides: [
       { tpl: 'A', eyebrow: 'emergency fund', size: 'md',
         muted: "The cash that keeps you",
-        punch: "off the\n{credit card.}",
+        punch: "off the\na {credit card.}",
         meta: '1 / 5' },
       { tpl: 'A', eyebrow: 'emergency fund', size: 'md',
         muted: "2 weeks. 1 month.",
-        punch: "Then {3 to 6}\nmonths.",
+        punch: "Then {3-6.}\nmonths.",
         meta: '2 / 5' },
       { tpl: 'A', eyebrow: 'emergency fund', size: 'md',
         muted: "Keep it boring.",
@@ -3399,7 +3401,7 @@ window.CAROUSELS = [
         meta: '1 / 5' },
       { tpl: 'A', eyebrow: 'business credit', size: 'md',
         muted: "Step 1:",
-        punch: "{3 to 5}\nNet-30 vendors.",
+        punch: "{3-5.}\nNet-30 vendors.",
         meta: '2 / 5' },
       { tpl: 'A', eyebrow: 'business credit', size: 'md',
         muted: "Step 2: pay early.",
@@ -3422,15 +3424,15 @@ window.CAROUSELS = [
         meta: '1 / 5' },
       { tpl: 'A', eyebrow: 'warning', size: 'md',
         muted: "APRs hit",
-        punch: "{70 to 350%.}",
+        punch: "{350%.}",
         meta: '2 / 5' },
       { tpl: 'A', eyebrow: 'warning', size: 'md',
         muted: "Daily ACH pulls",
-        punch: "{10 to 20%}\nof every sale.",
+        punch: "{20%.}\nof every sale.",
         meta: '3 / 5' },
       { tpl: 'A', eyebrow: 'warning', size: 'md',
         muted: "Pitched speed?",
-        punch: "Factor rates?\n{Walk away.}",
+        punch: "Factor rates?\nWalk {away.}",
         meta: '4 / 5' },
       { tpl: 'A', eyebrow: 'warning', size: 'md',
         punch: "Free for\n{30 days.}",
@@ -3438,7 +3440,7 @@ window.CAROUSELS = [
   ] },
 
   // C124 — Why small biz owners get denied (glass-dark · business) — from why-small-business-owners-get-denied
-  { id: 'C124', slug: 'learn-business-denied', theme: 'glass-dark', format: 'tiktok', slides: [
+  { id: 'C124', slug: 'learn-business-denied', theme: 'glass-dark', flagged: 'credit-edu', format: 'tiktok', slides: [
       { tpl: 'A', eyebrow: 'funding', size: 'md',
         muted: "Small biz loan applications:",
         punch: "{80%}\nget denied.",
@@ -3449,7 +3451,7 @@ window.CAROUSELS = [
         meta: '2 / 5' },
       { tpl: 'A', eyebrow: 'funding', size: 'md',
         muted: "Second:",
-        punch: "{cash flow}\ndoesn't cover it.",
+        punch: "cash {flow}\ndoesn't cover it.",
         meta: '3 / 5' },
       { tpl: 'A', eyebrow: 'funding', size: 'md',
         muted: "Lenders look for",
@@ -3461,7 +3463,7 @@ window.CAROUSELS = [
   ] },
 
   // C125 — Mastering credit utilization (white · credit) — from /learn/improve-your-credit-score/mastering-credit-utilization
-  { id: 'C125', slug: 'learn-credit-utilization', theme: 'white', format: 'tiktok', slides: [
+  { id: 'C125', slug: 'learn-credit-utilization', theme: 'white', flagged: 'credit-edu', format: 'tiktok', slides: [
       { tpl: 'A', eyebrow: 'credit', size: 'md',
         muted: "Credit utilization:",
         punch: "the fastest way\nto {boost} your score.",
@@ -3489,27 +3491,27 @@ window.CAROUSELS = [
 
   // C126 — General entrepreneur (glass-dark · brandscript)
   { id: 'C126', slug: 'brandscript-general', theme: 'glass-dark', format: 'tiktok', slides: [
-      { tpl: 'A', eyebrow: 'brandscript', size: 'md',
+      { tpl: 'A', eyebrow: 'mixed', size: 'md',
         muted: "You want to",
         punch: "stop {worrying}\nabout money.",
         meta: '1 / 6' },
-      { tpl: 'A', eyebrow: 'brandscript', size: 'md',
+      { tpl: 'A', eyebrow: 'mixed', size: 'md',
         muted: "Your paycheck",
         punch: "doesn't follow\na {schedule.}",
         meta: '2 / 6' },
-      { tpl: 'A', eyebrow: 'brandscript', size: 'md', noWordmark: true,
+      { tpl: 'A', eyebrow: 'mixed', size: 'md', noWordmark: true,
         muted: "Meet Able.",
         punch: "Built for the way\nyou {actually}\nget paid.",
         meta: '3 / 6' },
-      { tpl: 'C', eyebrow: 'brandscript', size: 'md', shot: '02-allocation-flow', noWordmark: true,
+      { tpl: 'C', eyebrow: 'mixed', size: 'md', shot: '02-allocation-flow', noWordmark: true,
         muted: "Every deposit",
         punch: "fills the\n{floor first.}",
         meta: '4 / 6' },
-      { tpl: 'A', eyebrow: 'brandscript', size: 'md',
+      { tpl: 'A', eyebrow: 'mixed', size: 'md',
         muted: "Debt drops. Savings grow.",
         punch: "The fear of the\n{next check} fades.",
         meta: '5 / 6' },
-      { tpl: 'A', eyebrow: 'brandscript', size: 'md',
+      { tpl: 'A', eyebrow: 'mixed', size: 'md',
         punch: "Start your\n{30-day}\nfree trial.",
         meta: 'becomeable.app/get-able' },
   ] },
@@ -3557,7 +3559,7 @@ window.CAROUSELS = [
         meta: '3 / 6' },
       { tpl: 'C', eyebrow: 'creator', size: 'md', shot: '02-allocation-flow', noWordmark: true,
         muted: "Every deposit",
-        punch: "splits the moment\n{it arrives.}",
+        punch: "splits the moment\nit {arrives.}",
         meta: '4 / 6' },
       { tpl: 'A', eyebrow: 'creator', size: 'md',
         muted: "Slow stretch between brands?",
@@ -3576,7 +3578,7 @@ window.CAROUSELS = [
         meta: '1 / 6' },
       { tpl: 'A', eyebrow: 'gig', size: 'md',
         muted: "Rain Tuesday.",
-        punch: "Surge Saturday.\n{Bills don't care.}",
+        punch: "Surge Saturday.\nBills don't {care.}",
         meta: '2 / 6' },
       { tpl: 'A', eyebrow: 'gig', size: 'md', noWordmark: true,
         muted: "Meet Able.",
@@ -3599,7 +3601,7 @@ window.CAROUSELS = [
   { id: 'C130', slug: 'brandscript-commission', theme: 'black', format: 'tiktok', slides: [
       { tpl: 'A', eyebrow: 'commission', size: 'md',
         muted: "You want pay",
-        punch: "that stays\n{flat between deals.}",
+        punch: "that stays\nbetween {deals.}",
         meta: '1 / 6' },
       { tpl: 'A', eyebrow: 'commission', size: 'md',
         muted: "Deal Monday.",
@@ -3656,143 +3658,143 @@ window.CAROUSELS = [
 
   // C132 — Internal problem: "You freeze" / "Money that sits, leaks" (black)
   { id: 'C132', slug: 'brandscript-you-freeze', theme: 'black', format: 'tiktok', slides: [
-      { tpl: 'A', eyebrow: 'brandscript', size: 'md',
+      { tpl: 'A', eyebrow: 'mixed', size: 'md',
         muted: "You want to",
         punch: "stop the\n{freeze.}",
         meta: '1 / 6' },
-      { tpl: 'A', eyebrow: 'brandscript', size: 'md',
+      { tpl: 'A', eyebrow: 'mixed', size: 'md',
         muted: "Money that sits,",
         punch: "{leaks.}",
         meta: '2 / 6' },
-      { tpl: 'A', eyebrow: 'brandscript', size: 'md', noWordmark: true,
+      { tpl: 'A', eyebrow: 'mixed', size: 'md', noWordmark: true,
         muted: "Meet Able.",
         punch: "Built for\n{inconsistent}\nincome.",
         meta: '3 / 6' },
-      { tpl: 'C', eyebrow: 'brandscript', size: 'md', shot: '02-allocation-flow', noWordmark: true,
+      { tpl: 'C', eyebrow: 'mixed', size: 'md', shot: '02-allocation-flow', noWordmark: true,
         muted: "Every deposit",
-        punch: "splits the moment\n{it arrives.}",
+        punch: "splits the moment\nit {arrives.}",
         meta: '4 / 6' },
-      { tpl: 'A', eyebrow: 'brandscript', size: 'md',
+      { tpl: 'A', eyebrow: 'mixed', size: 'md',
         muted: "No more sitting.",
         punch: "{No more} leak.",
         meta: '5 / 6' },
-      { tpl: 'A', eyebrow: 'brandscript', size: 'md',
+      { tpl: 'A', eyebrow: 'mixed', size: 'md',
         punch: "Start your\n{30-day}\nfree trial.",
         meta: 'becomeable.app/get-able' },
   ] },
 
   // C133 — Philosophical: "The problem was never you" (page)
   { id: 'C133', slug: 'brandscript-not-your-fault', theme: 'page', format: 'tiktok', slides: [
-      { tpl: 'A', eyebrow: 'brandscript', size: 'md',
+      { tpl: 'A', eyebrow: 'mixed', size: 'md',
         muted: "You want to",
         punch: "stop blaming\n{yourself.}",
         meta: '1 / 6' },
-      { tpl: 'A', eyebrow: 'brandscript', size: 'md',
+      { tpl: 'A', eyebrow: 'mixed', size: 'md',
         muted: "The problem was never you.",
         punch: "It was the {advice}\nyou were handed.",
         meta: '2 / 6' },
-      { tpl: 'A', eyebrow: 'brandscript', size: 'md', noWordmark: true,
+      { tpl: 'A', eyebrow: 'mixed', size: 'md', noWordmark: true,
         muted: "Meet Able.",
-        punch: "Built for\n{income like yours.}",
+        punch: "Built for\n{like yours.}",
         meta: '3 / 6' },
-      { tpl: 'C', eyebrow: 'brandscript', size: 'md', shot: '02-allocation-flow', noWordmark: true,
+      { tpl: 'C', eyebrow: 'mixed', size: 'md', shot: '02-allocation-flow', noWordmark: true,
         muted: "Every deposit",
         punch: "fills the\n{floor first.}",
         meta: '4 / 6' },
-      { tpl: 'A', eyebrow: 'brandscript', size: 'md',
+      { tpl: 'A', eyebrow: 'mixed', size: 'md',
         muted: "Not more discipline.",
         punch: "A {plan}\nthat fits.",
         meta: '5 / 6' },
-      { tpl: 'A', eyebrow: 'brandscript', size: 'md',
+      { tpl: 'A', eyebrow: 'mixed', size: 'md',
         punch: "Start your\n{30-day}\nfree trial.",
         meta: 'becomeable.app/get-able' },
   ] },
 
   // C134 — Villain: break the Day 1-31 loop (white)
   { id: 'C134', slug: 'brandscript-break-the-loop', theme: 'white', format: 'tiktok', slides: [
-      { tpl: 'A', eyebrow: 'brandscript', size: 'md',
+      { tpl: 'A', eyebrow: 'mixed', size: 'md',
         muted: "You want to",
         punch: "break the\n{loop.}",
         meta: '1 / 6' },
-      { tpl: 'A', eyebrow: 'brandscript', size: 'md',
+      { tpl: 'A', eyebrow: 'mixed', size: 'md',
         muted: "Day 1: deposit lands.",
         punch: "Day 30: {where}\ndid it go?",
         meta: '2 / 6' },
-      { tpl: 'A', eyebrow: 'brandscript', size: 'md', noWordmark: true,
+      { tpl: 'A', eyebrow: 'mixed', size: 'md', noWordmark: true,
         muted: "Meet Able.",
         punch: "Built for\n{inconsistent}\nincome.",
         meta: '3 / 6' },
-      { tpl: 'C', eyebrow: 'brandscript', size: 'md', shot: '02-allocation-flow', noWordmark: true,
+      { tpl: 'C', eyebrow: 'mixed', size: 'md', shot: '02-allocation-flow', noWordmark: true,
         muted: "Every deposit",
         punch: "fills the\n{floor first.}",
         meta: '4 / 6' },
-      { tpl: 'A', eyebrow: 'brandscript', size: 'md',
+      { tpl: 'A', eyebrow: 'mixed', size: 'md',
         muted: "Day 31:",
         punch: "{nothing leaked.}",
         meta: '5 / 6' },
-      { tpl: 'A', eyebrow: 'brandscript', size: 'md',
+      { tpl: 'A', eyebrow: 'mixed', size: 'md',
         punch: "Start your\n{30-day}\nfree trial.",
         meta: 'becomeable.app/get-able' },
   ] },
 
   // C135 — Avoidance: stop avoiding your money (glass-dark)
   { id: 'C135', slug: 'brandscript-stop-avoiding', theme: 'glass-dark', format: 'tiktok', slides: [
-      { tpl: 'A', eyebrow: 'brandscript', size: 'md',
+      { tpl: 'A', eyebrow: 'mixed', size: 'md',
         muted: "You want to",
         punch: "stop {avoiding}\nyour money.",
         meta: '1 / 6' },
-      { tpl: 'A', eyebrow: 'brandscript', size: 'md',
+      { tpl: 'A', eyebrow: 'mixed', size: 'md',
         muted: "You don't move it",
         punch: "because you don't {know}\nwhen the next check\nis coming.",
         meta: '2 / 6' },
-      { tpl: 'A', eyebrow: 'brandscript', size: 'md', noWordmark: true,
+      { tpl: 'A', eyebrow: 'mixed', size: 'md', noWordmark: true,
         muted: "Meet Able.",
         punch: "Same foundation.\n{Different clock.}",
         meta: '3 / 6' },
-      { tpl: 'C', eyebrow: 'brandscript', size: 'md', shot: '02-allocation-flow', noWordmark: true,
+      { tpl: 'C', eyebrow: 'mixed', size: 'md', shot: '02-allocation-flow', noWordmark: true,
         muted: "Per-deposit allocation.",
         punch: "Not {per-month.}",
         meta: '4 / 6' },
-      { tpl: 'A', eyebrow: 'brandscript', size: 'md',
+      { tpl: 'A', eyebrow: 'mixed', size: 'md',
         muted: "You stop avoiding.",
         punch: "You {start}\nopening the app.",
         meta: '5 / 6' },
-      { tpl: 'A', eyebrow: 'brandscript', size: 'md',
+      { tpl: 'A', eyebrow: 'mixed', size: 'md',
         punch: "Start your\n{30-day}\nfree trial.",
         meta: 'becomeable.app/get-able' },
   ] },
 
   // C136 — Success-led: pay down debt (green)
   { id: 'C136', slug: 'brandscript-pay-down-debt', theme: 'green', format: 'tiktok', slides: [
-      { tpl: 'A', eyebrow: 'brandscript', size: 'md',
+      { tpl: 'A', eyebrow: 'mixed', size: 'md',
         muted: "You want to",
         punch: "pay down\n{debt.}",
         meta: '1 / 6' },
-      { tpl: 'A', eyebrow: 'brandscript', size: 'md',
-        muted: "Variable income means",
+      { tpl: 'A', eyebrow: 'mixed', size: 'md',
+        muted: "Inconsistent income means",
         punch: "the plan {dies}\non slow months.",
         meta: '2 / 6' },
-      { tpl: 'A', eyebrow: 'brandscript', size: 'md', noWordmark: true,
+      { tpl: 'A', eyebrow: 'mixed', size: 'md', noWordmark: true,
         muted: "Meet Able.",
         punch: "Built for the way\nyou {actually}\nget paid.",
         meta: '3 / 6' },
-      { tpl: 'C', eyebrow: 'brandscript', size: 'md', shot: '10-debts', noWordmark: true,
+      { tpl: 'C', eyebrow: 'mixed', size: 'md', shot: '10-debts', noWordmark: true,
         muted: "Every deposit",
         punch: "feeds the\n{extra debt} bucket.",
         meta: '4 / 6' },
-      { tpl: 'A', eyebrow: 'brandscript', size: 'md',
+      { tpl: 'A', eyebrow: 'mixed', size: 'md',
         muted: "Watch it",
         punch: "{drop.}",
         meta: '5 / 6' },
-      { tpl: 'A', eyebrow: 'brandscript', size: 'md',
+      { tpl: 'A', eyebrow: 'mixed', size: 'md',
         punch: "Start your\n{30-day}\nfree trial.",
         meta: 'becomeable.app/get-able' },
   ] },
 
   // ── DEBT DEEP-CUTS (C137-C143) — from able-content/learn/get-out-of-debt ──
 
-  // C137 — How to handle debt with variable income (green · debt)
-  { id: 'C137', slug: 'learn-debt-variable-income', theme: 'green', format: 'tiktok', slides: [
+  // C137 — How to handle debt with inconsistent income (green · debt)
+  { id: 'C137', slug: 'learn-debt-inconsistent-income', theme: 'green', format: 'tiktok', slides: [
       { tpl: 'A', eyebrow: 'debt', size: 'md',
         muted: "Every debt book",
         punch: "assumes a\n{steady paycheck.}",
@@ -3807,7 +3809,7 @@ window.CAROUSELS = [
         meta: '3 / 5' },
       { tpl: 'C', eyebrow: 'debt', size: 'md', shot: '10-debts', noWordmark: true,
         muted: "Extra debt bucket",
-        punch: "fills with\n{every deposit.}",
+        punch: "fills with\n{every} deposit.",
         meta: '4 / 5' },
       { tpl: 'A', eyebrow: 'debt', size: 'md',
         punch: "Free for\n{30 days.}",
@@ -3829,7 +3831,7 @@ window.CAROUSELS = [
         punch: "Over {43%:}\ndoors close.",
         meta: '3 / 5' },
       { tpl: 'A', eyebrow: 'DTI', size: 'md',
-        muted: "Variable income?",
+        muted: "Inconsistent income?",
         punch: "Use a {12-month}\naverage.",
         meta: '4 / 5' },
       { tpl: 'A', eyebrow: 'DTI', size: 'md',
@@ -3861,7 +3863,7 @@ window.CAROUSELS = [
   ] },
 
   // C140 — Dealing with collections (page · debt)
-  { id: 'C140', slug: 'learn-collections', theme: 'page', format: 'tiktok', slides: [
+  { id: 'C140', slug: 'learn-collections', flagged: 'credit-edu', theme: 'page', format: 'tiktok', slides: [
       { tpl: 'A', eyebrow: 'collections', size: 'md',
         muted: "Collections notice?",
         punch: "Don't {panic.}\nUse the system.",
@@ -3884,14 +3886,14 @@ window.CAROUSELS = [
   ] },
 
   // C141 — Negotiating with creditors (glass · debt)
-  { id: 'C141', slug: 'learn-negotiate-creditors', theme: 'glass', format: 'tiktok', slides: [
+  { id: 'C141', slug: 'learn-negotiate-creditors', theme: 'glass', flagged: 'credit-edu', format: 'tiktok', slides: [
       { tpl: 'A', eyebrow: 'negotiate', size: 'md',
         muted: "You have more leverage",
         punch: "than you\n{think.}",
         meta: '1 / 5' },
       { tpl: 'A', eyebrow: 'negotiate', size: 'md',
         muted: "Call. Ask.",
-        punch: "Many drop {3 to 5}\npoints on the spot.",
+        punch: "Many drop {3-5.}\npoints on the spot.",
         meta: '2 / 5' },
       { tpl: 'A', eyebrow: 'negotiate', size: 'md',
         muted: "Hardship program:",
@@ -3899,7 +3901,7 @@ window.CAROUSELS = [
         meta: '3 / 5' },
       { tpl: 'A', eyebrow: 'negotiate', size: 'md',
         muted: "Older debt?",
-        punch: "Settles for\n{30 to 50%.}",
+        punch: "Settles for\n{50%.}",
         meta: '4 / 5' },
       { tpl: 'A', eyebrow: 'negotiate', size: 'md',
         punch: "Free for\n{30 days.}",
@@ -3955,7 +3957,7 @@ window.CAROUSELS = [
   // ── CREDIT SCORE DEEP-CUTS (C144-C150) — from improve-your-credit-score ──
 
   // C144 — How credit score actually works (glass-dark · credit)
-  { id: 'C144', slug: 'learn-credit-score-factors', theme: 'glass-dark', format: 'tiktok', slides: [
+  { id: 'C144', slug: 'learn-credit-score-factors', theme: 'glass-dark', flagged: 'credit-edu', format: 'tiktok', slides: [
       { tpl: 'A', eyebrow: 'credit', size: 'md',
         muted: "Your credit score:",
         punch: "{five} factors\nbehind one number.",
@@ -4020,11 +4022,11 @@ window.CAROUSELS = [
         meta: '2 / 5' },
       { tpl: 'A', eyebrow: 'compounding', size: 'md',
         muted: "$500/month at 9%",
-        punch: "for {45 years}\n= ~$4M.",
+        punch: "for 45 {years}\n= ~$4M.",
         meta: '3 / 5' },
       { tpl: 'A', eyebrow: 'compounding', size: 'md',
         muted: "Time is",
-        punch: "the one ingredient\nyou {can't buy back.}",
+        punch: "the one ingredient\nyou buy {back.}",
         meta: '4 / 5' },
       { tpl: 'A', eyebrow: 'compounding', size: 'md',
         punch: "Free for\n{30 days.}",
@@ -4043,7 +4045,7 @@ window.CAROUSELS = [
         meta: '2 / 5' },
       { tpl: 'A', eyebrow: 'identity', size: 'md',
         muted: "Nobody taught you",
-        punch: "{the rules.}\nYou had to figure it out.",
+        punch: "the {rules.}\nYou had to figure it out.",
         meta: '3 / 5' },
       { tpl: 'A', eyebrow: 'identity', size: 'md',
         muted: "You're not behind.",
@@ -4082,7 +4084,7 @@ window.CAROUSELS = [
 
 
   // C157 — Schedule C walkthrough (glass-dark · tax)
-  { id: 'C157', slug: 'learn-schedule-c', theme: 'glass-dark', format: 'tiktok', slides: [
+  { id: 'C157', slug: 'learn-schedule-c', theme: 'glass-dark', flagged: 'tax-edu', format: 'tiktok', slides: [
       { tpl: 'A', eyebrow: 'tax', size: 'md',
         muted: "Schedule C.",
         punch: "Where {self-employed}\nincome lives.",
@@ -4093,7 +4095,7 @@ window.CAROUSELS = [
         meta: '2 / 5' },
       { tpl: 'A', eyebrow: 'tax', size: 'md',
         muted: "Net is what",
-        punch: "you {pay tax on.}",
+        punch: "you pay tax {on.}",
         meta: '3 / 5' },
       { tpl: 'A', eyebrow: 'tax', size: 'md',
         muted: "Common miss:",
@@ -4112,11 +4114,11 @@ window.CAROUSELS = [
   // about, then pivot to per-deposit / owner-pay as Able's actual approach.
   // No customer copy endorses "pay yourself first" as Able's method.
 
-  // C161 — PYF on variable income — per-deposit pivot (green · learn)
-  { id: 'C161', slug: 'learn-pyf-variable-income', theme: 'green', format: 'tiktok', slides: [
+  // C161 — PYF on inconsistent income — per-deposit pivot (green · learn)
+  { id: 'C161', slug: 'learn-pyf-inconsistent-income', theme: 'green', format: 'tiktok', slides: [
       { tpl: 'A', eyebrow: 'PYF', size: 'md',
         muted: '"Save 10% of monthly income."',
-        punch: "It {breaks}\non variable income.",
+        punch: "It {breaks}\non inconsistent income.",
         meta: '1 / 5' },
       { tpl: 'A', eyebrow: 'PYF', size: 'md',
         muted: "You don't know",
@@ -4162,7 +4164,7 @@ window.CAROUSELS = [
   { id: 'C163', slug: 'learn-pyf-percentage', theme: 'page', format: 'tiktok', slides: [
       { tpl: 'A', eyebrow: 'PYF', size: 'md',
         muted: "What % do you pick?",
-        punch: "The number you {won't skip}\non the worst week.",
+        punch: "The number you won't {skip}\non the worst week.",
         meta: '1 / 5' },
       { tpl: 'A', eyebrow: 'PYF', size: 'md',
         muted: "High-interest debt?",
@@ -4253,7 +4255,7 @@ window.CAROUSELS = [
   // ── BUSINESS FUNDING DEEP-CUTS (C167-C173) — from get-business-funding ──
 
   // C167 — Business credit cards (black · funding)
-  { id: 'C167', slug: 'learn-business-credit-cards', theme: 'black', format: 'tiktok', slides: [
+  { id: 'C167', slug: 'learn-business-credit-cards', theme: 'black', flagged: 'credit-edu', format: 'tiktok', slides: [
       { tpl: 'A', eyebrow: 'biz cards', size: 'md',
         muted: "Two flavors",
         punch: "of business\n{cards.}",
@@ -4299,7 +4301,7 @@ window.CAROUSELS = [
   ] },
 
   // C169 — Personal credit vs business credit (white · funding)
-  { id: 'C169', slug: 'learn-personal-vs-business-credit', theme: 'white', format: 'tiktok', slides: [
+  { id: 'C169', slug: 'learn-personal-vs-business-credit', theme: 'white', flagged: 'credit-edu', format: 'tiktok', slides: [
       { tpl: 'A', eyebrow: 'credit', size: 'md',
         muted: "Personal credit",
         punch: "follows {you.}",
@@ -4368,7 +4370,7 @@ window.CAROUSELS = [
   ] },
 
   // C172 — Business credit bureaus (glass-dark · funding)
-  { id: 'C172', slug: 'learn-business-credit-bureaus', theme: 'glass-dark', format: 'tiktok', slides: [
+  { id: 'C172', slug: 'learn-business-credit-bureaus', theme: 'glass-dark', flagged: 'credit-edu', format: 'tiktok', slides: [
       { tpl: 'A', eyebrow: 'bureaus', size: 'md',
         muted: "Personal credit has 3.",
         punch: "{Business credit}\nhas 3 too.",
@@ -4391,7 +4393,7 @@ window.CAROUSELS = [
   ] },
 
   // C173 — 6-month funding readiness roadmap (green · funding)
-  { id: 'C173', slug: 'learn-funding-roadmap', theme: 'green', format: 'tiktok', slides: [
+  { id: 'C173', slug: 'learn-funding-roadmap', theme: 'green', flagged: 'credit-edu', format: 'tiktok', slides: [
       { tpl: 'A', eyebrow: 'roadmap', size: 'md',
         muted: "6 months",
         punch: "from {unfundable}\nto approved.",
@@ -4417,7 +4419,7 @@ window.CAROUSELS = [
 
 
   // C175 — Pulling and reading your credit report (page · credit)
-  { id: 'C175', slug: 'learn-pull-credit-report', theme: 'page', format: 'tiktok', slides: [
+  { id: 'C175', slug: 'learn-pull-credit-report', theme: 'page', flagged: 'credit-edu', format: 'tiktok', slides: [
       { tpl: 'A', eyebrow: 'credit', size: 'md',
         muted: "Your report isn't",
         punch: "your {score.}",
@@ -4466,7 +4468,7 @@ window.CAROUSELS = [
   { id: 'C177', slug: 'learn-stay-out-of-debt', theme: 'glass', format: 'tiktok', slides: [
       { tpl: 'A', eyebrow: 'habits', size: 'md',
         muted: "Most people pay off debt.",
-        punch: "Then end up back\n{in 3-5 years.}",
+        punch: "Then end up back\n{3-5 years.}",
         meta: '1 / 5' },
       { tpl: 'A', eyebrow: 'habits', size: 'md',
         muted: "Pay cards in full.",
@@ -4595,7 +4597,7 @@ window.CAROUSELS = [
         meta: '3 / 5' },
       { tpl: 'A', eyebrow: 'landing', size: 'md',
         muted: "End of the month,",
-        punch: "you know exactly\n{where every dollar went.}",
+        punch: "you know exactly\nwhere every {dollar went.}",
         meta: '4 / 5' },
       { tpl: 'A', eyebrow: 'landing', size: 'md',
         punch: "Start your\n{30-day}\nfree trial.",
@@ -4629,11 +4631,11 @@ window.CAROUSELS = [
   { id: 'C184', slug: 'landing-cost-of-waiting', theme: 'black', format: 'tiktok', slides: [
       { tpl: 'A', eyebrow: 'stakes', size: 'md',
         muted: "Every month you wait",
-        punch: "is another\n{$500 to $1,000}\ngone.",
+        punch: "is another\n$500 to $1,000\n{gone.}",
         meta: '1 / 5' },
       { tpl: 'A', eyebrow: 'stakes', size: 'md',
         muted: "Six months:",
-        punch: "{$3,000 to $6,000}\nyou didn't save.",
+        punch: "$3,000 to $6,000\nyou {didn't save.}",
         meta: '2 / 5' },
       { tpl: 'A', eyebrow: 'stakes', size: 'md',
         muted: "A year:",
@@ -4674,11 +4676,11 @@ window.CAROUSELS = [
   // ── LIST-FORMAT PILOTS (C186-C190) — # reasons / tips / mistakes / benefits ──
   // Listicle carousels typically run 6-8 slides (1 hook + N items + 1 CTA).
 
-  // C186 — 5 reasons your budget breaks on variable income (black · list)
+  // C186 — 5 reasons your budget breaks on inconsistent income (black · list)
   { id: 'C186', slug: 'list-budget-breaks-reasons', theme: 'black', format: 'tiktok', slides: [
       { tpl: 'A', eyebrow: '5 reasons', size: 'md',
         muted: "5 reasons your budget",
-        punch: "breaks on\n{variable income.}",
+        punch: "breaks on\n{inconsistent income.}",
         meta: '1 / 7' },
       { tpl: 'A', eyebrow: 'reason 1', size: 'md',
         muted: "1.",
@@ -4717,15 +4719,15 @@ window.CAROUSELS = [
         meta: '2 / 6' },
       { tpl: 'A', eyebrow: 'reason 2', size: 'md',
         muted: "2.",
-        punch: "Slow months\n{handle themselves.}",
+        punch: "Slow months\nhandle {themselves.}",
         meta: '3 / 6' },
       { tpl: 'A', eyebrow: 'reason 3', size: 'md',
         muted: "3.",
-        punch: "Big months\n{don't leak.}",
+        punch: "Big months\ndon't {leak.}",
         meta: '4 / 6' },
       { tpl: 'A', eyebrow: 'reason 4', size: 'md',
         muted: "4.",
-        punch: "The decision happens\n{at the right moment.}",
+        punch: "The decision happens\nat the {right moment.}",
         meta: '5 / 6' },
       { tpl: 'A', eyebrow: '4 reasons', size: 'md',
         punch: "Free for\n{30 days.}",
@@ -4748,7 +4750,7 @@ window.CAROUSELS = [
         meta: '3 / 7' },
       { tpl: 'A', eyebrow: 'tip 3', size: 'md',
         muted: "3.",
-        punch: "Tag business expenses\n{as you go.}",
+        punch: "Tag business expenses\n{you go.}",
         meta: '4 / 7' },
       { tpl: 'A', eyebrow: 'tip 4', size: 'md',
         muted: "4.",
@@ -4756,7 +4758,7 @@ window.CAROUSELS = [
         meta: '5 / 7' },
       { tpl: 'A', eyebrow: 'tip 5', size: 'md',
         muted: "5.",
-        punch: "Home office deduction.\n{Don't skip it.}",
+        punch: "Home office deduction.\n{skip it.}",
         meta: '6 / 7' },
       { tpl: 'A', eyebrow: '5 tips', size: 'md',
         punch: "Free for\n{30 days.}",
@@ -4835,7 +4837,7 @@ window.CAROUSELS = [
   { id: 'C191', slug: 'list-debt-not-moving-reasons', theme: 'black', format: 'tiktok', slides: [
       { tpl: 'A', eyebrow: '5 reasons', size: 'md',
         muted: "5 reasons",
-        punch: "your debt\n{isn't moving.}",
+        punch: "your debt\nisn't {moving.}",
         meta: '1 / 7' },
       { tpl: 'A', eyebrow: 'reason 1', size: 'md',
         muted: "1.",
@@ -4862,11 +4864,11 @@ window.CAROUSELS = [
         meta: 'becomeable.app/get-able' },
   ] },
 
-  // C192 — 5 reasons Floor-First works for variable income (green · reasons-positive)
+  // C192 — 5 reasons Floor-First works for inconsistent income (green · reasons-positive)
   { id: 'C192', slug: 'list-floor-first-reasons', theme: 'green', format: 'tiktok', slides: [
       { tpl: 'A', eyebrow: '5 reasons', size: 'md',
         muted: "5 reasons Floor-First",
-        punch: "works for {variable}\nincome.",
+        punch: "works for {inconsistent}\nincome.",
         meta: '1 / 7' },
       { tpl: 'A', eyebrow: 'reason 1', size: 'md',
         muted: "1.",
@@ -4874,11 +4876,11 @@ window.CAROUSELS = [
         meta: '2 / 7' },
       { tpl: 'A', eyebrow: 'reason 2', size: 'md',
         muted: "2.",
-        punch: "Slow months\n{handle themselves.}",
+        punch: "Slow months\nhandle {themselves.}",
         meta: '3 / 7' },
       { tpl: 'A', eyebrow: 'reason 3', size: 'md',
         muted: "3.",
-        punch: "Big months\n{don't leak.}",
+        punch: "Big months\ndon't {leak.}",
         meta: '4 / 7' },
       { tpl: 'A', eyebrow: 'reason 4', size: 'md',
         muted: "4.",
@@ -5049,7 +5051,7 @@ window.CAROUSELS = [
   ] },
 
   // C198 — 5 mistakes that kill credit scores (glass-dark · mistakes)
-  { id: 'C198', slug: 'list-credit-score-mistakes', theme: 'glass-dark', format: 'tiktok', slides: [
+  { id: 'C198', slug: 'list-credit-score-mistakes', theme: 'glass-dark', flagged: 'credit-edu', format: 'tiktok', slides: [
       { tpl: 'A', eyebrow: '5 mistakes', size: 'md',
         muted: "5 mistakes that",
         punch: "kill your\n{credit score.}",
@@ -5068,7 +5070,7 @@ window.CAROUSELS = [
         meta: '4 / 7' },
       { tpl: 'A', eyebrow: 'mistake 4', size: 'md',
         muted: "4.",
-        punch: "{5 hard pulls}\nin a weekend.",
+        punch: "5 {hard pulls}\nin a weekend.",
         meta: '5 / 7' },
       { tpl: 'A', eyebrow: 'mistake 5', size: 'md',
         muted: "5.",
@@ -5148,11 +5150,11 @@ window.CAROUSELS = [
 
   // ── MORE LIST-FORMAT CAROUSELS (C202-C211) ──
 
-  // C202 — 5 reasons "Save 20%" doesn't work for variable income (black · reasons-neg)
+  // C202 — 5 reasons "Save 20%" doesn't work for inconsistent income (black · reasons-neg)
   { id: 'C202', slug: 'list-save-20-doesnt-work', theme: 'black', format: 'tiktok', slides: [
       { tpl: 'A', eyebrow: '5 reasons', size: 'md',
         muted: "5 reasons \"Save 20%\"",
-        punch: "doesn't work for\n{variable income.}",
+        punch: "doesn't work for\n{inconsistent income.}",
         meta: '1 / 7' },
       { tpl: 'A', eyebrow: 'reason 1', size: 'md',
         muted: "1.",
@@ -5160,7 +5162,7 @@ window.CAROUSELS = [
         meta: '2 / 7' },
       { tpl: 'A', eyebrow: 'reason 2', size: 'md',
         muted: "2.",
-        punch: "You don't know\n{20% of what.}",
+        punch: "You don't know\n{of what.}",
         meta: '3 / 7' },
       { tpl: 'A', eyebrow: 'reason 3', size: 'md',
         muted: "3.",
@@ -5207,7 +5209,7 @@ window.CAROUSELS = [
   ] },
 
   // C204 — 5 tips for building business credit fast (white · tips)
-  { id: 'C204', slug: 'list-business-credit-tips', theme: 'white', format: 'tiktok', slides: [
+  { id: 'C204', slug: 'list-business-credit-tips', theme: 'white', flagged: 'credit-edu', format: 'tiktok', slides: [
       { tpl: 'A', eyebrow: '5 tips', size: 'md',
         muted: "5 tips for building",
         punch: "{business credit}\nfast.",
@@ -5238,7 +5240,7 @@ window.CAROUSELS = [
   ] },
 
   // C205 — 5 tips for negotiating with creditors (page · tips)
-  { id: 'C205', slug: 'list-negotiate-creditors-tips', theme: 'page', format: 'tiktok', slides: [
+  { id: 'C205', slug: 'list-negotiate-creditors-tips', theme: 'page', flagged: 'credit-edu', format: 'tiktok', slides: [
       { tpl: 'A', eyebrow: '5 tips', size: 'md',
         muted: "5 tips for negotiating",
         punch: "with {creditors.}",
@@ -5288,7 +5290,7 @@ window.CAROUSELS = [
         meta: '4 / 7' },
       { tpl: 'A', eyebrow: 'tip 4', size: 'md',
         muted: "4.",
-        punch: "Save % for\nthe {next big thing.}",
+        punch: "Save % for\nthe {big thing.}",
         meta: '5 / 7' },
       { tpl: 'A', eyebrow: 'tip 5', size: 'md',
         muted: "5.",
@@ -5354,7 +5356,7 @@ window.CAROUSELS = [
         meta: '5 / 7' },
       { tpl: 'A', eyebrow: 'mistake 5', size: 'md',
         muted: "5.",
-        punch: "5 lenders same day.\n{5 hard pulls.}",
+        punch: "5 lenders same day.\n5 {hard pulls.}",
         meta: '6 / 7' },
       { tpl: 'A', eyebrow: '5 mistakes', size: 'md',
         punch: "Free for\n{30 days.}",
@@ -5392,11 +5394,11 @@ window.CAROUSELS = [
         meta: 'becomeable.app/get-able' },
   ] },
 
-  // C210 — 5 benefits of an emergency fund for variable income (glass · benefits)
+  // C210 — 5 benefits of an emergency fund for inconsistent income (glass · benefits)
   { id: 'C210', slug: 'list-emergency-fund-benefits', theme: 'glass', format: 'tiktok', slides: [
       { tpl: 'A', eyebrow: '5 benefits', size: 'md',
         muted: "5 benefits of an",
-        punch: "{emergency fund}\nfor variable income.",
+        punch: "{emergency fund}\nfor inconsistent income.",
         meta: '1 / 7' },
       { tpl: 'A', eyebrow: 'benefit 1', size: 'md',
         muted: "1.",
@@ -5452,7 +5454,7 @@ window.CAROUSELS = [
 
   // ── MASSIVE LISTICLE BATCH (C212-C240) — all safe topics ──
   // Per feedback_no_tax_credit_overclaim.md: no tax beyond bucket/classify/export,
-  // no credit-score content. Pure Able-mechanic + variable-income framing.
+  // no credit-score content. Pure Able-mechanic + inconsistent-income framing.
 
   { id: 'C212', slug: 'list-save-10-doesnt-stick', theme: 'black', format: 'tiktok', slides: [
       { tpl: 'A', eyebrow: '5 reasons', size: 'md', muted: "5 reasons \"save 10%\"", punch: "never {sticks.}", meta: '1 / 7' },
@@ -5477,7 +5479,7 @@ window.CAROUSELS = [
   { id: 'C214', slug: 'list-tracking-doesnt-fix-leak', theme: 'black', format: 'tiktok', slides: [
       { tpl: 'A', eyebrow: '5 reasons', size: 'md', muted: "5 reasons \"track everything\"", punch: "doesn't {fix}\nthe leak.", meta: '1 / 7' },
       { tpl: 'A', eyebrow: 'reason 1', size: 'md', muted: "1.", punch: "Tracking shows\nthe {past.}", meta: '2 / 7' },
-      { tpl: 'A', eyebrow: 'reason 2', size: 'md', muted: "2.", punch: "The leak\n{already left.}", meta: '3 / 7' },
+      { tpl: 'A', eyebrow: 'reason 2', size: 'md', muted: "2.", punch: "The leak\nalready {left.}", meta: '3 / 7' },
       { tpl: 'A', eyebrow: 'reason 3', size: 'md', muted: "3.", punch: "No system underneath\nto change {behavior.}", meta: '4 / 7' },
       { tpl: 'A', eyebrow: 'reason 4', size: 'md', muted: "4.", punch: "Categorizing isn't\n{deciding.}", meta: '5 / 7' },
       { tpl: 'A', eyebrow: 'reason 5', size: 'md', muted: "5.", punch: "You need {upstream}\nrouting.", meta: '6 / 7' },
@@ -5490,7 +5492,7 @@ window.CAROUSELS = [
       { tpl: 'A', eyebrow: 'reason 2', size: 'md', muted: "2.", punch: "The leak {runs}\nall month.", meta: '3 / 7' },
       { tpl: 'A', eyebrow: 'reason 3', size: 'md', muted: "3.", punch: "Variance hides\nyour {real} position.", meta: '4 / 7' },
       { tpl: 'A', eyebrow: 'reason 4', size: 'md', muted: "4.", punch: "\"$400 left\" but bills\naren't paid {yet.}", meta: '5 / 7' },
-      { tpl: 'A', eyebrow: 'reason 5', size: 'md', muted: "5.", punch: "Same system =\n{same Day 30.}", meta: '6 / 7' },
+      { tpl: 'A', eyebrow: 'reason 5', size: 'md', muted: "5.", punch: "Same system =\n{Day 30.}", meta: '6 / 7' },
       { tpl: 'A', eyebrow: '5 reasons', size: 'md', punch: "Free for\n{30 days.}", meta: 'becomeable.app/get-able' },
   ] },
 
@@ -5580,7 +5582,7 @@ window.CAROUSELS = [
   ] },
 
   { id: 'C225', slug: 'list-first-30-days-tips', theme: 'white', format: 'tiktok', slides: [
-      { tpl: 'A', eyebrow: '5 tips', size: 'md', muted: "5 tips for your", punch: "{first 30 days}\nwith Able.", meta: '1 / 7' },
+      { tpl: 'A', eyebrow: '5 tips', size: 'md', muted: "5 tips for your", punch: "First {30 days.}\nwith Able.", meta: '1 / 7' },
       { tpl: 'A', eyebrow: 'tip 1', size: 'md', muted: "1.", punch: "Connect your bank.\n{Day 1.}", meta: '2 / 7' },
       { tpl: 'A', eyebrow: 'tip 2', size: 'md', muted: "2.", punch: "Approve the {analyzer's}\nplan.", meta: '3 / 7' },
       { tpl: 'A', eyebrow: 'tip 3', size: 'md', muted: "3.", punch: "Set your {tax %.}", meta: '4 / 7' },
@@ -5621,7 +5623,7 @@ window.CAROUSELS = [
 
   { id: 'C229', slug: 'list-gap-between-deposits-tips', theme: 'white', format: 'tiktok', slides: [
       { tpl: 'A', eyebrow: '5 tips', size: 'md', muted: "5 tips for the", punch: "{gap} between deposits.", meta: '1 / 7' },
-      { tpl: 'A', eyebrow: 'tip 1', size: 'md', muted: "1.", punch: "Reserve is\n{exactly for this.}", meta: '2 / 7' },
+      { tpl: 'A', eyebrow: 'tip 1', size: 'md', muted: "1.", punch: "Reserve is\n{for this.}", meta: '2 / 7' },
       { tpl: 'A', eyebrow: 'tip 2', size: 'md', muted: "2.", punch: "Floor stays\n{covered.}", meta: '3 / 7' },
       { tpl: 'A', eyebrow: 'tip 3', size: 'md', muted: "3.", punch: "Don't {borrow}\nfrom bills.", meta: '4 / 7' },
       { tpl: 'A', eyebrow: 'tip 4', size: 'md', muted: "4.", punch: "Free spending → $0.\n{That's OK.}", meta: '5 / 7' },
@@ -5649,8 +5651,8 @@ window.CAROUSELS = [
       { tpl: 'A', eyebrow: '5 tips', size: 'md', punch: "Free for\n{30 days.}", meta: 'becomeable.app/get-able' },
   ] },
 
-  { id: 'C232', slug: 'list-starting-variable-mistakes', theme: 'glass-dark', format: 'tiktok', slides: [
-      { tpl: 'A', eyebrow: '5 mistakes', size: 'md', muted: "5 mistakes when starting", punch: "{variable-income}\nbudgeting.", meta: '1 / 7' },
+  { id: 'C232', slug: 'list-starting-inconsistent-mistakes', theme: 'glass-dark', format: 'tiktok', slides: [
+      { tpl: 'A', eyebrow: '5 mistakes', size: 'md', muted: "5 mistakes when starting", punch: "{inconsistent-income}\nbudgeting.", meta: '1 / 7' },
       { tpl: 'A', eyebrow: 'mistake 1', size: 'md', muted: "1.", punch: "Setting % {aspirationally.}", meta: '2 / 7' },
       { tpl: 'A', eyebrow: 'mistake 2', size: 'md', muted: "2.", punch: "No reserve before\n{aggressive} savings.", meta: '3 / 7' },
       { tpl: 'A', eyebrow: 'mistake 3', size: 'md', muted: "3.", punch: "Same account as\n{personal} spending.", meta: '4 / 7' },
@@ -5701,7 +5703,7 @@ window.CAROUSELS = [
   ] },
 
   { id: 'C237', slug: 'list-free-spending-leak-mistakes', theme: 'black', format: 'tiktok', slides: [
-      { tpl: 'A', eyebrow: '5 mistakes', size: 'md', muted: "5 mistakes that leak", punch: "{free spending.}", meta: '1 / 7' },
+      { tpl: 'A', eyebrow: '5 mistakes', size: 'md', muted: "5 mistakes that leak", punch: "free {spending.}", meta: '1 / 7' },
       { tpl: 'A', eyebrow: 'mistake 1', size: 'md', muted: "1.", punch: "Subscription {drift.}", meta: '2 / 7' },
       { tpl: 'A', eyebrow: 'mistake 2', size: 'md', muted: "2.", punch: "\"I have it in {checking}\"\nthinking.", meta: '3 / 7' },
       { tpl: 'A', eyebrow: 'mistake 3', size: 'md', muted: "3.", punch: "{Lifestyle} bump\nafter one big check.", meta: '4 / 7' },
@@ -5711,7 +5713,7 @@ window.CAROUSELS = [
   ] },
 
   { id: 'C238', slug: 'list-routing-every-deposit-benefits', theme: 'glass', format: 'tiktok', slides: [
-      { tpl: 'A', eyebrow: '5 benefits', size: 'md', muted: "5 benefits of routing", punch: "on {every deposit.}", meta: '1 / 7' },
+      { tpl: 'A', eyebrow: '5 benefits', size: 'md', muted: "5 benefits of routing", punch: "on every {deposit.}", meta: '1 / 7' },
       { tpl: 'A', eyebrow: 'benefit 1', size: 'md', muted: "1.", punch: "Bills funded before\n{due date.}", meta: '2 / 7' },
       { tpl: 'A', eyebrow: 'benefit 2', size: 'md', muted: "2.", punch: "Tax bucket fills\n{automatically.}", meta: '3 / 7' },
       { tpl: 'A', eyebrow: 'benefit 3', size: 'md', muted: "3.", punch: "Reserve grows\n{passively.}", meta: '4 / 7' },
@@ -5722,9 +5724,9 @@ window.CAROUSELS = [
 
   { id: 'C239', slug: 'list-forecast-30-day-benefits', theme: 'green', format: 'tiktok', slides: [
       { tpl: 'A', eyebrow: '4 benefits', size: 'md', muted: "4 benefits of seeing your", punch: "{forecast}\n30 days out.", meta: '1 / 6' },
-      { tpl: 'A', eyebrow: 'benefit 1', size: 'md', muted: "1.", punch: "Slow stretch coming?\n{You know early.}", meta: '2 / 6' },
-      { tpl: 'A', eyebrow: 'benefit 2', size: 'md', muted: "2.", punch: "Big bill on Day 28?\n{Already reserved.}", meta: '3 / 6' },
-      { tpl: 'A', eyebrow: 'benefit 3', size: 'md', muted: "3.", punch: "No more {\"will I have}\nenough?\"", meta: '4 / 6' },
+      { tpl: 'A', eyebrow: 'benefit 1', size: 'md', muted: "1.", punch: "Slow stretch coming?\n{know early.}", meta: '2 / 6' },
+      { tpl: 'A', eyebrow: 'benefit 2', size: 'md', muted: "2.", punch: "Big bill on Day 28?\nAlready {reserved.}", meta: '3 / 6' },
+      { tpl: 'A', eyebrow: 'benefit 3', size: 'md', muted: "3.", punch: "No more \"will I\nhave {enough?}\"", meta: '4 / 6' },
       { tpl: 'A', eyebrow: 'benefit 4', size: 'md', muted: "4.", punch: "You {plan.}\nYou don't react.", meta: '5 / 6' },
       { tpl: 'A', eyebrow: '4 benefits', size: 'md', punch: "Free for\n{30 days.}", meta: 'becomeable.app/get-able' },
   ] },
@@ -5733,100 +5735,100 @@ window.CAROUSELS = [
       { tpl: 'A', eyebrow: '4 benefits', size: 'md', muted: "4 benefits of being your own", punch: "{payroll dept.}", meta: '1 / 6' },
       { tpl: 'A', eyebrow: 'benefit 1', size: 'md', muted: "1.", punch: "You don't depend on\n{revenue} timing.", meta: '2 / 6' },
       { tpl: 'A', eyebrow: 'benefit 2', size: 'md', muted: "2.", punch: "Pay scales with\n{reality.}", meta: '3 / 6' },
-      { tpl: 'A', eyebrow: 'benefit 3', size: 'md', muted: "3.", punch: "Variable income,\n{consistent} take-home.", meta: '4 / 6' },
+      { tpl: 'A', eyebrow: 'benefit 3', size: 'md', muted: "3.", punch: "Inconsistent income,\n{consistent} take-home.", meta: '4 / 6' },
       { tpl: 'A', eyebrow: 'benefit 4', size: 'md', muted: "4.", punch: "Business pays you\nlike a {real job.}", meta: '5 / 6' },
       { tpl: 'A', eyebrow: '4 benefits', size: 'md', punch: "Free for\n{30 days.}", meta: 'becomeable.app/get-able' },
   ] },
   // ── MORE BRAND-SCRIPT VARIANTS (C241-C250) ──
 
   { id: 'C241', slug: 'brandscript-calm-sunday', theme: 'glass-dark', format: 'tiktok', slides: [
-      { tpl: 'A', eyebrow: 'brandscript', size: 'md', muted: "You want to", punch: "stop the\n{Sunday-night dread.}", meta: '1 / 6' },
-      { tpl: 'A', eyebrow: 'brandscript', size: 'md', muted: "Tomorrow's invoices.", punch: "Wednesday's {bills.}\nThe gap.", meta: '2 / 6' },
-      { tpl: 'A', eyebrow: 'brandscript', size: 'md', noWordmark: true, muted: "Meet Able.", punch: "Built for the way\nyou {actually}\nget paid.", meta: '3 / 6' },
-      { tpl: 'C', eyebrow: 'brandscript', size: 'md', shot: '02-allocation-flow', noWordmark: true, muted: "Floor + tax", punch: "{pre-funded}\nbefore Sunday.", meta: '4 / 6' },
-      { tpl: 'A', eyebrow: 'brandscript', size: 'md', muted: "Sunday is just", punch: "{Sunday.}", meta: '5 / 6' },
-      { tpl: 'A', eyebrow: 'brandscript', size: 'md', punch: "Start your\n{30-day}\nfree trial.", meta: 'becomeable.app/get-able' },
+      { tpl: 'A', eyebrow: 'mixed', size: 'md', muted: "You want to", punch: "stop the\n{Sunday-night dread.}", meta: '1 / 6' },
+      { tpl: 'A', eyebrow: 'mixed', size: 'md', muted: "Tomorrow's invoices.", punch: "Wednesday's {bills.}\nThe gap.", meta: '2 / 6' },
+      { tpl: 'A', eyebrow: 'mixed', size: 'md', noWordmark: true, muted: "Meet Able.", punch: "Built for the way\nyou {actually}\nget paid.", meta: '3 / 6' },
+      { tpl: 'C', eyebrow: 'mixed', size: 'md', shot: '02-allocation-flow', noWordmark: true, muted: "Floor + tax", punch: "{pre-funded}\nbefore Sunday.", meta: '4 / 6' },
+      { tpl: 'A', eyebrow: 'mixed', size: 'md', muted: "Sunday is just", punch: "{Sunday.}", meta: '5 / 6' },
+      { tpl: 'A', eyebrow: 'mixed', size: 'md', punch: "Start your\n{30-day}\nfree trial.", meta: 'becomeable.app/get-able' },
   ] },
 
   { id: 'C242', slug: 'brandscript-nothing-leaked', theme: 'green', format: 'tiktok', slides: [
-      { tpl: 'A', eyebrow: 'brandscript', size: 'md', muted: "You want a Day 31", punch: "that doesn't end in\n{shame.}", meta: '1 / 6' },
-      { tpl: 'A', eyebrow: 'brandscript', size: 'md', muted: "\"Where did", punch: "the {$1,000} go?\"", meta: '2 / 6' },
-      { tpl: 'A', eyebrow: 'brandscript', size: 'md', noWordmark: true, muted: "Meet Able.", punch: "Built for\n{inconsistent}\nincome.", meta: '3 / 6' },
-      { tpl: 'C', eyebrow: 'brandscript', size: 'md', shot: '02-allocation-flow', noWordmark: true, muted: "Every deposit splits.", punch: "{Nothing} leaks.", meta: '4 / 6' },
-      { tpl: 'A', eyebrow: 'brandscript', size: 'md', muted: "Day 31:", punch: "you know exactly\n{where every dollar went.}", meta: '5 / 6' },
-      { tpl: 'A', eyebrow: 'brandscript', size: 'md', punch: "Start your\n{30-day}\nfree trial.", meta: 'becomeable.app/get-able' },
+      { tpl: 'A', eyebrow: 'mixed', size: 'md', muted: "You want a Day 31", punch: "that doesn't end in\n{shame.}", meta: '1 / 6' },
+      { tpl: 'A', eyebrow: 'mixed', size: 'md', muted: "\"Where did", punch: "the {$1,000} go?\"", meta: '2 / 6' },
+      { tpl: 'A', eyebrow: 'mixed', size: 'md', noWordmark: true, muted: "Meet Able.", punch: "Built for\n{inconsistent}\nincome.", meta: '3 / 6' },
+      { tpl: 'C', eyebrow: 'mixed', size: 'md', shot: '02-allocation-flow', noWordmark: true, muted: "Every deposit splits.", punch: "{Nothing} leaks.", meta: '4 / 6' },
+      { tpl: 'A', eyebrow: 'mixed', size: 'md', muted: "Day 31:", punch: "you know exactly\nwhere every {dollar went.}", meta: '5 / 6' },
+      { tpl: 'A', eyebrow: 'mixed', size: 'md', punch: "Start your\n{30-day}\nfree trial.", meta: 'becomeable.app/get-able' },
   ] },
 
   { id: 'C243', slug: 'brandscript-stop-checking', theme: 'black', format: 'tiktok', slides: [
-      { tpl: 'A', eyebrow: 'brandscript', size: 'md', muted: "You want to", punch: "stop {refreshing}\nyour bank.", meta: '1 / 6' },
-      { tpl: 'A', eyebrow: 'brandscript', size: 'md', muted: "You check because", punch: "you don't {trust}\nyour position.", meta: '2 / 6' },
-      { tpl: 'A', eyebrow: 'brandscript', size: 'md', noWordmark: true, muted: "Meet Able.", punch: "Built for the way\nyou {actually}\nget paid.", meta: '3 / 6' },
-      { tpl: 'C', eyebrow: 'brandscript', size: 'md', shot: '01-dashboard', noWordmark: true, muted: "Floor + tax routed.", punch: "What you see\n{is yours.}", meta: '4 / 6' },
-      { tpl: 'A', eyebrow: 'brandscript', size: 'md', muted: "You stop checking.", punch: "{First time}\nin years.", meta: '5 / 6' },
-      { tpl: 'A', eyebrow: 'brandscript', size: 'md', punch: "Start your\n{30-day}\nfree trial.", meta: 'becomeable.app/get-able' },
+      { tpl: 'A', eyebrow: 'mixed', size: 'md', muted: "You want to", punch: "stop {refreshing}\nyour bank.", meta: '1 / 6' },
+      { tpl: 'A', eyebrow: 'mixed', size: 'md', muted: "You check because", punch: "you don't {trust}\nyour position.", meta: '2 / 6' },
+      { tpl: 'A', eyebrow: 'mixed', size: 'md', noWordmark: true, muted: "Meet Able.", punch: "Built for the way\nyou {actually}\nget paid.", meta: '3 / 6' },
+      { tpl: 'C', eyebrow: 'mixed', size: 'md', shot: '01-dashboard', noWordmark: true, muted: "Floor + tax routed.", punch: "What you see\n{is yours.}", meta: '4 / 6' },
+      { tpl: 'A', eyebrow: 'mixed', size: 'md', muted: "You stop checking.", punch: "{First time}\nin years.", meta: '5 / 6' },
+      { tpl: 'A', eyebrow: 'mixed', size: 'md', punch: "Start your\n{30-day}\nfree trial.", meta: 'becomeable.app/get-able' },
   ] },
 
   { id: 'C244', slug: 'brandscript-i-am-able-to-budget', theme: 'page', format: 'tiktok', slides: [
-      { tpl: 'A', eyebrow: 'brandscript', size: 'md', muted: "You want to say:", punch: "\"I'm {able to}\nbudget.\"", meta: '1 / 6' },
-      { tpl: 'A', eyebrow: 'brandscript', size: 'md', muted: "Variable income makes", punch: "that feel\n{impossible.}", meta: '2 / 6' },
-      { tpl: 'A', eyebrow: 'brandscript', size: 'md', noWordmark: true, muted: "Meet Able.", punch: "Per-deposit,\n{not per-month.}", meta: '3 / 6' },
-      { tpl: 'C', eyebrow: 'brandscript', size: 'md', shot: '02-allocation-flow', noWordmark: true, muted: "Every deposit", punch: "fills the\n{floor first.}", meta: '4 / 6' },
-      { tpl: 'A', eyebrow: 'brandscript', size: 'md', muted: "Same income.", punch: "{Different relationship}\nto money.", meta: '5 / 6' },
-      { tpl: 'A', eyebrow: 'brandscript', size: 'md', punch: "Start your\n{30-day}\nfree trial.", meta: 'becomeable.app/get-able' },
+      { tpl: 'A', eyebrow: 'mixed', size: 'md', muted: "You want to say:", punch: "\"I'm {able to}\nbudget.\"", meta: '1 / 6' },
+      { tpl: 'A', eyebrow: 'mixed', size: 'md', muted: "Inconsistent income makes", punch: "that feel\n{impossible.}", meta: '2 / 6' },
+      { tpl: 'A', eyebrow: 'mixed', size: 'md', noWordmark: true, muted: "Meet Able.", punch: "Per-deposit,\n{not per-month.}", meta: '3 / 6' },
+      { tpl: 'C', eyebrow: 'mixed', size: 'md', shot: '02-allocation-flow', noWordmark: true, muted: "Every deposit", punch: "fills the\n{floor first.}", meta: '4 / 6' },
+      { tpl: 'A', eyebrow: 'mixed', size: 'md', muted: "Same income.", punch: "{Different relationship}\nto money.", meta: '5 / 6' },
+      { tpl: 'A', eyebrow: 'mixed', size: 'md', punch: "Start your\n{30-day}\nfree trial.", meta: 'becomeable.app/get-able' },
   ] },
 
   { id: 'C245', slug: 'brandscript-year-one-calm', theme: 'glass', format: 'tiktok', slides: [
-      { tpl: 'A', eyebrow: 'brandscript', size: 'md', muted: "You want a year", punch: "that doesn't end in\n{panic.}", meta: '1 / 6' },
-      { tpl: 'A', eyebrow: 'brandscript', size: 'md', muted: "December usually =", punch: "{scramble.}\nApril usually = surprise.", meta: '2 / 6' },
-      { tpl: 'A', eyebrow: 'brandscript', size: 'md', noWordmark: true, muted: "Meet Able.", punch: "Built for the way\nyou {actually}\nget paid.", meta: '3 / 6' },
-      { tpl: 'C', eyebrow: 'brandscript', size: 'md', shot: '02-allocation-flow', noWordmark: true, muted: "Floor + tax pre-funded.", punch: "{All year.}", meta: '4 / 6' },
-      { tpl: 'A', eyebrow: 'brandscript', size: 'md', muted: "Year-end recap:", punch: "debt down. Savings up.\n{No panic.}", meta: '5 / 6' },
-      { tpl: 'A', eyebrow: 'brandscript', size: 'md', punch: "Start your\n{30-day}\nfree trial.", meta: 'becomeable.app/get-able' },
+      { tpl: 'A', eyebrow: 'mixed', size: 'md', muted: "You want a year", punch: "that doesn't end in\n{panic.}", meta: '1 / 6' },
+      { tpl: 'A', eyebrow: 'mixed', size: 'md', muted: "December usually =", punch: "{scramble.}\nApril usually = surprise.", meta: '2 / 6' },
+      { tpl: 'A', eyebrow: 'mixed', size: 'md', noWordmark: true, muted: "Meet Able.", punch: "Built for the way\nyou {actually}\nget paid.", meta: '3 / 6' },
+      { tpl: 'C', eyebrow: 'mixed', size: 'md', shot: '02-allocation-flow', noWordmark: true, muted: "Floor + tax pre-funded.", punch: "{All year.}", meta: '4 / 6' },
+      { tpl: 'A', eyebrow: 'mixed', size: 'md', muted: "Year-end recap:", punch: "debt down. Savings up.\n{No panic.}", meta: '5 / 6' },
+      { tpl: 'A', eyebrow: 'mixed', size: 'md', punch: "Start your\n{30-day}\nfree trial.", meta: 'becomeable.app/get-able' },
   ] },
 
   { id: 'C246', slug: 'brandscript-permission', theme: 'white', format: 'tiktok', slides: [
-      { tpl: 'A', eyebrow: 'brandscript', size: 'md', muted: "You want to", punch: "stop feeling {guilty}\nabout money.", meta: '1 / 6' },
-      { tpl: 'A', eyebrow: 'brandscript', size: 'md', muted: "The advice was wrong", punch: "for your {income}\nshape.", meta: '2 / 6' },
-      { tpl: 'A', eyebrow: 'brandscript', size: 'md', noWordmark: true, muted: "The problem was never you.", punch: "It was the {advice}\nyou were handed.", meta: '3 / 6' },
-      { tpl: 'C', eyebrow: 'brandscript', size: 'md', shot: '02-allocation-flow', noWordmark: true, muted: "Per-deposit allocation.", punch: "Not {per-month.}", meta: '4 / 6' },
-      { tpl: 'A', eyebrow: 'brandscript', size: 'md', muted: "Shame fades.", punch: "{Structure} takes\nits place.", meta: '5 / 6' },
-      { tpl: 'A', eyebrow: 'brandscript', size: 'md', punch: "Start your\n{30-day}\nfree trial.", meta: 'becomeable.app/get-able' },
+      { tpl: 'A', eyebrow: 'mixed', size: 'md', muted: "You want to", punch: "stop feeling {guilty}\nabout money.", meta: '1 / 6' },
+      { tpl: 'A', eyebrow: 'mixed', size: 'md', muted: "The advice was wrong", punch: "for your {income}\nshape.", meta: '2 / 6' },
+      { tpl: 'A', eyebrow: 'mixed', size: 'md', noWordmark: true, muted: "The problem was never you.", punch: "It was the {advice}\nyou were handed.", meta: '3 / 6' },
+      { tpl: 'C', eyebrow: 'mixed', size: 'md', shot: '02-allocation-flow', noWordmark: true, muted: "Per-deposit allocation.", punch: "Not {per-month.}", meta: '4 / 6' },
+      { tpl: 'A', eyebrow: 'mixed', size: 'md', muted: "Shame fades.", punch: "{Structure} takes\nits place.", meta: '5 / 6' },
+      { tpl: 'A', eyebrow: 'mixed', size: 'md', punch: "Start your\n{30-day}\nfree trial.", meta: 'becomeable.app/get-able' },
   ] },
 
   { id: 'C247', slug: 'brandscript-reserve-bridge', theme: 'green', format: 'tiktok', slides: [
-      { tpl: 'A', eyebrow: 'brandscript', size: 'md', muted: "You want to bridge", punch: "{slow months}\nwithout panic.", meta: '1 / 6' },
-      { tpl: 'A', eyebrow: 'brandscript', size: 'md', muted: "Slow months feel like", punch: "{emergencies.}", meta: '2 / 6' },
-      { tpl: 'A', eyebrow: 'brandscript', size: 'md', noWordmark: true, muted: "Meet Able.", punch: "Built for the way\nyou {actually}\nget paid.", meta: '3 / 6' },
-      { tpl: 'C', eyebrow: 'brandscript', size: 'md', shot: '02-allocation-flow', noWordmark: true, muted: "Every good-month deposit", punch: "grows the {reserve.}", meta: '4 / 6' },
-      { tpl: 'A', eyebrow: 'brandscript', size: 'md', muted: "Slow months become", punch: "{routine.}\nNot emergencies.", meta: '5 / 6' },
-      { tpl: 'A', eyebrow: 'brandscript', size: 'md', punch: "Start your\n{30-day}\nfree trial.", meta: 'becomeable.app/get-able' },
+      { tpl: 'A', eyebrow: 'mixed', size: 'md', muted: "You want to bridge", punch: "{slow months}\nwithout panic.", meta: '1 / 6' },
+      { tpl: 'A', eyebrow: 'mixed', size: 'md', muted: "Slow months feel like", punch: "{emergencies.}", meta: '2 / 6' },
+      { tpl: 'A', eyebrow: 'mixed', size: 'md', noWordmark: true, muted: "Meet Able.", punch: "Built for the way\nyou {actually}\nget paid.", meta: '3 / 6' },
+      { tpl: 'C', eyebrow: 'mixed', size: 'md', shot: '02-allocation-flow', noWordmark: true, muted: "Every good-month deposit", punch: "grows the {reserve.}", meta: '4 / 6' },
+      { tpl: 'A', eyebrow: 'mixed', size: 'md', muted: "Slow months become", punch: "{routine.}\nNot emergencies.", meta: '5 / 6' },
+      { tpl: 'A', eyebrow: 'mixed', size: 'md', punch: "Start your\n{30-day}\nfree trial.", meta: 'becomeable.app/get-able' },
   ] },
 
   { id: 'C248', slug: 'brandscript-weekly-rhythm', theme: 'glass-dark', format: 'tiktok', slides: [
-      { tpl: 'A', eyebrow: 'brandscript', size: 'md', muted: "You want a money habit", punch: "that takes {10 minutes}\na week.", meta: '1 / 6' },
-      { tpl: 'A', eyebrow: 'brandscript', size: 'md', muted: "Most apps want", punch: "{daily} attention.", meta: '2 / 6' },
-      { tpl: 'A', eyebrow: 'brandscript', size: 'md', noWordmark: true, muted: "Meet Able.", punch: "Built for the way\nyou {actually}\nget paid.", meta: '3 / 6' },
-      { tpl: 'C', eyebrow: 'brandscript', size: 'md', shot: '01-dashboard', noWordmark: true, muted: "Automation does the daily.", punch: "You do the\n{weekly.}", meta: '4 / 6' },
-      { tpl: 'A', eyebrow: 'brandscript', size: 'md', muted: "10 minutes Sunday.", punch: "Then you're\n{done.}", meta: '5 / 6' },
-      { tpl: 'A', eyebrow: 'brandscript', size: 'md', punch: "Start your\n{30-day}\nfree trial.", meta: 'becomeable.app/get-able' },
+      { tpl: 'A', eyebrow: 'mixed', size: 'md', muted: "You want a money habit", punch: "that takes {10 minutes}\na week.", meta: '1 / 6' },
+      { tpl: 'A', eyebrow: 'mixed', size: 'md', muted: "Most apps want", punch: "{daily} attention.", meta: '2 / 6' },
+      { tpl: 'A', eyebrow: 'mixed', size: 'md', noWordmark: true, muted: "Meet Able.", punch: "Built for the way\nyou {actually}\nget paid.", meta: '3 / 6' },
+      { tpl: 'C', eyebrow: 'mixed', size: 'md', shot: '01-dashboard', noWordmark: true, muted: "Automation does the daily.", punch: "You do the\n{weekly.}", meta: '4 / 6' },
+      { tpl: 'A', eyebrow: 'mixed', size: 'md', muted: "10 minutes Sunday.", punch: "Then you're\n{done.}", meta: '5 / 6' },
+      { tpl: 'A', eyebrow: 'mixed', size: 'md', punch: "Start your\n{30-day}\nfree trial.", meta: 'becomeable.app/get-able' },
   ] },
 
   { id: 'C249', slug: 'brandscript-finally-save', theme: 'black', format: 'tiktok', slides: [
-      { tpl: 'A', eyebrow: 'brandscript', size: 'md', muted: "You want to", punch: "actually {build}\nsavings.", meta: '1 / 6' },
-      { tpl: 'A', eyebrow: 'brandscript', size: 'md', muted: "Slow months", punch: "wipe what you\n{saved.}", meta: '2 / 6' },
-      { tpl: 'A', eyebrow: 'brandscript', size: 'md', noWordmark: true, muted: "Meet Able.", punch: "Built for the way\nyou {actually}\nget paid.", meta: '3 / 6' },
-      { tpl: 'C', eyebrow: 'brandscript', size: 'md', shot: '02-allocation-flow', noWordmark: true, muted: "Reserve grows on every deposit.", punch: "Bills {don't}\nraid it.", meta: '4 / 6' },
-      { tpl: 'A', eyebrow: 'brandscript', size: 'md', muted: "Savings line that goes", punch: "{up.}\nNot sideways.", meta: '5 / 6' },
-      { tpl: 'A', eyebrow: 'brandscript', size: 'md', punch: "Start your\n{30-day}\nfree trial.", meta: 'becomeable.app/get-able' },
+      { tpl: 'A', eyebrow: 'mixed', size: 'md', muted: "You want to", punch: "actually {build}\nsavings.", meta: '1 / 6' },
+      { tpl: 'A', eyebrow: 'mixed', size: 'md', muted: "Slow months", punch: "wipe what you\n{saved.}", meta: '2 / 6' },
+      { tpl: 'A', eyebrow: 'mixed', size: 'md', noWordmark: true, muted: "Meet Able.", punch: "Built for the way\nyou {actually}\nget paid.", meta: '3 / 6' },
+      { tpl: 'C', eyebrow: 'mixed', size: 'md', shot: '02-allocation-flow', noWordmark: true, muted: "Reserve grows on every deposit.", punch: "Bills {don't}\nraid it.", meta: '4 / 6' },
+      { tpl: 'A', eyebrow: 'mixed', size: 'md', muted: "Savings line that goes", punch: "{up.}\nNot sideways.", meta: '5 / 6' },
+      { tpl: 'A', eyebrow: 'mixed', size: 'md', punch: "Start your\n{30-day}\nfree trial.", meta: 'becomeable.app/get-able' },
   ] },
 
   { id: 'C250', slug: 'brandscript-end-the-cycle', theme: 'page', format: 'tiktok', slides: [
-      { tpl: 'A', eyebrow: 'brandscript', size: 'md', muted: "You want to end", punch: "the Day 1-31\n{cycle.}", meta: '1 / 6' },
-      { tpl: 'A', eyebrow: 'brandscript', size: 'md', muted: "Same income.", punch: "{Same shame.}", meta: '2 / 6' },
-      { tpl: 'A', eyebrow: 'brandscript', size: 'md', noWordmark: true, muted: "Meet Able.", punch: "Same foundation.\n{Different clock.}", meta: '3 / 6' },
-      { tpl: 'C', eyebrow: 'brandscript', size: 'md', shot: '02-allocation-flow', noWordmark: true, muted: "Different unit of time.", punch: "{Per-deposit.}", meta: '4 / 6' },
-      { tpl: 'A', eyebrow: 'brandscript', size: 'md', muted: "Same income.", punch: "{Different} outcome.", meta: '5 / 6' },
-      { tpl: 'A', eyebrow: 'brandscript', size: 'md', punch: "Start your\n{30-day}\nfree trial.", meta: 'becomeable.app/get-able' },
+      { tpl: 'A', eyebrow: 'mixed', size: 'md', muted: "You want to end", punch: "the Day 1-31\n{cycle.}", meta: '1 / 6' },
+      { tpl: 'A', eyebrow: 'mixed', size: 'md', muted: "Same income.", punch: "{Same shame.}", meta: '2 / 6' },
+      { tpl: 'A', eyebrow: 'mixed', size: 'md', noWordmark: true, muted: "Meet Able.", punch: "Same foundation.\n{Different clock.}", meta: '3 / 6' },
+      { tpl: 'C', eyebrow: 'mixed', size: 'md', shot: '02-allocation-flow', noWordmark: true, muted: "Different unit of time.", punch: "{Per-deposit.}", meta: '4 / 6' },
+      { tpl: 'A', eyebrow: 'mixed', size: 'md', muted: "Same income.", punch: "{Different} outcome.", meta: '5 / 6' },
+      { tpl: 'A', eyebrow: 'mixed', size: 'md', punch: "Start your\n{30-day}\nfree trial.", meta: 'becomeable.app/get-able' },
   ] },
 
   // ── MORE IDENTITY-ARC (C251-C258) — vulnerable transformation moments ──
@@ -5834,13 +5836,13 @@ window.CAROUSELS = [
   { id: 'C251', slug: 'identity-can-afford-this', theme: 'page', format: 'tiktok', slides: [
       { tpl: 'A', eyebrow: 'identity', size: 'md', muted: "\"We can afford this.\"", punch: "First time you said it\n{out loud.}", meta: '1 / 5' },
       { tpl: 'A', eyebrow: 'identity', size: 'md', muted: "Used to whisper it.", punch: "Or {avoid} the question.", meta: '2 / 5' },
-      { tpl: 'C', eyebrow: 'identity', size: 'md', shot: '01-dashboard', noWordmark: true, muted: "Free spending bucket?", punch: "{It has the number.}", meta: '3 / 5' },
+      { tpl: 'C', eyebrow: 'identity', size: 'md', shot: '01-dashboard', noWordmark: true, muted: "Free spending bucket?", punch: "It has {the number.}", meta: '3 / 5' },
       { tpl: 'A', eyebrow: 'identity', size: 'md', muted: "No flinch.", punch: "No {mental math.}\nJust yes.", meta: '4 / 5' },
       { tpl: 'A', eyebrow: 'identity', size: 'md', punch: "Free for\n{30 days.}", meta: 'becomeable.app/get-able' },
   ] },
 
   { id: 'C252', slug: 'identity-holiday-no-borrow', theme: 'green', format: 'tiktok', slides: [
-      { tpl: 'A', eyebrow: 'identity', size: 'md', muted: "December.", punch: "First holiday without\n{a credit card.}", meta: '1 / 5' },
+      { tpl: 'A', eyebrow: 'identity', size: 'md', muted: "December.", punch: "First holiday without\na {credit card.}", meta: '1 / 5' },
       { tpl: 'A', eyebrow: 'identity', size: 'md', muted: "Free spending bucket", punch: "had the {gift money}\nready.", meta: '2 / 5' },
       { tpl: 'C', eyebrow: 'identity', size: 'md', shot: '01-dashboard', noWordmark: true, muted: "Floor still funded.", punch: "Tax still {growing.}", meta: '3 / 5' },
       { tpl: 'A', eyebrow: 'identity', size: 'md', muted: "January arrives.", punch: "{No} statement panic.", meta: '4 / 5' },
@@ -5909,7 +5911,7 @@ window.CAROUSELS = [
       { tpl: 'A', eyebrow: 'real estate', size: 'md', muted: "Real estate agent.", punch: "{Day 1.}\nClosing\n{commission lands.}", meta: '1 / 5' },
       { tpl: 'C', eyebrow: 'real estate', size: 'md', shot: '02-allocation-flow', noWordmark: true, muted: "Day 7.", punch: "Floor + tax routed.\nMarketing fund {topped.}", meta: '2 / 5' },
       { tpl: 'C', eyebrow: 'real estate', size: 'md', shot: '01-dashboard', noWordmark: true, muted: "Day 18.", punch: "No new closings.\n{Reserve covers.}", meta: '3 / 5' },
-      { tpl: 'C', eyebrow: 'real estate', size: 'md', shot: '04-score', noWordmark: true, muted: "Day 31.", punch: "Slow month.\n{Floor held.}", meta: '4 / 5' },
+      { tpl: 'C', eyebrow: 'real estate', size: 'md', shot: '04-score', noWordmark: true, muted: "Day 31.", punch: "Slow month.\nFloor {held.}", meta: '4 / 5' },
       { tpl: 'A', eyebrow: 'real estate', size: 'md', punch: "Free for\n{30 days.}", meta: 'becomeable.app/get-able' },
   ] },
 
@@ -5925,15 +5927,15 @@ window.CAROUSELS = [
       { tpl: 'A', eyebrow: 'tips', size: 'md', muted: "Tipped server.", punch: "{Day 1.}\nFriday shift.\nCash + cards.", meta: '1 / 5' },
       { tpl: 'C', eyebrow: 'tips', size: 'md', shot: '06-log-income', noWordmark: true, muted: "Log both.", punch: "Tax + reserve\n{auto-routed.}", meta: '2 / 5' },
       { tpl: 'C', eyebrow: 'tips', size: 'md', shot: '01-dashboard', noWordmark: true, muted: "Day 14.", punch: "Slow Tuesday.\n{Reserve covered.}", meta: '3 / 5' },
-      { tpl: 'C', eyebrow: 'tips', size: 'md', shot: '04-score', noWordmark: true, muted: "Day 31.", punch: "Variable tips.\n{Floor held.}", meta: '4 / 5' },
+      { tpl: 'C', eyebrow: 'tips', size: 'md', shot: '04-score', noWordmark: true, muted: "Day 31.", punch: "Inconsistent tips.\n{Floor held.}", meta: '4 / 5' },
       { tpl: 'A', eyebrow: 'tips', size: 'md', punch: "Free for\n{30 days.}", meta: 'becomeable.app/get-able' },
   ] },
 
   { id: 'C263', slug: 'nurse-day-1-31', theme: 'page', format: 'tiktok', slides: [
-      { tpl: 'A', eyebrow: 'nurse', size: 'md', muted: "Nurse, PRN.", punch: "{Day 1.}\nPaycheck from\n{this week's contract.}", meta: '1 / 5' },
+      { tpl: 'A', eyebrow: 'nurse', size: 'md', muted: "Nurse, PRN.", punch: "{Day 1.}\nPaycheck from\nthis {week's contract.}", meta: '1 / 5' },
       { tpl: 'C', eyebrow: 'nurse', size: 'md', shot: '02-allocation-flow', noWordmark: true, muted: "Each paycheck", punch: "splits the\n{same way.}", meta: '2 / 5' },
-      { tpl: 'C', eyebrow: 'nurse', size: 'md', shot: '01-dashboard', noWordmark: true, muted: "Day 18.", punch: "Between contracts.\n{Reserve holds.}", meta: '3 / 5' },
-      { tpl: 'C', eyebrow: 'nurse', size: 'md', shot: '04-score', noWordmark: true, muted: "Day 31.", punch: "Variable schedule.\n{Consistent} take-home.", meta: '4 / 5' },
+      { tpl: 'C', eyebrow: 'nurse', size: 'md', shot: '01-dashboard', noWordmark: true, muted: "Day 18.", punch: "Between contracts.\nReserve {holds.}", meta: '3 / 5' },
+      { tpl: 'C', eyebrow: 'nurse', size: 'md', shot: '04-score', noWordmark: true, muted: "Day 31.", punch: "Inconsistent schedule.\n{Consistent} take-home.", meta: '4 / 5' },
       { tpl: 'A', eyebrow: 'nurse', size: 'md', punch: "Free for\n{30 days.}", meta: 'becomeable.app/get-able' },
   ] },
 
@@ -5943,7 +5945,7 @@ window.CAROUSELS = [
       { tpl: 'A', eyebrow: 'design', size: 'md', muted: "You want to", punch: "stop the\n{Net-60 panic.}", meta: '1 / 6' },
       { tpl: 'A', eyebrow: 'design', size: 'md', muted: "Bills are due", punch: "{net-zero.}", meta: '2 / 6' },
       { tpl: 'A', eyebrow: 'design', size: 'md', noWordmark: true, muted: "Meet Able.", punch: "Built for the way\nyou {actually}\nget paid.", meta: '3 / 6' },
-      { tpl: 'C', eyebrow: 'design', size: 'md', shot: '02-allocation-flow', noWordmark: true, muted: "Every deposit", punch: "splits the moment\n{it arrives.}", meta: '4 / 6' },
+      { tpl: 'C', eyebrow: 'design', size: 'md', shot: '02-allocation-flow', noWordmark: true, muted: "Every deposit", punch: "splits the moment\nit {arrives.}", meta: '4 / 6' },
       { tpl: 'A', eyebrow: 'design', size: 'md', muted: "Pipeline gaps?", punch: "Floor {doesn't notice.}", meta: '5 / 6' },
       { tpl: 'A', eyebrow: 'design', size: 'md', punch: "Start your\n{30-day}\nfree trial.", meta: 'becomeable.app/get-able' },
   ] },
@@ -5976,7 +5978,7 @@ window.CAROUSELS = [
   ] },
 
   { id: 'C268', slug: 'brandscript-nurse', theme: 'page', format: 'tiktok', slides: [
-      { tpl: 'A', eyebrow: 'nurse', size: 'md', muted: "You want", punch: "variable schedule,\n{consistent} pay.", meta: '1 / 6' },
+      { tpl: 'A', eyebrow: 'nurse', size: 'md', muted: "You want", punch: "inconsistent schedule,\n{consistent} pay.", meta: '1 / 6' },
       { tpl: 'A', eyebrow: 'nurse', size: 'md', muted: "PRN.", punch: "Per-diem.\n{Travel} contracts.", meta: '2 / 6' },
       { tpl: 'A', eyebrow: 'nurse', size: 'md', noWordmark: true, muted: "Meet Able.", punch: "Built for the way\nyou {actually}\nget paid.", meta: '3 / 6' },
       { tpl: 'C', eyebrow: 'nurse', size: 'md', shot: '02-allocation-flow', noWordmark: true, muted: "Each paycheck", punch: "splits the\n{same way.}", meta: '4 / 6' },
@@ -5984,10 +5986,12 @@ window.CAROUSELS = [
       { tpl: 'A', eyebrow: 'nurse', size: 'md', punch: "Start your\n{30-day}\nfree trial.", meta: 'becomeable.app/get-able' },
   ] },
 
-  // C269 — Launch arc: waves → freeze → leak → cost → guide → 3 steps → success → CTA (page · launch)
+  // C269 — Launch arc: now-in-app-store hero → pain → guide → 3 product-shot steps → success → CTA (page · launch)
   { id: 'C269', slug: 'income-in-waves', theme: 'page', format: 'tiktok', slides: [
-      { tpl: 'B', eyebrow: 'Swipe →', size: 'md',
-        punch: "Income comes\nin {waves.}",
+      { tpl: 'C', eyebrow: 'Now in the App Store.', size: 'md',
+        pos: 'right', shot: '01-dashboard',
+        muted: "An app built for",
+        punch: "{inconsistent}\nincome.",
         meta: '1 / 10' },
       { tpl: 'A', eyebrow: 'inconsistent income', size: 'md',
         muted: "You don't know\nwhen the next\ncheck lands.",
@@ -6004,19 +6008,23 @@ window.CAROUSELS = [
       { tpl: 'B', eyebrow: 'inconsistent income', size: 'md',
         punch: "Able was built\nfor {this.}",
         meta: '5 / 10' },
-      { tpl: 'A', eyebrow: 'Step 1', size: 'md',
+      { tpl: 'C', eyebrow: 'Step 1', size: 'md',
+        pos: 'left', shot: '06-log-income',
         muted: "Money arrives.",
         punch: "You {log it.}",
         meta: '6 / 10' },
-      { tpl: 'A', eyebrow: 'Step 2', size: 'md',
+      { tpl: 'C', eyebrow: 'Step 2', size: 'md',
+        pos: 'right', shot: '03-plan-bills',
         muted: "Bills and taxes",
         punch: "are {funded first.}",
         meta: '7 / 10' },
-      { tpl: 'A', eyebrow: 'Step 3', size: 'md',
+      { tpl: 'C', eyebrow: 'Step 3', size: 'md',
+        pos: 'left', shot: '02-allocation-flow',
         muted: "Surplus splits.",
         punch: "Debt. Reserve.\n{Free spending.}",
         meta: '8 / 10' },
-      { tpl: 'A', eyebrow: 'after a few months', size: 'md',
+      { tpl: 'C', eyebrow: 'after a few months', size: 'md',
+        pos: 'right', shot: '04-score',
         muted: "Nothing leaks.\nBills paid. Debt down.",
         punch: "Reserve {grew.}",
         meta: '9 / 10' },
@@ -6146,7 +6154,7 @@ window.CAROUSELS = [
         meta: '2 / 6' },
       { tpl: 'A', eyebrow: 'Also', size: 'md',
         muted: "80% couldn't cover",
-        punch: "a {$1,000 surprise.}",
+        punch: "a {surprise.}",
         meta: '3 / 6' },
       { tpl: 'A', eyebrow: 'The pattern', size: 'md',
         muted: "Three numbers.",
@@ -6351,7 +6359,7 @@ window.RESERVED_CAROUSELS = [
         punch: "{Run both} numbers.\nTake the bigger.",
         meta: '5 / 6' },
       { tpl: 'B', eyebrow: 'mixed', size: 'md',
-        punch: "{Free} for 30 days.\nBuilt for\nvariable income.",
+        punch: "{Free} for 30 days.\nBuilt for\ninconsistent income.",
         meta: 'becomeable.app/get-able' },
   ] },
   // C32 — Schedule C walkthrough (white · pricing)
@@ -6360,7 +6368,7 @@ window.RESERVED_CAROUSELS = [
         punch: "{Schedule C}\nin 6 slides.",
         meta: '1 / 7' },
       { tpl: 'B', eyebrow: 'mixed', size: 'md',
-        punch: "The form\nwhere your {business}\nlives.",
+        punch: "The form where\nyour {business}\nlives.",
         meta: '2 / 7' },
       { tpl: 'A', eyebrow: 'Line 1', size: 'md',
         muted: "Gross income.",
@@ -6471,7 +6479,7 @@ window.RESERVED_CAROUSELS = [
         meta: '1 / 5' },
       { tpl: 'A', eyebrow: 'credit', size: 'md',
         muted: "Hard pull:",
-        punch: "{3 to 7} points.\n2 years on report.",
+        punch: "{3-7.} points.\n2 years on report.",
         meta: '2 / 5' },
       { tpl: 'A', eyebrow: 'credit', size: 'md',
         muted: "Mortgage + auto + student?",
@@ -6489,7 +6497,7 @@ window.RESERVED_CAROUSELS = [
   { id: 'C147', slug: 'learn-90-day-credit-plan', theme: 'green', flagged: 'credit-edu', format: 'tiktok', slides: [
       { tpl: 'A', eyebrow: 'credit', size: 'md',
         muted: "90 days.",
-        punch: "{50 to 150} points.",
+        punch: "{50-150.} points.",
         meta: '1 / 5' },
       { tpl: 'A', eyebrow: 'credit', size: 'md',
         muted: "Week 1:",
@@ -6522,7 +6530,7 @@ window.RESERVED_CAROUSELS = [
         punch: "Manually pay the\n{full balance.}",
         meta: '3 / 5' },
       { tpl: 'A', eyebrow: 'credit', size: 'md',
-        muted: "Variable income?",
+        muted: "Inconsistent income?",
         punch: "Pay {weekly.}\nNot at the due date.",
         meta: '4 / 5' },
       { tpl: 'A', eyebrow: 'credit', size: 'md',
@@ -6559,7 +6567,7 @@ window.RESERVED_CAROUSELS = [
         meta: '1 / 5' },
       { tpl: 'A', eyebrow: 'credit', size: 'md',
         muted: "Wrong balance.",
-        punch: "Wrong late.\n{Not your account.}",
+        punch: "Wrong late.\n{your account.}",
         meta: '2 / 5' },
       { tpl: 'A', eyebrow: 'credit', size: 'md',
         muted: "Write the bureau.",
@@ -6774,14 +6782,14 @@ window.BRANDSCRIPT = [
 
   // ── Brand lockup ──
   { id: 'B01', slug: 'lockup-built-for', cat: 'Brand lockup', theme: 'green', tpl: 'B', eyebrow: 'mixed', center: true,
-    punch: "Built for\n{inconsistent income.}" },
+    punch: "Built for\n{inconsistent}\nincome." },
 
   { id: 'B02', slug: 'lockup-budget-with', cat: 'Brand lockup', theme: 'page', tpl: 'B', eyebrow: 'mixed', center: true,
-    punch: "Budget with an\n{inconsistent income.}" },
+    punch: "Budget with an\n{inconsistent}\nincome." },
 
   { id: 'B03', slug: 'lockup-app-built-for', cat: 'Brand lockup', theme: 'white', tpl: 'A', eyebrow: 'mixed', size: 'md',
     muted: "An app built for anyone",
-    punch: "who struggles to\nbudget {inconsistent income.}" },
+    punch: "who struggles to\nbudget {inconsistent}\nincome." },
 
   // ── North Star ──
   { id: 'B04', slug: 'north-star', cat: 'North Star', theme: 'glass-dark', tpl: 'A', eyebrow: 'mixed', size: 'md',
@@ -6791,17 +6799,17 @@ window.BRANDSCRIPT = [
   // ── Audience ──
   { id: 'B05', slug: 'audience-struggles-to-budget', cat: 'Audience', theme: 'page', tpl: 'A', eyebrow: 'mixed', size: 'md',
     muted: "For anyone",
-    punch: "who struggles to budget\n{inconsistent income.}" },
+    punch: "who struggles to budget\n{inconsistent}\nincome." },
 
   { id: 'B06', slug: 'audience-cant-budget', cat: 'Audience', theme: 'white', tpl: 'A', eyebrow: 'mixed', size: 'md',
     muted: "For people who",
-    punch: "can't budget\n{inconsistent income.}" },
+    punch: "can't budget\n{inconsistent}\nincome." },
 
   { id: 'B07', slug: 'audience-built-for-ents', cat: 'Audience', theme: 'green', tpl: 'B', eyebrow: 'mixed',
     punch: "Built for {anyone}\nwith inconsistent income." },
 
   { id: 'B08', slug: 'audience-people', cat: 'Audience', theme: 'page', tpl: 'B', eyebrow: 'mixed',
-    punch: "For people with\n{inconsistent income.}" },
+    punch: "For people who\nbudget {inconsistent}\nincome." },
 
   // ── Villain / problem ──
   { id: 'B09', slug: 'villain-no-one-taught', cat: 'Villain', theme: 'black', tpl: 'A', eyebrow: 'mixed',
@@ -6810,20 +6818,20 @@ window.BRANDSCRIPT = [
 
   { id: 'B10', slug: 'villain-assume-paycheck', cat: 'Villain', theme: 'white', tpl: 'A', eyebrow: 'mixed',
     muted: "Most budgeting apps",
-    punch: "assume a\n{steady paycheck.}" },
+    punch: "assume a\n{steady} paycheck." },
 
   { id: 'B11', slug: 'villain-feels-impossible', cat: 'Villain', theme: 'glass-dark', tpl: 'A', eyebrow: 'mixed',
     muted: "Inconsistent income",
-    punch: "makes budgeting\n{feel impossible.}" },
+    punch: "makes budgeting\nfeel {impossible.}" },
 
   { id: 'B12', slug: 'villain-never-taught', cat: 'Villain', theme: 'black', tpl: 'A', eyebrow: 'mixed', size: 'md',
     muted: "You were never taught\nhow to budget a paycheck",
-    punch: "that {doesn't follow}\na schedule." },
+    punch: "that doesn't {follow}\na schedule." },
 
   // ── Real fear (insight) ──
   { id: 'B13', slug: 'fear-not-knowing', cat: 'Real fear', theme: 'glass-dark', tpl: 'A', eyebrow: 'mixed', size: 'md',
     muted: "Entrepreneurs don't fail to\npay down debt because\nthey don't want to.",
-    punch: "They fail because they're\n{afraid} of not knowing\nwhen the next check\nis coming in." },
+    punch: "They fail because\nthey're {afraid} of not\nknowing when the\nnext check is coming in." },
 
   // ── Paralysis ──
   { id: 'B14', slug: 'paralysis-you-freeze', cat: 'Paralysis', theme: 'black', tpl: 'B', eyebrow: 'mixed', center: true,
@@ -6849,7 +6857,7 @@ window.BRANDSCRIPT = [
     punch: "Nothing paid down.\nNothing saved.\nNothing to show for it." },
 
   { id: 'B20', slug: 'paralysis-check-to-check', cat: 'Paralysis', theme: 'glass-dark', tpl: 'B', eyebrow: 'mixed',
-    punch: "Living unpredictable\ncheck to unpredictable\n{check.}" },
+    punch: "Stop living check\nto unpredictable {check.}", size: "sm" },
 
   // ── Permission ──
   { id: 'B21', slug: 'permission-not-discipline', cat: 'Permission', theme: 'green', tpl: 'A', eyebrow: 'mixed', size: 'md',
@@ -6866,7 +6874,7 @@ window.BRANDSCRIPT = [
 
   { id: 'B24', slug: 'solution-lumpy-on-purpose', cat: 'Solution', theme: 'glass', tpl: 'A', eyebrow: 'mixed', size: 'md',
     muted: "Traditional apps assume\na steady paycheck.",
-    punch: "{Able assumes} your income\nis lumpy, unpredictable,\nand rarely on schedule." },
+    punch: "{Able assumes} your\nincome is lumpy,\nunpredictable, and rarely\non schedule." },
 
   // ── Outcomes ──
   { id: 'B25', slug: 'outcome-pay-down-debt', cat: 'Outcomes', theme: 'green', tpl: 'B', eyebrow: 'mixed', center: true,
@@ -6877,7 +6885,7 @@ window.BRANDSCRIPT = [
 
   { id: 'B27', slug: 'outcome-stop-check-to-check', cat: 'Outcomes', theme: 'green', tpl: 'A', eyebrow: 'mixed',
     muted: "Stop living",
-    punch: "{unpredictable check}\nto unpredictable check." },
+    punch: "unpredictable check\nto {unpredictable} check." },
 
   // ── Transformation ──
   { id: 'B28', slug: 'transform-i-am-able', cat: 'Transformation', theme: 'page', tpl: 'B', eyebrow: 'mixed', center: true,
@@ -6911,7 +6919,7 @@ window.BRANDSCRIPT = [
 
   { id: 'B36', slug: 'identity-budget-inconsistent', cat: 'New identity', theme: 'green', tpl: 'A', eyebrow: 'mixed', size: 'md',
     muted: "I am able to budget",
-    punch: "{inconsistent income.}" },
+    punch: "{inconsistent}\nincome." },
 
   // ── Transformation (added 2026-04-25) ──
   { id: 'B37', slug: 'transform-breathe-again', cat: 'Transformation', theme: 'glass-dark', tpl: 'A', eyebrow: 'mixed', size: 'md',
@@ -6919,7 +6927,7 @@ window.BRANDSCRIPT = [
     punch: "Finally able to\n{breathe.}" },
 
   { id: 'B38', slug: 'identity-become-able', cat: 'New identity', theme: 'green', tpl: 'A', eyebrow: 'mixed', size: 'md',
-    muted: "Able to pay down debt, even on slow months.\nAble to save without second-guessing.\nAble to predict what is coming.\nAble to budget inconsistent income.",
+    muted: "Able to pay down debt.\nAble to save without second-guessing.\nAble to predict what is coming.\nAble to budget inconsistent income.",
     punch: "{Become able.}" },
 
   { id: 'B39', slug: 'outcome-just-confidence', cat: 'Outcomes', theme: 'green', tpl: 'A', eyebrow: 'mixed', size: 'md',
@@ -6927,12 +6935,12 @@ window.BRANDSCRIPT = [
     punch: "{Just confidence.}\nEvery day." },
 
   { id: 'B40', slug: 'outcome-cost-of-waiting', cat: 'Outcomes', theme: 'black', tpl: 'B', eyebrow: 'mixed',
-    punch: "Every month you wait\nis another\n{$500–$1,000 gone.}" },
+    punch: "Every month you\nwait is another\n$500–$1,000 {gone.}" },
 
   { id: 'B41', slug: 'transform-unable-to-able', cat: 'Transformation', theme: 'green', tpl: 'B', eyebrow: 'mixed', center: true,
     punch: "From Unable\n→ {Able.}" },
 
   // ── Solution (added 2026-04-26 — value prop tagline) ──
   { id: 'B42', slug: 'solution-help-manage', cat: 'Solution', theme: 'green', tpl: 'B', eyebrow: 'mixed', center: true,
-    punch: "Able helps you manage\n{inconsistent income.}" },
+    punch: "Able helps you budget\n{inconsistent}\nincome." },
 ];

@@ -38,6 +38,25 @@ Rule 4 is the destination. When next month's floor is reserved before next month
 
 ---
 
+## Bucket framings: three views, all true (locked 2026-05-20)
+
+Different contexts call for different enumerations. All three are accurate; do not mix within a single piece of copy.
+
+**3-bucket (brand narrative, headlines, elevator pitch):**
+Floor → Reserve → Free spending.
+
+**5 jobs (LinkedIn, blog, video script, ads — the marketing default):**
+Taxes → Bills → Debt → Reserve → Free spending.
+This is the default user experience: `ownerPct` defaults to 0, so pay-yourself is silent for most users. Use this enumeration whenever copy lists the buckets.
+
+**6 destinations (capabilities docs, in-app help, comparison tables):**
+Tax off-top → Bills → Pay-yourself → Debt → Reserve → Free spending.
+The full configurable product, with `ownerPct` exposed. Reserve this view for accuracy-first contexts.
+
+**Pay-yourself in marketing copy:** acceptable in posts whose article topic is *specifically* pay-yourself (e.g., `/learn/pay-yourself-first/*`, `/business/pay-yourself-steady-paycheck/*`). Elsewhere, default to the 5 jobs framing.
+
+---
+
 ## Voice rules (lock these)
 
 - **Always** capitalize: **Floor-First Budgeting** (proper noun, like "Zero-Based Budgeting")

@@ -122,7 +122,7 @@ window.PRODUCT_POSTS = [
   { id: 'P17', slug: 'product-coach-stress', cat: 'Product', theme: 'black', tpl: 'C', eyebrow: 'mixed',
     pos: 'right', shot: '05-coach',
     muted: "Stress-tested",
-    punch: "with your {actual} bills." },
+    punch: "with your\n{actual} bills." },
 
   // P18 — Log alt
   { id: 'P18', slug: 'product-log-already-split', cat: 'Product', theme: 'green', tpl: 'C', eyebrow: 'mixed',
@@ -268,6 +268,47 @@ window.PRODUCT_POSTS = [
     muted: "From {Unable.}",
     punch: "To Able." },
 
+  // ─── LAUNCH BUNCH (2026-05-19) ──────────────────────────────────────
+  // Five singles stamped with "Now in the App Store." Each pairs a flagship
+  // phone shot with a short brand-script-locked beat. Themes diversified so
+  // they don't read as one block in the feed. Same canonical schema as
+  // P-series, only the eyebrow swaps from 'mixed' to the launch stamp.
+
+  // L01 — LAUNCH + CHARACTER (dashboard, light)
+  { id: 'L01', slug: 'launch-now-live', cat: 'Launch', theme: 'page', tpl: 'C',
+    eyebrow: 'Now in the App Store.',
+    pos: 'right', shot: '01-dashboard',
+    muted: "An app built for",
+    punch: "{inconsistent}\nincome." },
+
+  // L02 — PLAN (allocation, green)
+  { id: 'L02', slug: 'launch-five-jobs', cat: 'Launch', theme: 'green', tpl: 'C',
+    eyebrow: 'Now in the App Store.',
+    pos: 'left', shot: '02-allocation-flow',
+    muted: "One deposit.",
+    punch: "{Five jobs.}\nIn order." },
+
+  // L03 — PROBLEM external (dashboard, white)
+  { id: 'L03', slug: 'launch-wrong-tool', cat: 'Launch', theme: 'white', tpl: 'C',
+    eyebrow: 'Now in the App Store.',
+    pos: 'right', shot: '01-dashboard',
+    muted: "Most apps assume\na steady paycheck.",
+    punch: "{isn't one.}" },
+
+  // L04 — GUIDE empathy (coach, glass-dark)
+  { id: 'L04', slug: 'launch-not-your-fault', cat: 'Launch', theme: 'glass-dark', tpl: 'C',
+    eyebrow: 'Now in the App Store.',
+    pos: 'left', shot: '05-coach',
+    muted: "The problem was\nnever you.",
+    punch: "It was the\n{advice.}" },
+
+  // L05 — INSIGHT (debts, black)
+  { id: 'L05', slug: 'launch-the-fear', cat: 'Launch', theme: 'black', tpl: 'C',
+    eyebrow: 'Now in the App Store.',
+    pos: 'right', shot: '10-debts',
+    muted: "Built for the fear",
+    punch: "of the next\n{check.}" },
+
 ];
 
 
@@ -338,10 +379,10 @@ window.PRODUCT_CAROUSELS = [
         meta: 'becomeable.app/get-able' },
   ] },
 
-  // PC3 — Built for variable income (5 features)
-  { id: 'PC3', slug: 'product-built-for-variable', theme: 'glass-dark', format: 'tiktok', slides: [
+  // PC3 — Built for inconsistent income (5 features)
+  { id: 'PC3', slug: 'product-built-for-inconsistent', theme: 'glass-dark', format: 'tiktok', slides: [
       { tpl: 'B', eyebrow: 'Swipe →', size: 'md',
-        punch: "Built for\n{variable income.}",
+        punch: "Built for\n{inconsistent income.}",
         meta: '1 / 7' },
       { tpl: 'C', eyebrow: 'The floor', size: 'md', pos: 'right', shot: '01-dashboard',
         muted: "Bills + tax.",
@@ -487,10 +528,10 @@ window.PRODUCT_CAROUSELS = [
         meta: 'becomeable.app/get-able' },
   ] },
 
-  // PC8 — Why apps fail variable income (problem → solution)
+  // PC8 — Why apps fail inconsistent income (problem → solution)
   { id: 'PC8', slug: 'product-why-apps-fail', theme: 'glass-dark', format: 'tiktok', slides: [
       { tpl: 'B', eyebrow: 'Swipe →', size: 'md',
-        punch: "Why apps fail\n{variable income.}",
+        punch: "Why apps fail\n{inconsistent income.}",
         meta: '1 / 7' },
       { tpl: 'A', eyebrow: 'Reason 1', size: 'md',
         muted: "They assume",
@@ -516,6 +557,73 @@ window.PRODUCT_CAROUSELS = [
         muted: "Built for",
         punch: "{inconsistent}\nincome.",
         meta: 'becomeable.app/get-able' },
+  ] },
+
+  // ─── LAUNCH CAROUSELS (2026-05-19) ──────────────────────────────────
+  // Two net-new launch-stamped carousels. LC1 carries the "now live" beat
+  // through a 3-step product walkthrough. LC2 is the Day 1→31 villain
+  // inverted — what each day looks like WITH Able. Existing canonical
+  // carousels (C52 Floor-First, C56 3-steps, C111-C115 identity, C259-262
+  // persona Day 1→31, C242/C250 brand-script success/transformation) get
+  // pulled into the launch rotation directly from inventory; LC1/LC2 only
+  // exist to cover the launch-specific framing those don't carry.
+
+  // LC1 — "Able is live. Here's how it works." (6 slides)
+  { id: 'LC1', slug: 'launch-how-it-works', cat: 'Launch', theme: 'page', format: 'tiktok', slides: [
+      { tpl: 'B', eyebrow: 'Now in the App Store.', size: 'md',
+        punch: "Able is\n{live.}",
+        meta: '1 / 6' },
+      { tpl: 'C', eyebrow: 'Step 1', size: 'md', pos: 'right', shot: '06-log-income',
+        muted: "Log what came in.",
+        punch: "{Ten seconds.}",
+        meta: '2 / 6' },
+      { tpl: 'C', eyebrow: 'Step 2', size: 'md', pos: 'left', shot: '02-allocation-flow',
+        muted: "Able tells you",
+        punch: "where it\n{goes.}",
+        meta: '3 / 6' },
+      { tpl: 'C', eyebrow: 'Step 3', size: 'md', pos: 'right', shot: '04-score',
+        muted: "Debt drops.",
+        punch: "Savings\n{grow.}",
+        meta: '4 / 6' },
+      { tpl: 'A', eyebrow: 'Now in the App Store.', size: 'md',
+        muted: "30 days free.",
+        punch: "Live one {full}\nincome cycle.",
+        meta: '5 / 6' },
+      { tpl: 'A', eyebrow: 'mixed', size: 'md',
+        muted: "Built for",
+        punch: "{inconsistent}\nincome.",
+        meta: 'becomeable.app/get-able' },
+  ] },
+
+  // LC2 — "Day 1 with Able" — villain Day 1→31 inverted (7 slides)
+  { id: 'LC2', slug: 'launch-day-1-with-able', cat: 'Launch', theme: 'glass-dark', format: 'tiktok', slides: [
+      { tpl: 'B', eyebrow: 'Swipe →', size: 'md',
+        punch: "Day 1\nwith {Able.}",
+        meta: '1 / 7' },
+      { tpl: 'A', eyebrow: 'Day 1', size: 'md',
+        muted: "Money comes in.",
+        punch: "{Already}\nsorted.",
+        meta: '2 / 7' },
+      { tpl: 'A', eyebrow: 'Day 7', size: 'md',
+        muted: "A snack. A sub.",
+        punch: "{Within}\nthe plan.",
+        meta: '3 / 7' },
+      { tpl: 'A', eyebrow: 'Day 14', size: 'md',
+        muted: "The leak.",
+        punch: "{Caught.}",
+        meta: '4 / 7' },
+      { tpl: 'A', eyebrow: 'Day 30', size: 'md',
+        muted: "Where did $1,000 go?",
+        punch: "You {already}\nknow.",
+        meta: '5 / 7' },
+      { tpl: 'A', eyebrow: 'Day 31', size: 'md',
+        muted: "Bills paid. Debt down.",
+        punch: "Nothing\n{leaked.}",
+        meta: '6 / 7' },
+      { tpl: 'A', eyebrow: 'Now in the App Store.', size: 'md',
+        muted: "From Unable.",
+        punch: "To {Able.}",
+        meta: '7 / 7' },
   ] },
 
 ];

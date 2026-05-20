@@ -30,7 +30,7 @@ window.REELS = [
       { text: "$300.\n{Subscriptions.}", durationSec: 2.5 },
       { text: "$400.\n{Just grabbed.}", durationSec: 2.5 },
       { text: "$300.\n{The leak.}", durationSec: 2.5 },
-      { text: "Feels small.\n{The compound is huge.}", durationSec: 3 },
+      { text: "Feels small.\nThe compound is {huge.}", durationSec: 3 },
       { text: "becomeable.app/get-able", durationSec: 4 },
     ] },
 
@@ -61,12 +61,12 @@ window.REELS = [
   // R5 — Why budgeting apps fail (white)
   { id: 'R5', slug: 'apps-fail', theme: 'white', format: 'text-reel', durationSec: 20.5, eyebrow: 'mixed',
     beats: [
-      { text: "Why apps fail\n{variable income}.", durationSec: 3 },
+      { text: "Why apps fail\n{inconsistent} income.", durationSec: 3 },
       { text: "They assume\na {paycheck}.", durationSec: 2.5 },
       { text: "Yours {isn't}.", durationSec: 2.5 },
       { text: "They show\nwhat {happened}.", durationSec: 3 },
       { text: "Too {late}.", durationSec: 2.5 },
-      { text: "You need a system\nfor {variable}.", durationSec: 3 },
+      { text: "You need a system\nfor {inconsistent}.", durationSec: 3 },
       { text: "{Free} for 30 days.", durationSec: 2 },
       { text: "becomeable.app/get-able", durationSec: 2 },
     ] },
@@ -74,10 +74,10 @@ window.REELS = [
   // R6 — You were handed the wrong tool (page)
   { id: 'R6', slug: 'wrong-tool', theme: 'page', format: 'text-reel', durationSec: 14, eyebrow: 'mixed',
     beats: [
-      { text: "You're not\n{bad with money}.", durationSec: 3 },
+      { text: "You're not\nbad with {money}.", durationSec: 3 },
       { text: "You were handed\nthe {wrong tool}.", durationSec: 3 },
       { text: "Every app assumes\na {paycheck}.", durationSec: 3 },
-      { text: "Your income\nis {variable}.", durationSec: 2.5 },
+      { text: "Your income\nis {inconsistent}.", durationSec: 2.5 },
       { text: "becomeable.app/get-able", durationSec: 2.5 },
     ] },
 
@@ -144,7 +144,7 @@ window.REELS = [
     beats: [
       { text: "Which day\nare {you}?", durationSec: 2.5 },
       { text: "Day 3.\nFrozen on the {money}.", durationSec: 3, theme: 'glass-dark' },
-      { text: "Day 14.\nGone before you\n{noticed}.", durationSec: 3, theme: 'black' },
+      { text: "Gone before\nyou {noticed}.", durationSec: 3, theme: 'black' },
       { text: "Day 31.\nRelief, then {panic}.", durationSec: 3.5, theme: 'glass-dark' },
       { text: "Same person.\n{Different week.}", durationSec: 3, theme: 'green' },
       { text: "becomeable.app/get-able", durationSec: 3, theme: 'green' },
@@ -186,7 +186,7 @@ window.REELS = [
       { text: "Your\n{reserve}.", durationSec: 2.5 },
       { text: "A dam.\nOn a {river}.", durationSec: 2.5 },
       { text: "Big check?\n{Fills up.}", durationSec: 3 },
-      { text: "Slow week?\n{You draw down.}", durationSec: 3 },
+      { text: "Slow week?\nYou {draw down.}", durationSec: 3 },
       { text: "Bills funded.\n{Always.}", durationSec: 3 },
       { text: "becomeable.app/get-able", durationSec: 4 },
     ] },
@@ -221,7 +221,7 @@ window.REELS = [
     beats: [
       { text: "Your spreadsheet\nis {dying}.", durationSec: 3 },
       { text: "Opened {three times}\nthis quarter.", durationSec: 3.5 },
-      { text: "Can't follow\n{variable}.", durationSec: 3 },
+      { text: "Can't follow\n{inconsistent}.", durationSec: 3 },
       { text: "Don't need a better\n{spreadsheet}.", durationSec: 3, theme: 'green' },
       { text: "Need {a system}.", durationSec: 3.5, theme: 'green' },
     ] },
@@ -232,7 +232,7 @@ window.REELS = [
       { text: "'Save more'\nisn't a {plan}.", durationSec: 3 },
       { text: "It's a {wish}.\nDressed as advice.", durationSec: 3 },
       { text: "Saving needs\n{left over}.", durationSec: 3 },
-      { text: "Variable income\nrarely {has it}.", durationSec: 3 },
+      { text: "Inconsistent income\nrarely {has it}.", durationSec: 3 },
       { text: "Reverse the {order}.", durationSec: 3 },
       { text: "becomeable.app/get-able", durationSec: 3 },
     ] },
@@ -258,11 +258,11 @@ window.REELS = [
   { id: 'R23', slug: 'split-first-spend-last', theme: 'green', format: 'text-reel', durationSec: 22, eyebrow: 'mixed',
     beats: [
       { text: "{One pile.}\nFive jobs.", durationSec: 2.5 },
-      { text: "1. {Taxes} —\noff the top.", durationSec: 2.5 },
-      { text: "2. {Bills} —\nbefore they're due.", durationSec: 2.5 },
-      { text: "3. {Debt} —\non schedule.", durationSec: 2.5 },
-      { text: "4. {Reserve} —\nfor slow months.", durationSec: 2.5 },
-      { text: "5. {Free} —\nguilt-free.", durationSec: 2.5 },
+      { text: "1. {Taxes:}\noff the top.", durationSec: 2.5 },
+      { text: "2. {Bills:}\nbefore they're due.", durationSec: 2.5 },
+      { text: "3. {Debt:}\non schedule.", durationSec: 2.5 },
+      { text: "4. {Reserve:}\nfor slow months.", durationSec: 2.5 },
+      { text: "5. {Free:}\nguilt-free.", durationSec: 2.5 },
       { text: "{Split first.}\nSpend last.", durationSec: 3 },
       { text: "Free for {30 days}.\nbecomeable.app", durationSec: 4 },
     ] },
@@ -278,7 +278,7 @@ window.REELS = [
       { text: "If you've ever\n{frozen} on Day 1.", durationSec: 2.5 },
       { text: "Or {checked}\nyour balance at 1am.", durationSec: 2.5 },
       { text: "Or {dreaded}\nApril.", durationSec: 2.5 },
-      { text: "You're not\n{bad with money}.", durationSec: 2.5, theme: 'green' },
+      { text: "You're not\nbad with {money}.", durationSec: 2.5, theme: 'green' },
       { text: "Wrong {tool}.\nNot wrong you.", durationSec: 2, theme: 'green' },
       { text: "becomeable.app/get-able", durationSec: 2, theme: 'green' },
     ] },
@@ -289,7 +289,7 @@ window.REELS = [
       { text: "Not more\n{discipline}.", durationSec: 2 },
       { text: "Not a stricter\n{budget}.", durationSec: 2 },
       { text: "Not {trying harder}.", durationSec: 2 },
-      { text: "A {system}.\nBuilt for variable.", durationSec: 3, theme: 'green' },
+      { text: "A {system}.\nBuilt for inconsistent.", durationSec: 3, theme: 'green' },
       { text: "{Free} for 30 days.", durationSec: 1.5, theme: 'green' },
       { text: "becomeable.app/get-able", durationSec: 1.5, theme: 'green' },
     ] },
@@ -297,7 +297,7 @@ window.REELS = [
   // R29 — New identity stack (green)
   { id: 'R29', slug: 'i-am-able', theme: 'green', format: 'text-reel', durationSec: 16, eyebrow: 'mixed',
     beats: [
-      { text: "I am able\nto {pay down debt}.", durationSec: 2.5 },
+      { text: "I am able\nto pay down {debt}.", durationSec: 2.5 },
       { text: "Even on\n{slow months}.", durationSec: 2.5 },
       { text: "I am able\nto {save}.", durationSec: 2.5 },
       { text: "Without\n{second-guessing}.", durationSec: 2.5 },
@@ -323,7 +323,7 @@ window.REELS = [
       { text: "Day 14.\n$23 here.", durationSec: 2.5 },
       { text: "$48 there.\n{$12} again.", durationSec: 2.5 },
       { text: "Day 30.\n{$400 gone}.", durationSec: 3 },
-      { text: "Nothing\nto {show for it}.", durationSec: 2 },
+      { text: "Nothing\nto {show} for it.", durationSec: 2 },
       { text: "becomeable.app/get-able", durationSec: 1.5 },
     ] },
 
@@ -332,7 +332,7 @@ window.REELS = [
   // R32 — Gig moment (page → green)
   { id: 'R32', slug: 'gig-moment', theme: 'page', format: 'text-reel', durationSec: 16, eyebrow: 'gig',
     beats: [
-      { text: "End of\n{a long shift}.", durationSec: 2.5 },
+      { text: "End of\na long {shift}.", durationSec: 2.5 },
       { text: "Earnings hit.\n{Already gone.}", durationSec: 3 },
       { text: "Gas. Phone.\n{Tax owed.}", durationSec: 3 },
       { text: "Reserve {30%}\nthe second it lands.", durationSec: 3, theme: 'green' },
@@ -345,7 +345,7 @@ window.REELS = [
     beats: [
       { text: "{Sponsorship} hits.", durationSec: 2.5 },
       { text: "Feels like\n{a windfall}.", durationSec: 2.5 },
-      { text: "Until tax day.\n{Then it isn't.}", durationSec: 3 },
+      { text: "Until tax day.\nThen it {isn't.}", durationSec: 3 },
       { text: "Every payout\nsplits {five ways}.", durationSec: 3, theme: 'green' },
       { text: "Tax. Bills.\nDebt. {Reserve.} Free.", durationSec: 3.5, theme: 'green' },
       { text: "becomeable.app/get-able", durationSec: 2.5, theme: 'green' },
@@ -369,7 +369,7 @@ window.REELS = [
       { text: "Because every deposit\nhad {someone else's} purpose.", durationSec: 3.5 },
       { text: "Set an\n{owner pay} percent.", durationSec: 3, theme: 'green' },
       { text: "Every deposit\n{honors it}.", durationSec: 3, theme: 'green' },
-      { text: "Pay yourself automatically.\n{Boring is right.}", durationSec: 3, theme: 'green' },
+      { text: "Pay yourself automatically.\nBoring is {right.}", durationSec: 3, theme: 'green' },
       { text: "becomeable.app/get-able", durationSec: 2.5, theme: 'green' },
     ] },
 
@@ -387,9 +387,9 @@ window.REELS = [
   // R37 — Tip: name every deposit (page)
   { id: 'R37', slug: 'tip-name-every-dollar', theme: 'page', format: 'text-reel', durationSec: 9, eyebrow: 'mixed',
     beats: [
-      { text: "One rule.\n{For variable income.}", durationSec: 2.5 },
+      { text: "One rule.\nFor inconsistent {income.}", durationSec: 2.5 },
       { text: "Every deposit\ngets {a destination}.", durationSec: 3 },
-      { text: "Before it\n{leaves your hand}.", durationSec: 2 },
+      { text: "Before it\nleaves your {hand}.", durationSec: 2 },
       { text: "becomeable.app/get-able", durationSec: 1.5 },
     ] },
 
@@ -409,7 +409,7 @@ window.REELS = [
     beats: [
       { text: "{76%}", durationSec: 2.5 },
       { text: "of self-employed\nAmericans.", durationSec: 2.5 },
-      { text: "Have {variable}\nmonthly income.", durationSec: 3 },
+      { text: "Have {inconsistent}\nmonthly income.", durationSec: 3 },
       { text: "Yet {every} app\nassumes a paycheck.", durationSec: 3 },
       { text: "Built for the {76%}.", durationSec: 2 },
       { text: "becomeable.app/get-able", durationSec: 1 },
@@ -420,8 +420,8 @@ window.REELS = [
     beats: [
       { text: "{36%}", durationSec: 2.5 },
       { text: "of US workers\nfreelance now.", durationSec: 2.5 },
-      { text: "Most budgeting tools\n{don't fit them}.", durationSec: 3 },
-      { text: "Built for the\n{paycheck} that doesn't\ncome every two weeks.", durationSec: 3.5, theme: 'green' },
+      { text: "Most budgeting tools\ndon't {fit} them.", durationSec: 3 },
+      { text: "For the {paycheck}\nthat skips weeks.", durationSec: 3.5, theme: 'green' },
       { text: "becomeable.app/get-able", durationSec: 2.5, theme: 'green' },
     ] },
 
@@ -524,7 +524,7 @@ window.REELS = [
     theme: 'page', eyebrow: 'mixed', pos: 'bottom',
     clip: 'more-learn', durationSec: 8,
     muted: "Built-in lessons.",
-    punch: "For variable\n{income.}" },
+    punch: "For inconsistent\n{income.}" },
 
   // R54 — more-refer (green, copy top)
   { id: 'R54', slug: 'reel-product-refer', format: 'product-clip-reel',

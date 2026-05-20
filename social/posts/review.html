@@ -110,6 +110,7 @@
   .nav-list .lane-stats { background: #ffb84d; color: #4a2800; }
   .nav-list .lane-brand { background: #c5a8e8; color: #2e1a4a; }
   .nav-list .lane-product { background: #88b8ff; color: #0a2a55; }
+  .nav-list .lane-launch { background: #6fcf80; color: #0a2a14; }
   .nav-list .lane-reserve { background: rgba(255,255,255,.18); color: rgba(255,255,255,.7); }
 
   .tools { margin-top: 22px; padding-top: 16px; border-top: 1px solid rgba(255,255,255,.12); }
@@ -165,6 +166,7 @@
   .header .pill.lane-stats { background: #ffb84d; color: #4a2800; }
   .header .pill.lane-brand { background: #c5a8e8; color: #2e1a4a; }
   .header .pill.lane-product { background: #88b8ff; color: #0a2a55; }
+  .header .pill.lane-launch { background: #6fcf80; color: #0a2a14; }
 
   /* Carousel slide grid (existing) */
   .slide-grid { display: flex; flex-direction: column; gap: 28px; }
@@ -259,6 +261,87 @@
     pointer-events: none; z-index: 100;
   }
   .toast.show { opacity: 1; transform: translateY(0); }
+
+  /* ────────── FOCUS MODE (Tinder-style review) ────────── */
+  .tools button.focus-btn {
+    background: #2a7a4a; color: #fff; border-color: #2a7a4a;
+    font-weight: 800; padding: 10px 12px;
+  }
+  .tools button.focus-btn:hover { background: #1f6038; }
+
+  body.focus-on .app { display: none; }
+  body.focus-on .focus-layer { display: flex; }
+
+  .focus-layer {
+    display: none;
+    position: fixed; inset: 0;
+    background: #e8efe9;
+    flex-direction: column;
+    z-index: 200;
+  }
+  .focus-bar {
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 14px 24px;
+    background: #111c16; color: #fff;
+    flex-shrink: 0;
+  }
+  .focus-bar .left { display: flex; align-items: center; gap: 14px; }
+  .focus-bar .exit-btn {
+    background: rgba(255,255,255,.10); color: #fff;
+    border: 1px solid rgba(255,255,255,.18); border-radius: 6px;
+    padding: 7px 14px; font-size: 13px; font-weight: 700;
+    cursor: pointer; font-family: inherit;
+  }
+  .focus-bar .exit-btn:hover { background: rgba(255,255,255,.18); }
+  .focus-bar .progress { font-size: 13px; font-weight: 700; letter-spacing: .04em; }
+  .focus-bar .progress .pos { color: #6fcf80; font-size: 16px; }
+  .focus-bar .progress .meta { color: rgba(255,255,255,.55); margin-left: 8px; font-size: 12px; }
+  .focus-bar .right { display: flex; align-items: center; gap: 10px; font-size: 11.5px; color: rgba(255,255,255,.55); }
+  .focus-bar kbd {
+    background: rgba(255,255,255,.10); color: #fff;
+    padding: 2px 7px; border-radius: 4px; font-size: 11px;
+    font-family: -apple-system, BlinkMacSystemFont, sans-serif;
+    border: 1px solid rgba(255,255,255,.18);
+  }
+
+  .focus-body {
+    flex: 1; overflow: auto;
+    padding: 28px 36px 28px;
+  }
+  .focus-body .header { margin-bottom: 18px; }
+  .focus-body .header .title { font-size: 22px; }
+
+  /* Focus uses the same slide-row/single-row/reel-row layouts so renders identical
+     to the inline view, but in a single full-bleed column. */
+  .focus-body .slide-row,
+  .focus-body .single-row {
+    max-width: 980px; margin: 0 auto 22px;
+  }
+
+  .focus-nav {
+    flex-shrink: 0;
+    background: #fff;
+    border-top: 1px solid #d2dad4;
+    padding: 14px 24px;
+    display: flex; align-items: center; justify-content: space-between;
+    gap: 12px;
+  }
+  .focus-nav .center { display: flex; gap: 10px; align-items: center; }
+  .focus-nav button {
+    background: #fff; color: #111c16;
+    border: 1px solid #c4d0c8; border-radius: 8px;
+    padding: 11px 22px; font-size: 14px; font-weight: 700;
+    cursor: pointer; font-family: inherit;
+  }
+  .focus-nav button:hover { background: #f0f5f2; border-color: #2a7a4a; }
+  .focus-nav button.primary { background: #2a7a4a; color: #fff; border-color: #2a7a4a; padding: 12px 28px; font-size: 15px; }
+  .focus-nav button.primary:hover { background: #1f6038; }
+  .focus-nav button.muted { color: #4a5c52; }
+  .focus-nav .quick-flags { display: flex; gap: 8px; align-items: center; font-size: 12px; color: #4a5c52; }
+  .focus-nav .quick-flags .label { font-weight: 800; letter-spacing: .12em; text-transform: uppercase; font-size: 10px; }
+  .focus-nav .quick-flags button { padding: 8px 14px; font-size: 12.5px; }
+  .focus-nav .quick-flags button.act-approve.active { background: #6fcf80; border-color: #6fcf80; color: #fff; }
+  .focus-nav .quick-flags button.act-reserve.active { background: #f5b955; border-color: #f5b955; color: #111c16; }
 </style>
 </head>
 <body>
@@ -287,6 +370,7 @@
         <option value="Stats">Stats</option>
         <option value="BrandScript">BrandScript</option>
         <option value="Product">Product</option>
+        <option value="Launch">Launch</option>
         <option value="Library">Library</option>
         <option value="Reserve">Reserve</option>
       </select>
@@ -311,6 +395,7 @@
     <div id="sections"></div>
 
     <div class="tools">
+      <button id="enterFocus" class="focus-btn">⚡ Focus mode (review fast)</button>
       <button id="copyMd">Copy comments as markdown</button>
       <button id="copyFlags">Copy flag decisions</button>
       <button id="exportJson">Export JSON</button>
@@ -326,6 +411,35 @@
   </main>
 </div>
 <div class="toast" id="toast"></div>
+
+<!-- ─── FOCUS MODE LAYER (Tinder-style) ─── -->
+<div class="focus-layer" id="focusLayer">
+  <div class="focus-bar">
+    <div class="left">
+      <button class="exit-btn" id="focusExit">← Exit Focus</button>
+      <div class="progress">
+        <span class="pos" id="focusPos">— / —</span>
+        <span class="meta" id="focusMeta"></span>
+      </div>
+    </div>
+    <div class="right">
+      <kbd>←</kbd>/<kbd>→</kbd> nav · <kbd>Esc</kbd> exit · <kbd>F</kbd> approve · <kbd>R</kbd> reserve
+    </div>
+  </div>
+  <div class="focus-body" id="focusBody"></div>
+  <div class="focus-nav">
+    <button id="focusPrev">← Prev</button>
+    <div class="center">
+      <button class="muted" id="focusSkip">Skip</button>
+      <button class="primary" id="focusNext">Next →</button>
+    </div>
+    <div class="quick-flags">
+      <span class="label">Flag:</span>
+      <button class="act-approve" id="focusApprove">✓ Approve</button>
+      <button class="act-reserve" id="focusReserve">⏸ Reserve</button>
+    </div>
+  </div>
+</div>
 
 <script src="data.js"></script>
 <script src="product-data.js"></script>
@@ -357,6 +471,7 @@
     const id = String(item.id || '');
     if (/^(S|CS|RS)\d/.test(id)) return 'Stats';
     if (/^B\d/.test(id)) return 'BrandScript';
+    if (/^L(C)?\d/.test(id) || item.cat === 'Launch') return 'Launch';
     if (/^(P0|PC)/.test(id)) return 'Product';
     if (item._fromReserved) return 'Reserve';
     return 'Library';
@@ -433,6 +548,7 @@
     lane === 'Stats' ? 'lane-stats'
     : lane === 'BrandScript' ? 'lane-brand'
     : lane === 'Product' ? 'lane-product'
+    : lane === 'Launch' ? 'lane-launch'
     : lane === 'Reserve' ? 'lane-reserve'
     : '';
 
@@ -759,6 +875,222 @@
     comments = {}; saveComments(); renderSections();
     if (activeId) selectItem(activeId);
     toast('All comments cleared.');
+  });
+
+  // ────────── FOCUS MODE ──────────
+  // Renders the same item view (single/carousel/reel/longform) but full-screen,
+  // with a queue (the currently-filtered items) and keyboard nav for fast review.
+  const focusLayer = document.getElementById('focusLayer');
+  const focusBody  = document.getElementById('focusBody');
+  const focusPos   = document.getElementById('focusPos');
+  const focusMeta  = document.getElementById('focusMeta');
+  const focusApprove = document.getElementById('focusApprove');
+  const focusReserve = document.getElementById('focusReserve');
+  let focusQueue = [];
+  let focusIdx = 0;
+
+  const renderFocus = () => {
+    const item = focusQueue[focusIdx];
+    if (!item) return;
+    // Temporarily repoint mainEl so renderCarousel/renderSingle/etc. write into focusBody
+    const realMain = mainEl;
+    Object.defineProperty(window, 'mainElProxy', { configurable: true, value: focusBody });
+    // Each render fn references `mainEl` via closure — easier path: swap innerHTML manually.
+    focusBody.innerHTML = '';
+    // Re-implement the render dispatch but writing into focusBody.
+    if (item._kind === 'carousel') renderCarouselInto(focusBody, item);
+    else if (item._kind === 'reel') renderReelInto(focusBody, item);
+    else if (item._kind === 'longform') renderLongformInto(focusBody, item);
+    else renderSingleInto(focusBody, item);
+
+    // Progress + meta
+    focusPos.textContent = `${focusIdx + 1} / ${focusQueue.length}`;
+    const laneTag = item._lane !== 'Library' ? `· ${item._lane}` : '';
+    focusMeta.textContent = `${item.id} · ${item._kind} ${laneTag}`;
+    // Active flag-quick state
+    const dec = item.flagged ? getFlagDecision(item.id) : null;
+    focusApprove.classList.toggle('active', dec === 'approve');
+    focusReserve.classList.toggle('active', dec === 'reserve');
+    focusApprove.disabled = !item.flagged;
+    focusReserve.disabled = !item.flagged;
+    focusApprove.style.opacity = item.flagged ? '1' : '.35';
+    focusReserve.style.opacity = item.flagged ? '1' : '.35';
+    // Auto-focus the first textarea so typing starts immediately
+    setTimeout(() => {
+      const ta = focusBody.querySelector('textarea');
+      if (ta) ta.focus({ preventScroll: true });
+    }, 60);
+    // Reflect into the URL/sidebar so state survives an exit
+    activeId = item.id;
+    history.replaceState(null, '', '?id=' + item.id);
+    document.title = `Focus · ${item.id} · ${item.slug || item.title || ''}`;
+  };
+
+  // Render fns mirroring the inline ones but accepting the target element.
+  const renderCarouselInto = (root, item) => {
+    const fmt = item.format === 'tiktok' ? 'tiktok' : 'square';
+    root.innerHTML = `
+      ${flagBarHtml(item)}
+      ${headerHtml(item)}
+      <div class="slide-grid"></div>
+    `;
+    wireFlagBarIn(root, item);
+    const grid = root.querySelector('.slide-grid');
+    item.slides.forEach((slide, i) => {
+      const slideData = Object.assign({ theme: item.theme, format: item.format }, slide);
+      const row = document.createElement('div');
+      row.className = 'slide-row';
+      const frame = document.createElement('div');
+      frame.className = `slide-frame ${fmt}`;
+      const tag = document.createElement('div');
+      tag.className = 'slide-number'; tag.textContent = `Slide ${i + 1}`;
+      frame.appendChild(tag);
+      const post = document.createElement('div'); post.className = 'post'; frame.appendChild(post);
+      renderSlideInto(post, slideData);
+      const col = makeCommentCol(item.id, String(i + 1), `Slide ${i + 1}`);
+      row.appendChild(frame); row.appendChild(col);
+      grid.appendChild(row);
+    });
+  };
+  const renderSingleInto = (root, item) => {
+    root.innerHTML = `
+      ${headerHtml(item)}
+      <div class="single-row">
+        <div class="single-frame"><div class="post"></div></div>
+        <div data-comment-slot="main"></div>
+      </div>
+    `;
+    const post = root.querySelector('.single-frame .post');
+    renderSlideInto(post, item);
+    root.querySelector('[data-comment-slot="main"]').replaceWith(makeCommentCol(item.id, 'main', 'Notes'));
+  };
+  const renderReelInto = (root, item) => {
+    const beats = item.beats || [];
+    root.innerHTML = `
+      ${headerHtml(item)}
+      <div class="reel-row">
+        <div class="reel-frame">
+          <div class="reel-meta">${beats.length} beats · ${item.durationSec || '?'}s · ${item.theme || ''}</div>
+          ${beats.map((b, i) => `
+            <div class="reel-beat">
+              ${b.text.replace(/\{([^}]+)\}/g, '<strong>$1</strong>').replace(/\n/g, '<br>')}
+              <span class="dur">Beat ${i + 1} · ${b.durationSec || '?'}s${b.theme ? ' · ' + b.theme : ''}</span>
+            </div>
+          `).join('')}
+        </div>
+        <div data-comment-slot="main"></div>
+      </div>
+    `;
+    root.querySelector('[data-comment-slot="main"]').replaceWith(makeCommentCol(item.id, 'main', 'Notes'));
+  };
+  const renderLongformInto = (root, item) => {
+    const hasVideo = !!item.youtube_id;
+    root.innerHTML = `
+      ${headerHtml(item)}
+      <div class="longform-row">
+        <div class="longform-info">
+          <h3>Article details</h3>
+          <div class="row"><b>Title:</b> ${item.title || '(no title)'}</div>
+          <div class="row"><b>Type:</b> ${item.page_type || 'supporting'}</div>
+          <div class="row"><b>Cluster:</b> ${item.cluster || '(none)'}</div>
+          <div class="row"><b>URL:</b> ${item.url ? `<a href="${item.url}" target="_blank">${item.url}</a>` : '<em>(not set)</em>'}</div>
+          <div class="row ${hasVideo ? 'has-video' : 'no-video'}">
+            <b>YouTube:</b> ${hasVideo ? `<a href="https://youtu.be/${item.youtube_id}" target="_blank">${item.youtube_id}</a>` : 'Not uploaded yet'}
+          </div>
+          ${item.url ? `<a class="open-btn" href="${item.url}" target="_blank">Open article →</a>` : ''}
+        </div>
+        <div data-comment-slot="main"></div>
+      </div>
+    `;
+    root.querySelector('[data-comment-slot="main"]').replaceWith(makeCommentCol(item.id, 'main', 'Notes'));
+  };
+
+  const wireFlagBarIn = (root, item) => {
+    if (!item.flagged) return;
+    const bar = root.querySelector(`[data-flag-bar="${item.id}"]`);
+    if (!bar) return;
+    bar.querySelectorAll('button').forEach(btn => {
+      btn.addEventListener('click', () => {
+        const action = btn.dataset.action;
+        const current = getFlagDecision(item.id);
+        const next = current === action ? null : action;
+        setFlagDecision(item.id, next);
+        bar.querySelectorAll('button').forEach(b => b.classList.remove('active'));
+        if (next) btn.classList.add('active');
+        focusApprove.classList.toggle('active', next === 'approve');
+        focusReserve.classList.toggle('active', next === 'reserve');
+        toast(next ? `${next === 'approve' ? 'Approved' : 'Reserved'} ${item.id}` : `Cleared ${item.id}`);
+      });
+    });
+  };
+
+  const enterFocus = () => {
+    focusQueue = filterItems();
+    if (!focusQueue.length) { toast('No items match current filters'); return; }
+    // Sort the same way the sidebar does so order is predictable
+    focusQueue.sort((a, b) => {
+      if (a._kind !== b._kind) return ['single','carousel','reel','brandscript','longform'].indexOf(a._kind) - ['single','carousel','reel','brandscript','longform'].indexOf(b._kind);
+      return String(a.id).localeCompare(String(b.id), undefined, { numeric: true });
+    });
+    // Start from currently-active item if present in queue
+    const startIdx = activeId ? focusQueue.findIndex(it => it.id === activeId) : -1;
+    focusIdx = Math.max(0, startIdx);
+    document.body.classList.add('focus-on');
+    renderFocus();
+  };
+  const exitFocus = () => {
+    document.body.classList.remove('focus-on');
+    // Re-render sidebar (badges may have changed) and reselect the same item
+    renderSections();
+    if (activeId && byId[activeId]) selectItem(activeId);
+  };
+  const advance = (delta) => {
+    const next = focusIdx + delta;
+    if (next < 0 || next >= focusQueue.length) {
+      toast(delta > 0 ? 'End of queue' : 'Start of queue');
+      return;
+    }
+    focusIdx = next;
+    renderFocus();
+  };
+
+  document.getElementById('enterFocus').addEventListener('click', enterFocus);
+  document.getElementById('focusExit').addEventListener('click', exitFocus);
+  document.getElementById('focusPrev').addEventListener('click', () => advance(-1));
+  document.getElementById('focusNext').addEventListener('click', () => advance(1));
+  document.getElementById('focusSkip').addEventListener('click', () => advance(1));
+  focusApprove.addEventListener('click', () => {
+    const item = focusQueue[focusIdx]; if (!item || !item.flagged) return;
+    const next = getFlagDecision(item.id) === 'approve' ? null : 'approve';
+    setFlagDecision(item.id, next);
+    focusApprove.classList.toggle('active', next === 'approve');
+    focusReserve.classList.toggle('active', false);
+    toast(next ? `Approved ${item.id}` : `Cleared ${item.id}`);
+  });
+  focusReserve.addEventListener('click', () => {
+    const item = focusQueue[focusIdx]; if (!item || !item.flagged) return;
+    const next = getFlagDecision(item.id) === 'reserve' ? null : 'reserve';
+    setFlagDecision(item.id, next);
+    focusReserve.classList.toggle('active', next === 'reserve');
+    focusApprove.classList.toggle('active', false);
+    toast(next ? `Reserved ${item.id}` : `Cleared ${item.id}`);
+  });
+
+  document.addEventListener('keydown', (e) => {
+    if (!document.body.classList.contains('focus-on')) return;
+    const inText = /^(INPUT|TEXTAREA)$/.test(document.activeElement && document.activeElement.tagName);
+    // Always-on shortcuts (even inside textarea since they're modifier-required or arrow keys)
+    if (e.key === 'Escape') { e.preventDefault(); exitFocus(); return; }
+    if (inText && !e.metaKey && !e.ctrlKey) {
+      // Cmd/Ctrl + arrow still navigates while typing
+      if (e.key === 'ArrowRight' && (e.metaKey || e.ctrlKey)) { e.preventDefault(); advance(1); }
+      if (e.key === 'ArrowLeft'  && (e.metaKey || e.ctrlKey)) { e.preventDefault(); advance(-1); }
+      return;
+    }
+    if (e.key === 'ArrowRight' || e.key === 'PageDown') { e.preventDefault(); advance(1); }
+    if (e.key === 'ArrowLeft'  || e.key === 'PageUp')   { e.preventDefault(); advance(-1); }
+    if (e.key.toLowerCase() === 'f') { e.preventDefault(); focusApprove.click(); }
+    if (e.key.toLowerCase() === 'r') { e.preventDefault(); focusReserve.click(); }
   });
 
   // ── Boot ──

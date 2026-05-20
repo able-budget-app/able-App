@@ -71,6 +71,30 @@ SQUARE_OVERRIDE_CSS = """
 .post.format-tiktok .muted.size-sm {
   font-size: 48px !important;
 }
+/* tpl-C in square format: phone was 540x960 (built for 1920-tall TikTok).
+   In 1080 square that overflows + pushes copy off the bottom. Shrink phone
+   to 270x480, drop tpl-C copy font sizes, and add explicit padding-bottom
+   to .punch so the swoosh underline doesn't bleed into the Able wordmark. */
+.post.format-tiktok.tpl-C .product-shot {
+  width: 270px !important;
+  height: 480px !important;
+  aspect-ratio: auto !important;
+}
+.post.format-tiktok.tpl-C .punch,
+.post.format-tiktok.tpl-C.size-md .punch,
+.post.format-tiktok.tpl-C.size-sm .punch {
+  font-size: 52px !important;
+  line-height: 1.06 !important;
+  padding-bottom: 28px !important;  /* clears the swoosh below baseline */
+}
+.post.format-tiktok.tpl-C .muted,
+.post.format-tiktok.tpl-C.size-md .muted,
+.post.format-tiktok.tpl-C.size-sm .muted {
+  font-size: 36px !important;
+  margin-bottom: 14px !important;
+}
+.post.format-tiktok.tpl-C .product-row { gap: 24px !important; }
+.post.format-tiktok.tpl-C .footer       { margin-top: 24px !important; }
 """
 
 PORT = 8766  # +1 from record-clips.py's 8765 to avoid clash if both run
