@@ -23,6 +23,9 @@ const RESEND_API_KEY = Deno.env.get('RESEND_API_KEY')!;
 const CRON_SECRET = Deno.env.get('CRON_SECRET')!;
 const FROM_EMAIL = Deno.env.get('FROM_EMAIL') || 'Able <onboarding@resend.dev>';
 const APP_URL = (Deno.env.get('APP_URL') || 'https://becomeable.app').trim().replace(/\/$/, '');
+// CAN-SPAM compliant physical address. Override with MAILING_ADDRESS env (e.g.
+// a PO Box or CMRA mailbox) to keep the home address out of customer mail.
+const ABLE_ADDRESS = Deno.env.get('MAILING_ADDRESS') || '7548 E Savanna River St, Nampa, ID 83687, USA';
 
 const IS_PREVIEW = Deno.args.includes('--preview');
 
@@ -472,8 +475,8 @@ const LOGO_UNDERLINE = `data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/20
 function header(): string {
   return `<tr><td align="center" style="padding-bottom:22px;">
     <div style="display:inline-block;text-align:center;">
-      <div style="font-weight:900;font-size:30px;letter-spacing:-.03em;color:${T.ink};line-height:1;">Able</div>
-      <img src="${LOGO_UNDERLINE}" alt="" width="80" height="6" style="display:block;margin:4px auto 0;width:80px;height:6px;border:0;">
+      <div style="font-family:'Bricolage Grotesque',-apple-system,BlinkMacSystemFont,'Segoe UI',Helvetica,Arial,sans-serif;font-weight:900;font-size:32px;letter-spacing:-.035em;color:${T.ink};line-height:1;">Able</div>
+      <img src="${LOGO_UNDERLINE}" alt="" width="70" height="5" style="display:block;margin:3px auto 0;width:70px;height:5px;border:0;">
     </div>
   </td></tr>`;
 }
@@ -554,15 +557,15 @@ function footer(unsub: string): string {
     <a href="${APP_URL}/app.html" style="color:${T.green};font-weight:700;text-decoration:none;">Open Able</a>
     &middot;
     <a href="${unsub}" style="color:${T.inkMuted};text-decoration:underline;">Unsubscribe</a>
-    <div style="margin-top:8px;font-size:11px;color:${T.inkLight};">Able App &middot; 7548 E Savanna River St, Nampa, ID 83687, USA</div>
-    <div style="margin-top:2px;font-size:11px;color:${T.inkLight};">becomeable.app</div>
+    <div style="margin-top:10px;font-size:10px;color:${T.inkLight};opacity:.75;">becomeable.app</div>
+    <div style="margin-top:2px;font-size:10px;color:${T.inkLight};opacity:.65;">Able App &middot; ${ABLE_ADDRESS}</div>
   </td></tr>`;
 }
 
 function layout(opts: { tone: Tone; inner: string; unsub: string }): string {
   const c = toneStyle(opts.tone);
-  return `<!doctype html><html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="color-scheme" content="light only"><meta name="supported-color-schemes" content="light"></head>
-<body style="margin:0;padding:0;background:${T.bg};font-family:Helvetica,Arial,sans-serif;color:${T.ink};-webkit-font-smoothing:antialiased;">
+  return `<!doctype html><html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="color-scheme" content="light only"><meta name="supported-color-schemes" content="light"><link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400;12..96,500;12..96,600;12..96,700;12..96,800;12..96,900&display=swap" rel="stylesheet"><!--[if !mso]><!--><style>@import url('https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400;12..96,500;12..96,600;12..96,700;12..96,800;12..96,900&display=swap');</style><!--<![endif]--></head>
+<body style="margin:0;padding:0;background:${T.bg};font-family:'Bricolage Grotesque',-apple-system,BlinkMacSystemFont,'Segoe UI',Helvetica,Arial,sans-serif;color:${T.ink};-webkit-font-smoothing:antialiased;">
 <table role="presentation" cellpadding="0" cellspacing="0" border="0" width="100%" style="background:${T.bg};"><tr><td align="center" style="padding:36px 16px 32px;">
 <table role="presentation" cellpadding="0" cellspacing="0" border="0" width="100%" style="max-width:520px;">
   ${header()}
