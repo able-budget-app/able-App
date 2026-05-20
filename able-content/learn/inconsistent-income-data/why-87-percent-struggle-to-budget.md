@@ -11,6 +11,7 @@ secondary_keywords:
   - personal finance struggles statistics
   - budgeting failure rate
 cluster: learn-inconsistent-income-data
+youtube_id: "7WBeKl-ZvB8"
 page_type: supporting
 parent: /learn/inconsistent-income-data/
 internal_links:

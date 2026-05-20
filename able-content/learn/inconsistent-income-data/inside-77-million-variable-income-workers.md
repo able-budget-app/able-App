@@ -12,6 +12,7 @@ secondary_keywords:
   - freelancer income data
   - gig economy demographics
 cluster: learn-inconsistent-income-data
+youtube_id: "vy2kwgjeIJA"
 page_type: supporting
 parent: /learn/inconsistent-income-data/
 internal_links:
