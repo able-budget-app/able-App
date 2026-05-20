@@ -56,6 +56,16 @@ const VAPID_PUBLIC_KEY = Deno.env.get('VAPID_PUBLIC_KEY') || '';
 const VAPID_PRIVATE_KEY = Deno.env.get('VAPID_PRIVATE_KEY') || '';
 const VAPID_SUBJECT = Deno.env.get('VAPID_SUBJECT') || 'mailto:hello@becomeable.app';
 
+// APNs (native iOS push). The .p8 key from Apple Dev portal is stored
+// verbatim (including PEM headers) in APNS_KEY_P8. Host defaults to
+// production; can override to https://api.sandbox.push.apple.com for
+// debug builds (aps-environment=development).
+const APNS_KEY_P8   = Deno.env.get('APNS_KEY_P8')   || '';
+const APNS_KEY_ID   = Deno.env.get('APNS_KEY_ID')   || '';
+const APNS_TEAM_ID  = Deno.env.get('APNS_TEAM_ID')  || '';
+const APNS_BUNDLE_ID = Deno.env.get('APNS_BUNDLE_ID') || 'com.becomeable.app';
+const APNS_HOST     = Deno.env.get('APNS_HOST')     || 'https://api.push.apple.com';
+
 const _ALLOWED_ORIGINS = new Set([
   'https://becomeable.app',
   'https://www.becomeable.app',
@@ -119,7 +129,7 @@ Deno.serve(async (req) => {
   const admin = createClient(SUPABASE_URL, SERVICE_ROLE);
   const { data: subs, error } = await admin
     .from('push_subscriptions')
-    .select('id, endpoint, p256dh, auth')
+    .select('id, endpoint, p256dh, auth, platform')
     .eq('user_id', body.user_id);
   if (error) return json(req, { error: error.message }, 500);
   if (!subs || subs.length === 0) return json(req, { sent: 0, removed: 0, errors: 0, note: 'no subscriptions' });
@@ -129,7 +139,10 @@ Deno.serve(async (req) => {
 
   for (const sub of subs) {
     try {
-      const result = await sendOne(sub.endpoint, sub.p256dh, sub.auth, payloadStr);
+      const platform = (sub as any).platform || 'web';
+      const result = platform === 'ios'
+        ? await sendOneAPNs(sub.endpoint, body.payload)
+        : await sendOne(sub.endpoint, sub.p256dh, sub.auth, payloadStr);
       if (result.ok) {
         sent += 1;
         await admin.from('push_subscriptions').update({ last_used_at: new Date().toISOString(), failure_count: 0 }).eq('id', sub.id);
@@ -310,4 +323,88 @@ function b64uDecode(s: string): Uint8Array {
   const out = new Uint8Array(bin.length);
   for (let i = 0; i < bin.length; i++) out[i] = bin.charCodeAt(i);
   return out;
+}
+
+// ─── APNs (native iOS push via HTTP/2 + ES256 JWT) ────────────────────
+// JWT is signed once and cached for ~50min (Apple rejects tokens older
+// than 60min). The .p8 key is PKCS8-PEM; we strip headers, base64-decode,
+// and importKey as pkcs8 ECDSA P-256.
+
+let _apnsJwt: { token: string; expiresAt: number } = { token: '', expiresAt: 0 };
+
+async function _getApnsJwt(): Promise<string> {
+  const now = Math.floor(Date.now() / 1000);
+  if (_apnsJwt.token && now < _apnsJwt.expiresAt) return _apnsJwt.token;
+  const header = { typ: 'JWT', alg: 'ES256', kid: APNS_KEY_ID };
+  const claim  = { iss: APNS_TEAM_ID, iat: now };
+  const enc = new TextEncoder();
+  const headerB64 = b64uEncode(enc.encode(JSON.stringify(header)));
+  const claimB64  = b64uEncode(enc.encode(JSON.stringify(claim)));
+  const signingInput = `${headerB64}.${claimB64}`;
+  const privKey = await _importApnsPrivateKey(APNS_KEY_P8);
+  const sig = await crypto.subtle.sign(
+    { name: 'ECDSA', hash: 'SHA-256' }, privKey,
+    enc.encode(signingInput) as unknown as BufferSource,
+  );
+  _apnsJwt = {
+    token: `${signingInput}.${b64uEncode(new Uint8Array(sig))}`,
+    expiresAt: now + 50 * 60,
+  };
+  return _apnsJwt.token;
+}
+
+async function _importApnsPrivateKey(p8Pem: string): Promise<CryptoKey> {
+  const b64 = p8Pem
+    .replace(/-----BEGIN PRIVATE KEY-----/g, '')
+    .replace(/-----END PRIVATE KEY-----/g, '')
+    .replace(/\s+/g, '');
+  if (!b64) throw new Error('APNS_KEY_P8 is empty or malformed');
+  const bin = atob(b64);
+  const der = new Uint8Array(bin.length);
+  for (let i = 0; i < bin.length; i++) der[i] = bin.charCodeAt(i);
+  return await crypto.subtle.importKey(
+    'pkcs8', der as unknown as BufferSource,
+    { name: 'ECDSA', namedCurve: 'P-256' }, false, ['sign'],
+  );
+}
+
+async function sendOneAPNs(deviceToken: string, payload: PushPayload): Promise<{ ok: boolean; gone?: boolean }> {
+  if (!APNS_KEY_P8 || !APNS_KEY_ID || !APNS_TEAM_ID) {
+    console.error('send-push: APNs env not configured (need APNS_KEY_P8, APNS_KEY_ID, APNS_TEAM_ID)');
+    return { ok: false };
+  }
+  // APNs hex token, no scheme/slashes. Defensive cleanup.
+  const token = (deviceToken || '').trim().replace(/[^0-9a-fA-F]/g, '');
+  if (!token) return { ok: false, gone: true };
+  let jwt: string;
+  try { jwt = await _getApnsJwt(); }
+  catch (e) { console.error('send-push: APNs JWT sign failed', e); return { ok: false }; }
+  const apnsBody: Record<string, unknown> = {
+    aps: {
+      alert: { title: payload.title, body: payload.body || '' },
+      sound: 'default',
+    },
+  };
+  if (payload.url) apnsBody.url = payload.url;
+  const headers: Record<string, string> = {
+    'authorization': `bearer ${jwt}`,
+    'apns-topic': APNS_BUNDLE_ID,
+    'apns-push-type': 'alert',
+    'content-type': 'application/json',
+  };
+  // Collapse-id replaces an earlier same-tag notification (dedupe). Max 64 bytes.
+  if (payload.tag) headers['apns-collapse-id'] = payload.tag.slice(0, 64);
+  const res = await fetch(`${APNS_HOST}/3/device/${token}`, {
+    method: 'POST', headers, body: JSON.stringify(apnsBody),
+  });
+  if (res.ok) return { ok: true };
+  // Token-gone codes: 410 (Unregistered) or 400 with BadDeviceToken reason.
+  let bodyText = '';
+  try { bodyText = await res.text(); } catch { /* noop */ }
+  if (res.status === 410) return { ok: false, gone: true };
+  if (res.status === 400 && /BadDeviceToken|DeviceTokenNotForTopic|Unregistered/.test(bodyText)) {
+    return { ok: false, gone: true };
+  }
+  console.warn(`APNs ${res.status}: ${bodyText}`);
+  return { ok: false };
 }
