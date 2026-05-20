@@ -297,19 +297,45 @@ input,select,button,textarea{font-family:inherit;}
      bottom edge floats above the keys). Add modal padding-bottom equal to
      kb-h so internal content (sticky-now-static actions + scrolled input)
      stays above the keyboard top. */
-  .coach-panel-bg, .lc-game-bg{transition:bottom .28s cubic-bezier(.32,.72,0,1);}
-  body.kb-open .coach-panel-bg,
+  .lc-game-bg{transition:bottom .28s cubic-bezier(.32,.72,0,1);}
   body.kb-open .lc-game-bg{bottom:var(--kb-h,0px);}
-  .modal,.db-sheet{transition:padding-bottom .28s cubic-bezier(.32,.72,0,1);}
+  /* All bottom-sheet panels (.modal, .db-sheet-panel, .coach-panel) use the
+     same pattern: outer bg stays full-screen so the white panel extends
+     BEHIND the keyboard (no visible bottom edge floating above the keys),
+     and padding-bottom:kb-h on the inner panel pushes content above the
+     keyboard. Override max-height with vh-based units when kb-open so the
+     panel can actually fill to screen bottom — dvh shrinks with the
+     keyboard, which would cap the panel above the keyboard and re-expose
+     the gap. */
+  .modal,.db-sheet-panel,.coach-panel{transition:padding-bottom .28s cubic-bezier(.32,.72,0,1);}
   body.kb-open .modal,
-  body.kb-open .db-sheet{padding-bottom:var(--kb-h,0px);}
-  /* Auth-screen (login/signup) + onboard-screen don't use the overlay pattern —
-     pad the bottom so the focused input has room to scroll above the keyboard,
-     and switch from align-items:center to flex-start so the form anchors to the
-     top of the visible area instead of staying centered behind the keyboard. */
-  #auth-screen,#onboard-screen{transition:padding-bottom .28s cubic-bezier(.32,.72,0,1);}
+  body.kb-open .db-sheet-panel,
+  body.kb-open .coach-panel{padding-bottom:var(--kb-h,0px);}
+  body.kb-open .modal{max-height:92vh;}
+  body.kb-open .db-sheet-panel,
+  body.kb-open .coach-panel{max-height:90vh;}
+  /* Auth-screen (login/signup) + onboard-screen don't use the overlay pattern.
+     Anchor the form to the top of the visible area (flex-start), and make
+     .auth-box itself the scroll container with a max-height that fits above
+     the keyboard. iOS WKWebView has trouble scrolling fixed-position outer
+     containers with the keyboard open, but a nested scroll element works
+     (same reason .modal scrolls inside .modal-bg). iOS auto-scrolls the
+     focused input into view since .auth-box is now a scrollable ancestor —
+     no JS translateY needed. */
   body.kb-open #auth-screen,
-  body.kb-open #onboard-screen{padding-bottom:calc(1rem + var(--kb-h,0px));align-items:flex-start;}
+  body.kb-open #onboard-screen{align-items:flex-start;padding:0;}
+  body.kb-open .auth-box,
+  body.kb-open .ob-card{
+    max-height: calc(100vh - var(--kb-h, 0px));
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
+    /* Full-bleed: drop the card chrome so the form looks like a page, not
+       a floating bubble. White background stays so it's still a clean
+       writing surface above the page tint. */
+    max-width: 100%;
+    border-radius: 0;
+    box-shadow: none;
+  }
   .nav > .logo, .nav > .nav-right{display:none;}
   .nav-tabs{background:transparent;padding:4px 8px;gap:4px;width:100%;justify-content:space-around;border-radius:0;}
   .nav-tab{flex-direction:column;align-items:center;justify-content:center;gap:4px;padding:10px 8px;border-radius:16px;font-size:11px;font-weight:800;letter-spacing:.03em;text-transform:uppercase;flex:1 1 0;min-width:0;min-height:58px;touch-action:manipulation;}
@@ -548,14 +574,30 @@ input,select,button,textarea{font-family:inherit;}
   .modal-close{top:18px;right:14px;}
   .modal-actions{position:sticky;bottom:0;background:var(--ds-card);margin:1rem -1.25rem 0;padding:12px 1.25rem calc(1rem + env(safe-area-inset-bottom,0px));border-top:1px solid var(--ds-t4);flex-direction:column-reverse;gap:8px;}
   .modal-actions .btn{width:100%;}
-  /* Drop the sticky pin while the keyboard is open so the focused input scrolls
-     into view with nothing covering it. Also zero the safe-area padding —
-     the keyboard already occupies the home-indicator zone, so the extra bottom
-     padding would leave empty space between Cancel and the keyboard top. */
+  /* Keyboard-open: drop sticky entirely. .modal-actions sit at end of
+     content in normal flow; user scrolls to reach them if they fall behind
+     the keyboard. Sticky-shift attempts (bottom:kb-h) misposition the
+     buttons because the sticky offset is calculated against the scrollport
+     bottom, which extends behind the keyboard with our padding-bottom
+     pattern. */
   body.kb-open .modal-actions {
     position: static;
+    margin-top: 1rem;
     border-top-color: transparent;
     padding-bottom: 12px;
+  }
+  body.kb-open .modal { scroll-padding-bottom: 80px; }
+  /* Coach .coach-messages has its own max-height:55dvh which, when the
+     keyboard shrinks dvh, can exceed the flex-allocated space inside the
+     panel and overflow into the input pill below. Drop it when kb-open so
+     the parent .coach-messages-wrap flex bound governs the height instead. */
+  body.kb-open .coach-panel .coach-messages { max-height: none; }
+  /* Make the input pill opaque + above messages when kb-open, so even if a
+     long message bleeds through any layout glitch, the pill stays on top. */
+  body.kb-open .coach-panel .coach-input-wrap {
+    position: relative;
+    z-index: 2;
+    background: var(--ds-card);
   }
 }
 .empty-state{text-align:center;padding:2.5rem 1.5rem;color:var(--ds-t3);font-size:13px;font-weight:600;background:var(--ds-card);border-radius:var(--ds-r2);box-shadow:var(--ds-sh1);}
@@ -2693,7 +2735,7 @@ body.is-scrolling .btn-primary:hover{transform:none!important;box-shadow:inherit
       </div>
       <button class="coach-close" onclick="closeCoachPanel()" aria-label="Close">✕</button>
     </div>
-    <div class="coach-messages-wrap" style="position:relative;flex:1;min-height:0;display:flex;flex-direction:column;">
+    <div class="coach-messages-wrap" style="position:relative;flex:1;min-height:0;display:flex;flex-direction:column;overflow:hidden;">
       <div class="coach-messages" id="coach-messages"></div>
       <button id="coach-scroll-top" class="coach-scroll-top" onclick="coachScrollToTop()" aria-label="Scroll to top of conversation" style="display:none;">
         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><polyline points="18 15 12 9 6 15"/></svg>
@@ -11834,6 +11876,10 @@ function _b64UrlToUint8(b64){
   for (let i = 0; i < raw.length; i++) out[i] = raw.charCodeAt(i);
   return out;
 }
+// True when running inside the Capacitor iOS shell (or future Android shell).
+function _isNativeApp(){
+  return !!(window.Capacitor && typeof window.Capacitor.isNativePlatform === 'function' && window.Capacitor.isNativePlatform());
+}
 async function refreshPushUI(){
   const status = document.getElementById('push-status');
   const enableBtn = document.getElementById('push-enable-btn');
@@ -11841,6 +11887,9 @@ async function refreshPushUI(){
   const errEl = document.getElementById('push-error');
   if (!status || !enableBtn || !disableBtn) return;
   if (errEl) errEl.style.display = 'none';
+  // Native iOS: bypass the web-push (service worker + PushManager) flow entirely.
+  // The Capacitor shell uses APNs via @capacitor/push-notifications instead.
+  if (_isNativeApp()) return _refreshPushUINative();
   if (!('serviceWorker' in navigator) || !('PushManager' in window)) {
     const ua = navigator.userAgent || '';
     const isIOS = /iPad|iPhone|iPod/.test(ua) || (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
@@ -11877,6 +11926,7 @@ async function refreshPushUI(){
   }
 }
 async function enablePushNotifications(){
+  if (_isNativeApp()) return _enableNativePush();
   const errEl = document.getElementById('push-error');
   const enableBtn = document.getElementById('push-enable-btn');
   if (errEl) errEl.style.display = 'none';
@@ -11917,6 +11967,7 @@ async function enablePushNotifications(){
   }
 }
 async function disablePushNotifications(){
+  if (_isNativeApp()) return _disableNativePush();
   const errEl = document.getElementById('push-error');
   if (errEl) errEl.style.display = 'none';
   try {
@@ -11939,6 +11990,119 @@ async function disablePushNotifications(){
     refreshPushUI();
   }
 }
+
+// ─── Native iOS push (Capacitor @capacitor/push-notifications) ─────────
+// Tokens land in push_subscriptions with platform='ios' and the APNs
+// hex token stored in the `endpoint` column (p256dh/auth NULL). The
+// send-push Edge Function branches on platform and signs APNs JWTs
+// from the env-stored .p8 key.
+async function _refreshPushUINative(){
+  const status = document.getElementById('push-status');
+  const enableBtn = document.getElementById('push-enable-btn');
+  const disableBtn = document.getElementById('push-disable-btn');
+  const PN = window.Capacitor?.Plugins?.PushNotifications;
+  if (!PN) {
+    status.textContent = 'Push notifications need an app update. Reinstall from the App Store to enable.';
+    enableBtn.style.display = 'none';
+    disableBtn.style.display = 'none';
+    return;
+  }
+  let perm = 'prompt';
+  try { perm = (await PN.checkPermissions())?.receive || 'prompt'; } catch (_) {}
+  let hasSub = false;
+  try {
+    if (currentUser?.id) {
+      const { data } = await sbGet()
+        .from('push_subscriptions')
+        .select('id')
+        .eq('user_id', currentUser.id)
+        .eq('platform', 'ios')
+        .limit(1)
+        .maybeSingle();
+      hasSub = !!data;
+    }
+  } catch (_) {}
+  if (perm === 'granted' && hasSub) {
+    status.textContent = 'On - this device will receive Able push notifications.';
+    enableBtn.style.display = 'none';
+    disableBtn.style.display = 'block';
+  } else if (perm === 'denied') {
+    status.textContent = 'Push is blocked in iOS Settings. Open Settings → Able → Notifications to enable.';
+    enableBtn.style.display = 'none';
+    disableBtn.style.display = 'none';
+  } else {
+    status.textContent = 'Off - enable to get a nudge when a bill is due or a deposit lands.';
+    enableBtn.style.display = 'block';
+    disableBtn.style.display = 'none';
+  }
+}
+async function _enableNativePush(){
+  const errEl = document.getElementById('push-error');
+  const enableBtn = document.getElementById('push-enable-btn');
+  if (errEl) errEl.style.display = 'none';
+  if (enableBtn) { enableBtn.disabled = true; enableBtn.textContent = 'Enabling…'; }
+  let regHandle = null, errHandle = null;
+  try {
+    const PN = window.Capacitor?.Plugins?.PushNotifications;
+    if (!PN) throw new Error('PushNotifications plugin unavailable');
+    const permRes = await PN.requestPermissions();
+    if (permRes.receive !== 'granted') throw new Error('Permission ' + permRes.receive);
+    // Race: APNs token arrives via the 'registration' listener after register().
+    // 30s timeout — slow networks or first-launch APNs handshakes can take ~10s.
+    const apnsToken = await new Promise(async (resolve, reject) => {
+      const timer = setTimeout(() => reject(new Error('Registration timed out')), 30000);
+      try {
+        regHandle = await PN.addListener('registration', (t) => { clearTimeout(timer); resolve(t?.value || ''); });
+        errHandle = await PN.addListener('registrationError', (e) => { clearTimeout(timer); reject(new Error(e?.error || 'Registration failed')); });
+        await PN.register();
+      } catch (e) { clearTimeout(timer); reject(e); }
+    });
+    if (!apnsToken) throw new Error('Empty APNs token');
+    if (!currentUser) throw new Error('Not signed in');
+    const { error } = await sbGet().from('push_subscriptions').upsert({
+      user_id: currentUser.id,
+      endpoint: apnsToken,
+      p256dh: null,
+      auth: null,
+      platform: 'ios',
+      user_agent: 'iOS Native',
+      last_used_at: new Date().toISOString(),
+      failure_count: 0,
+    }, { onConflict: 'user_id,endpoint' });
+    if (error) throw error;
+    Able.track?.('push_enabled_ios');
+    showToast('Push notifications on.');
+  } catch (e) {
+    console.error('_enableNativePush failed:', e);
+    if (errEl) { errEl.textContent = 'Could not enable: ' + (e.message || 'unknown error'); errEl.style.display = 'block'; }
+  } finally {
+    try { regHandle?.remove?.(); } catch (_) {}
+    try { errHandle?.remove?.(); } catch (_) {}
+    if (enableBtn) { enableBtn.disabled = false; enableBtn.textContent = 'Enable push notifications'; }
+    refreshPushUI();
+  }
+}
+async function _disableNativePush(){
+  const errEl = document.getElementById('push-error');
+  if (errEl) errEl.style.display = 'none';
+  try {
+    if (!currentUser?.id) return;
+    // Drop our server-side subscription; we can't programmatically revoke
+    // iOS permission (user must do that in Settings → Able → Notifications).
+    await sbGet()
+      .from('push_subscriptions')
+      .delete()
+      .eq('user_id', currentUser.id)
+      .eq('platform', 'ios');
+    Able.track?.('push_disabled_ios');
+    showToast('Push notifications off.');
+  } catch (e) {
+    console.error('_disableNativePush failed:', e);
+    if (errEl) { errEl.textContent = 'Could not disable: ' + (e.message || 'unknown error'); errEl.style.display = 'block'; }
+  } finally {
+    refreshPushUI();
+  }
+}
 // Refresh push UI whenever Settings becomes the active page.
 document.addEventListener('DOMContentLoaded', () => {
   // Capacitor: keep the iOS input accessory toolbar (^ v ✓ above keyboard) visible
@@ -11953,39 +12117,16 @@ document.addEventListener('DOMContentLoaded', () => {
         const kbH = (info && info.keyboardHeight) || 0;
         document.documentElement.style.setProperty('--kb-h', kbH + 'px');
         document.body.classList.add('kb-open');
-        // iOS WKWebView + Capacitor Keyboard.resize:"none" keeps the layout
-        // viewport at full screen, so padding-bottom on the scroll container
-        // doesn't add scrollable space (padding lives in the padding box, not
-        // content box) — scrollTop manipulation is a no-op. Instead, find the
-        // focused input's containing card and translate it up by exactly the
-        // amount needed to bring the input ~40% into the visible-above-keyboard
-        // area. Two RAFs so kb-open layout settles before measuring.
-        requestAnimationFrame(() => requestAnimationFrame(() => {
-          const el = document.activeElement;
-          if (!el || (el.tagName !== 'INPUT' && el.tagName !== 'TEXTAREA' && el.tagName !== 'SELECT')) return;
-          const card = el.closest('.auth-box, .ob-card, .modal, .db-sheet-inner, .coach-panel');
-          if (!card) return;
-          try {
-            const elRect = el.getBoundingClientRect();
-            const visibleH = Math.max(100, window.innerHeight - kbH);
-            const desiredY = visibleH * 0.4;
-            const shift = Math.max(0, elRect.top + elRect.height / 2 - desiredY);
-            if (shift > 4) {
-              card.style.transition = 'transform .25s cubic-bezier(.32,.72,0,1)';
-              card.style.transform = 'translateY(-' + Math.round(shift) + 'px)';
-              card.dataset.kbShift = '1';
-            }
-          } catch (_) {}
-        }));
+        // All overlays + page-level forms are handled by CSS rules keyed off
+        // body.kb-open: bottom-sheets get padding-bottom:kb-h on their inner
+        // panel (extends behind keyboard); .auth-box / .ob-card become
+        // scrollable with max-height fitted above the keyboard. iOS
+        // auto-scrolls focused inputs into view via the nearest scrollable
+        // ancestor — no JS translateY needed here.
       });
       Kb.addListener('keyboardWillHide', () => {
         document.documentElement.style.setProperty('--kb-h', '0px');
         document.body.classList.remove('kb-open');
-        // Reset any card we shifted up on keyboardWillShow.
-        document.querySelectorAll('[data-kb-shift="1"]').forEach((card) => {
-          card.style.transform = '';
-          card.dataset.kbShift = '';
-        });
       });
     }
   } catch (_) {}
@@ -15781,18 +15922,13 @@ document.querySelectorAll('.modal-bg').forEach(m=>m.addEventListener('click',e=>
 // on iPhone 14+ frequently leave the focused field hidden under the keyboard.
 // 300ms delay matches iOS keyboard animation. Skipped on desktop (no virtual
 // keyboard) via the touch-coarse media query.
-if (window.matchMedia && window.matchMedia('(max-width:800px)').matches) {
-  document.addEventListener('focusin', (e) => {
-    const el = e.target;
-    if (!el || (el.tagName !== 'INPUT' && el.tagName !== 'TEXTAREA')) return;
-    const overlay = el.closest('.modal-bg, .coach-panel-bg');
-    if (!overlay) return;
-    if (overlay.style.display === 'none' || !overlay.style.display) return;
-    setTimeout(() => {
-      try { el.scrollIntoView({ block: 'center', behavior: 'smooth' }); } catch (_) {}
-    }, 300);
-  });
-}
+// Removed: focusin → scrollIntoView({block:'center'}) handler for inputs
+// inside .modal-bg / .coach-panel-bg. Was a leftover from the pre-translateY
+// keyboard era. block:'center' was scrolling the panel to center the focused
+// input — yanking the coach panel so only the input bar showed at the top of
+// the screen. Keyboard avoidance is fully handled by the body.kb-open CSS
+// rules (.coach-panel-bg bottom:kb-h, .modal/.db-sheet-panel padding-bottom:
+// kb-h) plus the conditional translateY for .ob-card.
 
 // Numeric input polish: iOS decimal keyboard via inputmode="decimal" and
 // min="0" to reject negatives. Day-of-month fields (id matches /due/ or
