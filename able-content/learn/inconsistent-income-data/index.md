@@ -12,6 +12,7 @@ secondary_keywords:
   - irregular income america
   - income volatility statistics
 cluster: learn-inconsistent-income-data
+youtube_id: "xVkT4Of-NS8"
 page_type: pillar
 internal_links:
   - /learn/

@@ -12,6 +12,7 @@ secondary_keywords:
   - interest rate reduction call
   - negotiate debt self employed
 cluster: get-out-of-debt
+youtube_id: "NBG9zkXN3Jw"
 page_type: supporting
 parent: /learn/get-out-of-debt/
 internal_links:

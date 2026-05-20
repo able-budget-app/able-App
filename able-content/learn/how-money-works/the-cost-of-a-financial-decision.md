@@ -12,6 +12,7 @@ secondary_keywords:
   - small money decisions add up
   - financial decision long term cost
 cluster: how-money-works
+youtube_id: "HGxxfBz2DZw"
 page_type: supporting
 parent: /learn/how-money-works/
 internal_links:

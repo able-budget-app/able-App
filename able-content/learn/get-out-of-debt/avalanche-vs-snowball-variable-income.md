@@ -12,6 +12,7 @@ secondary_keywords:
   - debt payoff strategy
   - paying off credit cards self employed
 cluster: get-out-of-debt
+youtube_id: "vjO_roYZZJs"
 page_type: supporting
 parent: /learn/get-out-of-debt/
 internal_links:
