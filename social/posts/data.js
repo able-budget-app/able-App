@@ -5986,8 +5986,8 @@ window.CAROUSELS = [
       { tpl: 'A', eyebrow: 'nurse', size: 'md', punch: "Start your\n{30-day}\nfree trial.", meta: 'becomeable.app/get-able' },
   ] },
 
-  // C269 — Launch arc: now-in-app-store hero → pain → guide → 3 product-shot steps → success → CTA (page · launch)
-  { id: 'C269', slug: 'income-in-waves', theme: 'page', format: 'tiktok', slides: [
+  // C269 — Launch arc: now-in-app-store hero → pain → guide → 3 product-shot steps → success → CTA (green · launch)
+  { id: 'C269', slug: 'income-in-waves', theme: 'green', format: 'tiktok', slides: [
       { tpl: 'C', eyebrow: 'Now in the App Store.', size: 'md',
         pos: 'right', shot: '01-dashboard',
         muted: "An app built for",
