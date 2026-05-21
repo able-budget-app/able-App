@@ -21,7 +21,7 @@ window.POSTS = [
 
   { id: '05', slug: 'leak-math', theme: 'white', tpl: 'A', eyebrow: 'mixed',
     muted: "$7 here. A snack.\nA subscription.",
-    punch: "By day 30.\n$1,000–$2,000 {gone.}" },
+    punch: "By day 30.\n$1,000-$2,000 {gone.}" },
 
   { id: '06', slug: 'day1-day30', theme: 'page', tpl: 'A', eyebrow: 'mixed',
     muted: "Day 1 you breathe.",
@@ -119,10 +119,6 @@ window.POSTS = [
     muted: "You're not avoiding\nyour bank account.",
     punch: "You're {protecting}\nyourself from it." },
 
-  { id: '32', slug: 'irs-takes', theme: 'black', tpl: 'A', eyebrow: 'mixed',
-    muted: "A $4,000 deposit\nfeels like $4,000.",
-    punch: "$1,200 belongs to\nthe {IRS.}" },
-
   { id: '33', slug: 'asks-for-nothing', theme: 'page', tpl: 'A', eyebrow: 'mixed',
     muted: "The best money system.",
     punch: "Asks you for\n{nothing}." },
@@ -172,12 +168,8 @@ window.POSTS = [
     muted: "You don't need\nto be better.",
     punch: "You need\na {different}\nstarting point." },
 
-  { id: '46', slug: 'mint-replacement', theme: 'white', tpl: 'A', eyebrow: 'mixed',
-    muted: "Coming from Mint?",
-    punch: "The replacement\nstill {assumes}\na paycheck." },
-
   { id: '47', slug: 'every-dollar-assigned', theme: 'black', tpl: 'A', eyebrow: 'mixed',
-    muted: "Asked to assign\nevery dollar.",
+    muted: "Plan the month\nin advance.",
     punch: "Money you\n{don't} have yet." },
 
   { id: '48', slug: 'two-income-households', theme: 'page', tpl: 'A', eyebrow: 'mixed',
@@ -243,11 +235,6 @@ window.POSTS = [
   { id: '61', slug: 'split-first', theme: 'green', tpl: 'A', eyebrow: 'mixed',
     muted: "One pile.\nFive jobs.",
     punch: "{Split first.}\nSpend last." },
-
-  // 62 — L3 Thu · FAILURE AVOIDED
-  { id: '62', slug: 'april-surprise-shame', theme: 'black', tpl: 'A', eyebrow: 'mixed',
-    muted: "What you avoid:",
-    punch: "April. Surprise.\n{Shame.}" },
 
   // 63 — L3 Sat · CTA CLOSE
   { id: '63', slug: 'free-seven-days', theme: 'green', tpl: 'B', eyebrow: 'mixed', center: true,
@@ -2121,7 +2108,7 @@ window.CAROUSELS = [
         meta: '2 / 5' },
       { tpl: 'A', eyebrow: 'mixed', size: 'md',
         muted: "Pay Yourself First.",
-        punch: "Save first.\n{Personal-focused.}",
+        punch: "% off pay.\n{Personal-focused.}",
         meta: '3 / 5' },
       { tpl: 'A', eyebrow: 'mixed', size: 'md',
         muted: "Inconsistent income?",
@@ -2441,7 +2428,7 @@ window.CAROUSELS = [
   { id: 'C81', slug: 'counter-ynab', theme: 'black', format: 'tiktok', slides: [
       { tpl: 'A', eyebrow: 'YNAB', size: 'md',
         muted: "Zero-based.",
-        punch: "Asks you to\n{assign} every dollar.",
+        punch: "Asks you to plan\n{the full month.}",
         meta: '1 / 5' },
       { tpl: 'A', eyebrow: 'YNAB', size: 'md',
         muted: "Before the month starts.",
@@ -6935,7 +6922,7 @@ window.BRANDSCRIPT = [
     punch: "{Just confidence.}\nEvery day." },
 
   { id: 'B40', slug: 'outcome-cost-of-waiting', cat: 'Outcomes', theme: 'black', tpl: 'B', eyebrow: 'mixed',
-    punch: "Every month you\nwait is another\n$500–$1,000 {gone.}" },
+    punch: "Every month you\nwait is another\n$500-$1,000 {gone.}" },
 
   { id: 'B41', slug: 'transform-unable-to-able', cat: 'Transformation', theme: 'green', tpl: 'B', eyebrow: 'mixed', center: true,
     punch: "From Unable\n→ {Able.}" },

@@ -59,10 +59,13 @@ function loadDataJs(p) {
 
 const w1 = loadDataJs(path.join(ROOT, 'social/posts/data.js'));
 const w2 = loadDataJs(path.join(ROOT, 'social/reels/data.js'));
-const POSTS       = w1.POSTS       || [];
-const CAROUSELS   = w1.CAROUSELS   || [];
-const BRANDSCRIPT = w1.BRANDSCRIPT || [];
-const REELS       = w2.REELS       || [];
+const w3 = loadDataJs(path.join(ROOT, 'social/posts/product-data.js'));
+const POSTS             = w1.POSTS             || [];
+const CAROUSELS         = w1.CAROUSELS         || [];
+const BRANDSCRIPT       = w1.BRANDSCRIPT       || [];
+const REELS             = w2.REELS             || [];
+const PRODUCT_POSTS     = w3.PRODUCT_POSTS     || [];
+const PRODUCT_CAROUSELS = w3.PRODUCT_CAROUSELS || [];
 
 // Captions per cadence slot, keyed by `${week}|${day}` (e.g. "1|Mon").
 // Each record: { ig, tt, li, links? }. `li` is the LinkedIn body without the
@@ -117,10 +120,12 @@ const BS_CADENCE  = eval('(' + extractLiteral(html, 'const BS_CADENCE')  + ')');
 // Lookup by id (combines all 4 collections)
 // ─────────────────────────────────────────────────────────────────────
 const byId = new Map();
-for (const p of POSTS)       byId.set(p.id, { ...p, _kind: 'single'      });
-for (const c of CAROUSELS)   byId.set(c.id, { ...c, _kind: 'carousel'    });
-for (const r of REELS)       byId.set(r.id, { ...r, _kind: 'reel'        });
-for (const b of BRANDSCRIPT) byId.set(b.id, { ...b, _kind: 'brandscript' });
+for (const p of POSTS)             byId.set(p.id, { ...p, _kind: 'single'      });
+for (const p of PRODUCT_POSTS)     byId.set(p.id, { ...p, _kind: 'single'      });
+for (const c of CAROUSELS)         byId.set(c.id, { ...c, _kind: 'carousel'    });
+for (const c of PRODUCT_CAROUSELS) byId.set(c.id, { ...c, _kind: 'carousel'    });
+for (const r of REELS)             byId.set(r.id, { ...r, _kind: 'reel'        });
+for (const b of BRANDSCRIPT)       byId.set(b.id, { ...b, _kind: 'brandscript' });
 
 // ─────────────────────────────────────────────────────────────────────
 // Helpers
@@ -211,8 +216,18 @@ const HEADERS = [
   'ig_url', 'fb_url', 'tt_url', 'li_url', 'posted_at',
 ];
 
+// Items approved 2026-05-21 to be promoted from library to schedule.
+// They fill the first N gaps left by removing TikTok-slideshow items.
+const PROMOTED_TO_SCHEDULE = [
+  '51', '57', '60', '71',
+  'P04', 'P06', 'P08', 'P09', 'P12',
+  'P16', 'P17', 'P18', 'P19', 'P21', 'P23', 'P24', 'P26',
+  'R53',
+];
+
 const rows = [];
-const usedBrandscriptIds = new Set();
+const usedIds = new Set();
+const freedCarouselSlots = [];  // {weekN, dayName, weekTheme} for each removed TT-slideshow
 
 for (const week of WEEKS) {
   // Render the day list with the Sun BS slot appended (matches the live cadence)
@@ -222,7 +237,12 @@ for (const week of WEEKS) {
 
   for (const d of days) {
     const item = byId.get(d.id);
-    if (item && item._kind === 'brandscript') usedBrandscriptIds.add(item.id);
+    // Skip TikTok slideshows entirely — they live in the 02-yt-short sheet, not IG cadence
+    if (item && item._kind === 'carousel') {
+      freedCarouselSlots.push({ weekN: week.n, dayName: d.day, weekTheme: week.theme.replace(/&amp;/g, '&') });
+      continue;
+    }
+    if (item) usedIds.add(item.id);
 
     const cap = CAPTIONS[`${week.n}|${d.day}`] || {};
     const links = cap.links || 'becomeable.app/get-able';
@@ -260,26 +280,80 @@ for (const week of WEEKS) {
   }
 }
 
-// Reserve rows: brandscript items not used in cadence
-for (const b of BRANDSCRIPT) {
-  if (usedBrandscriptIds.has(b.id)) continue;
-  const item = { ...b, _kind: 'brandscript' };
+// Promote approved items into the freed TikTok-slideshow slots (chronological order)
+for (let i = 0; i < PROMOTED_TO_SCHEDULE.length && i < freedCarouselSlots.length; i++) {
+  const slot = freedCarouselSlots[i];
+  const id = PROMOTED_TO_SCHEDULE[i];
+  const item = byId.get(id);
+  if (!item) {
+    console.warn(`PROMOTED id ${id} not found in any library — skipping`);
+    continue;
+  }
+  usedIds.add(id);
+  const cap = CAPTIONS[`${slot.weekN}|${slot.dayName}`] || {};
+  const links = cap.links || 'becomeable.app/get-able';
+  const captionLi = cap.li ? `${cap.li}\n\n${links}` : '';
+  const captionFb = cap.ig ? cap.ig.replace(/Link in bio\./g, links) : '';
   rows.push([
-    '', '', '',
-    'brandscript',
-    b.id, b.slug, b.theme || '',
-    `Reserve · ${b.cat || 'Uncategorized'}`,
-    '',
+    slot.weekN, slot.dayName, postDateFor(slot.weekN, slot.dayName),
+    item._kind, id, item.slug, item.theme || '',
+    slot.weekTheme,
+    `Promoted from library 2026-05-21`,
     cleanPunch(item),
     filenameFor(item),
     driveFolderFor(item),
-    'becomeable.app/get-able',  // relevant_links
-    '', '', '', '',    // caption_ig, caption_tt, caption_li, caption_fb
-    '', '', '', '', '', // repurpose pipeline
-    'Reserve',
-    '', '', '', '', '', // ig_url, fb_url, tt_url, li_url, posted_at
+    links,
+    cap.ig || '',
+    cap.tt || '',
+    captionLi,
+    captionFb,
+    '', '', '', '', '',
+    'Pending',
+    '', '', '', '', '',
   ]);
 }
+
+// Reserve rows: active items not used in cadence (excluding TikTok slideshows
+// — they have their own sheet — and Launch L## items which live in the Launch sheet)
+const RESERVE_POOLS = [
+  { kind: 'single',      list: POSTS         },
+  { kind: 'single',      list: PRODUCT_POSTS },
+  { kind: 'reel',        list: REELS         },
+  { kind: 'brandscript', list: BRANDSCRIPT   },
+];
+for (const { kind, list } of RESERVE_POOLS) {
+  for (const e of list) {
+    if (usedIds.has(e.id)) continue;
+    // L## launch items live in the dedicated Launch sheet, not the cadence
+    if (e.cat === 'Launch') continue;
+    const item = { ...e, _kind: kind };
+    rows.push([
+      '', '', '',
+      kind,
+      e.id, e.slug, e.theme || '',
+      `Reserve · ${e.cat || 'Uncategorized'}`,
+      '',
+      cleanPunch(item),
+      filenameFor(item),
+      driveFolderFor(item),
+      'becomeable.app/get-able',  // relevant_links
+      '', '', '', '',    // caption_ig, caption_tt, caption_li, caption_fb
+      '', '', '', '', '', // repurpose pipeline
+      'Reserve',
+      '', '', '', '', '', // ig_url, fb_url, tt_url, li_url, posted_at
+    ]);
+  }
+}
+
+// ─────────────────────────────────────────────────────────────────────
+// Sort: scheduled rows by post_date asc, reserve rows last
+// ─────────────────────────────────────────────────────────────────────
+rows.sort((a, b) => {
+  const aRes = a[22] === 'Reserve';
+  const bRes = b[22] === 'Reserve';
+  if (aRes !== bRes) return aRes ? 1 : -1;          // reserves to bottom
+  return String(a[2]).localeCompare(String(b[2])); // post_date asc (YYYY-MM-DD)
+});
 
 // ─────────────────────────────────────────────────────────────────────
 // Write CSV
@@ -300,5 +374,7 @@ const fmt = rows.reduce((a, r) => (a[r[3]] = (a[r[3]] || 0) + 1, a), {});
 console.log(`Wrote ${rows.length} rows to ${path.relative(ROOT, outPath)}`);
 console.log('By format:');
 Object.entries(fmt).forEach(([k, v]) => console.log(`  ${k}: ${v}`));
-console.log(`Brandscript used in cadence: ${usedBrandscriptIds.size} / ${BRANDSCRIPT.length}`);
-console.log(`Brandscript in reserve: ${BRANDSCRIPT.length - usedBrandscriptIds.size}`);
+const reserveCount = rows.filter(r => r[22] === 'Reserve').length;
+console.log(`Cadence rows: ${rows.length - reserveCount}  ·  Reserve rows: ${reserveCount}`);
+const brandscriptUsed = [...usedIds].filter(id => BRANDSCRIPT.some(b => b.id === id)).length;
+console.log(`Brandscript used in cadence: ${brandscriptUsed} / ${BRANDSCRIPT.length}`);
