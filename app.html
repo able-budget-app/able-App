@@ -3053,6 +3053,15 @@ const SUPPORT_EMAIL  = 'hello@becomeable.app';
 const sbGet = () => window._sb;
 const stripeGet = () => window._stripe;
 
+// Debug-only logger. No-ops in production; flip on per-session for support
+// cases by running `window._ableDebug = true` in DevTools (or appending
+// `?_debug=1` to the URL). Keeps the timing/flow traces useful without
+// polluting end-user consoles.
+try {
+  if (new URLSearchParams(location.search).get('_debug') === '1') window._ableDebug = true;
+} catch (_) { /* noop */ }
+const _dbg = (...args) => { if (window._ableDebug) console.debug(...args); };
+
 // Supabase Functions v2 returns generic "Edge Function returned a non-2xx
 // status code" for any non-2xx response. The actual server-side error message
 // lives in the Response body, accessible via err.context. This helper extracts
@@ -3428,7 +3437,7 @@ async function resendSignupConfirmation() {
     const { error } = await sbGet().auth.resend({ type: 'signup', email });
     if (error) throw error;
     if (note) { note.textContent = `Sent to ${email}. Check your inbox (and spam).`; note.style.display = 'block'; }
-    Able.track?.('signup_confirmation_resent', { email });
+    Able.track?.('signup_confirmation_resent', { email_domain: (email || '').split('@')[1] || null });
   } catch (e) {
     if (note) { note.textContent = (e && e.message) ? `Couldn't resend: ${e.message}` : `Couldn't resend. Try again in a moment.`; note.style.display = 'block'; }
   }
@@ -3682,7 +3691,7 @@ async function ensureMfaForPlaid() {
     setTimeout(() => openMfaEnroll(), 250);
     return false;
   } catch(e) {
-    console.debug('ensureMfaForPlaid error:', e);
+    _dbg('ensureMfaForPlaid error:', e);
     return false;
   }
 }
@@ -3785,11 +3794,11 @@ async function checkSubscription(userId) {
   try {
     data = await attempt(8000);
   } catch (e) {
-    console.debug('checkSubscription first attempt error:', e.message, '— retrying');
+    _dbg('checkSubscription first attempt error:', e.message, '— retrying');
     try {
       data = await attempt(8000);
     } catch (e2) {
-      console.debug('checkSubscription retry error:', e2.message);
+      _dbg('checkSubscription retry error:', e2.message);
       return false;
     }
   }
@@ -3838,7 +3847,7 @@ async function onAuthStateChange(user) {
     return;
   }
   if(_authFlowRunning){
-    console.debug('onAuthStateChange already running, skipping duplicate for', user.id);
+    _dbg('onAuthStateChange already running, skipping duplicate for', user.id);
     return;
   }
   _authFlowRunning = true;
@@ -3938,7 +3947,7 @@ async function _onAuthStateChangeImpl(user) {
 
   const authBox = document.querySelector('.auth-box');
   const showLoading = (msg) => {
-    if(authBox) authBox.innerHTML = `<div style="text-align:center;padding:1.5rem 1rem;font-family:var(--ds-f);"><div class="brand-wordmark-wrap" style="margin-bottom:1.5rem;"><div class="brand-wordmark brand-wordmark--xl brand-wordmark--loading">Able</div></div><div style="font-size:12px;color:var(--ds-t3);font-weight:700;letter-spacing:.08em;text-transform:uppercase;">${msg}</div></div>`;
+    if(authBox) authBox.innerHTML = `<div style="text-align:center;padding:1.5rem 1rem;font-family:var(--ds-f);"><div class="brand-wordmark-wrap" style="margin-bottom:1.5rem;"><div class="brand-wordmark brand-wordmark--xl brand-wordmark--loading">Able</div></div><div style="font-size:12px;color:var(--ds-t3);font-weight:700;letter-spacing:.08em;text-transform:uppercase;">${escapeHtml(msg)}</div></div>`;
   };
   // Debounce the "Loading your account" pill so fast paths (fresh signup →
   // paywall in <600ms) skip the flash. Returning users with longer load times
@@ -4062,7 +4071,7 @@ async function _onAuthStateChangeImpl(user) {
       const tVerify = performance.now();
       try {
         const { data: vData, error: vErr } = await verifyCheckoutSession(checkoutSessionId);
-        console.debug(`[Able] verify-checkout-session: ${Math.round(performance.now()-tVerify)}ms`, vData, vErr);
+        _dbg(`[Able] verify-checkout-session: ${Math.round(performance.now()-tVerify)}ms`, vData, vErr);
         if (!vErr && vData?.status === 'active') {
           sessionStorage.setItem('able_access_'+user.id, 'true');
           // Persist across app launches so the next sign-in skips the
@@ -4094,7 +4103,7 @@ async function _onAuthStateChangeImpl(user) {
     if (!hasAccess) {
       const t0 = performance.now();
       hasAccess = await checkSubscription(user.id);
-      console.debug(`[Able] First checkSubscription: ${Math.round(performance.now()-t0)}ms, hasAccess=${hasAccess}`);
+      _dbg(`[Able] First checkSubscription: ${Math.round(performance.now()-t0)}ms, hasAccess=${hasAccess}`);
     }
 
     // If we have a session_id and the first verify returned 'pending'
@@ -4111,14 +4120,14 @@ async function _onAuthStateChangeImpl(user) {
         const tRetry = performance.now();
         try {
           const { data: vData } = await verifyCheckoutSession(checkoutSessionId);
-          console.debug(`[Able] Verify retry ${i+1}: ${Math.round(performance.now()-tRetry)}ms, status=${vData?.status}`);
+          _dbg(`[Able] Verify retry ${i+1}: ${Math.round(performance.now()-tRetry)}ms, status=${vData?.status}`);
           if (vData?.status === 'active') {
             sessionStorage.setItem('able_access_'+user.id, 'true');
             hasAccess = true;
             Able.track('checkout_verified_via_retry', { attempts: i+1 });
           }
         } catch (e) {
-          console.debug(`[Able] Verify retry ${i+1} threw:`, e?.message);
+          _dbg(`[Able] Verify retry ${i+1} threw:`, e?.message);
         }
       }
     }
@@ -4134,7 +4143,7 @@ async function _onAuthStateChangeImpl(user) {
         sessionStorage.removeItem('able_access_'+user.id);
         const tPoll = performance.now();
         hasAccess = await checkSubscription(user.id);
-        console.debug(`[Able] Poll ${i+1}: ${Math.round(performance.now()-tPoll)}ms, hasAccess=${hasAccess}`);
+        _dbg(`[Able] Poll ${i+1}: ${Math.round(performance.now()-tPoll)}ms, hasAccess=${hasAccess}`);
       }
     }
 
@@ -4493,7 +4502,7 @@ function renderObStep() {
 
   document.getElementById('ob-progress').style.width = ((obStep / OB_QUESTIONS.length) * 100) + '%';
   document.getElementById('ob-step-label').textContent = `Step ${obStep + 1} of ${OB_QUESTIONS.length}`;
-  document.getElementById('ob-msg').innerHTML = `<div>${q.msg}</div><div style="font-size:13px;color:var(--ds-t3);font-weight:500;line-height:1.6;margin-top:.5rem;">${q.hint}</div>`;
+  document.getElementById('ob-msg').innerHTML = `<div>${escapeHtml(q.msg)}</div><div style="font-size:13px;color:var(--ds-t3);font-weight:500;line-height:1.6;margin-top:.5rem;">${escapeHtml(q.hint)}</div>`;
 
   // Default: show the Continue button. The plaid type may hide it.
   document.getElementById('ob-next-btn').style.display = 'inline-flex';
@@ -5389,7 +5398,7 @@ async function obStartPlaidLink() {
       },
       onEvent: (eventName) => {
         // Surface helpful for debugging while we're integrating.
-        console.debug('[Plaid Link]', eventName);
+        _dbg('[Plaid Link]', eventName);
       },
     });
     handler.open();
@@ -6071,7 +6080,7 @@ async function obAutoApplyPendingReview() {
       sb.functions.invoke('plaid-deep-dive', { body: { plaid_item_row_id: itemRowId } })
         .then(({ data, error }) => {
           if (error) console.warn('[deep-dive] kickoff failed:', error.message || error);
-          else console.debug('[deep-dive] kicked off:', data);
+          else _dbg('[deep-dive] kicked off:', data);
         })
         .catch((e) => console.warn('[deep-dive] invoke threw:', e?.message || e));
     }
@@ -16253,7 +16262,7 @@ window.addEventListener('load', async () => {
 
   let authFlowRunning = false;
   const runAuthFlow = async (user) => {
-    if(authFlowRunning) { console.debug('Auth flow already running, skipping duplicate'); return; }
+    if(authFlowRunning) { _dbg('Auth flow already running, skipping duplicate'); return; }
     authFlowRunning = true;
     try {
       await onAuthStateChange(user);
@@ -16265,7 +16274,7 @@ window.addEventListener('load', async () => {
   let initialSessionHandled = false;
 
   window._sb.auth.onAuthStateChange(async(event, session) => {
-    console.debug('Auth event:', event, session?.user?.email);
+    _dbg('Auth event:', event);
     if(event === 'SIGNED_OUT') {
       currentUser = null;
       initialSessionHandled = false;
@@ -19009,7 +19018,7 @@ async function lcAudioGenerate() {
       blob = await res.blob();
       await lcAudioCacheSet(lesson.id, blob);
       const rem = res.headers.get('x-remaining-today');
-      if (rem != null) console.debug('[audio] remaining today:', rem);
+      if (rem != null) _dbg('[audio] remaining today:', rem);
     }
     if (lcAudio.blobUrl) URL.revokeObjectURL(lcAudio.blobUrl);
     const url = URL.createObjectURL(blob);

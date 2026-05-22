@@ -54,6 +54,30 @@ function _getServiceKey(): string {
   return Deno.env.get('SUPABASE_SERVICE_ROLE_KEY') ?? '';
 }
 
+// Per-user in-memory rate limit. Each Stripe Checkout Session creation hits
+// the Stripe API and the user normally only goes through checkout once.
+// 5/hour + 10/day covers a user who bails and retries, while capping
+// console-loop spam that would slam Stripe + pollute the dashboard.
+// Per-isolate (resets on cold start) — fine for the abuse vectors at this stage.
+const HOURLY_CAP = 5;
+const DAILY_CAP = 10;
+const _callLog = new Map<string, number[]>(); // userId -> call timestamps (ms)
+function _checkRateLimit(userId: string): { ok: true } | { ok: false; reason: string } {
+  const now = Date.now();
+  const hour = 60 * 60 * 1000;
+  const day = 24 * hour;
+  const log = (_callLog.get(userId) || []).filter((t) => now - t < day);
+  if (log.filter((t) => now - t < hour).length >= HOURLY_CAP) {
+    return { ok: false, reason: `Too many checkout attempts. Try again in a few minutes.` };
+  }
+  if (log.length >= DAILY_CAP) {
+    return { ok: false, reason: `Daily checkout cap reached. Resets in a few hours.` };
+  }
+  log.push(now);
+  _callLog.set(userId, log);
+  return { ok: true };
+}
+
 Deno.serve(async (req) => {
   if (req.method === 'OPTIONS') return new Response('ok', { headers: corsHeaders(req) })
 
@@ -73,6 +97,9 @@ Deno.serve(async (req) => {
     }
     const userId = userRes.user.id
     const email = userRes.user.email ?? ''
+
+    const limit = _checkRateLimit(userId)
+    if (!limit.ok) return json(req, { error: limit.reason }, 429)
 
     // 2. Only trust priceId + return/cancel URLs from the body
     const { priceId, returnUrl, cancelUrl, ref_token } = await req.json()

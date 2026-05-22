@@ -166,18 +166,30 @@ function json(req: Request, body: unknown, status = 200) {
   });
 }
 
+// Strip control chars + cap length on user-facing string fields before they
+// hit the Claude prompt. JSON.stringify already escapes \n/\r/\t, but
+// defense-in-depth: also collapse them up front so a 100KB bill name
+// can't bloat the prompt or sneak past escaping.
+function _safeStr(v: string | null | undefined, max: number): string | null {
+  if (v == null) return null;
+  if (typeof v !== 'string') return null;
+  const cleaned = v.replace(/[\u0000-\u001f\u007f]/g, ' ').replace(/\s+/g, ' ').trim();
+  if (!cleaned) return null;
+  return cleaned.slice(0, max);
+}
+
 function buildUserMessage(bills: BillInput[], streams: StreamInput[]): string {
   const billsTrim = bills.map((b) => ({
     id: b.id,
-    name: b.name,
+    name: _safeStr(b.name, 200) ?? '',
     amount: b.amount,
     cat: b.cat ?? null,
     freq: b.freq ?? null,
   }));
   const streamsTrim = streams.map((s) => ({
     stream_id: s.stream_id,
-    merchant_name: s.merchant_name ?? null,
-    description: s.description ?? null,
+    merchant_name: _safeStr(s.merchant_name, 200),
+    description: _safeStr(s.description, 300),
     amount: s.amount,
     frequency: s.frequency ?? null,
     category: s.category ?? null,

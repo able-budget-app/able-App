@@ -101,9 +101,29 @@ Deno.serve(async (req) => {
     if (userErr || !userRes.user) return json(req, { error: 'Unauthorized' }, 401);
     const userId = userRes.user.id;
 
-    const body = (await req.json().catch(() => ({}))) as Body;
+    // Body is optional (defaults to {}), but if it's present and malformed
+    // we want a loud 400 rather than silently swallowing the parse error
+    // and pretending the caller sent {}. Read as text first so we can tell
+    // "no body" apart from "broken body".
+    const rawBody = await req.text();
+    let body: Body = {};
+    if (rawBody.trim()) {
+      try {
+        const parsed = JSON.parse(rawBody);
+        if (!parsed || typeof parsed !== 'object' || Array.isArray(parsed)) {
+          return json(req, { error: 'Body must be a JSON object' }, 400);
+        }
+        body = parsed as Body;
+      } catch {
+        return json(req, { error: 'Malformed JSON body' }, 400);
+      }
+    }
+    const rawMax = body.max_batches;
+    if (rawMax !== undefined && (typeof rawMax !== 'number' || !Number.isFinite(rawMax))) {
+      return json(req, { error: 'max_batches must be a number' }, 400);
+    }
     const maxBatches = Math.min(
-      Math.max(1, body.max_batches ?? DEFAULT_MAX_BATCHES),
+      Math.max(1, Math.floor(rawMax ?? DEFAULT_MAX_BATCHES)),
       HARD_MAX_BATCHES,
     );
     const limit = BATCH_SIZE * maxBatches;

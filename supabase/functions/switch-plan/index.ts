@@ -83,6 +83,14 @@ function _getServiceKey(): string {
     const isPreview = body.preview === true
     const action = typeof body.action === 'string' ? body.action : null
 
+    // Whitelist action up front. Without isPreview, we require a known
+    // action value before doing any work — keeps unrecognized values from
+    // burning a Stripe API call before they hit the existing check below.
+    const ALLOWED_ACTIONS = ['switch_to_annual'] as const
+    if (!isPreview && (action === null || !ALLOWED_ACTIONS.includes(action as typeof ALLOWED_ACTIONS[number]))) {
+      return json(req, { error: 'Unsupported action' }, 400)
+    }
+
     // Pull the user's stored subscription id
     const admin = createClient(SUPABASE_URL, SERVICE_ROLE)
     const { data: profile, error: profileErr } = await admin

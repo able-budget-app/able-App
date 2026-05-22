@@ -172,6 +172,33 @@ type Body = {
   force_run?: boolean;
 };
 
+// profile_hint fields land verbatim in the Claude user message via
+// JSON.stringify. Strip control chars + newlines (would otherwise let a
+// user inject fake prompt sections), cap length, whitelist known keys,
+// and constrain state to a recognized format. Unknown input shapes
+// collapse to {}.
+function _sanitizeProfileHint(raw: unknown): AnalyzerInput['profile'] {
+  if (!raw || typeof raw !== 'object') return {};
+  const r = raw as Record<string, unknown>;
+  const cleanStr = (v: unknown, max: number): string | undefined => {
+    if (typeof v !== 'string') return undefined;
+    // eslint-disable-next-line no-control-regex
+    const stripped = v.replace(/[\u0000-\u001f\u007f]/g, ' ').replace(/\s+/g, ' ').trim();
+    if (!stripped) return undefined;
+    return stripped.slice(0, max);
+  };
+  const out: AnalyzerInput['profile'] = {};
+  const name = cleanStr(r.name, 100);
+  if (name) out.name = name;
+  const business = cleanStr(r.business, 200);
+  if (business) out.business = business;
+  const ips = cleanStr(r.income_payment_structure, 80);
+  if (ips) out.income_payment_structure = ips;
+  const stateRaw = typeof r.state === 'string' ? r.state.trim().toUpperCase() : '';
+  if (/^[A-Z]{2}$/.test(stateRaw) || stateRaw === 'OTHER') out.state = stateRaw;
+  return out;
+}
+
 Deno.serve(async (req) => {
   if (req.method === 'OPTIONS') return new Response('ok', { headers: corsHeaders(req) });
   if (req.method !== 'POST') return json(req, { error: 'POST only' }, 405);
@@ -358,7 +385,7 @@ Deno.serve(async (req) => {
       recurring_streams: { inflow_streams, outflow_streams },
       credit_accounts,
       pre_built_credit_debts,
-      profile: body.profile_hint ?? {},
+      profile: _sanitizeProfileHint(body.profile_hint),
       lookback_months: lookback,
     };
 

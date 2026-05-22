@@ -208,6 +208,15 @@ Deno.serve(async (req) => {
     if (!body?.plaid_item_row_id) {
       return json(req, { error: 'plaid_item_row_id required' }, 400);
     }
+    // merchant_filter is a debug-only substring used in .includes() against
+    // every group's display_name + every txn's name/merchant_name. Without
+    // a cap a multi-MB filter would burn memory + CPU per request. Reject
+    // anything unreasonable rather than silently truncating.
+    if (body.merchant_filter !== undefined) {
+      if (typeof body.merchant_filter !== 'string' || body.merchant_filter.length > 200) {
+        return json(req, { error: 'merchant_filter must be a string ≤ 200 chars' }, 400);
+      }
+    }
 
     const admin = createClient(SUPABASE_URL, SERVICE_ROLE);
 

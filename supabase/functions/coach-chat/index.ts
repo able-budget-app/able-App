@@ -166,13 +166,36 @@ function json(req: Request, body: unknown, status = 200) {
   });
 }
 
+// state is user-controlled and lands verbatim in the Claude system prompt
+// via JSON.stringify. A pathological client could send a 5MB nested object
+// (token bloat + cost) or inject prompt-control sequences. Drop anything
+// that's not a plain object, scrub dangerous keys, and cap the rendered
+// payload size so a single request can't blow past Claude's context.
+const STATE_MAX_BYTES = 20_000;
+const _DANGEROUS_KEYS = new Set(['__proto__', 'constructor', 'prototype']);
+function _sanitizeState(raw: unknown): Record<string, unknown> {
+  if (!raw || typeof raw !== 'object' || Array.isArray(raw)) return {};
+  const out: Record<string, unknown> = {};
+  for (const [k, v] of Object.entries(raw)) {
+    if (_DANGEROUS_KEYS.has(k)) continue;
+    out[k] = v;
+  }
+  return out;
+}
+
 function buildStateBlock(state: unknown): string {
+  const safe = _sanitizeState(state);
+  let serialized = JSON.stringify(safe, null, 2);
+  if (serialized.length > STATE_MAX_BYTES) {
+    // Truncate rather than reject — partial state is still useful to Coach.
+    serialized = serialized.slice(0, STATE_MAX_BYTES) + '\n…(truncated)';
+  }
   return `# Current user state
 
 Live snapshot from Able. Use these numbers when giving advice.
 
 \`\`\`json
-${JSON.stringify(state ?? {}, null, 2)}
+${serialized}
 \`\`\``;
 }
 

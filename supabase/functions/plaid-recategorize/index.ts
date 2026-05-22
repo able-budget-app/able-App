@@ -124,11 +124,23 @@ function json(req: Request, body: unknown, status = 200) {
   });
 }
 
+// Strip control chars + cap length on user-facing string fields before they
+// hit the Claude prompt. JSON.stringify already escapes \n/\r/\t, but
+// defense-in-depth: also collapse them up front so a 100KB merchant_name
+// can't bloat the prompt or sneak past escaping via Unicode normalization.
+function _safeStr(v: string | null | undefined, max: number): string | null {
+  if (v == null) return null;
+  if (typeof v !== 'string') return null;
+  const cleaned = v.replace(/[\u0000-\u001f\u007f]/g, ' ').replace(/\s+/g, ' ').trim();
+  if (!cleaned) return null;
+  return cleaned.slice(0, max);
+}
+
 function buildUserMessage(transactions: PlaidTxnInput[]): string {
   const trimmed = transactions.map((t) => ({
     transaction_id: t.transaction_id,
-    name: t.name ?? null,
-    merchant_name: t.merchant_name ?? null,
+    name: _safeStr(t.name, 150),
+    merchant_name: _safeStr(t.merchant_name, 150),
     amount: t.amount,
     date: t.date,
     plaid_primary: t.personal_finance_category?.primary ?? null,

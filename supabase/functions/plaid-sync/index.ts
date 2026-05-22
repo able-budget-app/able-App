@@ -52,6 +52,30 @@ const SERVICE_ROLE = _getServiceKey();
 const INTERNAL_SECRET = Deno.env.get('INTERNAL_FUNCTION_SECRET') ?? '';
 const MAX_PAGES = 50; // hard cap. Each page is up to 500 txns. 25k limit.
 
+// Per-user in-memory rate limit on user-initiated syncs. Plaid charges per
+// /transactions/sync call; normal flow is webhook-driven (service-role,
+// uncapped) with the user "Refresh" button as fallback. 6/hour + 20/day
+// covers a heavy manual user and caps a console-loop attack. Per-isolate
+// (resets on cold start) — webhooks and internal sweeps bypass this.
+const HOURLY_CAP = 6;
+const DAILY_CAP = 20;
+const _callLog = new Map<string, number[]>(); // userId -> call timestamps (ms)
+function _checkRateLimit(userId: string): { ok: true } | { ok: false; reason: string } {
+  const now = Date.now();
+  const hour = 60 * 60 * 1000;
+  const day = 24 * hour;
+  const log = (_callLog.get(userId) || []).filter((t) => now - t < day);
+  if (log.filter((t) => now - t < hour).length >= HOURLY_CAP) {
+    return { ok: false, reason: `Hourly sync cap reached (${HOURLY_CAP}). Your bank pushes updates automatically — try again in a bit.` };
+  }
+  if (log.length >= DAILY_CAP) {
+    return { ok: false, reason: `Daily sync cap reached (${DAILY_CAP}). Resets in a few hours.` };
+  }
+  log.push(now);
+  _callLog.set(userId, log);
+  return { ok: true };
+}
+
 const _ALLOWED_ORIGINS = new Set([
   'https://becomeable.app',
   'https://www.becomeable.app',
@@ -119,6 +143,8 @@ Deno.serve(async (req) => {
       const { data: userRes, error: userErr } = await userClient.auth.getUser();
       if (userErr || !userRes.user) return json(req, { error: 'Unauthorized' }, 401);
       if (item.user_id !== userRes.user.id) return json(req, { error: 'Forbidden' }, 403);
+      const limit = _checkRateLimit(userRes.user.id);
+      if (!limit.ok) return json(req, { error: limit.reason }, 429);
     }
     const userId = item.user_id;
 

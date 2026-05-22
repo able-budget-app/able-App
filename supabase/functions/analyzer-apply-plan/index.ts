@@ -126,6 +126,84 @@ type Body = {
 
 type AnalyzerPlan = AnalyzerPlanShape;
 
+// Bounds-check the user-supplied overrides object. The override arrays land
+// in user_data verbatim through the merge below, so an attacker submitting
+// e.g. overrides.bills = [...10_000 entries] or amount: -999999 would
+// corrupt downstream state. Reject the whole payload on a hard cap; per-row
+// numeric clamps are silent (out-of-range fields drop to a safe default).
+const MAX_INCOME_SOURCES = 50;
+const MAX_BILLS = 100;
+const MAX_DEBTS = 50;
+function _validateOverrides(raw: unknown): { ok: true; value: Partial<AnalyzerPlanShape> } | { ok: false; error: string } {
+  if (raw == null) return { ok: true, value: {} };
+  if (typeof raw !== 'object' || Array.isArray(raw)) return { ok: false, error: 'overrides must be an object' };
+  const r = raw as Record<string, unknown>;
+  const out: Partial<AnalyzerPlanShape> = {};
+  const cleanName = (v: unknown, max: number): string => {
+    if (typeof v !== 'string') return '';
+    return v.replace(/[\u0000-\u001f\u007f]/g, ' ').replace(/\s+/g, ' ').trim().slice(0, max);
+  };
+  const num = (v: unknown, lo: number, hi: number, fallback: number | null): number | null => {
+    if (typeof v !== 'number' || !Number.isFinite(v)) return fallback;
+    if (v < lo) return fallback;
+    if (v > hi) return fallback;
+    return v;
+  };
+
+  if (Array.isArray(r.income_sources)) {
+    if (r.income_sources.length > MAX_INCOME_SOURCES) return { ok: false, error: `Too many income_sources (max ${MAX_INCOME_SOURCES})` };
+    out.income_sources = r.income_sources
+      .map((x) => ({ name: cleanName((x as Record<string, unknown>)?.name, 100) }))
+      .filter((x) => x.name.length > 0);
+  }
+  if (Array.isArray(r.bills)) {
+    if (r.bills.length > MAX_BILLS) return { ok: false, error: `Too many bills (max ${MAX_BILLS})` };
+    out.bills = r.bills.map((x) => {
+      const b = x as Record<string, unknown>;
+      return {
+        name: cleanName(b.name, 100),
+        amount: num(b.amount, 0, 100_000, 0) as number,
+        due_day_of_month: num(b.due_day_of_month, 1, 31, null),
+        frequency: typeof b.frequency === 'string' ? cleanName(b.frequency, 50) : undefined,
+        evidence_stream_id: typeof b.evidence_stream_id === 'string' ? b.evidence_stream_id.slice(0, 200) : null,
+      };
+    }).filter((b) => b.name.length > 0);
+  }
+  if (Array.isArray(r.debts)) {
+    if (r.debts.length > MAX_DEBTS) return { ok: false, error: `Too many debts (max ${MAX_DEBTS})` };
+    out.debts = r.debts.map((x) => {
+      const d = x as Record<string, unknown>;
+      return {
+        name: cleanName(d.name, 100),
+        min_payment: num(d.min_payment, 0, 100_000, 0) as number,
+        due_day_of_month: num(d.due_day_of_month, 1, 31, null),
+        rate_estimate: num(d.rate_estimate, 0, 1, null),
+        balance_estimate: num(d.balance_estimate, 0, 10_000_000, null),
+      };
+    }).filter((d) => d.name.length > 0);
+  }
+  if (r.tax_allocation && typeof r.tax_allocation === 'object') {
+    const t = r.tax_allocation as Record<string, unknown>;
+    const pct = num(t.suggested_pct, 0, 100, null);
+    if (pct !== null) {
+      out.tax_allocation = {
+        suggested_pct: pct,
+        evidence_summary: typeof t.evidence_summary === 'string' ? t.evidence_summary.slice(0, 1000) : undefined,
+      };
+    }
+  }
+  if (r.surplus_split && typeof r.surplus_split === 'object') {
+    const s = r.surplus_split as Record<string, unknown>;
+    out.surplus_split = {
+      owner_pct:   num(s.owner_pct,   0, 100, 0) as number,
+      debt_pct:    num(s.debt_pct,    0, 100, 0) as number,
+      reserve_pct: num(s.reserve_pct, 0, 100, 0) as number,
+      free_pct:    num(s.free_pct,    0, 100, 0) as number,
+    };
+  }
+  return { ok: true, value: out };
+}
+
 Deno.serve(async (req) => {
   if (req.method === 'OPTIONS') return new Response('ok', { headers: corsHeaders(req) });
   if (req.method !== 'POST') return json(req, { error: 'POST only' }, 405);
@@ -141,6 +219,9 @@ Deno.serve(async (req) => {
 
     const body: Body = await req.json();
     if (!body?.plan_id) return json(req, { error: 'plan_id required' }, 400);
+
+    const overridesCheck = _validateOverrides(body.overrides);
+    if (!overridesCheck.ok) return json(req, { error: overridesCheck.error }, 400);
 
     const flags: Required<SectionFlags> = {
       income_sources: body.sections?.income_sources ?? true,
@@ -170,7 +251,7 @@ Deno.serve(async (req) => {
     // Merge user overrides on top of the plan. For any section the user
     // edited, the override array/object replaces the plan's version
     // entirely. Sections without an override use the plan's data.
-    const o = body.overrides ?? {};
+    const o = overridesCheck.value;
     const effective: AnalyzerPlan = {
       income_sources: o.income_sources ?? plan.income_sources,
       bills:          o.bills          ?? plan.bills,
