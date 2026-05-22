@@ -5,15 +5,15 @@
 # Usage:
 #   scripts/plaid-sweep-test.sh
 #
-# Reads SB_SERVICE_ROLE_KEY from .env.local (same as scripts/plaid-test.sh).
+# Reads SB_SERVICE_ROLE_KEY from ~/.config/able/.env (same as scripts/plaid-test.sh).
 
 set -euo pipefail
 cd "$(dirname "$0")/.."
 
-if [[ -f .env.local ]]; then
+if [[ -f "$HOME/.config/able/.env" ]]; then
   set -a
   # shellcheck disable=SC1091
-  source .env.local
+  source "$HOME/.config/able/.env"
   set +a
 fi
 

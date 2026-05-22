@@ -4,7 +4,7 @@
 # trial / achievement / deep-dive emails immediately instead of waiting
 # for the next cron tick.
 #
-# Auths via INTERNAL_FUNCTION_SECRET (already in .env.local from the
+# Auths via INTERNAL_FUNCTION_SECRET (already in ~/.config/able/.env from the
 # 2026-05-08 inter-function auth fix) on the x-internal-auth header.
 # pg_cron continues to use CRON_SECRET on the Authorization header — both
 # paths are accepted by email-cron-daily.
@@ -19,14 +19,14 @@
 set -e
 cd "$(dirname "$0")/.."
 
-if [ ! -f .env.local ]; then
-  echo "ERROR: .env.local not found in repo root" >&2
+if [ ! -f "$HOME/.config/able/.env" ]; then
+  echo "ERROR: ~/.config/able/.env not found" >&2
   exit 1
 fi
-SECRET=$(grep -v "^#" .env.local | grep "^INTERNAL_FUNCTION_SECRET=" | cut -d= -f2-)
+SECRET=$(grep -v "^#" "$HOME/.config/able/.env" | grep "^INTERNAL_FUNCTION_SECRET=" | cut -d= -f2-)
 if [ -z "$SECRET" ]; then
   cat >&2 <<EOF
-ERROR: INTERNAL_FUNCTION_SECRET not in .env.local.
+ERROR: INTERNAL_FUNCTION_SECRET not in ~/.config/able/.env.
 Should have been added 2026-05-08. Re-add it:
   INTERNAL_FUNCTION_SECRET=<value>
 EOF

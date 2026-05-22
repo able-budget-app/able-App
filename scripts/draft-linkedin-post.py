@@ -27,8 +27,8 @@ BRAND_SPINE = ROOT / "docs" / "notebooklm-sources" / "00-able-brand-spine.md"
 
 
 def load_env_local():
-    """Load .env.local into os.environ if it exists. Skips already-set keys."""
-    env_path = ROOT / ".env.local"
+    """Load ~/.config/able/.env into os.environ if it exists. Skips already-set keys."""
+    env_path = Path.home() / ".config" / "able" / ".env"
     if not env_path.exists():
         return
     for line in env_path.read_text().splitlines():

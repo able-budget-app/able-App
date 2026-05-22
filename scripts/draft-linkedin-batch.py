@@ -20,8 +20,8 @@ linkedin_scheduled_date (won't reshuffle the calendar) but replaces the text
 and resets linkedin_status to 'pending_review'.
 
 Requires:
-  - secrets/google-oauth-token.json  (from scripts/youtube-upload.py first run)
-  - ANTHROPIC_API_KEY in .env.local or environment
+  - ~/.config/able/secrets/google-oauth-token.json  (from scripts/youtube-upload.py first run)
+  - ANTHROPIC_API_KEY in ~/.config/able/.env or environment
   - SHEET_ID env var
 """
 import argparse
@@ -42,7 +42,7 @@ from googleapiclient.errors import HttpError
 ROOT = Path(__file__).resolve().parent.parent
 CONTENT = ROOT / "able-content"
 BRAND_SPINE = ROOT / "docs" / "notebooklm-sources" / "00-able-brand-spine.md"
-TOKEN_FILE = ROOT / "secrets" / "google-oauth-token.json"
+TOKEN_FILE = Path.home() / ".config" / "able" / "secrets" / "google-oauth-token.json"
 
 SCOPES = [
     "https://www.googleapis.com/auth/youtube.upload",
@@ -51,7 +51,7 @@ SCOPES = [
 
 
 def load_env_local():
-    env_path = ROOT / ".env.local"
+    env_path = Path.home() / ".config" / "able" / ".env"
     if not env_path.exists():
         return
     for line in env_path.read_text().splitlines():
@@ -309,7 +309,7 @@ def main():
     if not sheet_id:
         sys.exit("error: pass --sheet-id or set SHEET_ID env")
     if not os.environ.get("ANTHROPIC_API_KEY"):
-        sys.exit("error: ANTHROPIC_API_KEY not set (add to .env.local)")
+        sys.exit("error: ANTHROPIC_API_KEY not set (add to ~/.config/able/.env)")
 
     tab = args.tab or os.environ.get("YT_LONGFORM_TAB") or "yt-longform"
 

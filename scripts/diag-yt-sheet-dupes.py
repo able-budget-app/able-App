@@ -22,7 +22,7 @@ from google_auth_oauthlib.flow import InstalledAppFlow
 from googleapiclient.discovery import build
 
 ROOT = Path(__file__).resolve().parent.parent
-SECRETS = ROOT / "secrets"
+SECRETS = Path.home() / ".config" / "able" / "secrets"
 CREDS_FILE = SECRETS / "google-oauth-credentials.json"
 TOKEN_FILE = SECRETS / "google-oauth-token.json"
 

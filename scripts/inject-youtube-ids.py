@@ -11,7 +11,7 @@ Run:
   python3 scripts/inject-youtube-ids.py --build     # also run build-resources.py after
 
 Requires the same auth as scripts/youtube-upload.py:
-  - secrets/google-oauth-token.json (created by youtube-upload.py first run)
+  - ~/.config/able/secrets/google-oauth-token.json (created by youtube-upload.py first run)
   - SHEET_ID env var
 
 Sheet columns consumed: page_url, youtube_video_id, yt_published_date.
@@ -31,7 +31,7 @@ from googleapiclient.discovery import build
 
 ROOT = Path(__file__).resolve().parent.parent
 CONTENT_DIR = ROOT / "able-content"
-TOKEN_FILE = ROOT / "secrets" / "google-oauth-token.json"
+TOKEN_FILE = Path.home() / ".config" / "able" / "secrets" / "google-oauth-token.json"
 SCOPES = [
     "https://www.googleapis.com/auth/youtube.upload",
     "https://www.googleapis.com/auth/spreadsheets",

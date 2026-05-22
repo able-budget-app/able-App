@@ -39,12 +39,12 @@ That writes docs/youtube-shorts-tracker.csv. Import the CSV into a Google
 Sheet, flip statuses to 'ready-to-upload', then run this script with --shorts.
 
 Requires (one-time setup, see docs/youtube-api-setup.md):
-  - secrets/google-oauth-credentials.json    (Desktop OAuth credentials)
+  - ~/.config/able/secrets/google-oauth-credentials.json    (Desktop OAuth credentials)
   - SHEET_ID env var                          (Google Sheet ID, long-form)
   - SHORTS_SHEET_ID env var                   (Google Sheet ID, shorts)
 
 First run kicks off the OAuth browser flow; saves token at
-secrets/google-oauth-token.json for subsequent headless runs.
+~/.config/able/secrets/google-oauth-token.json for subsequent headless runs.
 
 Per-upload cost: 1700 quota units (1600 upload + 50 thumbnail + 50 metadata).
 Default daily quota: 10,000 → 5 uploads/day. Apply for an increase at
@@ -66,7 +66,7 @@ from googleapiclient.errors import HttpError
 from googleapiclient.http import MediaFileUpload
 
 ROOT = Path(__file__).resolve().parent.parent
-SECRETS = ROOT / "secrets"
+SECRETS = Path.home() / ".config" / "able" / "secrets"
 SECRETS.mkdir(exist_ok=True)
 CREDS_FILE = SECRETS / "google-oauth-credentials.json"
 TOKEN_FILE = SECRETS / "google-oauth-token.json"

@@ -32,13 +32,13 @@ if [ -z "$USER_ID" ]; then
   exit 1
 fi
 
-if [ ! -f .env.local ]; then
-  echo "ERROR: .env.local not found in repo root" >&2
+if [ ! -f "$HOME/.config/able/.env" ]; then
+  echo "ERROR: ~/.config/able/.env not found" >&2
   exit 1
 fi
-SECRET=$(grep -v "^#" .env.local | grep "^INTERNAL_FUNCTION_SECRET=" | cut -d= -f2-)
+SECRET=$(grep -v "^#" "$HOME/.config/able/.env" | grep "^INTERNAL_FUNCTION_SECRET=" | cut -d= -f2-)
 if [ -z "$SECRET" ]; then
-  echo "ERROR: INTERNAL_FUNCTION_SECRET not in .env.local" >&2
+  echo "ERROR: INTERNAL_FUNCTION_SECRET not in ~/.config/able/.env" >&2
   exit 1
 fi
 

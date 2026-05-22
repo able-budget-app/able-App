@@ -10,7 +10,7 @@ from google.oauth2.credentials import Credentials
 from googleapiclient.discovery import build
 
 ROOT = Path(__file__).resolve().parent.parent
-TOKEN_FILE = ROOT / "secrets" / "google-oauth-token.json"
+TOKEN_FILE = Path.home() / ".config" / "able" / "secrets" / "google-oauth-token.json"
 SCOPES = [
     "https://www.googleapis.com/auth/youtube.upload",
     "https://www.googleapis.com/auth/spreadsheets",

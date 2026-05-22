@@ -4,8 +4,8 @@
 #
 # One-time setup:
 #   1. Copy your service role key from Supabase dashboard → Project Settings → API.
-#   2. Run:   echo "SB_SERVICE_ROLE_KEY=$(pbpaste)" > .env.local
-#      (this writes the clipboard contents to .env.local without terminal wrap.)
+#   2. Run:   echo "SB_SERVICE_ROLE_KEY=$(pbpaste)" > ~/.config/able/.env
+#      (this writes the clipboard contents to ~/.config/able/.env without terminal wrap.)
 #
 # Usage:
 #   scripts/plaid-test.sh <plaid_item_row_id>
@@ -16,17 +16,17 @@
 set -euo pipefail
 cd "$(dirname "$0")/.."
 
-if [[ -f .env.local ]]; then
+if [[ -f "$HOME/.config/able/.env" ]]; then
   set -a
   # shellcheck disable=SC1091
-  source .env.local
+  source "$HOME/.config/able/.env"
   set +a
 fi
 
 if [[ -z "${SB_SERVICE_ROLE_KEY:-}" ]]; then
   echo "Missing SB_SERVICE_ROLE_KEY." >&2
   echo "Setup: copy the service_role key from Supabase dashboard → Project Settings → API," >&2
-  echo "       then run:  echo \"SB_SERVICE_ROLE_KEY=\$(pbpaste)\" > .env.local" >&2
+  echo "       then run:  echo \"SB_SERVICE_ROLE_KEY=\$(pbpaste)\" > ~/.config/able/.env" >&2
   exit 1
 fi
 

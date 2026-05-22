@@ -9,7 +9,7 @@ from googleapiclient.discovery import build
 
 ROOT = Path(__file__).resolve().parent.parent
 
-env_path = ROOT / ".env.local"
+env_path = Path.home() / ".config" / "able" / ".env"
 if env_path.exists():
     for line in env_path.read_text().splitlines():
         if "=" in line and not line.startswith("#"):
@@ -21,7 +21,7 @@ if not sheet_id:
     sys.exit("SHEET_ID not set")
 
 creds = Credentials.from_authorized_user_file(
-    str(ROOT / "secrets/google-oauth-token.json"),
+    str(Path.home() / ".config" / "able" / "secrets" / "google-oauth-token.json"),
     [
         "https://www.googleapis.com/auth/youtube.upload",
         "https://www.googleapis.com/auth/spreadsheets",

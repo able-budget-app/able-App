@@ -8,14 +8,14 @@
 set -e
 cd "$(dirname "$0")/.."
 
-# Load service role key from .env.local
-if [ ! -f .env.local ]; then
-  echo "ERROR: .env.local not found in repo root" >&2
+# Load service role key from ~/.config/able/.env
+if [ ! -f "$HOME/.config/able/.env" ]; then
+  echo "ERROR: ~/.config/able/.env not found" >&2
   exit 1
 fi
-KEY=$(grep -v "^#" .env.local | grep "^SB_SERVICE_ROLE_KEY=" | cut -d= -f2-)
+KEY=$(grep -v "^#" "$HOME/.config/able/.env" | grep "^SB_SERVICE_ROLE_KEY=" | cut -d= -f2-)
 if [ -z "$KEY" ]; then
-  echo "ERROR: SB_SERVICE_ROLE_KEY not found in .env.local" >&2
+  echo "ERROR: SB_SERVICE_ROLE_KEY not found in ~/.config/able/.env" >&2
   exit 1
 fi
 URL="https://vfnozfvqgevjflwdjlyz.supabase.co"

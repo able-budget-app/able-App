@@ -20,11 +20,11 @@ if [ -z "$EMAIL" ]; then
   exit 1
 fi
 
-if [ ! -f .env.local ]; then
-  echo "ERROR: .env.local not found in repo root" >&2
+if [ ! -f "$HOME/.config/able/.env" ]; then
+  echo "ERROR: ~/.config/able/.env not found" >&2
   exit 1
 fi
-KEY=$(grep -v "^#" .env.local | grep "^SB_SERVICE_ROLE_KEY=" | cut -d= -f2-)
+KEY=$(grep -v "^#" "$HOME/.config/able/.env" | grep "^SB_SERVICE_ROLE_KEY=" | cut -d= -f2-)
 URL="https://vfnozfvqgevjflwdjlyz.supabase.co"
 
 sb() {

@@ -15,15 +15,15 @@ cd "$(dirname "$0")/.."
 
 BATCH="${1:-5}"
 
-# Load SHEET_ID + tab overrides from .env.local if present. No hardcoded
+# Load SHEET_ID + tab overrides from ~/.config/able/.env if present. No hardcoded
 # fallback — require explicit env so a forgotten migration fails loudly
 # instead of silently posting to the old single-purpose sheet.
-if [[ -f .env.local ]]; then
+if [[ -f "$HOME/.config/able/.env" ]]; then
     set -a
-    source <(grep -E "^(SHEET_ID|YT_LONGFORM_TAB|SHORTS_SHEET_ID|SHORTS_TAB)=" .env.local || true)
+    source <(grep -E "^(SHEET_ID|YT_LONGFORM_TAB|SHORTS_SHEET_ID|SHORTS_TAB)=" "$HOME/.config/able/.env" || true)
     set +a
 fi
-: "${SHEET_ID:?error: SHEET_ID not set. Add SHEET_ID=<mega-workbook-id> to .env.local}"
+: "${SHEET_ID:?error: SHEET_ID not set. Add SHEET_ID=<mega-workbook-id> to ~/.config/able/.env}"
 export SHEET_ID
 [[ -n "${YT_LONGFORM_TAB:-}" ]] && export YT_LONGFORM_TAB
 

@@ -10,7 +10,7 @@ from googleapiclient.discovery import build
 
 ROOT = Path(__file__).resolve().parent.parent
 
-env = ROOT / ".env.local"
+env = Path.home() / ".config" / "able" / ".env"
 if env.exists():
     for ln in env.read_text().splitlines():
         if "=" in ln and not ln.startswith("#"):
@@ -25,7 +25,7 @@ tab = os.environ.get("YT_LONGFORM_TAB") or "yt-longform"
 rng = f"{tab}!A1:ZZ"
 
 creds = Credentials.from_authorized_user_file(
-    str(ROOT / "secrets/google-oauth-token.json"),
+    str(Path.home() / ".config" / "able" / "secrets" / "google-oauth-token.json"),
     ["https://www.googleapis.com/auth/spreadsheets"],
 )
 sheets = build("sheets", "v4", credentials=creds, cache_discovery=False)
