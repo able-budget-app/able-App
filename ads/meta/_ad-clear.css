@@ -1,0 +1,163 @@
+/* Clear-prop ads. 1080x1350 (4:5 Meta feed).
+   Single solid-green canvas, no grid columns (the column boundary at x=540
+   created a faint subpixel seam in renders). Text is absolutely positioned
+   on the left, phone shot on the right. A faint SVG-noise overlay breaks
+   up 8-bit PNG banding on the solid fill. */
+
+html, body {
+  width: 1080px;
+  height: 1350px;
+  margin: 0;
+  padding: 0;
+  background: #2a7a4a;
+  font-family: 'Bricolage Grotesque', -apple-system, sans-serif;
+}
+
+.canvas {
+  width: 1080px;
+  height: 1350px;
+  background: #2a7a4a;
+  position: relative;
+  overflow: hidden;
+}
+
+.left {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 540px;
+  height: 1350px;
+  padding: 96px 48px 80px 96px;
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: space-between;
+  text-align: left;
+  z-index: 2;
+}
+
+.right {
+  position: absolute;
+  right: 0;
+  top: 0;
+  width: 540px;
+  height: 1350px;
+  padding: 60px 60px 60px 0;
+  box-sizing: border-box;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 2;
+}
+
+.right img.phone {
+  width: 100%;
+  max-height: 1000px;
+  object-fit: contain;
+}
+
+.wordmark.wordmark-corner {
+  position: absolute;
+  right: 96px;
+  bottom: 80px;
+  z-index: 3;
+}
+
+.eyebrow {
+  font-size: 20px;
+  font-weight: 800;
+  letter-spacing: .22em;
+  text-transform: uppercase;
+  color: #cdebd8;
+  margin: 0;
+}
+
+.center-block {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 24px;
+}
+
+.headline {
+  font-weight: 800;
+  line-height: 1.06;
+  letter-spacing: -.03em;
+  color: #ffffff;
+}
+
+.headline em {
+  font-style: normal;
+  color: #cdebd8;
+}
+
+.sub {
+  font-size: 22px;
+  font-weight: 500;
+  line-height: 1.36;
+  letter-spacing: -.005em;
+  color: rgba(255, 255, 255, 0.82);
+}
+
+.footer-stack {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 18px;
+}
+
+/* Wordmark swoosh — matches the social-export library, white squiggle on green. */
+.wordmark {
+  font-size: 60px;
+  font-weight: 900;
+  letter-spacing: -.03em;
+  color: #ffffff;
+  line-height: 1;
+  position: relative;
+  display: inline-block;
+}
+.wordmark::after {
+  content: '';
+  position: absolute;
+  left: 0;
+  right: -4%;
+  bottom: calc(60px * -0.136);
+  height: calc(60px * 0.205);
+  background-color: #ffffff;
+  -webkit-mask-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 120 4.2' preserveAspectRatio='none'><path d='M3 2.6 Q2 2.4 3 2.15 Q58 1.75 115 0.15 Q119 1 119 2 Q119 3 115 3.9 Q58 3.55 3 2.65 Q2 2.45 3 2.6 Z' fill='white'/></svg>");
+          mask-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 120 4.2' preserveAspectRatio='none'><path d='M3 2.6 Q2 2.4 3 2.15 Q58 1.75 115 0.15 Q119 1 119 2 Q119 3 115 3.9 Q58 3.55 3 2.65 Q2 2.45 3 2.6 Z' fill='white'/></svg>");
+  -webkit-mask-repeat: no-repeat;
+          mask-repeat: no-repeat;
+  -webkit-mask-size: 100% 100%;
+          mask-size: 100% 100%;
+}
+
+/* CTA row — App Store badge + 30-day trial pill side by side. */
+.cta-row {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  margin-top: 4px;
+}
+
+.app-store-badge {
+  height: 56px;
+  width: auto;
+  display: block;
+}
+
+.trial-pill {
+  display: inline-flex;
+  align-items: center;
+  height: 56px;
+  padding: 0 18px;
+  border-radius: 9px;
+  background: #cdebd8;
+  color: #1a4a2e;
+  font-size: 18px;
+  font-weight: 800;
+  letter-spacing: -.01em;
+  white-space: nowrap;
+  box-sizing: border-box;
+}
