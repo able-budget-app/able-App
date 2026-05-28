@@ -11263,8 +11263,12 @@ function dismissBankPrompt() {
 // is defined there). Once per visit. "Not now" snoozes 7 days; "Don't ask
 // again" persists forever via localStorage. Triggered on first home refresh
 // after sign-in - see refreshHome().
-const IOS_INSTALL_SNOOZE_DAYS = 7;
+const IOS_INSTALL_SNOOZE_DAYS = 7;       // "Not now" → re-asks after 7 days
+const IOS_INSTALL_TAP_SNOOZE_DAYS = 30;  // Tap "Get the app" → re-asks after 30 days
+                                         // (treats tap as likely-installed; reopens
+                                         // the path only if they came back without installing)
 const IOS_INSTALL_KEY_DISMISSED = 'able_ios_install_dismissed_at';
+const IOS_INSTALL_KEY_TAPPED = 'able_ios_install_tapped_at';
 const IOS_INSTALL_KEY_NEVER = 'able_ios_install_never';
 let _iosPromptShownThisVisit = false;
 function _isIosWebContext() {
@@ -11283,8 +11287,11 @@ function _shouldShowIosInstallPrompt() {
   if (typeof window !== 'undefined' && window.matchMedia && window.matchMedia('(display-mode: standalone)').matches) return false;
   try {
     if (localStorage.getItem(IOS_INSTALL_KEY_NEVER) === '1') return false;
+    const now = Date.now();
     const dismissedAt = parseInt(localStorage.getItem(IOS_INSTALL_KEY_DISMISSED) || '0', 10);
-    if (dismissedAt && (Date.now() - dismissedAt) < IOS_INSTALL_SNOOZE_DAYS * 86400000) return false;
+    if (dismissedAt && (now - dismissedAt) < IOS_INSTALL_SNOOZE_DAYS * 86400000) return false;
+    const tappedAt = parseInt(localStorage.getItem(IOS_INSTALL_KEY_TAPPED) || '0', 10);
+    if (tappedAt && (now - tappedAt) < IOS_INSTALL_TAP_SNOOZE_DAYS * 86400000) return false;
   } catch (_) { /* localStorage blocked - still show */ }
   return true;
 }
@@ -11309,9 +11316,12 @@ function dismissIosInstallPrompt(forever) {
   try { Able.track?.('ios_install_prompt_dismissed', { forever: !!forever }); } catch (_) {}
 }
 function trackIosInstallTap() {
-  // Fires before the App Store link opens - mark as snoozed so we don't
-  // re-prompt next visit while they're installing.
-  try { localStorage.setItem(IOS_INSTALL_KEY_DISMISSED, String(Date.now())); } catch (_) {}
+  // Fires before the App Store link opens. Tap = high intent (most users
+  // install). Snooze 30 days so we don't nag a likely-installed user, but
+  // re-engage anyone who tapped, saw the price, and backed out without
+  // returning soon. Stored in a separate key from "Not now" so the two
+  // snooze windows compose independently.
+  try { localStorage.setItem(IOS_INSTALL_KEY_TAPPED, String(Date.now())); } catch (_) {}
   try { Able.track?.('ios_install_prompt_tapped'); } catch (_) {}
 }
 
