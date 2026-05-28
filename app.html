@@ -541,6 +541,18 @@ input,select,button,textarea{font-family:inherit;}
   .bills-amt-input{font-size:16px;padding:8px 10px;min-height:36px;width:88px;}
 }
 .modal-bg{position:fixed;inset:0;background:rgba(17,28,22,.45);z-index:200;display:flex;align-items:center;justify-content:center;padding:1rem;backdrop-filter:blur(6px);animation:modalFadeIn .2s ease;overscroll-behavior:contain;}
+/* iOS install prompt - bottom slide-up sheet. z-index above nav (50) and most
+   modals but below alloc preview (230) so it never blocks active flows. */
+#ios-install-sheet{position:fixed;inset:0;z-index:210;display:flex;align-items:flex-end;justify-content:center;pointer-events:none;}
+#ios-install-sheet[style*="flex"]{pointer-events:auto;}
+.ios-install-backdrop{position:absolute;inset:0;background:rgba(17,28,22,.35);backdrop-filter:blur(4px);animation:modalFadeIn .25s ease;}
+.ios-install-panel{position:relative;background:var(--ds-card);width:100%;max-width:480px;border-radius:var(--ds-r3) var(--ds-r3) 0 0;padding:14px 1.25rem calc(1.25rem + env(safe-area-inset-bottom,0px));box-shadow:0 -16px 48px rgba(0,0,0,.18);animation:sheetSlideUp .32s cubic-bezier(.34,1.2,.64,1);display:flex;flex-direction:column;align-items:center;text-align:center;}
+.ios-install-handle{width:40px;height:4px;background:var(--ds-t4);border-radius:4px;margin-bottom:1rem;}
+.ios-install-icon{margin-bottom:.85rem;}
+.ios-install-title{font-family:var(--ds-f);font-size:18px;font-weight:900;color:var(--ds-t1);letter-spacing:-.02em;margin-bottom:.4rem;line-height:1.25;}
+.ios-install-body{font-size:13.5px;font-weight:600;color:var(--ds-t2);line-height:1.5;margin-bottom:1.15rem;max-width:300px;}
+.ios-install-never{background:none;border:none;color:var(--ds-t3);font-family:var(--ds-f);font-size:11px;font-weight:600;letter-spacing:.02em;cursor:pointer;padding:6px 8px;margin-top:6px;text-decoration:underline;}
+.ios-install-never:hover{color:var(--ds-t2);}
 /* Allocation preview is launched FROM the allocate sheet (z-index 220), so it
    needs to sit above the sheet to be visible. Other modals can stay at 200. */
 #modal-alloc-preview{z-index:230;}
@@ -1643,6 +1655,7 @@ body.is-scrolling .btn-primary:hover{transform:none!important;box-shadow:inherit
 .act-pfc-badge{display:inline-block;font-size:10px;font-weight:700;letter-spacing:.02em;color:var(--ds-t3);background:transparent;border:1px solid var(--ds-line);padding:1px 6px;border-radius:100px;margin-left:4px;}
 .act-tax-flag{display:inline-block;font-size:10px;font-weight:800;letter-spacing:.04em;text-transform:uppercase;padding:1px 6px;border-radius:100px;background:#fff3d6;color:#9a6e0c;margin-left:4px;}
 .act-business-badge{display:inline-block;font-size:10px;font-weight:800;letter-spacing:.02em;color:var(--ds-green);background:var(--ds-green-l);padding:1px 6px;border-radius:100px;margin-left:4px;}
+.act-bill-link{display:inline-block;font-size:10px;font-weight:800;letter-spacing:.02em;color:var(--ds-t1);background:#eaf4ff;border:1px solid #c9def3;padding:1px 6px;border-radius:100px;margin-left:4px;}
 /* Rows inside the past-due review modal */
 .past-due-row{display:flex;align-items:center;gap:12px;padding:11px 14px;background:var(--ds-page);border-radius:var(--ds-r1);margin-bottom:7px;}
 .past-due-row-info{flex:1;min-width:0;}
@@ -2427,7 +2440,7 @@ body.is-scrolling .btn-primary:hover{transform:none!important;box-shadow:inherit
   <div class="modal" style="max-width:520px;">
     <button class="modal-close" onclick="closeTaxExportModal()" aria-label="Close"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button>
     <div class="modal-title" id="modal-tax-export-title">Tax export</div>
-    <div style="font-size:12px;color:var(--ds-t2);font-weight:600;margin-bottom:14px;line-height:1.6;">Every transaction you marked tax-deductible, grouped by category. Download as CSV for your accountant or Schedule C.</div>
+    <div style="font-size:12px;color:var(--ds-t2);font-weight:600;margin-bottom:14px;line-height:1.6;">Income you received and every transaction you marked tax-deductible, grouped for your accountant or Schedule C. Download as CSV.</div>
     <div style="display:flex;align-items:center;gap:10px;margin-bottom:1rem;">
       <label style="font-size:12px;font-weight:700;color:var(--ds-t2);">Year:</label>
       <select id="tax-year" onchange="renderTaxExport()" style="font-family:var(--ds-f);font-size:12px;font-weight:700;padding:6px 10px;border:1px solid var(--ds-line);border-radius:var(--ds-r1);background:white;color:var(--ds-t1);"></select>
@@ -2452,6 +2465,13 @@ body.is-scrolling .btn-primary:hover{transform:none!important;box-shadow:inherit
       <label style="display:block;font-size:11px;font-weight:800;letter-spacing:.06em;text-transform:uppercase;color:var(--ds-t3);margin-bottom:.4rem;">Business (optional)</label>
       <input type="text" id="reclassify-business" placeholder="e.g. Personal, Acme LLC, Side hustle" list="reclassify-business-suggestions" style="width:100%;font-family:var(--ds-f);font-size:16px;font-weight:600;padding:8px 11px;border:1.5px solid var(--ds-line);border-radius:var(--ds-r1);background:white;color:var(--ds-t1);">
       <datalist id="reclassify-business-suggestions"></datalist>
+    </div>
+    <div style="margin-bottom:.85rem;">
+      <label style="display:block;font-size:11px;font-weight:800;letter-spacing:.06em;text-transform:uppercase;color:var(--ds-t3);margin-bottom:.4rem;">Pays a bill? (optional)</label>
+      <select id="reclassify-bill-link" style="width:100%;font-family:var(--ds-f);font-size:14px;font-weight:600;padding:8px 11px;border:1.5px solid var(--ds-line);border-radius:var(--ds-r1);background:white;color:var(--ds-t1);">
+        <option value="">— not linked —</option>
+      </select>
+      <div style="font-size:11px;color:var(--ds-t3);font-weight:600;margin-top:5px;line-height:1.45;">Link this purchase to one of your bills. Able will remember the merchant and link future ones automatically.</div>
     </div>
     <label style="display:flex;align-items:center;gap:9px;font-size:12px;font-weight:600;color:var(--ds-t2);cursor:pointer;user-select:none;margin-bottom:.65rem;">
       <input type="checkbox" id="reclassify-tax-deductible" style="margin:0;width:16px;height:16px;">
@@ -2948,6 +2968,51 @@ body.is-scrolling .btn-primary:hover{transform:none!important;box-shadow:inherit
     <div class="field" style="margin-bottom:1rem;"><label>Amount</label><input type="number" id="preview-amount" min="0" step="0.01" oninput="onPreviewAmountChange()"></div>
     <div id="preview-jobs"></div>
     <div class="modal-actions"><button class="btn" onclick="cancelAllocPreview()">Cancel</button><button class="btn btn-primary" onclick="confirmAlloc()">Confirm &amp; log it</button></div>
+  </div>
+</div>
+<div class="modal-bg" id="modal-income-router" style="display:none;" role="dialog" aria-modal="true" aria-labelledby="modal-income-router-title">
+  <div class="modal" style="padding-bottom:calc(1.5rem + env(safe-area-inset-bottom,0px));">
+    <button class="modal-close" onclick="closeIncomeRouter()" aria-label="Close"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button>
+    <div class="modal-title" id="modal-income-router-title">Where should this go?</div>
+    <div id="ir-source" style="font-size:13px;color:var(--ds-t3);font-weight:700;margin-bottom:1rem;letter-spacing:.05em;text-transform:uppercase;"></div>
+    <div id="ir-view-choose" style="display:block;">
+      <button class="ir-card" onclick="incomeRouterChoosePlan()" style="display:block;width:100%;text-align:left;padding:14px 16px;margin-bottom:10px;border:1.5px solid var(--ds-line);border-radius:14px;background:#fff;cursor:pointer;">
+        <div style="font-weight:800;font-size:15px;color:var(--ds-t1);margin-bottom:4px;">Use my recommended plan</div>
+        <div style="font-size:13px;color:var(--ds-t2);font-weight:500;line-height:1.45;">Floor first, then surplus splits across debt, buffer, and free spending.</div>
+      </button>
+      <button class="ir-card" onclick="incomeRouterChooseBill()" style="display:block;width:100%;text-align:left;padding:14px 16px;margin-bottom:0;border:1.5px solid var(--ds-line);border-radius:14px;background:#fff;cursor:pointer;">
+        <div style="font-weight:800;font-size:15px;color:var(--ds-t1);margin-bottom:4px;">Send it to a bill</div>
+        <div style="font-size:13px;color:var(--ds-t2);font-weight:500;line-height:1.45;">Earmark the whole amount toward one bill — like getting ahead on the mortgage.</div>
+      </button>
+    </div>
+    <div id="ir-view-bill" style="display:none;">
+      <div style="font-size:13px;color:var(--ds-t2);font-weight:600;margin-bottom:10px;">Pick a bill to earmark this toward:</div>
+      <div id="ir-bill-list" style="max-height:50vh;overflow-y:auto;margin-bottom:.75rem;"></div>
+      <button class="btn btn-ghost btn-sm" onclick="incomeRouterBackToChoose()" style="width:100%;">← Back</button>
+    </div>
+    <div id="ir-view-overflow" style="display:none;">
+      <div id="ir-overflow-msg" style="font-size:14px;color:var(--ds-t1);font-weight:600;line-height:1.55;margin-bottom:1rem;"></div>
+      <button class="btn btn-primary" onclick="incomeRouterCommitOverflow(true)" style="width:100%;margin-bottom:.5rem;">Keep saving toward next cycle</button>
+      <button class="btn" onclick="incomeRouterCommitOverflow(false)" style="width:100%;margin-bottom:.5rem;">Split the rest into my plan</button>
+      <button class="btn btn-ghost btn-sm" onclick="incomeRouterBackToBill()" style="width:100%;">← Back</button>
+    </div>
+  </div>
+</div>
+<!-- iOS install prompt: bottom slide-up sheet shown to iPhone/iPad Safari users
+     on the web app (NOT inside the Capacitor wrapper). Fires once per visit
+     with a 7-day cooldown on dismiss. See showIosInstallPrompt(). -->
+<div id="ios-install-sheet" role="dialog" aria-labelledby="ios-install-title" style="display:none;">
+  <div class="ios-install-backdrop" onclick="dismissIosInstallPrompt(false)"></div>
+  <div class="ios-install-panel">
+    <div class="ios-install-handle"></div>
+    <div class="ios-install-icon">
+      <img src="/icon-192.png" alt="Able" width="56" height="56" style="border-radius:14px;display:block;">
+    </div>
+    <div class="ios-install-title" id="ios-install-title">Get Able on your home screen.</div>
+    <div class="ios-install-body">Faster open, push reminders when bills are due, works offline.</div>
+    <a class="btn btn-primary" href="https://apps.apple.com/app/able-inconsistent-income/id6769551407" target="_blank" rel="noopener" onclick="trackIosInstallTap()" style="width:100%;margin-bottom:.5rem;">Get the app →</a>
+    <button class="btn btn-ghost btn-sm" onclick="dismissIosInstallPrompt(false)" style="width:100%;">Not now</button>
+    <button class="ios-install-never" onclick="dismissIosInstallPrompt(true)">Don't ask again</button>
   </div>
 </div>
 <div class="modal-bg" id="modal-bank-prompt" style="display:none;" role="dialog" aria-modal="true" aria-labelledby="modal-bank-prompt-title">
@@ -7997,8 +8062,11 @@ function ensureBillIds() {
 // Number of times a non-monthly bill recurs in (start, end].
 // Monthly and ongoing bills return 0 - they're released by the explicit `paid` flag,
 // not by the passage of time. Used to auto-release reservations as occurrences pass.
+// Note: paid state is the caller's responsibility - this function answers the
+// pure date-math question so callers can reuse it for both reservation releases
+// (which skip paid bills) and per-occurrence paid resets (which target them).
 function _occurrencesBetween(bill, start, end) {
-  if (!bill || bill.due === 'ongoing' || bill.paid) return 0;
+  if (!bill || bill.due === 'ongoing') return 0;
   const freq = bill.freq || 'monthly';
   if (freq === 'monthly') return 0;
   const s = new Date(start); s.setHours(0,0,0,0);
@@ -8045,7 +8113,23 @@ function applyOccurrenceReleases() {
   }
   let dirty = false;
   for (const b of S.bills) {
-    if (!b.id || b.paid) continue;
+    if (!b.id) continue;
+    // Per-occurrence paid reset for non-monthly bills. When a user marked the
+    // bill paid for the latest cycle, that flag should clear once the next
+    // occurrence arrives - otherwise weekly/biweekly/custom bills stay hidden
+    // from Next 14 days for the rest of the month. Monthly bills are still
+    // cleared by autoRolloverIfNewMonth on calendar rollover.
+    if (b.paid) {
+      const freq = b.freq || 'monthly';
+      if (freq !== 'monthly' && b.due !== 'ongoing') {
+        const passed = _occurrencesBetween(b, last, now);
+        if (passed > 0) {
+          b.paid = false;
+          dirty = true;
+        }
+      }
+      continue; // No reservation to release while still paid (cleared at toggle time)
+    }
     const r = _billReserved(b.id);
     if (r <= 0.01) continue;
     const count = _occurrencesBetween(b, last, now);
@@ -8122,7 +8206,26 @@ function autoRolloverIfNewMonth() {
   }
 
   if (Array.isArray(S.bills)) {
-    S.bills.forEach(b => { if (b.paid) b.paid = false; });
+    // Only clear paid on MONTHLY bills here. Non-monthly bills (weekly,
+    // biweekly, custom) reset their paid flag per occurrence inside
+    // applyOccurrenceReleases - blanket-clearing here would re-show a bill
+    // that the user just paid 3 days ago.
+    S.bills.forEach(b => {
+      if (!b.paid) return;
+      const freq = b.freq || 'monthly';
+      if (freq === 'monthly') b.paid = false;
+    });
+  }
+  // Prune received forecasts so the Forecast page stays forward-looking.
+  // Income data isn't lost - it's archived above in month_history.incomeLog
+  // (via S.history.slice(0,50)) and lives in plaid_transactions for users
+  // with a connected bank. The forecast row is just the "Got it" UI receipt.
+  if (Array.isArray(S.forecast)) {
+    const before = S.forecast.length;
+    S.forecast = S.forecast.filter(f => f && f.status !== 'received');
+    if (S.forecast.length !== before) {
+      try { Able.track('forecast_received_pruned', { pruned: before - S.forecast.length }); } catch(_) {}
+    }
   }
   S.settings.allocResetMonth = _currentMonthKey();
   S.allocated_to_bills = 0;
@@ -8540,7 +8643,8 @@ function applyJobs(jobs,amount,source,opts){
 }
 
 // Direct-income entry point. Validates input, computes jobs, stages them in _pendingAlloc,
-// and opens the preview modal. State is NOT mutated until the user taps Confirm.
+// and opens the income router (chooser → plan vs bill earmark). State is NOT mutated
+// until the user confirms inside the chosen path.
 function allocate(){
   if(isAllocating)return;
   const amount=parseFloat(document.getElementById('inc-amount').value);
@@ -8549,7 +8653,7 @@ function allocate(){
   if(!source){document.getElementById('inc-source').focus();return;}
   const jobs=computeJobs(amount,source);
   _pendingAlloc={type:'direct',amount,source,jobs};
-  openAllocPreview(amount,source,jobs);
+  openIncomeRouter(amount,source);
 }
 
 // Render the preview modal for either direct or forecast paths. Source is the displayed
@@ -8630,6 +8734,181 @@ function confirmAlloc(){
   } finally {
     _pendingAlloc=null;
     isAllocating=false;
+  }
+}
+
+// ═══════════════════════════════════════
+// INCOME ROUTER — chooser between plan vs bill earmark
+// Fires on the two ACTIVE income moments (forecast "Got it" + manual Log new
+// income), NOT on passive Plaid-detected deposits. _pendingAlloc is staged by
+// the caller (gotMoney / allocate) before this opens, and is preserved if the
+// user picks "Use my plan" so confirmAlloc can commit the normal flow.
+// ═══════════════════════════════════════
+function openIncomeRouter(amount, sourceLabel){
+  if(!_pendingAlloc) return;
+  document.getElementById('ir-source').textContent = `${f2(amount)} from ${sourceLabel}`;
+  document.getElementById('ir-view-choose').style.display = 'block';
+  document.getElementById('ir-view-bill').style.display = 'none';
+  document.getElementById('ir-view-overflow').style.display = 'none';
+  document.getElementById('modal-income-router').style.display = 'flex';
+}
+function closeIncomeRouter(){
+  document.getElementById('modal-income-router').style.display = 'none';
+  // Discard the staged allocation - user backed out. Matches cancelAllocPreview semantics.
+  _pendingAlloc = null;
+}
+function incomeRouterChoosePlan(){
+  // Fall through to the existing preview-and-confirm flow. _pendingAlloc still holds
+  // the jobs computed by gotMoney/allocate, so openAllocPreview just renders them.
+  if(!_pendingAlloc) return;
+  document.getElementById('modal-income-router').style.display = 'none';
+  const p = _pendingAlloc;
+  const sourceLabel = p.type === 'forecast'
+    ? (p.source + (p.note ? ' (' + p.note + ')' : ''))
+    : p.source;
+  openAllocPreview(p.amount, sourceLabel, p.jobs);
+}
+function incomeRouterChooseBill(){
+  document.getElementById('ir-view-choose').style.display = 'none';
+  document.getElementById('ir-view-bill').style.display = 'block';
+  renderIncomeRouterBillList();
+}
+function incomeRouterBackToChoose(){
+  document.getElementById('ir-view-bill').style.display = 'none';
+  document.getElementById('ir-view-overflow').style.display = 'none';
+  document.getElementById('ir-view-choose').style.display = 'block';
+}
+function incomeRouterBackToBill(){
+  document.getElementById('ir-view-overflow').style.display = 'none';
+  document.getElementById('ir-view-bill').style.display = 'block';
+}
+// Holds the picked-bill context while user answers the overflow ask.
+let _irPickedBill = null;
+function renderIncomeRouterBillList(){
+  const wrap = document.getElementById('ir-bill-list');
+  if (!wrap) return;
+  const bills = (S.bills || []).filter(b => b.id && b.amount > 0.01);
+  if (!bills.length) {
+    wrap.innerHTML = `<div style="font-size:13px;color:var(--ds-t3);font-weight:500;padding:1rem;text-align:center;">No bills yet — add one on the Plan tab first.</div>`;
+    return;
+  }
+  // Sort: unpaid first (most useful for earmarking), then by amount descending.
+  const sorted = [...bills].sort((a, b) => {
+    if (!!a.paid !== !!b.paid) return a.paid ? 1 : -1;
+    return (b.amount || 0) - (a.amount || 0);
+  });
+  wrap.innerHTML = sorted.map(b => {
+    const reserved = _billReserved(b.id);
+    const remaining = Math.max(0, (b.amount || 0) - reserved);
+    const pct = b.amount > 0 ? Math.min(100, Math.round((reserved / b.amount) * 100)) : 0;
+    const sub = b.paid
+      ? `Paid this cycle · tap to pre-fund next`
+      : (remaining < 0.01
+        ? `Fully reserved · tap to pre-fund next cycle`
+        : `${fr(remaining)} still needed · ${pct}% reserved`);
+    return `<button class="ir-bill-row" onclick="incomeRouterPickBill('${escapeAttr(b.id)}')" style="display:flex;align-items:center;justify-content:space-between;width:100%;text-align:left;padding:12px 14px;margin-bottom:8px;border:1.5px solid var(--ds-line);border-radius:12px;background:#fff;cursor:pointer;">
+      <div style="flex:1;min-width:0;">
+        <div style="font-weight:800;font-size:14px;color:var(--ds-t1);margin-bottom:2px;">${escapeHtml(b.name)}</div>
+        <div style="font-size:12px;color:var(--ds-t2);font-weight:500;">${sub}</div>
+      </div>
+      <div style="font-weight:800;font-size:14px;color:var(--ds-t1);margin-left:.75rem;">${fr(b.amount)}</div>
+    </button>`;
+  }).join('');
+}
+function incomeRouterPickBill(billId){
+  if (!_pendingAlloc) return;
+  const bill = (S.bills || []).find(b => b.id === billId);
+  if (!bill) return;
+  const amount = _pendingAlloc.amount;
+  const reserved = _billReserved(bill.id);
+  const needed = Math.max(0, (bill.amount || 0) - reserved);
+  const overflow = Math.max(0, amount - needed);
+  _irPickedBill = { billId, needed, overflow };
+  if (overflow < 0.01) {
+    // Amount fits within current cycle's remaining need - no overflow question.
+    incomeRouterApplyToBill(billId, amount, 0);
+    return;
+  }
+  // Overflow ask. Wording covers both the "covers + leaves $X" case and the
+  // "already-paid / fully-reserved, this is all pre-funding" case.
+  const msgEl = document.getElementById('ir-overflow-msg');
+  if (needed < 0.01) {
+    msgEl.textContent = `${bill.name} is already covered this cycle. The full ${fr(amount)} would pre-fund the next cycle. Keep it all on this bill, or split into your plan?`;
+  } else {
+    msgEl.textContent = `${fr(amount)} covers ${bill.name} (${fr(needed)} needed) and leaves ${fr(overflow)}. Keep saving toward the next cycle of ${bill.name}, or split the rest into your plan?`;
+  }
+  document.getElementById('ir-view-bill').style.display = 'none';
+  document.getElementById('ir-view-overflow').style.display = 'block';
+}
+function incomeRouterCommitOverflow(keepSaving){
+  if (!_pendingAlloc || !_irPickedBill) return;
+  const { billId, needed, overflow } = _irPickedBill;
+  if (keepSaving) {
+    // All of it goes to the bill - overflow pre-funds future cycles.
+    incomeRouterApplyToBill(billId, _pendingAlloc.amount, 0);
+  } else {
+    // Bill takes what's needed; remainder runs through the recommended plan.
+    incomeRouterApplyToBill(billId, needed, overflow);
+  }
+}
+// Single commit point for the bill-earmark path. Constructs a jobs array shaped
+// like computeJobs output so applyJobs handles history + balance + reservations
+// the same way as the normal flow. If splitOverflow > 0, the remainder is run
+// through computeJobs and appended.
+function incomeRouterApplyToBill(billId, toBillAmount, splitOverflow){
+  if (!_pendingAlloc) return;
+  const p = _pendingAlloc;
+  const bill = (S.bills || []).find(b => b.id === billId);
+  if (!bill) { closeIncomeRouter(); return; }
+  isAllocating = true;
+  try {
+    const jobs = [];
+    if (toBillAmount > 0.01) {
+      jobs.push({
+        type: 'bills',
+        name: `Toward ${bill.name}`,
+        amount: toBillAmount,
+        why: `Earmarked for ${bill.name}`,
+        items: [{ billId: bill.id, name: bill.name, amount: toBillAmount }],
+      });
+    }
+    if (splitOverflow > 0.01) {
+      const overflowJobs = computeJobs(splitOverflow, p.source);
+      for (const j of overflowJobs) jobs.push(j);
+    }
+    const sourceLabel = p.type === 'forecast'
+      ? (p.source + (p.note ? ' (' + p.note + ')' : ''))
+      : p.source;
+    if (p.type === 'forecast') {
+      const f = S.forecast[p.forecastIdx];
+      if (f && f.status !== 'received') {
+        S.forecast[p.forecastIdx].status = 'received';
+      }
+    }
+    applyJobs(jobs, p.amount, sourceLabel, { balanceNeutral: !!p.balanceNeutral });
+    try { Able.track('income_earmarked_to_bill', {
+      bill_category: bill.cat || null,
+      amount: p.amount,
+      to_bill_amount: toBillAmount,
+      split_overflow: splitOverflow,
+      source_type: p.type,
+    }); } catch (_) {}
+    try { renderForecast(); } catch (_) {}
+    closeModal('modal-income-router');
+    closeAllocateSheet();
+    refreshHome();
+    const h = S.history[0];
+    if (splitOverflow > 0.01) {
+      showToast(`${fr(toBillAmount)} earmarked to ${bill.name}, ${fr(splitOverflow)} into your plan.`, { duration: 5500 });
+    } else if (h && h.balanceDelta > 0.01) {
+      showToast(`${fr(toBillAmount)} earmarked to ${bill.name}. Added ${fr(h.balanceDelta)} to your balance.`, { duration: 5500 });
+    } else {
+      showToast(`${fr(toBillAmount)} earmarked to ${bill.name}.`, { duration: 5000 });
+    }
+  } finally {
+    _pendingAlloc = null;
+    _irPickedBill = null;
+    isAllocating = false;
   }
 }
 
@@ -8724,6 +9003,12 @@ function refreshHome(){
   renderDashboard();
   renderHeroMoney();
   renderPastDueBanner();
+  // iOS install push: fire once per visit, only on web (not the Capacitor
+  // wrapper), only for signed-in users (refreshHome runs after auth + data
+  // load). Delay 2s so it doesn't clobber the initial home render.
+  if (!_iosPromptShownThisVisit && currentUser && _shouldShowIosInstallPrompt()) {
+    setTimeout(showIosInstallPrompt, 2000);
+  }
   renderDueTodayCard();
   renderPlanRefreshBanner();
   renderQuarterlyTaxCard();
@@ -9736,7 +10021,7 @@ function gotMoney(i){
   if(!f.amount||f.amount<=0)return;
   const jobs=computeJobs(f.amount,f.source);
   _pendingAlloc={type:'forecast',amount:f.amount,source:f.source,jobs,forecastIdx:i,note:f.note};
-  openAllocPreview(f.amount,f.source+(f.note?' ('+f.note+')':''),jobs);
+  openIncomeRouter(f.amount,f.source+(f.note?' ('+f.note+')':''));
 }
 function delForecast(i){
   // Guard against -1: indexOf in renderForecast can return -1 if S.forecast is replaced
@@ -10968,6 +11253,66 @@ function dismissBankPrompt() {
   try { sessionStorage.setItem('able_bank_prompt_dismissed', '1'); } catch (_) { /* noop */ }
   const modal = document.getElementById('modal-bank-prompt');
   if (modal) modal.style.display = 'none';
+}
+
+// ═══════════════════════════════════════
+// iOS INSTALL PROMPT
+// ═══════════════════════════════════════
+// Bottom slide-up sheet that pushes iPhone/iPad Safari users on the web app
+// to the App Store. NEVER fires inside the Capacitor wrapper (window.Capacitor
+// is defined there). Once per visit. "Not now" snoozes 7 days; "Don't ask
+// again" persists forever via localStorage. Triggered on first home refresh
+// after sign-in - see refreshHome().
+const IOS_INSTALL_SNOOZE_DAYS = 7;
+const IOS_INSTALL_KEY_DISMISSED = 'able_ios_install_dismissed_at';
+const IOS_INSTALL_KEY_NEVER = 'able_ios_install_never';
+let _iosPromptShownThisVisit = false;
+function _isIosWebContext() {
+  if (typeof navigator === 'undefined') return false;
+  if (typeof window !== 'undefined' && window.Capacitor) return false; // inside the native wrapper
+  const ua = navigator.userAgent || '';
+  // iPadOS 13+ identifies as Mac in UA but has touch points - cover both.
+  const isIphone = /iPhone|iPod/.test(ua);
+  const isIpad = /iPad/.test(ua) || (/Macintosh/.test(ua) && navigator.maxTouchPoints > 1);
+  return isIphone || isIpad;
+}
+function _shouldShowIosInstallPrompt() {
+  if (_iosPromptShownThisVisit) return false;
+  if (!_isIosWebContext()) return false;
+  // Already-installed PWAs (added to home screen) shouldn't see this either.
+  if (typeof window !== 'undefined' && window.matchMedia && window.matchMedia('(display-mode: standalone)').matches) return false;
+  try {
+    if (localStorage.getItem(IOS_INSTALL_KEY_NEVER) === '1') return false;
+    const dismissedAt = parseInt(localStorage.getItem(IOS_INSTALL_KEY_DISMISSED) || '0', 10);
+    if (dismissedAt && (Date.now() - dismissedAt) < IOS_INSTALL_SNOOZE_DAYS * 86400000) return false;
+  } catch (_) { /* localStorage blocked - still show */ }
+  return true;
+}
+function showIosInstallPrompt() {
+  if (!_shouldShowIosInstallPrompt()) return;
+  const sheet = document.getElementById('ios-install-sheet');
+  if (!sheet) return;
+  sheet.style.display = 'flex';
+  _iosPromptShownThisVisit = true;
+  try { Able.track?.('ios_install_prompt_shown'); } catch (_) {}
+}
+function dismissIosInstallPrompt(forever) {
+  const sheet = document.getElementById('ios-install-sheet');
+  if (sheet) sheet.style.display = 'none';
+  try {
+    if (forever) {
+      localStorage.setItem(IOS_INSTALL_KEY_NEVER, '1');
+    } else {
+      localStorage.setItem(IOS_INSTALL_KEY_DISMISSED, String(Date.now()));
+    }
+  } catch (_) { /* localStorage blocked - dismiss is in-memory only */ }
+  try { Able.track?.('ios_install_prompt_dismissed', { forever: !!forever }); } catch (_) {}
+}
+function trackIosInstallTap() {
+  // Fires before the App Store link opens - mark as snoozed so we don't
+  // re-prompt next visit while they're installing.
+  try { localStorage.setItem(IOS_INSTALL_KEY_DISMISSED, String(Date.now())); } catch (_) {}
+  try { Able.track?.('ios_install_prompt_tapped'); } catch (_) {}
 }
 
 async function bankPromptConnect() {
@@ -13522,7 +13867,7 @@ function renderTaxExportSurface(){
         </div>
         <div class="tax-export-body">
           <div class="tax-export-title">Tax export</div>
-          <div class="tax-export-sub">Every transaction you marked tax-deductible, grouped by category. CSV for your accountant.</div>
+          <div class="tax-export-sub">Income + every tax-deductible transaction, grouped for your accountant.</div>
         </div>
         <div class="tax-export-chevron">›</div>
       </div>`;
@@ -13684,6 +14029,10 @@ function _renderActivityRow(r){
     : `<span class="act-cat-badge ${cat}">${escapeHtml(_catLabel(cat))}</span>`;
   const name = r.merchant_name || r.name || 'Unknown';
   const pfc = _formatPfc(r.personal_finance_category_detailed, r.personal_finance_category_primary);
+  const linkedBill = (typeof _billForTxn === 'function') ? _billForTxn(r) : null;
+  const billBadge = linkedBill
+    ? `<span class="act-bill-link" title="Linked to your ${escapeHtml(linkedBill.name)} bill">→ ${escapeHtml(linkedBill.name)}</span>`
+    : '';
   return `
     <div class="act-row" onclick="openReclassifyModal('${r.id}')">
       <div class="act-row-info">
@@ -13693,11 +14042,68 @@ function _renderActivityRow(r){
           ${pfc ? `<span class="act-pfc-badge">${escapeHtml(pfc)}</span>` : ''}
           ${r.business_label ? `<span class="act-business-badge">${escapeHtml(r.business_label)}</span>` : ''}
           ${r.is_tax_deductible ? `<span class="act-tax-flag">deductible</span>` : ''}
+          ${billBadge}
           ${r.able_label ? ` · ${escapeHtml(r.able_label)}` : ''}
         </div>
       </div>
       <div class="act-row-amount ${isInflow ? 'in' : 'out'}">${sign}${display}</div>
     </div>`;
+}
+
+// Transaction → bill linking. Three stores, all on S.settings (JSONB-round-tripped):
+//   txn_bill_links   { plaid_transaction_id: bill_id }   — explicit per-txn pin
+//   merchant_to_bill { NORMALIZED_MERCHANT: bill_id }    — learned per merchant (Chevron → Gas)
+//   category_to_bill { plaid_detailed_category: bill_id } — learned per category (gas → Gas;
+//                                                            covers Shell, ARCO, etc. once user
+//                                                            links any gas purchase to Gas bill)
+// Lookup precedence: explicit → merchant → category. User can override any
+// row to "— not linked —" to drop both memory layers for that merchant/category.
+function _normMerchant(s) {
+  return (s || '').toString().trim().toUpperCase();
+}
+function _txnCategoryKey(txn) {
+  return (txn && txn.personal_finance_category_detailed) || '';
+}
+function _txnBillLinks() {
+  if (!S.settings) S.settings = {};
+  if (!S.settings.txn_bill_links || typeof S.settings.txn_bill_links !== 'object') S.settings.txn_bill_links = {};
+  return S.settings.txn_bill_links;
+}
+function _merchantBillMap() {
+  if (!S.settings) S.settings = {};
+  if (!S.settings.merchant_to_bill || typeof S.settings.merchant_to_bill !== 'object') S.settings.merchant_to_bill = {};
+  return S.settings.merchant_to_bill;
+}
+function _categoryBillMap() {
+  if (!S.settings) S.settings = {};
+  if (!S.settings.category_to_bill || typeof S.settings.category_to_bill !== 'object') S.settings.category_to_bill = {};
+  return S.settings.category_to_bill;
+}
+function _billForTxn(txn) {
+  if (!txn) return null;
+  const bills = S.bills || [];
+  const explicit = _txnBillLinks()[txn.plaid_transaction_id];
+  if (explicit) {
+    const b = bills.find((x) => x.id === explicit);
+    if (b) return b;
+  }
+  const merchKey = _normMerchant(txn.merchant_name || txn.name);
+  if (merchKey) {
+    const billId = _merchantBillMap()[merchKey];
+    if (billId) {
+      const b = bills.find((x) => x.id === billId);
+      if (b) return b;
+    }
+  }
+  const catKey = _txnCategoryKey(txn);
+  if (catKey) {
+    const billId = _categoryBillMap()[catKey];
+    if (billId) {
+      const b = bills.find((x) => x.id === billId);
+      if (b) return b;
+    }
+  }
+  return null;
 }
 
 function openReclassifyModal(txnRowId){
@@ -13713,10 +14119,21 @@ function openReclassifyModal(txnRowId){
   const saveBtn = document.getElementById('reclassify-save-btn');
   const bizInput = document.getElementById('reclassify-business');
   const bizDatalist = document.getElementById('reclassify-business-suggestions');
+  const billLink = document.getElementById('reclassify-bill-link');
   if (errEl) { errEl.style.display = 'none'; errEl.textContent = ''; }
   if (justOnce) justOnce.checked = false;
   if (taxBox) taxBox.checked = !!row.is_tax_deductible;
   if (bizInput) bizInput.value = row.business_label || '';
+  // Populate bill-link select. Pre-select via explicit link first, then via
+  // merchant memory so the user can SEE the inferred mapping (and unlink it).
+  if (billLink) {
+    const bills = (S.bills || []).filter((b) => b.id);
+    const sorted = [...bills].sort((a, b) => (a.name || '').localeCompare(b.name || ''));
+    billLink.innerHTML = `<option value="">— not linked —</option>` +
+      sorted.map((b) => `<option value="${escapeAttr(b.id)}">${escapeHtml(b.name)} · ${fr(b.amount)}</option>`).join('');
+    const inferred = _billForTxn(row);
+    billLink.value = inferred ? inferred.id : '';
+  }
   // Suggestions = distinct business labels currently visible on the Activity
   // page so the user gets autocomplete for tags they've already used.
   if (bizDatalist) {
@@ -13871,12 +14288,51 @@ async function applyReclassify(){
   const justOnce = document.getElementById('reclassify-just-once');
   const taxBox = document.getElementById('reclassify-tax-deductible');
   const bizInput = document.getElementById('reclassify-business');
+  const billLink = document.getElementById('reclassify-bill-link');
   // create_override only matters when the category actually changed (or when
   // the user is committing to a learn-this-pattern action). If they only
   // toggled the tax-deductible flag, we still want the override behavior to
   // respect the "just this transaction" toggle.
   const createOverride = !(justOnce && justOnce.checked);
   const override = createOverride ? _deriveOverride(row) : null;
+  // Bill link: save BEFORE the network call so the UX persists even if the
+  // classify override fails. Local-only state (S.settings JSONB) - sync rides
+  // the next save() call below.
+  const billSel = billLink ? billLink.value : '';
+  const txnLinks = _txnBillLinks();
+  const merchantMap = _merchantBillMap();
+  const categoryMap = _categoryBillMap();
+  const merchKey = _normMerchant(row.merchant_name || row.name);
+  const catKey = _txnCategoryKey(row);
+  const priorExplicit = txnLinks[row.plaid_transaction_id];
+  const priorMerchant = merchKey ? merchantMap[merchKey] : null;
+  const priorCategory = catKey ? categoryMap[catKey] : null;
+  let billLinkChanged = false;
+  if (billSel) {
+    if (txnLinks[row.plaid_transaction_id] !== billSel) {
+      txnLinks[row.plaid_transaction_id] = billSel;
+      billLinkChanged = true;
+    }
+    // Memory layers only update when the user is teaching Able a pattern.
+    // "Just this transaction" suppresses both, so a one-off Chevron snack
+    // run doesn't poison the Gas → bill mapping.
+    if (createOverride && merchKey && merchantMap[merchKey] !== billSel) {
+      merchantMap[merchKey] = billSel;
+      billLinkChanged = true;
+    }
+    if (createOverride && catKey && categoryMap[catKey] !== billSel) {
+      categoryMap[catKey] = billSel;
+      billLinkChanged = true;
+    }
+  } else {
+    // Unlink: drop explicit link AND both memory layers (so future merchant /
+    // category txns don't keep inheriting it). User can re-link to a different
+    // bill if they want to redirect the pattern.
+    if (priorExplicit) { delete txnLinks[row.plaid_transaction_id]; billLinkChanged = true; }
+    if (merchKey && priorMerchant) { delete merchantMap[merchKey]; billLinkChanged = true; }
+    if (catKey && priorCategory) { delete categoryMap[catKey]; billLinkChanged = true; }
+  }
+  if (billLinkChanged) { try { save(); } catch (_) {} }
   const isInflow = (row.amount ?? 0) < 0;
   const body = {
     txn_row_id: row.id,
@@ -13974,10 +14430,70 @@ async function applyReclassify(){
 // ═══════════════════════════════════════
 // TAX EXPORT
 // ═══════════════════════════════════════
-// Pulls every plaid_transactions row marked is_tax_deductible=true for the
-// selected year, groups by Plaid PFC for the on-screen summary, and offers
-// CSV download (frontend-generated).
+// Pulls every plaid_transactions row marked is_tax_deductible=true (expenses)
+// AND every income inflow for the selected year. Groups by business → category
+// for the on-screen summary; CSV download bundles both sections (frontend-generated).
 let _taxExportRows = [];
+let _taxIncomeRows = [];
+
+// Income for tax export: Plaid-detected deposits + manual S.history / month_history
+// entries that were never matched to a Plaid txn (cash, Venmo, Zelle, etc.).
+// Matched manual entries are skipped because the Plaid row represents the same
+// dollar — including both would double-count.
+async function _fetchTaxExportIncome(year) {
+  const startMs = new Date(year, 0, 1).getTime();
+  const endMs = new Date(year + 1, 0, 1).getTime();
+  const rows = [];
+  if (currentUser) {
+    const start = `${year}-01-01`;
+    const end = `${year}-12-31`;
+    const { data, error } = await sbGet()
+      .from('plaid_transactions')
+      .select('plaid_transaction_id, date, name, merchant_name, amount, business_label')
+      .eq('user_id', currentUser.id)
+      .eq('able_category', 'income')
+      .lt('amount', 0)
+      .gte('date', start)
+      .lte('date', end)
+      .order('date', { ascending: true })
+      .limit(2000);
+    if (!error && data) {
+      for (const p of data) {
+        rows.push({
+          src: 'plaid',
+          date: p.date,
+          name: p.merchant_name || p.name || 'Deposit',
+          amount: Math.abs(p.amount || 0),
+          business: p.business_label || 'Personal',
+        });
+      }
+    }
+  }
+  const collectManual = (entries) => {
+    for (const h of (entries || [])) {
+      if (!h || !(h.amount > 0)) continue;
+      if (h.mergedWithPlaidTxnId) continue;
+      if (h.balanceNeutral) continue; // reshuffle of existing balance, not new income
+      const ts = h.ts || (h.date ? Date.parse(h.date) : 0);
+      if (!ts || ts < startMs || ts >= endMs) continue;
+      const d = new Date(ts);
+      const iso = `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`;
+      rows.push({
+        src: 'manual',
+        date: iso,
+        name: h.source || 'Manual income',
+        amount: h.amount,
+        business: 'Personal',
+      });
+    }
+  };
+  collectManual(S.history);
+  for (const m of (S.month_history || [])) {
+    collectManual(m.incomeLog);
+  }
+  rows.sort((a, b) => (a.date || '').localeCompare(b.date || ''));
+  return rows;
+}
 
 function openTaxExportModal(){
   const modal = document.getElementById('modal-tax-export');
@@ -14018,19 +14534,23 @@ async function renderTaxExport(){
   if (dlBtn) dlBtn.disabled = true;
   if (!currentUser) { summary.innerHTML = `<div class="empty-state">Sign in to view tax export.</div>`; return; }
   try {
-    const { data, error } = await sbGet()
-      .from('plaid_transactions')
-      .select('date, name, merchant_name, amount, able_category, able_label, personal_finance_category_primary, personal_finance_category_detailed, business_label')
-      .eq('user_id', currentUser.id)
-      .eq('is_tax_deductible', true)
-      .gte('date', start)
-      .lte('date', end)
-      .order('date', { ascending: true })
-      .limit(5000);
-    if (error) throw error;
-    _taxExportRows = data || [];
-    if (_taxExportRows.length === 0) {
-      summary.innerHTML = `<div class="empty-state">No tax-deductible transactions in ${year}. Tag transactions from the Activity tab to populate this export.</div>`;
+    const [expenseRes, incomeRows] = await Promise.all([
+      sbGet()
+        .from('plaid_transactions')
+        .select('date, name, merchant_name, amount, able_category, able_label, personal_finance_category_primary, personal_finance_category_detailed, business_label')
+        .eq('user_id', currentUser.id)
+        .eq('is_tax_deductible', true)
+        .gte('date', start)
+        .lte('date', end)
+        .order('date', { ascending: true })
+        .limit(5000),
+      _fetchTaxExportIncome(year),
+    ]);
+    if (expenseRes.error) throw expenseRes.error;
+    _taxExportRows = expenseRes.data || [];
+    _taxIncomeRows = incomeRows || [];
+    if (_taxExportRows.length === 0 && _taxIncomeRows.length === 0) {
+      summary.innerHTML = `<div class="empty-state">No tax-deductible transactions or income recorded in ${year}. Tag transactions from the Activity tab to populate this export.</div>`;
       return;
     }
     // Group by business → PFC primary so users with multiple businesses
@@ -14057,7 +14577,35 @@ async function renderTaxExport(){
       if (b[0] === 'Personal') return 1;
       return b[1].total - a[1].total;
     });
-    summary.innerHTML = `
+    // Income section: group by business, sum totals.
+    const incomeByBiz = new Map();
+    let incomeTotal = 0;
+    for (const r of _taxIncomeRows) {
+      const biz = r.business || 'Personal';
+      const prev = incomeByBiz.get(biz) || { count: 0, total: 0 };
+      prev.count += 1;
+      prev.total += r.amount || 0;
+      incomeByBiz.set(biz, prev);
+      incomeTotal += r.amount || 0;
+    }
+    const sortedIncome = [...incomeByBiz.entries()].sort((a, b) => {
+      if (a[0] === 'Personal') return -1;
+      if (b[0] === 'Personal') return 1;
+      return b[1].total - a[1].total;
+    });
+    const incomeHtml = _taxIncomeRows.length === 0 ? '' : `
+      <div style="font-size:11px;font-weight:900;color:var(--ds-t3);letter-spacing:.06em;text-transform:uppercase;margin:0 0 .5rem;">Income</div>
+      <div style="font-size:13px;font-weight:800;color:var(--ds-t1);margin-bottom:.85rem;">${_taxIncomeRows.length} entr${_taxIncomeRows.length===1?'y':'ies'} · ${fmt(incomeTotal)} total</div>
+      ${sortedIncome.map(([biz, g]) => `
+        <div style="background:var(--ds-card);border-radius:var(--ds-r2);padding:12px 14px;margin-bottom:9px;border:1px solid var(--ds-line);">
+          <div style="display:flex;justify-content:space-between;align-items:baseline;">
+            <div style="font-size:13px;font-weight:900;color:var(--ds-t1);letter-spacing:-.01em;">${escapeHtml(biz)} · ${g.count} entr${g.count===1?'y':'ies'}</div>
+            <div style="font-size:13px;font-weight:900;color:var(--ds-green);">${fmt(g.total)}</div>
+          </div>
+        </div>`).join('')}
+      <div style="height:1px;background:var(--ds-line);margin:1.25rem 0 1rem;"></div>`;
+    const expensesHtml = _taxExportRows.length === 0 ? '' : `
+      <div style="font-size:11px;font-weight:900;color:var(--ds-t3);letter-spacing:.06em;text-transform:uppercase;margin:0 0 .5rem;">Deductible expenses</div>
       <div style="font-size:13px;font-weight:800;color:var(--ds-t1);margin-bottom:.85rem;">${_taxExportRows.length} transaction${_taxExportRows.length===1?'':'s'} · ${fmt(total)} total</div>
       ${sortedBiz.map(([biz, bg]) => {
         const pfcSorted = [...bg.byPfc.entries()].sort((a,b) => b[1].total - a[1].total);
@@ -14074,6 +14622,7 @@ async function renderTaxExport(){
             </div>`).join('')}
         </div>`;
       }).join('')}`;
+    summary.innerHTML = incomeHtml + expensesHtml;
     if (dlBtn) dlBtn.disabled = false;
   } catch (e) {
     console.error('renderTaxExport failed:', e);
@@ -14304,10 +14853,9 @@ async function renderInterestCostCard() {
 }
 
 function downloadTaxCsv(){
-  if (!_taxExportRows.length) return;
+  if (!_taxExportRows.length && !_taxIncomeRows.length) return;
   const yearSel = document.getElementById('tax-year');
   const year = yearSel ? yearSel.value : 'export';
-  const headers = ['Date','Business','Merchant','Name','Amount','Category','Plaid Category','Label'];
   const csvSafe = (v) => {
     let s = (v ?? '').toString();
     // Formula-injection guard: prefix cells starting with =, +, -, @, tab,
@@ -14317,26 +14865,52 @@ function downloadTaxCsv(){
     if (/^[=+\-@\t\r]/.test(s)) s = "'" + s;
     return /[",\n]/.test(s) ? `"${s.replace(/"/g, '""')}"` : s;
   };
-  const rows = _taxExportRows.map((r) => [
-    r.date,
-    r.business_label || 'Personal',
-    r.merchant_name || '',
-    r.name || '',
-    Math.abs(r.amount ?? 0).toFixed(2),
-    _catLabel(r.able_category),
-    _formatPfc(r.personal_finance_category_detailed, r.personal_finance_category_primary),
-    r.able_label || '',
-  ].map(csvSafe).join(','));
-  const csv = [headers.join(','), ...rows].join('\n');
+  const parts = [];
+  // Income section first - matches Schedule C ordering (revenue, then expenses).
+  if (_taxIncomeRows.length) {
+    parts.push('INCOME');
+    parts.push(['Date','Business','Source','Amount','Origin'].map(csvSafe).join(','));
+    for (const r of _taxIncomeRows) {
+      parts.push([
+        r.date || '',
+        r.business || 'Personal',
+        r.name || '',
+        (r.amount ?? 0).toFixed(2),
+        r.src === 'plaid' ? 'Bank deposit' : 'Manual',
+      ].map(csvSafe).join(','));
+    }
+    parts.push('');
+  }
+  if (_taxExportRows.length) {
+    parts.push('DEDUCTIBLE EXPENSES');
+    parts.push(['Date','Business','Merchant','Name','Amount','Category','Plaid Category','Label'].map(csvSafe).join(','));
+    for (const r of _taxExportRows) {
+      parts.push([
+        r.date,
+        r.business_label || 'Personal',
+        r.merchant_name || '',
+        r.name || '',
+        Math.abs(r.amount ?? 0).toFixed(2),
+        _catLabel(r.able_category),
+        _formatPfc(r.personal_finance_category_detailed, r.personal_finance_category_primary),
+        r.able_label || '',
+      ].map(csvSafe).join(','));
+    }
+  }
+  const csv = parts.join('\n');
   const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
   const url = URL.createObjectURL(blob);
   const a = document.createElement('a');
   a.href = url;
-  a.download = `able-tax-deductible-${year}.csv`;
+  a.download = `able-tax-${year}.csv`;
   document.body.appendChild(a);
   a.click();
   setTimeout(() => { URL.revokeObjectURL(url); a.remove(); }, 0);
-  Able.track?.('tax_export_csv_download', { year, row_count: _taxExportRows.length });
+  Able.track?.('tax_export_csv_download', {
+    year,
+    expense_row_count: _taxExportRows.length,
+    income_row_count: _taxIncomeRows.length,
+  });
 }
 
 function renderPastDue(){
@@ -14424,6 +14998,10 @@ function buildNext14Events(days){
         amount: b.amount,
         bill: b,
         billIndex,
+        // bill.paid is template-level (current cycle only). When bill.paid=true,
+        // billOccurrenceDates returns the NEXT cycle's date — so the displayed
+        // occurrence is never the paid one. Per-occurrence paid is always false here.
+        occurrencePaid: false,
       });
     }
   });
@@ -14485,7 +15063,7 @@ function renderNextNCard(days){
       const reservedFor = (typeof _billReserved === 'function' && ev.bill && ev.bill.id)
         ? Math.min(_billReserved(ev.bill.id), ev.amount || 0) : 0;
       const pct = ev.amount > 0 ? Math.round((reservedFor / ev.amount) * 100) : 0;
-      if (ev.bill && ev.bill.paid) {
+      if (ev.occurrencePaid) {
         stat = 'paid';
       } else if (pct >= 99) {
         stat = 'funded';
@@ -14554,7 +15132,11 @@ function renderNext14(){
     }
     if (ev.type === 'bill') {
       const reserved = ev.bill.id ? Math.min(_billReserved(ev.bill.id), ev.amount) : 0;
-      const isPaid = !!ev.bill.paid;
+      const isPaid = !!ev.occurrencePaid;
+      // Template-level paid flag means the CURRENT cycle is paid; the row's date
+      // is the NEXT cycle. Hide "Mark paid" since toggleBillPaid would no-op
+      // (and could accidentally unpay the current cycle if the guard ever moved).
+      const templatePaid = !!ev.bill.paid;
       let fundedTag = '';
       if (isPaid) {
         fundedTag = '<span class="next14-funded">PAID</span>';
@@ -14564,7 +15146,7 @@ function renderNext14(){
         fundedTag = `<span class="next14-funded next14-funded--partial">${Math.round((reserved/ev.amount)*100)}% FUNDED</span>`;
       }
       const billIcon = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>';
-      const markBtn = isPaid ? '' :
+      const markBtn = (isPaid || templatePaid) ? '' :
         `<button class="next14-mark" onclick="event.stopPropagation();markBillPaidFromTimeline(${ev.billIndex})" title="Mark this bill paid">Mark paid</button>`;
       const metaText = isPaid ? 'Bill due · paid' : 'Bill due · tap to edit';
       html += `
@@ -14774,10 +15356,10 @@ function allocateAvailable(){
   const source = 'Unallocated balance';
   const jobs = computeJobs(avail, source);
   _pendingAlloc = { type: 'direct', amount: avail, source, jobs, balanceNeutral: true };
-  // Skip the "Money just came in" sheet - this isn't new money. Go straight
-  // to the preview modal. After confirm, both layers close and the user
-  // lands back on the dashboard.
-  openAllocPreview(avail, source, jobs);
+  // Route through the chooser so the user can earmark this unallocated cash
+  // toward a specific bill (e.g., pre-funding next month's mortgage) instead
+  // of always running it through the surplus-split plan.
+  openIncomeRouter(avail, source);
 }
 // Renders the money section (balance / reserved / available / CTA) into the
 // unified green hero. Replaces the old white db-balance-card. The eyebrow
@@ -15545,22 +16127,23 @@ const TOUR_STEPS = [
   },
   {
     tab: 'home',
-    spotlight: '.db-actions-grid:first-of-type',
-    title: "Next 14 days, and the Coach.",
+    spotlight: '#db-next-card',
+    title: "Next 14 days.",
     bullets: [
       "Every bill due in the next two weeks",
       "Every expected payment, in date order",
-      "Coach reads your numbers and tells you how the month's shaping up",
+      "Tap to open the full picture",
     ],
   },
   {
     tab: 'home',
-    spotlight: '.db-actions-grid:nth-of-type(2)',
+    spotlight: '.db-action-chips',
     title: "Add what's coming.",
     bullets: [
-      "Log a new bill",
-      "Log expected income",
+      "Ask Coach how the month is shaping up",
+      "Log a new bill or expected income",
       "Every bill gets reserved against each deposit until it's covered",
+      "Tap Got it on incoming income to send it all to one bill — like getting ahead on the mortgage",
     ],
   },
 
