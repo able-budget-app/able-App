@@ -1157,10 +1157,11 @@ body.is-scrolling .btn-primary:hover{transform:none!important;box-shadow:inherit
 .db-hero-money-label{font-size:11px;font-weight:800;letter-spacing:.1em;text-transform:uppercase;color:rgba(255,255,255,.78);}
 .db-hero-money-val{font-size:17px;font-weight:800;color:white;letter-spacing:-.02em;}
 .db-hero-money-edit-row{position:relative;display:flex;justify-content:flex-end;margin-top:-2px;padding-bottom:4px;font-family:var(--ds-f);}
-.db-hero-money-divider{height:1px;background:rgba(255,255,255,.18);margin:6px 0;}
-.db-hero-available-row{position:relative;display:flex;justify-content:space-between;align-items:baseline;padding:6px 0 4px;font-family:var(--ds-f);}
-.db-hero-available-label{font-size:11px;font-weight:800;letter-spacing:.12em;text-transform:uppercase;color:rgba(255,255,255,.85);}
-.db-hero-available-val{font-size:2.6rem;font-weight:900;color:white;letter-spacing:-.035em;line-height:1.05;}
+/* "Available to spend" was the loudest hero number (2.6rem); demoted to a
+   peer of Balance/Reserved when the Floor block owns the headline slot. */
+.db-hero-available-row{position:relative;display:flex;justify-content:space-between;align-items:baseline;padding:7px 0;font-family:var(--ds-f);}
+.db-hero-available-label{font-size:11px;font-weight:800;letter-spacing:.1em;text-transform:uppercase;color:rgba(255,255,255,.85);}
+.db-hero-available-val{font-size:17px;font-weight:800;color:white;letter-spacing:-.02em;}
 .db-hero-available-val--neg{color:#ffd0d8;}
 .db-hero-toggle{display:inline-flex;align-items:center;font-size:13px;color:rgba(255,255,255,.7);background:transparent;border:none;cursor:pointer;padding:0;margin-left:6px;}
 .db-hero-toggle:hover{color:white;}
@@ -1208,15 +1209,23 @@ body.is-scrolling .btn-primary:hover{transform:none!important;box-shadow:inherit
 .db-hero-eyebrow .db-hero-month{font-size:32px;font-weight:900;color:white;letter-spacing:-.04em;text-transform:none;line-height:1;}
 .db-hero-eyebrow .db-hero-month-tag{font-size:10px;font-weight:800;letter-spacing:.14em;color:rgba(255,255,255,.7);text-transform:uppercase;}
 
-/* Floor coverage strip - Floor-First made visible on home */
-.db-floor-strip{position:relative;margin-top:.75rem;background:rgba(0,0,0,.18);border:1px solid rgba(184,224,200,.22);border-radius:var(--ds-r1);padding:10px 12px 11px;}
-.db-floor-row{display:flex;justify-content:space-between;align-items:baseline;margin-bottom:6px;}
-.db-floor-label{font-size:10px;font-weight:800;text-transform:uppercase;letter-spacing:.12em;color:#b8e0c8;}
+/* Floor coverage hero - Floor-First as the loudest pixel on home.
+   Was a small strip below "Available"; now sits at the top of the hero so
+   the brand promise (bills + tax are safe first) is the first thing the
+   user sees when they open the app. */
+.db-floor-strip{position:relative;margin-bottom:1rem;background:rgba(0,0,0,.22);border:1px solid rgba(184,224,200,.28);border-radius:var(--ds-r2);padding:14px 16px 16px;}
+.db-floor-row{display:flex;justify-content:space-between;align-items:baseline;margin-bottom:8px;}
+.db-floor-label{font-size:11px;font-weight:800;text-transform:uppercase;letter-spacing:.14em;color:#b8e0c8;}
+.db-floor-pct{font-size:12px;font-weight:800;color:rgba(255,255,255,.7);letter-spacing:-.01em;}
+.db-floor-headline{font-family:var(--ds-f);font-size:1.55rem;font-weight:900;color:white;letter-spacing:-.025em;line-height:1.15;margin-bottom:10px;}
+.db-floor-headline--neg{color:#ffd0d8;}
+.db-floor-track{position:relative;height:10px;background:rgba(255,255,255,.1);border-radius:999px;overflow:hidden;}
+.db-floor-fill{position:absolute;left:0;top:0;bottom:0;background:linear-gradient(90deg,#b8e0c8,#ffffff);border-radius:999px;transition:width .6s cubic-bezier(.34,1.2,.64,1);}
+.db-floor-meta{margin-top:9px;font-size:12px;font-weight:600;color:rgba(255,255,255,.78);line-height:1.4;}
+.db-floor-meta b{color:white;font-weight:800;}
 .db-floor-num{font-size:11px;font-weight:800;color:white;letter-spacing:-.01em;}
 .db-floor-num span{color:rgba(255,255,255,.55);font-weight:700;}
-.db-floor-track{position:relative;height:7px;background:rgba(255,255,255,.1);border-radius:999px;overflow:hidden;}
-.db-floor-fill{position:absolute;left:0;top:0;bottom:0;background:linear-gradient(90deg,#b8e0c8,#ffffff);border-radius:999px;transition:width .6s cubic-bezier(.34,1.2,.64,1);}
-.db-floor-cap{margin-top:8px;font-size:11px;font-weight:600;color:rgba(255,255,255,.78);line-height:1.4;}
+.db-floor-cap{margin-top:8px;font-size:12px;font-weight:600;color:rgba(255,255,255,.78);line-height:1.4;}
 .db-floor-cap b{color:white;font-weight:800;}
 
 /* Score page heading. */
@@ -2469,7 +2478,7 @@ body.is-scrolling .btn-primary:hover{transform:none!important;box-shadow:inherit
     <div style="margin-bottom:.85rem;">
       <label style="display:block;font-size:11px;font-weight:800;letter-spacing:.06em;text-transform:uppercase;color:var(--ds-t3);margin-bottom:.4rem;">Pays a bill? (optional)</label>
       <select id="reclassify-bill-link" style="width:100%;font-family:var(--ds-f);font-size:14px;font-weight:600;padding:8px 11px;border:1.5px solid var(--ds-line);border-radius:var(--ds-r1);background:white;color:var(--ds-t1);">
-        <option value="">— not linked —</option>
+        <option value="">(not linked)</option>
       </select>
       <div style="font-size:11px;color:var(--ds-t3);font-weight:600;margin-top:5px;line-height:1.45;">Link this purchase to one of your bills. Able will remember the merchant and link future ones automatically.</div>
     </div>
@@ -2982,7 +2991,7 @@ body.is-scrolling .btn-primary:hover{transform:none!important;box-shadow:inherit
       </button>
       <button class="ir-card" onclick="incomeRouterChooseBill()" style="display:block;width:100%;text-align:left;padding:14px 16px;margin-bottom:0;border:1.5px solid var(--ds-line);border-radius:14px;background:#fff;cursor:pointer;">
         <div style="font-weight:800;font-size:15px;color:var(--ds-t1);margin-bottom:4px;">Send it to a bill</div>
-        <div style="font-size:13px;color:var(--ds-t2);font-weight:500;line-height:1.45;">Earmark the whole amount toward one bill — like getting ahead on the mortgage.</div>
+        <div style="font-size:13px;color:var(--ds-t2);font-weight:500;line-height:1.45;">Earmark the whole amount toward one bill, like getting ahead on the mortgage.</div>
       </button>
     </div>
     <div id="ir-view-bill" style="display:none;">
@@ -8789,7 +8798,7 @@ function renderIncomeRouterBillList(){
   if (!wrap) return;
   const bills = (S.bills || []).filter(b => b.id && b.amount > 0.01);
   if (!bills.length) {
-    wrap.innerHTML = `<div style="font-size:13px;color:var(--ds-t3);font-weight:500;padding:1rem;text-align:center;">No bills yet — add one on the Plan tab first.</div>`;
+    wrap.innerHTML = `<div style="font-size:13px;color:var(--ds-t3);font-weight:500;padding:1rem;text-align:center;">No bills yet. Add one on the Plan tab first.</div>`;
     return;
   }
   // Sort: unpaid first (most useful for earmarking), then by amount descending.
@@ -15273,6 +15282,33 @@ function _totalReservedNow(){
   }, 0);
 }
 function _availableToSpend(){ return _getBalance() - _totalReservedNow(); }
+// "Through what date is the Floor actually safe?" — walks upcoming bills in
+// chronological order, stops at the first one that isn't paid AND isn't fully
+// reserved, returns the date of the last covered bill before that gap. Used
+// as the home hero headline so users see a concrete date, not a percentage.
+// Conservative: each bill contributes only its NEXT occurrence (reservations
+// are per-bill, not per-occurrence, so a weekly bill's later occurrences
+// could overcount if we walked them all).
+function floorCoveredThrough(){
+  if (!Array.isArray(S.bills) || S.bills.length === 0) {
+    return { date: null, allCovered: false, hasBills: false };
+  }
+  const items = [];
+  for (const b of S.bills) {
+    const dates = billOccurrenceDates(b, 60);
+    if (!dates || dates.length === 0) continue;
+    const covered = b.paid || _billReserved(b.id) >= (b.amount || 0) - 0.01;
+    items.push({ date: dates[0], covered });
+  }
+  if (items.length === 0) return { date: null, allCovered: false, hasBills: false };
+  items.sort((a, b) => a.date - b.date);
+  let lastCovered = null;
+  for (const it of items) {
+    if (it.covered) { lastCovered = it.date; continue; }
+    return { date: lastCovered, allCovered: false, hasBills: true };
+  }
+  return { date: items[items.length - 1].date, allCovered: true, hasBills: true };
+}
 // Brief floating toast at the bottom. Optional action button on the right.
 let _toastTimer = null;
 function showToast(msg, opts){
@@ -15485,31 +15521,59 @@ function renderHeroMoney(){
       <span class="db-hero-money-val">${f2(reserved)}</span>
     </div>`;
 
-  // Floor coverage strip - Floor-First made visible on home.
-  // Floor = total monthly bills. Funded = paid + reserved (paid bills
-  // are still "covered" this month even though the cash already left).
+  // Floor hero block - the brand promise made loud. Was a small strip under
+  // "Available to spend"; now sits at the top of the hero so the first thing
+  // a user sees when they open the app is "is my Floor safe?" not "how much
+  // can I blow?" Headline shows a concrete date ("Covered through Jun 14")
+  // computed by floorCoveredThrough() rather than just a percentage.
   const floorTotal = (typeof totalBills === 'function') ? totalBills() : 0;
   const floorPaid  = (typeof paidBills === 'function')  ? paidBills()  : 0;
   const floorFunded = floorPaid + reserved;
   const floorPct = floorTotal > 0 ? Math.max(0, Math.min(100, Math.round((floorFunded / floorTotal) * 100))) : 0;
-  let floorCap = '';
-  if (floorTotal <= 0.01) {
-    floorCap = ''; // nothing to render - handled by hiding strip below
-  } else if (floorFunded >= floorTotal - 0.01) {
-    floorCap = `<b>Floor covered.</b> Surplus is going to the rest of your plan.`;
-  } else {
-    const shortBy = floorTotal - floorFunded;
-    floorCap = `<b>${f2(shortBy)}</b> short of the floor. Your next deposit fills it first.`;
+  const floorShort = Math.max(0, floorTotal - floorFunded);
+  const coverage = (typeof floorCoveredThrough === 'function') ? floorCoveredThrough() : { date: null, allCovered: false, hasBills: false };
+  const fmtCoverDate = (d) => d ? d.toLocaleDateString('en-US', { month: 'short', day: 'numeric' }) : '';
+  let floorHeadline = '';
+  let headlineNeg = false;
+  if (floorTotal > 0.01) {
+    if (coverage.allCovered) {
+      floorHeadline = 'Floor covered';
+    } else if (coverage.date) {
+      floorHeadline = `Covered through ${fmtCoverDate(coverage.date)}`;
+    } else {
+      floorHeadline = 'Floor not yet covered';
+      headlineNeg = true;
+    }
   }
+  const floorMeta = floorTotal > 0.01
+    ? (floorShort > 0.01
+        ? `<b>${f2(floorFunded)}</b> of ${f2(floorTotal)} · <b>${f2(floorShort)}</b> short. Your next deposit fills it first.`
+        : `<b>${f2(floorFunded)}</b> of ${f2(floorTotal)}. Surplus is going to the rest of your plan.`)
+    : '';
   const floorStrip = floorTotal > 0.01 ? `
     <div class="db-floor-strip" id="db-floor-strip">
       <div class="db-floor-row">
         <div class="db-floor-label"><span class="glossary-term" tabindex="0" data-tip="Bills + tax. The amount you can't miss each month. Floor-First means every deposit covers this before any other dollar gets a job.">The Floor</span></div>
-        <div class="db-floor-num">${f2(floorFunded)} <span>/ ${f2(floorTotal)}</span></div>
+        <div class="db-floor-pct">${floorPct}%</div>
       </div>
+      <div class="db-floor-headline${headlineNeg ? ' db-floor-headline--neg' : ''}">${floorHeadline}</div>
       <div class="db-floor-track"><div class="db-floor-fill" style="width:${floorPct}%;"></div></div>
-      <div class="db-floor-cap">${floorCap}</div>
+      <div class="db-floor-meta">${floorMeta}</div>
     </div>` : '';
+
+  // Money rows (Balance / Reserved / Available) are now peers of each other
+  // and live BELOW the Floor block, not above it. No divider between them -
+  // they're all "money status" rows at the same visual weight.
+  const moneyRowsBase = `
+    <div class="db-hero-money-row">
+      <span class="db-hero-money-label">Balance</span>
+      <span class="db-hero-money-val">${f2(balance)}</span>
+    </div>
+    <div class="db-hero-money-edit-row">${editBtn}</div>
+    ${bankLine}
+    ${bankBreakdown}
+    ${reservedRow}
+    ${breakdownHtml}`;
 
   // CTA hierarchy: primary action is always "Log new income" (Floor-First's
   // core moment - every deposit gets allocated). When there's unallocated
@@ -15522,59 +15586,35 @@ function renderHeroMoney(){
   let body = '';
   if (available > 0.01) {
     body = `
-      <div class="db-hero-money-row">
-        <span class="db-hero-money-label">Balance</span>
-        <span class="db-hero-money-val">${f2(balance)}</span>
-      </div>
-      <div class="db-hero-money-edit-row">${editBtn}</div>
-      ${bankLine}
-      ${bankBreakdown}
-      ${reservedRow}
-      ${breakdownHtml}
-      <div class="db-hero-money-divider"></div>
+      ${floorStrip}
+      ${moneyRowsBase}
       <div class="db-hero-available-row">
         <span class="db-hero-available-label">Available to spend</span>
         <span class="db-hero-available-val">${f2(available)}</span>
       </div>
-      ${floorStrip}
       ${primaryCta}
       ${allocateLink}
     `;
   } else if (Math.abs(available) <= 0.01) {
     body = `
-      <div class="db-hero-money-row">
-        <span class="db-hero-money-label">Balance</span>
-        <span class="db-hero-money-val">${f2(balance)}</span>
-      </div>
-      <div class="db-hero-money-edit-row">${editBtn}</div>
-      ${bankLine}
-      ${bankBreakdown}
-      ${reservedRow}
-      ${breakdownHtml}
-      <div class="db-hero-money-divider"></div>
-      <div style="font-size:13px;font-weight:700;color:white;text-align:center;padding:.5rem 0 .25rem;">Every dollar's accounted for. Nothing left to allocate.</div>
       ${floorStrip}
+      ${moneyRowsBase}
+      <div class="db-hero-available-row">
+        <span class="db-hero-available-label">Available to spend</span>
+        <span class="db-hero-available-val">${f2(0)}</span>
+      </div>
       ${primaryCta}
     `;
   } else {
     const short = Math.abs(available);
     body = `
-      <div class="db-hero-money-row">
-        <span class="db-hero-money-label">Balance</span>
-        <span class="db-hero-money-val">${f2(balance)}</span>
-      </div>
-      <div class="db-hero-money-edit-row">${editBtn}</div>
-      ${bankLine}
-      ${bankBreakdown}
-      ${reservedRow}
-      ${breakdownHtml}
-      <div class="db-hero-money-divider"></div>
+      ${floorStrip}
+      ${moneyRowsBase}
       <div class="db-hero-available-row">
         <span class="db-hero-available-label">Short by</span>
         <span class="db-hero-available-val db-hero-available-val--neg">${f2(short)}</span>
       </div>
-      <div class="db-hero-shortfall">Reservations exceed your balance. Skip a bill, dip into your reserve, or wait for the next deposit to fill the gap.</div>
-      ${floorStrip}
+      <div class="db-hero-shortfall">Reservations exceed your balance. Dip into your reserve or wait for the next deposit to fill the gap.</div>
       ${primaryCta}
     `;
   }
