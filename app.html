@@ -538,7 +538,14 @@ input,select,button,textarea{font-family:inherit;}
 @media(max-width:540px){
   /* Header columns (BILL/DUE/AMOUNT) hidden — row is self-labeling. */
   .bills-header{display:none !important;}
-  .bills-amt-input{font-size:16px;padding:8px 10px;min-height:36px;width:88px;}
+  /* Tighten right column on mobile so long bill names ("Monthly Maintenance
+     Fee", "Ultimate Rewards® ending 4766") stop wrapping to 3 lines and
+     getting clipped by the amount box. Was width:88px + 10px padding (~108px
+     visual) eating ~200px total with Edit+X; trimmed to ~78px + tighter gap. */
+  .bills-amt-input{font-size:15px;padding:7px 8px;min-height:36px;width:72px;}
+  .bills-right{gap:4px;}
+  .bills-edit{padding:3px 6px;}
+  .bills-x{padding:8px 4px;}
 }
 .modal-bg{position:fixed;inset:0;background:rgba(17,28,22,.45);z-index:200;display:flex;align-items:center;justify-content:center;padding:1rem;backdrop-filter:blur(6px);animation:modalFadeIn .2s ease;overscroll-behavior:contain;}
 /* iOS install prompt - bottom slide-up sheet. z-index above nav (50) and most
@@ -1549,6 +1556,12 @@ body.is-scrolling .btn-primary:hover{transform:none!important;box-shadow:inherit
 .next14-mark{font-family:var(--ds-f);font-size:11px;font-weight:800;letter-spacing:-.01em;color:var(--ds-green);background:var(--ds-green-l);border:1px solid var(--ds-green-m);padding:6px 10px;border-radius:100px;cursor:pointer;flex-shrink:0;min-height:32px;white-space:nowrap;transition:background .15s;}
 .next14-mark:hover{background:#d9ecde;}
 .next14-mark:active{transform:scale(.97);}
+/* Disabled variant: shown on next-cycle rows when the current cycle is
+   already paid. Without this, the button silently vanishes and the row looks
+   broken ("why can't I mark this paid?"). */
+.next14-mark--disabled{color:var(--ds-t3);background:var(--ds-card2);border-color:var(--ds-line);cursor:not-allowed;}
+.next14-mark--disabled:hover{background:var(--ds-card2);}
+.next14-mark--disabled:active{transform:none;}
 /* Look-ahead: monthly bills due past the rolling window (15-45 days out).
    Informational only - no reservations until they enter the window. */
 .next14-lookahead{margin-top:1.25rem;padding-top:1rem;border-top:1px dashed var(--ds-t4);}
@@ -7032,7 +7045,7 @@ function renderObReview() {
       <div class="ob-summary-title">Allocation strategy</div>
       <div class="ob-summary-row"><span>Owner draw</span><span class="ob-summary-row-right">${r.settings.ownerPct || 0}%</span></div>
       <div class="ob-summary-row"><span>Extra to debt</span><span class="ob-summary-row-right">${r.settings.debtPct || 0}%</span></div>
-      <div class="ob-summary-row"><span>Extra to buffer</span><span class="ob-summary-row-right">${r.settings.bufPct || 0}%</span></div>
+      <div class="ob-summary-row"><span>Extra to reserve</span><span class="ob-summary-row-right">${r.settings.bufPct || 0}%</span></div>
       <div class="ob-summary-row"><span>Extra to free spending</span><span class="ob-summary-row-right">${r.settings.freePct || 0}%</span></div>
     </div>`;
   }
@@ -9612,7 +9625,7 @@ function updateBillDueField(){
   const freq=document.getElementById('nb-freq').value;
   const wrap=document.getElementById('nb-due-wrap');
   if(freq==='monthly'){
-    wrap.innerHTML=`<div class="field"><label>Day of the month</label><input type="number" id="nb-due-monthly" placeholder="20" min="1" max="31"><div style="font-size:11px;color:var(--ds-t3);font-weight:600;margin-top:5px;">Leave blank for an ongoing bill with no fixed date (like groceries).</div></div>`;
+    wrap.innerHTML=`<div class="field"><label>Day of the month</label><input type="number" id="nb-due-monthly" placeholder="20" min="1" max="31"><div style="font-size:11px;color:var(--ds-t3);font-weight:600;margin-top:5px;">Leave blank for an ongoing bill with no fixed date (like groceries). Day 29-31 fires on the last day of shorter months.</div></div>`;
   } else if(freq==='weekly'){
     wrap.innerHTML=`<div class="field"><label>Day of the week</label><select id="nb-due-weekly"><option value="0">Sunday</option><option value="1">Monday</option><option value="2">Tuesday</option><option value="3">Wednesday</option><option value="4">Thursday</option><option value="5">Friday</option><option value="6">Saturday</option></select></div>`;
   } else if(freq==='biweekly'){
@@ -15165,8 +15178,14 @@ function renderNext14(){
         fundedTag = `<span class="next14-funded next14-funded--partial">${Math.round((reserved/ev.amount)*100)}% FUNDED</span>`;
       }
       const billIcon = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>';
-      const markBtn = (isPaid || templatePaid) ? '' :
-        `<button class="next14-mark" onclick="event.stopPropagation();markBillPaidFromTimeline(${ev.billIndex})" title="Mark this bill paid">Mark paid</button>`;
+      // isPaid (this occurrence done) → hide button entirely.
+      // templatePaid (current cycle paid, this row is next cycle) → show
+      // disabled button with explanation. Vanishing-button reads as a bug.
+      const markBtn = isPaid
+        ? ''
+        : templatePaid
+          ? `<button class="next14-mark next14-mark--disabled" disabled onclick="event.stopPropagation()" title="Current cycle is already paid. Mark paid again once this date arrives.">Mark paid</button>`
+          : `<button class="next14-mark" onclick="event.stopPropagation();markBillPaidFromTimeline(${ev.billIndex})" title="Mark this bill paid">Mark paid</button>`;
       const metaText = isPaid ? 'Bill due · paid' : 'Bill due · tap to edit';
       html += `
         <div class="next14-row next14-row--bill${isPaid?' next14-row--paid':''}" onclick="editBillFromTimeline(${ev.billIndex})">
@@ -16105,6 +16124,9 @@ function openCoachPanel(seedPrompt){
   if(!bg) return;
   bg.style.display='flex';
   document.body.style.overflow='hidden';
+  // Fire-and-forget: prime the plaid_items cache so coachSyncInProgress()
+  // can gate the first Send if the user lands here mid-pipeline.
+  _refreshPlaidItemsCacheForCoach();
   renderCoach();
   // Wire scroll-to-top affordance once the panel is mounted.
   const messagesEl = document.getElementById('coach-messages');
@@ -19865,6 +19887,33 @@ async function lcToggleDone(lessonId) {
 let coachHistory = null;
 let coachSending = false;
 
+// Lazy-fetch a tiny slice of plaid_items so coachSyncInProgress() can
+// distinguish "no Plaid connected yet" from "Plaid connected, still
+// classifying." Fires once per session; renderPlanRefreshBanner doesn't run
+// when S.bills is empty, so the Coach path needs its own primer.
+async function _refreshPlaidItemsCacheForCoach() {
+  if (Array.isArray(S._plaidItemsLite)) return;
+  if (!currentUser) return;
+  try {
+    const sb = sbGet();
+    const { data } = await sb.from('plaid_items')
+      .select('id, recurring_status, created_at')
+      .eq('user_id', currentUser.id);
+    S._plaidItemsLite = Array.isArray(data) ? data : [];
+  } catch (_) { S._plaidItemsLite = []; }
+}
+// True when the Coach would reason from incomplete data. Heuristic: user has
+// a connected bank but no bills/debts yet, so the analyzer hasn't produced
+// output. Without this gate, Coach happily answers "no debts detected,
+// looks great!" while the pipeline is mid-flight.
+function coachSyncInProgress() {
+  if (Array.isArray(S.bills) && S.bills.length > 0) return false;
+  if (Array.isArray(S.debts) && S.debts.length > 0) return false;
+  const items = S._plaidItemsLite;
+  if (!Array.isArray(items) || items.length === 0) return false;
+  return true;
+}
+
 function buildCoachState() {
   const ti = (typeof totalIn === 'function') ? totalIn() : 0;
   const tb = (typeof totalBills === 'function') ? totalBills() : 0;
@@ -20122,6 +20171,21 @@ async function coachSend() {
   if (!msg) return;
   if (msg.length > 2000) {
     footer.innerHTML = '<div class="coach-error">Message too long. Keep it under 2000 characters.</div>';
+    return;
+  }
+  // Gate: if Plaid is still classifying (user has a bank but no bills yet),
+  // refuse to answer rather than guess from empty state. Injects a local
+  // assistant bubble so the user gets immediate feedback without burning a
+  // server call (Coach has a daily cap).
+  if (coachSyncInProgress()) {
+    if (!coachHistory) coachHistory = [];
+    coachHistory.push({ role: 'user', content: msg });
+    coachHistory.push({
+      role: 'assistant',
+      content: "I'm still reading your transactions from your bank — usually 2-3 minutes after a fresh connect. Try me again in a moment so I can give you a real answer instead of guessing from empty data."
+    });
+    input.value = '';
+    renderCoach();
     return;
   }
   coachSending = true;
