@@ -9423,6 +9423,21 @@ function renderBillsPage(){
       const tip = fullyFunded ? `${f2(b.amount)} reserved from prior deposits` : `${f2(reservedAmt)} of ${f2(b.amount)} reserved from prior deposits`;
       fundedTag = ` <span title="${tip}" style="display:inline-flex;align-items:center;font-size:9px;font-weight:800;color:var(--ds-green);background:var(--ds-green-l);padding:2px 6px;border-radius:100px;letter-spacing:.04em;vertical-align:middle;margin-left:4px;">${label}</span>`;
     }
+    // Linked-transactions chip: surfaces the 3-layer memory map (explicit txn
+    // pins + merchant memory + category memory) so users can see Able is
+    // remembering their reclassifications. Tooltip lists the actual names.
+    let linkedTag = '';
+    if (b.id) {
+      const link = _linkedToBillSummary(b.id);
+      if (link.count > 0) {
+        const tipParts = [];
+        if (link.merchants.length) tipParts.push(link.merchants.join(', '));
+        if (link.categories.length) tipParts.push(link.categories.join(', '));
+        if (link.pinned > 0) tipParts.push(`${link.pinned} pinned ${link.pinned === 1 ? 'txn' : 'txns'}`);
+        const tip = `Linked: ${tipParts.join(' · ')}. Reclassify a transaction to add or remove links.`;
+        linkedTag = ` <span title="${escapeHtml(tip)}" style="display:inline-flex;align-items:center;gap:3px;font-size:9px;font-weight:800;color:var(--ds-t2);background:var(--ds-card2);padding:2px 6px;border-radius:100px;letter-spacing:.04em;vertical-align:middle;margin-left:4px;"><svg width="8" height="8" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></svg>${link.count} LINKED</span>`;
+      }
+    }
     const amtInput=b.fromDebtId
       ?`<div class="bills-amt-static" title="Edit in the Debt tab">${b.amount.toFixed(2)}</div>`
       :`<input class="bills-amt-input" type="number" value="${b.amount.toFixed(2)}" onchange="updateBill(${i},this.value)">`;
@@ -9431,7 +9446,7 @@ function renderBillsPage(){
       :`<button class="btn btn-sm btn-ghost bills-edit" onclick="openAddBillModal(${i})" title="Edit">Edit</button>`;
     d.innerHTML=`<button class="checkbtn${b.paid?' checked':''}" onclick="toggleBillPaid(${i})">${b.paid?'✓':''}</button>
       <div class="bills-mid">
-        <div class="bills-name">${escapeHtml(b.name)} <span style="display:inline-block;width:7px;height:7px;border-radius:50%;background:${catDots[b.cat]||'var(--text3)'};margin-left:3px;vertical-align:middle;"></span>${linkTag}${freqTag}${reviewTag}${fundedTag}</div>
+        <div class="bills-name">${escapeHtml(b.name)} <span style="display:inline-block;width:7px;height:7px;border-radius:50%;background:${catDots[b.cat]||'var(--text3)'};margin-left:3px;vertical-align:middle;"></span>${linkTag}${freqTag}${reviewTag}${fundedTag}${linkedTag}</div>
         <div class="bills-meta">${billDueLabel(b)}</div>
       </div>
       <div class="bills-right">${amtInput}${editBtn}<button class="bills-x" onclick="delBill(${i})" title="${b.fromDebtId?'Remove from Debt tab':'Remove'}" aria-label="Remove">✕</button></div>`;
@@ -14136,6 +14151,30 @@ function _billForTxn(txn) {
     }
   }
   return null;
+}
+
+// Roll-up of what's wired into a given bill: explicit transaction pins +
+// learned merchant memory + learned category memory. Used by renderBillsPage
+// to surface a "LINKED · N" chip so users can see the 3-layer linking from
+// P0-2026-05-27 #3 is actually doing something. Returns merchant + category
+// display names for a hover tooltip — without them, "3 linked" reads as a
+// black box.
+function _linkedToBillSummary(billId) {
+  if (!billId) return { count: 0, merchants: [], categories: [], pinned: 0 };
+  const explicitMap = _txnBillLinks();
+  const merchantMap = _merchantBillMap();
+  const categoryMap = _categoryBillMap();
+  let pinned = 0;
+  for (const v of Object.values(explicitMap)) if (v === billId) pinned++;
+  const merchants = [];
+  for (const [k, v] of Object.entries(merchantMap)) {
+    if (v === billId) merchants.push(k.charAt(0) + k.slice(1).toLowerCase());
+  }
+  const categories = [];
+  for (const [k, v] of Object.entries(categoryMap)) {
+    if (v === billId) categories.push(_formatPfc(k, null));
+  }
+  return { count: pinned + merchants.length + categories.length, merchants, categories, pinned };
 }
 
 function openReclassifyModal(txnRowId){
