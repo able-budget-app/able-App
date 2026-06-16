@@ -13142,6 +13142,7 @@ function _formatPfc(detailed, primary){
 let _activityRows = [];
 let _activeReclassifyTxn = null;
 let _activeReclassifyCat = null;
+let _activityScrollBeforeReclassify = 0;
 
 // Floor-pace sparkline on the home tab. Loads month-to-date Plaid spend,
 // derives a daily floor from monthly bills + observed-discretionary
@@ -14200,6 +14201,11 @@ function _linkedToBillSummary(billId) {
 function openReclassifyModal(txnRowId){
   const row = _activityRows.find((r) => r.id === txnRowId);
   if (!row) return;
+  // Capture scroll position BEFORE the modal opens — the body-scroll-lock
+  // MutationObserver (around line 12695) is about to set body{position:fixed}
+  // which makes window.scrollY read 0. applyReclassify will read this back
+  // after the list re-render to restore the user to where they were.
+  _activityScrollBeforeReclassify = window.scrollY || window.pageYOffset || 0;
   _activeReclassifyTxn = row;
   const modal = document.getElementById('modal-reclassify');
   const summary = document.getElementById('reclassify-summary');
@@ -14356,11 +14362,6 @@ function closeReclassifyModal(){
 }
 
 async function applyReclassify(){
-  // Capture scroll BEFORE any DOM mutation — renderActivityPage will wipe
-  // the list to a Loading… empty-state and the browser will clamp scrollY
-  // to 0 long before our restore code runs. Read it now while the page
-  // still has full height.
-  const _scrollBeforeReclassify = window.scrollY;
   const row = _activeReclassifyTxn;
   if (!row) return;
   const errEl = document.getElementById('reclassify-error');
@@ -14504,15 +14505,15 @@ async function applyReclassify(){
     }
 
     closeReclassifyModal();
-    // Preserve scroll position across the list rebuild. renderActivityPage
-    // wipes the list to a "Loading…" empty-state synchronously (line ~13952),
-    // collapsing page height to nearly 0 — the browser clamps scrollY to 0
-    // before we even reach the await. So capture EARLY (saved at top of fn
-    // via _scrollBeforeReclassify) and restore with double-rAF so the new
-    // rows have had time to lay out before scrollTo runs.
+    // Preserve scroll across the list rebuild. The real save happens in
+    // openReclassifyModal — by the time we're inside applyReclassify, the
+    // body-scroll-lock observer has body{position:fixed} and window.scrollY
+    // reads 0. _activityScrollBeforeReclassify was set BEFORE the modal
+    // opened, so it has the user's true position. Double-rAF waits for the
+    // re-populated list to actually paint before we restore.
     await renderActivityPage();
     await new Promise(r => requestAnimationFrame(() => requestAnimationFrame(r)));
-    window.scrollTo(0, _scrollBeforeReclassify);
+    window.scrollTo(0, _activityScrollBeforeReclassify);
     renderIncomeInboxBanner();
     if (bulkRequested > 0) {
       showToast(`Updated 1 row + ${bulkApplied} similar ${bulkApplied === 1 ? 'row' : 'rows'}.`);
