@@ -8690,6 +8690,11 @@ function allocate(){
   if(!source){document.getElementById('inc-source').focus();return;}
   const jobs=computeJobs(amount,source);
   _pendingAlloc={type:'direct',amount,source,jobs};
+  // Close the "Money just came in" sheet before opening the router, otherwise
+  // both modals stack and the router renders behind the still-open sheet
+  // (z-index quirk: db-sheet sits at z:200 same as modal-bg, last-opened wins
+  // for paint order but the original sheet keeps blocking pointer events).
+  closeAllocateSheet();
   openIncomeRouter(amount,source);
 }
 
