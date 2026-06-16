@@ -3018,20 +3018,23 @@ body.is-scrolling .btn-primary:hover{transform:none!important;box-shadow:inherit
         <div style="font-size:13px;color:var(--ds-t2);font-weight:500;line-height:1.45;">Floor first, then surplus splits across debt, buffer, and free spending.</div>
       </button>
       <button class="ir-card" onclick="incomeRouterChooseBill()" style="display:block;width:100%;text-align:left;padding:14px 16px;margin-bottom:0;border:1.5px solid var(--ds-line);border-radius:14px;background:#fff;cursor:pointer;">
-        <div style="font-weight:800;font-size:15px;color:var(--ds-t1);margin-bottom:4px;">Send it to a bill</div>
-        <div style="font-size:13px;color:var(--ds-t2);font-weight:500;line-height:1.45;">Earmark the whole amount toward one bill, like getting ahead on the mortgage.</div>
+        <div style="font-weight:800;font-size:15px;color:var(--ds-t1);margin-bottom:4px;">Split across bills</div>
+        <div style="font-size:13px;color:var(--ds-t2);font-weight:500;line-height:1.45;">Earmark amounts toward one or more specific bills. The remainder can roll into your plan.</div>
       </button>
     </div>
     <div id="ir-view-bill" style="display:none;">
-      <div style="font-size:13px;color:var(--ds-t2);font-weight:600;margin-bottom:10px;">Pick a bill to earmark this toward:</div>
-      <div id="ir-bill-list" style="max-height:50vh;overflow-y:auto;margin-bottom:.75rem;"></div>
+      <div style="display:flex;justify-content:space-between;align-items:baseline;padding:10px 12px;background:var(--ds-card2);border-radius:10px;margin-bottom:10px;font-family:var(--ds-f);">
+        <div style="font-size:12px;font-weight:700;color:var(--ds-t2);">Budget: <b style="color:var(--ds-t1);" id="ir-multi-budget">$0</b></div>
+        <div style="font-size:12px;font-weight:700;color:var(--ds-t2);"><b id="ir-multi-remaining" style="color:var(--ds-green);">$0</b> remaining</div>
+      </div>
+      <div id="ir-multi-error" style="display:none;font-size:12px;font-weight:700;color:var(--ds-c4);background:#fdeef2;border-radius:8px;padding:8px 10px;margin-bottom:8px;"></div>
+      <div id="ir-multi-list" style="max-height:42vh;overflow-y:auto;margin-bottom:.75rem;"></div>
+      <label style="display:flex;align-items:center;gap:8px;padding:10px 12px;background:#fff;border:1.5px solid var(--ds-line);border-radius:10px;margin-bottom:.75rem;cursor:pointer;font-size:13px;font-weight:600;color:var(--ds-t1);">
+        <input type="checkbox" id="ir-multi-remainder-to-plan" checked style="width:18px;height:18px;accent-color:var(--ds-green);flex-shrink:0;">
+        <span>Send remainder to my plan</span>
+      </label>
+      <button class="btn btn-primary" id="ir-multi-apply-btn" onclick="incomeRouterApplyMulti()" style="width:100%;margin-bottom:.5rem;">Apply</button>
       <button class="btn btn-ghost btn-sm" onclick="incomeRouterBackToChoose()" style="width:100%;">← Back</button>
-    </div>
-    <div id="ir-view-overflow" style="display:none;">
-      <div id="ir-overflow-msg" style="font-size:14px;color:var(--ds-t1);font-weight:600;line-height:1.55;margin-bottom:1rem;"></div>
-      <button class="btn btn-primary" onclick="incomeRouterCommitOverflow(true)" style="width:100%;margin-bottom:.5rem;">Keep saving toward next cycle</button>
-      <button class="btn" onclick="incomeRouterCommitOverflow(false)" style="width:100%;margin-bottom:.5rem;">Split the rest into my plan</button>
-      <button class="btn btn-ghost btn-sm" onclick="incomeRouterBackToBill()" style="width:100%;">← Back</button>
     </div>
   </div>
 </div>
@@ -8791,7 +8794,6 @@ function openIncomeRouter(amount, sourceLabel){
   document.getElementById('ir-source').textContent = `${f2(amount)} from ${sourceLabel}`;
   document.getElementById('ir-view-choose').style.display = 'block';
   document.getElementById('ir-view-bill').style.display = 'none';
-  document.getElementById('ir-view-overflow').style.display = 'none';
   document.getElementById('modal-income-router').style.display = 'flex';
 }
 function closeIncomeRouter(){
@@ -8813,109 +8815,145 @@ function incomeRouterChoosePlan(){
 function incomeRouterChooseBill(){
   document.getElementById('ir-view-choose').style.display = 'none';
   document.getElementById('ir-view-bill').style.display = 'block';
-  renderIncomeRouterBillList();
+  renderIncomeRouterMultiList();
 }
 function incomeRouterBackToChoose(){
   document.getElementById('ir-view-bill').style.display = 'none';
-  document.getElementById('ir-view-overflow').style.display = 'none';
   document.getElementById('ir-view-choose').style.display = 'block';
 }
-function incomeRouterBackToBill(){
-  document.getElementById('ir-view-overflow').style.display = 'none';
-  document.getElementById('ir-view-bill').style.display = 'block';
-}
-// Holds the picked-bill context while user answers the overflow ask.
-let _irPickedBill = null;
-function renderIncomeRouterBillList(){
-  const wrap = document.getElementById('ir-bill-list');
+// Live map: { [billId]: amount }. Recomputed on every input. Drives the
+// sticky budget/remaining bar and the Apply validation.
+let _irMultiAllocations = {};
+function renderIncomeRouterMultiList(){
+  const wrap = document.getElementById('ir-multi-list');
   if (!wrap) return;
+  _irMultiAllocations = {};
   const bills = (S.bills || []).filter(b => b.id && b.amount > 0.01);
   if (!bills.length) {
     wrap.innerHTML = `<div style="font-size:13px;color:var(--ds-t3);font-weight:500;padding:1rem;text-align:center;">No bills yet. Add one on the Plan tab first.</div>`;
+    incomeRouterRefreshBudget();
     return;
   }
-  // Sort: unpaid first (most useful for earmarking), then by amount descending.
+  // Unpaid first, then by soonest-due (urgency-first matches Floor-First).
+  // Paid bills sink to the bottom — they're "pre-fund next cycle" candidates,
+  // not the user's first concern.
   const sorted = [...bills].sort((a, b) => {
     if (!!a.paid !== !!b.paid) return a.paid ? 1 : -1;
-    return (b.amount || 0) - (a.amount || 0);
+    const ad = typeof billDaysUntil === 'function' ? (billDaysUntil(a) ?? 999) : 999;
+    const bd = typeof billDaysUntil === 'function' ? (billDaysUntil(b) ?? 999) : 999;
+    return ad - bd;
   });
   wrap.innerHTML = sorted.map(b => {
     const reserved = _billReserved(b.id);
     const remaining = Math.max(0, (b.amount || 0) - reserved);
-    const pct = b.amount > 0 ? Math.min(100, Math.round((reserved / b.amount) * 100)) : 0;
     const sub = b.paid
-      ? `Paid this cycle · tap to pre-fund next`
+      ? `Paid this cycle · pre-fund next`
       : (remaining < 0.01
-        ? `Fully reserved · tap to pre-fund next cycle`
-        : `${fr(remaining)} still needed · ${pct}% reserved`);
-    return `<button class="ir-bill-row" onclick="incomeRouterPickBill('${escapeAttr(b.id)}')" style="display:flex;align-items:center;justify-content:space-between;width:100%;text-align:left;padding:12px 14px;margin-bottom:8px;border:1.5px solid var(--ds-line);border-radius:12px;background:#fff;cursor:pointer;">
-      <div style="flex:1;min-width:0;">
-        <div style="font-weight:800;font-size:14px;color:var(--ds-t1);margin-bottom:2px;">${escapeHtml(b.name)}</div>
-        <div style="font-size:12px;color:var(--ds-t2);font-weight:500;">${sub}</div>
+        ? `Fully reserved · pre-fund next cycle`
+        : `${fr(remaining)} still needed`);
+    const placeholder = remaining > 0.01 ? fr(remaining).replace('$','') : '0';
+    return `<div class="ir-multi-row" data-bill-id="${escapeAttr(b.id)}" style="display:flex;align-items:center;gap:10px;padding:10px 12px;margin-bottom:6px;border:1.5px solid var(--ds-line);border-radius:10px;background:#fff;">
+      <div onclick="incomeRouterFillRow('${escapeAttr(b.id)}')" style="flex:1;min-width:0;cursor:pointer;">
+        <div style="font-weight:800;font-size:13px;color:var(--ds-t1);">${escapeHtml(b.name)}</div>
+        <div style="font-size:11px;color:var(--ds-t2);font-weight:500;margin-top:1px;">${sub}</div>
       </div>
-      <div style="font-weight:800;font-size:14px;color:var(--ds-t1);margin-left:.75rem;">${fr(b.amount)}</div>
-    </button>`;
+      <input type="number" inputmode="decimal" min="0" step="0.01" placeholder="${placeholder}"
+        data-bill-id="${escapeAttr(b.id)}"
+        oninput="incomeRouterUpdateRow('${escapeAttr(b.id)}', this.value)"
+        style="width:80px;font-family:var(--ds-f);font-size:14px;font-weight:800;text-align:right;padding:7px 8px;border:1.5px solid var(--ds-line);border-radius:8px;background:#fff;color:var(--ds-t1);outline:none;-webkit-appearance:none;appearance:none;">
+    </div>`;
   }).join('');
+  incomeRouterRefreshBudget();
 }
-function incomeRouterPickBill(billId){
-  if (!_pendingAlloc) return;
+// Tap on the row's text (not the input) pre-fills the input with what the
+// bill still needs. Power-user shortcut for "give this one its full need"
+// without typing. Tapping a fully-reserved/paid bill pre-fills the full
+// bill amount (next-cycle pre-fund).
+function incomeRouterFillRow(billId){
   const bill = (S.bills || []).find(b => b.id === billId);
   if (!bill) return;
-  const amount = _pendingAlloc.amount;
-  const reserved = _billReserved(bill.id);
-  const needed = Math.max(0, (bill.amount || 0) - reserved);
-  const overflow = Math.max(0, amount - needed);
-  _irPickedBill = { billId, needed, overflow };
-  if (overflow < 0.01) {
-    // Amount fits within current cycle's remaining need - no overflow question.
-    incomeRouterApplyToBill(billId, amount, 0);
-    return;
-  }
-  // Overflow ask. Wording covers both the "covers + leaves $X" case and the
-  // "already-paid / fully-reserved, this is all pre-funding" case.
-  const msgEl = document.getElementById('ir-overflow-msg');
-  if (needed < 0.01) {
-    msgEl.textContent = `${bill.name} is already covered this cycle. The full ${fr(amount)} would pre-fund the next cycle. Keep it all on this bill, or split into your plan?`;
-  } else {
-    msgEl.textContent = `${fr(amount)} covers ${bill.name} (${fr(needed)} needed) and leaves ${fr(overflow)}. Keep saving toward the next cycle of ${bill.name}, or split the rest into your plan?`;
-  }
-  document.getElementById('ir-view-bill').style.display = 'none';
-  document.getElementById('ir-view-overflow').style.display = 'block';
-}
-function incomeRouterCommitOverflow(keepSaving){
-  if (!_pendingAlloc || !_irPickedBill) return;
-  const { billId, needed, overflow } = _irPickedBill;
-  if (keepSaving) {
-    // All of it goes to the bill - overflow pre-funds future cycles.
-    incomeRouterApplyToBill(billId, _pendingAlloc.amount, 0);
-  } else {
-    // Bill takes what's needed; remainder runs through the recommended plan.
-    incomeRouterApplyToBill(billId, needed, overflow);
+  const reserved = _billReserved(billId);
+  const remaining = Math.max(0, (bill.amount || 0) - reserved);
+  const fill = remaining > 0.01 ? remaining : (bill.amount || 0);
+  const input = document.querySelector(`#ir-multi-list input[data-bill-id="${CSS.escape(billId)}"]`);
+  if (input) {
+    input.value = fill.toFixed(2);
+    incomeRouterUpdateRow(billId, input.value);
   }
 }
-// Single commit point for the bill-earmark path. Constructs a jobs array shaped
-// like computeJobs output so applyJobs handles history + balance + reservations
-// the same way as the normal flow. If splitOverflow > 0, the remainder is run
-// through computeJobs and appended.
-function incomeRouterApplyToBill(billId, toBillAmount, splitOverflow){
+function incomeRouterUpdateRow(billId, raw){
+  const n = parseFloat(raw);
+  if (!isFinite(n) || n <= 0) {
+    delete _irMultiAllocations[billId];
+  } else {
+    _irMultiAllocations[billId] = n;
+  }
+  incomeRouterRefreshBudget();
+}
+function incomeRouterRefreshBudget(){
+  if (!_pendingAlloc) return;
+  const budget = _pendingAlloc.amount;
+  const allocated = Object.values(_irMultiAllocations).reduce((s, v) => s + v, 0);
+  const remaining = budget - allocated;
+  const budgetEl = document.getElementById('ir-multi-budget');
+  const remEl = document.getElementById('ir-multi-remaining');
+  const errEl = document.getElementById('ir-multi-error');
+  const applyBtn = document.getElementById('ir-multi-apply-btn');
+  if (budgetEl) budgetEl.textContent = fr(budget);
+  if (remEl) {
+    remEl.textContent = fr(Math.abs(remaining));
+    remEl.style.color = remaining < -0.01 ? 'var(--ds-c4)' : 'var(--ds-green)';
+    if (remaining < -0.01) remEl.textContent = `${fr(Math.abs(remaining))} over`;
+  }
+  if (errEl) {
+    if (remaining < -0.01) {
+      errEl.style.display = '';
+      errEl.textContent = `Allocations exceed ${fr(budget)} by ${fr(Math.abs(remaining))}. Trim some inputs.`;
+    } else {
+      errEl.style.display = 'none';
+    }
+  }
+  if (applyBtn) applyBtn.disabled = remaining < -0.01;
+}
+// Apply the multi-bill split. Builds jobs the same shape computeJobs emits
+// so applyJobs handles history/balance/reservations the same as the normal
+// flow. Remainder either runs through the plan (toggle on, default) or
+// stays unallocated as a balance bump (toggle off).
+function incomeRouterApplyMulti(){
   if (!_pendingAlloc) return;
   const p = _pendingAlloc;
-  const bill = (S.bills || []).find(b => b.id === billId);
-  if (!bill) { closeIncomeRouter(); return; }
+  const budget = p.amount;
+  const allocated = Object.values(_irMultiAllocations).reduce((s, v) => s + v, 0);
+  if (allocated > budget + 0.01) return; // guard; button should be disabled anyway
+  const remainder = Math.max(0, budget - allocated);
+  const remainderToPlan = document.getElementById('ir-multi-remainder-to-plan')?.checked !== false;
+  if (allocated < 0.01 && !remainderToPlan) {
+    const errEl = document.getElementById('ir-multi-error');
+    if (errEl) {
+      errEl.style.display = '';
+      errEl.textContent = 'Allocate something to at least one bill, or toggle "Send remainder to my plan".';
+    }
+    return;
+  }
   isAllocating = true;
   try {
     const jobs = [];
-    if (toBillAmount > 0.01) {
+    const billNamesApplied = [];
+    for (const [billId, amount] of Object.entries(_irMultiAllocations)) {
+      if (amount <= 0.01) continue;
+      const bill = (S.bills || []).find(b => b.id === billId);
+      if (!bill) continue;
       jobs.push({
         type: 'bills',
         name: `Toward ${bill.name}`,
-        amount: toBillAmount,
+        amount,
         why: `Earmarked for ${bill.name}`,
-        items: [{ billId: bill.id, name: bill.name, amount: toBillAmount }],
+        items: [{ billId: bill.id, name: bill.name, amount }],
       });
+      billNamesApplied.push(bill.name);
     }
-    if (splitOverflow > 0.01) {
-      const overflowJobs = computeJobs(splitOverflow, p.source);
+    if (remainder > 0.01 && remainderToPlan) {
+      const overflowJobs = computeJobs(remainder, p.source);
       for (const j of overflowJobs) jobs.push(j);
     }
     const sourceLabel = p.type === 'forecast'
@@ -8928,28 +8966,35 @@ function incomeRouterApplyToBill(billId, toBillAmount, splitOverflow){
       }
     }
     applyJobs(jobs, p.amount, sourceLabel, { balanceNeutral: !!p.balanceNeutral });
-    try { Able.track('income_earmarked_to_bill', {
-      bill_category: bill.cat || null,
+    try { Able.track('income_earmarked_multi', {
       amount: p.amount,
-      to_bill_amount: toBillAmount,
-      split_overflow: splitOverflow,
+      allocated_total: allocated,
+      bill_count: billNamesApplied.length,
+      remainder_to_plan: remainder > 0.01 && remainderToPlan,
+      remainder_amount: remainder,
       source_type: p.type,
     }); } catch (_) {}
     try { renderForecast(); } catch (_) {}
     closeModal('modal-income-router');
     closeAllocateSheet();
     refreshHome();
-    const h = S.history[0];
-    if (splitOverflow > 0.01) {
-      showToast(`${fr(toBillAmount)} earmarked to ${bill.name}, ${fr(splitOverflow)} into your plan.`, { duration: 5500 });
-    } else if (h && h.balanceDelta > 0.01) {
-      showToast(`${fr(toBillAmount)} earmarked to ${bill.name}. Added ${fr(h.balanceDelta)} to your balance.`, { duration: 5500 });
+    // Toast wording: lead with the bill earmarks (the deliberate part),
+    // mention remainder routing as a subordinate clause.
+    const billSummary = billNamesApplied.length === 1
+      ? billNamesApplied[0]
+      : `${billNamesApplied.length} bills`;
+    if (allocated > 0.01 && remainder > 0.01 && remainderToPlan) {
+      showToast(`${fr(allocated)} earmarked to ${billSummary}, ${fr(remainder)} into your plan.`, { duration: 5500 });
+    } else if (allocated > 0.01 && remainder > 0.01) {
+      showToast(`${fr(allocated)} earmarked to ${billSummary}. ${fr(remainder)} stays on your balance.`, { duration: 5500 });
+    } else if (allocated > 0.01) {
+      showToast(`${fr(allocated)} earmarked to ${billSummary}.`, { duration: 5000 });
     } else {
-      showToast(`${fr(toBillAmount)} earmarked to ${bill.name}.`, { duration: 5000 });
+      showToast(`${fr(p.amount)} split into your plan.`, { duration: 5000 });
     }
   } finally {
     _pendingAlloc = null;
-    _irPickedBill = null;
+    _irMultiAllocations = {};
     isAllocating = false;
   }
 }
