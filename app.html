@@ -14351,6 +14351,11 @@ function closeReclassifyModal(){
 }
 
 async function applyReclassify(){
+  // Capture scroll BEFORE any DOM mutation — renderActivityPage will wipe
+  // the list to a Loading… empty-state and the browser will clamp scrollY
+  // to 0 long before our restore code runs. Read it now while the page
+  // still has full height.
+  const _scrollBeforeReclassify = window.scrollY;
   const row = _activeReclassifyTxn;
   if (!row) return;
   const errEl = document.getElementById('reclassify-error');
@@ -14494,14 +14499,15 @@ async function applyReclassify(){
     }
 
     closeReclassifyModal();
-    // Preserve scroll position across the list rebuild. Without this, users
-    // who reclassified a deep-in-history transaction got bounced to the top
-    // and had to scroll back down — frustrating on long activity lists.
-    const _savedScroll = window.scrollY;
+    // Preserve scroll position across the list rebuild. renderActivityPage
+    // wipes the list to a "Loading…" empty-state synchronously (line ~13952),
+    // collapsing page height to nearly 0 — the browser clamps scrollY to 0
+    // before we even reach the await. So capture EARLY (saved at top of fn
+    // via _scrollBeforeReclassify) and restore with double-rAF so the new
+    // rows have had time to lay out before scrollTo runs.
     await renderActivityPage();
-    // requestAnimationFrame: wait for the DOM paint before scrolling, otherwise
-    // the new (potentially shorter) list isn't sized yet and scrollTo clamps.
-    requestAnimationFrame(() => window.scrollTo(0, _savedScroll));
+    await new Promise(r => requestAnimationFrame(() => requestAnimationFrame(r)));
+    window.scrollTo(0, _scrollBeforeReclassify);
     renderIncomeInboxBanner();
     if (bulkRequested > 0) {
       showToast(`Updated 1 row + ${bulkApplied} similar ${bulkApplied === 1 ? 'row' : 'rows'}.`);
