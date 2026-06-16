@@ -433,6 +433,11 @@ input,select,button,textarea{font-family:inherit;}
 .btn-ghost:hover{background:var(--ds-green-l);color:var(--ds-green);border-color:transparent;}
 .btn-danger-ghost{background:transparent;border-color:transparent;color:var(--ds-t3);font-size:12px;padding:5px 10px;}
 .btn-danger-ghost:hover{color:var(--ds-c4);background:#fdeef2;border-color:transparent;}
+/* Solid danger button — used by appConfirm() for destructive confirms
+   (delete bill, delete all data, etc.) so users get a visually-distinct
+   red action button rather than the same green as save/continue. */
+.btn-danger{background:var(--ds-c4);color:white;border-color:var(--ds-c4);font-weight:800;padding:13px 24px;}
+.btn-danger:hover{background:#c63a52;border-color:#c63a52;color:white;}
 .btn-sky{background:var(--ds-c5);color:white;border-color:var(--ds-c5);}
 .btn-sky:hover{background:#2e64a6;border-color:#2e64a6;color:white;}
 .btn-amber{background:var(--ds-c3);color:white;border-color:var(--ds-c3);}
@@ -2952,6 +2957,16 @@ body.is-scrolling .btn-primary:hover{transform:none!important;box-shadow:inherit
     <div class="modal-actions"><button class="btn" onclick="closeModal('modal-buffer')">Cancel</button><button class="btn btn-primary" onclick="saveBuffer()">Save</button></div>
   </div>
 </div>
+<!-- Branded confirm modal. Driven by appConfirm({ title, body, confirmLabel,
+     cancelLabel, danger }) → Promise<bool>. Replaces native window.confirm()
+     which renders as a generic browser-chrome dialog and breaks the brand. -->
+<div class="modal-bg" id="modal-app-confirm" style="display:none;" role="dialog" aria-modal="true" aria-labelledby="app-confirm-title">
+  <div class="modal" style="max-width:440px;">
+    <div class="modal-title" id="app-confirm-title">Confirm</div>
+    <div id="app-confirm-body" style="font-size:14px;color:var(--ds-t2);font-weight:500;line-height:1.55;margin-bottom:1.25rem;"></div>
+    <div class="modal-actions"><button class="btn" id="app-confirm-cancel">Cancel</button><button class="btn btn-primary" id="app-confirm-ok">Confirm</button></div>
+  </div>
+</div>
 <div class="modal-bg" id="modal-past-due" style="display:none;" role="dialog" aria-modal="true" aria-labelledby="modal-past-due-title" onclick="if(event.target===this)closeModal('modal-past-due')">
   <div class="modal" style="max-width:520px;max-height:88dvh;overflow-y:auto;">
     <button class="modal-close" onclick="closeModal('modal-past-due')" aria-label="Close"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button>
@@ -3693,7 +3708,7 @@ async function verifyMfaEnroll() {
 }
 
 async function disableMfa() {
-  const ok = confirm('Turn off two-factor authentication? You\'ll be asked to set it up again before connecting a bank account.');
+  const ok = await appConfirm({ title: 'Turn off two-factor authentication?', body: 'You\'ll be asked to set it up again before connecting a bank account.', confirmLabel: 'Turn off', danger: true });
   if (!ok) return;
   const factor = await _getVerifiedTotpFactor();
   if (!factor) { await refreshMfaStatus(); return; }
@@ -7105,8 +7120,8 @@ async function obConfirm() {
   // Settings > Replay app tour if the user wants it.
 }
 
-function obRestart() {
-  if (!confirm('Start setup over from the beginning?')) return;
+async function obRestart() {
+  if (!(await appConfirm({ title: 'Start setup over?', body: 'Your answers so far will be cleared and you\'ll go back to step 1.', confirmLabel: 'Start over' }))) return;
   obStep = 0;
   obAnswers = {};
   obResult = null;
@@ -7309,7 +7324,7 @@ async function switchToAnnual() {
   const message=isTrialing
     ? "Switch to the annual plan?\n\nNo charge today since you're still in your free trial. When the trial ends, you'll be billed $129/yr instead of $14.99/mo. You save $50.88."
     : "Switch to the annual plan?\n\nThe prorated difference will be charged to your saved card today, then $129/yr going forward. You save $50.88 over the next 12 months.";
-  if(!confirm(message)) return;
+  if(!(await appConfirm({ title: 'Switch to annual?', body: message, confirmLabel: 'Switch' }))) return;
   const btn=document.getElementById('switch-to-annual-btn');
   if(!btn) return;
   const original=btn.innerHTML;
@@ -9312,11 +9327,11 @@ function reverseJobs(entry){
   }
 }
 
-function deleteIncome(id){
+async function deleteIncome(id){
   const idx=S.history.findIndex(h=>h.id===id);
   if(idx<0)return;
   const entry=S.history[idx];
-  if(!confirm(`Delete ${f2(entry.amount)} from ${entry.source}?\n\nThis will reverse the allocation: money goes back to debt balances and out of your reserve.`))return;
+  if(!(await appConfirm({ title: `Delete ${f2(entry.amount)} from ${entry.source}?`, body: 'This will reverse the allocation. Money goes back to debt balances and out of your reserve.', confirmLabel: 'Delete', danger: true })))return;
   reverseJobs(entry);
   S.history.splice(idx,1);
   // Reversing an allocation rebalances debt + buffer + balance. Force-flush
@@ -9543,7 +9558,7 @@ function toggleBillPaid(i){
     }catch(_){}
   }
 }
-function markPaidThroughToday(){
+async function markPaidThroughToday(){
   // Mark paid only unpaid MONTHLY bills whose due-day has already passed this month.
   // Weekly/biweekly/custom bills recur multiple times per month, so "paid through today"
   // is ambiguous for them. Mark those individually with the check button.
@@ -9558,18 +9573,18 @@ function markPaidThroughToday(){
   });
   if(!eligible.length){alert('No monthly bills are due on or before today ('+today+').\n\nFor weekly or biweekly bills, use the check button on each row.');return;}
   const total=eligible.reduce((s,b)=>s+b.amount,0);
-  if(!confirm('Mark '+eligible.length+' bill'+(eligible.length>1?'s':'')+' paid for a total of '+fr(total)+'?\n\n'+eligible.map(b=>'• '+b.name+' ('+fr(b.amount)+')').join('\n'))) return;
+  if(!(await appConfirm({ title: `Mark ${eligible.length} bill${eligible.length>1?'s':''} paid?`, body: `Total: ${fr(total)}.\n\n${eligible.map(b=>'• '+b.name+' ('+fr(b.amount)+')').join('\n')}`, confirmLabel: 'Mark paid' }))) return;
   eligible.forEach(b=>{b.paid=true; if(b.id) _clearReservation(b.id);});
   save();renderBillsPage();renderUpcoming();refreshHome();
 }
 function updateBill(i,v){S.bills[i].amount=parseFloat(v)||0;save();renderBillsPage();renderUpcoming();refreshHome();}
-function delBill(i){
+async function delBill(i){
   const b=S.bills[i];
   if(b.fromDebtId){
     alert('This bill is linked to a debt in your Debt tab. To remove it, edit or remove the debt itself.');
     return;
   }
-  if(!confirm('Delete "'+b.name+'"?'))return;
+  if(!(await appConfirm({ title: 'Delete bill?', body: `"${b.name}" will be removed from your Floor. Any reservations on this bill release back to your balance.`, confirmLabel: 'Delete', danger: true })))return;
   if (b.id) _clearReservation(b.id);
   S.bills.splice(i,1);
   // Belt-and-suspenders: drop any reservation keyed against a bill that no
@@ -9655,7 +9670,7 @@ function updateBillDueField(){
   }
 }
 
-function addBill(){
+async function addBill(){
   const name=document.getElementById('nb-name').value.trim();
   const amount=parseFloat(document.getElementById('nb-amt').value)||0;
   const freq=document.getElementById('nb-freq').value;
@@ -9672,7 +9687,7 @@ function addBill(){
         // Day 29-31 doesn't exist in every month. The engine clamps to last-of-month
         // but the user deserves to know up front. Confirm before saving.
         const shortMonth = d === 29 ? 'February (except leap years)' : d === 30 ? 'February' : 'February, April, June, September, November';
-        if(!confirm(`There's no day ${d} in ${shortMonth}. Able will fire this bill on the last day of those months. Save anyway?`))return;
+        if(!(await appConfirm({ title: `Day ${d} doesn't exist in ${shortMonth}`, body: 'Able will fire this bill on the last day of those months. Save anyway?', confirmLabel: 'Save' })))return;
       }
       due=String(d);
     } else due='ongoing';
@@ -9851,8 +9866,8 @@ function updateDebt(i,v){
   S.debts[i].balance=parseFloat(v)||0;
   save();refreshHome();renderTimeline();
 }
-function delDebt(i){
-  if(!confirm('Remove "'+S.debts[i].name+'"?'))return;
+async function delDebt(i){
+  if(!(await appConfirm({ title: 'Remove debt?', body: `"${S.debts[i].name}" will be removed from your Debt tab.`, confirmLabel: 'Remove', danger: true })))return;
   const debtId=S.debts[i].id;
   // Remove the linked bill (and its reservation) if one exists
   if(debtId){
@@ -9862,7 +9877,7 @@ function delDebt(i){
   S.debts.splice(i,1);
   save();renderDebtPage();renderBillsPage();renderUpcoming();refreshHome();
 }
-function addDebt(){
+async function addDebt(){
   const name=document.getElementById('nd-name').value.trim();
   const balance=parseFloat(document.getElementById('nd-bal').value)||0;
   const min=parseFloat(document.getElementById('nd-min').value)||0;
@@ -9874,7 +9889,7 @@ function addDebt(){
     if(dueDay < 1 || dueDay > 31){alert('Due day must be between 1 and 31.');return;}
     if(dueDay > 28){
       const shortMonth = dueDay === 29 ? 'February (except leap years)' : dueDay === 30 ? 'February' : 'February, April, June, September, November';
-      if(!confirm(`There's no day ${dueDay} in ${shortMonth}. The minimum-payment bill will fall on the last day of those months. Save anyway?`))return;
+      if(!(await appConfirm({ title: `Day ${dueDay} doesn't exist in ${shortMonth}`, body: 'The minimum-payment bill will fall on the last day of those months. Save anyway?', confirmLabel: 'Save' })))return;
     }
   }
   const clrs=['#e07a5f','#c85a5a','#d4956a','#6b9fcf','#9b8ec4','#7aad8a'];
@@ -11187,7 +11202,7 @@ function statusLabel(status) {
 }
 
 async function settingsDisconnectBank(plaidItemRowId, institutionName) {
-  if (!confirm(`Disconnect ${institutionName}? Able will stop syncing transactions from this bank and the data will be removed from your account.`)) return;
+  if (!(await appConfirm({ title: `Disconnect ${institutionName}?`, body: 'Able will stop syncing transactions from this bank and its data will be removed from your account.', confirmLabel: 'Disconnect', danger: true }))) return;
   const errEl = document.getElementById('connect-bank-error');
   if (errEl) { errEl.style.display = 'none'; errEl.textContent = ''; }
   try {
@@ -11425,7 +11440,7 @@ async function settingsHandlePostLink(public_token, metadata) {
     if (existing) {
       Able.track?.('plaid_duplicate_link_blocked', { context: 'settings', institution_name: existing.institution_name || institutionName });
       const friendly = existing.institution_name || institutionName || 'This bank';
-      const wantsUpdate = confirm(`${friendly} is already connected to Able. Reconnect it to fix sync issues instead?`);
+      const wantsUpdate = await appConfirm({ title: `${friendly} is already connected`, body: 'Reconnect it to fix sync issues instead?', confirmLabel: 'Reconnect' });
       if (wantsUpdate && typeof settingsRunUpdateMode === 'function') {
         await settingsRunUpdateMode(existing.id, false);
       }
@@ -11682,7 +11697,7 @@ function updateSplitPreview(){
     ${freeEx>0?`<div style="display:flex;justify-content:space-between;padding:6px 0;font-size:13px;font-weight:700;"><span style="color:var(--sage);">Spend freely</span><span>${f2(freeEx)}</span></div>`:''}
   </div>`;
 }
-function saveSettings(){
+async function saveSettings(){
   const owner=parseInt(document.getElementById('set-owner').value)||0;
   const debt=parseInt(document.getElementById('set-debt').value)||0;
   const buf=parseInt(document.getElementById('set-buf').value)||0;
@@ -11691,7 +11706,7 @@ function saveSettings(){
   if(total>100){alert('Your percentages add up to '+total+'%. Please bring the total to 100% or less.');return;}
   if(total<100){
     const rest=100-total;
-    if(!confirm('Your split adds up to '+total+'%. The remaining '+rest+'% will go to debt payoff on top of your '+debt+'% setting, meaning '+(debt+rest)+'% of surplus goes to debt.\n\nSave this way?\n\nClick Cancel to adjust so everything totals 100%.'))return;
+    if(!(await appConfirm({ title: `Split adds up to ${total}%`, body: `The remaining ${rest}% will go to debt payoff on top of your ${debt}% setting, meaning ${debt+rest}% of surplus goes to debt.\n\nSave this way, or tap Cancel to adjust so everything totals 100%.`, confirmLabel: 'Save anyway' })))return;
   }
   S.settings={...S.settings,ownerPct:owner,debtPct:debt,bufPct:buf,freePct:free};save();
   showToast('Split saved.', { duration: 3000 });
@@ -11849,9 +11864,9 @@ function toggleFixedAlloc(i){
   o.active=!o.active;save();renderFixedAllocList();
 }
 
-function deleteFixedAlloc(i){
+async function deleteFixedAlloc(i){
   const o=S.obligations[i];if(!o) return;
-  if(!confirm(`Delete "${o.label}"?`)) return;
+  if(!(await appConfirm({ title: 'Delete allocation?', body: `"${o.label}" will be removed from your fixed allocations.`, confirmLabel: 'Delete', danger: true }))) return;
   S.obligations.splice(i,1);save();renderFixedAllocList();
 }
 
@@ -14479,7 +14494,14 @@ async function applyReclassify(){
     }
 
     closeReclassifyModal();
-    renderActivityPage();
+    // Preserve scroll position across the list rebuild. Without this, users
+    // who reclassified a deep-in-history transaction got bounced to the top
+    // and had to scroll back down — frustrating on long activity lists.
+    const _savedScroll = window.scrollY;
+    await renderActivityPage();
+    // requestAnimationFrame: wait for the DOM paint before scrolling, otherwise
+    // the new (potentially shorter) list isn't sized yet and scrollTo clamps.
+    requestAnimationFrame(() => window.scrollTo(0, _savedScroll));
     renderIncomeInboxBanner();
     if (bulkRequested > 0) {
       showToast(`Updated 1 row + ${bulkApplied} similar ${bulkApplied === 1 ? 'row' : 'rows'}.`);
@@ -15390,6 +15412,54 @@ function hideToast(){
   if (el) el.classList.remove('show');
   if (_toastTimer) { clearTimeout(_toastTimer); _toastTimer = null; }
 }
+// Branded replacement for native window.confirm(). Resolves to true if the
+// user taps confirm, false if cancel/Esc/backdrop. Body supports \n for
+// paragraph breaks. opts.danger swaps the primary button to .btn-danger
+// for destructive actions like deletes.
+//   await appConfirm({ title: 'Delete bill?', body: '"Netflix" will be removed.', confirmLabel: 'Delete', danger: true })
+function appConfirm(opts){
+  return new Promise((resolve) => {
+    const o = (typeof opts === 'string') ? { body: opts } : (opts || {});
+    const bg = document.getElementById('modal-app-confirm');
+    const titleEl = document.getElementById('app-confirm-title');
+    const bodyEl = document.getElementById('app-confirm-body');
+    const okBtn = document.getElementById('app-confirm-ok');
+    const cancelBtn = document.getElementById('app-confirm-cancel');
+    if (!bg || !titleEl || !bodyEl || !okBtn || !cancelBtn) {
+      // Fallback to native if scaffold missing - never silently break a flow.
+      resolve(window.confirm(o.body || o.title || 'Confirm'));
+      return;
+    }
+    titleEl.textContent = o.title || 'Confirm';
+    // \n in the source string → line break in the rendered body. Empty lines
+    // collapse to a paragraph gap so multi-paragraph confirms stay legible.
+    const lines = String(o.body || '').split('\n');
+    bodyEl.innerHTML = lines.map(l => {
+      const t = l.trim();
+      return t ? `<div>${escapeHtml(t)}</div>` : '<div style="height:.6em;"></div>';
+    }).join('');
+    okBtn.textContent = o.confirmLabel || 'Confirm';
+    cancelBtn.textContent = o.cancelLabel || 'Cancel';
+    okBtn.className = o.danger ? 'btn btn-danger' : 'btn btn-primary';
+    const cleanup = (result) => {
+      bg.style.display = 'none';
+      okBtn.onclick = null;
+      cancelBtn.onclick = null;
+      bg.onclick = null;
+      document.removeEventListener('keydown', onKey);
+      resolve(result);
+    };
+    const onKey = (e) => {
+      if (e.key === 'Escape') { e.preventDefault(); cleanup(false); }
+      else if (e.key === 'Enter') { e.preventDefault(); cleanup(true); }
+    };
+    okBtn.onclick = () => cleanup(true);
+    cancelBtn.onclick = () => cleanup(false);
+    bg.onclick = (e) => { if (e.target === bg) cleanup(false); };
+    document.addEventListener('keydown', onKey);
+    bg.style.display = 'flex';
+  });
+}
 // On iOS WKWebView, auto-focusing an input pops the keyboard and the system
 // scrolls the focused element into view, which yanks position:fixed modal-bg
 // elements off-screen. Skip auto-focus inside Capacitor so the user controls
@@ -16055,8 +16125,8 @@ Tell me what to change.`;
 };
 
 async function clearAllData(){
-  if(!confirm('This will delete ALL your data. Are you sure?'))return;
-  if(!confirm('Last chance. This cannot be undone.'))return;
+  if(!(await appConfirm({ title: 'Delete all your data?', body: 'Every bill, debt, deposit, and setting will be wiped. This cannot be undone.', confirmLabel: 'Delete everything', danger: true })))return;
+  if(!(await appConfirm({ title: 'Last chance', body: 'Are you completely sure? This is final.', confirmLabel: 'Yes, delete', danger: true })))return;
   S=JSON.parse(JSON.stringify(EMPTY_DATA));
   S.sources=['Salary','Freelance','Side income','Other'];
   await sbGet().from('user_data').upsert({id:currentUser.id,...S,updated_at:new Date().toISOString()});
@@ -16069,8 +16139,8 @@ async function clearAllData(){
 // to the same account. Required by Apple Guideline 5.1.1(v) for any app
 // that offers account creation.
 async function deleteAccount(){
-  if(!confirm('This will PERMANENTLY DELETE your Able account and all of your data. This cannot be undone. Continue?')) return;
-  if(!confirm('Last chance. Type-confirm by tapping OK once more to permanently delete your account.')) return;
+  if(!(await appConfirm({ title: 'Delete your Able account?', body: 'This permanently deletes your account and all of your data — bills, debts, deposits, settings, everything. This cannot be undone.', confirmLabel: 'Delete account', danger: true }))) return;
+  if(!(await appConfirm({ title: 'Last chance', body: 'Tap Delete once more to permanently delete your account.', confirmLabel: 'Delete account', danger: true }))) return;
   try {
     const resp = await sbGet().functions.invoke('delete-account', { body: {} });
     if (resp.error || !resp.data?.ok) {
