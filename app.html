@@ -8821,13 +8821,19 @@ function incomeRouterBackToChoose(){
   document.getElementById('ir-view-bill').style.display = 'none';
   document.getElementById('ir-view-choose').style.display = 'block';
 }
-// Live map: { [billId]: amount }. Recomputed on every input. Drives the
-// sticky budget/remaining bar and the Apply validation.
+// Live map: { [billId]: amount }. Tap a bill row to add it with its full
+// needed amount (or full bill amount if already paid/reserved — pre-fund
+// next cycle). Tap again to remove. Drives the sticky budget/remaining
+// bar and the Apply validation.
 let _irMultiAllocations = {};
+// Per-bill "what gets earmarked if you tap this" — cached at render time so
+// toggle handlers don't need to recompute. Map: billId → { name, amount }.
+let _irMultiFills = {};
 function renderIncomeRouterMultiList(){
   const wrap = document.getElementById('ir-multi-list');
   if (!wrap) return;
   _irMultiAllocations = {};
+  _irMultiFills = {};
   const bills = (S.bills || []).filter(b => b.id && b.amount > 0.01);
   if (!bills.length) {
     wrap.innerHTML = `<div style="font-size:13px;color:var(--ds-t3);font-weight:500;padding:1rem;text-align:center;">No bills yet. Add one on the Plan tab first.</div>`;
@@ -8843,50 +8849,63 @@ function renderIncomeRouterMultiList(){
     const bd = typeof billDaysUntil === 'function' ? (billDaysUntil(b) ?? 999) : 999;
     return ad - bd;
   });
-  wrap.innerHTML = sorted.map(b => {
+  for (const b of sorted) {
     const reserved = _billReserved(b.id);
     const remaining = Math.max(0, (b.amount || 0) - reserved);
-    const sub = b.paid
-      ? `Paid this cycle · pre-fund next`
-      : (remaining < 0.01
-        ? `Fully reserved · pre-fund next cycle`
-        : `${fr(remaining)} still needed`);
-    const placeholder = remaining > 0.01 ? fr(remaining).replace('$','') : '0';
-    return `<div class="ir-multi-row" data-bill-id="${escapeAttr(b.id)}" style="display:flex;align-items:center;gap:10px;padding:10px 12px;margin-bottom:6px;border:1.5px solid var(--ds-line);border-radius:10px;background:#fff;">
-      <div onclick="incomeRouterFillRow('${escapeAttr(b.id)}')" style="flex:1;min-width:0;cursor:pointer;">
-        <div style="font-weight:800;font-size:13px;color:var(--ds-t1);">${escapeHtml(b.name)}</div>
-        <div style="font-size:11px;color:var(--ds-t2);font-weight:500;margin-top:1px;">${sub}</div>
-      </div>
-      <input type="number" inputmode="decimal" min="0" step="0.01" placeholder="${placeholder}"
-        data-bill-id="${escapeAttr(b.id)}"
-        oninput="incomeRouterUpdateRow('${escapeAttr(b.id)}', this.value)"
-        style="width:80px;font-family:var(--ds-f);font-size:14px;font-weight:800;text-align:right;padding:7px 8px;border:1.5px solid var(--ds-line);border-radius:8px;background:#fff;color:var(--ds-t1);outline:none;-webkit-appearance:none;appearance:none;">
-    </div>`;
-  }).join('');
+    _irMultiFills[b.id] = {
+      name: b.name,
+      amount: remaining > 0.01 ? remaining : (b.amount || 0),
+      paid: !!b.paid,
+      fullyReserved: remaining < 0.01 && !b.paid,
+    };
+  }
+  wrap.innerHTML = sorted.map(b => _renderIrRow(b)).join('');
   incomeRouterRefreshBudget();
 }
-// Tap on the row's text (not the input) pre-fills the input with what the
-// bill still needs. Power-user shortcut for "give this one its full need"
-// without typing. Tapping a fully-reserved/paid bill pre-fills the full
-// bill amount (next-cycle pre-fund).
-function incomeRouterFillRow(billId){
-  const bill = (S.bills || []).find(b => b.id === billId);
-  if (!bill) return;
-  const reserved = _billReserved(billId);
-  const remaining = Math.max(0, (bill.amount || 0) - reserved);
-  const fill = remaining > 0.01 ? remaining : (bill.amount || 0);
-  const input = document.querySelector(`#ir-multi-list input[data-bill-id="${CSS.escape(billId)}"]`);
-  if (input) {
-    input.value = fill.toFixed(2);
-    incomeRouterUpdateRow(billId, input.value);
-  }
+// Single-row template — used both at initial render and when re-rendering
+// on toggle so the selected/unselected visual stays in sync with state.
+function _renderIrRow(b){
+  const fill = _irMultiFills[b.id];
+  if (!fill) return '';
+  const selected = _irMultiAllocations[b.id] > 0.01;
+  const sub = fill.paid
+    ? `Paid this cycle · pre-fund next`
+    : (fill.fullyReserved
+      ? `Fully reserved · pre-fund next cycle`
+      : `${fr(fill.amount)} still needed`);
+  const bg = selected ? 'var(--ds-green-l)' : '#fff';
+  const border = selected ? 'var(--ds-green)' : 'var(--ds-line)';
+  const check = selected
+    ? `<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--ds-green)" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10" fill="var(--ds-green)" stroke="var(--ds-green)"/><polyline points="8 12 11 15 16 9" stroke="white"/></svg>`
+    : `<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--ds-t4)" stroke-width="2"><circle cx="12" cy="12" r="10"/></svg>`;
+  const amtColor = selected ? 'var(--ds-green)' : 'var(--ds-t2)';
+  return `<div class="ir-multi-row" data-bill-id="${escapeAttr(b.id)}" onclick="incomeRouterToggleBill('${escapeAttr(b.id)}')" style="display:flex;align-items:center;gap:10px;padding:11px 12px;margin-bottom:6px;border:1.5px solid ${border};border-radius:10px;background:${bg};cursor:pointer;transition:background .12s,border-color .12s;">
+    <div style="flex-shrink:0;display:flex;align-items:center;">${check}</div>
+    <div style="flex:1;min-width:0;">
+      <div style="font-weight:800;font-size:13px;color:var(--ds-t1);">${escapeHtml(fill.name)}</div>
+      <div style="font-size:11px;color:var(--ds-t2);font-weight:500;margin-top:1px;">${sub}</div>
+    </div>
+    <div style="font-weight:800;font-size:14px;color:${amtColor};letter-spacing:-.01em;">${fr(fill.amount)}</div>
+  </div>`;
 }
-function incomeRouterUpdateRow(billId, raw){
-  const n = parseFloat(raw);
-  if (!isFinite(n) || n <= 0) {
+// Toggle a bill in/out of the allocation map. Re-renders just the affected
+// row to keep the selected/unselected visual in sync; the rest of the list
+// stays untouched so DOM churn is minimal even on a long bill list.
+function incomeRouterToggleBill(billId){
+  const fill = _irMultiFills[billId];
+  if (!fill) return;
+  if (_irMultiAllocations[billId] > 0.01) {
     delete _irMultiAllocations[billId];
   } else {
-    _irMultiAllocations[billId] = n;
+    _irMultiAllocations[billId] = fill.amount;
+  }
+  // Re-render only this row.
+  const oldRow = document.querySelector(`.ir-multi-row[data-bill-id="${CSS.escape(billId)}"]`);
+  if (oldRow) {
+    const tmp = document.createElement('div');
+    tmp.innerHTML = _renderIrRow({ id: billId });
+    const newRow = tmp.firstElementChild;
+    if (newRow) oldRow.replaceWith(newRow);
   }
   incomeRouterRefreshBudget();
 }
@@ -8908,7 +8927,7 @@ function incomeRouterRefreshBudget(){
   if (errEl) {
     if (remaining < -0.01) {
       errEl.style.display = '';
-      errEl.textContent = `Allocations exceed ${fr(budget)} by ${fr(Math.abs(remaining))}. Trim some inputs.`;
+      errEl.textContent = `Selected bills exceed ${fr(budget)} by ${fr(Math.abs(remaining))}. Deselect one.`;
     } else {
       errEl.style.display = 'none';
     }
@@ -8931,7 +8950,7 @@ function incomeRouterApplyMulti(){
     const errEl = document.getElementById('ir-multi-error');
     if (errEl) {
       errEl.style.display = '';
-      errEl.textContent = 'Allocate something to at least one bill, or toggle "Send remainder to my plan".';
+      errEl.textContent = 'Select at least one bill, or toggle "Send remainder to my plan".';
     }
     return;
   }
