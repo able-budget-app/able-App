@@ -2431,6 +2431,10 @@ body.is-scrolling .btn-primary:hover{transform:none!important;box-shadow:inherit
   <!-- Recurring outflows surfaced from plaid_recurring_streams. Hidden by
        loadRecurringScan when there's no detected recurring activity. -->
   <div id="recurring-section" style="display:none;margin-bottom:1.25rem;"></div>
+  <!-- Spending buckets: last-30-day discretionary outflows grouped by Plaid
+       PFC primary into Food / Transport / Shopping / Entertainment / etc.
+       Populated by renderActivitySpendingBuckets(); hidden when no data. -->
+  <div id="activity-buckets-section" style="display:none;margin-bottom:1.25rem;"></div>
   <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin-bottom:.85rem;">
     <input type="text" id="activity-search" placeholder="Search merchant, name, or label…" oninput="onActivitySearchInput()" style="flex:1;min-width:200px;font-family:var(--ds-f);font-weight:600;padding:8px 12px;border:1.5px solid var(--ds-line);border-radius:var(--ds-r1);background:white;color:var(--ds-t1);outline:none;">
     <select id="activity-range" onchange="renderActivityPage()" style="font-family:var(--ds-f);font-size:12px;font-weight:700;padding:6px 10px;border:1px solid var(--ds-line);border-radius:var(--ds-r1);background:white;color:var(--ds-t1);">
@@ -13351,22 +13355,26 @@ async function loadPaceLine(){
     const floorPath = floorPts.map((v, i) => `${i === 0 ? 'M' : 'L'}${xs(i).toFixed(1)},${ys(v).toFixed(1)}`).join(' ');
 
     const gap = actualPts[actualPts.length - 1] - floorPts[floorPts.length - 1];
+    // "Over/under floor" was the old copy. It collided with the hero Floor
+    // card ("covered through Jun 28") and read as a contradiction: users
+    // could be fully covered on bill obligations but $1,800 "over floor"
+    // here. Reframed as "over/under pace" — same math, no word collision.
+    // Under-pace = win (paint green); over-pace = warning (paint amber).
     const overUnder = gap >= 0 ? 'over' : 'under';
-    // In the dark score card, "under floor" is the win state (paint green);
-    // "over floor" is the warning state (paint amber).
     const gapColorDark = gap >= 0 ? '#e3c478' : '#b8e0c8';
     const gapColorLight = gap >= 0 ? '#c25656' : '#3d9e78';
     const gapColor = isInScoreCard ? gapColorDark : gapColorLight;
     const floorStrokeDark = 'rgba(255,255,255,.35)';
     const floorStrokeLight = 'var(--ds-t3)';
     const gapStr = Math.abs(gap).toLocaleString(undefined, { style: 'currency', currency: 'USD', maximumFractionDigits: 0 });
+    const paceTip = `Pace = your monthly bills + your typical discretionary spending, split across the days in the month. Under pace = you're spending slower than that baseline. Over pace = faster.`;
 
     wrap.style.display = 'block';
     if (isInScoreCard) {
       wrap.innerHTML = `
         <div style="display:flex;align-items:baseline;justify-content:space-between;gap:.5rem;margin-bottom:4px;">
-          <div class="db-pace-label">Floor pace · last ${stripDays}${stripDays === 1 ? ' day' : ' days'}</div>
-          <div class="db-pace-gap" style="color:${gapColor};">${gapStr} ${overUnder} floor</div>
+          <div class="db-pace-label" title="${escapeHtml(paceTip)}">Floor pace · last ${stripDays}${stripDays === 1 ? ' day' : ' days'}</div>
+          <div class="db-pace-gap" style="color:${gapColor};">${gapStr} ${overUnder} pace</div>
         </div>
         <svg width="100%" height="${H}" viewBox="0 0 ${W} ${H}" preserveAspectRatio="none" style="display:block;">
           <path d="${floorPath}" fill="none" stroke="${floorStrokeDark}" stroke-width="1.5" stroke-dasharray="3,3"/>
@@ -13378,15 +13386,15 @@ async function loadPaceLine(){
       wrap.innerHTML = `
         <div style="background:white;border:1px solid var(--ds-line);border-radius:var(--ds-r2);padding:1rem 1.25rem;box-shadow:var(--ds-sh1);">
           <div style="display:flex;align-items:center;justify-content:space-between;gap:.75rem;margin-bottom:.5rem;flex-wrap:wrap;">
-            <div style="font-size:11px;font-weight:800;letter-spacing:.1em;text-transform:uppercase;color:var(--ds-t3);">Floor pace · last ${stripDays} ${stripDays === 1 ? 'day' : 'days'}</div>
-            <div style="font-size:13px;font-weight:800;color:${gapColor};letter-spacing:-.005em;">${gapStr} ${overUnder} floor today</div>
+            <div style="font-size:11px;font-weight:800;letter-spacing:.1em;text-transform:uppercase;color:var(--ds-t3);" title="${escapeHtml(paceTip)}">Floor pace · last ${stripDays} ${stripDays === 1 ? 'day' : 'days'}</div>
+            <div style="font-size:13px;font-weight:800;color:${gapColor};letter-spacing:-.005em;">${gapStr} ${overUnder} pace today</div>
           </div>
           <svg width="100%" height="${H}" viewBox="0 0 ${W} ${H}" preserveAspectRatio="none" style="display:block;">
             <path d="${floorPath}" fill="none" stroke="${floorStrokeLight}" stroke-width="1.5" stroke-dasharray="3,3" opacity=".55"/>
             <path d="${actualPath}" fill="none" stroke="${gapColor}" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/>
           </svg>
           <div style="display:flex;align-items:center;gap:1.25rem;margin-top:.5rem;font-size:11px;font-weight:600;color:var(--ds-t3);">
-            <span style="display:inline-flex;align-items:center;gap:.45rem;"><span style="display:inline-block;width:16px;height:0;border-top:1.5px dashed var(--ds-t3);"></span>Floor</span>
+            <span style="display:inline-flex;align-items:center;gap:.45rem;"><span style="display:inline-block;width:16px;height:0;border-top:1.5px dashed var(--ds-t3);"></span>Pace</span>
             <span style="display:inline-flex;align-items:center;gap:.45rem;"><span style="display:inline-block;width:16px;height:2px;background:${gapColor};"></span>You</span>
           </div>
         </div>
@@ -13667,6 +13675,101 @@ async function saveDetectedBills() {
   renderUpcoming();
   refreshHome();
   loadDetectedBillsBanner();
+}
+
+// "Where it went" — last 30 days of discretionary outflows grouped by Plaid
+// PFC primary into big buckets (Food / Transport / Shopping / etc). Sits at
+// the top of the Activity tab so users can see where money's going at a
+// glance and spot waste. Skips bills (already filtered out by
+// able_category='discretionary') and recurring subscriptions detected as
+// bills. Tap a row to expand the top transactions in that bucket.
+const _ACTIVITY_BUCKETS = {
+  FOOD_AND_DRINK:      { label: 'Food & Drink',  color: '#e3c478' },
+  TRANSPORTATION:      { label: 'Transport',     color: '#3570b8' },
+  GENERAL_MERCHANDISE: { label: 'Shopping',      color: '#8b70b8' },
+  ENTERTAINMENT:       { label: 'Entertainment', color: '#c25656' },
+  TRAVEL:              { label: 'Travel',        color: '#2a7a8a' },
+  PERSONAL_CARE:       { label: 'Personal Care', color: '#c294b8' },
+  MEDICAL:             { label: 'Health',        color: '#3d9e78' },
+  HOME_IMPROVEMENT:    { label: 'Home',          color: '#7a9e3d' },
+  GENERAL_SERVICES:    { label: 'Services',      color: '#6a7a8a' },
+  BANK_FEES:           { label: 'Fees',          color: '#a04050' },
+  OTHER:               { label: 'Other',         color: '#999999' },
+};
+async function renderActivitySpendingBuckets(){
+  const wrap = document.getElementById('activity-buckets-section');
+  if (!wrap) return;
+  if (!currentUser) { wrap.style.display = 'none'; return; }
+  try {
+    const since = new Date();
+    since.setDate(since.getDate() - 30);
+    const sinceStr = `${since.getFullYear()}-${String(since.getMonth()+1).padStart(2,'0')}-${String(since.getDate()).padStart(2,'0')}`;
+    const { data, error } = await sbGet()
+      .from('plaid_transactions')
+      .select('amount, personal_finance_category_primary, merchant_name, name, date')
+      .eq('user_id', currentUser.id)
+      .eq('able_category', 'discretionary')
+      .gte('date', sinceStr)
+      .gt('amount', 0)
+      .limit(2000);
+    if (error) throw error;
+    if (!data || data.length === 0) { wrap.style.display = 'none'; return; }
+    const buckets = {};
+    let total = 0;
+    for (const t of data) {
+      const pfc = t.personal_finance_category_primary || 'OTHER';
+      const key = _ACTIVITY_BUCKETS[pfc] ? pfc : 'OTHER';
+      if (!buckets[key]) buckets[key] = { total: 0, count: 0, items: [] };
+      buckets[key].total += t.amount;
+      buckets[key].count += 1;
+      buckets[key].items.push(t);
+      total += t.amount;
+    }
+    if (total < 1) { wrap.style.display = 'none'; return; }
+    const sorted = Object.entries(buckets).sort((a, b) => b[1].total - a[1].total);
+    wrap.style.display = 'block';
+    wrap.innerHTML = `
+      <div style="background:white;border:1px solid var(--ds-line);border-radius:var(--ds-r2);padding:1.1rem 1.25rem;box-shadow:var(--ds-sh1);">
+        <div style="display:flex;justify-content:space-between;align-items:baseline;margin-bottom:.85rem;gap:.5rem;flex-wrap:wrap;">
+          <div style="font-size:14px;font-weight:900;color:var(--ds-t1);letter-spacing:-.01em;">Where it went</div>
+          <div style="font-size:11px;font-weight:800;color:var(--ds-t3);letter-spacing:.08em;">LAST 30 DAYS · ${f2(total)}</div>
+        </div>
+        <div>${sorted.map(([key, b]) => {
+          const friendly = _ACTIVITY_BUCKETS[key] || _ACTIVITY_BUCKETS.OTHER;
+          const pct = Math.round((b.total / total) * 100);
+          const safeKey = key.replace(/[^A-Z_]/g, '');
+          const detail = [...b.items].sort((x, y) => y.amount - x.amount).slice(0, 8);
+          return `<div style="margin-bottom:12px;">
+            <div onclick="toggleActivityBucket('${safeKey}')" style="cursor:pointer;">
+              <div style="display:flex;justify-content:space-between;align-items:baseline;margin-bottom:5px;">
+                <span style="font-weight:700;font-size:13px;color:var(--ds-t1);">${friendly.label} <span style="color:var(--ds-t3);font-weight:600;font-size:11px;">· ${b.count} ${b.count === 1 ? 'txn' : 'txns'}</span></span>
+                <span style="font-size:13px;font-weight:800;color:var(--ds-t1);letter-spacing:-.01em;">${f2(b.total)} <span style="color:var(--ds-t3);font-weight:600;font-size:11px;">· ${pct}%</span></span>
+              </div>
+              <div style="height:6px;background:var(--ds-page);border-radius:999px;overflow:hidden;">
+                <div style="height:100%;width:${pct}%;background:${friendly.color};border-radius:999px;transition:width .4s ease;"></div>
+              </div>
+            </div>
+            <div id="bucket-detail-${safeKey}" style="display:none;margin-top:8px;padding:8px 10px;background:var(--ds-card2);border-radius:8px;">
+              ${detail.map(t => `
+                <div style="display:flex;justify-content:space-between;font-size:12px;padding:3px 0;">
+                  <span style="color:var(--ds-t2);font-weight:600;flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;padding-right:8px;">${escapeHtml(t.merchant_name || t.name || 'Unknown')}</span>
+                  <span style="font-weight:800;color:var(--ds-t1);">${f2(t.amount)}</span>
+                </div>
+              `).join('')}
+              ${b.items.length > 8 ? `<div style="font-size:11px;color:var(--ds-t3);font-weight:600;padding:4px 0 0;">+ ${b.items.length - 8} more in this bucket</div>` : ''}
+            </div>
+          </div>`;
+        }).join('')}</div>
+      </div>
+    `;
+  } catch (e) {
+    console.warn('renderActivitySpendingBuckets failed:', e);
+    wrap.style.display = 'none';
+  }
+}
+function toggleActivityBucket(key){
+  const el = document.getElementById(`bucket-detail-${key}`);
+  if (el) el.style.display = el.style.display === 'none' ? 'block' : 'none';
 }
 
 async function loadRecurringScan(){
@@ -16298,7 +16401,7 @@ function goTo(target){
   if(page==='whatif'){document.getElementById('wi-empty').style.display='block';document.getElementById('wi-result').style.display='none';}
   if(page==='learn')renderLearn();
   if(page==='refer')enterReferPage();
-  if(page==='activity'){renderActivityPage();loadRecurringScan().catch(()=>{});}
+  if(page==='activity'){renderActivityPage();loadRecurringScan().catch(()=>{});renderActivitySpendingBuckets().catch(()=>{});}
 }
 
 // ═══════════════════════════════════════
