@@ -1683,6 +1683,38 @@ body.is-scrolling .btn-primary:hover{transform:none!important;box-shadow:inherit
 .act-tax-flag{display:inline-block;font-size:10px;font-weight:800;letter-spacing:.04em;text-transform:uppercase;padding:1px 6px;border-radius:100px;background:#fff3d6;color:#9a6e0c;margin-left:4px;}
 .act-business-badge{display:inline-block;font-size:10px;font-weight:800;letter-spacing:.02em;color:var(--ds-green);background:var(--ds-green-l);padding:1px 6px;border-radius:100px;margin-left:4px;}
 .act-bill-link{display:inline-block;font-size:10px;font-weight:800;letter-spacing:.02em;color:var(--ds-t1);background:#eaf4ff;border:1px solid #c9def3;padding:1px 6px;border-radius:100px;margin-left:4px;}
+.act-bucket-badge{display:inline-block;font-size:10px;font-weight:800;letter-spacing:.02em;color:#fff;padding:1px 7px;border-radius:100px;margin-left:4px;}
+.bc-chip{font-family:var(--ds-f);font-size:12px;font-weight:700;padding:5px 12px;border-radius:100px;border:1.5px solid var(--ds-line);background:white;color:var(--ds-t2);cursor:pointer;transition:all .12s;}
+.bc-chip:hover{opacity:.85;}
+.bc-chip.selected{color:#fff;}
+/* Home spending buckets card */
+.hb-row{padding:7px 0;border-bottom:1px solid var(--ds-page);}
+.hb-row:last-child{border-bottom:none;padding-bottom:0;}
+.hb-row-top{display:flex;justify-content:space-between;align-items:center;margin-bottom:5px;}
+.hb-row-label{display:flex;align-items:center;gap:7px;min-width:0;}
+.hb-dot{width:9px;height:9px;border-radius:50%;flex-shrink:0;}
+.hb-name{font-size:13px;font-weight:800;color:var(--ds-t1);white-space:nowrap;}
+.hb-budget-tag{font-size:11px;font-weight:600;color:var(--ds-t3);white-space:nowrap;}
+.hb-row-right{flex-shrink:0;margin-left:10px;}
+.hb-amt{font-size:13px;font-weight:900;color:var(--ds-t1);}
+.hb-sublabel{font-size:10px;font-weight:600;color:var(--ds-t3);}
+.hb-amt--good{color:#1f6038;}
+.hb-amt--warn{color:#c97c0a;}
+.hb-amt--bad{color:#c25656;}
+.hb-amt--muted{color:var(--ds-t3);font-weight:700;}
+.hb-bar-bg{height:5px;background:var(--ds-page);border-radius:999px;overflow:hidden;}
+.hb-bar-fill{height:100%;border-radius:999px;transition:width .4s ease;}
+.cf-date-hdr{font-size:10px;font-weight:800;color:var(--ds-t3);letter-spacing:.07em;text-transform:uppercase;padding:7px 0 2px;margin-top:4px;}
+.cf-event{display:flex;align-items:center;gap:8px;padding:3px 0;}
+.cf-event-dot{width:8px;height:8px;border-radius:50%;flex-shrink:0;}
+.cf-event.in .cf-event-dot{background:var(--ds-green);}
+.cf-event.out .cf-event-dot{background:#c25656;}
+.cf-event-name{flex:1;font-size:13px;font-weight:700;color:var(--ds-t1);overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+.cf-event-amt{font-size:13px;font-weight:900;min-width:65px;text-align:right;}
+.cf-event.in .cf-event-amt{color:var(--ds-green);}
+.cf-event.out .cf-event-amt{color:#c25656;}
+.cf-event-bal{font-size:11px;font-weight:700;min-width:60px;text-align:right;color:var(--ds-t3);}
+.cf-low-badge{display:inline-flex;align-items:center;gap:5px;background:#fff3d6;color:#9a6e0c;font-size:11px;font-weight:800;padding:3px 9px;border-radius:100px;margin:4px 0;}
 /* Rows inside the past-due review modal */
 .past-due-row{display:flex;align-items:center;gap:12px;padding:11px 14px;background:var(--ds-page);border-radius:var(--ds-r1);margin-bottom:7px;}
 .past-due-row-info{flex:1;min-width:0;}
@@ -2095,28 +2127,23 @@ body.is-scrolling .btn-primary:hover{transform:none!important;box-shadow:inherit
        unpaid bills due today. Filled by renderDueTodayCard. Empty otherwise. -->
   <div id="due-today-card"></div>
 
-  <!-- HERO GRID - money (left/top) + score (right/bottom on mobile). -->
-  <div class="db-hero-grid">
-    <!-- Money hero: same green gradient, money snapshot + Floor coverage. -->
-    <div class="db-hero" id="db-hero">
-      <div class="db-hero-eyebrow" id="db-hero-eyebrow" style="margin-bottom:.65rem;"><span class="db-hero-month">Month</span><span class="db-hero-month-tag">in progress</span></div>
-      <div id="db-hero-money"></div>
-    </div>
+  <!-- Money hero (full width) -->
+  <div class="db-hero" id="db-hero" style="margin-bottom:1rem;">
+    <div class="db-hero-eyebrow" id="db-hero-eyebrow" style="margin-bottom:.65rem;"><span class="db-hero-month">Month</span><span class="db-hero-month-tag">in progress</span></div>
+    <div id="db-hero-money"></div>
+  </div>
 
-    <!-- Score card: combined month score + pace sparkline + 5 equal-weight
-         habit rings. The pace sparkline (rendered by loadPaceLine into
-         #db-score-pace) sits between the score number and the habits, so it
-         reads as the bridge between "where you stand" (Floor strip in hero)
-         and "what you've done this month" (the rings below). -->
-    <div class="db-score-card">
-      <div class="db-score-card-head">
-        <div class="db-score-card-eyebrow" id="db-score-eyebrow">May habits</div>
-        <div class="db-score-card-num"><span id="db-score-big">--</span><span class="db-score-card-max">/100</span></div>
-      </div>
-      <div class="db-score-pace" id="db-score-pace"></div>
-      <div class="db-habits-row" id="db-habits-row"></div>
-      <button class="db-score-card-link" onclick="goTo('score')">See your story →</button>
+  <!-- SPENDING BUCKETS CARD (full width, above habits) -->
+  <div id="home-buckets-section" style="margin-bottom:1rem;"></div>
+
+  <!-- Score / Habits card (no pace line) -->
+  <div class="db-score-card" style="margin-bottom:1rem;">
+    <div class="db-score-card-head">
+      <div class="db-score-card-eyebrow" id="db-score-eyebrow">May habits</div>
+      <div class="db-score-card-num"><span id="db-score-big">--</span><span class="db-score-card-max">/100</span></div>
     </div>
+    <div class="db-habits-row" id="db-habits-row"></div>
+    <button class="db-score-card-link" onclick="goTo('score')">See your story →</button>
   </div>
 
   <!-- Quarterly tax card - Tax C workstream (P2 #24). Surfaces the next
@@ -2154,9 +2181,7 @@ body.is-scrolling .btn-primary:hover{transform:none!important;box-shadow:inherit
     </button>
   </div>
 
-  <!-- Legacy paceline slot - pace strip now lives inside the home Score
-       card (#db-score-pace). Kept hidden so older builds that called
-       loadPaceLine targeting this id still work without DOM errors. -->
+  <!-- Legacy paceline slot - kept for DOM safety -->
   <div id="home-paceline" style="display:none;"></div>
 
   <!-- INCOME THIS MONTH -->
@@ -2504,6 +2529,10 @@ body.is-scrolling .btn-primary:hover{transform:none!important;box-shadow:inherit
       </select>
       <div style="font-size:11px;color:var(--ds-t3);font-weight:600;margin-top:5px;line-height:1.45;">Link this purchase to one of your bills. Able will remember the merchant and link future ones automatically.</div>
     </div>
+    <div id="reclassify-bucket-row" style="margin-bottom:.85rem;">
+      <label style="display:block;font-size:11px;font-weight:800;letter-spacing:.06em;text-transform:uppercase;color:var(--ds-t3);margin-bottom:.4rem;">Spending bucket (optional)</label>
+      <div id="reclassify-bucket-chips" style="display:flex;flex-wrap:wrap;gap:7px;"></div>
+    </div>
     <label style="display:flex;align-items:center;gap:9px;font-size:12px;font-weight:600;color:var(--ds-t2);cursor:pointer;user-select:none;margin-bottom:.65rem;">
       <input type="checkbox" id="reclassify-tax-deductible" style="margin:0;width:16px;height:16px;">
       <span>Tax-deductible - include in Tax export at year end.</span>
@@ -2525,6 +2554,59 @@ body.is-scrolling .btn-primary:hover{transform:none!important;box-shadow:inherit
     <div class="modal-actions">
       <button class="btn btn-ghost" onclick="closeReclassifyModal()">Cancel</button>
       <button class="btn btn-primary" id="reclassify-save-btn" onclick="applyReclassify()">Save changes</button>
+    </div>
+  </div>
+</div>
+
+<!-- BUCKET SETTINGS MODAL -->
+<div class="modal-bg" id="modal-bucket-settings" style="display:none;" role="dialog" aria-modal="true" onclick="if(event.target===this)closeModal('modal-bucket-settings')">
+  <div class="modal" style="max-width:400px;">
+    <button class="modal-close" onclick="closeModal('modal-bucket-settings')" aria-label="Close"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button>
+    <div class="modal-title">Spending buckets</div>
+    <div style="font-size:13px;color:var(--ds-t2);font-weight:600;line-height:1.55;margin-bottom:1rem;">Label transactions on the Activity tab to track spending by purpose. Set a monthly target to see your progress here.</div>
+    <div id="bucket-settings-list" style="margin-bottom:1rem;"></div>
+    <div style="border-top:1px solid var(--ds-line);padding-top:1rem;">
+      <div style="font-size:11px;font-weight:800;color:var(--ds-t3);letter-spacing:.06em;text-transform:uppercase;margin-bottom:.5rem;">Add bucket</div>
+      <div style="display:flex;gap:8px;align-items:center;">
+        <input type="text" id="new-bucket-name" placeholder="e.g. Dates, Business, Travel" maxlength="24" style="flex:1;font-family:var(--ds-f);font-size:14px;font-weight:600;padding:8px 11px;border:1.5px solid var(--ds-line);border-radius:var(--ds-r1);background:white;color:var(--ds-t1);" onkeydown="if(event.key==='Enter')addBucket()">
+        <button class="btn btn-primary btn-sm" onclick="addBucket()">Add</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- MONTH WIZARD MODAL -->
+<div class="modal-bg" id="modal-month-wizard" style="display:none;" role="dialog" aria-modal="true">
+  <div class="modal" style="max-width:480px;max-height:88vh;overflow-y:auto;">
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:1.25rem;">
+      <div id="wiz-month-label" style="font-size:11px;font-weight:800;color:var(--ds-t3);letter-spacing:.07em;text-transform:uppercase;"></div>
+      <div style="display:flex;align-items:center;gap:10px;">
+        <div id="wiz-dots" style="display:flex;gap:5px;"></div>
+        <button onclick="closeMonthWizard(true)" style="background:none;border:none;font-size:18px;color:var(--ds-t3);cursor:pointer;padding:0 2px;line-height:1;" title="Skip">&times;</button>
+      </div>
+    </div>
+    <div id="wiz-body"></div>
+  </div>
+</div>
+
+<!-- LOG NEW INCOME MODAL -->
+<div class="modal-bg" id="modal-log-income" style="display:none;" role="dialog" aria-modal="true" onclick="if(event.target===this)closeModal('modal-log-income')">
+  <div class="modal" style="max-width:360px;">
+    <button class="modal-close" onclick="closeModal('modal-log-income')" aria-label="Close"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button>
+    <div class="modal-title">Log new income</div>
+    <div style="font-size:13px;color:var(--ds-t2);font-weight:600;margin-bottom:1.25rem;">Money that wasn't in your plan — a side job, bonus, gift, or surprise deposit.</div>
+    <div class="modal-field">
+      <label class="modal-label">Source</label>
+      <input type="text" id="li-source" placeholder="e.g. Freelance, Side gig, Gift" style="width:100%;font-family:var(--ds-f);font-size:15px;font-weight:700;padding:10px 12px;border:1.5px solid var(--ds-line);border-radius:var(--ds-r1);background:white;color:var(--ds-t1);box-sizing:border-box;">
+    </div>
+    <div class="modal-field" style="margin-top:.85rem;">
+      <label class="modal-label">Amount</label>
+      <input type="number" id="li-amount" inputmode="decimal" placeholder="0.00" step="0.01" min="0" style="width:100%;font-family:var(--ds-f);font-size:18px;font-weight:800;padding:10px 12px;border:1.5px solid var(--ds-line);border-radius:var(--ds-r1);background:white;color:var(--ds-t1);box-sizing:border-box;">
+    </div>
+    <div id="li-action-hint" style="display:none;margin-top:1rem;padding:10px 13px;background:#f0f9f4;border-radius:10px;font-size:13px;font-weight:600;color:#1a5c3a;line-height:1.55;"></div>
+    <div class="modal-actions" style="margin-top:1.25rem;">
+      <button class="btn" onclick="closeModal('modal-log-income')">Cancel</button>
+      <button class="btn btn-primary" onclick="saveLogIncome()">Log it</button>
     </div>
   </div>
 </div>
@@ -7663,7 +7745,15 @@ function _applyUserDataToState(d, opts) {
   S.history         = d.history||[];
   S.forecast        = d.forecast||[];
   S.buffer          = parseFloat(d.buffer)||0;
-  S.settings        = {debtPct:20,bufPct:15,freePct:5,ownerPct:0,allocateWindow:14,...(d.settings||{})};
+  S.settings        = {debtPct:20,bufPct:15,freePct:5,ownerPct:0,allocateWindow:14,
+    spending_buckets:[
+      {id:'fun-money',   name:'Fun Money',    color:'#3d9e78', target:null},
+      {id:'dates',       name:'Dates',        color:'#c04060', target:null},
+      {id:'life-happens',name:'Life Happens', color:'#c97c0a', target:null},
+      {id:'avoidable',   name:'Avoidable',    color:'#c25656', target:null},
+    ],
+    txn_buckets:{},
+    ...(d.settings||{})};
   S.month_history   = d.month_history||[];
   S.sources         = d.sources||['Salary','Freelance','Side income','Other'];
   S.allocated_to_bills = parseFloat(d.allocated_to_bills)||0;
@@ -9148,6 +9238,12 @@ function refreshHome(){
   // users see "Bank balances: $X across N accounts" without blocking the
   // initial render. No-op when the user hasn't connected a bank.
   loadBankBalances().then(() => renderHeroMoney()).catch(() => {});
+  renderHomeBuckets().catch(() => {});
+  // Month-start wizard: once per calendar month, only after bills are set up
+  if (currentUser && (S.bills||[]).length>0 && S.settings.wizard_month!==_wizardMonthKey() && !_wizardShownThisSession) {
+    _wizardShownThisSession=true;
+    setTimeout(openMonthWizard, 1000);
+  }
 }
 
 // Greeting row at the top of the home page. Time-of-day greeting + first
@@ -10203,29 +10299,77 @@ function renderForecast(){
     `;
     el.appendChild(div);
   });
-  const tb=totalBills(),ti=totalIn();
-  const pending=S.forecast.filter(f=>f.status!=='received').reduce((s,f)=>s+f.amount,0);
-  const proj=ti+pending-tb;
-  document.getElementById('fc-outlook').innerHTML=`
-    <div class="metric-row">
-      <div class="metric"><div class="metric-label">Received</div><div class="metric-val" style="color:var(--sage);">${fr(ti)}</div><div class="metric-sub">this month</div></div>
-      <div class="metric"><div class="metric-label">Expected</div><div class="metric-val" style="color:var(--sky);">${fr(pending)}</div><div class="metric-sub">still coming</div></div>
-    </div>
-    <div class="metric-row">
-      <div class="metric"><div class="metric-label">Monthly bills</div><div class="metric-val" style="color:var(--coral);">${fr(tb)}</div></div>
-      <div class="metric"><div class="metric-label">Projected net</div><div class="metric-val" style="color:${proj>=0?'var(--sage)':'var(--red)'};">${proj<0?'-':''}${fr(Math.abs(proj))}</div><div class="metric-sub">after all bills</div></div>
-    </div>`;
+  renderCashFlowTimeline();
 }
 function gotMoney(i){
-  if(isAllocating)return;
   const f=S.forecast[i];
   if(!f)return;
   if(f.status==='received')return;
   if(!f.amount||f.amount<=0)return;
-  const jobs=computeJobs(f.amount,f.source);
-  _pendingAlloc={type:'forecast',amount:f.amount,source:f.source,jobs,forecastIdx:i,note:f.note};
-  openIncomeRouter(f.amount,f.source+(f.note?' ('+f.note+')':''));
+  f.status='received';
+  save();
+  renderForecast();
+  refreshHome();
+  showIncomeAction(f.amount, f.source);
 }
+
+function showIncomeAction(amount, source){
+  const goal = (S.settings && S.settings.month_goal) || 'track';
+  const cf = (typeof computeCashFlowEvents === 'function') ? computeCashFlowEvents(30) : null;
+  const lowPoint = cf ? cf.events.find(e => e.balance != null && e.balance < 200) : null;
+
+  let suggestion = '';
+  if (goal === 'debt') {
+    const debtBills = (S.bills||[]).filter(b => b.category === 'debt' || /credit|loan|card/i.test(b.name||''));
+    const topDebt = debtBills.sort((a,b) => (b.amount||0) - (a.amount||0))[0];
+    suggestion = topDebt
+      ? `Put extra toward <b>${escapeHtml(topDebt.name)}</b> to chip away at debt.`
+      : `Apply extra toward your highest-rate debt.`;
+  } else if (goal === 'cushion') {
+    suggestion = `Move what you don't need right now into savings.`;
+  } else if (goal === 'breakeven') {
+    suggestion = lowPoint
+      ? `Watch out — balance dips low around <b>${lowPoint.date.toLocaleDateString('en-US',{month:'short',day:'numeric'})}</b>. Keep that buffer.`
+      : `You're on track to break even. Keep bills paid and hold the rest.`;
+  } else {
+    suggestion = lowPoint
+      ? `Heads up: balance dips around <b>${lowPoint.date.toLocaleDateString('en-US',{month:'short',day:'numeric'})}</b>.`
+      : `${escapeHtml(source||'Income')} of ${f2(amount)} marked received.`;
+  }
+
+  showToast(`Got it! ${suggestion}`, {duration: 5000});
+}
+
+function openLogIncomeModal(){
+  const modal = document.getElementById('modal-log-income');
+  if (!modal) return;
+  const srcEl = document.getElementById('li-source');
+  const amtEl = document.getElementById('li-amount');
+  const hint  = document.getElementById('li-action-hint');
+  if (srcEl) srcEl.value = '';
+  if (amtEl) amtEl.value = '';
+  if (hint)  { hint.style.display = 'none'; hint.innerHTML = ''; }
+  modal.style.display = 'flex';
+  setTimeout(() => { if (srcEl) srcEl.focus(); }, 80);
+}
+
+function saveLogIncome(){
+  const source = (document.getElementById('li-source').value || '').trim() || 'Income';
+  const amount = parseFloat(document.getElementById('li-amount').value) || 0;
+  if (amount <= 0) { showToast('Enter an amount first.'); return; }
+
+  // Log to history
+  const today = new Date();
+  const dateStr = `${today.getFullYear()}-${String(today.getMonth()+1).padStart(2,'0')}-${String(today.getDate()).padStart(2,'0')}`;
+  if (!Array.isArray(S.history)) S.history = [];
+  S.history.push({ type: 'income', source, amount, date: dateStr, note: 'logged manually' });
+  save();
+
+  closeModal('modal-log-income');
+  showIncomeAction(amount, source);
+  refreshHome();
+}
+
 function delForecast(i){
   // Guard against -1: indexOf in renderForecast can return -1 if S.forecast is replaced
   // between sort and click; splice(-1,1) would silently delete the last entry.
@@ -13320,6 +13464,7 @@ function _formatPfc(detailed, primary){
 let _activityRows = [];
 let _activeReclassifyTxn = null;
 let _activeReclassifyCat = null;
+let _activeReclassifyBucket = null;
 let _activityScrollBeforeReclassify = 0;
 
 // Floor-pace sparkline on the home tab. Loads month-to-date Plaid spend,
@@ -13882,6 +14027,566 @@ function toggleActivityBucket(key){
   if (el) el.style.display = el.style.display === 'none' ? 'block' : 'none';
 }
 
+// ═══════════════════════════════════════
+// SPENDING BUCKETS
+// ═══════════════════════════════════════
+const _BUCKET_COLORS = ['#3d9e78','#c04060','#c97c0a','#3570b8','#8b70b8','#6a7a8a','#c25656','#2a7a8a'];
+
+function _bucketList(){
+  return (S.settings && Array.isArray(S.settings.spending_buckets)) ? S.settings.spending_buckets : [];
+}
+function _txnBucketMap(){
+  if (!S.settings) S.settings = {};
+  if (!S.settings.txn_buckets || typeof S.settings.txn_buckets !== 'object') S.settings.txn_buckets = {};
+  return S.settings.txn_buckets;
+}
+
+async function renderHomeBuckets(){
+  const section = document.getElementById('home-buckets-section');
+  if (!section) return;
+
+  const buckets = _bucketList();
+  const billsTotal = (typeof totalBills === 'function') ? totalBills() : 0;
+  const billsPaid  = (typeof paidBills  === 'function') ? paidBills()  : 0;
+
+  if (!currentUser || (billsTotal < 0.01 && buckets.length === 0)) {
+    section.innerHTML = '';
+    return;
+  }
+
+  // Fetch this month's tagged transactions
+  const now = new Date();
+  const monthStart = `${now.getFullYear()}-${String(now.getMonth()+1).padStart(2,'0')}-01`;
+  const monthName = now.toLocaleDateString('en-US', { month: 'long' });
+  let totals = {};
+  try {
+    if (buckets.length > 0) {
+      const { data, error } = await sbGet()
+        .from('plaid_transactions')
+        .select('plaid_transaction_id, amount')
+        .eq('user_id', currentUser.id)
+        .gte('date', monthStart)
+        .gt('amount', 0);
+      if (!error && data) {
+        const map = _txnBucketMap();
+        for (const t of data) {
+          const bId = map[t.plaid_transaction_id];
+          if (bId) totals[bId] = (totals[bId] || 0) + t.amount;
+        }
+      }
+    }
+  } catch(e) { console.warn('renderHomeBuckets fetch failed:', e); }
+
+  // --- Bills bucket row ---
+  const billsRemaining = Math.max(0, billsTotal - billsPaid);
+  const billsPct = billsTotal > 0 ? Math.min(100, Math.round((billsPaid / billsTotal) * 100)) : 0;
+  const billsAllDone = billsRemaining < 0.01;
+  const billsRow = billsTotal > 0.01 ? `
+    <div class="hb-row">
+      <div class="hb-row-top">
+        <div class="hb-row-label">
+          <div class="hb-dot" style="background:#1f6038;"></div>
+          <span class="hb-name">Bills</span>
+        </div>
+        <div class="hb-row-right">
+          ${billsAllDone
+            ? `<span class="hb-amt hb-amt--good">All paid ✓</span>`
+            : `<span class="hb-amt">${f2(billsRemaining)} <span class="hb-sublabel">remaining</span></span>`}
+        </div>
+      </div>
+      <div class="hb-bar-bg"><div class="hb-bar-fill" style="width:${billsPct}%;background:#2a7a4a;"></div></div>
+    </div>` : '';
+
+  // --- Spending bucket rows ---
+  const bucketRows = buckets.map(b => {
+    const spent = totals[b.id] || 0;
+    const target = b.target || 0;
+    const isAvoidable = b.id === 'avoidable';
+
+    if (isAvoidable) {
+      // Avoidable: climbing number — no budget framing, just show total in amber
+      const hasSpend = spent > 0.01;
+      return `
+        <div class="hb-row">
+          <div class="hb-row-top">
+            <div class="hb-row-label">
+              <div class="hb-dot" style="background:${b.color};"></div>
+              <span class="hb-name">${escapeHtml(b.name)}</span>
+            </div>
+            <div class="hb-row-right">
+              <span class="hb-amt${hasSpend ? ' hb-amt--warn' : ' hb-amt--muted'}">${hasSpend ? f2(spent) + ' <span class="hb-sublabel">this month</span>' : 'none yet'}</span>
+            </div>
+          </div>
+        </div>`;
+    }
+
+    if (target > 0) {
+      // Budget bucket: counts down from target
+      const remaining = Math.max(0, target - spent);
+      const pct = Math.min(100, Math.round((spent / target) * 100));
+      const isOver = spent > target + 0.01;
+      return `
+        <div class="hb-row">
+          <div class="hb-row-top">
+            <div class="hb-row-label">
+              <div class="hb-dot" style="background:${b.color};"></div>
+              <span class="hb-name">${escapeHtml(b.name)}</span>
+              <span class="hb-budget-tag">${f2(target)}</span>
+            </div>
+            <div class="hb-row-right">
+              ${isOver
+                ? `<span class="hb-amt hb-amt--bad">${f2(spent - target)} <span class="hb-sublabel">over</span></span>`
+                : `<span class="hb-amt">${f2(remaining)} <span class="hb-sublabel">left</span></span>`}
+            </div>
+          </div>
+          <div class="hb-bar-bg"><div class="hb-bar-fill" style="width:${pct}%;background:${isOver ? '#c25656' : b.color};"></div></div>
+        </div>`;
+    }
+
+    // Bucket with no target — just show tagged total
+    const hasSpend = spent > 0.01;
+    return `
+      <div class="hb-row">
+        <div class="hb-row-top">
+          <div class="hb-row-label">
+            <div class="hb-dot" style="background:${b.color};"></div>
+            <span class="hb-name">${escapeHtml(b.name)}</span>
+          </div>
+          <div class="hb-row-right">
+            <span class="hb-amt${hasSpend ? '' : ' hb-amt--muted'}">${hasSpend ? f2(spent) : 'none yet'}</span>
+          </div>
+        </div>
+      </div>`;
+  }).join('');
+
+  section.innerHTML = `
+    <div style="background:white;border:1px solid var(--ds-line);border-radius:var(--ds-r2);overflow:hidden;box-shadow:var(--ds-sh1);">
+      <div style="display:flex;justify-content:space-between;align-items:center;padding:.9rem 1.1rem .75rem;">
+        <div style="font-size:11px;font-weight:800;color:var(--ds-t3);letter-spacing:.08em;text-transform:uppercase;">${monthName} spending</div>
+        <button type="button" onclick="openBucketSettingsModal()" style="background:none;border:none;font-size:11px;font-weight:700;color:var(--ds-t3);cursor:pointer;padding:0;letter-spacing:.04em;text-transform:uppercase;">Manage</button>
+      </div>
+      <div style="padding:0 1.1rem .75rem;">
+        ${billsRow}${bucketRows}
+        ${buckets.length === 0 ? '<div style="font-size:12px;color:var(--ds-t3);font-weight:600;padding:4px 0 8px;">Label transactions on Activity to track spending buckets.</div>' : ''}
+      </div>
+    </div>`;
+}
+
+function openBucketSettingsModal(){
+  const modal = document.getElementById('modal-bucket-settings');
+  if (modal) modal.style.display = 'flex';
+  renderBucketSettingsList();
+}
+
+function renderBucketSettingsList(){
+  const list = document.getElementById('bucket-settings-list');
+  if (!list) return;
+  const buckets = _bucketList();
+  if (buckets.length === 0) {
+    list.innerHTML = '<div style="font-size:13px;color:var(--ds-t3);font-weight:600;padding:8px 0;">No buckets yet. Add one below.</div>';
+    return;
+  }
+  list.innerHTML = buckets.map(b => `
+    <div style="display:flex;align-items:center;gap:10px;padding:9px 0;border-bottom:1px solid var(--ds-line);">
+      <div style="width:11px;height:11px;border-radius:50%;background:${escapeHtml(b.color)};flex-shrink:0;"></div>
+      <div style="flex:1;font-size:13px;font-weight:700;color:var(--ds-t1);">${escapeHtml(b.name)}</div>
+      <div style="display:flex;align-items:center;gap:4px;">
+        <span style="font-size:12px;color:var(--ds-t3);font-weight:600;">$</span>
+        <input type="number" value="${b.target || ''}" placeholder="target" min="1" step="1" title="Monthly target"
+          style="width:80px;font-family:var(--ds-f);font-size:13px;font-weight:600;padding:4px 8px;border:1.5px solid var(--ds-line);border-radius:var(--ds-r1);background:white;color:var(--ds-t1);"
+          onblur="saveBucketTarget('${escapeAttr(b.id)}',this.value)" onchange="saveBucketTarget('${escapeAttr(b.id)}',this.value)">
+      </div>
+      <button type="button" onclick="deleteBucket('${escapeAttr(b.id)}')"
+        style="background:none;border:none;cursor:pointer;color:var(--ds-c4);font-size:20px;padding:0 2px;line-height:1;flex-shrink:0;" title="Remove">&times;</button>
+    </div>
+  `).join('');
+}
+
+function addBucket(){
+  const inp = document.getElementById('new-bucket-name');
+  if (!inp) return;
+  const name = inp.value.trim().slice(0, 24);
+  if (!name) return;
+  if (!S.settings.spending_buckets) S.settings.spending_buckets = [];
+  const usedColors = S.settings.spending_buckets.map(b => b.color);
+  const color = _BUCKET_COLORS.find(c => !usedColors.includes(c)) || _BUCKET_COLORS[S.settings.spending_buckets.length % _BUCKET_COLORS.length];
+  const id = name.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '') + '-' + Date.now().toString(36);
+  S.settings.spending_buckets.push({ id, name, color, target: null });
+  inp.value = '';
+  save();
+  renderBucketSettingsList();
+  renderHomeBuckets().catch(() => {});
+}
+
+function deleteBucket(id){
+  if (!S.settings.spending_buckets) return;
+  S.settings.spending_buckets = S.settings.spending_buckets.filter(b => b.id !== id);
+  const map = _txnBucketMap();
+  for (const k of Object.keys(map)) { if (map[k] === id) delete map[k]; }
+  save();
+  renderBucketSettingsList();
+  renderHomeBuckets().catch(() => {});
+}
+
+function saveBucketTarget(id, raw){
+  const bucket = _bucketList().find(b => b.id === id);
+  if (!bucket) return;
+  const val = parseFloat(raw);
+  bucket.target = (!isNaN(val) && val > 0) ? val : null;
+  save();
+  renderHomeBuckets().catch(() => {});
+}
+
+function selectBucketChip(id){
+  _activeReclassifyBucket = id || null;
+  document.querySelectorAll('#reclassify-bucket-chips .bc-chip').forEach(btn => {
+    const bid = btn.getAttribute('data-bucket');
+    const sel = !!id && bid === id;
+    btn.classList.toggle('selected', sel);
+    const bucket = _bucketList().find(b => b.id === bid);
+    if (bucket) {
+      btn.style.background = sel ? bucket.color : '';
+      btn.style.color = sel ? '#fff' : '';
+      btn.style.borderColor = sel ? bucket.color : '';
+    } else {
+      btn.style.background = '';
+      btn.style.color = '';
+      btn.style.borderColor = '';
+    }
+  });
+}
+
+// ═══════════════════════════════════════
+// CASH FLOW TIMELINE
+// ═══════════════════════════════════════
+function computeCashFlowEvents(days) {
+  const today = new Date(); today.setHours(0,0,0,0);
+  const todayStr = today.toISOString().slice(0,10);
+  const events = [];
+  // Pending forecast income on or after today
+  for (const f of (S.forecast||[])) {
+    if (f.status === 'received' || !f.amount || f.date < todayStr) continue;
+    const d = new Date(f.date); d.setHours(0,0,0,0);
+    if (Math.round((d - today) / 86400000) > days) continue;
+    events.push({ date:d, type:'income', name:f.source+(f.note?' · '+f.note:''), amount:f.amount });
+  }
+  // Bill occurrences in the window
+  for (const b of (S.bills||[])) {
+    if (!b.amount || b.amount <= 0) continue;
+    const dates = billOccurrenceDates(b, days);
+    for (const d of dates) {
+      if (d < today) continue;
+      events.push({ date:d, type:'bill', name:b.name, amount:b.amount });
+    }
+  }
+  // Sort by date; income before bills on same day
+  events.sort((a,b) => { const dt=a.date-b.date; return dt!==0?dt:(a.type==='income'?-1:1); });
+  // Starting balance: Plaid available balance if loaded, else manual setting
+  const startBal = (S._bankBalances && typeof S._bankBalances.sum==='number' && S._bankBalances.sum>0)
+    ? S._bankBalances.sum
+    : (parseFloat((S.settings||{}).checking_balance)||0);
+  let running = startBal;
+  for (const ev of events) {
+    running += ev.type==='income' ? ev.amount : -ev.amount;
+    ev.balance = running;
+  }
+  return { events, startBal };
+}
+
+function renderCashFlowTimeline() {
+  const el = document.getElementById('fc-outlook');
+  if (!el) return;
+  const tb=totalBills(), ti=totalIn();
+  const pending=(S.forecast||[]).filter(f=>f.status!=='received').reduce((s,f)=>s+f.amount,0);
+  const proj=ti+pending-tb;
+  const metrics = `
+    <div class="metric-row" style="margin-top:.75rem;">
+      <div class="metric"><div class="metric-label">Received</div><div class="metric-val" style="color:var(--sage);">${fr(ti)}</div><div class="metric-sub">this month</div></div>
+      <div class="metric"><div class="metric-label">Expected</div><div class="metric-val" style="color:var(--sky);">${fr(pending)}</div><div class="metric-sub">still coming</div></div>
+    </div>
+    <div class="metric-row">
+      <div class="metric"><div class="metric-label">Monthly bills</div><div class="metric-val" style="color:var(--coral);">${fr(tb)}</div></div>
+      <div class="metric"><div class="metric-label">Projected net</div><div class="metric-val" style="color:${proj>=0?'var(--sage)':'var(--red)'};">${proj<0?'−':''}${fr(Math.abs(proj))}</div><div class="metric-sub">after all bills</div></div>
+    </div>`;
+
+  const { events, startBal } = computeCashFlowEvents(35);
+  if (events.length === 0) { el.innerHTML = metrics; return; }
+
+  // Find lowest balance
+  let minBal=startBal, minIdx=-1;
+  for (let i=0;i<events.length;i++) {
+    if (events[i].balance < minBal) { minBal=events[i].balance; minIdx=i; }
+  }
+  const endBal = events[events.length-1].balance;
+  const balSource = (S._bankBalances&&S._bankBalances.accounts&&S._bankBalances.accounts.length>0)
+    ? S._bankBalances.accounts[0].institution_name : null;
+
+  // Build event rows grouped by date
+  const today=new Date(); today.setHours(0,0,0,0);
+  const monthName=today.toLocaleDateString('en-US',{month:'long'});
+  let rows='', lastDateLabel='';
+  for (let i=0;i<events.length;i++) {
+    const ev=events[i];
+    const dateLabel=ev.date.toLocaleDateString('en-US',{month:'short',day:'numeric'});
+    const isToday=Math.round((ev.date-today)/86400000)===0;
+    if (dateLabel!==lastDateLabel) {
+      rows+=`<div class="cf-date-hdr">${dateLabel}${isToday?' · today':''}</div>`;
+      lastDateLabel=dateLabel;
+    }
+    const balColor=ev.balance<0?'#c25656':ev.balance<200?'#c97c0a':'var(--ds-t3)';
+    rows+=`<div class="cf-event ${ev.type==='income'?'in':'out'}">
+      <div class="cf-event-dot"></div>
+      <div class="cf-event-name">${escapeHtml(ev.name)}</div>
+      <div class="cf-event-amt">${ev.type==='income'?'+':'−'}${f2(ev.amount)}</div>
+      <div class="cf-event-bal" style="color:${balColor};">${f2(ev.balance)}</div>
+    </div>`;
+    if (i===minIdx && minBal<startBal*0.2) {
+      rows+=`<div><span class="cf-low-badge">⚠ Low point · ${f2(minBal)}</span></div>`;
+    }
+  }
+
+  el.innerHTML = `
+    <div style="background:white;border:1px solid var(--ds-line);border-radius:var(--ds-r2);padding:1.1rem 1.25rem;box-shadow:var(--ds-sh1);">
+      <div style="display:flex;justify-content:space-between;align-items:baseline;margin-bottom:.75rem;flex-wrap:wrap;gap:.3rem;">
+        <div style="font-size:14px;font-weight:900;color:var(--ds-t1);">${monthName} cash flow</div>
+        <div style="font-size:11px;font-weight:700;color:var(--ds-t3);">Start ${f2(startBal)}${balSource?` · ${balSource}`:''}</div>
+      </div>
+      <div style="display:grid;grid-template-columns:1fr auto auto;gap:0 4px;align-items:center;">
+        <div style="font-size:10px;font-weight:800;color:var(--ds-t4);letter-spacing:.05em;text-transform:uppercase;">Event</div>
+        <div style="font-size:10px;font-weight:800;color:var(--ds-t4);letter-spacing:.05em;text-transform:uppercase;text-align:right;min-width:65px;">Amount</div>
+        <div style="font-size:10px;font-weight:800;color:var(--ds-t4);letter-spacing:.05em;text-transform:uppercase;text-align:right;min-width:60px;">Balance</div>
+      </div>
+      ${rows}
+      <div style="border-top:1px solid var(--ds-line);margin-top:10px;padding-top:10px;display:flex;justify-content:space-between;align-items:baseline;">
+        <span style="font-size:12px;font-weight:700;color:var(--ds-t2);">End of period</span>
+        <span style="font-size:14px;font-weight:900;color:${endBal<0?'#c25656':endBal<300?'#c97c0a':'var(--ds-green)'};">${f2(endBal)}</span>
+      </div>
+      ${!balSource&&startBal===0?`<div style="margin-top:8px;font-size:11px;color:var(--ds-t3);font-weight:600;">Connect your bank or <button type="button" onclick="openCheckingBalanceInput()" style="background:none;border:none;color:var(--ds-green);font-size:11px;font-weight:700;cursor:pointer;padding:0;">enter today's balance</button> to project from a real starting point.</div>`:''}
+    </div>${metrics}`;
+}
+
+function openCheckingBalanceInput(){
+  const amt = prompt('What\'s in your checking account today? ($)');
+  const val = parseFloat(amt);
+  if (!isNaN(val) && val >= 0) {
+    if (!S.settings) S.settings = {};
+    S.settings.checking_balance = val;
+    save();
+    renderCashFlowTimeline();
+  }
+}
+
+// ═══════════════════════════════════════
+// MONTH-START WIZARD
+// ═══════════════════════════════════════
+let _wizardStep = 0;
+let _wizardShownThisSession = false;
+const _WIZARD_GOALS = [
+  { id:'debt',      icon:'💳', label:'Pay down debt',    sub:'Route extra cash to your highest-interest card.' },
+  { id:'cushion',   icon:'💰', label:'Grow my cushion',  sub:'Build a buffer so slow months don\'t sting.' },
+  { id:'breakeven', icon:'⚖️', label:'Break even',       sub:'Cover the bills and stay out of the red.' },
+  { id:'track',     icon:'📊', label:'Just track it',    sub:'Know exactly where every dollar goes.' },
+];
+
+function _wizardMonthKey(){
+  const n=new Date();
+  return `${n.getFullYear()}-${String(n.getMonth()+1).padStart(2,'0')}`;
+}
+
+function openMonthWizard(){
+  _wizardStep=0;
+  const modal=document.getElementById('modal-month-wizard');
+  if (!modal) return;
+  modal.style.display='flex';
+  const lbl=document.getElementById('wiz-month-label');
+  if (lbl) lbl.textContent=new Date().toLocaleDateString('en-US',{month:'long',year:'numeric'})+' · Plan';
+  renderWizardStep();
+}
+
+function closeMonthWizard(markDone){
+  const modal=document.getElementById('modal-month-wizard');
+  if (modal) modal.style.display='none';
+  if (markDone) { S.settings.wizard_month=_wizardMonthKey(); save(); }
+}
+
+function wizardNext(){
+  if (_wizardStep<2) { _wizardStep++; renderWizardStep(); }
+  else completeWizard();
+}
+function wizardBack(){
+  if (_wizardStep>0) { _wizardStep--; renderWizardStep(); }
+}
+
+function selectWizardGoal(id){
+  S.settings.month_goal=id;
+  document.querySelectorAll('.wiz-goal-btn').forEach(b=>{
+    const sel=b.getAttribute('data-goal')===id;
+    b.style.borderColor=sel?'var(--ds-green)':'var(--ds-line)';
+    b.style.background=sel?'var(--ds-green-l)':'white';
+  });
+}
+
+function wizardAddIncome(){
+  const src=(document.getElementById('wiz-fc-src')||{}).value?.trim();
+  const amt=parseFloat((document.getElementById('wiz-fc-amt')||{}).value||'0');
+  const date=(document.getElementById('wiz-fc-date')||{}).value;
+  if (!src||!amt||!date){showToast('Fill in source, amount, and date.');return;}
+  S.forecast.push({source:src,amount:amt,date,note:'',status:'expected'});
+  save();
+  renderWizardStep();
+}
+
+function renderWizardStep(){
+  const body=document.getElementById('wiz-body');
+  const dots=document.getElementById('wiz-dots');
+  if (!body||!dots) return;
+  dots.innerHTML=Array.from({length:3},(_,i)=>
+    `<div style="width:7px;height:7px;border-radius:50%;background:${i===_wizardStep?'var(--ds-green)':'var(--ds-line)'}"></div>`
+  ).join('');
+  if (_wizardStep===0) _renderWizardIncome(body);
+  else if (_wizardStep===1) _renderWizardGoal(body);
+  else _renderWizardPlan(body);
+}
+
+function _renderWizardIncome(body){
+  const now=new Date();
+  const monthName=now.toLocaleDateString('en-US',{month:'long'});
+  const y=now.getFullYear(), m=now.getMonth()+1;
+  const mStart=`${y}-${String(m).padStart(2,'0')}-01`;
+  const mEnd=`${y}-${String(m+1).padStart(2,'0')}-01`;
+  const thisMonth=(S.forecast||[]).filter(f=>f.status!=='received'&&f.date>=mStart&&f.date<mEnd);
+  const itemRows=thisMonth.map(f=>{
+    const ri=S.forecast.indexOf(f);
+    return `<div style="display:flex;align-items:center;gap:8px;padding:8px 0;border-bottom:1px solid var(--ds-line);">
+      <div style="flex:1;">
+        <div style="font-size:13px;font-weight:800;color:var(--ds-t1);">${escapeHtml(f.source)}${f.note?' · '+escapeHtml(f.note):''}</div>
+        <div style="font-size:11px;color:var(--ds-t3);font-weight:600;">${f2(f.amount)} · ${new Date(f.date).toLocaleDateString('en-US',{month:'short',day:'numeric'})}</div>
+      </div>
+      <button onclick="delForecast(${ri});renderWizardStep();" style="background:none;border:none;color:var(--ds-c4);font-size:19px;cursor:pointer;padding:0 4px;line-height:1;">&times;</button>
+    </div>`;
+  }).join('');
+  // Default date = tomorrow
+  const tomorrow=new Date(now);tomorrow.setDate(tomorrow.getDate()+1);
+  const tomorrowStr=tomorrow.toISOString().slice(0,10);
+  body.innerHTML=`
+    <div style="font-size:20px;font-weight:900;color:var(--ds-t1);letter-spacing:-.02em;margin-bottom:.3rem;">What's coming in ${monthName}?</div>
+    <div style="font-size:13px;color:var(--ds-t2);font-weight:600;line-height:1.55;margin-bottom:1rem;">Add income you're expecting so Able can map out your month.</div>
+    ${thisMonth.length>0?`<div style="margin-bottom:.85rem;">${itemRows}</div>`:''}
+    <div style="background:var(--ds-card2);border-radius:var(--ds-r1);padding:12px;margin-bottom:1.1rem;">
+      <div style="font-size:10px;font-weight:800;color:var(--ds-t3);letter-spacing:.07em;text-transform:uppercase;margin-bottom:.6rem;">Add income</div>
+      <div style="display:grid;grid-template-columns:1fr 85px 105px;gap:6px;margin-bottom:6px;">
+        <input type="text" id="wiz-fc-src" placeholder="Source" style="font-family:var(--ds-f);font-size:13px;font-weight:600;padding:7px 9px;border:1.5px solid var(--ds-line);border-radius:var(--ds-r1);background:white;color:var(--ds-t1);">
+        <input type="number" id="wiz-fc-amt" placeholder="$" min="1" style="font-family:var(--ds-f);font-size:13px;font-weight:600;padding:7px 9px;border:1.5px solid var(--ds-line);border-radius:var(--ds-r1);background:white;color:var(--ds-t1);">
+        <input type="date" id="wiz-fc-date" value="${tomorrowStr}" style="font-family:var(--ds-f);font-size:12px;font-weight:600;padding:7px 9px;border:1.5px solid var(--ds-line);border-radius:var(--ds-r1);background:white;color:var(--ds-t1);">
+      </div>
+      <button class="btn btn-primary btn-sm" onclick="wizardAddIncome()" style="width:100%;">+ Add</button>
+    </div>
+    <div style="display:flex;gap:8px;justify-content:space-between;align-items:center;">
+      <button class="btn btn-ghost btn-sm" onclick="closeMonthWizard(true)">Skip</button>
+      <button class="btn btn-primary" onclick="wizardNext()">Next →</button>
+    </div>`;
+}
+
+function _renderWizardGoal(body){
+  const current=S.settings.month_goal||null;
+  body.innerHTML=`
+    <div style="font-size:20px;font-weight:900;color:var(--ds-t1);letter-spacing:-.02em;margin-bottom:.3rem;">What's your #1 focus?</div>
+    <div style="font-size:13px;color:var(--ds-t2);font-weight:600;line-height:1.55;margin-bottom:1rem;">Pick one. You can change it anytime.</div>
+    <div style="display:flex;flex-direction:column;gap:8px;margin-bottom:1.1rem;">
+      ${_WIZARD_GOALS.map(g=>`
+        <button type="button" class="wiz-goal-btn" data-goal="${g.id}" onclick="selectWizardGoal('${g.id}')"
+          style="display:flex;align-items:flex-start;gap:12px;text-align:left;padding:12px 14px;border-radius:var(--ds-r1);border:1.5px solid ${g.id===current?'var(--ds-green)':'var(--ds-line)'};background:${g.id===current?'var(--ds-green-l)':'white'};cursor:pointer;width:100%;transition:all .12s;">
+          <span style="font-size:21px;line-height:1.1;flex-shrink:0;">${g.icon}</span>
+          <div>
+            <div style="font-size:14px;font-weight:800;color:var(--ds-t1);">${g.label}</div>
+            <div style="font-size:12px;font-weight:600;color:var(--ds-t3);margin-top:2px;line-height:1.35;">${g.sub}</div>
+          </div>
+        </button>`).join('')}
+    </div>
+    <div style="display:flex;gap:8px;justify-content:space-between;">
+      <button class="btn btn-ghost btn-sm" onclick="wizardBack()">← Back</button>
+      <button class="btn btn-primary" onclick="wizardNext()">Next →</button>
+    </div>`;
+}
+
+function _renderWizardPlan(body){
+  const now=new Date();
+  const monthName=now.toLocaleDateString('en-US',{month:'long'});
+  const y=now.getFullYear(), m=now.getMonth()+1;
+  const mStart=`${y}-${String(m).padStart(2,'0')}-01`;
+  const mEnd=`${y}-${String(m+1).padStart(2,'0')}-01`;
+  const received=totalIn();
+  const expected=(S.forecast||[]).filter(f=>f.status!=='received'&&f.date>=mStart&&f.date<mEnd).reduce((s,f)=>s+f.amount,0);
+  const totalIncome=received+expected;
+  const bills=totalBills();
+  const surplus=totalIncome-bills;
+  // Cash flow low point
+  const {events,startBal}=computeCashFlowEvents(35);
+  let lowBal=null,lowDate=null,actionDay=null;
+  if (startBal>0&&events.length>0){
+    let minB=startBal;
+    for (const ev of events){
+      if (typeof ev.balance==='number'&&ev.balance<minB){minB=ev.balance;lowDate=ev.date;}
+    }
+    if (lowDate&&minB<startBal*0.25) lowBal=minB;
+    // Find next sizable income after the low
+    if (lowDate){
+      for (const ev of events){
+        if (ev.type==='income'&&ev.date>lowDate&&ev.amount>=400){actionDay=ev;break;}
+      }
+    }
+  }
+  const goal=S.settings.month_goal||null;
+  const goalObj=_WIZARD_GOALS.find(g=>g.id===goal);
+  // Goal-specific nudge
+  let nudge='';
+  if (goal==='debt'){
+    const topDebt=[...(S.debts||[])].sort((a,b)=>(b.rate||0)-(a.rate||0))[0];
+    if (topDebt&&actionDay){
+      nudge=`When your ${f2(actionDay.amount)} from ${escapeHtml(actionDay.name)} lands around ${actionDay.date.toLocaleDateString('en-US',{month:'short',day:'numeric'})}, move ${f2(Math.min(surplus*0.6,600))} to your ${escapeHtml(topDebt.name||'highest-rate card')} (${topDebt.rate||'?'}% interest).`;
+    } else if (topDebt) {
+      nudge=`Any surplus goes to your ${escapeHtml(topDebt.name||'highest-rate card')} (${topDebt.rate||'?'}% APR) — highest interest first.`;
+    }
+  } else if (goal==='cushion'){
+    nudge=surplus>0?`After bills are covered, move ${f2(Math.min(surplus*0.4,300))} to savings right after your biggest deposit.`:'Stretch to save anything — even $50 helps.';
+  } else if (goal==='breakeven'){
+    nudge=surplus<0?`You\'re projected ${f2(Math.abs(surplus))} short. Look for things to trim before month-end.`:`You\'re on track to cover everything with ${f2(surplus)} left over.`;
+  } else if (goal==='track'){
+    nudge='Label every transaction in Activity this month. One month of data tells you more than a year of guessing.';
+  }
+  body.innerHTML=`
+    <div style="font-size:20px;font-weight:900;color:var(--ds-t1);letter-spacing:-.02em;margin-bottom:.3rem;">${monthName} snapshot</div>
+    <div style="background:var(--ds-card2);border-radius:var(--ds-r1);padding:13px 15px;margin-bottom:.75rem;">
+      <div style="display:flex;justify-content:space-between;padding:3px 0;font-size:13px;"><span style="color:var(--ds-t2);font-weight:600;">Expected income</span><span style="font-weight:900;color:var(--ds-green);">+${f2(totalIncome)}</span></div>
+      <div style="display:flex;justify-content:space-between;padding:3px 0;font-size:13px;"><span style="color:var(--ds-t2);font-weight:600;">Bills</span><span style="font-weight:900;color:#c25656;">−${f2(bills)}</span></div>
+      <div style="border-top:1px solid var(--ds-line);margin-top:6px;padding-top:6px;display:flex;justify-content:space-between;">
+        <span style="font-size:14px;font-weight:800;color:var(--ds-t1);">Surplus</span>
+        <span style="font-size:14px;font-weight:900;color:${surplus>=0?'var(--ds-green)':'#c25656'};">${surplus<0?'−':''}${f2(Math.abs(surplus))}</span>
+      </div>
+    </div>
+    ${lowBal!==null?`<div style="background:#fff3d6;border-radius:var(--ds-r1);padding:10px 13px;margin-bottom:.75rem;display:flex;gap:9px;align-items:flex-start;">
+      <span style="font-size:17px;line-height:1.1;flex-shrink:0;">⚠</span>
+      <div>
+        <div style="font-size:13px;font-weight:800;color:#9a6e0c;">Low point around ${lowDate.toLocaleDateString('en-US',{month:'short',day:'numeric'})}</div>
+        <div style="font-size:12px;font-weight:600;color:#9a6e0c;margin-top:2px;line-height:1.4;">Balance could dip to ${f2(lowBal)}. Avoid big purchases in that window${actionDay?' — your '+f2(actionDay.amount)+' hits '+actionDay.date.toLocaleDateString('en-US',{month:'short',day:'numeric'}):''}.</div>
+      </div>
+    </div>`:''}
+    ${goalObj&&nudge?`<div style="background:var(--ds-green-l);border-radius:var(--ds-r1);padding:10px 13px;margin-bottom:.75rem;">
+      <div style="font-size:10px;font-weight:800;color:var(--ds-green);letter-spacing:.07em;text-transform:uppercase;margin-bottom:4px;">Goal: ${goalObj.label}</div>
+      <div style="font-size:13px;font-weight:600;color:var(--ds-t1);line-height:1.5;">${nudge}</div>
+    </div>`:''}
+    <button class="btn btn-primary" onclick="completeWizard()" style="width:100%;margin-top:.15rem;">Got it, let\'s go →</button>
+    <div style="text-align:center;margin-top:.6rem;">
+      <button type="button" onclick="wizardBack()" style="background:none;border:none;font-size:12px;color:var(--ds-t3);cursor:pointer;font-family:var(--ds-f);font-weight:700;">← Back</button>
+    </div>`;
+}
+
+function completeWizard(){
+  closeMonthWizard(true);
+  try { Able.track?.('month_wizard_complete',{goal:S.settings.month_goal||'none'}); } catch(_){}
+  showToast(`${new Date().toLocaleDateString('en-US',{month:'long'})} plan set. Check the Forecast tab for your cash flow.`, {duration:4000});
+}
+
 async function loadRecurringScan(){
   const wrap = document.getElementById('recurring-section');
   if (!wrap) return;
@@ -14378,6 +15083,11 @@ function _renderActivityRow(r){
   const billBadge = linkedBill
     ? `<span class="act-bill-link" title="Linked to your ${escapeHtml(linkedBill.name)} bill">→ ${escapeHtml(linkedBill.name)}</span>`
     : '';
+  const txnBucketId = (S.settings && S.settings.txn_buckets) ? S.settings.txn_buckets[r.plaid_transaction_id] : null;
+  const txnBucket = txnBucketId ? _bucketList().find(b => b.id === txnBucketId) : null;
+  const bucketBadge = txnBucket
+    ? `<span class="act-bucket-badge" style="background:${txnBucket.color};">${escapeHtml(txnBucket.name)}</span>`
+    : '';
   return `
     <div class="act-row" onclick="openReclassifyModal('${r.id}')">
       <div class="act-row-info">
@@ -14388,6 +15098,7 @@ function _renderActivityRow(r){
           ${r.business_label ? `<span class="act-business-badge">${escapeHtml(r.business_label)}</span>` : ''}
           ${r.is_tax_deductible ? `<span class="act-tax-flag">deductible</span>` : ''}
           ${billBadge}
+          ${bucketBadge}
           ${r.able_label ? ` · ${escapeHtml(r.able_label)}` : ''}
         </div>
       </div>
@@ -14515,6 +15226,27 @@ function openReclassifyModal(txnRowId){
     for (const r of _activityRows) { if (r.business_label) seen.add(r.business_label); }
     bizDatalist.innerHTML = [...seen].sort().map((v) => `<option value="${escapeHtml(v)}"></option>`).join('');
   }
+  // Populate spending bucket chips
+  const bucketChipsEl = document.getElementById('reclassify-bucket-chips');
+  if (bucketChipsEl) {
+    const buckets = _bucketList();
+    const currentBucketId = _txnBucketMap()[row.plaid_transaction_id] || null;
+    _activeReclassifyBucket = currentBucketId;
+    const bucketChipHtml = buckets.map(b => {
+      const sel = b.id === currentBucketId;
+      return `<button type="button" class="bc-chip${sel ? ' selected' : ''}" data-bucket="${escapeAttr(b.id)}"
+        style="${sel ? `background:${b.color};color:#fff;border-color:${b.color};` : ''}"
+        onclick="selectBucketChip('${escapeAttr(b.id)}')">${escapeHtml(b.name)}</button>`;
+    }).join('');
+    const clearBtn = currentBucketId
+      ? `<button type="button" class="bc-chip" data-bucket="" onclick="selectBucketChip('')" style="color:var(--ds-t3);font-size:11px;">✕ clear</button>`
+      : '';
+    bucketChipsEl.innerHTML = buckets.length > 0
+      ? bucketChipHtml + clearBtn
+      : `<span style="font-size:12px;color:var(--ds-t3);font-weight:600;">No buckets set up — <button type="button" onclick="openBucketSettingsModal()" style="background:none;border:none;color:var(--ds-green);font-size:12px;font-weight:700;cursor:pointer;padding:0;">add one</button></span>`;
+    const bucketRow = document.getElementById('reclassify-bucket-row');
+    if (bucketRow) bucketRow.style.display = isInflow ? 'none' : 'block';
+  }
   // Reset save-button state. applyReclassify disables it + flips the label to
   // "Saving..." during the API call; on success we close the modal but never
   // restore, so subsequent opens would land on a permanently-stuck "Saving..."
@@ -14633,6 +15365,7 @@ function closeReclassifyModal(){
   if (modal) modal.style.display = 'none';
   _activeReclassifyTxn = null;
   _activeReclassifyCat = null;
+  _activeReclassifyBucket = null;
   _reclassifyBulkCandidates = [];
   const section = document.getElementById('reclassify-bulk-section');
   if (section) section.style.display = 'none';
@@ -14707,6 +15440,18 @@ async function applyReclassify(){
     if (catKey && priorCategory) { delete categoryMap[catKey]; billLinkChanged = true; }
   }
   if (billLinkChanged) { try { save(); } catch (_) {} }
+  // Bucket assignment: local-only, persisted in S.settings.txn_buckets
+  const bucketMap = _txnBucketMap();
+  const prevBucket = bucketMap[row.plaid_transaction_id];
+  if (_activeReclassifyBucket) {
+    if (bucketMap[row.plaid_transaction_id] !== _activeReclassifyBucket) {
+      bucketMap[row.plaid_transaction_id] = _activeReclassifyBucket;
+      try { save(); } catch(_) {}
+    }
+  } else if (prevBucket) {
+    delete bucketMap[row.plaid_transaction_id];
+    try { save(); } catch(_) {}
+  }
   const isInflow = (row.amount ?? 0) < 0;
   const body = {
     txn_row_id: row.id,
@@ -15831,16 +16576,43 @@ function allocateAvailable(){
 function renderHeroMoney(){
   const el = document.getElementById('db-hero-money');
   if (!el) return;
-  if (!_hasBalance()) {
-    // Connected-Plaid path: show live bank balance immediately so a fresh
-    // user doesn't see a blank "$0 to allocate" card. Surfaces the same
-    // breakdown the populated branch shows (per-account list on tap),
-    // plus a one-tap CTA to seed S.settings.balance from the bank sum.
-    // Manual entry stays available as a secondary option.
-    const bb = S._bankBalances;
-    if (bb && bb.accounts && bb.accounts.length > 0) {
-      const accCount = bb.accounts.length;
-      const breakdown = `<div id="db-hero-bank-breakdown" class="db-hero-breakdown" style="display:none;">
+
+  const bb = S._bankBalances;
+  const hasPlaid = bb && bb.accounts && bb.accounts.length > 0;
+
+  // Bills this month strip
+  const billsTotal = (typeof totalBills === 'function') ? totalBills() : 0;
+  const billsPaid  = (typeof paidBills === 'function')  ? paidBills()  : 0;
+  const billsPct   = billsTotal > 0 ? Math.max(0, Math.min(100, Math.round((billsPaid / billsTotal) * 100))) : 0;
+  const billsRemaining = Math.max(0, billsTotal - billsPaid);
+  const billsStrip = billsTotal > 0.01 ? `
+    <div class="db-floor-strip" id="db-floor-strip" style="margin-bottom:1rem;">
+      <div class="db-floor-row">
+        <div class="db-floor-label">Bills this month</div>
+        <div class="db-floor-pct">${billsPct}%</div>
+      </div>
+      <div class="db-floor-track"><div class="db-floor-fill" style="width:${billsPct}%;"></div></div>
+      <div class="db-floor-meta">${billsRemaining > 0.01 ? `<b>${f2(billsPaid)}</b> paid · <b>${f2(billsRemaining)}</b> still due` : `<b>${f2(billsTotal)}</b> · all paid`}</div>
+    </div>` : '';
+
+  const primaryCta = `<button class="db-hero-cta-primary" onclick="goTo('forecast')">See This Month's Plan →</button>`;
+  const secondaryCta = `<button class="db-hero-cta-secondary" onclick="openLogIncomeModal()" style="margin-top:6px;">Log new income</button>`;
+
+  // No Plaid and no manual balance — prompt to connect or enter
+  if (!hasPlaid && !_hasBalance()) {
+    el.innerHTML = `
+      <div class="db-hero-empty">Connect your bank to see your live balance, or enter it manually.</div>
+      <button class="db-hero-cta-primary" onclick="settingsConnectBank ? settingsConnectBank() : goTo('settings')">Connect bank</button>
+      <button class="db-hero-cta-secondary" onclick="openBalanceModal()" style="margin-top:6px;">Enter balance manually</button>
+    `;
+    return;
+  }
+
+  // Plaid-connected: live bank balance is the primary number
+  if (hasPlaid) {
+    const accCount = bb.accounts.length;
+    const bankBreakdown = `
+      <div id="db-hero-bank-breakdown" class="db-hero-breakdown" style="display:none;">
         ${bb.accounts.map((a) => `
           <div class="db-hero-breakdown-row">
             <div>
@@ -15851,200 +16623,35 @@ function renderHeroMoney(){
           </div>
         `).join('')}
       </div>`;
-      el.innerHTML = `
-        <div class="db-hero-money-row">
-          <span class="db-hero-money-label">Bank balance</span>
-          <span class="db-hero-money-val">${f2(bb.sum)}</span>
-        </div>
-        <div class="db-hero-bank-line" onclick="toggleBankBreakdown()">
-          <span>Across ${accCount} account${accCount === 1 ? '' : 's'} <span class="db-hero-toggle" aria-label="Show bank breakdown">▾</span></span>
-        </div>
-        ${breakdown}
-        <div class="db-hero-empty" style="margin-top:10px;">Use this as your starting balance to see what's safe to spend.</div>
-        <button class="db-hero-cta-primary" onclick="useBankBalanceAsStart()">Use ${f2(bb.sum)} as my balance</button>
-        <button class="db-hero-cta-secondary" onclick="openBalanceModal()" style="margin-top:6px;">Enter a different amount</button>
-      `;
-      return;
-    }
     el.innerHTML = `
-      <div class="db-hero-empty">Add your starting balance to see what's safe to spend.</div>
-      <button class="db-hero-cta-primary" onclick="openBalanceModal()">Add balance</button>
+      <div class="db-hero-money-row">
+        <span class="db-hero-money-label">Bank balance</span>
+        <span class="db-hero-money-val">${f2(bb.sum)}</span>
+      </div>
+      <div class="db-hero-bank-line" onclick="toggleBankBreakdown()">
+        <span>Across ${accCount} account${accCount === 1 ? '' : 's'} <span class="db-hero-toggle" aria-label="Show bank breakdown">▾</span></span>
+      </div>
+      ${bankBreakdown}
+      ${billsStrip}
+      ${primaryCta}
+      ${secondaryCta}
     `;
     return;
   }
+
+  // Manual balance fallback
   const balance = _getBalance();
-  const reserved = _totalReservedNow();
-  const available = balance - reserved;
-  const reservedBills = (S.bills||[])
-    .filter(b => b.id && !b.paid && (_billReserved(b.id) > 0.01))
-    .map(b => ({
-      name: b.name,
-      reserved: Math.min(_billReserved(b.id), b.amount||0),
-      total: b.amount||0,
-      days: billDaysUntil(b),
-    }))
-    .sort((a,b) => (a.days||999) - (b.days||999));
-  const breakdownHtml = reservedBills.length
-    ? `<div id="db-hero-breakdown" class="db-hero-breakdown" style="display:none;">
-        ${reservedBills.map(r => `
-          <div class="db-hero-breakdown-row">
-            <div>
-              <div class="db-hero-breakdown-name">${r.name}</div>
-              <div class="db-hero-breakdown-meta">${r.days===0?'due today':r.days===1?'due tomorrow':r.days!=null&&r.days<0?(-r.days)+'d past due':r.days!=null&&r.days<999?'due in '+r.days+'d':'ongoing'}${r.reserved < r.total - 0.01 ? ' · '+f2(r.reserved)+' of '+f2(r.total) : ''}</div>
-            </div>
-            <div class="db-hero-breakdown-amt">${f2(r.reserved)}</div>
-          </div>
-        `).join('')}
-      </div>`
-    : '';
   const editBtn = `<button class="db-hero-edit" onclick="openBalanceModal()" aria-label="Edit balance">Edit</button>`;
-
-  // Bank-balance dropdown - informational layer below the manual In-your-
-  // accounts row. Sum across linked depository accounts, with a per-bank
-  // breakdown on tap. Drift indicator surfaces when Plaid sum and S.balance
-  // disagree by more than $50 (most often: cash/Venmo deposit user logged
-  // before Plaid saw it, or stale manual balance). Never overrides the
-  // working balance - that stays Option B per Paul's decision 2026-05-03.
-  const bankBalances = S._bankBalances;
-  let bankLine = '';
-  let bankBreakdown = '';
-  if (bankBalances && bankBalances.accounts && bankBalances.accounts.length > 0) {
-    const accCount = bankBalances.accounts.length;
-    const drift = bankBalances.sum - balance;
-    const driftStr = Math.abs(drift) > 50
-      ? `<span class="db-hero-bank-drift">${drift > 0 ? '+' : '−'}${f2(Math.abs(drift))} vs. yours</span>`
-      : '';
-    bankLine = `
-      <div class="db-hero-bank-line" onclick="toggleBankBreakdown()">
-        <span>Bank balances: ${f2(bankBalances.sum)} across ${accCount} account${accCount === 1 ? '' : 's'}${driftStr} <span class="db-hero-toggle" aria-label="Show bank breakdown">▾</span></span>
-      </div>`;
-    bankBreakdown = `
-      <div id="db-hero-bank-breakdown" class="db-hero-breakdown" style="display:none;">
-        ${bankBalances.accounts.map((a) => `
-          <div class="db-hero-breakdown-row">
-            <div>
-              <div class="db-hero-breakdown-name">${escapeHtml(a.institution_name)}</div>
-              <div class="db-hero-breakdown-meta">${escapeHtml(a.name)}${a.mask ? ' ····' + escapeHtml(a.mask) : ''}</div>
-            </div>
-            <div class="db-hero-breakdown-amt">${a.current_balance != null ? f2(a.current_balance) : '-'}</div>
-          </div>
-        `).join('')}
-      </div>`;
-  }
-
-  const reservedRow = `
-    <div class="db-hero-money-row" style="cursor:${reservedBills.length?'pointer':'default'};" ${reservedBills.length?'onclick="toggleHeroBreakdown()"':''}>
-      <span class="db-hero-money-label">Reserved for bills${reservedBills.length?' <span class="db-hero-toggle" aria-label="Show breakdown">▾</span>':''}</span>
-      <span class="db-hero-money-val">${f2(reserved)}</span>
-    </div>`;
-
-  // Floor hero block - the brand promise made loud. Was a small strip under
-  // "Available to spend"; now sits at the top of the hero so the first thing
-  // a user sees when they open the app is "is my Floor safe?" not "how much
-  // can I blow?" Headline shows a concrete date ("Covered through Jun 14")
-  // computed by floorCoveredThrough() rather than just a percentage.
-  const floorTotal = (typeof totalBills === 'function') ? totalBills() : 0;
-  const floorPaid  = (typeof paidBills === 'function')  ? paidBills()  : 0;
-  const floorFunded = floorPaid + reserved;
-  const floorPct = floorTotal > 0 ? Math.max(0, Math.min(100, Math.round((floorFunded / floorTotal) * 100))) : 0;
-  const floorShort = Math.max(0, floorTotal - floorFunded);
-  const coverage = (typeof floorCoveredThrough === 'function') ? floorCoveredThrough() : { date: null, allCovered: false, hasBills: false };
-  const fmtCoverDate = (d) => d ? d.toLocaleDateString('en-US', { month: 'short', day: 'numeric' }) : '';
-  let floorHeadline = '';
-  let headlineNeg = false;
-  if (floorTotal > 0.01) {
-    if (coverage.allCovered) {
-      floorHeadline = 'Floor covered';
-    } else if (coverage.date) {
-      floorHeadline = `Covered through ${fmtCoverDate(coverage.date)}`;
-    } else {
-      floorHeadline = 'Floor not yet covered';
-      headlineNeg = true;
-    }
-  }
-  const floorMeta = floorTotal > 0.01
-    ? (floorShort > 0.01
-        ? `<b>${f2(floorFunded)}</b> of ${f2(floorTotal)} · <b>${f2(floorShort)}</b> short. Your next deposit fills it first.`
-        : `<b>${f2(floorFunded)}</b> of ${f2(floorTotal)}. Surplus is going to the rest of your plan.`)
-    : '';
-  const floorStrip = floorTotal > 0.01 ? `
-    <div class="db-floor-strip" id="db-floor-strip">
-      <div class="db-floor-row">
-        <div class="db-floor-label"><span class="glossary-term" tabindex="0" data-tip="Bills + tax. The amount you can't miss each month. Floor-First means every deposit covers this before any other dollar gets a job.">The Floor</span></div>
-        <div class="db-floor-pct">${floorPct}%</div>
-      </div>
-      <div class="db-floor-headline${headlineNeg ? ' db-floor-headline--neg' : ''}">${floorHeadline}</div>
-      <div class="db-floor-track"><div class="db-floor-fill" style="width:${floorPct}%;"></div></div>
-      <div class="db-floor-meta">${floorMeta}</div>
-    </div>` : '';
-
-  // Money rows (Balance / Reserved / Available) are now peers of each other
-  // and live BELOW the Floor block, not above it. No divider between them -
-  // they're all "money status" rows at the same visual weight.
-  const moneyRowsBase = `
+  el.innerHTML = `
     <div class="db-hero-money-row">
       <span class="db-hero-money-label">Balance</span>
       <span class="db-hero-money-val">${f2(balance)}</span>
     </div>
     <div class="db-hero-money-edit-row">${editBtn}</div>
-    ${bankLine}
-    ${bankBreakdown}
-    ${reservedRow}
-    ${breakdownHtml}`;
-
-  // CTA hierarchy: primary action is always "Log new income" (Floor-First's
-  // core moment - every deposit gets allocated). When there's unallocated
-  // available, surface "allocate the $X" as a quiet secondary text link.
-  const primaryCta = `<button class="db-hero-cta-primary" onclick="openAllocateSheet()">Log new income →</button>`;
-  const allocateLink = (available > 0.01)
-    ? `<button class="db-hero-cta-link" onclick="allocateAvailable()">or allocate the ${f2(available)} available →</button>`
-    : '';
-
-  let body = '';
-  if (available > 0.01) {
-    body = `
-      ${floorStrip}
-      ${moneyRowsBase}
-      <div class="db-hero-available-row">
-        <span class="db-hero-available-label">Available to spend</span>
-        <span class="db-hero-available-val">${f2(available)}</span>
-      </div>
-      ${primaryCta}
-      ${allocateLink}
-    `;
-  } else if (Math.abs(available) <= 0.01) {
-    body = `
-      ${floorStrip}
-      ${moneyRowsBase}
-      <div class="db-hero-available-row">
-        <span class="db-hero-available-label">Available to spend</span>
-        <span class="db-hero-available-val">${f2(0)}</span>
-      </div>
-      ${primaryCta}
-    `;
-  } else {
-    const short = Math.abs(available);
-    body = `
-      ${floorStrip}
-      ${moneyRowsBase}
-      <div class="db-hero-available-row">
-        <span class="db-hero-available-label">Short by</span>
-        <span class="db-hero-available-val db-hero-available-val--neg">${f2(short)}</span>
-      </div>
-      <div class="db-hero-shortfall">Reservations exceed your balance. Dip into your reserve or wait for the next deposit to fill the gap.</div>
-      ${primaryCta}
-    `;
-  }
-  el.innerHTML = body;
-  // First-time Floor-strip popover. Fires once when the strip is visible
-  // for the first time and the user isn't in the onboarding tour. Stored
-  // in localStorage so it never re-appears once dismissed.
-  if (floorTotal > 0.01 && !document.body.classList.contains('tour-active')) {
-    try {
-      const seen = localStorage.getItem('able_seen_floor_intro') === '1';
-      if (!seen) maybeShowFloorIntro();
-    } catch (_) {}
-  }
+    ${billsStrip}
+    ${primaryCta}
+    ${secondaryCta}
+  `;
 }
 function maybeShowFloorIntro(){
   const strip = document.getElementById('db-floor-strip');
@@ -16506,7 +17113,7 @@ function goTo(target){
   if(page==='debt')renderDebtPage();
   if(page==='bills')renderBillsPage();
   if(page==='score')renderScore();
-  if(page==='forecast')renderForecast();
+  if(page==='forecast'){renderForecast();loadBankBalances().then(()=>renderCashFlowTimeline()).catch(()=>{});}
   if(page==='settings')loadSettingsPage();
   if(page==='whatif'){document.getElementById('wi-empty').style.display='block';document.getElementById('wi-result').style.display='none';}
   if(page==='learn')renderLearn();
