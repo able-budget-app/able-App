@@ -15403,6 +15403,7 @@ function _linkedToBillSummary(billId) {
 function openReclassifyModal(txnRowId){
   const row = _activityRows.find((r) => r.plaid_transaction_id === txnRowId || String(r.id) === String(txnRowId));
   if (!row) return;
+  const isInflow = (row.amount ?? 0) < 0;
   // Capture scroll position BEFORE the modal opens — the body-scroll-lock
   // MutationObserver (around line 12695) is about to set body{position:fixed}
   // which makes window.scrollY read 0. applyReclassify will read this back
@@ -15470,7 +15471,6 @@ function openReclassifyModal(txnRowId){
     saveBtn.textContent = 'Save changes';
   }
 
-  const isInflow = (row.amount ?? 0) < 0;
   const display = Math.abs(row.amount ?? 0).toLocaleString(undefined, { style: 'currency', currency: 'USD' });
   const sign = isInflow ? '+' : '−';
   const name = row.merchant_name || row.name || 'Unknown';
