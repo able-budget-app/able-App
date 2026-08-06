@@ -1681,6 +1681,9 @@ body.is-scrolling .btn-primary:hover{transform:none!important;box-shadow:inherit
 .bc-chip{font-family:var(--ds-f);font-size:12px;font-weight:700;padding:5px 12px;border-radius:100px;border:1.5px solid var(--ds-line);background:white;color:var(--ds-t2);cursor:pointer;transition:all .12s;}
 .bc-chip:hover{opacity:.85;}
 .bc-chip.selected{color:#fff;}
+.fund-bucket-card{width:100%;text-align:left;background:var(--ds-card);border:1.5px solid var(--ds-line);border-radius:var(--ds-r2);padding:11px 14px;cursor:pointer;font-family:var(--ds-f);transition:border-color .12s,box-shadow .12s;}
+.fund-bucket-card:hover{border-color:var(--ds-green-m);}
+.fund-bucket-card.selected{border-color:var(--ds-green);box-shadow:0 0 0 2px var(--ds-green-l);}
 /* Home spending buckets card */
 .hb-row{padding:7px 0;border-bottom:1px solid var(--ds-page);}
 .hb-row:last-child{border-bottom:none;padding-bottom:0;}
@@ -2179,9 +2182,9 @@ body.is-scrolling .btn-primary:hover{transform:none!important;box-shadow:inherit
       <span class="db-chip-action-icon" style="background:var(--ds-green-l);color:var(--ds-green);"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" width="16" height="16"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg></span>
       <span class="db-chip-action-label">Ask Coach</span>
     </button>
-    <button class="db-chip-action" onclick="openAddIncomeModal()" type="button" aria-label="Log income">
-      <span class="db-chip-action-icon" style="background:#fef3e0;color:var(--ds-c3);"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" width="16" height="16"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg></span>
-      <span class="db-chip-action-label">Log income</span>
+    <button class="db-chip-action" onclick="openFundBucketModal()" type="button" aria-label="Fund a bucket">
+      <span class="db-chip-action-icon" style="background:var(--ds-green-l);color:var(--ds-green2);"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" width="16" height="16"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2z"/><path d="M12 6v6l4 2"/></svg></span>
+      <span class="db-chip-action-label">Fund bucket</span>
     </button>
     <button class="db-chip-action" onclick="openAddBillModal()" type="button" aria-label="Add a new bill">
       <span class="db-chip-action-icon" style="background:#fdeef2;color:var(--ds-c4);"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" width="16" height="16"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg></span>
@@ -2603,20 +2606,24 @@ body.is-scrolling .btn-primary:hover{transform:none!important;box-shadow:inherit
 <div class="modal-bg" id="modal-log-income" style="display:none;" role="dialog" aria-modal="true" onclick="if(event.target===this)closeModal('modal-log-income')">
   <div class="modal" style="max-width:360px;">
     <button class="modal-close" onclick="closeModal('modal-log-income')" aria-label="Close"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button>
-    <div class="modal-title">Log new income</div>
-    <div style="font-size:13px;color:var(--ds-t2);font-weight:600;margin-bottom:1.25rem;">Money that wasn't in your plan — a side job, bonus, gift, or surprise deposit.</div>
+    <div class="modal-title">Log income</div>
+    <div style="font-size:13px;color:var(--ds-t2);font-weight:600;margin-bottom:1.25rem;">Today or past — logs it now and updates your plan. Future date — holds a spot in your forecast.</div>
+    <datalist id="li-source-list"></datalist>
     <div class="modal-field">
       <label class="modal-label">Source</label>
-      <input type="text" id="li-source" placeholder="e.g. Freelance, Side gig, Gift" style="width:100%;font-family:var(--ds-f);font-size:15px;font-weight:700;padding:10px 12px;border:1.5px solid var(--ds-line);border-radius:var(--ds-r1);background:white;color:var(--ds-t1);box-sizing:border-box;">
+      <input type="text" id="li-source" list="li-source-list" placeholder="e.g. Freelance, Side gig, Gift" style="width:100%;font-family:var(--ds-f);font-size:15px;font-weight:700;padding:10px 12px;border:1.5px solid var(--ds-line);border-radius:var(--ds-r1);background:white;color:var(--ds-t1);box-sizing:border-box;">
     </div>
     <div class="modal-field" style="margin-top:.85rem;">
       <label class="modal-label">Amount</label>
       <input type="number" id="li-amount" inputmode="decimal" placeholder="0.00" step="0.01" min="0" style="width:100%;font-family:var(--ds-f);font-size:18px;font-weight:800;padding:10px 12px;border:1.5px solid var(--ds-line);border-radius:var(--ds-r1);background:white;color:var(--ds-t1);box-sizing:border-box;">
     </div>
-    <div id="li-action-hint" style="display:none;margin-top:1rem;padding:10px 13px;background:#f0f9f4;border-radius:10px;font-size:13px;font-weight:600;color:#1a5c3a;line-height:1.55;"></div>
+    <div class="modal-field" style="margin-top:.85rem;">
+      <label class="modal-label">Date</label>
+      <input type="date" id="li-date" onchange="_liDateChange()" style="width:100%;font-family:var(--ds-f);font-size:15px;font-weight:700;padding:10px 12px;border:1.5px solid var(--ds-line);border-radius:var(--ds-r1);background:white;color:var(--ds-t1);box-sizing:border-box;">
+    </div>
     <div class="modal-actions" style="margin-top:1.25rem;">
       <button class="btn" onclick="closeModal('modal-log-income')">Cancel</button>
-      <button class="btn btn-primary" onclick="saveLogIncome()">Log it</button>
+      <button class="btn btn-primary" id="li-save-btn" onclick="saveLogIncome()">Log it →</button>
     </div>
   </div>
 </div>
@@ -3020,6 +3027,23 @@ body.is-scrolling .btn-primary:hover{transform:none!important;box-shadow:inherit
       <div class="field"><label>Note (optional)</label><input type="text" id="qfc-note" placeholder="Client name, project..."></div>
     </div>
     <div class="modal-actions"><button class="btn" onclick="closeModal('modal-add-income')">Cancel</button><button class="btn btn-primary" id="qfc-save-btn" onclick="addForecastFromQuickModal()">Add to forecast</button></div>
+  </div>
+</div>
+<!-- Fund bucket modal - quick home-screen access to confirm bucket funding -->
+<div class="modal-bg" id="modal-fund-bucket" style="display:none;" role="dialog" aria-modal="true" onclick="if(event.target===this)closeModal('modal-fund-bucket')">
+  <div class="modal" style="max-width:380px;">
+    <button class="modal-close" onclick="closeModal('modal-fund-bucket')" aria-label="Close"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button>
+    <div class="modal-title">Fund a bucket</div>
+    <div style="font-size:13px;color:var(--ds-t2);font-weight:600;margin-bottom:1rem;">Set money aside for a spending envelope this month.</div>
+    <div id="fund-bucket-list" style="display:flex;flex-direction:column;gap:8px;margin-bottom:.75rem;max-height:260px;overflow-y:auto;"></div>
+    <div id="fund-bucket-amount-row" style="display:none;margin-bottom:.25rem;">
+      <label class="modal-label" style="font-size:12px;font-weight:800;letter-spacing:.06em;text-transform:uppercase;color:var(--ds-t2);">Amount</label>
+      <input type="number" id="fund-bucket-amount" inputmode="decimal" placeholder="0.00" step="0.01" min="0.01" style="width:100%;font-family:var(--ds-f);font-size:18px;font-weight:800;padding:10px 12px;border:1.5px solid var(--ds-line);border-radius:var(--ds-r1);background:white;color:var(--ds-t1);box-sizing:border-box;margin-top:6px;">
+    </div>
+    <div class="modal-actions">
+      <button class="btn" onclick="closeModal('modal-fund-bucket')">Cancel</button>
+      <button class="btn btn-primary" id="fund-bucket-save-btn" disabled onclick="saveFundBucket(this)">Fund it →</button>
+    </div>
   </div>
 </div>
 <!-- Leak summary - opens from the recurring scan when at least one leak is
@@ -10392,15 +10416,34 @@ async function showIncomeAction(amount, source){
   showToast(`Got it! ${suggestion}`, {duration: 5000});
 }
 
+function _liTodayStr() {
+  const t = new Date();
+  return `${t.getFullYear()}-${String(t.getMonth()+1).padStart(2,'0')}-${String(t.getDate()).padStart(2,'0')}`;
+}
+function _liDateChange() {
+  const d = document.getElementById('li-date');
+  const b = document.getElementById('li-save-btn');
+  if (!d || !b) return;
+  b.textContent = d.value > _liTodayStr() ? 'Add to forecast →' : 'Log it →';
+}
+
 function openLogIncomeModal(){
+  if (document.body.classList.contains('tour-active')) return;
   const modal = document.getElementById('modal-log-income');
   if (!modal) return;
-  const srcEl = document.getElementById('li-source');
-  const amtEl = document.getElementById('li-amount');
-  const hint  = document.getElementById('li-action-hint');
-  if (srcEl) srcEl.value = '';
-  if (amtEl) amtEl.value = '';
-  if (hint)  { hint.style.display = 'none'; hint.innerHTML = ''; }
+  const srcEl  = document.getElementById('li-source');
+  const amtEl  = document.getElementById('li-amount');
+  const dateEl = document.getElementById('li-date');
+  const saveBtn = document.getElementById('li-save-btn');
+  const dl = document.getElementById('li-source-list');
+  if (dl) {
+    const srcs = (S.sources && S.sources.length) ? S.sources : ['Salary','Freelance','Side income','Other'];
+    dl.innerHTML = srcs.map(s => `<option value="${escapeAttr(s)}">`).join('');
+  }
+  if (srcEl)  srcEl.value = '';
+  if (amtEl)  amtEl.value = '';
+  if (dateEl) dateEl.value = _liTodayStr();
+  if (saveBtn) saveBtn.textContent = 'Log it →';
   modal.style.display = 'flex';
   setTimeout(() => { if (srcEl) srcEl.focus(); }, 80);
 }
@@ -10409,17 +10452,28 @@ function saveLogIncome(){
   const source = (document.getElementById('li-source').value || '').trim() || 'Income';
   const amount = parseFloat(document.getElementById('li-amount').value) || 0;
   if (amount <= 0) { showToast('Enter an amount first.'); return; }
-
-  // Log to history
-  const today = new Date();
-  const dateStr = `${today.getFullYear()}-${String(today.getMonth()+1).padStart(2,'0')}-${String(today.getDate()).padStart(2,'0')}`;
-  if (!Array.isArray(S.history)) S.history = [];
-  S.history.push({ type: 'income', source, amount, date: dateStr, note: 'logged manually' });
-  save();
+  const todayStr = _liTodayStr();
+  const selDate  = document.getElementById('li-date')?.value || todayStr;
+  const isFuture = selDate > todayStr;
 
   closeModal('modal-log-income');
-  showIncomeAction(amount, source);
-  refreshHome();
+
+  if (isFuture) {
+    if (!Array.isArray(S.forecast)) S.forecast = [];
+    S.forecast.push({ source, amount, date: selDate, note: '', status: 'expected' });
+    save();
+    try { renderForecast(); } catch(_) {}
+    refreshHome();
+    showToast(`Added ${f2(amount)} to your forecast.`);
+  } else {
+    if (!Array.isArray(S.history)) S.history = [];
+    S.history.push({ type: 'income', source, amount, date: todayStr, note: 'logged manually' });
+    save();
+    refreshHome();
+    goTo('forecast');
+    refreshOutlook().catch(()=>{});
+    showToast(`${escapeHtml(source)} received — see your updated plan below.`, {duration:3500});
+  }
 }
 
 function delForecast(i){
@@ -10441,48 +10495,85 @@ function addForecast(){
   document.getElementById('fc-note').value='';
 }
 
-// Quick-capture forecast popup opened from the home "Add income" chip,
-// so the chip behaves like its sibling "Add bill" instead of navigating
-// to the Plan → Forecast page. Same data shape, same save path.
-function openAddIncomeModal(){
-  if (document.body.classList.contains('tour-active')) return;
-  const modal = document.getElementById('modal-add-income');
-  if (!modal) return;
-  const srcSel = document.getElementById('qfc-src');
-  if (srcSel) {
-    const srcs = (S.sources && S.sources.length) ? S.sources : ['Salary','Freelance','Side income','Other'];
-    srcSel.innerHTML = srcs.map(s => `<option value="${escapeAttr(s)}">${escapeHtml(s)}</option>`).join('');
-  }
-  // Reset fields and prefill date to today (most common case for "Add income"
-  // is logging a recently-known upcoming payment, often today or tomorrow).
-  document.getElementById('qfc-amt').value = '';
-  document.getElementById('qfc-note').value = '';
-  const dateInp = document.getElementById('qfc-date');
-  if (dateInp) {
-    const today = new Date();
-    dateInp.value = `${today.getFullYear()}-${String(today.getMonth()+1).padStart(2,'0')}-${String(today.getDate()).padStart(2,'0')}`;
-  }
-  modal.style.display = 'flex';
-  if (!_shouldSkipAutoFocus()) setTimeout(() => document.getElementById('qfc-amt')?.focus(), 50);
-}
-
+// Backward-compat shim — callers that predate the unified modal still work.
+function openAddIncomeModal(){ openLogIncomeModal(); }
 function addForecastFromQuickModal(){
-  const source = document.getElementById('qfc-src').value;
-  const amount = parseFloat(document.getElementById('qfc-amt').value) || 0;
-  const date   = document.getElementById('qfc-date').value;
-  const note   = document.getElementById('qfc-note').value.trim();
-  if (!amount || !date) {
-    showToast('Add an amount and a date.');
-    return;
-  }
+  const source = document.getElementById('qfc-src')?.value || 'Income';
+  const amount = parseFloat(document.getElementById('qfc-amt')?.value) || 0;
+  const date   = document.getElementById('qfc-date')?.value;
+  const note   = document.getElementById('qfc-note')?.value?.trim() || '';
+  if (!amount || !date) { showToast('Add an amount and a date.'); return; }
   S.forecast.push({ source, amount, date, note, status: 'expected' });
   save();
-  // Re-render the forecast page in case the user navigates there next, and
-  // refresh home so the next-N card picks up the new event immediately.
   try { renderForecast(); } catch (_) {}
   refreshHome();
   closeModal('modal-add-income');
   showToast(`Added ${f2(amount)} to the forecast.`);
+}
+
+// ─── FUND BUCKET MODAL ───────────────────────────────────────────────────────
+let _fundBucketSelected = null;
+
+function openFundBucketModal() {
+  if (document.body.classList.contains('tour-active')) return;
+  _fundBucketSelected = null;
+  const modal   = document.getElementById('modal-fund-bucket');
+  const listEl  = document.getElementById('fund-bucket-list');
+  const amtRow  = document.getElementById('fund-bucket-amount-row');
+  const saveBtn = document.getElementById('fund-bucket-save-btn');
+  if (!modal || !listEl) return;
+  if (amtRow)  amtRow.style.display  = 'none';
+  if (saveBtn) saveBtn.disabled = true;
+
+  const buckets = (typeof _bucketList === 'function') ? _bucketList().filter(b => b.target && b.id !== 'avoidable') : [];
+  const cache   = (typeof _bucketDataCache !== 'undefined') ? _bucketDataCache : { spent:{}, funded:{} };
+
+  if (!buckets.length) {
+    listEl.innerHTML = `<div style="font-size:13px;font-weight:600;color:var(--ds-t2);padding:12px 0;">No buckets with a target set yet. Go to Plan → manage buckets to add one.</div>`;
+  } else {
+    listEl.innerHTML = buckets.map(b => {
+      const funded    = cache.funded[b.id] || 0;
+      const spent     = cache.spent[b.id]  || 0;
+      const effective = Math.max(funded, spent);
+      const remaining = Math.max(0, b.target - effective);
+      const pct       = Math.min(100, Math.round((effective / b.target) * 100));
+      const done      = remaining < 0.01;
+      const color     = b.color || 'var(--ds-green)';
+      return `<button class="fund-bucket-card" data-id="${escapeAttr(b.id)}" data-remaining="${remaining.toFixed(2)}" onclick="_selectFundBucket(this)">
+        <div style="display:flex;justify-content:space-between;align-items:center;">
+          <span style="font-size:14px;font-weight:800;color:var(--ds-t1);">${escapeHtml(b.name)}</span>
+          <span style="font-size:12px;font-weight:700;color:${done ? 'var(--ds-green)' : 'var(--ds-t3)'};">${done ? '✓ Funded' : '$'+Math.round(remaining)+' needed'}</span>
+        </div>
+        <div style="background:var(--ds-line);border-radius:4px;height:4px;margin-top:7px;">
+          <div style="background:${color};height:4px;border-radius:4px;width:${pct}%;transition:width .2s;"></div>
+        </div>
+      </button>`;
+    }).join('');
+  }
+  modal.style.display = 'flex';
+}
+
+function _selectFundBucket(btn) {
+  _fundBucketSelected = btn.dataset.id;
+  const remaining = parseFloat(btn.dataset.remaining) || 0;
+  document.querySelectorAll('.fund-bucket-card').forEach(b => b.classList.remove('selected'));
+  btn.classList.add('selected');
+  const amtRow  = document.getElementById('fund-bucket-amount-row');
+  const amtEl   = document.getElementById('fund-bucket-amount');
+  const saveBtn = document.getElementById('fund-bucket-save-btn');
+  if (amtRow)  amtRow.style.display = 'block';
+  if (amtEl)   amtEl.value = remaining > 0.01 ? remaining.toFixed(2) : '';
+  if (saveBtn) saveBtn.disabled = false;
+  if (!_shouldSkipAutoFocus()) setTimeout(() => amtEl?.focus(), 80);
+}
+
+async function saveFundBucket(btn) {
+  if (!_fundBucketSelected) return;
+  const amount = parseFloat(document.getElementById('fund-bucket-amount')?.value) || 0;
+  if (amount <= 0) { showToast('Enter an amount first.'); return; }
+  closeModal('modal-fund-bucket');
+  await confirmBucketFunding(_fundBucketSelected, amount, btn);
+  _fundBucketSelected = null;
 }
 
 // ═══════════════════════════════════════
