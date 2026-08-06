@@ -2179,9 +2179,9 @@ body.is-scrolling .btn-primary:hover{transform:none!important;box-shadow:inherit
       <span class="db-chip-action-icon" style="background:var(--ds-green-l);color:var(--ds-green);"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" width="16" height="16"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg></span>
       <span class="db-chip-action-label">Ask Coach</span>
     </button>
-    <button class="db-chip-action" onclick="openAddIncomeModal()" type="button" aria-label="Add expected income">
+    <button class="db-chip-action" onclick="openAddIncomeModal()" type="button" aria-label="Log income">
       <span class="db-chip-action-icon" style="background:#fef3e0;color:var(--ds-c3);"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" width="16" height="16"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg></span>
-      <span class="db-chip-action-label">Expected income</span>
+      <span class="db-chip-action-label">Log income</span>
     </button>
     <button class="db-chip-action" onclick="openAddBillModal()" type="button" aria-label="Add a new bill">
       <span class="db-chip-action-icon" style="background:#fdeef2;color:var(--ds-c4);"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" width="16" height="16"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg></span>
@@ -9834,6 +9834,7 @@ function _pruneOrphanReservations(){
   }
 }
 function openAddBillModal(editIdx){
+  if (document.body.classList.contains('tour-active')) return;
   const modal=document.getElementById('modal-add-bill');
   const titleEl=document.getElementById('bill-modal-title');
   const saveBtn=document.getElementById('bill-save-btn');
@@ -10309,14 +10310,14 @@ function renderTimeline(){
 function renderForecast(){
   const el=document.getElementById('forecast-list');
   const today=new Date();today.setHours(0,0,0,0);
-  const sorted=[...S.forecast].sort((a,b)=>new Date(a.date)-new Date(b.date));
+  const sorted=[...S.forecast].sort((a,b)=>new Date(a.date+('T00:00:00'))-new Date(b.date+('T00:00:00')));
   if(!sorted.length){el.innerHTML='<div class="empty-state">No expected income added yet. Log a payment you know is coming so Able can plan ahead.</div>';return;}
   el.innerHTML='';
   sorted.forEach((f) => {
     // gotMoney/delForecast index into S.forecast (insertion order), not the sorted view,
     // so resolve the original index here. indexOf on the object reference is safe - sorted is a shallow copy.
     const realIdx = S.forecast.indexOf(f);
-    const d = new Date(f.date);
+    const d = new Date(f.date + 'T00:00:00');
     const diff = Math.round((d - today) / 86400000);
     const overdue = f.status === 'expected' && diff < 0;
     const received = f.status === 'received';
@@ -10444,6 +10445,7 @@ function addForecast(){
 // so the chip behaves like its sibling "Add bill" instead of navigating
 // to the Plan → Forecast page. Same data shape, same save path.
 function openAddIncomeModal(){
+  if (document.body.classList.contains('tour-active')) return;
   const modal = document.getElementById('modal-add-income');
   if (!modal) return;
   const srcSel = document.getElementById('qfc-src');
@@ -14423,9 +14425,9 @@ function computeCashFlowEvents(days, bucketData = { funded:{}, spent:{} }) {
   // Default: through last day of current month (strict boundary)
   const endOfMonth = new Date(today.getFullYear(), today.getMonth()+1, 0);
   endOfMonth.setHours(23,59,59,999);
-  if (days === undefined) {
-    days = Math.round((endOfMonth - today) / 86400000);
-  }
+  // Always use end-of-month as the authoritative boundary; `days` param is
+  // ignored for display — endOfMonth caps both income and bill events.
+  const billLookAheadDays = Math.round((endOfMonth - today) / 86400000) + 2;
 
   const events = [];
   for (const f of (S.forecast||[])) {
@@ -14436,7 +14438,7 @@ function computeCashFlowEvents(days, bucketData = { funded:{}, spent:{} }) {
   }
   for (const b of (S.bills||[])) {
     if (!b.amount || b.amount <= 0) continue;
-    const dates = billOccurrenceDates(b, days + 2);
+    const dates = billOccurrenceDates(b, billLookAheadDays);
     for (const d of dates) {
       if (d < today || d > endOfMonth) continue;
       events.push({ date:d, type:'bill', name:b.name, amount:b.amount, billPaid:!!b.paid });
@@ -14787,7 +14789,7 @@ function _renderWizardIncome(body){
     return `<div style="display:flex;align-items:center;gap:8px;padding:8px 0;border-bottom:1px solid var(--ds-line);">
       <div style="flex:1;">
         <div style="font-size:13px;font-weight:800;color:var(--ds-t1);">${escapeHtml(f.source)}${f.note?' · '+escapeHtml(f.note):''}</div>
-        <div style="font-size:11px;color:var(--ds-t3);font-weight:600;">${f2(f.amount)} · ${new Date(f.date).toLocaleDateString('en-US',{month:'short',day:'numeric'})}</div>
+        <div style="font-size:11px;color:var(--ds-t3);font-weight:600;">${f2(f.amount)} · ${new Date(f.date+'T00:00:00').toLocaleDateString('en-US',{month:'short',day:'numeric'})}</div>
       </div>
       <button onclick="delForecast(${ri});renderWizardStep();" style="background:none;border:none;color:var(--ds-c4);font-size:19px;cursor:pointer;padding:0 4px;line-height:1;">&times;</button>
     </div>`;
@@ -16474,9 +16476,8 @@ function buildNext14Events(days){
   // Forecasted income - only entries that haven't been marked received yet.
   (S.forecast||[]).forEach((f, forecastIndex) => {
     if (f.status === 'received') return;
-    const d = new Date(f.date);
+    const d = new Date(f.date + 'T00:00:00');
     if (isNaN(+d)) return;
-    d.setHours(0,0,0,0);
     const days = Math.round((d - now) / 86400000);
     if (days < 0 || days > win) return;
     events.push({
@@ -21386,6 +21387,21 @@ function buildCoachState() {
       totalDebtEnd: m.totalDebtEnd, bufferEnd: m.bufferEnd,
     })),
     totals: { monthlyBills: tb, incomeThisMonth: ti },
+    // Spending bucket / envelope state so Coach can answer "how funded is my
+    // Groceries bucket?" and "what should I move after this paycheck?"
+    spending_buckets: (() => {
+      const buckets = (typeof _bucketList === 'function') ? _bucketList() : [];
+      const cache = (typeof _bucketDataCache !== 'undefined') ? _bucketDataCache : { spent:{}, funded:{} };
+      return buckets.map(b => ({
+        id: b.id,
+        name: b.name,
+        target: b.target || null,
+        funded: Math.round((cache.funded[b.id] || 0) * 100) / 100,
+        spent: Math.round((cache.spent[b.id] || 0) * 100) / 100,
+        balance: Math.round(((cache.funded[b.id] || 0) - (cache.spent[b.id] || 0)) * 100) / 100,
+        fully_funded: b.target && (cache.funded[b.id] || 0) >= b.target,
+      }));
+    })(),
   };
 }
 
