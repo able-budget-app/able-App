@@ -14342,14 +14342,18 @@ function computeCashFlowEvents(days) {
     ev.balance = running;
   }
 
-  // Compute one-time action suggestions per income event
+  // Compute action suggestions per income event — buckets can be partially funded
+  // across multiple deposits when the full amount isn't safe to move at once.
   const goal = (S.settings && S.settings.month_goal) || 'track';
-  const pendingBuckets = _bucketList().filter(b => b.target && b.id !== 'avoidable');
+  // Track remaining amount still needed for each bucket (starts at target, drains across events)
+  const pendingBuckets = _bucketList()
+    .filter(b => b.target && b.id !== 'avoidable')
+    .map(b => ({ id:b.id, name:b.name, color:b.color, target:b.target, remaining:b.target }));
   let goalAssigned = false;
 
-  // Pre-compute minimum balance at all future event indices for look-ahead safety.
-  // Moving money to a bucket lowers every future balance by that amount, so we
-  // only suggest a move if the lowest future balance stays above the safety floor.
+  // Pre-compute minimum future balance at each event index.
+  // Moving money to a bucket effectively lowers all future balances by that amount,
+  // so we cap suggestions so the future floor never drops below SAFETY_FLOOR.
   const SAFETY_FLOOR = 200;
   const minFutureBalance = new Array(events.length).fill(Infinity);
   for (let i = events.length - 2; i >= 0; i--) {
@@ -14358,19 +14362,16 @@ function computeCashFlowEvents(days) {
 
   for (let i = 0; i < events.length; i++) {
     if (events[i].type !== 'income') continue;
-    // Find next income index
     let nextIncIdx = events.length;
     for (let j = i+1; j < events.length; j++) {
       if (events[j].type === 'income') { nextIncIdx = j; break; }
     }
-    // Unpaid bills between this income and the next
     const windowBills = [];
     for (let j = i+1; j < nextIncIdx; j++) {
       if (events[j].type === 'bill' && !events[j].billPaid) windowBills.push(events[j]);
     }
     const totalWindowBills = windowBills.reduce((s,b) => s + b.amount, 0);
-    // Surplus = running balance AFTER this deposit, minus bills due before next income
-    let surplus = events[i].balance - totalWindowBills;
+    const surplus = events[i].balance - totalWindowBills;
 
     const actions = [];
     if (windowBills.length > 0) {
@@ -14378,29 +14379,30 @@ function computeCashFlowEvents(days) {
     }
 
     if (surplus > 0.01) {
-      // futureMin: lowest balance at any point later in the month (Infinity if no future events)
-      const futureMin = minFutureBalance[i];
-      // Track cumulative amount suggested at this income event to maintain safety headroom
-      let movedAtThisEvent = 0;
+      const futureMin = minFutureBalance[i]; // Infinity when no future events
+      // Safe headroom at this income event: limited by local surplus AND by how much
+      // we can move before the future floor drops below the safety threshold.
+      let safeLeft = Math.max(0, Math.min(surplus, futureMin - SAFETY_FLOOR));
 
-      const toAssign = [];
-      for (let bi = pendingBuckets.length - 1; bi >= 0; bi--) {
-        const b = pendingBuckets[bi];
-        const moveAmt = b.target;
-        // Assign only if surplus can absorb it AND future minimum stays above safety floor
-        if (surplus >= moveAmt && (futureMin - movedAtThisEvent - moveAmt) >= SAFETY_FLOOR) {
-          toAssign.unshift(pendingBuckets.splice(bi, 1)[0]);
-          surplus -= moveAmt;
-          movedAtThisEvent += moveAmt;
-        }
+      // Fund each pending bucket up to available headroom; partial if not enough at once.
+      for (let bi = 0; bi < pendingBuckets.length && safeLeft > 0.01; bi++) {
+        const pb = pendingBuckets[bi];
+        const canMove = Math.min(pb.remaining, safeLeft);
+        if (canMove < 0.01) continue;
+        const stillNeeds = pb.remaining - canMove;
+        const partial = stillNeeds > 0.01;
+        const label = partial
+          ? `Move $${Math.round(canMove)} → ${pb.name} · $${Math.round(stillNeeds)} more later`
+          : `Move $${Math.round(canMove)} → ${pb.name}`;
+        actions.push({ type:'bucket', label, amount:canMove, color:pb.color });
+        pb.remaining = stillNeeds;
+        safeLeft -= canMove;
+        if (!partial) { pendingBuckets.splice(bi, 1); bi--; }
       }
-      for (const b of toAssign) {
-        actions.push({ type:'bucket', label:`Move $${b.target} → ${b.name}`, amount:b.target, color:b.color });
-      }
-      // Goal action: cap by how much the future floor can safely absorb
-      if (!goalAssigned && surplus > 0.01 && goal !== 'track') {
-        const maxSafe = Math.max(0, Math.min(surplus, futureMin - movedAtThisEvent - SAFETY_FLOOR));
-        const goalAmt = Math.round(maxSafe);
+
+      // Goal action (debt / cushion / breakeven): use whatever headroom remains
+      if (!goalAssigned && safeLeft > 0.01 && goal !== 'track') {
+        const goalAmt = Math.round(safeLeft);
         if (goalAmt > 0) {
           if (goal === 'debt') {
             const top = (S.bills||[])
