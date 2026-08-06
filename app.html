@@ -7833,7 +7833,10 @@ function flushSave() {
 }
 
 document.addEventListener('visibilitychange', () => {
-  if (document.hidden) flushSave();
+  if (document.hidden) { flushSave(); return; }
+  // App returned to foreground — expire the bucket cache so the next render
+  // re-fetches spending/funding data (catches background Plaid syncs).
+  _bucketDataMonthKey = '';
 });
 // iOS Safari (and some Android browsers) can fire pagehide without firing
 // visibilitychange when the tab is killed by the task switcher. Cover that
@@ -8035,13 +8038,37 @@ function billOccurrenceDates(bill,days){
   const now=new Date();now.setHours(0,0,0,0);
   const out=[];
   if (bill.paid) {
-    if (freq !== 'monthly') return [];
-    const dueDay = parseInt(bill.due);
-    if (isNaN(dueDay)) return [];
-    const nextDate = monthlyDueDate(now.getFullYear(), now.getMonth() + 1, dueDay);
-    const delta = Math.round((nextDate - now) / 86400000);
-    if (delta <= days && delta >= 0) out.push(nextDate);
-    return out;
+    if (freq === 'monthly') {
+      const dueDay = parseInt(bill.due);
+      if (isNaN(dueDay)) return [];
+      const nextDate = monthlyDueDate(now.getFullYear(), now.getMonth() + 1, dueDay);
+      const delta = Math.round((nextDate - now) / 86400000);
+      if (delta <= days && delta >= 0) out.push(nextDate);
+      return out;
+    }
+    if (freq === 'weekly') {
+      const targetDow = parseInt(bill.due);
+      if (isNaN(targetDow)) return [];
+      let delta = (targetDow - now.getDay() + 7) % 7;
+      if (delta === 0) delta = 7; // paid this week — advance to next
+      if (delta <= days) out.push(new Date(now.getTime() + delta * 86400000));
+      return out;
+    }
+    if (freq === 'biweekly' || freq === 'custom') {
+      const interval = freq === 'biweekly' ? 14 : (parseInt(bill.freqDays) || 14);
+      let anchor = bill.due ? new Date(bill.due) : null;
+      if (!anchor || isNaN(+anchor)) return [];
+      anchor.setHours(0,0,0,0);
+      const ms = interval * 86400000;
+      if (anchor < now) {
+        const steps = Math.ceil((now - anchor) / ms);
+        anchor = new Date(anchor.getTime() + steps * ms);
+      }
+      if (Math.round((anchor - now) / 86400000) === 0) anchor = new Date(anchor.getTime() + ms);
+      if (Math.round((anchor - now) / 86400000) <= days) out.push(new Date(anchor));
+      return out;
+    }
+    return [];
   }
   if(freq==='monthly'){
     const d=parseInt(bill.due);if(isNaN(d))return [];
@@ -9177,7 +9204,7 @@ function computeMonthlyScore(){
   const s2=de>0?Math.min(20,Math.round((de/Math.max(tb*0.05,1))*4)):0;
   const s3=bc>0?Math.min(15,Math.round((bc/Math.max(tb*0.05,1))*3)):0;
   const s4=15;
-  const ownerTarget=ti*((S.settings.ownerPct||0)/100);
+  const ownerTarget=ti*(((S.settings||{}).ownerPct||0)/100);
   const s5=op>0?(ownerTarget>0.01?Math.min(20,Math.round((op/ownerTarget)*20)):20):0;
   const total=Math.min(100,s1+s2+s3+s4+s5);
   const grades=[[90,'S, elite budgeter'],[75,'A, really solid'],[60,'B, on the right track'],[45,'C, needs some work'],[0,'D, let\'s fix this']];
@@ -10327,6 +10354,7 @@ function gotMoney(i){
   if(f.status==='received')return;
   if(!f.amount||f.amount<=0)return;
   f.status='received';
+  f.date=new Date().toISOString().slice(0,10);
   save();
   renderForecast();
   refreshHome();
@@ -14349,6 +14377,11 @@ function deleteBucket(id){
   const map = _txnBucketMap();
   for (const k of Object.keys(map)) { if (map[k] === id) delete map[k]; }
   save();
+  if (currentUser) {
+    sbGet().from('bucket_funding_events').delete()
+      .eq('user_id', currentUser.id).eq('bucket_id', id).then(() => {});
+  }
+  _bucketDataMonthKey = '';
   renderBucketSettingsList();
   renderHomeBuckets().catch(() => {});
 }
@@ -14386,7 +14419,7 @@ function selectBucketChip(id){
 // ═══════════════════════════════════════
 function computeCashFlowEvents(days, bucketData = { funded:{}, spent:{} }) {
   const today = new Date(); today.setHours(0,0,0,0);
-  const todayStr = today.toISOString().slice(0,10);
+  const todayStr = `${today.getFullYear()}-${String(today.getMonth()+1).padStart(2,'0')}-${String(today.getDate()).padStart(2,'0')}`;
   // Default: through last day of current month (strict boundary)
   const endOfMonth = new Date(today.getFullYear(), today.getMonth()+1, 0);
   endOfMonth.setHours(23,59,59,999);
@@ -14440,6 +14473,8 @@ function computeCashFlowEvents(days, bucketData = { funded:{}, spent:{} }) {
   // so we cap suggestions so the future floor never drops below SAFETY_FLOOR.
   const SAFETY_FLOOR = 200;
   const minFutureBalance = new Array(events.length).fill(Infinity);
+  // Last event has no successors — its own balance is the floor.
+  if (events.length > 0) minFutureBalance[events.length - 1] = events[events.length - 1].balance;
   for (let i = events.length - 2; i >= 0; i--) {
     minFutureBalance[i] = Math.min(events[i+1].balance, minFutureBalance[i+1]);
   }
@@ -14633,6 +14668,7 @@ async function renderCashFlowTimeline() {
 
 async function refreshOutlook() {
   _bucketDataMonthKey = '';
+  renderForecast();
   await loadBankBalances().catch(() => {});
   await renderCashFlowTimeline();
 }
@@ -15367,9 +15403,10 @@ function _renderActivityRow(r){
   // for ~90s before the classifier runs is anxiety-inducing. Render a
   // calmer "Sorting this..." pill with a subtle pulse instead, until the
   // Edge Function lands a real category.
+  const safeCat = /^[a-z0-9_-]+$/.test(cat) ? cat : 'unclassified';
   const catBadge = isSorting
     ? `<span class="act-sorting-badge" title="Able is classifying this transaction. Usually takes a minute or two."><span class="act-sorting-dot"></span>Sorting this…</span>`
-    : `<span class="act-cat-badge ${cat}">${escapeHtml(_catLabel(cat))}</span>`;
+    : `<span class="act-cat-badge ${safeCat}">${escapeHtml(_catLabel(cat))}</span>`;
   const name = r.merchant_name || r.name || 'Unknown';
   const pfc = _formatPfc(r.personal_finance_category_detailed, r.personal_finance_category_primary);
   const linkedBill = (typeof _billForTxn === 'function') ? _billForTxn(r) : null;
@@ -15560,7 +15597,7 @@ function openReclassifyModal(txnRowId){
   summary.innerHTML = `
     <div style="font-size:18px;font-weight:900;color:${isInflow ? 'var(--ds-green)' : 'var(--ds-t1)'};letter-spacing:-.01em;margin-bottom:4px;">${sign}${display}</div>
     <div style="font-size:13px;font-weight:800;color:var(--ds-t1);">${escapeHtml(name)}</div>
-    <div style="font-size:11px;font-weight:600;color:var(--ds-t3);margin-top:3px;">${_formatActivityDay(row.date)} · currently <span class="act-cat-badge ${row.able_category || 'unclassified'}">${escapeHtml(_catLabel(row.able_category))}</span>${pfc ? ` <span class="act-pfc-badge">${escapeHtml(pfc)}</span>` : ''} · ${conf}% sure${row.able_label ? ' · "' + escapeHtml(row.able_label) + '"' : ''}</div>`;
+    <div style="font-size:11px;font-weight:600;color:var(--ds-t3);margin-top:3px;">${_formatActivityDay(row.date)} · currently <span class="act-cat-badge ${/^[a-z0-9_-]+$/.test(row.able_category||'') ? row.able_category : 'unclassified'}">${escapeHtml(_catLabel(row.able_category))}</span>${pfc ? ` <span class="act-pfc-badge">${escapeHtml(pfc)}</span>` : ''} · ${conf}% sure${row.able_label ? ' · "' + escapeHtml(row.able_label) + '"' : ''}</div>`;
 
   const cats = isInflow ? ACTIVITY_INFLOW_CATS : ACTIVITY_OUTFLOW_CATS;
   // Pre-select the row's current category if it appears in the chip set
