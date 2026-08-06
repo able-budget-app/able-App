@@ -13483,33 +13483,52 @@ function _formatPfc(detailed, primary){
 let _activityRows = [];
 let _activeReclassifyTxn = null;
 
-// Shared bucket-spending cache — populated by renderHomeBuckets and renderCashFlowTimeline.
-// Maps bucket_id → total amount of transactions tagged to it this calendar month.
-let _bucketSpentThisMonth = {};
-let _bucketSpentMonthKey = '';
-async function _fetchBucketSpending() {
-  if (!currentUser) return {};
+// Unified bucket data cache — both tagged spending and confirmed funding events.
+// Invalidated by confirmBucketFunding() and refreshed each calendar month.
+let _bucketDataCache = { spent:{}, funded:{} };
+let _bucketDataMonthKey = '';
+async function _fetchBucketData() {
+  if (!currentUser) return { spent:{}, funded:{} };
   const now = new Date();
   const monthKey = `${now.getFullYear()}-${String(now.getMonth()+1).padStart(2,'0')}`;
-  if (_bucketSpentMonthKey === monthKey) return _bucketSpentThisMonth;
+  if (_bucketDataMonthKey === monthKey) return _bucketDataCache;
   const monthStart = `${monthKey}-01`;
-  const { data, error } = await sbGet()
-    .from('plaid_transactions')
-    .select('plaid_transaction_id, amount')
-    .eq('user_id', currentUser.id)
-    .gte('date', monthStart)
-    .gt('amount', 0);
-  const totals = {};
-  if (!error && data) {
+  const [txnRes, fundRes] = await Promise.all([
+    sbGet().from('plaid_transactions').select('plaid_transaction_id,amount')
+      .eq('user_id', currentUser.id).gte('date', monthStart).gt('amount', 0),
+    sbGet().from('bucket_funding_events').select('bucket_id,amount')
+      .eq('user_id', currentUser.id).eq('month', monthKey)
+  ]);
+  const spent = {};
+  if (!txnRes.error && txnRes.data) {
     const map = _txnBucketMap();
-    for (const t of data) {
+    for (const t of txnRes.data) {
       const bId = map[t.plaid_transaction_id];
-      if (bId) totals[bId] = (totals[bId] || 0) + t.amount;
+      if (bId) spent[bId] = (spent[bId]||0) + t.amount;
     }
   }
-  _bucketSpentThisMonth = totals;
-  _bucketSpentMonthKey = monthKey;
-  return totals;
+  const funded = {};
+  if (!fundRes.error && fundRes.data) {
+    for (const f of fundRes.data) funded[f.bucket_id] = (funded[f.bucket_id]||0) + f.amount;
+  }
+  _bucketDataCache = { spent, funded };
+  _bucketDataMonthKey = monthKey;
+  return _bucketDataCache;
+}
+
+async function confirmBucketFunding(bucketId, amount) {
+  if (!currentUser) return;
+  const now = new Date();
+  const month = `${now.getFullYear()}-${String(now.getMonth()+1).padStart(2,'0')}`;
+  const bucket = _bucketList().find(b => b.id === bucketId);
+  const { error } = await sbGet().from('bucket_funding_events').insert({
+    user_id: currentUser.id, bucket_id: bucketId, amount,
+    month, note: bucket ? `${bucket.name} funded` : 'Funded'
+  });
+  if (error) { console.error('confirmBucketFunding failed:', error); return; }
+  _bucketDataMonthKey = ''; // invalidate cache so next render re-fetches
+  await renderCashFlowTimeline();
+  renderHomeBuckets().catch(() => {});
 }
 let _activeReclassifyCat = null;
 let _activeReclassifyBucket = null;
@@ -14102,9 +14121,9 @@ async function renderHomeBuckets(){
 
   const now = new Date();
   const monthName = now.toLocaleDateString('en-US', { month: 'long' });
-  let totals = {};
+  let spentMap = {}, fundedMap = {};
   try {
-    if (buckets.length > 0) totals = await _fetchBucketSpending();
+    if (buckets.length > 0) { const d = await _fetchBucketData(); spentMap = d.spent; fundedMap = d.funded; }
   } catch(e) { console.warn('renderHomeBuckets fetch failed:', e); }
 
   // --- Bills bucket row ---
@@ -14129,12 +14148,12 @@ async function renderHomeBuckets(){
 
   // --- Spending bucket rows ---
   const bucketRows = buckets.map(b => {
-    const spent = totals[b.id] || 0;
-    const target = b.target || 0;
+    const spent   = spentMap[b.id]  || 0;
+    const funded  = fundedMap[b.id] || 0;
+    const target  = b.target || 0;
     const isAvoidable = b.id === 'avoidable';
 
     if (isAvoidable) {
-      // Avoidable: climbing number — no budget framing, just show total in amber
       const hasSpend = spent > 0.01;
       return `
         <div class="hb-row">
@@ -14151,7 +14170,37 @@ async function renderHomeBuckets(){
     }
 
     if (target > 0) {
-      // Budget bucket: counts down from target
+      if (funded > 0.01) {
+        // Envelope mode: funded amount is the envelope. Balance = funded − spent.
+        const balance = funded - spent;
+        const isFullyFunded = funded >= target - 0.01;
+        const fundPct = Math.min(100, Math.round((funded / target) * 100));
+        const balNeg = balance < -0.01;
+        const fundedBadge = isFullyFunded
+          ? `<span style="font-size:9px;font-weight:800;color:var(--ds-green);background:var(--ds-green-l);padding:1px 6px;border-radius:100px;letter-spacing:.04em;vertical-align:middle;">FUNDED ✓</span>`
+          : '';
+        return `
+          <div class="hb-row">
+            <div class="hb-row-top">
+              <div class="hb-row-label">
+                <div class="hb-dot" style="background:${b.color};"></div>
+                <span class="hb-name">${escapeHtml(b.name)} ${fundedBadge}</span>
+                <span class="hb-budget-tag">${f2(target)}</span>
+              </div>
+              <div class="hb-row-right">
+                ${balNeg
+                  ? `<span class="hb-amt hb-amt--bad">${f2(Math.abs(balance))} <span class="hb-sublabel">over</span></span>`
+                  : `<span class="hb-amt${isFullyFunded ? ' hb-amt--good' : ''}">${f2(balance)} <span class="hb-sublabel">left</span></span>`}
+              </div>
+            </div>
+            <div class="hb-bar-bg"><div class="hb-bar-fill" style="width:${fundPct}%;background:${b.color};"></div></div>
+            <div style="display:flex;gap:10px;margin-top:3px;">
+              <span style="font-size:10px;font-weight:700;color:var(--ds-t3);">Funded ${f2(funded)}</span>
+              <span style="font-size:10px;font-weight:700;color:var(--ds-t3);">· Spent ${f2(spent)}</span>
+            </div>
+          </div>`;
+      }
+      // No funding yet — show budget countdown (spent vs target) with hint
       const remaining = Math.max(0, target - spent);
       const pct = Math.min(100, Math.round((spent / target) * 100));
       const isOver = spent > target + 0.01;
@@ -14170,10 +14219,11 @@ async function renderHomeBuckets(){
             </div>
           </div>
           <div class="hb-bar-bg"><div class="hb-bar-fill" style="width:${pct}%;background:${isOver ? '#c25656' : b.color};"></div></div>
+          ${spent < 0.01 ? `<div style="font-size:10px;font-weight:600;color:var(--ds-t3);margin-top:3px;">Confirm funding from the Plan tab to activate envelope</div>` : ''}
         </div>`;
     }
 
-    // Bucket with no target — just show tagged total
+    // No target — just show tagged total
     const hasSpend = spent > 0.01;
     return `
       <div class="hb-row">
@@ -14319,7 +14369,7 @@ function selectBucketChip(id){
 // ═══════════════════════════════════════
 // CASH FLOW TIMELINE
 // ═══════════════════════════════════════
-function computeCashFlowEvents(days, bucketSpent = {}) {
+function computeCashFlowEvents(days, bucketFunded = {}) {
   const today = new Date(); today.setHours(0,0,0,0);
   const todayStr = today.toISOString().slice(0,10);
   // Default: through last day of current month (strict boundary)
@@ -14358,13 +14408,14 @@ function computeCashFlowEvents(days, bucketSpent = {}) {
   // Compute action suggestions per income event — buckets can be partially funded
   // across multiple deposits when the full amount isn't safe to move at once.
   const goal = (S.settings && S.settings.month_goal) || 'track';
-  // Track remaining amount still needed for each bucket.
-  // Subtract what's already been tagged to it this month — if fully covered, drop it entirely.
+  // Track remaining amount still needed to FUND each bucket.
+  // Uses confirmed funding events (not spending) — plan tells you what to move,
+  // the bucket card tracks how much is left in the envelope after spending.
   const pendingBuckets = _bucketList()
     .filter(b => b.target && b.id !== 'avoidable')
     .map(b => ({
       id:b.id, name:b.name, color:b.color, target:b.target,
-      remaining: Math.max(0, b.target - (bucketSpent[b.id] || 0))
+      remaining: Math.max(0, b.target - (bucketFunded[b.id] || 0))
     }))
     .filter(b => b.remaining > 0.01);
   let goalAssigned = false;
@@ -14412,7 +14463,7 @@ function computeCashFlowEvents(days, bucketSpent = {}) {
         const label = partial
           ? `Move $${Math.round(canMove)} → ${pb.name} · $${Math.round(stillNeeds)} more later`
           : `Move $${Math.round(canMove)} → ${pb.name}`;
-        actions.push({ type:'bucket', label, amount:canMove, color:pb.color });
+        actions.push({ type:'bucket', label, amount:canMove, color:pb.color, bucketId:pb.id });
         pb.remaining = stillNeeds;
         safeLeft -= canMove;
         if (!partial) { pendingBuckets.splice(bi, 1); bi--; }
@@ -14470,8 +14521,8 @@ async function renderCashFlowTimeline() {
       <div class="metric"><div class="metric-label">Projected net</div><div class="metric-val" style="color:${proj>=0?'var(--sage)':'var(--red)'};">${proj<0?'−':''}${fr(Math.abs(proj))}</div><div class="metric-sub">after all bills</div></div>
     </div>`;
 
-  const bucketSpent = await _fetchBucketSpending().catch(() => ({}));
-  const { events, startBal } = computeCashFlowEvents(daysLeft, bucketSpent);
+  const { funded: bucketFunded } = await _fetchBucketData().catch(() => ({ funded:{} }));
+  const { events, startBal } = computeCashFlowEvents(daysLeft, bucketFunded);
   const balSource = (S._bankBalances&&S._bankBalances.accounts&&S._bankBalances.accounts.length>0)
     ? S._bankBalances.accounts[0].institution_name : null;
 
@@ -14528,7 +14579,11 @@ async function renderCashFlowTimeline() {
         } else if (act.type==='bucket') {
           rows += `<div class="cf-action-row" style="padding-left:16px;">
             <span class="cf-action-name"><span style="display:inline-block;width:7px;height:7px;border-radius:50%;background:${act.color};margin-right:5px;vertical-align:middle;"></span>${escapeHtml(act.label)}</span>
-            <span class="cf-action-amt">${f2(act.amount)}</span>
+            <span style="display:flex;align-items:center;gap:6px;flex-shrink:0;">
+              <span class="cf-action-amt">${f2(act.amount)}</span>
+              <button type="button" onclick="confirmBucketFunding('${escapeAttr(act.bucketId)}',${act.amount})"
+                style="font-size:11px;font-weight:800;color:var(--ds-green);background:var(--ds-green-l);border:1.5px solid var(--ds-green-m);border-radius:100px;padding:3px 9px;cursor:pointer;font-family:var(--ds-f);white-space:nowrap;touch-action:manipulation;">✓ Done</button>
+            </span>
           </div>`;
         } else if (act.type==='short') {
           rows += `<div class="cf-action-block cf-action-block--warn">
