@@ -10332,9 +10332,10 @@ function gotMoney(i){
   showIncomeAction(f.amount, f.source);
 }
 
-function showIncomeAction(amount, source){
+async function showIncomeAction(amount, source){
   const goal = (S.settings && S.settings.month_goal) || 'track';
-  const cf = (typeof computeCashFlowEvents === 'function') ? computeCashFlowEvents(30) : null;
+  const bd = await _fetchBucketData().catch(() => ({ funded:{}, spent:{} }));
+  const cf = (typeof computeCashFlowEvents === 'function') ? computeCashFlowEvents(30, bd) : null;
   const lowPoint = cf ? cf.events.find(e => e.balance != null && e.balance < 200) : null;
 
   let suggestion = '';
@@ -13516,8 +13517,11 @@ async function _fetchBucketData() {
   return _bucketDataCache;
 }
 
-async function confirmBucketFunding(bucketId, amount) {
-  if (!currentUser) return;
+const _confirmingBuckets = new Set();
+async function confirmBucketFunding(bucketId, amount, btn) {
+  if (!currentUser || _confirmingBuckets.has(bucketId)) return;
+  _confirmingBuckets.add(bucketId);
+  if (btn) { btn.disabled = true; btn.style.opacity = '0.5'; }
   const now = new Date();
   const month = `${now.getFullYear()}-${String(now.getMonth()+1).padStart(2,'0')}`;
   const bucket = _bucketList().find(b => b.id === bucketId);
@@ -13525,7 +13529,12 @@ async function confirmBucketFunding(bucketId, amount) {
     user_id: currentUser.id, bucket_id: bucketId, amount,
     month, note: bucket ? `${bucket.name} funded` : 'Funded'
   });
-  if (error) { console.error('confirmBucketFunding failed:', error); return; }
+  _confirmingBuckets.delete(bucketId);
+  if (error) {
+    console.error('confirmBucketFunding failed:', error);
+    if (btn) { btn.disabled = false; btn.style.opacity = ''; }
+    return;
+  }
   _bucketDataMonthKey = ''; // invalidate cache so next render re-fetches
   await renderCashFlowTimeline();
   renderHomeBuckets().catch(() => {});
@@ -14440,7 +14449,8 @@ function computeCashFlowEvents(days, bucketData = { funded:{}, spent:{} }) {
       if (events[j].type === 'bill' && !events[j].billPaid) windowBills.push(events[j]);
     }
     const totalWindowBills = windowBills.reduce((s,b) => s + b.amount, 0);
-    const surplus = events[i].balance - totalWindowBills;
+    // surplus = post-income balance; futureMin already captures the dip when bills pay out
+    const surplus = events[i].balance;
 
     const actions = [];
     if (windowBills.length > 0) {
@@ -14581,7 +14591,7 @@ async function renderCashFlowTimeline() {
             <span class="cf-action-name"><span style="display:inline-block;width:7px;height:7px;border-radius:50%;background:${act.color};margin-right:5px;vertical-align:middle;"></span>${escapeHtml(act.label)}</span>
             <span style="display:flex;align-items:center;gap:6px;flex-shrink:0;">
               <span class="cf-action-amt">${f2(act.amount)}</span>
-              <button type="button" onclick="confirmBucketFunding('${escapeAttr(act.bucketId)}',${act.amount})"
+              <button type="button" onclick="confirmBucketFunding('${escapeAttr(act.bucketId)}',${act.amount},this)"
                 style="font-size:11px;font-weight:800;color:var(--ds-green);background:var(--ds-green-l);border:1.5px solid var(--ds-green-m);border-radius:100px;padding:3px 9px;cursor:pointer;font-family:var(--ds-f);white-space:nowrap;touch-action:manipulation;">✓ Done</button>
             </span>
           </div>`;
