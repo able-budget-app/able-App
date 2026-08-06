@@ -7700,6 +7700,7 @@ async function _writeUserData() {
   };
   const {error}=await sbGet().from('user_data').upsert(payload);
   setSyncState(error?'error':'ok');
+  if (error) showToast('Auto-save failed. Check your connection.', {duration:6000});
   if (!error) _persistUserDataCache(currentUser.id, payload);
 }
 
@@ -10069,7 +10070,7 @@ function saveEditDebt(){
   save();renderDebtPage();renderBillsPage();renderUpcoming();refreshHome();
 }
 function updateDebt(i,v){
-  S.debts[i].balance=parseFloat(v)||0;
+  S.debts[i].balance=Math.max(0,parseFloat(v)||0);
   save();refreshHome();renderTimeline();
 }
 // Manual "I just paid extra on this debt" entry point. Without it, the
@@ -10145,11 +10146,11 @@ async function delDebt(i){
 }
 async function addDebt(){
   const name=document.getElementById('nd-name').value.trim();
-  const balance=parseFloat(document.getElementById('nd-bal').value)||0;
-  const min=parseFloat(document.getElementById('nd-min').value)||0;
-  const rate=parseFloat(document.getElementById('nd-apr').value)||0;
+  const balance=Math.max(0,parseFloat(document.getElementById('nd-bal').value)||0);
+  const min=Math.max(0,parseFloat(document.getElementById('nd-min').value)||0);
+  const rate=Math.max(0,parseFloat(document.getElementById('nd-apr').value)||0);
   const dueDayRaw=parseInt(document.getElementById('nd-due').value);
-  if(!name||!balance)return;
+  if(!name||balance<=0)return;
   let dueDay = Number.isFinite(dueDayRaw) ? dueDayRaw : null;
   if(dueDay !== null){
     if(dueDay < 1 || dueDay > 31){alert('Due day must be between 1 and 31.');return;}
@@ -10329,7 +10330,9 @@ function gotMoney(i){
   save();
   renderForecast();
   refreshHome();
-  showIncomeAction(f.amount, f.source);
+  goTo('forecast');
+  refreshOutlook().catch(()=>{});
+  showToast(`${escapeHtml(f.source||'Income')} received — see your updated plan below.`, {duration:3500});
 }
 
 async function showIncomeAction(amount, source){
@@ -12024,6 +12027,7 @@ async function saveSettings(){
     if(!(await appConfirm({ title: `Split adds up to ${total}%`, body: `The remaining ${rest}% will go to debt payoff on top of your ${debt}% setting, meaning ${debt+rest}% of surplus goes to debt.\n\nSave this way, or tap Cancel to adjust so everything totals 100%.`, confirmLabel: 'Save anyway' })))return;
   }
   S.settings={...S.settings,ownerPct:owner,debtPct:debt,bufPct:buf,freePct:free};save();
+  refreshHome();
   showToast('Split saved.', { duration: 3000 });
 }
 function populateSources(){
@@ -12191,7 +12195,7 @@ async function deleteFixedAlloc(i){
 function openBufferModal(){document.getElementById('buf-inp').value=S.buffer.toFixed(2);document.getElementById('modal-buffer').style.display='flex';}
 function saveBuffer(){
   const prev = S.buffer || 0;
-  const next = parseFloat(document.getElementById('buf-inp').value) || 0;
+  const next = Math.max(0, parseFloat(document.getElementById('buf-inp').value) || 0);
   S.buffer = next;
   const delta = next - prev;
   // Credit any increase to bufContrib so the monthly Reserve score moves.
@@ -13491,12 +13495,14 @@ let _bucketDataMonthKey = '';
 async function _fetchBucketData() {
   if (!currentUser) return { spent:{}, funded:{} };
   const now = new Date();
-  const monthKey = `${now.getFullYear()}-${String(now.getMonth()+1).padStart(2,'0')}`;
+  const y = now.getFullYear(), mo = now.getMonth() + 1;
+  const monthKey = `${y}-${String(mo).padStart(2,'0')}`;
   if (_bucketDataMonthKey === monthKey) return _bucketDataCache;
   const monthStart = `${monthKey}-01`;
+  const nextMo = mo === 12 ? `${y+1}-01-01` : `${y}-${String(mo+1).padStart(2,'0')}-01`;
   const [txnRes, fundRes] = await Promise.all([
     sbGet().from('plaid_transactions').select('plaid_transaction_id,amount')
-      .eq('user_id', currentUser.id).gte('date', monthStart).gt('amount', 0),
+      .eq('user_id', currentUser.id).gte('date', monthStart).lt('date', nextMo).gt('amount', 0),
     sbGet().from('bucket_funding_events').select('bucket_id,amount')
       .eq('user_id', currentUser.id).eq('month', monthKey)
   ]);
@@ -13536,7 +13542,7 @@ async function confirmBucketFunding(bucketId, amount, btn) {
     return;
   }
   _bucketDataMonthKey = ''; // invalidate cache so next render re-fetches
-  await renderCashFlowTimeline();
+  try { await renderCashFlowTimeline(); } catch(e) { console.error('timeline re-render failed:', e); }
   renderHomeBuckets().catch(() => {});
 }
 let _activeReclassifyCat = null;
@@ -15342,8 +15348,10 @@ function _refreshBusinessFilterOptions(){
 }
 
 function _formatActivityDay(iso){
+  if (!iso || iso === 'null') return 'Pending';
   try {
     const d = new Date(iso + 'T00:00:00');
+    if (isNaN(d)) return 'Pending';
     return d.toLocaleDateString(undefined, { weekday: 'short', month: 'short', day: 'numeric' });
   } catch (_) { return iso; }
 }
@@ -15373,8 +15381,10 @@ function _renderActivityRow(r){
   const bucketBadge = txnBucket
     ? `<span class="act-bucket-badge" style="background:${txnBucket.color};">${escapeHtml(txnBucket.name)}</span>`
     : '';
+  const rowClick = r.plaid_transaction_id
+    ? `onclick="openReclassifyModal('${escapeAttr(r.plaid_transaction_id)}')"` : '';
   return `
-    <div class="act-row" onclick="openReclassifyModal('${escapeAttr(r.plaid_transaction_id)}')">
+    <div class="act-row" ${rowClick}>
       <div class="act-row-info">
         <div class="act-row-name">${escapeHtml(name)}</div>
         <div class="act-row-meta">
@@ -15816,6 +15826,7 @@ async function applyReclassify(){
     }
 
     closeReclassifyModal();
+    if (category !== row.able_category) _bucketDataMonthKey = '';
     // Preserve scroll across the list rebuild. The real save happens in
     // openReclassifyModal — by the time we're inside applyReclassify, the
     // body-scroll-lock observer has body{position:fixed} and window.scrollY
@@ -15824,6 +15835,7 @@ async function applyReclassify(){
     // re-populated list to actually paint before we restore.
     if (bucketChanged) renderHomeBuckets().catch(() => {});
     await renderActivityPage();
+    renderActivitySpendingBuckets().catch(() => {});
     await new Promise(r => requestAnimationFrame(() => requestAnimationFrame(r)));
     window.scrollTo(0, _activityScrollBeforeReclassify);
     renderIncomeInboxBanner();
@@ -18227,6 +18239,9 @@ window.addEventListener('load', async () => {
     _dbg('Auth event:', event);
     if(event === 'SIGNED_OUT') {
       currentUser = null;
+      _activityRows = [];
+      _activeReclassifyTxn = null;
+      _bucketDataMonthKey = '';
       initialSessionHandled = false;
       document.getElementById('app').style.display = 'none';
       document.getElementById('paywall-screen').style.display = 'none';
