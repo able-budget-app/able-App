@@ -2202,7 +2202,7 @@ body.is-scrolling .btn-primary:hover{transform:none!important;box-shadow:inherit
   <div>
     <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:.5rem;">
       <div class="sec" style="margin:0;">30-day outlook</div>
-      <button type="button" onclick="renderCashFlowTimeline()" title="Refresh" style="background:none;border:none;cursor:pointer;padding:4px 6px;color:var(--ds-t3);font-size:13px;font-weight:700;display:flex;align-items:center;gap:4px;">
+      <button type="button" onclick="refreshOutlook()" title="Refresh" style="background:none;border:none;cursor:pointer;padding:4px 6px;color:var(--ds-t3);font-size:13px;font-weight:700;display:flex;align-items:center;gap:4px;">
         <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M23 4v6h-6"/><path d="M1 20v-6h6"/><path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"/></svg>
         Refresh
       </button>
@@ -14021,9 +14021,9 @@ async function renderActivitySpendingBuckets(){
   if (!wrap) return;
   if (!currentUser) { wrap.style.display = 'none'; return; }
   try {
-    const since = new Date();
-    since.setDate(since.getDate() - 30);
-    const sinceStr = `${since.getFullYear()}-${String(since.getMonth()+1).padStart(2,'0')}-${String(since.getDate()).padStart(2,'0')}`;
+    const now = new Date();
+    const sinceStr = `${now.getFullYear()}-${String(now.getMonth()+1).padStart(2,'0')}-01`;
+    const monthLabel = now.toLocaleDateString('en-US', { month: 'long' }).toUpperCase();
     const { data, error } = await sbGet()
       .from('plaid_transactions')
       .select('amount, personal_finance_category_primary, merchant_name, name, date')
@@ -14052,7 +14052,7 @@ async function renderActivitySpendingBuckets(){
       <div style="background:white;border:1px solid var(--ds-line);border-radius:var(--ds-r2);padding:1.1rem 1.25rem;box-shadow:var(--ds-sh1);">
         <div style="display:flex;justify-content:space-between;align-items:baseline;margin-bottom:.85rem;gap:.5rem;flex-wrap:wrap;">
           <div style="font-size:14px;font-weight:900;color:var(--ds-t1);letter-spacing:-.01em;">Where it went</div>
-          <div style="font-size:11px;font-weight:800;color:var(--ds-t3);letter-spacing:.08em;">LAST 30 DAYS · ${f2(total)}</div>
+          <div style="font-size:11px;font-weight:800;color:var(--ds-t3);letter-spacing:.08em;">${monthLabel} · ${f2(total)}</div>
         </div>
         <div>${sorted.map(([key, b]) => {
           const friendly = _ACTIVITY_BUCKETS[key] || _ACTIVITY_BUCKETS.OTHER;
@@ -14369,7 +14369,7 @@ function selectBucketChip(id){
 // ═══════════════════════════════════════
 // CASH FLOW TIMELINE
 // ═══════════════════════════════════════
-function computeCashFlowEvents(days, bucketFunded = {}) {
+function computeCashFlowEvents(days, bucketData = { funded:{}, spent:{} }) {
   const today = new Date(); today.setHours(0,0,0,0);
   const todayStr = today.toISOString().slice(0,10);
   // Default: through last day of current month (strict boundary)
@@ -14415,7 +14415,7 @@ function computeCashFlowEvents(days, bucketFunded = {}) {
     .filter(b => b.target && b.id !== 'avoidable')
     .map(b => ({
       id:b.id, name:b.name, color:b.color, target:b.target,
-      remaining: Math.max(0, b.target - (bucketFunded[b.id] || 0))
+      remaining: Math.max(0, b.target - Math.max(bucketData.funded[b.id]||0, bucketData.spent[b.id]||0))
     }))
     .filter(b => b.remaining > 0.01);
   let goalAssigned = false;
@@ -14521,8 +14521,8 @@ async function renderCashFlowTimeline() {
       <div class="metric"><div class="metric-label">Projected net</div><div class="metric-val" style="color:${proj>=0?'var(--sage)':'var(--red)'};">${proj<0?'−':''}${fr(Math.abs(proj))}</div><div class="metric-sub">after all bills</div></div>
     </div>`;
 
-  const { funded: bucketFunded } = await _fetchBucketData().catch(() => ({ funded:{} }));
-  const { events, startBal } = computeCashFlowEvents(daysLeft, bucketFunded);
+  const bucketData = await _fetchBucketData().catch(() => ({ funded:{}, spent:{} }));
+  const { events, startBal } = computeCashFlowEvents(daysLeft, bucketData);
   const balSource = (S._bankBalances&&S._bankBalances.accounts&&S._bankBalances.accounts.length>0)
     ? S._bankBalances.accounts[0].institution_name : null;
 
@@ -14613,6 +14613,12 @@ async function renderCashFlowTimeline() {
       </div>
       ${startBal===0?`<div style="margin-top:8px;font-size:11px;color:var(--ds-t3);font-weight:600;">Connect your bank or <button type="button" onclick="openCheckingBalanceInput()" style="background:none;border:none;color:var(--ds-green);font-size:11px;font-weight:700;cursor:pointer;padding:0;">enter today's balance</button> for an accurate projection.</div>`:''}
     </div>${metrics}`;
+}
+
+async function refreshOutlook() {
+  _bucketDataMonthKey = '';
+  await loadBankBalances().catch(() => {});
+  await renderCashFlowTimeline();
 }
 
 function openCheckingBalanceInput(){
@@ -15712,15 +15718,19 @@ async function applyReclassify(){
   // Bucket assignment: local-only, persisted in S.settings.txn_buckets
   const bucketMap = _txnBucketMap();
   const prevBucket = bucketMap[row.plaid_transaction_id];
+  let bucketChanged = false;
   if (_activeReclassifyBucket) {
     if (bucketMap[row.plaid_transaction_id] !== _activeReclassifyBucket) {
       bucketMap[row.plaid_transaction_id] = _activeReclassifyBucket;
       try { save(); } catch(_) {}
+      bucketChanged = true;
     }
   } else if (prevBucket) {
     delete bucketMap[row.plaid_transaction_id];
     try { save(); } catch(_) {}
+    bucketChanged = true;
   }
+  if (bucketChanged) _bucketDataMonthKey = ''; // invalidate so home + plan re-fetch
   const isInflow = (row.amount ?? 0) < 0;
   const body = {
     txn_row_id: row.id,
@@ -15802,6 +15812,7 @@ async function applyReclassify(){
     // reads 0. _activityScrollBeforeReclassify was set BEFORE the modal
     // opened, so it has the user's true position. Double-rAF waits for the
     // re-populated list to actually paint before we restore.
+    if (bucketChanged) renderHomeBuckets().catch(() => {});
     await renderActivityPage();
     await new Promise(r => requestAnimationFrame(() => requestAnimationFrame(r)));
     window.scrollTo(0, _activityScrollBeforeReclassify);
