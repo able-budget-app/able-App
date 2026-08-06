@@ -1424,12 +1424,6 @@ body.is-scrolling .btn-primary:hover{transform:none!important;box-shadow:inherit
 .db-score-card-head{position:relative;display:flex;justify-content:space-between;align-items:baseline;margin-bottom:.85rem;}
 .db-score-card-head .db-score-card-num{font-size:1.35rem;}
 .db-score-card-head .db-score-card-num .db-score-card-max{font-size:11px;}
-/* Pace slot - host for loadPaceLine SVG. Dark theme styling lives there. */
-.db-score-pace{position:relative;background:rgba(255,255,255,.04);border:1px solid rgba(184,224,200,.1);border-radius:var(--ds-r1);padding:10px 12px 11px;margin-bottom:.75rem;min-height:64px;}
-.db-score-pace:empty{display:none;}
-.db-score-pace--dark .db-pace-label{font-size:11px;font-weight:700;color:rgba(255,255,255,.7);letter-spacing:-.005em;}
-.db-score-pace--dark .db-pace-gap{font-size:11px;font-weight:800;letter-spacing:-.005em;}
-.db-score-pace--dark .db-pace-foot{display:flex;justify-content:space-between;margin-top:6px;font-size:9px;font-weight:700;color:rgba(255,255,255,.4);letter-spacing:.1em;text-transform:uppercase;}
 /* 5 equal-weight habit rings replacing the chips/extras split. */
 .db-habits-row{position:relative;display:grid;grid-template-columns:repeat(5,1fr);gap:6px;margin-top:.25rem;}
 .db-habit{display:flex;flex-direction:column;align-items:center;text-align:center;padding:8px 4px 6px;background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.06);border-radius:var(--ds-r1);min-height:72px;cursor:pointer;transition:background .15s,transform .15s;}
@@ -1715,6 +1709,20 @@ body.is-scrolling .btn-primary:hover{transform:none!important;box-shadow:inherit
 .cf-event.out .cf-event-amt{color:#c25656;}
 .cf-event-bal{font-size:11px;font-weight:700;min-width:60px;text-align:right;color:var(--ds-t3);}
 .cf-low-badge{display:inline-flex;align-items:center;gap:5px;background:#fff3d6;color:#9a6e0c;font-size:11px;font-weight:800;padding:3px 9px;border-radius:100px;margin:4px 0;}
+.cf-event--paid{opacity:.55;}
+.cf-event--paid .cf-event-dot{background:var(--ds-green);}
+/* Action suggestion blocks below income events */
+.cf-actions{margin:4px 0 8px 16px;padding:8px 10px;background:var(--ds-page);border-radius:var(--ds-r1);border-left:3px solid var(--ds-green);}
+.cf-action-hdr{font-size:10px;font-weight:800;color:var(--ds-t3);letter-spacing:.06em;text-transform:uppercase;margin-bottom:5px;}
+.cf-action-block{margin-bottom:6px;}
+.cf-action-block--goal{border-top:1px solid var(--ds-line);padding-top:6px;margin-top:6px;}
+.cf-action-block--warn{border-top:1px solid var(--ds-line);padding-top:6px;margin-top:6px;}
+.cf-action-row{display:flex;justify-content:space-between;align-items:center;padding:2px 0;}
+.cf-action-row--total{border-top:1px solid var(--ds-line);margin-top:3px;padding-top:4px;font-weight:800;}
+.cf-action-name{font-size:12px;font-weight:600;color:var(--ds-t2);}
+.cf-action-amt{font-size:12px;font-weight:800;color:var(--ds-t1);}
+.cf-action-amt--green{color:var(--ds-green);}
+.cf-action-amt--red{color:#c25656;}
 /* Rows inside the past-due review modal */
 .past-due-row{display:flex;align-items:center;gap:12px;padding:11px 14px;background:var(--ds-page);border-radius:var(--ds-r1);margin-bottom:7px;}
 .past-due-row-info{flex:1;min-width:0;}
@@ -2182,7 +2190,6 @@ body.is-scrolling .btn-primary:hover{transform:none!important;box-shadow:inherit
   </div>
 
   <!-- Legacy paceline slot - kept for DOM safety -->
-  <div id="home-paceline" style="display:none;"></div>
 
   <!-- INCOME THIS MONTH -->
   <div class="sec" style="margin-top:1.5rem;">Income this month</div>
@@ -2192,27 +2199,31 @@ body.is-scrolling .btn-primary:hover{transform:none!important;box-shadow:inherit
 <!-- FORECAST -->
 <div class="page" id="page-forecast">
   <h1 class="sr-only">Forecast</h1>
-  <div class="two-col">
-    <div>
-      <div class="sec">Expected income</div>
-      <div id="forecast-list"><div class="empty-state">No expected income added yet. Log a payment you know is coming so Able can plan ahead.</div></div>
-      <div class="sec">Add expected income</div>
-      <div class="card">
-        <div class="form-row">
-          <div class="field"><label>Source</label><select id="fc-src"></select></div>
-          <div class="field"><label>Amount ($)</label><input type="number" id="fc-amt" placeholder="0.00" min="0"></div>
-        </div>
-        <div class="form-row">
-          <div class="field"><label>Expected date</label><input type="date" id="fc-date"></div>
-          <div class="field"><label>Note (optional)</label><input type="text" id="fc-note" placeholder="Client name, project..."></div>
-        </div>
-        <button class="btn btn-primary btn-sm" onclick="addForecast()">Add to forecast</button>
-      </div>
+  <div>
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:.5rem;">
+      <div class="sec" style="margin:0;">30-day outlook</div>
+      <button type="button" onclick="renderCashFlowTimeline()" title="Refresh" style="background:none;border:none;cursor:pointer;padding:4px 6px;color:var(--ds-t3);font-size:13px;font-weight:700;display:flex;align-items:center;gap:4px;">
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M23 4v6h-6"/><path d="M1 20v-6h6"/><path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"/></svg>
+        Refresh
+      </button>
     </div>
-    <div>
-      <div class="sec">30-day outlook</div>
-      <div id="fc-outlook"></div>
-      <div class="sec" style="margin-top:1.5rem;">Add bills to your calendar</div>
+    <div id="fc-outlook"></div>
+    <div class="sec" style="margin-top:1.5rem;">Expected income</div>
+    <div id="forecast-list"><div class="empty-state">No expected income added yet. Log a payment you know is coming so Able can plan ahead.</div></div>
+    <div class="sec" style="margin-top:1.5rem;">Add expected income</div>
+    <div class="card">
+      <div class="form-row">
+        <div class="field"><label>Source</label><select id="fc-src"></select></div>
+        <div class="field"><label>Amount ($)</label><input type="number" id="fc-amt" placeholder="0.00" min="0"></div>
+      </div>
+      <div class="form-row">
+        <div class="field"><label>Expected date</label><input type="date" id="fc-date"></div>
+        <div class="field"><label>Note (optional)</label><input type="text" id="fc-note" placeholder="Client name, project..."></div>
+      </div>
+      <button class="btn btn-primary btn-sm" onclick="addForecast()">Add to forecast</button>
+    </div>
+    <div class="sec" style="margin-top:1.5rem;">Add bills to your calendar</div>
+    <div style="display:none;"><!-- removed wrapper -->
       <div class="card">
         <div style="font-size:13px;color:var(--ds-t2);font-weight:600;margin-bottom:1rem;line-height:1.6;">Add all your bill due dates as monthly repeating reminders.</div>
         <div style="display:flex;flex-direction:column;gap:10px;">
@@ -2230,7 +2241,6 @@ body.is-scrolling .btn-primary:hover{transform:none!important;box-shadow:inherit
     </div>
   </div>
 </div>
-
 <!-- DEBT -->
 <div class="page" id="page-debt">
   <h1 class="sr-only">Debt payoff</h1>
@@ -2238,6 +2248,8 @@ body.is-scrolling .btn-primary:hover{transform:none!important;box-shadow:inherit
        Sort and "Pay this first" labels respect the choice. First-time tip
        appears below until dismissed. -->
   <div id="debt-strategy-toggle"></div>
+  <!-- Debt bucket callout - shows extra debt payments tagged this month -->
+  <div id="debt-bucket-callout"></div>
   <!-- Payoff-date card - leading callout. Uses last-90-day Plaid debt-payment
        pace (floored at sum of minimums) to project a single "debt-free by"
        date. Renders only when there are debts with a balance. -->
@@ -2297,9 +2309,7 @@ body.is-scrolling .btn-primary:hover{transform:none!important;box-shadow:inherit
     </div>
     <div class="detected-bills-banner-arrow">›</div>
   </div>
-  <!-- Summary card: monthly total + tracked count, plus a "Funded this month"
-       bar so the Floor-First question (am I covered?) is answered before
-       the user scrolls the list. -->
+  <!-- Summary card: monthly total + tracked count + "Paid this month" bar. -->
   <div class="card" style="padding:16px 18px 14px;margin-bottom:.85rem;">
     <div style="display:flex;align-items:flex-start;justify-content:space-between;gap:10px;">
       <div>
@@ -2313,7 +2323,7 @@ body.is-scrolling .btn-primary:hover{transform:none!important;box-shadow:inherit
     </div>
     <div id="bills-funded-block" style="margin-top:.85rem;padding-top:.85rem;border-top:1px solid var(--ds-line);">
       <div style="display:flex;justify-content:space-between;align-items:baseline;margin-bottom:6px;">
-        <div style="font-size:11px;font-weight:800;color:var(--ds-green2);letter-spacing:-.005em;">Funded this month</div>
+        <div style="font-size:11px;font-weight:800;color:var(--ds-green2);letter-spacing:-.005em;">Paid this month</div>
         <div style="font-size:12px;font-weight:800;color:var(--ds-t1);letter-spacing:-.005em;font-family:var(--ds-f);" id="bills-funded-num">$0 <span style="color:var(--ds-t3);font-weight:600;">/ $0</span></div>
       </div>
       <div style="height:8px;background:rgba(42,122,74,.15);border-radius:999px;overflow:hidden;"><div id="bills-funded-fill" style="height:100%;width:0%;background:linear-gradient(90deg,var(--ds-green),var(--ds-green2));border-radius:999px;transition:width .6s cubic-bezier(.34,1.2,.64,1);"></div></div>
@@ -2560,7 +2570,7 @@ body.is-scrolling .btn-primary:hover{transform:none!important;box-shadow:inherit
 
 <!-- BUCKET SETTINGS MODAL -->
 <div class="modal-bg" id="modal-bucket-settings" style="display:none;" role="dialog" aria-modal="true" onclick="if(event.target===this)closeModal('modal-bucket-settings')">
-  <div class="modal" style="max-width:400px;">
+  <div class="modal" style="max-width:400px;max-height:85vh;overflow-y:auto;padding-bottom:2rem;">
     <button class="modal-close" onclick="closeModal('modal-bucket-settings')" aria-label="Close"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button>
     <div class="modal-title">Spending buckets</div>
     <div style="font-size:13px;color:var(--ds-t2);font-weight:600;line-height:1.55;margin-bottom:1rem;">Label transactions on the Activity tab to track spending by purpose. Set a monthly target to see your progress here.</div>
@@ -9233,16 +9243,26 @@ function refreshHome(){
   // whatever's already merged, then a re-render after dedup catches new ones.
   dedupPlaidWithHistory().then((merged) => { if (merged > 0) renderHistory(); }).catch(() => {});
   renderHistory();
-  loadPaceLine().catch(() => {});
+  // pace line removed
   // Async fetch of cached Plaid balances; repaints the hero when done so
   // users see "Bank balances: $X across N accounts" without blocking the
   // initial render. No-op when the user hasn't connected a bank.
   loadBankBalances().then(() => renderHeroMoney()).catch(() => {});
   renderHomeBuckets().catch(() => {});
-  // Month-start wizard: once per calendar month, only after bills are set up
-  if (currentUser && (S.bills||[]).length>0 && S.settings.wizard_month!==_wizardMonthKey() && !_wizardShownThisSession) {
-    _wizardShownThisSession=true;
-    setTimeout(openMonthWizard, 1000);
+  // Planning wizard: fires 3 days before month end to plan the upcoming month,
+  // OR on the 1st/2nd of a new month if they missed the pre-month prompt.
+  if (currentUser && (S.bills||[]).length > 0 && !_wizardShownThisSession) {
+    const now = new Date();
+    const daysLeftInMonth = new Date(now.getFullYear(), now.getMonth()+1, 0).getDate() - now.getDate();
+    const planningKey = daysLeftInMonth <= 3
+      ? _wizardNextMonthKey()   // pre-month: plan next month
+      : _wizardMonthKey();      // early month: plan current month
+    const isEarlyMonth = now.getDate() <= 2;
+    const isPreMonth = daysLeftInMonth <= 3;
+    if ((isPreMonth || isEarlyMonth) && S.settings.wizard_month !== planningKey) {
+      _wizardShownThisSession = true;
+      setTimeout(openMonthWizard, 1000);
+    }
   }
 }
 
@@ -9657,26 +9677,24 @@ function renderBillsPage(){
   const countEl=document.getElementById('bills-count');
   if(countEl) countEl.textContent=String(S.bills.length);
 
-  // "Funded this month" bar: paid + reserved vs. total floor.
+  // "Paid this month" bar: paid vs. total.
   const tb = totalBills();
   const pb = (typeof paidBills === 'function') ? paidBills() : 0;
-  const reservedTotal = (typeof _totalReservedNow === 'function') ? _totalReservedNow() : 0;
-  const funded = pb + reservedTotal;
-  const pct = tb > 0 ? Math.max(0, Math.min(100, Math.round((funded / tb) * 100))) : 0;
+  const pct = tb > 0 ? Math.max(0, Math.min(100, Math.round((pb / tb) * 100))) : 0;
   const numEl = document.getElementById('bills-funded-num');
   const fillEl = document.getElementById('bills-funded-fill');
   const capEl = document.getElementById('bills-funded-cap');
   const block = document.getElementById('bills-funded-block');
   if (block) block.style.display = tb > 0.01 ? '' : 'none';
-  if (numEl) numEl.innerHTML = `${f2(funded)} <span style="color:var(--ds-t3);font-weight:600;">/ ${f2(tb)}</span>`;
+  if (numEl) numEl.innerHTML = `${f2(pb)} <span style="color:var(--ds-t3);font-weight:600;">/ ${f2(tb)}</span>`;
   if (fillEl) fillEl.style.width = pct + '%';
   if (capEl) {
-    const stillToFund = Math.max(0, tb - funded);
-    const remaining = S.bills.filter(b => !b.paid && (Math.min((reservedTotal>0?_billReserved(b.id):0), b.amount||0) < (b.amount||0) - 0.01));
-    if (stillToFund <= 0.01) {
-      capEl.innerHTML = `<b>Floor covered.</b> Surplus is going to the rest of your plan.`;
+    const remaining = Math.max(0, tb - pb);
+    const unpaidCount = S.bills.filter(b => !b.paid).length;
+    if (remaining <= 0.01) {
+      capEl.innerHTML = `<b>All paid.</b> Great month.`;
     } else {
-      capEl.innerHTML = `<b>${remaining.length} of ${S.bills.length}</b> still to fund. ${f2(stillToFund)} short of the floor.`;
+      capEl.innerHTML = `<b>${unpaidCount} bill${unpaidCount === 1 ? '' : 's'}</b> still unpaid · ${f2(remaining)} left.`;
     }
   }
 
@@ -9969,6 +9987,7 @@ async function dismissStrategyTip(){
 }
 
 function renderDebtPage(){
+  renderDebtBucketCallout().catch(() => {});
   // Async - fires-and-forgets, populates each card when its query returns.
   renderPayoffStrategyToggle();
   renderPayoffEstimateCard();
@@ -13474,10 +13493,8 @@ let _activityScrollBeforeReclassify = 0;
 // Hidden when there's no Plaid history yet or no bills/baseline to
 // anchor against - the line would be meaningless.
 async function loadPaceLine(){
-  // Pace line now lives inside the home Score card (#db-score-pace).
-  // Falls back to the legacy #home-paceline slot for backwards-compat
-  // (older builds where the card hasn't been migrated yet).
-  const wrap = document.getElementById('db-score-pace') || document.getElementById('home-paceline');
+  return; // removed — pace line deprecated
+  const wrap = null; // eslint-disable-line
   if (!wrap) return;
   const isInScoreCard = wrap.id === 'db-score-pace';
   if (isInScoreCard) wrap.classList.add('db-score-pace--dark');
@@ -14172,6 +14189,36 @@ async function renderHomeBuckets(){
     </div>`;
 }
 
+async function renderDebtBucketCallout(){
+  const el = document.getElementById('debt-bucket-callout');
+  if (!el) return;
+  const buckets = _bucketList();
+  const debtBucket = buckets.find(b => /debt/i.test(b.name) || b.id === 'debt');
+  if (!debtBucket || !currentUser) { el.innerHTML = ''; return; }
+  const now = new Date();
+  const monthStart = `${now.getFullYear()}-${String(now.getMonth()+1).padStart(2,'0')}-01`;
+  try {
+    const { data, error } = await sbGet()
+      .from('plaid_transactions')
+      .select('plaid_transaction_id, amount')
+      .eq('user_id', currentUser.id)
+      .gte('date', monthStart)
+      .gt('amount', 0);
+    if (error) throw error;
+    const map = _txnBucketMap();
+    let total = 0;
+    if (data) for (const t of data) {
+      if (map[t.plaid_transaction_id] === debtBucket.id) total += t.amount;
+    }
+    if (total < 0.01) { el.innerHTML = ''; return; }
+    const monthName = now.toLocaleDateString('en-US', { month: 'long' });
+    el.innerHTML = `<div style="background:#f0f9f4;border:1px solid #b8e0c8;border-radius:var(--ds-r2);padding:.85rem 1.1rem;margin-bottom:.85rem;display:flex;align-items:center;gap:10px;">
+      <div style="width:9px;height:9px;border-radius:50%;background:${debtBucket.color};flex-shrink:0;"></div>
+      <div style="font-size:13px;font-weight:700;color:#1a5c3a;">You put <b>${f2(total)}</b> toward debt in ${monthName}. Tagged under <b>${escapeHtml(debtBucket.name)}</b> in Activity.</div>
+    </div>`;
+  } catch(e) { el.innerHTML = ''; }
+}
+
 function openBucketSettingsModal(){
   const modal = document.getElementById('modal-bucket-settings');
   if (modal) modal.style.display = 'flex';
@@ -14262,26 +14309,30 @@ function selectBucketChip(id){
 function computeCashFlowEvents(days) {
   const today = new Date(); today.setHours(0,0,0,0);
   const todayStr = today.toISOString().slice(0,10);
+  // Default: through last day of current month (strict boundary)
+  const endOfMonth = new Date(today.getFullYear(), today.getMonth()+1, 0);
+  endOfMonth.setHours(23,59,59,999);
+  if (days === undefined) {
+    days = Math.round((endOfMonth - today) / 86400000);
+  }
+
   const events = [];
-  // Pending forecast income on or after today
   for (const f of (S.forecast||[])) {
     if (f.status === 'received' || !f.amount || f.date < todayStr) continue;
-    const d = new Date(f.date); d.setHours(0,0,0,0);
-    if (Math.round((d - today) / 86400000) > days) continue;
+    const d = new Date(f.date + 'T00:00:00'); d.setHours(0,0,0,0);
+    if (d > endOfMonth) continue;
     events.push({ date:d, type:'income', name:f.source+(f.note?' · '+f.note:''), amount:f.amount });
   }
-  // Bill occurrences in the window
   for (const b of (S.bills||[])) {
     if (!b.amount || b.amount <= 0) continue;
-    const dates = billOccurrenceDates(b, days);
+    const dates = billOccurrenceDates(b, days + 2);
     for (const d of dates) {
-      if (d < today) continue;
-      events.push({ date:d, type:'bill', name:b.name, amount:b.amount });
+      if (d < today || d > endOfMonth) continue;
+      events.push({ date:d, type:'bill', name:b.name, amount:b.amount, billPaid:!!b.paid });
     }
   }
-  // Sort by date; income before bills on same day
   events.sort((a,b) => { const dt=a.date-b.date; return dt!==0?dt:(a.type==='income'?-1:1); });
-  // Starting balance: Plaid available balance if loaded, else manual setting
+
   const startBal = (S._bankBalances && typeof S._bankBalances.sum==='number' && S._bankBalances.sum>0)
     ? S._bankBalances.sum
     : (parseFloat((S.settings||{}).checking_balance)||0);
@@ -14290,12 +14341,102 @@ function computeCashFlowEvents(days) {
     running += ev.type==='income' ? ev.amount : -ev.amount;
     ev.balance = running;
   }
+
+  // Compute one-time action suggestions per income event
+  const goal = (S.settings && S.settings.month_goal) || 'track';
+  const pendingBuckets = _bucketList().filter(b => b.target && b.id !== 'avoidable');
+  let goalAssigned = false;
+
+  // Pre-compute minimum balance at all future event indices for look-ahead safety.
+  // Moving money to a bucket lowers every future balance by that amount, so we
+  // only suggest a move if the lowest future balance stays above the safety floor.
+  const SAFETY_FLOOR = 200;
+  const minFutureBalance = new Array(events.length).fill(Infinity);
+  for (let i = events.length - 2; i >= 0; i--) {
+    minFutureBalance[i] = Math.min(events[i+1].balance, minFutureBalance[i+1]);
+  }
+
+  for (let i = 0; i < events.length; i++) {
+    if (events[i].type !== 'income') continue;
+    // Find next income index
+    let nextIncIdx = events.length;
+    for (let j = i+1; j < events.length; j++) {
+      if (events[j].type === 'income') { nextIncIdx = j; break; }
+    }
+    // Unpaid bills between this income and the next
+    const windowBills = [];
+    for (let j = i+1; j < nextIncIdx; j++) {
+      if (events[j].type === 'bill' && !events[j].billPaid) windowBills.push(events[j]);
+    }
+    const totalWindowBills = windowBills.reduce((s,b) => s + b.amount, 0);
+    // Surplus = running balance AFTER this deposit, minus bills due before next income
+    let surplus = events[i].balance - totalWindowBills;
+
+    const actions = [];
+    if (windowBills.length > 0) {
+      actions.push({ type:'bills', bills:windowBills, total:totalWindowBills });
+    }
+
+    if (surplus > 0.01) {
+      // futureMin: lowest balance at any point later in the month (Infinity if no future events)
+      const futureMin = minFutureBalance[i];
+      // Track cumulative amount suggested at this income event to maintain safety headroom
+      let movedAtThisEvent = 0;
+
+      const toAssign = [];
+      for (let bi = pendingBuckets.length - 1; bi >= 0; bi--) {
+        const b = pendingBuckets[bi];
+        const moveAmt = b.target;
+        // Assign only if surplus can absorb it AND future minimum stays above safety floor
+        if (surplus >= moveAmt && (futureMin - movedAtThisEvent - moveAmt) >= SAFETY_FLOOR) {
+          toAssign.unshift(pendingBuckets.splice(bi, 1)[0]);
+          surplus -= moveAmt;
+          movedAtThisEvent += moveAmt;
+        }
+      }
+      for (const b of toAssign) {
+        actions.push({ type:'bucket', label:`Move $${b.target} → ${b.name}`, amount:b.target, color:b.color });
+      }
+      // Goal action: cap by how much the future floor can safely absorb
+      if (!goalAssigned && surplus > 0.01 && goal !== 'track') {
+        const maxSafe = Math.max(0, Math.min(surplus, futureMin - movedAtThisEvent - SAFETY_FLOOR));
+        const goalAmt = Math.round(maxSafe);
+        if (goalAmt > 0) {
+          if (goal === 'debt') {
+            const top = (S.bills||[])
+              .filter(b => b.cat==='debt' || /credit|loan|card/i.test(b.name||''))
+              .sort((a,b)=>(b.amount||0)-(a.amount||0))[0];
+            const amt = Math.round(Math.min(goalAmt, top ? top.amount : goalAmt));
+            if (amt > 0) {
+              actions.push({ type:'goal', label:`Pay extra → ${top ? top.name : 'debt'}`, amount:amt });
+              goalAssigned = true;
+            }
+          } else if (goal === 'cushion') {
+            actions.push({ type:'goal', label:'Move to savings', amount:goalAmt });
+            goalAssigned = true;
+          } else if (goal === 'breakeven') {
+            actions.push({ type:'goal', label:'Hold as buffer', amount:goalAmt });
+            goalAssigned = true;
+          }
+        }
+      }
+    } else if (surplus < -0.01) {
+      actions.push({ type:'short', amount:Math.abs(surplus) });
+    }
+
+    if (actions.length) events[i].actions = actions;
+  }
   return { events, startBal };
 }
 
 function renderCashFlowTimeline() {
   const el = document.getElementById('fc-outlook');
   if (!el) return;
+  const today = new Date(); today.setHours(0,0,0,0);
+  const monthName = today.toLocaleDateString('en-US', {month:'long'});
+  const endOfMonth = new Date(today.getFullYear(), today.getMonth()+1, 0);
+  const daysLeft = Math.round((endOfMonth - today) / 86400000) + 1;
+
   const tb=totalBills(), ti=totalIn();
   const pending=(S.forecast||[]).filter(f=>f.status!=='received').reduce((s,f)=>s+f.amount,0);
   const proj=ti+pending-tb;
@@ -14309,21 +14450,24 @@ function renderCashFlowTimeline() {
       <div class="metric"><div class="metric-label">Projected net</div><div class="metric-val" style="color:${proj>=0?'var(--sage)':'var(--red)'};">${proj<0?'−':''}${fr(Math.abs(proj))}</div><div class="metric-sub">after all bills</div></div>
     </div>`;
 
-  const { events, startBal } = computeCashFlowEvents(35);
-  if (events.length === 0) { el.innerHTML = metrics; return; }
+  const { events, startBal } = computeCashFlowEvents(daysLeft);
+  const balSource = (S._bankBalances&&S._bankBalances.accounts&&S._bankBalances.accounts.length>0)
+    ? S._bankBalances.accounts[0].institution_name : null;
 
-  // Find lowest balance
+  if (events.length === 0) {
+    el.innerHTML = `<div style="background:white;border:1px solid var(--ds-line);border-radius:var(--ds-r2);padding:1.1rem 1.25rem;box-shadow:var(--ds-sh1);margin-bottom:.75rem;">
+      <div style="font-size:14px;font-weight:900;color:var(--ds-t1);margin-bottom:.5rem;">${monthName} outlook</div>
+      <div style="font-size:13px;color:var(--ds-t3);font-weight:600;">No income or bills left this month. Add expected income above to see your plan.</div>
+    </div>${metrics}`;
+    return;
+  }
+
   let minBal=startBal, minIdx=-1;
   for (let i=0;i<events.length;i++) {
     if (events[i].balance < minBal) { minBal=events[i].balance; minIdx=i; }
   }
   const endBal = events[events.length-1].balance;
-  const balSource = (S._bankBalances&&S._bankBalances.accounts&&S._bankBalances.accounts.length>0)
-    ? S._bankBalances.accounts[0].institution_name : null;
 
-  // Build event rows grouped by date
-  const today=new Date(); today.setHours(0,0,0,0);
-  const monthName=today.toLocaleDateString('en-US',{month:'long'});
   let rows='', lastDateLabel='';
   for (let i=0;i<events.length;i++) {
     const ev=events[i];
@@ -14334,34 +14478,64 @@ function renderCashFlowTimeline() {
       lastDateLabel=dateLabel;
     }
     const balColor=ev.balance<0?'#c25656':ev.balance<200?'#c97c0a':'var(--ds-t3)';
-    rows+=`<div class="cf-event ${ev.type==='income'?'in':'out'}">
+    const isPaid = ev.type==='bill' && ev.billPaid;
+    rows+=`<div class="cf-event ${ev.type==='income'?'in':'out'}${isPaid?' cf-event--paid':''}">
       <div class="cf-event-dot"></div>
-      <div class="cf-event-name">${escapeHtml(ev.name)}</div>
+      <div class="cf-event-name">${escapeHtml(ev.name)}${isPaid?' <span style="font-size:9px;font-weight:800;color:var(--ds-green);background:var(--ds-green-l);padding:1px 5px;border-radius:100px;letter-spacing:.04em;vertical-align:middle;">PAID</span>':''}</div>
       <div class="cf-event-amt">${ev.type==='income'?'+':'−'}${f2(ev.amount)}</div>
       <div class="cf-event-bal" style="color:${balColor};">${f2(ev.balance)}</div>
     </div>`;
-    if (i===minIdx && minBal<startBal*0.2) {
-      rows+=`<div><span class="cf-low-badge">⚠ Low point · ${f2(minBal)}</span></div>`;
+    if (i===minIdx && minBal < 200) {
+      rows+=`<div style="padding:2px 0 4px 20px;"><span class="cf-low-badge">⚠ Low point · ${f2(minBal)}</span></div>`;
+    }
+    // Action suggestions below income events
+    if (ev.type==='income' && ev.actions && ev.actions.length) {
+      rows += `<div class="cf-actions">`;
+      for (const act of ev.actions) {
+        if (act.type==='bills') {
+          rows += `<div class="cf-action-block">
+            <div class="cf-action-hdr">Bills to cover from this deposit</div>`;
+          for (const b of act.bills) {
+            rows += `<div class="cf-action-row"><span class="cf-action-name">· ${escapeHtml(b.name)}</span><span class="cf-action-amt">${f2(b.amount)}</span></div>`;
+          }
+          rows += `<div class="cf-action-row cf-action-row--total"><span class="cf-action-name">Total</span><span class="cf-action-amt">${f2(act.total)}</span></div>`;
+          rows += `</div>`;
+        } else if (act.type==='goal') {
+          rows += `<div class="cf-action-block cf-action-block--goal">
+            <div class="cf-action-row"><span class="cf-action-name">→ ${escapeHtml(act.label)}</span><span class="cf-action-amt cf-action-amt--green">${f2(act.amount)}</span></div>
+          </div>`;
+        } else if (act.type==='bucket') {
+          rows += `<div class="cf-action-row" style="padding-left:16px;">
+            <span class="cf-action-name"><span style="display:inline-block;width:7px;height:7px;border-radius:50%;background:${act.color};margin-right:5px;vertical-align:middle;"></span>${escapeHtml(act.label)}</span>
+            <span class="cf-action-amt">${f2(act.amount)}</span>
+          </div>`;
+        } else if (act.type==='short') {
+          rows += `<div class="cf-action-block cf-action-block--warn">
+            <div class="cf-action-row"><span class="cf-action-name">⚠ Short by</span><span class="cf-action-amt cf-action-amt--red">${f2(act.amount)}</span></div>
+          </div>`;
+        }
+      }
+      rows += `</div>`;
     }
   }
 
   el.innerHTML = `
     <div style="background:white;border:1px solid var(--ds-line);border-radius:var(--ds-r2);padding:1.1rem 1.25rem;box-shadow:var(--ds-sh1);">
       <div style="display:flex;justify-content:space-between;align-items:baseline;margin-bottom:.75rem;flex-wrap:wrap;gap:.3rem;">
-        <div style="font-size:14px;font-weight:900;color:var(--ds-t1);">${monthName} cash flow</div>
-        <div style="font-size:11px;font-weight:700;color:var(--ds-t3);">Start ${f2(startBal)}${balSource?` · ${balSource}`:''}</div>
+        <div style="font-size:14px;font-weight:900;color:var(--ds-t1);">${monthName} outlook</div>
+        <div style="font-size:11px;font-weight:700;color:var(--ds-t3);">Starting ${f2(startBal)}${balSource?` · ${balSource}`:''}</div>
       </div>
-      <div style="display:grid;grid-template-columns:1fr auto auto;gap:0 4px;align-items:center;">
+      <div style="display:grid;grid-template-columns:1fr auto auto;gap:0 4px;align-items:center;padding-bottom:4px;border-bottom:1px solid var(--ds-line);margin-bottom:4px;">
         <div style="font-size:10px;font-weight:800;color:var(--ds-t4);letter-spacing:.05em;text-transform:uppercase;">Event</div>
         <div style="font-size:10px;font-weight:800;color:var(--ds-t4);letter-spacing:.05em;text-transform:uppercase;text-align:right;min-width:65px;">Amount</div>
         <div style="font-size:10px;font-weight:800;color:var(--ds-t4);letter-spacing:.05em;text-transform:uppercase;text-align:right;min-width:60px;">Balance</div>
       </div>
       ${rows}
       <div style="border-top:1px solid var(--ds-line);margin-top:10px;padding-top:10px;display:flex;justify-content:space-between;align-items:baseline;">
-        <span style="font-size:12px;font-weight:700;color:var(--ds-t2);">End of period</span>
+        <span style="font-size:12px;font-weight:700;color:var(--ds-t2);">End of ${monthName}</span>
         <span style="font-size:14px;font-weight:900;color:${endBal<0?'#c25656':endBal<300?'#c97c0a':'var(--ds-green)'};">${f2(endBal)}</span>
       </div>
-      ${!balSource&&startBal===0?`<div style="margin-top:8px;font-size:11px;color:var(--ds-t3);font-weight:600;">Connect your bank or <button type="button" onclick="openCheckingBalanceInput()" style="background:none;border:none;color:var(--ds-green);font-size:11px;font-weight:700;cursor:pointer;padding:0;">enter today's balance</button> to project from a real starting point.</div>`:''}
+      ${startBal===0?`<div style="margin-top:8px;font-size:11px;color:var(--ds-t3);font-weight:600;">Connect your bank or <button type="button" onclick="openCheckingBalanceInput()" style="background:none;border:none;color:var(--ds-green);font-size:11px;font-weight:700;cursor:pointer;padding:0;">enter today's balance</button> for an accurate projection.</div>`:''}
     </div>${metrics}`;
 }
 
@@ -14392,6 +14566,20 @@ function _wizardMonthKey(){
   const n=new Date();
   return `${n.getFullYear()}-${String(n.getMonth()+1).padStart(2,'0')}`;
 }
+function _wizardNextMonthKey(){
+  const n=new Date();
+  const nm=new Date(n.getFullYear(), n.getMonth()+1, 1);
+  return `${nm.getFullYear()}-${String(nm.getMonth()+1).padStart(2,'0')}`;
+}
+function _wizardPlanningMonthLabel(){
+  const now=new Date();
+  const daysLeft=new Date(now.getFullYear(),now.getMonth()+1,0).getDate()-now.getDate();
+  if (daysLeft<=3) {
+    const nm=new Date(now.getFullYear(),now.getMonth()+1,1);
+    return nm.toLocaleDateString('en-US',{month:'long',year:'numeric'});
+  }
+  return now.toLocaleDateString('en-US',{month:'long',year:'numeric'});
+}
 
 function openMonthWizard(){
   _wizardStep=0;
@@ -14399,14 +14587,19 @@ function openMonthWizard(){
   if (!modal) return;
   modal.style.display='flex';
   const lbl=document.getElementById('wiz-month-label');
-  if (lbl) lbl.textContent=new Date().toLocaleDateString('en-US',{month:'long',year:'numeric'})+' · Plan';
+  if (lbl) lbl.textContent=_wizardPlanningMonthLabel()+' · Plan';
   renderWizardStep();
 }
 
 function closeMonthWizard(markDone){
   const modal=document.getElementById('modal-month-wizard');
   if (modal) modal.style.display='none';
-  if (markDone) { S.settings.wizard_month=_wizardMonthKey(); save(); }
+  if (markDone) {
+    const now=new Date();
+    const daysLeft=new Date(now.getFullYear(),now.getMonth()+1,0).getDate()-now.getDate();
+    S.settings.wizard_month = daysLeft<=3 ? _wizardNextMonthKey() : _wizardMonthKey();
+    save();
+  }
 }
 
 function wizardNext(){
@@ -15089,7 +15282,7 @@ function _renderActivityRow(r){
     ? `<span class="act-bucket-badge" style="background:${txnBucket.color};">${escapeHtml(txnBucket.name)}</span>`
     : '';
   return `
-    <div class="act-row" onclick="openReclassifyModal('${r.id}')">
+    <div class="act-row" onclick="openReclassifyModal('${escapeAttr(r.plaid_transaction_id)}')"
       <div class="act-row-info">
         <div class="act-row-name">${escapeHtml(name)}</div>
         <div class="act-row-meta">
@@ -15187,7 +15380,7 @@ function _linkedToBillSummary(billId) {
 }
 
 function openReclassifyModal(txnRowId){
-  const row = _activityRows.find((r) => r.id === txnRowId);
+  const row = _activityRows.find((r) => r.plaid_transaction_id === txnRowId || String(r.id) === String(txnRowId));
   if (!row) return;
   // Capture scroll position BEFORE the modal opens — the body-scroll-lock
   // MutationObserver (around line 12695) is about to set body{position:fixed}
