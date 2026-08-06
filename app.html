@@ -2081,11 +2081,11 @@ body.is-scrolling .btn-primary:hover{transform:none!important;box-shadow:inherit
 <!-- Sub-navigation for grouped tabs. Visible when the group is active. -->
 <div class="sub-nav" id="sub-nav-plan" style="display:none;">
   <div class="sub-nav-inner">
+    <button class="sub-tab" data-sub="forecast" onclick="goTo('forecast')">Plan</button>
     <button class="sub-tab" data-sub="bills" onclick="goTo('bills')">Bills</button>
-    <button class="sub-tab" data-sub="whatif" onclick="goTo('whatif')">What-if</button>
-    <button class="sub-tab" data-sub="forecast" onclick="goTo('forecast')">Forecast</button>
-    <button class="sub-tab" data-sub="debt" onclick="goTo('debt')">Debt</button>
     <button class="sub-tab" data-sub="activity" onclick="goTo('activity')">Activity</button>
+    <button class="sub-tab" data-sub="debt" onclick="goTo('debt')">Debt</button>
+    <button class="sub-tab" data-sub="whatif" onclick="goTo('whatif')">What-if</button>
   </div>
 </div>
 <div class="sub-nav" id="sub-nav-more" style="display:none;">
@@ -13482,6 +13482,35 @@ function _formatPfc(detailed, primary){
 }
 let _activityRows = [];
 let _activeReclassifyTxn = null;
+
+// Shared bucket-spending cache — populated by renderHomeBuckets and renderCashFlowTimeline.
+// Maps bucket_id → total amount of transactions tagged to it this calendar month.
+let _bucketSpentThisMonth = {};
+let _bucketSpentMonthKey = '';
+async function _fetchBucketSpending() {
+  if (!currentUser) return {};
+  const now = new Date();
+  const monthKey = `${now.getFullYear()}-${String(now.getMonth()+1).padStart(2,'0')}`;
+  if (_bucketSpentMonthKey === monthKey) return _bucketSpentThisMonth;
+  const monthStart = `${monthKey}-01`;
+  const { data, error } = await sbGet()
+    .from('plaid_transactions')
+    .select('plaid_transaction_id, amount')
+    .eq('user_id', currentUser.id)
+    .gte('date', monthStart)
+    .gt('amount', 0);
+  const totals = {};
+  if (!error && data) {
+    const map = _txnBucketMap();
+    for (const t of data) {
+      const bId = map[t.plaid_transaction_id];
+      if (bId) totals[bId] = (totals[bId] || 0) + t.amount;
+    }
+  }
+  _bucketSpentThisMonth = totals;
+  _bucketSpentMonthKey = monthKey;
+  return totals;
+}
 let _activeReclassifyCat = null;
 let _activeReclassifyBucket = null;
 let _activityScrollBeforeReclassify = 0;
@@ -14071,27 +14100,11 @@ async function renderHomeBuckets(){
     return;
   }
 
-  // Fetch this month's tagged transactions
   const now = new Date();
-  const monthStart = `${now.getFullYear()}-${String(now.getMonth()+1).padStart(2,'0')}-01`;
   const monthName = now.toLocaleDateString('en-US', { month: 'long' });
   let totals = {};
   try {
-    if (buckets.length > 0) {
-      const { data, error } = await sbGet()
-        .from('plaid_transactions')
-        .select('plaid_transaction_id, amount')
-        .eq('user_id', currentUser.id)
-        .gte('date', monthStart)
-        .gt('amount', 0);
-      if (!error && data) {
-        const map = _txnBucketMap();
-        for (const t of data) {
-          const bId = map[t.plaid_transaction_id];
-          if (bId) totals[bId] = (totals[bId] || 0) + t.amount;
-        }
-      }
-    }
+    if (buckets.length > 0) totals = await _fetchBucketSpending();
   } catch(e) { console.warn('renderHomeBuckets fetch failed:', e); }
 
   // --- Bills bucket row ---
@@ -14306,7 +14319,7 @@ function selectBucketChip(id){
 // ═══════════════════════════════════════
 // CASH FLOW TIMELINE
 // ═══════════════════════════════════════
-function computeCashFlowEvents(days) {
+function computeCashFlowEvents(days, bucketSpent = {}) {
   const today = new Date(); today.setHours(0,0,0,0);
   const todayStr = today.toISOString().slice(0,10);
   // Default: through last day of current month (strict boundary)
@@ -14345,10 +14358,15 @@ function computeCashFlowEvents(days) {
   // Compute action suggestions per income event — buckets can be partially funded
   // across multiple deposits when the full amount isn't safe to move at once.
   const goal = (S.settings && S.settings.month_goal) || 'track';
-  // Track remaining amount still needed for each bucket (starts at target, drains across events)
+  // Track remaining amount still needed for each bucket.
+  // Subtract what's already been tagged to it this month — if fully covered, drop it entirely.
   const pendingBuckets = _bucketList()
     .filter(b => b.target && b.id !== 'avoidable')
-    .map(b => ({ id:b.id, name:b.name, color:b.color, target:b.target, remaining:b.target }));
+    .map(b => ({
+      id:b.id, name:b.name, color:b.color, target:b.target,
+      remaining: Math.max(0, b.target - (bucketSpent[b.id] || 0))
+    }))
+    .filter(b => b.remaining > 0.01);
   let goalAssigned = false;
 
   // Pre-compute minimum future balance at each event index.
@@ -14431,7 +14449,7 @@ function computeCashFlowEvents(days) {
   return { events, startBal };
 }
 
-function renderCashFlowTimeline() {
+async function renderCashFlowTimeline() {
   const el = document.getElementById('fc-outlook');
   if (!el) return;
   const today = new Date(); today.setHours(0,0,0,0);
@@ -14452,7 +14470,8 @@ function renderCashFlowTimeline() {
       <div class="metric"><div class="metric-label">Projected net</div><div class="metric-val" style="color:${proj>=0?'var(--sage)':'var(--red)'};">${proj<0?'−':''}${fr(Math.abs(proj))}</div><div class="metric-sub">after all bills</div></div>
     </div>`;
 
-  const { events, startBal } = computeCashFlowEvents(daysLeft);
+  const bucketSpent = await _fetchBucketSpending().catch(() => ({}));
+  const { events, startBal } = computeCashFlowEvents(daysLeft, bucketSpent);
   const balSource = (S._bankBalances&&S._bankBalances.accounts&&S._bankBalances.accounts.length>0)
     ? S._bankBalances.accounts[0].institution_name : null;
 
@@ -17266,7 +17285,7 @@ const PAGE_TO_GROUP = {
   score:'score',
   learn:'more', refer:'more', settings:'more',
 };
-const GROUP_DEFAULT = { plan:'bills', more:'learn' };
+const GROUP_DEFAULT = { plan:'forecast', more:'learn' };
 
 function goTo(target){
   // Accept either a group name (Plan / More) or a specific page id.
