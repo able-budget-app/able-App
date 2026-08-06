@@ -15284,7 +15284,7 @@ function _renderActivityRow(r){
     ? `<span class="act-bucket-badge" style="background:${txnBucket.color};">${escapeHtml(txnBucket.name)}</span>`
     : '';
   return `
-    <div class="act-row" onclick="openReclassifyModal('${escapeAttr(r.plaid_transaction_id)}')"
+    <div class="act-row" onclick="openReclassifyModal('${escapeAttr(r.plaid_transaction_id)}')">
       <div class="act-row-info">
         <div class="act-row-name">${escapeHtml(name)}</div>
         <div class="act-row-meta">
