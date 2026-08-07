@@ -11514,7 +11514,7 @@ async function loadConnectedAccounts() {
     const itemIds = items.map((i) => i.id);
     const { data: accounts } = await sb
       .from('plaid_accounts')
-      .select('plaid_item_id, name, mask, type, subtype')
+      .select('id, plaid_item_id, name, mask, type, subtype')
       .eq('user_id', currentUser.id)
       .in('plaid_item_id', itemIds);
 
@@ -11540,11 +11540,16 @@ async function loadConnectedAccounts() {
       estimateCountByItem[r.plaid_item_id] = (estimateCountByItem[r.plaid_item_id] || 0) + 1;
     });
 
+    const primaryId = (S.settings || {}).primary_account_id || null;
     listEl.innerHTML = items.map((item) => {
       const accs = accountsByItem[item.id] || [];
-      const accLabel = accs.length
-        ? accs.map((a) => a.mask ? `${a.name || a.subtype || 'account'} ····${a.mask}` : (a.name || a.subtype || 'account')).join(' · ')
-        : 'No accounts';
+      const accLabel = accs.length ? accs.map((a) => {
+        const label = a.mask ? `${a.name || a.subtype || 'account'} ····${a.mask}` : (a.name || a.subtype || 'account');
+        const isChecking = a.type === 'depository';
+        const isPrimary = a.id === primaryId;
+        const toggleBtn = isChecking ? `<button onclick="setPrimaryAccount('${escapeAttr(a.id)}')" style="flex-shrink:0;font-size:10px;font-weight:700;padding:2px 8px;border-radius:100px;border:1px solid ${isPrimary ? 'var(--ds-green)' : 'var(--ds-t4)'};background:${isPrimary ? '#eaf6ef' : 'transparent'};color:${isPrimary ? 'var(--ds-green)' : 'var(--ds-t3)'};cursor:pointer;">${isPrimary ? '✓ Budget source' : 'Set as budget source'}</button>` : '';
+        return `<div style="display:flex;align-items:center;justify-content:space-between;gap:8px;padding:2px 0;">\n  <span style="font-size:11px;color:var(--ds-t3);font-weight:600;">${escapeHtml(label)}</span>${toggleBtn}</div>`;
+      }).join('') : '<div style="font-size:11px;color:var(--ds-t3);font-weight:600;">No accounts</div>';
       const status = item.status || 'active';
       const statusBadge = status === 'active' ? '' : `
         <span style="display:inline-block;font-size:10px;font-weight:800;letter-spacing:.06em;text-transform:uppercase;color:var(--ds-c4);background:#fdeef2;padding:3px 7px;border-radius:100px;margin-left:8px;">${statusLabel(status)}</span>`;
@@ -11563,7 +11568,7 @@ async function loadConnectedAccounts() {
         <div style="display:flex;align-items:flex-start;justify-content:space-between;gap:12px;padding:14px 0;border-bottom:1px solid var(--ds-t4);">
           <div style="flex:1;min-width:0;">
             <div style="font-weight:800;font-size:14px;color:var(--ds-t1);letter-spacing:-.01em;">${escapeHtml(item.institution_name || 'Connected bank')}${statusBadge}</div>
-            <div style="font-size:11px;color:var(--ds-t3);font-weight:600;margin-top:3px;line-height:1.5;word-break:break-word;">${escapeHtml(accLabel)}</div>
+            <div style="margin-top:4px;line-height:1.6;">${accLabel}</div>
             ${item.error_message ? `<div style="font-size:11px;color:var(--ds-c4);font-weight:600;margin-top:5px;line-height:1.5;">${escapeHtml(item.error_message)}</div>` : ''}
           </div>
           <div style="display:flex;gap:6px;flex-shrink:0;flex-wrap:wrap;justify-content:flex-end;">
@@ -11577,6 +11582,15 @@ async function loadConnectedAccounts() {
     console.error('loadConnectedAccounts failed:', e);
     listEl.innerHTML = `<div class="empty-state" style="padding:1.25rem;color:var(--ds-c4);">Could not load connected accounts. ${escapeHtml(e.message || '')}</div>`;
   }
+}
+
+function setPrimaryAccount(accountId) {
+  if (!S.settings) S.settings = {};
+  // Toggle off if already selected; otherwise set as primary
+  S.settings.primary_account_id = (S.settings.primary_account_id === accountId) ? null : accountId;
+  save();
+  loadBankBalances().then(() => { renderHeroMoney(); refreshHome(); }).catch(() => {});
+  loadConnectedAccounts();
 }
 
 // Loads cached Plaid balances (depository accounts only - checking, savings,
@@ -11603,7 +11617,7 @@ async function loadBankBalances() {
     items.forEach((i) => { itemsById[i.id] = i; });
     const { data: accounts, error: accErr } = await sb
       .from('plaid_accounts')
-      .select('plaid_item_id, name, mask, type, subtype, current_balance, available_balance, iso_currency_code')
+      .select('id, plaid_item_id, name, mask, type, subtype, current_balance, available_balance, iso_currency_code')
       .eq('user_id', currentUser.id)
       .in('plaid_item_id', itemIds)
       .eq('type', 'depository');
@@ -11614,6 +11628,7 @@ async function loadBankBalances() {
     // expect to see. Falls back to current_balance when available is null
     // (some smaller institutions don't expose available via Plaid).
     const list = (accounts || []).map((a) => ({
+      id: a.id,
       institution_name: itemsById[a.plaid_item_id]?.institution_name || 'Bank',
       name: a.name || a.subtype || 'Account',
       mask: a.mask,
@@ -11622,8 +11637,12 @@ async function loadBankBalances() {
         ? a.available_balance
         : (typeof a.current_balance === 'number' ? a.current_balance : null),
     }));
-    const sum = list.reduce((s, a) => s + (a.current_balance || 0), 0);
-    S._bankBalances = { sum, accounts: list };
+    // If user pinned a primary account, budget from that account only.
+    // Otherwise sum all depository accounts (legacy behavior).
+    const primaryId = (S.settings || {}).primary_account_id || null;
+    const budgetList = primaryId ? list.filter(a => a.id === primaryId) : list;
+    const sum = budgetList.reduce((s, a) => s + (a.current_balance || 0), 0);
+    S._bankBalances = { sum, accounts: list, primaryId };
   } catch (e) {
     console.warn('loadBankBalances failed:', e);
     S._bankBalances = null;
@@ -13652,10 +13671,10 @@ async function confirmBucketFunding(bucketId, amount, btn) {
   const now = new Date();
   const month = `${now.getFullYear()}-${String(now.getMonth()+1).padStart(2,'0')}`;
   const bucket = _bucketList().find(b => b.id === bucketId);
-  const { error } = await sbGet().from('bucket_funding_events').insert({
+  const { data: inserted, error } = await sbGet().from('bucket_funding_events').insert({
     user_id: currentUser.id, bucket_id: bucketId, amount,
     month, note: bucket ? `${bucket.name} funded` : 'Funded'
-  });
+  }).select('id').single();
   _confirmingBuckets.delete(bucketId);
   if (error) {
     console.error('confirmBucketFunding failed:', error);
@@ -13665,6 +13684,21 @@ async function confirmBucketFunding(bucketId, amount, btn) {
   _bucketDataMonthKey = ''; // invalidate cache so next render re-fetches
   try { await renderCashFlowTimeline(); } catch(e) { console.error('timeline re-render failed:', e); }
   renderHomeBuckets().catch(() => {});
+  if (inserted?.id) {
+    showToast(`Funded ${escapeHtml(bucket?.name || 'bucket')} ${f2(amount)}`, {
+      duration: 8000,
+      actionLabel: 'Undo',
+      onAction: () => undoBucketFunding(inserted.id)
+    });
+  }
+}
+async function undoBucketFunding(rowId) {
+  const { error } = await sbGet().from('bucket_funding_events').delete().eq('id', rowId).eq('user_id', currentUser.id);
+  if (error) { showToast('Could not undo — try again.'); return; }
+  _bucketDataMonthKey = '';
+  try { await renderCashFlowTimeline(); } catch(e) {}
+  renderHomeBuckets().catch(() => {});
+  showToast('Funding removed.');
 }
 let _activeReclassifyCat = null;
 let _activeReclassifyBucket = null;
