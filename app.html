@@ -8071,9 +8071,11 @@ function billOccurrenceDates(bill,days){
     if (freq === 'monthly') {
       const dueDay = parseInt(bill.due);
       if (isNaN(dueDay)) return [];
-      const nextDate = monthlyDueDate(now.getFullYear(), now.getMonth() + 1, dueDay);
-      const delta = Math.round((nextDate - now) / 86400000);
-      if (delta <= days && delta >= 0) out.push(nextDate);
+      // Use this month's occurrence so the paid bill stays visible in the timeline
+      // (delta < 0 = already past/cleared → filtered later; delta >= 0 = still upcoming)
+      const thisDate = monthlyDueDate(now.getFullYear(), now.getMonth(), dueDay);
+      const delta = Math.round((thisDate - now) / 86400000);
+      if (delta >= 0 && delta <= days) out.push(thisDate);
       return out;
     }
     if (freq === 'weekly') {
@@ -14605,7 +14607,8 @@ function computeCashFlowEvents(days, bucketData = { funded:{}, spent:{} }) {
     const dates = billOccurrenceDates(b, billLookAheadDays);
     for (const d of dates) {
       if (d < today || d > endOfMonth) continue;
-      events.push({ date:d, type:'bill', name:b.name, amount:b.amount, billPaid:!!b.paid });
+      events.push({ date:d, type:'bill', name:b.name,
+        amount: b.paid ? 0 : b.amount, displayAmount: b.amount, billPaid:!!b.paid });
     }
   }
   events.sort((a,b) => { const dt=a.date-b.date; return dt!==0?dt:(a.type==='income'?-1:1); });
@@ -14668,7 +14671,10 @@ function computeCashFlowEvents(days, bucketData = { funded:{}, spent:{} }) {
       const futureMin = minFutureBalance[i]; // Infinity when no future events
       // Safe headroom at this income event: limited by local surplus AND by how much
       // we can move before the future floor drops below the safety threshold.
-      let safeLeft = Math.max(0, Math.min(surplus, futureMin - SAFETY_FLOOR));
+      const paidWindowTotal = events.slice(i+1, nextIncIdx)
+        .filter(ev => ev.type === 'bill' && ev.billPaid)
+        .reduce((s, ev) => s + (ev.displayAmount || 0), 0);
+      let safeLeft = Math.max(0, Math.min(surplus - paidWindowTotal, futureMin - SAFETY_FLOOR));
 
       // Fund each pending bucket up to available headroom; partial if not enough at once.
       for (let bi = 0; bi < pendingBuckets.length && safeLeft > 0.01; bi++) {
@@ -14771,7 +14777,7 @@ async function renderCashFlowTimeline() {
     rows+=`<div class="cf-event ${ev.type==='income'?'in':'out'}${isPaid?' cf-event--paid':''}">
       <div class="cf-event-dot"></div>
       <div class="cf-event-name">${escapeHtml(ev.name)}${isPaid?' <span style="font-size:9px;font-weight:800;color:var(--ds-green);background:var(--ds-green-l);padding:1px 5px;border-radius:100px;letter-spacing:.04em;vertical-align:middle;">PAID</span>':''}</div>
-      <div class="cf-event-amt">${ev.type==='income'?'+':'−'}${f2(ev.amount)}</div>
+      <div class="cf-event-amt">${isPaid?`<span style="text-decoration:line-through;opacity:.45;">−${f2(ev.displayAmount||ev.amount)}</span>`:ev.type==='income'?`+${f2(ev.amount)}`:`−${f2(ev.amount)}`}</div>
       <div class="cf-event-bal" style="color:${balColor};">${f2(ev.balance)}</div>
     </div>`;
     if (i===minIdx && minBal < 200) {
