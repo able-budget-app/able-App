@@ -13700,6 +13700,27 @@ async function undoBucketFunding(rowId) {
   renderHomeBuckets().catch(() => {});
   showToast('Funding removed.');
 }
+async function clearBucketFunding(bucketId, bucketName) {
+  const confirmed = await appConfirm({
+    title: `Clear ${bucketName} funding?`,
+    body: `This removes all funding entries for ${bucketName} this month. Spending history is unaffected.`,
+    confirmLabel: 'Clear funding',
+    danger: true
+  });
+  if (!confirmed) return;
+  const now = new Date();
+  const month = `${now.getFullYear()}-${String(now.getMonth()+1).padStart(2,'0')}`;
+  const { error } = await sbGet().from('bucket_funding_events')
+    .delete()
+    .eq('user_id', currentUser.id)
+    .eq('bucket_id', bucketId)
+    .eq('month', month);
+  if (error) { showToast('Could not clear — try again.'); return; }
+  _bucketDataMonthKey = '';
+  try { await renderCashFlowTimeline(); } catch(e) {}
+  renderHomeBuckets().catch(() => {});
+  showToast(`${bucketName} funding cleared.`);
+}
 let _activeReclassifyCat = null;
 let _activeReclassifyBucket = null;
 let _activityScrollBeforeReclassify = 0;
@@ -14364,9 +14385,10 @@ async function renderHomeBuckets(){
               </div>
             </div>
             <div class="hb-bar-bg"><div class="hb-bar-fill" style="width:${fundPct}%;background:${b.color};"></div></div>
-            <div style="display:flex;gap:10px;margin-top:3px;">
+            <div style="display:flex;align-items:center;gap:10px;margin-top:3px;">
               <span style="font-size:10px;font-weight:700;color:var(--ds-t3);">Funded ${f2(funded)}</span>
               <span style="font-size:10px;font-weight:700;color:var(--ds-t3);">· Spent ${f2(spent)}</span>
+              <button onclick="clearBucketFunding('${escapeAttr(b.id)}','${escapeAttr(b.name)}')" style="margin-left:auto;font-size:10px;font-weight:700;color:var(--ds-t3);background:none;border:none;padding:0;cursor:pointer;text-decoration:underline;font-family:var(--ds-f);">Clear</button>
             </div>
           </div>`;
       }
