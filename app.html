@@ -552,7 +552,7 @@ input,select,button,textarea{font-family:inherit;}
   .bills-edit{padding:3px 6px;}
   .bills-x{padding:8px 4px;}
 }
-.modal-bg{position:fixed;inset:0;background:rgba(17,28,22,.45);z-index:200;display:flex;align-items:center;justify-content:center;padding:1rem;backdrop-filter:blur(6px);animation:modalFadeIn .2s ease;overscroll-behavior:contain;}
+.modal-bg{position:fixed;inset:0;background:rgba(17,28,22,.45);z-index:200;display:flex;align-items:center;justify-content:center;padding:1rem;backdrop-filter:blur(6px);animation:modalFadeIn .2s ease;overscroll-behavior:contain;touch-action:pan-y;overflow:hidden;}
 /* iOS install prompt - bottom slide-up sheet. z-index above nav (50) and most
    modals but below alloc preview (230) so it never blocks active flows. */
 #ios-install-sheet{position:fixed;inset:0;z-index:210;display:flex;align-items:flex-end;justify-content:center;pointer-events:none;}
@@ -2619,7 +2619,7 @@ body.is-scrolling .btn-primary:hover{transform:none!important;box-shadow:inherit
     </div>
     <div class="modal-field" style="margin-top:.85rem;">
       <label class="modal-label">Date</label>
-      <input type="date" id="li-date" onchange="_liDateChange()" style="width:100%;font-family:var(--ds-f);font-size:15px;font-weight:700;padding:10px 12px;border:1.5px solid var(--ds-line);border-radius:var(--ds-r1);background:white;color:var(--ds-t1);box-sizing:border-box;">
+      <input type="date" id="li-date" onchange="_liDateChange()" style="width:100%;font-family:var(--ds-f);font-size:15px;font-weight:700;padding:10px 12px;border:1.5px solid var(--ds-line);border-radius:var(--ds-r1);background:white;color:var(--ds-t1);box-sizing:border-box;-webkit-appearance:none;appearance:none;min-height:44px;">
     </div>
     <div class="modal-actions" style="margin-top:1.25rem;">
       <button class="btn" onclick="closeModal('modal-log-income')">Cancel</button>
@@ -10445,7 +10445,6 @@ function openLogIncomeModal(){
   if (dateEl) dateEl.value = _liTodayStr();
   if (saveBtn) saveBtn.textContent = 'Log it →';
   modal.style.display = 'flex';
-  setTimeout(() => { if (srcEl) srcEl.focus(); }, 80);
 }
 
 function saveLogIncome(){
@@ -10464,15 +10463,16 @@ function saveLogIncome(){
     save();
     try { renderForecast(); } catch(_) {}
     refreshHome();
-    showToast(`Added ${f2(amount)} to your forecast.`);
+    goTo('forecast');
+    refreshOutlook().catch(()=>{});
+    showToast(`${escapeHtml(source)} added to your forecast — timeline updated.`, {duration:3500});
   } else {
     if (!Array.isArray(S.history)) S.history = [];
     S.history.push({ type: 'income', source, amount, date: todayStr, note: 'logged manually' });
     save();
     refreshHome();
-    goTo('forecast');
     refreshOutlook().catch(()=>{});
-    showToast(`${escapeHtml(source)} received — see your updated plan below.`, {duration:3500});
+    showToast(`${escapeHtml(source)} logged. Your balance will update after the next bank sync.`, {duration:4000});
   }
 }
 
